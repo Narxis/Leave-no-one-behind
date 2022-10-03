@@ -41,8 +41,9 @@ body {
 }
 svg {
     position: fixed;
-    top: 6vh;
-    fill: whitesmoke
+    top: 10vh;
+    fill: whitesmoke;
+    width: 31vw;
 }
 .stroke-text {
     font-size: 5vw;
@@ -109,7 +110,7 @@ svg {
     outline: none;
     cursor: pointer;
     border-radius: 8px;
-    padding: 2vh 6vw;
+    padding: 1vh 4vw;
     border: 2px solid whitesmoke;
     color: whitesmoke;
     transition: 0.4s;
