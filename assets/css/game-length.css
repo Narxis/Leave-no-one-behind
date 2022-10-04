@@ -20,7 +20,7 @@ body {
   line-height: 1.5;
   padding: 1.5em 0;
 }
-/* || Line Connector background by PHP Hacker "https://codepen.io/php-hacker/pen/RwLMbdL" */
+/*  Line Connector background by PHP Hacker "https://codepen.io/php-hacker/pen/RwLMbdL" */
 
 canvas {
   position: absolute; 
@@ -34,9 +34,10 @@ h1 {
   position: relative;
   left: 25vw;
   height: 14vh;
+  pointer-events:none;
 }
 
-/* || Radio Hopping by Jon Kantner "https://codepen.io/jkantner/pen/rNaPadg" */
+/*  Radio Hopping by Jon Kantner "https://codepen.io/jkantner/pen/rNaPadg" */
 
 form {
   top: 30vh;
