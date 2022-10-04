@@ -11,7 +11,7 @@ html,
 }
 
 body {
-  background: #000;
+  background: #17181c;
   margin: 0;
   color: whitesmoke;
   display: flex;
@@ -40,4 +40,7 @@ canvas {
   align-content: center;
   align-items: center;
   pointer-events:none;
+}
+.txt {
+  top: 1em;
 }
