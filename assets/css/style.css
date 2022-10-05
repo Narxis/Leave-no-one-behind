@@ -10,10 +10,6 @@ html,
   font-size: calc(32px + (40 - 32)*(100vw - 320px)/ (1024 - 320));
 }
 
-*:not(canvas) {
-  z-index: 0; 
-}
-
 body {
   background: #17181c;
   margin: 0;
@@ -46,13 +42,4 @@ canvas {
   align-content: center;
   align-items: center;
   pointer-events:none;
-}
-
-/*h1,
-txt {
-
-} */
-
-.txt {
-  top: 1em;
 }

@@ -27,14 +27,32 @@ canvas {
   top: 0px;
   width: 100%;
   height: 100%;
+  z-index: 0;
 }
 
-h1 {
+/*  BODY CONTAINER +FLEX */
+
+#trouduc {
+  display: flex;
+  top: 0;
+  width: 100vw;
+  height: 84.6vh;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  pointer-events:none;
+  z-index: 10000;
+}
+.container {
+  pointer-events:none;
+}
+.length {
   top: 14vh;
   position: relative;
   left: 25vw;
   height: 14vh;
   pointer-events:none;
+  font-size: 2em;
 }
 
 /*  Radio Hopping by Jon Kantner "https://codepen.io/jkantner/pen/rNaPadg" */
