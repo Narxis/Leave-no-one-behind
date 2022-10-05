@@ -15,15 +15,10 @@ body {
 .dot {
   background-image: radial-gradient( rgba(255, 255, 255, 0.1) 9%, transparent 9% );
   background-position: 0% 0%;
-  background-size: 2vmin 2vmin;
+  background-size: 20px 20px;
   z-index: 1;
   position: absolute;
-  height: 50rem;
-  width: 100rem;
-  height: 43.3vh;
-  width: 36.6vw;
-  top: 3.28vh;
-  left: 1.7vw
+  inset: 2rem;
 }
 /* Parrallax effect by Asan using: ".main, .wrap, .container"  
 https://codepen.io/SabAsan/pen/dyPOzZY */
