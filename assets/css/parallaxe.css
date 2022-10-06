@@ -87,10 +87,10 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   transition: none;
 }
 .container--2 {
-  filter: hue-rotate(80deg) saturate(140%);
+  filter: hue-rotate(60deg) saturate(140%);
 }
 .container--3 {
-  filter: hue-rotate(160deg) saturate(140%);
+  filter: hue-rotate(120deg) saturate(140%);
 }
 .container p{
   color: #e7e8f1;
@@ -101,3 +101,5 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   width: calc(100% - 4rem);
   height: calc(100% - 4rem);
 }
+
+/*---------------------------------------------------------------------*/
