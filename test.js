@@ -10,11 +10,11 @@ for (let i = 0; i < 50; i++){
         newCard.value = -1;
     }
     else if (i < 40){
-        newCard.type = 'positive';
+        newCard.type = 'negative';
         newCard.value = -1;
     }
     else if (i < 45){
-        newCard.type = 'negative';
+        newCard.type = 'positive';
         newCard.value = -1;
     }
     else{
@@ -29,7 +29,7 @@ let negCardList = cardList.filter(elt => elt.type === 'negative');
 let posCardList = cardList.filter(elt => elt.type === 'positive');
 let plaCardList = cardList.filter(elt => elt.type === 'planet');
 
-finalDeck = deck(neuCardList, posCardList, negCardList, plaCardList);
+finalDeck = deck(neuCardList, negCardList, posCardList, plaCardList);
 //console.log(neuCardList);
 //console.log(posCardList);
 //console.log(negCardList);
