@@ -69,8 +69,8 @@ module.exports = function deckGenerator_50(neuCardList, posCardList, negCardList
                 }
             }
         }
-        console.log(deck.length)
-        console.log(deck)
+        //console.log(deck.length)
+        //console.log(deck)
     }
     return deck;
 }
