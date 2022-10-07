@@ -1,6 +1,6 @@
 const card = require('./card')
 
-module.exports = function deckGenerator_50(neuCardList, posCardList, negCardList, plaCardList){
+module.exports = function deckGenerator_50(neuCardList, negCardList, posCardList, plaCardList){
     let size = neuCardList.length + posCardList.length + negCardList.length + plaCardList.length;
     let deck = [];
     let used = [];
