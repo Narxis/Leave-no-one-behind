@@ -44,19 +44,7 @@ module.exports = function deckGenerator_50(neuCardList, posCardList, negCardList
                     }
                 }
             }
-            else if (ind === 1 && posCount < 3) {
-                while (!added) {
-                    ind = Math.floor(Math.random() * posCardList.length);
-                    let currentCard = posCardList[ind];
-                    if (used.filter(elt => elt === currentCard).length === 0){
-                        deck.push(currentCard);
-                        used.push(currentCard);
-                        added = true;
-                        posCount++;
-                    }
-                }
-            }
-            else if (ind === 2 && negCount < 1) {
+            else if (ind === 1 && negCount < 3) {
                 while (!added) {
                     ind = Math.floor(Math.random() * negCardList.length);
                     let currentCard = negCardList[ind];
@@ -65,6 +53,18 @@ module.exports = function deckGenerator_50(neuCardList, posCardList, negCardList
                         used.push(currentCard);
                         added = true;
                         negCount++;
+                    }
+                }
+            }
+            else if (ind === 2 && posCount < 1) {
+                while (!added) {
+                    ind = Math.floor(Math.random() * posCardList.length);
+                    let currentCard = posCardList[ind];
+                    if (used.filter(elt => elt === currentCard).length === 0){
+                        deck.push(currentCard);
+                        used.push(currentCard);
+                        added = true;
+                        posCount++;
                     }
                 }
             }
