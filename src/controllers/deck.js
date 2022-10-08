@@ -7,6 +7,7 @@ module.exports.deckGenerator = function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, g
     let posCardList = shuffle(JSON.parse(fs.readFileSync('jsonFiles/posCardList.json').toString()));
     let plaCardList = JSON.parse(fs.readFileSync('jsonFiles/plaCardList.json').toString());
 
+
     let deck = [];
 
     for (let i = 0; i < nbPla; i++) {
