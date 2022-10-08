@@ -1,4 +1,5 @@
 var fs = require('fs');
+let deck = require('../controllers/deck')
 
 module.exports.index = function(req, res) {
     // req est bien entendu notre objet requête et res notre objet réponse
@@ -17,4 +18,9 @@ module.exports.event = function (req, res) {
     let events = conf.events;
     let event = events[Math.floor(Math.random() * events.length )];
     res.render('card', {event: event});
+}
+
+module.exports.deckGenerator = function (req, res) {
+    deck.deckGenerator_50();
+    res.render('index')
 }
