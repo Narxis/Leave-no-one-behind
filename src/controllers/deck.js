@@ -1,7 +1,7 @@
 const card = require('./card')
 const fs = require("fs")
 
-module.exports.deckGenerator_50 = function (mult = 1){
+module.exports.deckGenerator = function (mult = 1){
     let neuCardList = JSON.parse(fs.readFileSync('neuCardList.json').toString());
     let negCardList = JSON.parse(fs.readFileSync('negCardList.json').toString());
     let posCardList = JSON.parse(fs.readFileSync('posCardList.json').toString());
