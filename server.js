@@ -9,4 +9,3 @@ app.use('/', router);
 // Enfin on lance notre serveur sur le port 8080
 app.listen(8080);
 console.log('Server launched on port 8080');
-console.log('http://localhost:8080');

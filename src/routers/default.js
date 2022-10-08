@@ -1,4 +1,5 @@
 var controller = require('./../controllers/default');
+let deck = require('../controllers/deck')
 // On injecte le router d'express, nous en avons besoin pour définir les routes
 module.exports = function(router) {
     // On crée une route sur l'url "/",
@@ -6,4 +7,5 @@ module.exports = function(router) {
     router.get('/', controller.index);
     router.get('/coucou', controller.coucou);
     router.get('/event', controller.event);
+    router.get('/deck', deck.deckGenerator_50);
 };
