@@ -1,0 +1,22 @@
+<head>
+    <link rel="stylesheet" href="/css/parallax.css">
+</head>
+<body>
+<section class="main">
+    <div class="wrap wrap--1">
+        <div class="container container--1">
+            <div class="dot">
+                <h1 class="card-text title"><%= event.title %></h1>
+                <p class="card-text desc"><%= event.description %></p>
+                <div class="buttons">
+                    <% for(var i=0; i < event.choices.length ; i++) {%>
+                        <button><%= event.choices[i] %></button>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+
+<script src="/js/parallax.js"></script>
