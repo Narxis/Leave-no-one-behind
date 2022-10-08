@@ -57,9 +57,9 @@ body {
 }
 .vsaut {
     height: 100%;
-    background-image: url(https://steamuserimages-a.akamaihd.net/ugc/96103261805973309/8D5B28D5F24C40E5EF35CBC31C213CB6BDDD5E30/?imw=1024&imh=576&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true);
+    background-image: url(https://i.imgur.com/NDR40Tt.png);
     background-size: cover;
-    background-position: center -56px;
+    background-position: center -18px;
     background-repeat: no-repeat;
     border: 16px, solid,whitesmoke;
 }
@@ -78,9 +78,10 @@ body {
     text-decoration: #6E4DE0;
 }
 .modtxt {
+    top: 50px;
     color: #EBEBEB;
     font-weight: 600;
-    box-shadow: -5px 7px 8px -5px #724cea;
+    box-shadow: -2px -2px 0px 0px #7649ed;
     padding: 0px 4px;
 }
 .module {
@@ -89,11 +90,11 @@ body {
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: 1fr 3fr 1fr;
     left: 0px;
-    top: 3px;
+    top: 0px;
 }
 .bars {
     position: relative;
-    top: -8px;
+    top: -2px;
     left: -23px;
     z-index: -1;
 }
