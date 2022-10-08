@@ -21,6 +21,6 @@ module.exports.event = function (req, res) {
 }
 
 module.exports.deckGenerator = function (req, res) {
-    deck.deckGenerator_50();
+    deck.deckGenerator();
     res.render('index')
 }

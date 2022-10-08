@@ -1,5 +1,5 @@
-let card = require('./src/controllers/card');
-let deck = require('./src/controllers/deck')
+let card = require('../src/controllers/card');
+let deck = require('../src/controllers/deck')
 const fs = require("fs")
 
 
@@ -33,12 +33,12 @@ let posCardList = cardList.filter(elt => elt.type === 'positive');
 let plaCardList = cardList.filter(elt => elt.type === 'planet');
 
 
-fs.writeFileSync('neuCardList.json', JSON.stringify(neuCardList));
-fs.writeFileSync('negCardList.json', JSON.stringify(negCardList));
-fs.writeFileSync('posCardList.json', JSON.stringify(posCardList));
-fs.writeFileSync('plaCardList.json', JSON.stringify(plaCardList));
+fs.writeFileSync('jsonFiles/neuCardList.json', JSON.stringify(neuCardList));
+fs.writeFileSync('jsonFiles/negCardList.json', JSON.stringify(negCardList));
+fs.writeFileSync('jsonFiles/posCardList.json', JSON.stringify(posCardList));
+fs.writeFileSync('jsonFiles/plaCardList.json', JSON.stringify(plaCardList));
 
-finalDeck = deck.deckGenerator_50();
+finalDeck = deck.deckGenerator();
 
 //console.log(neuCardList);
 //console.log(posCardList);
@@ -48,9 +48,7 @@ console.log(finalDeck);
 
 //console.log(finalDeck.length)
 
-fs.writeFileSync('history.json', '');
+fs.writeFileSync('jsonFiles/history.json', '');
 
 deck.cardPop();
 deck.cardPop();
-
-console.log(finalDeck.length)
