@@ -7,8 +7,11 @@ module.exports.deckGenerator = function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, g
     let posCardList = shuffle(JSON.parse(fs.readFileSync('jsonFiles/posCardList.json').toString()));
     let plaCardList = JSON.parse(fs.readFileSync('jsonFiles/plaCardList.json').toString());
 
-
     let deck = [];
+
+    let firstPlaSlice = shuffle(plaCardList.filter(elt => (elt.value > 0 && elt.value <= 500)));
+    let secondPlaSlice = shuffle(plaCardList.filter(elt => (elt.value > 500 && elt.value <= 800)));
+    let thirdPlaSlice = shuffle(plaCardList.filter(elt => (elt.value > 800 && elt.value <= 1000)));
 
     for (let i = 0; i < nbPla; i++) {
         let tmp_system = [];
@@ -27,12 +30,12 @@ module.exports.deckGenerator = function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, g
         for (let elt of tmp_system)
             deck.push(elt);
 
-        let usablePla = plaCardList.filter(elt => (elt.value > i * (1000 / nbPla) && elt.value < (i + 1) * (1000 / nbPla)));
-        let ind = Math.floor(Math.random() * usablePla.length);
-        let card = usablePla[ind];
-        deck.push(card);
-        let toDel = plaCardList.findIndex(elt => elt === card);
-        plaCardList.splice(toDel, 1);
+        if (i < nbPla / 3)
+            deck.push(firstPlaSlice.pop());
+        else if (i < 2 * nbPla / 3)
+            deck.push(secondPlaSlice.pop());
+        else
+            deck.push(thirdPlaSlice.pop());
     }
 
     deck = deck.reverse();
