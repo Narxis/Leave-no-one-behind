@@ -76,6 +76,7 @@ body {
     font-family: orbitron;
     font-size: 13px;
     text-decoration: #6E4DE0;
+    top: -20px;
 }
 .modtxt {
     top: 50px;
@@ -110,14 +111,31 @@ body {
 
 .descriptif {
     position: relative;
-    background-color: lightcoral;
     margin: 32px;
     grid-column: 4 / 6;
     grid-row: 1 / 6;
     width: 352px;
     left: -123px;
+    color: whitesmoke;
+    font-family: orbitron;
 }
-
+.titre {
+    position: relative;
+    top: 7px
+    ;
+}
+.text {
+    position: relative;
+    top: 35px;
+    font-size: 14px;
+    /*box-shadow: -11px 11px 14px 0px #76b2ef;*/
+}
+hr {
+    border: none;
+}
+aside {
+    font-size: 10px;
+}
 .wrapper {
     position: relative;
     width: 77px;
