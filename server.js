@@ -1,4 +1,12 @@
 //server.js
+// TODO INIT DB
+const db = require ('./src/controllers/db');
+
+var DB = new db.DB;
+DB = DB.init();
+
+console.log(DB);
+
 // Nous avons besoin de notre configuration
 var app = require('./bin/express')();
 var router = require('./bin/express-router')();
