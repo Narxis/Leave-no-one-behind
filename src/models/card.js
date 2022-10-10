@@ -1,4 +1,5 @@
 const {cardModule} = require("./cardModule");
+const {where} = require("sequelize");
 
 class Card {
     id;
@@ -49,10 +50,11 @@ class Card {
             desc: this.desc,
             timer: this.timer
         }).then(async result => {
+            this.id = result.id;
             for (let choice of this.choices)
             {
                 await DB.tables.card_modules.create({
-                    card_id: result.id,
+                    card_id: this.id,
                     type: 'choice',
                     value: choice.toString(),
                     cost: -1,
@@ -61,17 +63,75 @@ class Card {
             for (let mod in this.modules)
             {
                 await DB.tables.card_modules.create({
-                    card_id: result.id,
+                    card_id: this.id,
                     type: mod.toString() + '_cost',
                     value: this.modules[mod].cost,
                 });
                 await DB.tables.card_modules.create({
-                    card_id: result.id,
+                    card_id: this.id,
                     type: mod.toString() + '_val',
                     value: this.modules[mod].value,
                 });
             }
         });
+    }
+
+    async update(data) {
+        await this.getData();
+
+        for (let dat in this.accepted_datas)
+            this[dat] = data[dat] || this[dat];
+
+        for (let dat in data) {
+            this[dat] = data[dat];
+        }
+
+        await DB.tables.cards.update({
+            type: this.type,
+            value: this.value,
+            name: this.name,
+            desc: this.desc,
+            timer: this.timer
+        }, {
+            where: {
+                id: this.id
+            }
+        });
+
+        for (let choice of this.choices)
+        {
+            await DB.tables.card_modules.update({
+                card_id: this.id,
+                type: 'choice',
+                value: choice.toString(),
+                cost: -1,
+            }, {
+                where: {
+                    id: this.id
+                }
+            });
+        }
+        for (let mod in this.modules)
+        {
+            await DB.tables.card_modules.update({
+                card_id: this.id,
+                type: mod.toString() + '_cost',
+                value: this.modules[mod].cost,
+            }, {
+                where: {
+                    id: this.id
+                }
+            });
+            await DB.tables.card_modules.update({
+                card_id: this.id,
+                type: mod.toString() + '_val',
+                value: this.modules[mod].value,
+            }, {
+                where: {
+                    id: this.id
+                }
+            });
+        }
     }
 
     async getData() {
@@ -123,7 +183,6 @@ class Card {
             }
         }
 
-        console.log(this);
         return this;
     }
 }
