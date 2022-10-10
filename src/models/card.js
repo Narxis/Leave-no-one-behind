@@ -9,6 +9,15 @@ class Card {
     timer;
     modules = [];
     choices = [];
+    accepted_datas = {
+        'type': 0,
+        'value': -1,
+        'name': '',
+        'desc': '',
+        'timer': 0,
+        'modules': {},
+        'choices': {}
+    }
 
     constructor(id = 0) {
         this.id = id;
@@ -27,6 +36,42 @@ class Card {
                 cost: -1,
             });
         }
+    }
+
+    async create(data) {
+        for (let dat in this.accepted_datas)
+            this[dat] = data[dat] || this.accepted_datas[dat];
+
+        await DB.tables.cards.create({
+            type: this.type,
+            value: this.value,
+            name: this.name,
+            desc: this.desc,
+            timer: this.timer
+        }).then(async result => {
+            for (let choice of this.choices)
+            {
+                await DB.tables.card_modules.create({
+                    card_id: result.id,
+                    type: 'choice',
+                    value: choice.toString(),
+                    cost: -1,
+                });
+            }
+            for (let mod in this.modules)
+            {
+                await DB.tables.card_modules.create({
+                    card_id: result.id,
+                    type: mod.toString() + '_cost',
+                    value: this.modules[mod].cost,
+                });
+                await DB.tables.card_modules.create({
+                    card_id: result.id,
+                    type: mod.toString() + '_val',
+                    value: this.modules[mod].value,
+                });
+            }
+        });
     }
 
     async getData() {
@@ -72,7 +117,6 @@ class Card {
                 this.choices.push(mod.value);
             }
             else {
-                console.log(name,type,mod.value)
                 if (typeof this.modules[name] === 'undefined')
                     this.modules[name] = {};
                 this.modules[name][type] = mod.value
