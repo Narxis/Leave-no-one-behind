@@ -1,17 +1,17 @@
 //server.js
 // TODO INIT DB
-const db = require ('./src/controllers/db');
 
-var DB = new db.DB;
-global.DB = DB.init();
+const start = async function() {
+    const db = require ('./src/controllers/db');
 
-// Nous avons besoin de notre configuration
-var app = require('./bin/express')();
-var router = require('./bin/express-router')();
-//On fait appel à nos routes
-require('./src/routers/default')(router);
-// Puis on dit à express d'utiliser notre router
-app.use('/', router);
-// Enfin on lance notre serveur sur le port 8080
-app.listen(8080);
-console.log('Server launched on port 8080');
+    var DB = new db.DB;
+    global.DB = await DB.init();
+
+    var app = require('./bin/express')();
+    var router = require('./bin/express-router')();
+    require('./src/routers/default')(router);
+    app.use('/', router);
+    app.listen(8080);
+}
+
+start().then(e => {console.log('Server launched on port 8080')});
