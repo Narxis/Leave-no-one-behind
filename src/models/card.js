@@ -22,6 +22,7 @@ class Card {
 
     constructor(id = 0) {
         this.id = id;
+        // must use this.getData() since Sequelize works with Promises
     }
 
     async test() {
@@ -74,6 +75,8 @@ class Card {
                 });
             }
         });
+
+        return await this.getData()
     }
 
     async update(data) {
@@ -132,6 +135,11 @@ class Card {
                 }
             });
         }
+    }
+
+    async delete() {
+        await DB.tables.cards.destroy({ where: { id: this.id } });
+        await DB.tables.card_modules.destroy({ where: { id: this.id } });
     }
 
     async getData() {
