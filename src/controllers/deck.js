@@ -1,4 +1,4 @@
-const card = require('./card')
+const card = require('../models/card')
 const fs = require("fs")
 
 module.exports.deckGenerator = function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, gameMode = 'Fair'){

@@ -1,4 +1,4 @@
-let card = require('../src/controllers/card');
+let card = require('../src/models/card');
 let deck = require('../src/controllers/deck')
 const fs = require("fs")
 
