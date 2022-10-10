@@ -57,13 +57,6 @@ class DB {
                 type: Sequelize.INTEGER,
                 defaultValue: -1,
                 allowNull: false
-            }
-        });
-
-        let card_details = this.sequelize.define('card_details', {
-            card_id: {
-                type: Sequelize.INTEGER,
-                allowNull: false
             },
             name: {
                 type: Sequelize.STRING,
@@ -88,7 +81,8 @@ class DB {
                 allowNull: false
             },
             type: {
-                type: Sequelize.ENUM('choice',
+                type: Sequelize.ENUM(
+                    'choice',
                     'oxy_cost',
                     'oxy_val',
                     'grv_cost',
@@ -101,10 +95,29 @@ class DB {
                     'cli_val',
                     'res_cost',
                     'res_val'),
-                allowNull: false
+                allowNull: false,
+                defaultValue: 'choice',
+                validate: {
+                    isIn: {
+                        args: [['choice',
+                            'oxy_cost',
+                            'oxy_val',
+                            'grv_cost',
+                            'grv_val',
+                            'wtr_cost',
+                            'wtr_val',
+                            'fau_cost',
+                            'fau_val',
+                            'cli_cost',
+                            'cli_val',
+                            'res_cost',
+                            'res_val']],
+                        msg: "Wrong type"
+                    }
+                }
             },
             value: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
                 defaultValue: 0,
                 allowNull: false
             }
@@ -112,7 +125,6 @@ class DB {
 
         this.tables = {
             cards: cards,
-            card_details: card_details,
             card_modules: card_modules
         };
 
