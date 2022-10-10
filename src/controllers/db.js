@@ -27,6 +27,8 @@ const Sequelize = require('sequelize');
 // }
 
 class DB {
+    sequelize;
+    tables;
     constructor() {}
     async init() {
         this.sequelize =  new Sequelize('database', '', '', {
@@ -40,7 +42,7 @@ class DB {
     }
 
     async registerDatabases() {
-        this.cards = this.sequelize.define('cards', {
+        let cards = this.sequelize.define('cards', {
             id: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
@@ -57,9 +59,8 @@ class DB {
                 allowNull: false
             }
         });
-        await this.cards.sync();
 
-        this.card_details = this.sequelize.define('card_details', {
+        let card_details = this.sequelize.define('card_details', {
             card_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false
@@ -80,9 +81,8 @@ class DB {
                 allowNull: false
             }
         });
-        await this.card_details.sync();
 
-        this.card_modules = this.sequelize.define('card_modules', {
+        let card_modules = this.sequelize.define('card_modules', {
             card_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false
@@ -110,7 +110,16 @@ class DB {
             }
         })
 
-        await this.card_modules.sync();
+        this.tables = {
+            cards: cards,
+            card_details: card_details,
+            card_modules: card_modules
+        };
+
+        for (let table in this.tables) {
+            await this.tables[table].sync();
+            console.log('synchro ' + table)
+        }
     }
 }
 

@@ -3,9 +3,7 @@
 const db = require ('./src/controllers/db');
 
 var DB = new db.DB;
-DB = DB.init();
-
-console.log(DB);
+global.DB = DB.init();
 
 // Nous avons besoin de notre configuration
 var app = require('./bin/express')();
