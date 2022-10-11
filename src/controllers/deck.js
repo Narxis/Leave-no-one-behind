@@ -1,7 +1,8 @@
-const card = require('../models/card')
+const {Card} = require('../models/Card')
 const fs = require("fs")
+const { Op } = require("sequelize");
 
-module.exports.deckGenerator = function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, gameMode = 'Fair'){
+const deckGenerator = async function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, gameMode = 'Fair'){
     let neuCardList = shuffle(JSON.parse(fs.readFileSync('jsonFiles/neuCardList.json').toString()));
     let negCardList = shuffle(JSON.parse(fs.readFileSync('jsonFiles/negCardList.json').toString()));
     let posCardList = shuffle(JSON.parse(fs.readFileSync('jsonFiles/posCardList.json').toString()));
@@ -43,7 +44,33 @@ module.exports.deckGenerator = function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, g
     return JSON.stringify(deck);
 }
 
-module.exports.cardPop = function (){
+const getCards = async function (type = 0, quantity = null, valMinMax= [-1,0]) {
+    let cards = [];
+    let rows = await DB.tables.cards.findAll({
+        attributes: [
+            'id',
+        ],
+        where: {
+            type: {
+                [Op.eq] : type
+            },
+            value: {
+                [Op.between]: valMinMax
+            }
+        },
+        limit: quantity
+    })
+    rows = rows.map(r => r.dataValues);
+
+    for (let row of rows) {
+        let card = new Card(row.id);
+        cards.push(await card.getData())
+    }
+
+    return cards;
+}
+
+const cardPop = function (){
     let deck = JSON.parse(fs.readFileSync('jsonFiles/deck.json').toString());
     let card = deck.pop();
 
@@ -63,7 +90,7 @@ module.exports.cardPop = function (){
     //console.log(history)
 }
 
-function shuffle(array) {
+const shuffle = function (array) {
     let currentIndex = array.length,  randomIndex;
 
     // While there remain elements to shuffle.
@@ -80,3 +107,5 @@ function shuffle(array) {
 
     return array;
 }
+
+module.exports = {deckGenerator, cardPop, getCards, shuffle}

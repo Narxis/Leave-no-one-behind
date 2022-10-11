@@ -1,5 +1,6 @@
 var controller = require('./../controllers/default');
 const {Card} = require("../models/card");
+const {deckGenerator, getCards} = require("../controllers/deck");
 
 module.exports = function(router) {
     router.get('/', controller.index);
@@ -27,4 +28,5 @@ module.exports = function(router) {
     }
     let c = new Card(66);
     c.update(card_obj);
+    deckGenerator()
 };
