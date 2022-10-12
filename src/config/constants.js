@@ -1,4 +1,4 @@
-module.exports.constants = function () {
+module.exports.register = function () {
     global.TYPE_PLANET = 0;
     global.TYPE_NEUTRAL = 1;
     global.TYPE_POSITIVE = 2;

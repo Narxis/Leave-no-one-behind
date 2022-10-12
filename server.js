@@ -1,9 +1,9 @@
-const {constants} = require('./src/config/constants');
+const constants = require('./src/config/constants');
 const db = require ('./src/controllers/db');
 
 const start = async function() {
 
-    constants();
+    constants.register();
     var DB = new db.DB;
     global.DB = await DB.init();
 
