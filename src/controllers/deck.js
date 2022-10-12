@@ -3,16 +3,16 @@ const fs = require("fs")
 const { Op, literal } = require("sequelize");
 
 const deckGenerator = async function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, gameMode = 'Fair'){
-    let neuCardList = shuffle(JSON.parse(fs.readFileSync('jsonFiles/neuCardList.json').toString()));
-    let negCardList = shuffle(JSON.parse(fs.readFileSync('jsonFiles/negCardList.json').toString()));
-    let posCardList = shuffle(JSON.parse(fs.readFileSync('jsonFiles/posCardList.json').toString()));
-    let plaCardList = JSON.parse(fs.readFileSync('jsonFiles/plaCardList.json').toString());
 
     let deck = [];
 
-    let firstPlaSlice = shuffle(plaCardList.filter(elt => (elt.value > 0 && elt.value <= 500)));
-    let secondPlaSlice = shuffle(plaCardList.filter(elt => (elt.value > 500 && elt.value <= 800)));
-    let thirdPlaSlice = shuffle(plaCardList.filter(elt => (elt.value > 800 && elt.value <= 1000)));
+    let neuCardList = getCards(TYPE_NEUTRAL);
+    let negCardList = getCards(TYPE_NEGATIVE);
+    let posCardList = getCards(TYPE_POSITIVE);
+
+    let firstPlaSlice = getCards(TYPE_PLANET, ALL, [1,500]);
+    let secondPlaSlice = getCards(TYPE_PLANET, ALL, [501,800]);
+    let thirdPlaSlice = getCards(TYPE_PLANET, ALL, [801,1000]);
 
     for (let i = 0; i < nbPla; i++) {
         let tmp_system = [];
@@ -44,7 +44,7 @@ const deckGenerator = async function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, game
     return JSON.stringify(deck);
 }
 
-const getCards = async function (type = 0, quantity = null, valMinMax= [-1,0], order_rand = true) {
+const getCards = async function (type = 0, quantity = ALL, valMinMax= [-1,0], order_rand = true) {
     let cards = [];
     let rows = await DB.tables.cards.findAll({
         attributes: [

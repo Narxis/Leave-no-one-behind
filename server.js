@@ -1,9 +1,9 @@
-//server.js
-// TODO INIT DB
+const {constants} = require('./src/models/constants');
+const db = require ('./src/controllers/db');
 
 const start = async function() {
-    const db = require ('./src/controllers/db');
 
+    constants();
     var DB = new db.DB;
     global.DB = await DB.init();
 
