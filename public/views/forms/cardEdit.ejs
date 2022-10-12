@@ -7,8 +7,47 @@
         <div class="wrap wrap--1">
             <div class="dot container container--1">
                 <div class="dot">
+                    <select name="type">
+                        <option value="pla">planet</option>
+                        <option value="pos">positive</option>
+                        <option value="neg">negative</option>
+                        <option value="neu">neutre</option>
+                    </select>
                     <input type="text" name="title" value="">
                     <textarea class="card-text desc" name="desc" id="desc" cols="30" rows="10"></textarea>
+                    <input type="range" name="timer" value="0">
+                    <div id="modules">
+                        <div>
+                            <span>oxygen</span>
+                            <input type="number" name="modules[oxy_val]">
+                            <input type="number" name="modules[oxy_cost]">
+                        </div>
+                        <div>
+                            <span>gravity</span>
+                            <input type="number" name="modules[grv_val]">
+                            <input type="number" name="modules[grv_cost]">
+                        </div>
+                        <div>
+                            <span>Faun</span>
+                            <input type="number" name="modules[fau_val]">
+                            <input type="number" name="modules[fau_cost]">
+                        </div>
+                        <div>
+                            <span>climate</span>
+                            <input type="number" name="modules[cli_val]">
+                            <input type="number" name="modules[cli_cost]">
+                        </div>
+                        <div>
+                            <span>resources</span>
+                            <input type="number" name="modules[res_val]">
+                            <input type="number" name="modules[res_cost]">
+                        </div>
+                    </div>
+                    <div id="choices">
+                        <span>choices</span>
+                        <input type="text" name="choices[]">
+                        <button>+</button>
+                    </div>
                 </div>
             </div>
         </div>
