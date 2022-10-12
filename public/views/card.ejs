@@ -6,8 +6,8 @@
     <div class="wrap wrap--1">
         <div class="container container--1">
             <div class="dot">
-                <h1 class="card-text title"><%= event.title %></h1>
-                <p class="card-text desc"><%= event.description %></p>
+                <h1 class="card-text title"><%= event.name %></h1>
+                <p class="card-text desc"><%= event.desc %></p>
                 <div class="buttons">
                     <% for(var i=0; i < event.choices.length ; i++) {%>
                         <button><%= event.choices[i] %></button>

@@ -1,5 +1,6 @@
 var fs = require('fs');
-let deck = require('../controllers/deck')
+let {deckGenerator,getCards} = require('../controllers/deck')
+const {Card} = require("../models/card");
 
 module.exports.index = function(req, res) {
     // req est bien entendu notre objet requête et res notre objet réponse
@@ -8,19 +9,21 @@ module.exports.index = function(req, res) {
     res.render('index');
 };
 
-module.exports.coucou = function (req, res) {
-    let variable_coucou = 'Texte qui dit coucou';
-    res.render('coucou', {var_coucou: variable_coucou});
-}
-
-module.exports.event = function (req, res) {
-    var conf = JSON.parse(fs.readFileSync('src/config/events.json', 'utf8'));
-    let events = conf.events;
-    let event = events[Math.floor(Math.random() * events.length )];
-    res.render('card', {event: event});
+module.exports.randCard = function (req, res) {
+    getCards(0, 1).then(card => {
+        console.log(card[0])
+        res.render('card', {event: card[0]});
+    });
 }
 
 module.exports.deckGenerator = function (req, res) {
-    deck.deckGenerator();
-    res.render('index')
+    deckGenerator().then(
+        res.render('index')
+    );
+
+}
+
+module.exports.cardEdit = function (req, res) {
+    console.log(req, res)
+    res.render('forms/cardEdit')
 }

@@ -16,9 +16,10 @@ body {
   background-image: radial-gradient( rgba(255, 255, 255, 0.1) 9%, transparent 9% );
   background-position: 0% 0%;
   background-size: 20px 20px;
-  z-index: 1;
   position: absolute;
   inset: 2rem;
+  display: flex;
+  flex-direction: column;
 }
 /* Parrallax effect by Asan using: ".main, .wrap, .container"  
 https://codepen.io/SabAsan/pen/dyPOzZY */
@@ -67,7 +68,7 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   height: 2rem;
   border: 1px solid #fff;
   position: absolute;
-  z-index: 2;
+  pointer-events: none;
   opacity: .3;
   transition: .3s;
 }

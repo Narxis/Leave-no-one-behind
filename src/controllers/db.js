@@ -1,31 +1,5 @@
 const Sequelize = require('sequelize');
 
-// module.exports.init = function () {
-//     const sequelize =  new Sequelize('database', '', '', {
-//         host: 'localhost',
-//         dialect: 'sqlite',
-//         logging: false,
-//         storage: 'database.sqlite'
-//     });
-//
-//     const DB = sequelize.define('pokedex', {
-//         word: {
-//             type: Sequelize.STRING,
-//             unique: true
-//         },
-//         ban_time: {
-//             type: Sequelize.INTEGER,
-//             defaultValue: 0,
-//             allowNull: false
-//         },
-//         founder: {
-//             type: Sequelize.STRING,
-//             defaultValue: '',
-//             allowNull: false
-//         }
-//     });
-// }
-
 class DB {
     sequelize;
     tables;

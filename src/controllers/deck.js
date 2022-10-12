@@ -1,6 +1,6 @@
 const {Card} = require('../models/Card')
 const fs = require("fs")
-const { Op } = require("sequelize");
+const { Op, literal } = require("sequelize");
 
 const deckGenerator = async function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, gameMode = 'Fair'){
     let neuCardList = shuffle(JSON.parse(fs.readFileSync('jsonFiles/neuCardList.json').toString()));
@@ -44,7 +44,7 @@ const deckGenerator = async function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, game
     return JSON.stringify(deck);
 }
 
-const getCards = async function (type = 0, quantity = null, valMinMax= [-1,0]) {
+const getCards = async function (type = 0, quantity = null, valMinMax= [-1,0], order_rand = true) {
     let cards = [];
     let rows = await DB.tables.cards.findAll({
         attributes: [
@@ -58,7 +58,8 @@ const getCards = async function (type = 0, quantity = null, valMinMax= [-1,0]) {
                 [Op.between]: valMinMax
             }
         },
-        limit: quantity
+        limit: quantity,
+        order: (order_rand ? literal('random()') : 'id')
     })
     rows = rows.map(r => r.dataValues);
 
