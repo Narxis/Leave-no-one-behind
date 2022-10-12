@@ -1,4 +1,4 @@
-const {constants} = require('./src/models/constants');
+const {constants} = require('./src/config/constants');
 const db = require ('./src/controllers/db');
 
 const start = async function() {
