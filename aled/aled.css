@@ -1,0 +1,11 @@
+body{
+    background-color:black;
+  }
+  
+  #panel{
+    
+    border: 1px solid dashed #FFF;
+    height:400px;
+    width:400px;
+    background-image:url('http://farm4.static.flickr.com/3550/3367798587_c24c797f0f.jpg');color:white;font-weight:bold;
+  }
