@@ -1,3 +1,6 @@
+@import 'https://fonts.googleapis.com/css?family=Roboto+Mono:100';
+
 *{
+    font-family: 'Roboto Mono', 'monospace';
     margin:0;
 }
