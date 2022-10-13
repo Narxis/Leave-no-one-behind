@@ -69,15 +69,12 @@ const fx = new TextScramble(el);
 
 let counter = 0;
 
-document.addEventListener('mouseup', function (){
-    fx.setText(phrases[counter])
+
+const next = () => {
+    fx.setText(phrases[counter]).then(() => {
+        setTimeout(next, 800);
+    });
     counter = (counter + 1) % phrases.length;
-})
-// const next = () => {
-//     fx.setText(phrases[counter]).then(() => {
-//         setTimeout(next, 800);
-//     });
-//     counter = (counter + 1) % phrases.length;
-// };
-//
-// next();
+};
+
+next();

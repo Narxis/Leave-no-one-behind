@@ -1,6 +1,6 @@
 @import 'https://fonts.googleapis.com/css?family=Roboto+Mono:100';
-
+@import 'https://fonts.googleapis.com/css2?family=Jura:wght@300&display=swap';
 *{
-    font-family: 'Roboto Mono', 'monospace';
+    font-family: 'Jura', 'Roboto Mono', 'monospace';
     margin:0;
 }
