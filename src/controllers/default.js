@@ -8,8 +8,10 @@ module.exports.index = function(req, res) {
 
 module.exports.randCard = function (req, res) {
     getCards(0, 1).then(card => {
-        console.log(card[0])
-        res.render('card', {event: card[0]});
+        if (req.query.json === '1')
+            res.json(card[0])
+        else
+            res.render('card', {event: card[0]});
     });
 }
 
