@@ -34,7 +34,6 @@
                 return resp.json()
             })
             .then(data => {
-                console.log(data)
                 fxt.setText(data.name);
                 fxd.setText(data.desc);
             })
