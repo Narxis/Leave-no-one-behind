@@ -85,7 +85,8 @@ class DB {
                             'cli_cost',
                             'cli_val',
                             'res_cost',
-                            'res_val']],
+                            'res_val'
+                        ]],
                         msg: "Wrong type"
                     }
                 }

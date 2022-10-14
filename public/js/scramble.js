@@ -49,32 +49,5 @@ class TextScramble {
     }
     randomChar() {
         return this.chars[Math.floor(Math.random() * this.chars.length)];
-    }}
-
-
-// ——————————————————————————————————————————————————
-// Example
-// ——————————————————————————————————————————————————
-
-const phrases = [
-    "Assumenda beatae incidunt ipsam nihil, obcaecati quasi ratione recusandae vero?",
-    "Culpa deserunt fugiat id labore perspiciatis sequi!",
-    "Lorem ipsum dolor sit <b>amet</b>, consectetur adipisicing elit.",
-    "Accusamus assumenda iusto minus non provident quam quasi quis ratione sequi tenetur.",
-];
-
-
-const el = document.querySelector(".text");
-const fx = new TextScramble(el);
-
-let counter = 0;
-
-
-const next = () => {
-    fx.setText(phrases[counter]).then(() => {
-        setTimeout(next, 800);
-    });
-    counter = (counter + 1) % phrases.length;
-};
-
-next();
+    }
+}
