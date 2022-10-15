@@ -1,18 +1,21 @@
 var fs = require('fs');
 let {deckGenerator,getCards} = require('../controllers/deck')
 const {Card} = require("../models/card");
+const {cardPop} = require("./deck");
 
 module.exports.index = function(req, res) {
     res.render('index');
 };
 
 module.exports.randCard = function (req, res) {
-    getCards(0, 1).then(card => {
+    getCards(1, 1).then(card => {
         if (req.query.json === '1')
             res.json(card[0])
         else
             res.render('card', {event: card[0]});
     });
+    // cardPop();
+    // res.render('index');
 }
 
 module.exports.deckGenerator = function (req, res) {

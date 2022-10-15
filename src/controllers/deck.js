@@ -2,31 +2,60 @@ const {Card} = require('../models/Card')
 const fs = require("fs")
 const { Op, literal } = require("sequelize");
 
-const deckGenerator = async function (nbPla = 5, nbPos=1, nbNeg=2, nbNeu=3, gameMode = 'Fair'){
+const deckGenerator = async function (gameMode = 'Fair', nbPla = 5, nbTot = 6, nbNeg=2, nbPos=1, nbNeu=3){
 
     let deck = [];
 
-    let neuCardList = getCards(TYPE_NEUTRAL);
-    let negCardList = getCards(TYPE_NEGATIVE);
-    let posCardList = getCards(TYPE_POSITIVE);
+    let neuCardList = await getCards(TYPE_NEUTRAL);
+    let negCardList = await getCards(TYPE_NEGATIVE);
+    let posCardList = await getCards(TYPE_POSITIVE);
 
-    let firstPlaSlice = getCards(TYPE_PLANET, ALL, [1,500]);
-    let secondPlaSlice = getCards(TYPE_PLANET, ALL, [501,800]);
-    let thirdPlaSlice = getCards(TYPE_PLANET, ALL, [801,1000]);
+    let cardList = [];
+    if (gameMode === "Chaos")
+        cardList = shuffle((neuCardList).concat((negCardList).concat(posCardList)));
+
+    let firstPlaSlice = await getCards(TYPE_PLANET, ALL, [1,500]);
+    let secondPlaSlice = await getCards(TYPE_PLANET, ALL, [501,800]);
+    let thirdPlaSlice = await getCards(TYPE_PLANET, ALL, [801,1000]);
 
     for (let i = 0; i < nbPla; i++) {
         let tmp_system = [];
 
-        for (let j = 0; j < nbPos; j++)
-            tmp_system.push(posCardList.pop());
+        if (posCardList.length < nbPos || neuCardList.length < nbNeu || negCardList.length < nbNeg)
+        {
+            neuCardList = await getCards(TYPE_NEUTRAL);
+            negCardList = await getCards(TYPE_NEGATIVE);
+            posCardList = await getCards(TYPE_POSITIVE);
+            if (gameMode === "Chaos")
+                cardList = shuffle((neuCardList).concat((negCardList).concat(posCardList)));
+        }
 
-        for (let j = 0; j < nbNeg; j++)
-            tmp_system.push(negCardList.pop());
+        if (gameMode === "Fair")
+        {
+            for (let j = 0; j < nbPos; j++)
+                tmp_system.push(posCardList.pop());
 
-        for (let j = 0; j < nbNeu; j++)
-            tmp_system.push(neuCardList.pop());
+            for (let j = 0; j < nbNeg; j++)
+                tmp_system.push(negCardList.pop());
 
-        shuffle(tmp_system);
+            for (let j = 0; j < nbNeu; j++)
+                tmp_system.push(neuCardList.pop());
+
+            shuffle(tmp_system);
+        }
+
+        else if (gameMode === "Chaos")
+            for (let j = 0; j < nbTot; j++)
+            {
+                if (j > 2 && tmp_system.slice(-3).filter(elt => elt.type === TYPE_NEGATIVE).length >= 3)
+                {
+                    let ind = cardList.findIndex(elt => elt.type === TYPE_NEUTRAL || elt.type === TYPE_POSITIVE);
+                    tmp_system.push(cardList[ind]);
+                    cardList.splice(ind, 1);
+                }
+                else
+                    tmp_system.push(cardList.pop());
+            }
 
         for (let elt of tmp_system)
             deck.push(elt);
@@ -59,7 +88,7 @@ const getCards = async function (type = 0, quantity = ALL, valMinMax= [-1,0], or
             }
         },
         limit: quantity,
-        order: (order_rand ? literal('random()') : 'id')
+        order: (order_rand ? literal('random()') : 'id'), logging: console.log
     })
     rows = rows.map(r => r.dataValues);
 

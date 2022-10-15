@@ -108,6 +108,23 @@ class DB {
             console.log('synchro ' + table)
         }
     }
+
+    async test() {
+        for (let i=0; i<1000; i++) {
+            let type = Math.floor(Math.random()*4);
+            await this.tables.cards.create({
+                type: type,
+                name: 'name '+i,
+                desc: 'desc '+i,
+                value: (type === 0 ? i : -1)
+            });
+            await this.tables.card_modules.create({
+                card_id: Math.floor(Math.random()*8),
+                value: 'CHOICE '+i,
+                cost: -1,
+            });
+        }
+    }
 }
 
 module.exports = {DB}

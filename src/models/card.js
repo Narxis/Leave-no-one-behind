@@ -25,21 +25,6 @@ class Card {
         // must use this.getData() since Sequelize works with Promises
     }
 
-    async test() {
-        for (let i=0; i<20; i++) {
-            await DB.tables.cards.create({
-                type: Math.floor(Math.random()*4),
-                name: 'name '+i,
-                desc: 'desc '+i,
-            });
-            await DB.tables.card_modules.create({
-                card_id: Math.floor(Math.random()*8),
-                value: 'CHOICE '+i,
-                cost: -1,
-            });
-        }
-    }
-
     async create(data) {
         for (let dat in this.accepted_datas)
             this[dat] = data[dat] || this.accepted_datas[dat];

@@ -4,11 +4,11 @@ const db = require ('./src/controllers/db');
 const start = async function() {
 
     constants.register();
-    var DB = new db.DB;
+    let DB = new db.DB;
     global.DB = await DB.init();
 
-    var app = require('./bin/express')();
-    var router = require('./bin/express-router')();
+    let app = require('./bin/express')();
+    let router = require('./bin/express-router')();
     require('./src/routers/default')(router);
     app.use('/', router);
     app.listen(8080);
