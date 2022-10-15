@@ -1,20 +1,20 @@
 :root {
-    --darkgrey: #17181c;
-
+  --planet-color: #C25447;
+  --darkgrey: #17181c;
 }
 
 body {
-    background: var(--darkgrey);
-    margin: 0;
-    color: whitesmoke;
-    display: flex;
-    font: 1em Hind, sans-serif;
-    height: 100vh;
-    line-height: 1.5;
-    padding: 1.5em 0;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+  background: var(--darkgrey);
+  margin: 0;
+  color: whitesmoke;
+  display: flex;
+  font: 1em Hind, sans-serif;
+  height: 100vh;
+  line-height: 1.5;
+  padding: 1.5em 0;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .orbit {
@@ -28,95 +28,95 @@ body {
           animation: orbit 12.81216s linear infinite;
 }
 .planet-card {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    position: fixed;
-    height: 690.1875px;
-    width: 1040px;
-    z-index: -2;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  position: fixed;
+  height: 690.1875px;
+  width: 1040px;
+  z-index: -2;
 }
 .planet-stats {
-    display: grid;
-    position: relative;
-    grid-column: 1 / 6;
-    grid-row: 1 / 6;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+  display: grid;
+  position: relative;
+  grid-column: 1 / 6;
+  grid-row: 1 / 6;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(10, 1fr);
 }
 .planet-desc {
-    height: 83px;
-    width: 254px;
-    /* background-color: #fff; */
-    transform: skew(311deg, 0deg);
-    box-shadow: inset 7px 4px 0 #8c8c8c;
-    position: relative;
-    top: 0px;
+  height: 83px;
+  width: 254px;
+  /* background-color: #fff; */
+  transform: skew(311deg, 0deg);
+  box-shadow: inset 7px 4px 0 #8c8c8c;
+  position: relative;
+  top: 0px;
 }
 
 #o2-line {
-    grid-column: 3 / 4;
-    grid-row: 5 / 6;
-    transform: scaleX(-1) skew(311deg, 0deg);
+  grid-column: 3 / 4;
+  grid-row: 5 / 6;
+  transform: scaleX(-1) skew(311deg, 0deg);
 }
 #eau-line {
-    grid-column: 3 / 4;
-    grid-row: 8 / 9;
-    transform: scaleX(-1) scaleY(-1) skew(311deg, 0deg);
+  grid-column: 3 / 4;
+  grid-row: 8 / 9;
+  transform: scaleX(-1) scaleY(-1) skew(311deg, 0deg);
 }
 #climat-line {
-    grid-column: 5 / 6;
-    grid-row: 2 / 3;
+  grid-column: 5 / 6;
+  grid-row: 2 / 3;
 }
 #ff-line {
-    grid-column: 5 / 6;
-    grid-row: 4 / 5;
+  grid-column: 5 / 6;
+  grid-row: 4 / 5;
 }
 #ress-line {
-    grid-column: 5 / 6;
-    grid-row: 6 / 7;
-    transform: scaleY(-1) skew(311deg, 0deg);
+  grid-column: 5 / 6;
+  grid-row: 6 / 7;
+  transform: scaleY(-1) skew(311deg, 0deg);
 }
 #grav-line {
-    grid-column: 5 / 6;
-    grid-row: 8 / 9;
-    transform: scaleY(-1) skew(311deg, 0deg);
+  grid-column: 5 / 6;
+  grid-row: 8 / 9;
+  transform: scaleY(-1) skew(311deg, 0deg);
 }
 .container--2 {
-    display: flex;
-    justify-content: center;
-    top: 0px;
-    left: 765px;
-    grid-column: 3 / 4;
-    grid-row: 3 / 4;
+  display: flex;
+  justify-content: center;
+  top: 0px;
+  left: 765px;
+  grid-column: 3 / 4;
+  grid-row: 3 / 4;
 }
   
 .planet {
-  background: #C25447;
-  box-shadow: inset -9px -7px 0px #bf4d3f;
+  background: var(--planet-color);
+  box-shadow: inset -9px -7px 0px rgb(0 0 0 / 15%);
   width: 200px;
   height: 200px;
   border-radius: 100%;
 }
-.planet:before {
-    content: "";
-    background: #b4483c;
-    border-radius: 100%;
-    width: 20px;
-    height: 20px;
-    display: block;
-    margin: 50px 100px;
-    box-shadow: inset 2px 2px 0px #bf4d3f;
+.planet::before {
+  background: rgb(0 0 0 / 10%);
+  box-shadow: inset 2px 2px 0px rgb(0 0 0 / 5%);
+  content: "";
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin: 50px 100px;
 }
-.planet:after {
-    content: "";
-    background: #b84a3d;
-    box-shadow: inset 5px 3px 0px #bf4d3f;
-    border-radius: 100%;
-    width: 50px;
-    height: 50px;
-    display: block;
-    margin: -20px 40px;
+.planet::after {
+  background: rgb(0 0 0 / 10%);
+  box-shadow: inset 5px 3px 0px rgb(0 0 0 / 5%);
+  content: "";
+  border-radius: 100%;
+  width: 50px;
+  height: 50px;
+  display: block;
+  margin: -20px 40px;
 }
 
 .moon {
