@@ -11,8 +11,10 @@ module.exports.getPlayer = async function (req, res) {
     player = await player.getData();
     if (!player)
         showError(res, 'No player for this ID')
-    else
+    else {
+        delete player['accepted_datas'];
         res.json(player)
+    }
 }
 
 module.exports.updatePlayer = async function (req, res) {
@@ -32,6 +34,7 @@ module.exports.updatePlayer = async function (req, res) {
             let updatedPlayer = await player.update(data)
             updatedPlayer['updated_stat'] = stat;
             updatedPlayer['updated_val'] = val;
+            delete updatedPlayer['accepted_datas'];
             res.json(updatedPlayer);
         }
     }
