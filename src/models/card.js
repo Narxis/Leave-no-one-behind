@@ -70,10 +70,6 @@ class Card {
         for (let dat in this.accepted_datas)
             this[dat] = data[dat] || this[dat];
 
-        for (let dat in data) {
-            this[dat] = data[dat];
-        }
-
         await DB.tables.cards.update({
             type: this.type,
             value: this.value,

@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const {Player} = require("../models/player");
 
 class DB {
     sequelize;
@@ -98,9 +99,58 @@ class DB {
             }
         })
 
+        let players = this.sequelize.define('players', {
+            id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            name: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            race: {
+                type: Sequelize.STRING,
+                defaultValue: 'human',
+                allowNull: false
+            },
+            combat: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            pilotage: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            engineering: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            survival: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            recon: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            moral: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            }
+        });
+
         this.tables = {
             cards: cards,
-            card_modules: card_modules
+            card_modules: card_modules,
+            players: players
         };
 
         for (let table in this.tables) {
@@ -123,6 +173,19 @@ class DB {
                 value: 'CHOICE '+i,
                 cost: -1,
             });
+        }
+
+        for (let i=0; i<100; i++) {
+            await this.tables.players.create({
+                'name': 'player ' + i,
+                'race': 'human',
+                'combat': Math.floor(Math.random() * 100),
+                'pilotage': Math.floor(Math.random() * 100),
+                'engineering': Math.floor(Math.random() * 100),
+                'survival': Math.floor(Math.random() * 100),
+                'recon': Math.floor(Math.random() * 100),
+                'moral': Math.floor(Math.random() * 100)
+            })
         }
     }
 }
