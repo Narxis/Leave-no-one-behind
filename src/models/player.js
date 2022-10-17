@@ -89,6 +89,9 @@ class Player {
                 id: this.id
             }
         })
+
+        if (!player) return false;
+
         for (let dat in player.dataValues) {
             this[dat] = player.dataValues[dat]
         }
