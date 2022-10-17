@@ -1,6 +1,3 @@
-const {cardModule} = require("./cardModule");
-const {where} = require("sequelize");
-
 class Card {
     id;
     type;
