@@ -93,4 +93,29 @@ body {
     transform: rotate(360deg);
   }
 }
-/* ^^^---Planet animation---^^^ */
+/* ^^^----Planet animation----^^^ */
+
+/* vvv---Planet description---vvv */
+/* p-stat > p-txt p-line */
+.p-stat {
+  position: absolute;
+}
+.p-txt {
+  position: absolute;
+  height: 125px;
+  width: 250px;
+  background-color: #8686867a;
+}
+.hor {
+  position: absolute;
+  height: 10px;
+  width: 150px;
+  background-color: #8686867a;
+}
+.ver {
+  position: absolute;
+  height: 100px;
+  width: 150px;
+  background-color: #8686867a;
+  transition: 5s;
+}
