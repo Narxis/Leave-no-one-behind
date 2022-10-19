@@ -16,16 +16,6 @@ body {
   align-items: center;
   overflow: hidden;
 }
-.mod-stats {
-  display: grid;
-  position: absolute;
-  height: 372px;
-  width: 291px;
-  top: 46px;
-  left: 529px;
-  grid-template-rows: repeat(6, 1fr);
-  grid-template-columns: 1fr;
-}
 .container {
   height: 50px;
   width: 50px;
@@ -48,12 +38,78 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   transform: perspective(100rem); */
   cursor: pointer;
   position: absolute;
+} 
+.mod-stats {
+  display: grid;
+  position: absolute;
+  height: 372px;
+  width: 291px;
+  top: 46px;
+  left: /*730px; */529px;
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: 1fr;
+}
+.modform {
+  position: absolute;
+  height: 30px;
+  top: 20px;
+  left: 115px;
+}
+.form-input {
+  width: 61px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Jura', sans-serif;
+  text-align: center;
+  color: #fff;
+  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
+  background-color: rgba(0, 0, 0, 0.26);
+}
+.form-input:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
+}
+.tab-moins {
+  top: 20px;
+  left: 80px;
+}
+.tab-plus {
+  top: 20px;
+  left: 180px;
+}
+.mod-b {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 13px;
+  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.6s ease;
+  background: rgba(0, 0, 0, 0.26);
+  border: none;
+  color: #FFFFFF
+}
+.mod-b:active {
+  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
+  color: rgba(255, 255, 255, 0.301);
 }
 .tab {
   position: relative;
   border-radius: 0px 40px 40px 0px;
   border: 2px solid rgb(180 180 180);
   background-color: #343641;
+}
+.tab-txt {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 291;
+  text-align: center;
 }
 .tab:hover {
   transform: translateX(10px);
