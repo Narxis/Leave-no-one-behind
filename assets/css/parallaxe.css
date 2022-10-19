@@ -50,6 +50,7 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   position: absolute;
 }
 .tab {
+  position: relative;
   border-radius: 0px 40px 40px 0px;
   border: 2px solid rgb(180 180 180);
   background-color: #343641;
