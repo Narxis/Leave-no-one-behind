@@ -7,15 +7,19 @@ body {
   background: var(--darkgrey);
   margin: 0;
   color: whitesmoke;
-  display: flex;
   font: 1em Hind, sans-serif;
   height: 100vh;
   line-height: 1.5;
   padding: 1.5em 0;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.planet-card {
+  width: 100vw;
+}
+/* vvv---Planet animation---vvv */
 
 .orbit {
   width: 300px;
@@ -23,74 +27,10 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.12);
   position: absolute;
   border-radius: 100%;
-  margin: -50px auto;
-  -webkit-animation: orbit 12.81216s linear infinite;
-          animation: orbit 12.81216s linear infinite;
-}
-.planet-card {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  position: fixed;
-  height: 690.1875px;
-  width: 1040px;
-  z-index: -2;
-}
-.planet-stats {
-  display: grid;
-  position: relative;
-  grid-column: 1 / 6;
-  grid-row: 1 / 6;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(10, 1fr);
-}
-.planet-desc {
-  height: 83px;
-  width: 254px;
-  /* background-color: #fff; */
-  transform: skew(311deg, 0deg);
-  box-shadow: inset 7px 4px 0 #8c8c8c;
-  position: relative;
-  top: 0px;
+  margin: -180px -50px;
+  animation: orbit 12.81216s linear infinite;
 }
 
-#o2-line {
-  grid-column: 3 / 4;
-  grid-row: 5 / 6;
-  transform: scaleX(-1) skew(311deg, 0deg);
-}
-#eau-line {
-  grid-column: 3 / 4;
-  grid-row: 8 / 9;
-  transform: scaleX(-1) scaleY(-1) skew(311deg, 0deg);
-}
-#climat-line {
-  grid-column: 5 / 6;
-  grid-row: 2 / 3;
-}
-#ff-line {
-  grid-column: 5 / 6;
-  grid-row: 4 / 5;
-}
-#ress-line {
-  grid-column: 5 / 6;
-  grid-row: 6 / 7;
-  transform: scaleY(-1) skew(311deg, 0deg);
-}
-#grav-line {
-  grid-column: 5 / 6;
-  grid-row: 8 / 9;
-  transform: scaleY(-1) skew(311deg, 0deg);
-}
-.container--2 {
-  display: flex;
-  justify-content: center;
-  top: 0px;
-  left: 765px;
-  grid-column: 3 / 4;
-  grid-row: 3 / 4;
-}
-  
 .planet {
   background: var(--planet-color);
   box-shadow: inset -9px -7px 0px rgb(0 0 0 / 15%);
@@ -98,7 +38,7 @@ body {
   height: 200px;
   border-radius: 100%;
 }
-.planet::before {
+.crat1 {
   background: rgb(0 0 0 / 10%);
   box-shadow: inset 2px 2px 0px rgb(0 0 0 / 5%);
   content: "";
@@ -108,7 +48,7 @@ body {
   display: block;
   margin: 50px 100px;
 }
-.planet::after {
+.crat2 {
   background: rgb(0 0 0 / 10%);
   box-shadow: inset 5px 3px 0px rgb(0 0 0 / 5%);
   content: "";
@@ -121,7 +61,7 @@ body {
 
 .moon {
   background: #9E9E9E;
-  box-shadow: inset -7px -7px 0 #8c8c8c;
+  box-shadow: inset 3px 3px 0 #8c8c8c;
   width: 50px;
   height: 50px;
   border-radius: 100%;
@@ -134,26 +74,89 @@ body {
   width: 9px;
   height: 9px;
   display: inline-block;
-  margin: 10px 10px;
+  margin: 15px 31px;
+  box-shadow: inset -2px -2px 0 #00000003;
 }
 .moon:after {
   content: "";
   background: #949494;
   border-radius: 100%;
-  width: 9px;
-  height: 9px;
+  width: 11px;
+  height: 11px;
   display: block;
-  margin: -7px 20px;
-}
-
-@-webkit-keyframes orbit {
-  to {
-    transform: rotate(360deg);
-  }
+  margin: -18px 8px;
+  box-shadow: inset -2px -2px 0 #00000003;
 }
 
 @keyframes orbit {
   to {
     transform: rotate(360deg);
   }
+}
+/* ^^^----Planet animation----^^^ */
+
+/* vvv---Planet description---vvv */
+/* p-stat > p-txt p-line */
+.p-stat {
+  position: absolute;
+}
+.p-txt {
+  position: absolute;
+  height: 125px;
+  width: 250px;
+  background-color: #8686867a;
+}
+.o2-circle {
+  height: 202px;
+  width: auto;
+  top: -131px;
+  left: -1px;
+  position: absolute;
+  transform: rotate(210deg);
+}
+
+.cls-1 {
+  fill:none;
+  stroke:#fff;
+  stroke-miterlimit:10;
+  stroke-width:3px;
+  stroke-dasharray: 360;
+}
+.o2:hover #rond1 {
+  filter: opacity(1);
+  stroke-dashoffset: -360;
+  box-shadow: #00000003;
+  animation: dash 2s linear forwards;
+}
+.o2:hover #rond2 {
+  filter: opacity(1);
+  stroke-dashoffset: 360;
+  animation: dash 2s linear forwards;
+}
+.o2-blur:before {
+  content: "";
+  filter: opacity(0);
+  position: absolute;
+  top: -130px;
+  height: 200px;
+  width: 200px;
+  border-radius: 100%;
+}
+.o2:hover .o2-blur:before {
+  box-shadow: inset 0px 0px 20px 3px #8dfffe;
+  animation: blur 2s linear forwards;
+}
+#rond1,
+#rond2 {
+  filter: opacity(0);
+}
+@keyframes dash {
+  to {
+      stroke-dashoffset: 0;
+  }
+}
+@keyframes blur {
+  0% { filter: opacity(0);}
+  80% { filter: opacity(0.1);}
+  100% { filter: opacity(1);}
 }
