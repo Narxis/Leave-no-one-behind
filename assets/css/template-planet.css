@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+
 :root {
   --planet-color: #C25447;
   --darkgrey: #17181c;
@@ -15,6 +17,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'Jura', sans-serif;
+    font-size: 15px;
 }
 .planet-card {
   width: 100vw;
@@ -96,15 +100,20 @@ body {
 /* ^^^----Planet animation----^^^ */
 
 /* vvv---Planet description---vvv */
-/* p-stat > p-txt p-line */
-.p-stat {
+/* -v--------o2 animation------v--*/
+.p-stat,
+.p-txt,
+.o2-txt {
   position: absolute;
 }
 .p-txt {
-  position: absolute;
   height: 125px;
   width: 250px;
-  background-color: #8686867a;
+  cursor: pointer;
+}
+.o2-txt {
+  height: 125px;
+  width: 250px;
 }
 .o2-circle {
   height: 202px;
@@ -149,13 +158,13 @@ body {
   stroke-width:3px;
   stroke-dasharray: 360;
 }
-.o2:hover #rond1 {
-  stroke-dashoffset: -360;
-  animation: dash 2s linear forwards;
-}
-.o2:hover #rond2 {
+.o2-txt:hover ~ .o2-circle #rond1 {
   stroke-dashoffset: 360;
   animation: dash 2s linear forwards;
+}
+.o2-txt:hover ~ .o2-circle #rond2 {
+  stroke-dashoffset: -360;
+  animation: dash2 2s linear forwards;
 }
 .o2-blur {
   content: "";
@@ -166,17 +175,17 @@ body {
   width: 200px;
   border-radius: 100%;
 }
-.o2:hover .o2-blur {
-  box-shadow: inset 0px 0px 20px 3px #8dfffe;
+.o2-txt:hover ~ .o2-blur {
+  box-shadow: inset 0px 0px 20px 3px var(--o2-color, #8dfffd);
   animation: blur 2s linear forwards;
 }
-.o2:hover .o2-line {
+.o2-txt:hover ~ .o2-line {
   animation: trace 1s linear forwards;
 }
-.o2:hover .o2-line2 {
+.o2-txt:hover ~ .o2-line2 {
   animation: trace-2 2s linear forwards;
 }
-.o2:hover .o2-linedot {
+.o2-txt:hover ~ .o2-linedot {
   animation: dot 2s linear forwards;
 }
 #rond1,
@@ -190,6 +199,13 @@ body {
   0% {filter: opacity(0);}
   29% {filter: opacity(0.1);}
   30% { stroke-dashoffset: 360; filter: opacity(1); stroke:rgb(255, 255, 255)}
+  80% { stroke-dashoffset: 0; filter: opacity(0.2);}
+  100% { stroke-dashoffset: 0; stroke: #8dfffe ;}
+}
+@keyframes dash2 {
+  0% {filter: opacity(0);}
+  29% {filter: opacity(0.1);}
+  30% { stroke-dashoffset: -360; filter: opacity(1); stroke:rgb(255, 255, 255)}
   80% { stroke-dashoffset: 0; filter: opacity(0.2);}
   100% { stroke-dashoffset: 0; stroke: #8dfffe ;}
 }
@@ -218,3 +234,4 @@ body {
   90% {  transform: scale(0.01); filter: opacity(1);}
   100% { transform: scale(1); filter: opacity(1);}
 }
+/* --^------o2 animation------^--*/
