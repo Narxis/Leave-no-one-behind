@@ -112,28 +112,52 @@ body {
   top: -131px;
   left: -1px;
   position: absolute;
-  transform: rotate(210deg);
+  transform: rotate(231deg);
 }
-
+.o2-line {
+  position: absolute;
+  top: -190px;
+  left: -193px;
+  height: 2px;
+  width: 150px;
+  background-color: rgb(255, 255, 255);
+  transform-origin: 0;
+}
+.o2-line2 {
+  position: absolute;
+  top: -190.2px;
+  left: -43.7px;
+  height: 2px;
+  width: 115px;
+  background-color: rgb(255, 255, 255);
+  transform-origin: 0;
+  transform: rotate(45deg);
+}
+.o2-linedot {
+  position: absolute;
+  top: -112px;
+  left: 33px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background-color: rgb(255, 255, 255);
+}
 .cls-1 {
   fill:none;
-  stroke:#fff;
+  stroke:rgb(255, 255, 255);
   stroke-miterlimit:10;
   stroke-width:3px;
   stroke-dasharray: 360;
 }
 .o2:hover #rond1 {
-  filter: opacity(1);
   stroke-dashoffset: -360;
-  box-shadow: #00000003;
   animation: dash 2s linear forwards;
 }
 .o2:hover #rond2 {
-  filter: opacity(1);
   stroke-dashoffset: 360;
   animation: dash 2s linear forwards;
 }
-.o2-blur:before {
+.o2-blur {
   content: "";
   filter: opacity(0);
   position: absolute;
@@ -142,21 +166,55 @@ body {
   width: 200px;
   border-radius: 100%;
 }
-.o2:hover .o2-blur:before {
+.o2:hover .o2-blur {
   box-shadow: inset 0px 0px 20px 3px #8dfffe;
   animation: blur 2s linear forwards;
 }
+.o2:hover .o2-line {
+  animation: trace 1s linear forwards;
+}
+.o2:hover .o2-line2 {
+  animation: trace-2 2s linear forwards;
+}
+.o2:hover .o2-linedot {
+  animation: dot 2s linear forwards;
+}
 #rond1,
-#rond2 {
+#rond2,
+.o2-line,
+.o2-line2,
+.o2-linedot {
   filter: opacity(0);
 }
 @keyframes dash {
-  to {
-      stroke-dashoffset: 0;
-  }
+  0% {filter: opacity(0);}
+  29% {filter: opacity(0.1);}
+  30% { stroke-dashoffset: 360; filter: opacity(1); stroke:rgb(255, 255, 255)}
+  80% { stroke-dashoffset: 0; filter: opacity(0.2);}
+  100% { stroke-dashoffset: 0; stroke: #8dfffe ;}
 }
 @keyframes blur {
   0% { filter: opacity(0);}
   80% { filter: opacity(0.1);}
   100% { filter: opacity(1);}
+}
+@keyframes trace {
+  0% { width: 0px; filter: opacity(1);}
+  1% { width: 1px;}
+  30% { width: 150px;}
+  100% { width: 150px; filter: opacity(1);}
+}
+@keyframes trace-2 {
+  0% { width: 0px; filter: opacity(1);}
+  14.9% { width: 0px;}
+  15% { width: 1px;}
+  30% { width: 115px; filter: opacity(1);}
+  100% { filter: opacity(1);}
+}
+@keyframes dot {
+  0% { filter: opacity(0); transform: scale(0);}
+  29.9% { filter: opacity(0.01);}
+  30% { filter: opacity(1);}
+  90% {  transform: scale(0.01); filter: opacity(1);}
+  100% { transform: scale(1); filter: opacity(1);}
 }
