@@ -133,9 +133,17 @@ body {
   stroke-dashoffset: 360;
   animation: dash 2s linear forwards;
 }
-.o2-circle {
-  box-shadow: inset 0px 0px 20px 3px #8dfffe;
+.o2-blur:before {
+  content: "";
+  filter: opacity(0);
+  position: absolute;
+  top: -130px;
+  height: 200px;
+  width: 200px;
   border-radius: 100%;
+}
+.o2:hover .o2-blur:before {
+  box-shadow: inset 0px 0px 20px 3px #8dfffe;
   animation: blur 2s linear forwards;
 }
 #rond1,
