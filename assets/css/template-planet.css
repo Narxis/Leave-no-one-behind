@@ -106,16 +106,49 @@ body {
   width: 250px;
   background-color: #8686867a;
 }
-.hor {
+.o2-circle {
+  height: 202px;
+  width: auto;
+  top: -131px;
+  left: -1px;
   position: absolute;
-  height: 10px;
-  width: 150px;
-  background-color: #8686867a;
+  transform: rotate(210deg);
 }
-.ver {
-  position: absolute;
-  height: 100px;
-  width: 150px;
-  background-color: #8686867a;
-  transition: 5s;
+
+.cls-1 {
+  fill:none;
+  stroke:#fff;
+  stroke-miterlimit:10;
+  stroke-width:3px;
+  stroke-dasharray: 360;
+}
+.o2:hover #rond1 {
+  filter: opacity(1);
+  stroke-dashoffset: -360;
+  box-shadow: #00000003;
+  animation: dash 2s linear forwards;
+}
+.o2:hover #rond2 {
+  filter: opacity(1);
+  stroke-dashoffset: 360;
+  animation: dash 2s linear forwards;
+}
+.o2-circle {
+  box-shadow: inset 0px 0px 20px 3px #8dfffe;
+  border-radius: 100%;
+  animation: blur 2s linear forwards;
+}
+#rond1,
+#rond2 {
+  filter: opacity(0);
+}
+@keyframes dash {
+  to {
+      stroke-dashoffset: 0;
+  }
+}
+@keyframes blur {
+  0% { filter: opacity(0);}
+  80% { filter: opacity(0.1);}
+  100% { filter: opacity(1);}
 }
