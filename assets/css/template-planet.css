@@ -23,6 +23,13 @@ body {
 .planet-card {
   width: 100vw;
 }
+button {
+  font-family: 'Jura', sans-serif;
+  font-size: 15px;
+  background-color: transparent;
+  color: #fff;
+  border-radius: 8px;
+}
 /* vvv---Planet animation---vvv */
 
 .orbit {
@@ -107,8 +114,6 @@ body {
   position: absolute;
 }
 .p-txt {
-  height: 125px;
-  width: 250px;
   cursor: pointer;
 }
 .o2-txt {
@@ -188,6 +193,7 @@ body {
 .o2-txt:hover ~ .o2-linedot {
   animation: dot 2s linear forwards;
 }
+
 #rond1,
 #rond2,
 .o2-line,
