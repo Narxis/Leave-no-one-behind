@@ -1,0 +1,30 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.container {
+  margin: auto;
+  width: 400px;
+}
+.path--background {
+  fill: rgb(34, 213, 201);
+  stroke: #fff;
+  stroke-width: 0px;
+}
+.pulse {
+  fill: rgb(255, 74, 74);
+}
+.path--foreground {
+  fill: #eee;
+  stroke: #eee;
+  stroke-width: 2px;
+}
+.label {
+  font: 90px "Open Sans";
+  font-weight: 900;
+  text-anchor: middle;
+  fill: rgb(34, 213, 201);
+}
