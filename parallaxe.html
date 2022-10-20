@@ -6,7 +6,7 @@
     <div class="wrap wrap--1">
       <div class="mod-stats" id="modtab">
         <div class="tab tab-moteurs move-right"  id="tab">
-          <div class="container moteurs" data-size="400" data-value="100" data-arrow="d"></div>
+          <div class="container moteurs dial" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-mot">-</button>
           <div class="modform form-mot">
             <input type="text" class="form-input" placeholder="1-100">
@@ -15,7 +15,7 @@
           <div class="tab-txt">Moteurs</div>
         </div>
         <div class="tab tab-scan move-right">
-          <div class="container scan" data-size="400" data-value="100" data-arrow="d"></div>
+          <div class="container scan dial" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-scan">-</button>
           <div class="modform form-scan">
             <input type="text" class="form-input" placeholder="1-100">
@@ -24,7 +24,7 @@
           <div class="tab-txt">Scanner de surface</div>
         </div>
         <div class="tab tab-detect move-right">
-          <div class="container detect" data-size="400" data-value="100" data-arrow="d"></div>
+          <div class="container detect dial" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-detect">-</button>
           <div class="modform form-detect">
             <input type="text" class="form-input" placeholder="1-100">
@@ -33,7 +33,7 @@
           <div class="tab-txt">Détecteur de proximité</div>
         </div>
         <div class="tab tab-o2 move-right">
-          <div class="container o2" data-size="400" data-value="100" data-arrow="d"></div>
+          <div class="container o2 dial" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-o2">-</button>
           <div class="modform form-o2">
             <input type="text" class="form-input" placeholder="1-100">
@@ -42,7 +42,7 @@
           <div class="tab-txt">Oxygène</div>
         </div>
         <div class="tab tab-elec move-right">
-          <div class="container elec" data-size="400" data-value="100" data-arrow="d"></div>
+          <div class="container elec dial" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-elec">-</button>
           <div class="modform form-elec">
             <input type="text" class="form-input" placeholder="1-100">
@@ -51,7 +51,7 @@
           <div class="tab-txt">Électricité</div>
         </div>
         <div class="tab tab-grav move-right">
-          <div class="container grav" data-size="400" data-value="100" data-arrow="d"></div>
+          <div class="container grav dial" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-grav">-</button>
           <div class="modform form-grav">
             <input type="text" class="form-input" placeholder="1-100">
@@ -75,11 +75,13 @@
   </div>
 </body>
 
-<script src="assets\js\parallaxe.js"></script>
-<script src="assets\js\slidingtabs.js"></script>
-<script src="assets\js\dial\moteurs.js"></script>
-<script src="assets\js\dial\scan.js"></script>
-<script src="assets\js\dial\detect.js"></script>
-<script src="assets\js\dial\o2.js"></script>
-<script src="assets\js\dial\elec.js"></script>
-<script src="assets\js\dial\grav.js"></script>
+<script src="assets/js/parallaxe.js"></script>
+<script src="assets/js/slidingtabs.js"></script>
+<script src="assets/js/dial/dial.js"></script>
+<script>
+  let dials = document.getElementsByClassName("dial");
+  for (let i = 0; i < dials.length; i++) {
+    let dial = new Dial(dials.item(i));
+    dial.animateStart();
+  }
+</script>
