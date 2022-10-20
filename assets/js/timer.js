@@ -1,6 +1,6 @@
 var width = 400,
     height = 400,
-    timePassed = 0,
+    timePassed = -1,
     timeLimit = 30;
 var fields = [{
   value: timeLimit,
@@ -24,7 +24,7 @@ var arc= d3.svg.arc()
     return ((d.value / d.size) * 2 * Math.PI);
   });
 
-var svg = d3.select(".container").append("svg")
+var svg = d3.select(".container-timer").append("svg")
   .attr('width', width)
   .attr('height', height);
 
@@ -42,7 +42,7 @@ var path = field.append("path")
   .attr("class", "path path--foreground");
 
 var label = field.append("text")
-  .attr("class", "label")
+  .attr("class", "label-timer")
   .attr("dy", ".35em");
 
 (function update() {

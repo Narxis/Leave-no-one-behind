@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
 
 :root {
   --darkgrey: #17181c;
@@ -20,7 +21,7 @@ body {
   height: 50px;
   width: 50px;
 }
-svg {
+.dial svg {
   position: relative;
   transform: scale(0.13);
   top: -171px;
@@ -195,15 +196,15 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
 }
 /*---------------------------------------------------------------------*/
 .card-text {
-  position: absolute;
+    position: absolute;
   display: flex;
   height: 300px;
   width: 590px;
-  font-size: 28px;
-  text-align: justify;
-  align-items: center;
+    font-size: 28px;
+    text-align: justify;
+    align-items: center;
   margin: 30px;
-  color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
   text-shadow: rgb(71, 71, 71) 3px 3px 3px;
 }
 .choices {
@@ -250,4 +251,51 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
 }
 .choice:hover {
   transform: translateY(5px);
+}
+/*---------------------------------------------------------------------*/
+.timertab {
+  position: absolute;
+  height: 200px;
+  width: 100px;
+  background-color: #2F1F3D;
+  top: -135px;
+  left: 611px;
+  border-radius: 55px 55px 0px 0px;
+  border: 4px solid rgb(180 180 180);
+  transform-origin: bottom;
+  transition: 1s;
+/*  transform: rotate(270deg); */
+}
+.container-timer {
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 90px;
+  height: 90px;
+}
+.rotate-90 {
+  transform: rotate(-90deg);
+}
+.container-timer svg {
+  transform-origin: center;
+  transform: translate(-100px,-100px) scale(0.3);
+}
+.path--background {
+  fill: rgb(34, 213, 201);
+  stroke: #2F1F3D;
+  stroke-width: 3px;
+}
+.pulse {
+  fill: rgb(255, 74, 74);
+}
+.path--foreground {
+  fill: #2F1F3D;
+  stroke: #2F1F3D;
+  stroke-width: 2px;
+}
+.label-timer {
+  font: 90px "Open Sans";
+  font-weight: 900;
+  text-anchor: middle;
+  fill: rgb(34, 213, 201);
 }
