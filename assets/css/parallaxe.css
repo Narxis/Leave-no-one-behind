@@ -16,16 +16,6 @@ body {
   align-items: center;
   overflow: hidden;
 }
-.mod-stats {
-  display: grid;
-  position: absolute;
-  height: 372px;
-  width: 291px;
-  top: 46px;
-  left: 529px;
-  grid-template-rows: repeat(6, 1fr);
-  grid-template-columns: 1fr;
-}
 .container {
   height: 50px;
   width: 50px;
@@ -48,33 +38,104 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   transform: perspective(100rem); */
   cursor: pointer;
   position: absolute;
+} 
+.mod-stats {
+  display: grid;
+  position: absolute;
+  height: 372px;
+  width: 291px;
+  top: 46px;
+  left: /*730px; */529px;
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: 1fr;
+}
+.modform {
+  position: absolute;
+  height: 30px;
+  top: 20px;
+  left: 115px;
+}
+.form-input {
+  width: 61px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Jura', sans-serif;
+  text-align: center;
+  color: #fff;
+  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
+  background-color: rgba(0, 0, 0, 0.26);
+}
+.form-input:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
+}
+.tab-moins {
+  top: 20px;
+  left: 80px;
+}
+.tab-plus {
+  top: 20px;
+  left: 180px;
+}
+.mod-b {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 13px;
+  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.6s ease;
+  background: rgba(0, 0, 0, 0.26);
+  border: none;
+  color: #FFFFFF
+}
+.mod-b:active {
+  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
+  color: rgba(255, 255, 255, 0.301);
 }
 .tab {
+  position: relative;
+  float: right;
   border-radius: 0px 40px 40px 0px;
   border: 2px solid rgb(180 180 180);
   background-color: #343641;
+  transition: 1s
+}
+.tab-txt {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 291;
+  text-align: center;
 }
 .tab:hover {
-  transform: translateX(10px);
-  transition: .5s;
+  transform: translateX(5px);
 }
 .tab-moteurs {
-  background-color: #845ec29d;
+  background-color: #94d0e7;
 }
 .tab-scan {
-  background-color: #d65db29a;
+  background-color: #8EB5F0;
 }
 .tab-detect {
-  background-color: #ff6f9193;
+  background-color: #858AE3;
 }
 .tab-o2 {
-  background-color: #ff9771a8;
+  background-color: #613DC1;
 }
 .tab-elec {
-  background-color: #ffc75f8f;
+  background-color: #4E148C;
 }
 .tab-grav {
-  background-color: #f9f97141;
+  background-color: #2C0735;
+}
+.move-right {
+  transform: translateX(-100px);
 }
 .container-card {
   --rX: 0;
@@ -94,7 +155,6 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   background-position: var(--bY) var(--bX);
   background-size: 800px auto;
   transition: transform .6s 1s;
-  overflow: hidden;
 }
 
 .container-card:before,
@@ -133,8 +193,61 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   position: absolute;
   inset: 37px;
 }
-.card-text {
-  font-size: 1.8rem;
-  padding: 2rem 0 3rem;
-}
 /*---------------------------------------------------------------------*/
+.card-text {
+  position: absolute;
+  display: flex;
+  height: 300px;
+  width: 590px;
+  font-size: 28px;
+  text-align: justify;
+  align-items: center;
+  margin: 30px;
+  color: rgb(255, 255, 255);
+  text-shadow: rgb(71, 71, 71) 3px 3px 3px;
+}
+.choices {
+  display: flex;
+  position: absolute;
+  width: 650px;
+  height: 200px;
+  top: 259px;
+  left: 50px;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+.move-down {
+  transform: translateY(-100px);
+}
+.choice {
+  display: flex;
+  position: relative;
+  height: 90px;
+  width: 250px;
+  top: 95px;
+  border-radius: 0 0 15px 15px;
+  border: 4px solid rgb(180 180 180);
+  font-size: 13px;
+  float: left;
+  transition: 1s;
+  justify-content: center;
+  align-items: center;
+  margin: 3px 1px 1px 1px;
+  text-align: center;
+  margin: 3px
+}
+#choice1 {
+  background-color: #2F1F3D;
+}
+#choice2 {
+  background-color: #291B36;
+}
+#choice3 {
+  background-color: #251335;
+}
+#choice4 {
+  background-color: #1E0931;
+}
+.choice:hover {
+  transform: translateY(5px);
+}

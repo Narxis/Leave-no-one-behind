@@ -29,6 +29,7 @@ button {
   background-color: transparent;
   color: #fff;
   border-radius: 8px;
+  border: none;
 }
 /* vvv---Planet animation---vvv */
 
@@ -241,3 +242,16 @@ button {
   100% { transform: scale(1); filter: opacity(1);}
 }
 /* --^------o2 animation------^--*/
+/* --v------ff animation------v--*/
+.ff-tree {
+  height: 100px;
+  fill: #fff;
+  transform: scale(0);
+}
+.ff-txt:hover ~ .ff-tree {
+  animation: treepop .4s cubic-bezier(1,0,1,1.5) forwards;
+}
+@keyframes treepop {
+  0% { transform: scale(0);}
+  100% { transform: scale(1);}
+}
