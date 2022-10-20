@@ -3,6 +3,7 @@
 
 :root {
   --darkgrey: #17181c;
+  --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(53, 9, 66, 0.486));
 }
 
 body {
@@ -152,7 +153,7 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   align-items: flex-end;
   position: relative;
   /* transform: rotate(calc(var(--rX) * 0.08deg)) rotateY(calc(var(--rY) * 0.6deg)); */
-  background: linear-gradient(hsla(0, 0%, 100%, .1), hsla(0, 0%, 100%, .1)), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
+  background: var(--lgrad), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
   background-position: var(--bY) var(--bX);
   background-size: 800px auto;
   transition: transform .6s 1s;
@@ -196,16 +197,16 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
 }
 /*---------------------------------------------------------------------*/
 .card-text {
-    position: absolute;
+  position: absolute;
   display: flex;
   height: 300px;
   width: 590px;
-    font-size: 28px;
-    text-align: justify;
-    align-items: center;
+  font-size: 28px;
+  text-align: justify;
+  align-items: center;
   margin: 30px;
-    color: rgb(255, 255, 255);
-  text-shadow: rgb(71, 71, 71) 3px 3px 3px;
+  color: rgb(255, 255, 255);
+  text-shadow: rgba(238, 232, 232, 0.418) 3px 3px 3px;
 }
 .choices {
   display: flex;
@@ -256,20 +257,20 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
 .timertab {
   position: absolute;
   height: 200px;
-  width: 100px;
-  background-color: #2F1F3D;
+  width: 80px;
+  background: var(--lgrad);
   top: -135px;
   left: 611px;
   border-radius: 55px 55px 0px 0px;
   border: 4px solid rgb(180 180 180);
   transform-origin: bottom;
-  transition: 1s;
+  transition: .5s ease-out;
 /*  transform: rotate(270deg); */
 }
 .container-timer {
   position: absolute;
-  top: -50px;
-  left: -50px;
+  top: -60px;
+  left: -60px;
   width: 90px;
   height: 90px;
 }
@@ -282,15 +283,15 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
 }
 .path--background {
   fill: rgb(34, 213, 201);
-  stroke: #2F1F3D;
+  stroke: black;
   stroke-width: 3px;
 }
 .pulse {
   fill: rgb(255, 74, 74);
 }
 .path--foreground {
-  fill: #2F1F3D;
-  stroke: #2F1F3D;
+  fill: black;
+  stroke: var(--lgrad);
   stroke-width: 2px;
 }
 .label-timer {
