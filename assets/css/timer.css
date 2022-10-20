@@ -1,30 +1,41 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
+
+:root {
+    --darkgrey: #17181c;
+}
+  
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+    background: var(--darkgrey);
+    margin: 0;
+    color: whitesmoke;
+    display: flex;
+    height: 100vh;
+    font-family: 'Jura', sans-serif;
+    font-size: 15px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 .container {
-  margin: auto;
-  width: 400px;
+    margin: auto;
+    width: 400px;
 }
 .path--background {
-  fill: rgb(34, 213, 201);
-  stroke: #fff;
-  stroke-width: 0px;
+    fill: rgb(34, 213, 201);
+    stroke: #fff;
+    stroke-width: 0px;
 }
 .pulse {
-  fill: rgb(255, 74, 74);
+    fill: rgb(255, 74, 74);
 }
 .path--foreground {
-  fill: #eee;
-  stroke: #eee;
-  stroke-width: 2px;
+    fill: var(--darkgrey);
+    stroke: var(--darkgrey);
+    stroke-width: 2px;
 }
 .label {
-  font: 90px "Open Sans";
-  font-weight: 900;
-  text-anchor: middle;
-  fill: rgb(34, 213, 201);
+    font: 90px "Open Sans";
+    font-weight: 900;
+    text-anchor: middle;
+    fill: rgb(34, 213, 201);
 }

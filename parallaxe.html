@@ -1,5 +1,6 @@
 <head>
   <link rel="stylesheet" href="assets\css\parallaxe.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
 </head>
 <body>
   <div class="card">
@@ -65,11 +66,13 @@
           <div class="choice move-down" id="choice2">Menacer de les attaquer en justice grâce a votre avo-cat-e</div>
           <div class="choice move-down" id="choice3">Donner vos consommables</div>
 <!--          <div class="choice move-down" id="choice4"></div>-->
-        </div>
-        <div class="container-card container--1">
+      </div>
+      <div class="timertab rotate-90" id="timer-tab">
+        <div class="container-timer"></div>
+      </div>
+      <div class="container-card container--1">
           <div class="bg-dot"></div>
           <div class="card-text">Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer.</div>
-        </div>
       </div>
     </div>
   </div>
@@ -78,6 +81,7 @@
 <script src="assets/js/parallaxe.js"></script>
 <script src="assets/js/slidingtabs.js"></script>
 <script src="assets/js/dial/dial.js"></script>
+<script src="assets\js\timer.js"></script>
 <script>
   let dials = document.getElementsByClassName("dial");
   for (let i = 0; i < dials.length; i++) {

@@ -46,3 +46,18 @@ async function initialiseModTabs() {
 }
 
 window.addEventListener('load', initialiseModTabs, false);
+
+async function initialiseTimerTab() {
+    var timerTab = document.getElementsByClassName('timertab');
+    console.log(timerTab.tagName);
+
+    for (let i=0; i<timerTab.length; i++) {
+        await sleep(100);
+        timerTab.item(i).classList.remove('rotate-90');
+        await sleep(31000)
+        timerTab.item(i).classList.add('rotate-90');
+    }
+
+}    
+
+window.addEventListener('load', initialiseTimerTab, false);
