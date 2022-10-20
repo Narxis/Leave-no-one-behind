@@ -4,8 +4,8 @@
 <body>
   <div class="card">
     <div class="wrap wrap--1">
-      <div class="mod-stats">
-        <div class="tab tab-moteurs">
+      <div class="mod-stats" id="modtab">
+        <div class="tab tab-moteurs move-right"  id="tab">
           <div class="container moteurs" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-mot">-</button>
           <div class="modform form-mot">
@@ -14,7 +14,7 @@
           <button class="mod-b tab-plus" id="plus-mot">+</button>
           <div class="tab-txt">Moteurs</div>
         </div>
-        <div class="tab tab-scan">
+        <div class="tab tab-scan move-right">
           <div class="container scan" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-scan">-</button>
           <div class="modform form-scan">
@@ -23,7 +23,7 @@
           <button class="mod-b tab-plus" id="plus-scan">+</button>
           <div class="tab-txt">Scanner de surface</div>
         </div>
-        <div class="tab tab-detect">
+        <div class="tab tab-detect move-right">
           <div class="container detect" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-detect">-</button>
           <div class="modform form-detect">
@@ -32,7 +32,7 @@
           <button class="mod-b tab-plus" id="plus-detect">+</button>
           <div class="tab-txt">Détecteur de proximité</div>
         </div>
-        <div class="tab tab-o2">
+        <div class="tab tab-o2 move-right">
           <div class="container o2" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-o2">-</button>
           <div class="modform form-o2">
@@ -41,7 +41,7 @@
           <button class="mod-b tab-plus" id="plus-o2">+</button>
           <div class="tab-txt">Oxygène</div>
         </div>
-        <div class="tab tab-elec">
+        <div class="tab tab-elec move-right">
           <div class="container elec" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-elec">-</button>
           <div class="modform form-elec">
@@ -50,7 +50,7 @@
           <button class="mod-b tab-plus" id="plus-elec">+</button>
           <div class="tab-txt">Électricité</div>
         </div>
-        <div class="tab tab-grav">
+        <div class="tab tab-grav move-right">
           <div class="container grav" data-size="400" data-value="100" data-arrow="d"></div>
           <button class="mod-b tab-moins" id="moins-grav">-</button>
           <div class="modform form-grav">
@@ -60,15 +60,23 @@
           <div class="tab-txt">Gravité artificielle</div>
         </div>
       </div>
+      <div class="choices" id="choicetab">
+          <div class="choice move-down" id="choice1">Utiliser une bouteille pour "convaincre" la douane</div>
+          <div class="choice move-down" id="choice2">Menacer de les attaquer en justice grâce a votre avo-cat-e</div>
+          <div class="choice move-down" id="choice3">Donner vos consommables</div>
+<!--          <div class="choice move-down" id="choice4"></div>   -->
+        </div>
+      </div>
       <div class="container-card container--1">
         <div class="bg-dot"></div>
-        <div class="card-text">Regarde Kardo j'ai fait les tab</div>
+        <div class="card-text">Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer.</div>
       </div>
     </div>
   </div>
 </body>
 
 <script src="assets\js\parallaxe.js"></script>
+<script src="assets\js\slidingtabs.js"></script>
 <script src="assets\js\dial\moteurs.js"></script>
 <script src="assets\js\dial\scan.js"></script>
 <script src="assets\js\dial\detect.js"></script>
