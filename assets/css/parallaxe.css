@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
 
 :root {
   --darkgrey: #17181c;
-  --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(53, 9, 66, 0.486));
+  --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
 }
 
 body {
@@ -47,7 +47,7 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   height: 372px;
   width: 291px;
   top: 46px;
-  left: /*730px; */529px;
+  left: 710px; /*529px;*/
   grid-template-rows: repeat(6, 1fr);
   grid-template-columns: 1fr;
 }
@@ -119,22 +119,28 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   transform: translateX(5px);
 }
 .tab-moteurs {
-  background-color: #94d0e7;
+  background: rgb(142,181,240);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(148,208,231,1) 100%);
 }
 .tab-scan {
-  background-color: #8EB5F0;
+  background: rgb(133,138,227);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(142,181,240,1) 100%);
 }
 .tab-detect {
-  background-color: #858AE3;
+  background: rgb(97,61,193);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(133,138,227,1) 100%);
 }
 .tab-o2 {
-  background-color: #613DC1;
+  background: rgb(78,20,140);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(97,61,193,1) 100%);
 }
 .tab-elec {
-  background-color: #4E148C;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(78,20,140,1) 100%);
 }
 .tab-grav {
-  background-color: #2C0735;
+  background: rgb(0,0,0);
+  background: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(44,7,53,1) 100%);
 }
 .move-right {
   transform: translateX(-100px);
@@ -239,16 +245,20 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   margin: 3px
 }
 #choice1 {
-  background-color: #2F1F3D;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
 }
 #choice2 {
-  background-color: #291B36;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(40, 20, 87) 0%, rgb(19, 9, 63) 100%);
 }
 #choice3 {
-  background-color: #251335;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(61, 17, 102) 0%, rgb(19, 9, 63) 100%);
 }
 #choice4 {
-  background-color: #1E0931;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(49, 2, 87) 0%, rgb(19, 9, 63) 100%);
 }
 .choice:hover {
   transform: translateY(5px);
