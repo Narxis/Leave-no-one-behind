@@ -1,6 +1,3 @@
-const {cardModule} = require("./cardModule");
-const {where} = require("sequelize");
-
 class Card {
     id;
     type;
@@ -69,10 +66,6 @@ class Card {
 
         for (let dat in this.accepted_datas)
             this[dat] = data[dat] || this[dat];
-
-        for (let dat in data) {
-            this[dat] = data[dat];
-        }
 
         await DB.tables.cards.update({
             type: this.type,
@@ -159,6 +152,7 @@ class Card {
         });
 
         raw_modules = raw_modules.map(m => m.dataValues);
+        let choices = [];
 
         for (let mod of raw_modules)
         {
@@ -167,13 +161,14 @@ class Card {
             let type = splitMod[1];
 
             if (name === 'choice') {
-                this.choices.push(mod.value);
+                choices.push(mod.value);
             }
             else {
                 if (typeof this.modules[name] === 'undefined')
                     this.modules[name] = {};
                 this.modules[name][type] = mod.value
             }
+            this.choices = choices;
         }
 
         return this;

@@ -1,8 +1,8 @@
 class parallaxTiltEffect {
   constructor({ element, tiltEffect }) {
     this.element = element;
-    this.container = this.element.querySelector(".container");
-    this.size = [300, 360];
+    this.container = this.element.querySelector(".container-card");
+    this.size = [778, 498];
     [this.w, this.h] = this.size;
 
     this.tiltEffect = tiltEffect;
@@ -36,18 +36,18 @@ class parallaxTiltEffect {
   }
   handleMouseEnter() {
     this.mouseOnComponent = true;
-    this.container.classList.add("container--active");
+    this.container.classList.add("container-card--active");
   }
   handleMouseLeave() {
     this.mouseOnComponent = false;
     this.defaultStates();
   }
   defaultStates() {
-    this.container.classList.remove("container--active");
+    this.container.classList.remove("container-card--active");
     this.setProperty("--rY", 0);
     this.setProperty("--rX", 0);
     this.setProperty("--bY", "79%");
-    this.setProperty("--bX", "70%");
+    this.setProperty("--bX", "88%");
   }
 
   setProperty(p, v) {

@@ -5,6 +5,6 @@ module.exports = function(router) {
     router.get('/randCard', controller.randCard);
     router.get('/deck', controller.deckGenerator);
 
-    router.get('/manageCards', controller.cardEdit);
-    router.post('/cardEdit', controller.cardEdit);
+    router.get('/createCard', controller.cardEdit);
+    router.post('/createCard', controller.cardCreate);
 };

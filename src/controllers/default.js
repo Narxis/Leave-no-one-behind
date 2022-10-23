@@ -43,3 +43,8 @@ module.exports.cardEdit = async function (req, res) {
     }
     res.render('forms/cardEdit')
 }
+module.exports.cardCreate = async function (req, res) {
+    let card = new Card(0);
+    await card.create(req.body);
+    res.render('forms/cardEdit');
+}

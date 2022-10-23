@@ -1,0 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
+
+:root {
+  --darkgrey: #17181c;
+  --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(53, 9, 66, 0.486));
+}
+
+body {
+  background: var(--darkgrey);
+  margin: 0;
+  color: whitesmoke;
+  display: flex;
+  height: 100vh;
+  font-family: 'Jura', sans-serif;
+  font-size: 15px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.container {
+  height: 50px;
+  width: 50px;
+}
+.dial svg {
+  position: relative;
+  transform: scale(0.13);
+  top: -171px;
+  left: 58px;
+}
+/* Parrallax effect by Asan using: ".main, .wrap, .container"  
+https://codepen.io/SabAsan/pen/dyPOzZY */
+.card {
+  position: absolute;
+  height: 470px;
+  width: 760px;
+}
+.wrap {
+/*  transform-style: preserve-3d;
+  transform: perspective(100rem); */
+  cursor: pointer;
+  position: absolute;
+} 
+.mod-stats {
+  display: grid;
+  position: absolute;
+  height: 372px;
+  width: 291px;
+  top: 46px;
+  left: /*730px; */529px;
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: 1fr;
+}
+.modform {
+  position: absolute;
+  height: 30px;
+  top: 20px;
+  left: 115px;
+}
+.form-input {
+  width: 61px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Jura', sans-serif;
+  text-align: center;
+  color: #fff;
+  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
+  background-color: rgba(0, 0, 0, 0.26);
+}
+.form-input:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
+}
+.tab-moins {
+  top: 20px;
+  left: 80px;
+}
+.tab-plus {
+  top: 20px;
+  left: 180px;
+}
+.mod-b {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 13px;
+  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.6s ease;
+  background: rgba(0, 0, 0, 0.26);
+  border: none;
+  color: #FFFFFF
+}
+.mod-b:active {
+  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
+  color: rgba(255, 255, 255, 0.301);
+}
+.tab {
+  position: relative;
+  float: right;
+  border-radius: 0px 40px 40px 0px;
+  border: 2px solid rgb(180 180 180);
+  background-color: #343641;
+  transition: 1s
+}
+.tab-txt {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 291;
+  text-align: center;
+}
+.tab:hover {
+  transform: translateX(5px);
+}
+.tab-moteurs {
+  background-color: #94d0e7;
+}
+.tab-scan {
+  background-color: #8EB5F0;
+}
+.tab-detect {
+  background-color: #858AE3;
+}
+.tab-o2 {
+  background-color: #613DC1;
+}
+.tab-elec {
+  background-color: #4E148C;
+}
+.tab-grav {
+  background-color: #2C0735;
+}
+.move-right {
+  transform: translateX(-100px);
+}
+.container-card {
+  --rX: 0;
+  --rY: 0;
+  --bX: 50%;
+  --bY: 80%;
+  width: 650px;
+  height: 360px;
+  border: 5px solid rgb(180 180 180);
+  border-radius: 40px;
+  padding: 50px;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+  /* transform: rotate(calc(var(--rX) * 0.08deg)) rotateY(calc(var(--rY) * 0.6deg)); */
+  background: var(--lgrad), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
+  background-position: var(--bY) var(--bX);
+  background-size: 800px auto;
+  transition: transform .6s 1s;
+}
+
+.container-card:before,
+.container-card:after {
+  content: "";
+  width: 33px;
+  height: 33px;
+  border: 1px solid #fff;
+  position: absolute;
+  z-index: 2;
+  opacity: .3;
+  transition: .3s;
+  pointer-events: none;
+}
+.container-card:before {
+  top: 33px;
+  right: 33px;
+  border-bottom-width: 0;
+  border-left-width: 0;
+}
+.container-card:after {
+  bottom: 33px;
+  left: 33px;
+  border-top-width: 0;
+  border-right-width: 0;
+}
+
+.wrap:hover .container-card:before,
+.wrap:hover .container-card:after {
+  width: calc(100% - 68px);
+  height: calc(100% - 68px);
+}
+.bg-dot {
+  background-image: radial-gradient( rgba(255, 255, 255, 0.15) 9%, transparent 9% );
+  background-position: 0% 0%;
+  background-size: 20px 20px;
+  position: absolute;
+  inset: 37px;
+}
+/*---------------------------------------------------------------------*/
+.card-text {
+  position: absolute;
+  display: flex;
+  height: 300px;
+  width: 590px;
+  font-size: 28px;
+  text-align: justify;
+  align-items: center;
+  margin: 30px;
+  color: rgb(255, 255, 255);
+  text-shadow: rgba(238, 232, 232, 0.418) 3px 3px 3px;
+}
+.choices {
+  display: flex;
+  position: absolute;
+  width: 650px;
+  height: 200px;
+  top: 259px;
+  left: 50px;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+.move-down {
+  transform: translateY(-100px);
+}
+.choice {
+  display: flex;
+  position: relative;
+  height: 90px;
+  width: 250px;
+  top: 95px;
+  border-radius: 0 0 15px 15px;
+  border: 4px solid rgb(180 180 180);
+  font-size: 13px;
+  float: left;
+  transition: 1s;
+  justify-content: center;
+  align-items: center;
+  margin: 3px 1px 1px 1px;
+  text-align: center;
+  margin: 3px
+}
+#choice1 {
+  background-color: #2F1F3D;
+}
+#choice2 {
+  background-color: #291B36;
+}
+#choice3 {
+  background-color: #251335;
+}
+#choice4 {
+  background-color: #1E0931;
+}
+.choice:hover {
+  transform: translateY(5px);
+}
+/*---------------------------------------------------------------------*/
+.timertab {
+  position: absolute;
+  height: 200px;
+  width: 80px;
+  background: var(--lgrad);
+  top: -135px;
+  left: 611px;
+  border-radius: 55px 55px 0px 0px;
+  border: 4px solid rgb(180 180 180);
+  transform-origin: bottom;
+  transition: .5s ease-out;
+/*  transform: rotate(270deg); */
+}
+.container-timer {
+  position: absolute;
+  top: -60px;
+  left: -60px;
+  width: 90px;
+  height: 90px;
+}
+.rotate-90 {
+  transform: rotate(-90deg);
+}
+.container-timer svg {
+  transform-origin: center;
+  transform: translate(-100px,-100px) scale(0.3);
+}
+.path--background {
+  fill: rgb(34, 213, 201);
+  stroke: black;
+  stroke-width: 3px;
+}
+.pulse {
+  fill: rgb(255, 74, 74);
+}
+.path--foreground {
+  fill: black;
+  stroke: var(--lgrad);
+  stroke-width: 2px;
+}
+.label-timer {
+  font: 90px "Open Sans";
+  font-weight: 900;
+  text-anchor: middle;
+  fill: rgb(34, 213, 201);
+}

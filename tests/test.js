@@ -1,4 +1,4 @@
-let card = require('../src/models/card');
+let {Card} = require('../src/models/card');
 let deck = require('../src/controllers/deck')
 const fs = require("fs")
 const db = require ('../src/controllers/db');
@@ -10,9 +10,14 @@ async function test() {
     let DB = new db.DB;
     global.DB = await DB.init();
 
-    //await DB.test();
+    // await DB.test();
 
     console.log(DB.tables.cards);
+
+    let card = new Card(1);
+    await card.update({
+        'name': 'NOOOOM TEST'
+    })
 
     type.register();
 
@@ -53,7 +58,7 @@ async function test() {
 //console.log(posCardList);
 //console.log(negCardList);
 //console.log(plaCardList);
-console.log(JSON.parse(finalDeck).map(n => n.type));
+    console.log(JSON.parse(finalDeck).map(n => n.type));
 
 //console.log(finalDeck.length)
 
@@ -62,19 +67,4 @@ console.log(JSON.parse(finalDeck).map(n => n.type));
     deck.cardPop();
     deck.cardPop();
 
-}
-
-async function test2() {
-    for (let i=0; i<20; i++) {
-        await DB.tables.cards.create({
-            type: Math.floor(Math.random()*4),
-            name: 'name '+i,
-            desc: 'desc '+i,
-        });
-        await DB.tables.card_modules.create({
-            card_id: Math.floor(Math.random()*8),
-            value: 'CHOICE '+i,
-            cost: -1,
-        });
-    }
 }
