@@ -147,7 +147,7 @@ class DB {
             }
         });
 
-        let shipModules = this.sequelize.define('shipModules', {
+        let ship = this.sequelize.define('ship', {
             id: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
@@ -158,38 +158,83 @@ class DB {
                 defaultValue: '',
                 allowNull: false
             },
-            desc: {
-                type: Sequelize.STRING,
-                defaultValue: '',
+            cryopods: {
+                type: Sequelize.INTEGER,
+                defaultValue: 1000,
                 allowNull: false
             },
-            integrity: {
+            scanner: {
                 type: Sequelize.INTEGER,
                 defaultValue: 100,
-                allowNull: false,
+                allowNull: false
             },
-            upgraded: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: false,
-                allowNull: false,
+            proximity: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
             },
-            repairable: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: false,
-                allowNull: false,
+            motors: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
             },
-            upgradable: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: false,
-                allowNull: false,
-            }
+            shield: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
+            },
+            oxygen: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
+            },
+            energy: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
+            },
+            gravity: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
+            },
+            landing: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
+            },
+            construction: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
+            },
+            scanner_up: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            oxygen_up: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            energy_up: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            gravity_up: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
         })
 
         this.tables = {
             cards: cards,
             card_modules: card_modules,
             players: players,
-            shipModules: shipModules
+            ship: ship,
         };
 
         for (let table in this.tables) {
