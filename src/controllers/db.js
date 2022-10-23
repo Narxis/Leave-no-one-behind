@@ -147,10 +147,49 @@ class DB {
             }
         });
 
+        let shipModules = this.sequelize.define('shipModules', {
+            id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            name: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            desc: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            integrity: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false,
+            },
+            upgraded: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: false,
+                allowNull: false,
+            },
+            repairable: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: false,
+                allowNull: false,
+            },
+            upgradable: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: false,
+                allowNull: false,
+            }
+        })
+
         this.tables = {
             cards: cards,
             card_modules: card_modules,
-            players: players
+            players: players,
+            shipModules: shipModules
         };
 
         for (let table in this.tables) {
