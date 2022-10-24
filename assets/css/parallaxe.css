@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
-
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
+@font-face {font-family: '7segments'; src: url('/assets/fonts/7segments.ttf') format('truetype');}
 :root {
   --darkgrey: #17181c;
-  --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(53, 9, 66, 0.486));
+  --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
 }
 
 body {
@@ -22,12 +22,99 @@ body {
   height: 50px;
   width: 50px;
 }
+/* ---VVV---------SVG--------VVV--- */
 .dial svg {
   position: relative;
   transform: scale(0.13);
   top: -171px;
   left: 58px;
 }
+.plugship {
+  position: absolute;
+  width: 200px;
+  height: 130px;
+  top: -119px;
+  left: 36px;
+  transform: rotate(348deg);
+}
+.robot-arm svg {
+  overflow: visible;
+  }
+.robot-arm {
+  position: absolute;
+  width: 432px;
+  height: 100px;
+  top: -138px;
+  left: 520px;
+}
+.plugun {
+  position: absolute;
+  width: 252px;
+  height: 100px;
+  top: -249px;
+  left: 0px;
+  transform: rotate(4deg);
+}
+/* ---^^^---------SVG--------^^^--- */
+/* ---VVV---Timer Animation---VVV--- */
+.timer {
+  position: absolute;
+  top: 62px;
+  left: 155px;
+  padding: 5px 0px 5px 5px;
+  background-color: black;
+  border: 2px inset #c5c5c5;
+  border-radius: 5px;
+  transform: rotate(10deg);
+  box-shadow: -2px -2px 5px #484848b0, 2px 2px 5px #e1e1e1, inset -1px -1px 3px 0px #ff0000c9, inset 4px 4px 20px 0px #ff00006e;
+}
+#arm1 {
+    position: absolute;
+    transform: rotate(45deg);
+    transform-origin: 1756px 1434px;
+    animation: rotate 4.225s alternate infinite;
+}
+#arm2 {
+  position: absolute;
+  transform: rotate(45deg);
+  transform-origin: 2369px 1259px;
+  animation: rotate 2.85s alternate infinite;
+}
+#arm3 {
+  position: absolute;
+  transform: rotate(45deg);
+  transform-origin: 2159px 717px;
+  animation: rotate 5.725s alternate infinite;
+}
+#jaw-up {
+  position: absolute;
+  transform: rotate(45deg);
+  transform-origin: 1868px 776px;
+  animation: rotate 3.75s alternate infinite;
+}
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  33% { transform: rotate(25deg);}
+  50% { transform: rotate(109deg);}
+  65% { transform: rotate(155deg);}
+  80% { transform: rotate(225deg);}
+  100% { transform: rotate(360deg); }
+}
+
+.timer-text,
+.timer-dim {
+  font-family: '7segments';
+  font-size: 26px;
+  letter-spacing: 3px;
+  color: #383838;
+}
+.timer-text{
+  position: absolute;
+  top: 5px;
+  color: #c71738;
+}
+/* ---^^^---Timer Animation---^^^--- */
+
 /* Parrallax effect by Asan using: ".main, .wrap, .container"  
 https://codepen.io/SabAsan/pen/dyPOzZY */
 .card {
@@ -38,19 +125,20 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
 .wrap {
 /*  transform-style: preserve-3d;
   transform: perspective(100rem); */
-  cursor: pointer;
   position: absolute;
 } 
 .mod-stats {
   display: grid;
   position: absolute;
+  cursor: pointer;
   height: 372px;
   width: 291px;
   top: 46px;
-  left: /*730px; */529px;
+  left: 529px;
   grid-template-rows: repeat(6, 1fr);
   grid-template-columns: 1fr;
 }
+
 .modform {
   position: absolute;
   height: 30px;
@@ -119,25 +207,34 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   transform: translateX(5px);
 }
 .tab-moteurs {
-  background-color: #94d0e7;
+  background: rgb(142,181,240);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(148,208,231,1) 100%);
 }
 .tab-scan {
-  background-color: #8EB5F0;
+  background: rgb(133,138,227);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(142,181,240,1) 100%);
 }
 .tab-detect {
-  background-color: #858AE3;
+  background: rgb(97,61,193);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(133,138,227,1) 100%);
 }
 .tab-o2 {
-  background-color: #613DC1;
+  background: rgb(78,20,140);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(97,61,193,1) 100%);
 }
 .tab-elec {
-  background-color: #4E148C;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(78,20,140,1) 100%);
 }
 .tab-grav {
-  background-color: #2C0735;
+  background: rgb(0,0,0);
+  background: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(44,7,53,1) 100%);
 }
 .move-right {
   transform: translateX(-100px);
+}
+.open {
+  transform: translateX(175px) !important;
 }
 .container-card {
   --rX: 0;
@@ -211,6 +308,7 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
 .choices {
   display: flex;
   position: absolute;
+  cursor: pointer;
   width: 650px;
   height: 200px;
   top: 259px;
@@ -239,64 +337,22 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   margin: 3px
 }
 #choice1 {
-  background-color: #2F1F3D;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
 }
 #choice2 {
-  background-color: #291B36;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(40, 20, 87) 0%, rgb(19, 9, 63) 100%);
 }
 #choice3 {
-  background-color: #251335;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(61, 17, 102) 0%, rgb(19, 9, 63) 100%);
 }
 #choice4 {
-  background-color: #1E0931;
+  background: rgb(44,7,53);
+  background: linear-gradient(45deg, rgb(49, 2, 87) 0%, rgb(19, 9, 63) 100%);
 }
 .choice:hover {
   transform: translateY(5px);
 }
 /*---------------------------------------------------------------------*/
-.timertab {
-  position: absolute;
-  height: 200px;
-  width: 80px;
-  background: var(--lgrad);
-  top: -135px;
-  left: 611px;
-  border-radius: 55px 55px 0px 0px;
-  border: 4px solid rgb(180 180 180);
-  transform-origin: bottom;
-  transition: .5s ease-out;
-/*  transform: rotate(270deg); */
-}
-.container-timer {
-  position: absolute;
-  top: -60px;
-  left: -60px;
-  width: 90px;
-  height: 90px;
-}
-.rotate-90 {
-  transform: rotate(-90deg);
-}
-.container-timer svg {
-  transform-origin: center;
-  transform: translate(-100px,-100px) scale(0.3);
-}
-.path--background {
-  fill: rgb(34, 213, 201);
-  stroke: black;
-  stroke-width: 3px;
-}
-.pulse {
-  fill: rgb(255, 74, 74);
-}
-.path--foreground {
-  fill: black;
-  stroke: var(--lgrad);
-  stroke-width: 2px;
-}
-.label-timer {
-  font: 90px "Open Sans";
-  font-weight: 900;
-  text-anchor: middle;
-  fill: rgb(34, 213, 201);
-}
