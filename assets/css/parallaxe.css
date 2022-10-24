@@ -37,15 +37,18 @@ body {
   left: 36px;
   transform: rotate(348deg);
 }
+.robot-arm svg {
+  overflow: visible;
+  }
 .robot-arm {
   position: absolute;
   width: 432px;
   height: 100px;
   top: -138px;
-  left: 505px;
+  left: 520px;
 }
 .plugun {
-  position: relative;
+  position: absolute;
   width: 252px;
   height: 100px;
   top: -249px;
@@ -65,17 +68,50 @@ body {
   transform: rotate(10deg);
   box-shadow: -2px -2px 5px #484848b0, 2px 2px 5px #e1e1e1, inset -1px -1px 3px 0px #ff0000c9, inset 4px 4px 20px 0px #ff00006e;
 }
-#arm3 {
-  position: relative;
-  transform: rotate(45deg);
+#arm1 {
+    position: absolute;
+    transform: rotate(45deg);
+    transform-origin: 1756px 1434px;
+    animation: rotate 4.225s alternate infinite;
 }
-.timer-text {
+#arm2 {
+  position: absolute;
+  transform: rotate(45deg);
+  transform-origin: 2369px 1259px;
+  animation: rotate 2.85s alternate infinite;
+}
+#arm3 {
+  position: absolute;
+  transform: rotate(45deg);
+  transform-origin: 2159px 717px;
+  animation: rotate 5.725s alternate infinite;
+}
+#jaw-up {
+  position: absolute;
+  transform: rotate(45deg);
+  transform-origin: 1868px 776px;
+  animation: rotate 3.75s alternate infinite;
+}
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  33% { transform: rotate(25deg);}
+  50% { transform: rotate(109deg);}
+  65% { transform: rotate(155deg);}
+  80% { transform: rotate(225deg);}
+  100% { transform: rotate(360deg); }
+}
 
+.timer-text,
+.timer-dim {
   font-family: '7segments';
   font-size: 26px;
   letter-spacing: 3px;
+  color: #383838;
+}
+.timer-text{
+  position: absolute;
+  top: 5px;
   color: #c71738;
-
 }
 /* ---^^^---Timer Animation---^^^--- */
 
