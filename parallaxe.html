@@ -215,7 +215,6 @@
       let time_left = parseInt(document.getElementById('timer-text').textContent);
       let interval_cd = setInterval(function() {
           time_left = time_left -1;
-          console.log(time_left.length)
           document.getElementById('timer-text').textContent = (time_left < 10 ? '0' + time_left : time_left);
           if (time_left === 0) {
               clearInterval(interval_cd);
