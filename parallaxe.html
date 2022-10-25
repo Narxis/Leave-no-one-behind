@@ -212,11 +212,16 @@
   }
 
   function startCountDown() {
+      // On récupère le texte dans le timer (en tant qu'entier)
       let time_left = parseInt(document.getElementById('timer-text').textContent);
+      // On lance une fonction toutes les secondes (1000ms)
       let interval_cd = setInterval(function() {
+          // aucune idée, une sorte de magie noire
           time_left = time_left -1;
-          document.getElementById('timer-text').textContent = (time_left < 10 ? '0' + time_left : time_left);
+          // On change le texte dans le timer (avec un 0 devant si on est en dessous de 10)
+          document.getElementById('timer-text').textContent = (time_left < 10 ? '0' : '') + time_left;
           if (time_left === 0) {
+              // On arrête l'execution de la fonction une fois à 0
               clearInterval(interval_cd);
               /* Code a executer quand le timer arrive à 0 */
               /* ... */
