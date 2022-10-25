@@ -31,11 +31,11 @@ body {
 }
 .plugship {
   position: absolute;
-  width: 200px;
+  width: 180px;
   height: 130px;
   top: -119px;
   left: 36px;
-  transform: rotate(348deg);
+  animation: shipfloat 10s ease-in-out infinite;
 }
 .robot-arm svg {
   overflow: visible;
@@ -69,37 +69,67 @@ body {
   box-shadow: -2px -2px 5px #484848b0, 2px 2px 5px #e1e1e1, inset -1px -1px 3px 0px #ff0000c9, inset 4px 4px 20px 0px #ff00006e;
 }
 #arm1 {
-    position: absolute;
-    transform: rotate(45deg);
-    transform-origin: 1756px 1434px;
-    animation: rotate 4.225s alternate infinite;
+  position: absolute;
+  transform: rotate(352deg);
+  transform-origin: 1756px 1434px;
+  animation-direction: reverse;
+  animation: gunfloat1 2s ease-in-out infinite;
+  /*animation: rotate 4.225s alternate infinite; Chaos animation*/
 }
 #arm2 {
   position: absolute;
-  transform: rotate(45deg);
+  transform: rotate(20deg);
   transform-origin: 2369px 1259px;
-  animation: rotate 2.85s alternate infinite;
+  animation: gunfloat2 2s ease-in-out infinite;
+  /*animation: ro tate 2.85s alternate infinite;  Chaos animation*/
 }
 #arm3 {
   position: absolute;
-  transform: rotate(45deg);
+  transform: rotate(344deg);
   transform-origin: 2159px 717px;
-  animation: rotate 5.725s alternate infinite;
+  animation: gunfloat3 2s ease-in-out infinite;
+  /*animation: rotate 5.725s alternate infinite;  Chaos animation*/
 }
 #jaw-up {
   position: absolute;
-  transform: rotate(45deg);
+  transform: rotate(356deg);
   transform-origin: 1868px 776px;
-  animation: rotate 3.75s alternate infinite;
+  animation: gunfloat4 2s ease-in-out infinite;
+  /*animation: rotate 3.75s alternate infinite;*/
 }
-@keyframes rotate {
+@keyframes gunfloat1 {
+  0% {transform: rotate(337deg);}
+	50% {transform: rotate(339deg);}
+	100% {transform: rotate(337deg);}
+}
+@keyframes gunfloat2 {
+  0% {transform: rotate(37deg);}
+	50% {transform: rotate(35deg);}
+	100% {transform: rotate(37deg);} 
+}
+@keyframes gunfloat3 {
+  0% {transform: rotate(312deg);}
+	50% {transform: rotate(314deg);}
+	100% {transform: rotate(312deg);} 
+}
+@keyframes gunfloat4 {
+  0% {transform: rotate(23deg);}
+	50% {transform: rotate(20deg);}
+	100% {transform: rotate(23deg);} 
+}
+@keyframes shipfloat {
+	0% {transform: translatey(0px) rotate(346deg);}
+	50% {transform: translatey(-10px) rotate(348deg);}
+	100% {transform: translatey(0px) rotate(346deg);}
+}
+/*@keyframes rotate {
   0% { transform: rotate(0deg); }
   33% { transform: rotate(25deg);}
   50% { transform: rotate(109deg);}
   65% { transform: rotate(155deg);}
   80% { transform: rotate(225deg);}
   100% { transform: rotate(360deg); }
-}
+} Chaos animation*/
 
 .timer-text,
 .timer-dim {
