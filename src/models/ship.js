@@ -1,5 +1,3 @@
-let module = require('shipModules')
-
 class Ship{
     id;
     name;
