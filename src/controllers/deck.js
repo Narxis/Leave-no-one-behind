@@ -1,4 +1,4 @@
-const {Card} = require('./../models/Card')
+const {Card} = require('./../models/card')
 const fs = require("fs")
 const { Op, literal } = require("sequelize");
 
