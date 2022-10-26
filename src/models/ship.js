@@ -33,6 +33,10 @@ class Ship{
         'gravity_up': 0
     }
 
+    constructor(id = 0) {
+        this.id = id;
+    }
+    
     async create(data){
         for (let dat in this.accepted_datas)
             this[dat] = data[dat] || this.accepted_datas[dat];
