@@ -37,9 +37,9 @@ class Ship{
         this.id = id;
     }
     
-    async create(data){
+    async create(data = {}){
         for (let dat in this.accepted_datas)
-            this[dat] = data[dat] || this.accepted_datas[dat];
+            this[dat] = (typeof data[dat] === 'undefined' ? this.accepted_datas[dat]: data[dat]);
 
         await DB.tables.ship.create({
             name: this.name,
@@ -64,13 +64,13 @@ class Ship{
         return await this.getData()
     }
 
-    async update(data) {
+    async update(data = {}) {
         await this.getData();
 
         for (let dat in this.accepted_datas)
-            this[dat] = data[dat] || this[dat];
+            this[dat] = (typeof data[dat] === 'undefined' ? this[dat] : data[dat]);
 
-        await DB.tables.players.update({
+        await DB.tables.ship.update({
             name: this.name,
             cryopods: this.cryopods,
             scanner: this.scanner,
@@ -123,6 +123,9 @@ class Ship{
             }
         })
 
+        if (!ship)
+            return false;
+
         for (let dat in ship.dataValues) {
             this[dat] = ship.dataValues[dat]
         }
@@ -132,13 +135,14 @@ class Ship{
 
     async updateIntegrity(module, amount){
         let data = {};
-        data[module] = this[module] + amount;
+        data[module] = parseInt(this[module]) + parseInt(amount);
         if (data[module] > 100)
             data[module] = 100;
         else if (data[module] < 0)
             data[module] = 0;
 
         await this.update(data);
+        return this;
     }
 
     async upgradeModule(module){
@@ -146,6 +150,7 @@ class Ship{
         data[module + '_up'] = 1;
 
         await this.update(data);
+        return this;
     }
 }
 

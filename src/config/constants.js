@@ -5,4 +5,6 @@ module.exports.register = function () {
     global.TYPE_NEGATIVE = 3;
 
     global.ALL = null;
+
+    global.API_VER = 1;
 }
