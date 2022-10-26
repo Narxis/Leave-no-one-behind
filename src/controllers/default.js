@@ -7,7 +7,7 @@ module.exports.index = function(req, res) {
     res.render('index');
 };
 
-module.exports.index = function (req, res) {
+module.exports.returnOk = function (req, res) {
     res.status(200);
     res.json({status: 200})
 }
