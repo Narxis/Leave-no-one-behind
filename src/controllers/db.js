@@ -6,12 +6,18 @@ class DB {
     tables;
     constructor() {}
     async init() {
-        this.sequelize =  new Sequelize('database', '', '', {
-            host: 'localhost',
-            dialect: 'sqlite',
-            logging: false,
-            storage: 'database.sqlite'
-        });
+
+        if (process.env.DB_URL === '') {
+            this.sequelize =  new Sequelize('database', '', '', {
+                host: 'localhost',
+                dialect: 'sqlite',
+                logging: false,
+                storage: 'database.sqlite'
+            });
+        }
+        else {
+            this.sequelize = new Sequelize(process.env.DB_URL)
+        }
         await this.registerDatabases();
         return this;
     }
