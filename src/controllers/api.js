@@ -1,5 +1,9 @@
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
+
+// TODO replace shipId with current game ship ID
+const shipId = 1;
+
 module.exports.index = function(req, res) {
     res.status(200);
     res.json({
@@ -42,8 +46,27 @@ module.exports.updatePlayer = async function (req, res) {
 }
 
 module.exports.getShip = async function (req, res) {
-    let ship = new Ship();
-    console.log(ship);
+    let ship = new Ship(shipId);
+    if (! await ship.getData())
+        await ship.create();
+    delete ship['accepted_datas'];
+    res.json(ship);
+}
+
+module.exports.upgradeShipModule = async function (req, res) {
+    let ship = new Ship(shipId);
+    await ship.getData();
+    await ship.upgradeModule(req.params.module);
+    delete ship['accepted_datas'];
+    res.json(ship);
+}
+
+module.exports.updateShipModule = async function (req, res) {
+    console.log('module update')
+    let ship = new Ship(shipId);
+    await ship.getData();
+    await ship.updateIntegrity(req.params.module, req.params.val);
+    delete ship['accepted_datas'];
     res.json(ship);
 }
 

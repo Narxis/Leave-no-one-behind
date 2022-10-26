@@ -22,9 +22,9 @@ class Card {
         // must use this.getData() since Sequelize works with Promises
     }
 
-    async create(data) {
+    async create(data = {}) {
         for (let dat in this.accepted_datas)
-            this[dat] = data[dat] || this.accepted_datas[dat];
+            this[dat] = (typeof data[dat] === 'undefined' ? this.accepted_datas[dat] : data[dat]);
 
         await DB.tables.cards.create({
             type: this.type,
@@ -61,11 +61,11 @@ class Card {
         return await this.getData()
     }
 
-    async update(data) {
+    async update(data = {}) {
         await this.getData();
 
         for (let dat in this.accepted_datas)
-            this[dat] = data[dat] || this[dat];
+            this[dat] = (typeof data[dat] === 'undefined' ? this[dat] : data[dat]);
 
         await DB.tables.cards.update({
             type: this.type,
