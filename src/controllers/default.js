@@ -7,6 +7,11 @@ module.exports.index = function(req, res) {
     res.render('index');
 };
 
+module.exports.index = function (req, res) {
+    res.status(200);
+    res.json({status: 200})
+}
+
 module.exports.randCard = function (req, res) {
     getCards(1, 1).then(card => {
         if (req.query.json === '1')
