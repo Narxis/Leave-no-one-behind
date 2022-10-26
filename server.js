@@ -1,5 +1,6 @@
 const constants = require('./src/config/constants');
 const db = require ('./src/controllers/db');
+const PORT = process.env.PORT || 8080;
 
 const start = async function() {
 
@@ -11,7 +12,7 @@ const start = async function() {
     let router = require('./bin/express-router')();
     require('./src/routers/default')(router);
     app.use('/', router);
-    app.listen(8080);
+    app.listen(PORT);
 }
 
 start().then(e => {console.log('Server launched on port 8080')});
