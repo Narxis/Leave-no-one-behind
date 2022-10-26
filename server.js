@@ -11,6 +11,7 @@ const start = async function() {
     let app = require('./bin/express')();
     let router = require('./bin/express-router')();
     require('./src/routers/default')(router);
+    require('./src/routers/api')(router);
     app.use('/', router);
     app.listen(PORT);
 }
