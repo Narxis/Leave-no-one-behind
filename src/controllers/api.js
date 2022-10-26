@@ -1,4 +1,5 @@
 const {Player} = require("../models/player");
+const {Ship} = require("../models/ship");
 module.exports.index = function(req, res) {
     res.status(200);
     res.json({
@@ -38,6 +39,12 @@ module.exports.updatePlayer = async function (req, res) {
             res.json(updatedPlayer);
         }
     }
+}
+
+module.exports.getShip = async function (req, res) {
+    let ship = new Ship();
+    console.log(ship);
+    res.json(ship);
 }
 
 const showError = function (res, msg) {
