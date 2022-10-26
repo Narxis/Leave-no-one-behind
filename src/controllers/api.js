@@ -55,10 +55,17 @@ module.exports.getShip = async function (req, res) {
 
 module.exports.upgradeShipModule = async function (req, res) {
     let ship = new Ship(shipId);
+    let mod = req.params.module;
     await ship.getData();
-    await ship.upgradeModule(req.params.module);
-    delete ship['accepted_datas'];
-    res.json(ship);
+    if (typeof ship.accepted_datas[mod] !== 'number')
+        showError(res, 'Not an upgradable module, expectiong on of [scanner|oxygen|energy|gravity]')
+    else if (ship.accepted_datas[mod + '_up'] !== 0)
+        showError(res, 'This module is already upgraded')
+    else {
+        await ship.upgradeModule(mod);
+        delete ship['accepted_datas'];
+        res.json(ship);
+    }
 }
 
 module.exports.updateShipModule = async function (req, res) {
