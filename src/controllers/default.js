@@ -1,6 +1,6 @@
 var fs = require('fs');
-let {deckGenerator,getCards} = require('../controllers/deck')
-const {Card} = require("../models/card");
+let {deckGenerator,getCards} = require('./../controllers/deck')
+const {Card} = require("./../models/card");
 const {cardPop} = require("./deck");
 
 module.exports.index = function(req, res) {

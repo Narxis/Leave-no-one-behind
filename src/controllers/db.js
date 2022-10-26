@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const {Player} = require("../models/player");
+const {Player} = require("./../models/player");
 
 class DB {
     sequelize;

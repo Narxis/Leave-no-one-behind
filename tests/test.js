@@ -1,8 +1,8 @@
-let {Card} = require('../src/models/card');
-let deck = require('../src/controllers/deck')
+let {Card} = require('./../src/models/card');
+let deck = require('./../src/controllers/deck')
 const fs = require("fs")
-const db = require ('../src/controllers/db');
-const type = require("../src/config/constants");
+const db = require ('./../src/controllers/db');
+const type = require("./../src/config/constants");
 
 test();
 

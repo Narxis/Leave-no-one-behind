@@ -1,5 +1,5 @@
-const {Player} = require("../models/player");
-const {Ship} = require("../models/ship");
+const {Player} = require("./../models/player");
+const {Ship} = require("./../models/ship");
 
 // TODO replace shipId with current game ship ID
 const shipId = 1;
