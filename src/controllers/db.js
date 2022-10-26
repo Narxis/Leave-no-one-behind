@@ -8,6 +8,7 @@ class DB {
     async init() {
 
         if (process.env.DB_URL === '') {
+            console.log('Using local DB')
             this.sequelize =  new Sequelize('database', '', '', {
                 host: 'localhost',
                 dialect: 'sqlite',
@@ -16,6 +17,7 @@ class DB {
             });
         }
         else {
+            console.log('Using remote DB')
             this.sequelize = new Sequelize(process.env.DB_URL)
         }
         await this.registerDatabases();
