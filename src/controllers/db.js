@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
+const fs = require("fs");
 
 class DB {
     sequelize;
@@ -249,6 +250,27 @@ class DB {
             await this.tables[table].sync();
             console.log('synchro ' + table)
         }
+    }
+
+    async exportData() {
+        let sql = [];
+        for (let i in this.tables) {
+            let items_strs = [];
+            let items = await this.tables[i].findAll();
+            items = items.map(e => e.dataValues);
+            let columns = '(' + Object.keys(items[0]).filter(e => e !== 'createdAt' && e !== 'updatedAt').join(',') + ')';
+            for (let j in items) {
+                let item_str = '(' + Object.values(items[j]).filter(e => typeof e !== 'object').map(function (e){
+                        if (typeof e === 'string')
+                            e = '"' + e + '"'
+                        return e;
+                    }).join(',') + ')';
+                items_strs.push(item_str);
+            }
+            let items_strs_sql = items_strs.join(',\n    ')
+            sql.push(`INSERT INTO ${i} table \n    ${columns} \nVALUES \n    ${items_strs_sql};`);
+        }
+        fs.writeFileSync('dump.sql', sql.join('\n'));
     }
 
     async test() {
