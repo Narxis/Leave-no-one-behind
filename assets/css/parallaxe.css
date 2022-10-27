@@ -122,9 +122,13 @@ body {
 #jaw-up {
   position: absolute;
   transform: rotate(356deg);
-  transform-origin: 1868px 776px;
+  transform-origin: 1852px 745px;
   animation: gunfloat4 2s ease-in-out infinite;
   /*animation: rotate 3.75s alternate infinite;*/
+}
+#neck-fill {
+  background: rgb(255,255,255);
+  fill: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 9%, rgba(255,0,0,1) 20%, rgba(255,255,255,0) 51%, rgba(255,255,255,0) 100%);
 }
 @keyframes gunfloat1 {
   0% {transform: rotate(337deg);}
