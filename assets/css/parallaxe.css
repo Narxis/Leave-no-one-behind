@@ -56,6 +56,35 @@ body {
   transform: rotate(4deg);
 }
 /* ---^^^---------SVG--------^^^--- */
+/* ---VVV-----Timer setup-----VVV--- */
+.ring1 {
+  transform-origin: right;
+  animation: ring1setup 10s alternate;
+}
+.ring2 {
+  transform-origin: right;
+  animation: ring2setup 10s alternate;
+}
+.ring3 {
+  transform-origin: right;
+  animation: ring3setup 10s alternate;
+}
+@keyframes ring1setup {
+  13%{transform: scale(1);}
+  23%{transform: scale(0.95);}
+  33%{transform: scale(1);}
+}
+@keyframes ring2setup {
+  46%{transform: scale(1);}
+  56%{transform: scale(0.95);}
+  66%{transform: scale(1);}
+}
+@keyframes ring3setup {
+  79%{transform: scale(1);}
+  89%{transform: scale(0.95);}
+  99%{transform: scale(1);}
+}
+/* ---^^^-----Timer setup-----^^^--- */
 /* ---VVV---Timer Animation---VVV--- */
 .timer {
   position: absolute;
@@ -113,9 +142,9 @@ body {
 	100% {transform: rotate(312deg);} 
 }
 @keyframes gunfloat4 {
-  0% {transform: rotate(23deg);}
-	50% {transform: rotate(20deg);}
-	100% {transform: rotate(23deg);} 
+  0% {transform: rotate(30deg);}
+	50% {transform: rotate(27deg);}
+	100% {transform: rotate(30deg);} 
 }
 @keyframes shipfloat {
 	0% {transform: translatey(0px) rotate(346deg);}
@@ -130,10 +159,14 @@ body {
   80% { transform: rotate(225deg);}
   100% { transform: rotate(360deg); }
 } Chaos animation*/
+.st1{fill:#323232;}
+.st2{font-family:'7Segments';}
+.st3{font-size:228.0805px;}
+.st4{fill:#FF0000;}
 
 .timer-text,
 .timer-dim {
-  font-family: '7segments';
+  font-family: '7segments'; 
   font-size: 26px;
   letter-spacing: 3px;
   color: #383838;
@@ -143,6 +176,39 @@ body {
   top: 5px;
   color: #c71738;
 }
+.beacon{
+  position:absolute;
+  top:50%;
+  left:50%;
+  background-color:#DB2828;
+  height:2em;
+  width:2em;
+  border-radius:50%;
+}
+.beacon:before{
+  position:absolute;
+  content:"";
+  height:2em;
+  width:2em;
+  border-radius:50%;
+  box-shadow:0px 0px 2px 2px #DB2828;
+  animation:active 2s infinite linear;
+}
+
+@keyframes active{
+  0%{
+    transform:scale(.1);
+    opacity:1;
+  }
+  70%{
+    transform:scale(2.5);
+    opacity:0;
+  }
+  100%{
+    opacity:0;
+  }
+}
+
 /* ---^^^---Timer Animation---^^^--- */
 
 /* Parrallax effect by Asan using: ".main, .wrap, .container"  
