@@ -312,7 +312,7 @@ body {
   transform: rotate3D(.5, 1, 2, 90deg);
 }
 .grow {
-  animation: spingrow 2s linear forwards;
+  animation: spingrow 9s linear forwards;
 }
 .float {
   position: absolute;
@@ -322,6 +322,13 @@ body {
   0% {top: -7px;}
 	50% {top: 7px;}
 	100% {top: -7px;} 
+}
+
+#bigboite.flash .ringl {
+  transform: translatex(-20px);
+}
+#bigboite.flash .ringr {
+  transform: translatex(20px);
 }
 /* ---^^^---Timer Animation---^^^--- */
 
