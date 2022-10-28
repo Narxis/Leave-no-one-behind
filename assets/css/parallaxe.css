@@ -57,17 +57,27 @@ body {
 }
 /* ---^^^---------SVG--------^^^--- */
 /* ---VVV-----Timer setup-----VVV--- */
+.ring1l,
+.ring2l,
+.ring3l {
+  transform: translateX(-20px);
+}
+.ring1r,
+.ring2r,
+.ring3r {
+  transform: translateX(20px);
+}
 .ring1 {
-  transform-origin: right;
-  animation: ring1setup 10s alternate;
+  transform-origin: center;
+  animation: ring1setup .3s linear;
 }
 .ring2 {
-  transform-origin: right;
-  animation: ring2setup 10s alternate;
+  transform-origin: center;
+  animation: ring2setup .3s linear;
 }
 .ring3 {
-  transform-origin: right;
-  animation: ring3setup 10s alternate;
+  transform-origin: center;
+  animation: ring3setup .3s linear;
 }
 @keyframes ring1setup {
   13%{transform: scale(1);}
@@ -126,10 +136,6 @@ body {
   animation: gunfloat4 2s ease-in-out infinite;
   /*animation: rotate 3.75s alternate infinite;*/
 }
-#neck-fill {
-  background: rgb(255,255,255);
-  fill: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 9%, rgba(255,0,0,1) 20%, rgba(255,255,255,0) 51%, rgba(255,255,255,0) 100%);
-}
 @keyframes gunfloat1 {
   0% {transform: rotate(337deg);}
 	50% {transform: rotate(339deg);}
@@ -163,56 +169,160 @@ body {
   80% { transform: rotate(225deg);}
   100% { transform: rotate(360deg); }
 } Chaos animation*/
-.st1{fill:#323232;}
-.st2{font-family:'7Segments';}
-.st3{font-size:228.0805px;}
-.st4{fill:#FF0000;}
-
-.timer-text,
-.timer-dim {
-  font-family: '7segments'; 
-  font-size: 26px;
+#timer-background, #timer-text {
+  font-family: '7segments';
+  font-size: 228.26px;
   letter-spacing: 3px;
-  color: #383838;
+  fill: #383838;
+  transform: translate(1322px, 721px) rotate(4deg) scale(0.9);
 }
-.timer-text{
+#timer-text{
   position: absolute;
   top: 5px;
-  color: #c71738;
+  fill: red;
 }
-.beacon{
-  position:absolute;
-  top:50%;
-  left:50%;
-  background-color:#DB2828;
-  height:2em;
-  width:2em;
-  border-radius:50%;
+.spinner-box {
+  top: -80px;
+  left: -88px;
+  width: 175px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  position: absolute;
+  overflow: visible;
 }
-.beacon:before{
-  position:absolute;
-  content:"";
-  height:2em;
-  width:2em;
-  border-radius:50%;
-  box-shadow:0px 0px 2px 2px #DB2828;
-  animation:active 2s infinite linear;
-}
-
-@keyframes active{
-  0%{
-    transform:scale(.1);
-    opacity:1;
-  }
-  70%{
-    transform:scale(2.5);
-    opacity:0;
-  }
-  100%{
-    opacity:0;
-  }
+.leo-border-1 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(0deg, rgba(63,249,220,0.1) 33%, rgba(63,249,220,1) 100%);
+  animation: spin3D 1.8s linear 0s infinite;
 }
 
+.leo-core-1 {
+  width: 100%;
+  height: 100%;
+  background-color: #37474faa;
+  border-radius: 50%;
+}
+
+.leo-border-2 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: rgb(251, 91, 83);
+  background: linear-gradient(0deg, rgba(251, 91, 83, 0.1) 33%, rgba(251, 91, 83, 1) 100%);
+}
+
+.leo-core-2 {
+  width: 100%;
+  height: 100%;
+  background-color: #1d2630aa;
+  border-radius: 50%;
+}
+
+#bigboite.flash #flashbox {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
+  animation: flash 5s ease-in-out forwards;
+}
+@keyframes flash {
+  0% {transform: scale(0); opacity: 1;}
+  25% {transform: scale(150); opacity: 0.8;}
+  100% {transform: scale(150); opacity: 0;}
+}
+@keyframes spingrow {
+  0% {transform: scale(0);}
+  49% {transform: scale(0);}
+  50% {transform: scale(0.15);}
+  100% {transform: scale(0.5);}
+}
+@keyframes spin3D {
+  0% {transform: rotate3d(.5,.5,.5, 360deg);}
+  50% {transform: rotate3d(0,0,0, 180deg);}
+  100% {transform: rotate3d(-0.5,-0.5,-0.5, 360deg);}
+}
+.leo {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+}
+
+.blue-orbit {
+	width: 165px;
+	height: 165px;
+  border: 1px solid #ffffff;
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
+  animation: spin3D 1s linear .2s infinite;
+}
+
+.green-orbit {
+	width: 120px;
+	height: 120px;
+  border: 1px solid #ffffff;
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
+  animation: spin3D .95s reverse 0s infinite;
+}
+
+.red-orbit {
+	width: 90px;
+	height: 90px;
+  border: 1px solid #ffffff;
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
+  animation: spin3D .5s linear 0s infinite;
+}
+
+.white-orbit {
+	width: 60px;
+	height: 60px;
+  border: 2px solid #ffffff;
+  animation: spin3D .01s reverse 0s infinite;
+}
+
+.w1 {
+  transform: rotate3D(1, 1, 1, 90deg);
+}
+
+.w2 {
+  transform: rotate3D(1, 2, .5, 90deg);
+}
+
+.w3 {
+  transform: rotate3D(.5, 1, 2, 90deg);
+}
+.grow {
+  animation: spingrow 2s linear forwards;
+}
+.float {
+  position: absolute;
+  animation: laserfloat 2s ease-in-out infinite;
+}
+@keyframes laserfloat {
+  0% {top: -7px;}
+	50% {top: 7px;}
+	100% {top: -7px;} 
+}
 /* ---^^^---Timer Animation---^^^--- */
 
 /* Parrallax effect by Asan using: ".main, .wrap, .container"  
