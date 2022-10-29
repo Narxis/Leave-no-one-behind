@@ -155,7 +155,7 @@
           <div class="choice move-down" id="choice3">Donner vos consommables</div>
           <!--<div class="choice move-down" id="choice4"></div>-->
       </div>
-      <div class="plugship">
+      <div id="plugship" class="plugship">
         <svg xmlns="http://www.w3.org/2000/svg" id="vaisseau" viewBox="0 0 1009.58 621.13"><defs>
           <style>
             .cls-0{fill:#323232;}
@@ -218,6 +218,7 @@
           switch (time_left){
             case 18:
               document.getElementById('bigboite').classList.add('start')
+              document.getElementById('plugship').classList.add('shipstart')
               break;
             case 16:
               document.getElementById('bigboite').classList.add('idle')
