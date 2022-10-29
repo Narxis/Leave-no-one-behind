@@ -46,7 +46,6 @@ body {
   height: 100px;
   top: -138px;
   left: 507px;
-  z-index: 1000; /* par pitié n'oublie pas de l'enlever après avoir fait les animations...*/
 }
 .plugun {
   position: absolute;
