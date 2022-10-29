@@ -45,7 +45,8 @@ body {
   width: 432px;
   height: 100px;
   top: -138px;
-  left: 520px;
+  left: 507px;
+  z-index: 1000; /* par pitié n'oublie pas de l'enlever après avoir fait les animations...*/
 }
 .plugun {
   position: absolute;
@@ -94,6 +95,7 @@ body {
   89%{transform: scale(0.95);}
   99%{transform: scale(1);}
 }
+
 /* ---^^^-----Timer setup-----^^^--- */
 /* ---VVV---Timer Animation---VVV--- */
 .timer {
@@ -107,54 +109,94 @@ body {
   transform: rotate(10deg);
   box-shadow: -2px -2px 5px #484848b0, 2px 2px 5px #e1e1e1, inset -1px -1px 3px 0px #ff0000c9, inset 4px 4px 20px 0px #ff00006e;
 }
+#robot-arm {
+  position: absolute;
+}
 #arm1 {
   position: absolute;
-  transform: rotate(352deg);
+  transform: rotate(207deg);
   transform-origin: 1756px 1434px;
   animation-direction: reverse;
-  animation: gunfloat1 2s ease-in-out infinite;
+ /* animation: gunfloat1 2s ease-in-out infinite;*/
   /*animation: rotate 4.225s alternate infinite; Chaos animation*/
 }
 #arm2 {
   position: absolute;
-  transform: rotate(20deg);
+  transform: rotate(304deg);
   transform-origin: 2369px 1259px;
-  animation: gunfloat2 2s ease-in-out infinite;
+ /* animation: gunfloat2 2s ease-in-out infinite;*/
   /*animation: ro tate 2.85s alternate infinite;  Chaos animation*/
 }
 #arm3 {
   position: absolute;
-  transform: rotate(344deg);
+  transform: rotate(219deg);
   transform-origin: 2159px 717px;
-  animation: gunfloat3 2s ease-in-out infinite;
+ /* animation: gunfloat3 2s ease-in-out infinite;*/
   /*animation: rotate 5.725s alternate infinite;  Chaos animation*/
 }
 #jaw-up {
   position: absolute;
-  transform: rotate(356deg);
+  transform: rotate(309deg);
   transform-origin: 1852px 745px;
-  animation: gunfloat4 2s ease-in-out infinite;
+ /* animation: gunfloat4 2s ease-in-out infinite; */
   /*animation: rotate 3.75s alternate infinite;*/
 }
+
+#bigboite.start #arm1 {
+  transition: 2.1s;
+  transform: rotate(352deg);
+}
+#bigboite.start #arm2 {
+  transition: 2.1s;
+  transform: rotate(20deg);
+}
+#bigboite.start #arm3 {
+  transition: 2.1s;
+  transform: rotate(344deg);
+}
+#bigboite.start #jaw-up {
+  transition: 2.1s;
+  transform: rotate(356deg);
+}
+#bigboite.start #jaw-down {
+  
+}
+
+#bigboite.idle #arm1 {
+  transition: 1s;
+  animation: gunfloat1 2s ease-in-out infinite;
+}
+#bigboite.idle #arm2 {
+  transition: 1s;
+  animation: gunfloat2 2s ease-in-out infinite;
+}
+#bigboite.idle #arm3 {
+  transition: 1s;
+  animation: gunfloat3 2s ease-in-out infinite;
+}
+#bigboite.idle #jaw-up {
+  transition: 1s;
+  animation: gunfloat4 2s ease-in-out infinite;
+}
 @keyframes gunfloat1 {
-  0% {transform: rotate(337deg);}
-	50% {transform: rotate(339deg);}
-	100% {transform: rotate(337deg);}
+  0% {transform: rotate(352deg);}
+	50% {transform: rotate(354deg);}
+	100% {transform: rotate(352deg);}
 }
 @keyframes gunfloat2 {
-  0% {transform: rotate(37deg);}
-	50% {transform: rotate(35deg);}
-	100% {transform: rotate(37deg);} 
+  0% {transform: rotate(20deg);}
+	50% {transform: rotate(18deg);}
+	100% {transform: rotate(20deg);} 
 }
 @keyframes gunfloat3 {
-  0% {transform: rotate(312deg);}
-	50% {transform: rotate(314deg);}
-	100% {transform: rotate(312deg);} 
+  0% {transform: rotate(344deg);}
+	50% {transform: rotate(346deg);}
+	100% {transform: rotate(344deg);} 
 }
 @keyframes gunfloat4 {
-  0% {transform: rotate(30deg);}
-	50% {transform: rotate(27deg);}
-	100% {transform: rotate(30deg);} 
+  0% {transform: rotate(356deg);}
+	50% {transform: rotate(353deg);}
+	100% {transform: rotate(356deg);} 
 }
 @keyframes shipfloat {
 	0% {transform: translatey(0px) rotate(346deg);}
@@ -181,6 +223,7 @@ body {
   top: 5px;
   fill: red;
 }
+/* ---VVV---Laser boule---VVV-------------------------------------------------------- */
 .spinner-box {
   top: -80px;
   left: -88px;
@@ -232,31 +275,6 @@ body {
   height: 100%;
   background-color: #1d2630aa;
   border-radius: 50%;
-}
-
-#bigboite.flash #flashbox {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: rgb(255,255,255);
-  background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
-  animation: flash 5s ease-in-out forwards;
-}
-@keyframes flash {
-  0% {transform: scale(0); opacity: 1;}
-  25% {transform: scale(150); opacity: 0.8;}
-  100% {transform: scale(150); opacity: 0;}
-}
-@keyframes spingrow {
-  0% {transform: scale(0);}
-  49% {transform: scale(0);}
-  50% {transform: scale(0.15);}
-  100% {transform: scale(0.5);}
-}
-@keyframes spin3D {
-  0% {transform: rotate3d(.5,.5,.5, 360deg);}
-  50% {transform: rotate3d(0,0,0, 180deg);}
-  100% {transform: rotate3d(-0.5,-0.5,-0.5, 360deg);}
 }
 .leo {
 	position: absolute;
@@ -318,19 +336,44 @@ body {
   position: absolute;
   animation: laserfloat 2s ease-in-out infinite;
 }
+#bigboite.flash #flashbox {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
+  animation: flash 5s ease-in-out forwards;
+}
+@keyframes flash {
+  0% {transform: scale(0); opacity: 1;}
+  25% {transform: scale(150); opacity: 0.8;}
+  100% {transform: scale(150); opacity: 0;}
+}
+@keyframes spingrow {
+  0% {transform: scale(0);}
+  33% {transform: scale(0.10);}
+  66% {transform: scale(0.10);}
+  100% {transform: scale(0.8);}
+}
+@keyframes spin3D {
+  0% {transform: rotate3d(.5,.5,.5, 360deg);}
+  50% {transform: rotate3d(0,0,0, 180deg);}
+  100% {transform: rotate3d(-0.5,-0.5,-0.5, 360deg);}
+}
+
 @keyframes laserfloat {
   0% {top: -7px;}
 	50% {top: 7px;}
 	100% {top: -7px;} 
 }
-
+/* ---^^^---Laser boule---^^^-------------------------------------------------------- */
 #bigboite.flash .ringl {
   transform: translatex(-20px);
 }
 #bigboite.flash .ringr {
   transform: translatex(20px);
 }
-/* ---^^^---Timer Animation---^^^--- */
+/* ---^^^---Timer Animation---^^^---------------------------------------------------- */
 
 /* Parrallax effect by Asan using: ".main, .wrap, .container"  
 https://codepen.io/SabAsan/pen/dyPOzZY */
@@ -472,7 +515,6 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   background-size: 800px auto;
   transition: transform .6s 1s;
 }
-
 .container-card:before,
 .container-card:after {
   content: "";
@@ -496,7 +538,6 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   border-top-width: 0;
   border-right-width: 0;
 }
-
 .wrap:hover .container-card:before,
 .wrap:hover .container-card:after {
   width: calc(100% - 68px);
@@ -509,7 +550,7 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   position: absolute;
   inset: 37px;
 }
-/*---------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------*/
 .card-text {
   position: absolute;
   display: flex;
