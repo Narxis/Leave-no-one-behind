@@ -87,46 +87,34 @@ body {
 /*---vvv-----Timer Animation-----vvv---*/
 /*---vvv-------Timer Start-------vvv---*/
 #bigboite.start #arm1 {
-  transition: 2.1s;
+  transition: 2s ease-out;
   transform: rotate(352deg);
 }
 #bigboite.start #arm2 {
-  transition: 2.1s;
+  transition: 2s ease-out;
   transform: rotate(20deg);
 }
 #bigboite.start #arm3 {
-  transition: 2.1s;
+  transition: 2s ease-out;
   transform: rotate(344deg);
 }
 #bigboite.start #jaw-up {
-  transition: 2.1s;
+  transition: 2s ease-out;
   transform: rotate(356deg);
-}
-#bigboite.idle .ringl {
-  transition: 2s;
-  transform: translateX(-20px);
-}
-#bigboite.idle .ringr {
-  transition: 2s;
-  transform: translateX(20px);
 }
 /*---^^^-----Timer Start-----^^^---*/
 /*---vvv-----Timer Idle------vvv---*/
 #bigboite.idle #arm1 {
-  transition: 1s;
-  animation: gunfloat1 2s ease-in-out infinite;
+  animation: gunfloat1 2s ease-out infinite;
 }
 #bigboite.idle #arm2 {
-  transition: 1s;
-  animation: gunfloat2 2s ease-in-out infinite;
+  animation: gunfloat2 2s ease-out infinite;
 }
 #bigboite.idle #arm3 {
-  transition: 1s;
-  animation: gunfloat3 2s ease-in-out infinite;
+  animation: gunfloat3 2s ease-out infinite;
 }
 #bigboite.idle #jaw-up {
-  transition: 1s;
-  animation: gunfloat4 2s ease-in-out infinite;
+  animation: gunfloat4 2s ease-out infinite;
 }
 @keyframes gunfloat1 {
   0% {transform: rotate(352deg);}
@@ -153,8 +141,56 @@ body {
 	50% {transform: translatey(-10px) rotate(348deg);}
 	100% {transform: translatey(0px) rotate(346deg);}
 }
+#bigboite.idle .ringl {
+  transition: 6s;
+  transform: translateX(-20px);
+}
+#bigboite.idle .ringr {
+  transition: 6s;
+  transform: translateX(20px);
+}
+/* ---^^^---Timer Idle----^^^--- */
+/* ---vvv---Timer Flash----vvv--- */
+#bigboite.flash #flashbox {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
+  animation: flash 5s ease-in-out forwards;
+}
+@keyframes flash {
+  0% {transform: scale(0); opacity: 1;}
+  25% {transform: scale(150); opacity: 0.8;}
+  100% {transform: scale(150); opacity: 0;}
+}
+#bigboite.flash .ringl {
+  transition: .3s;
+  transform: translatex(-60px);
+}
+#bigboite.flash .ringr {
+  transition: .3s;
+  transform: translatex(60px);
+}
+/* ---^^^---Timer Flash----^^^--- */
 /* ---^^^---Timer Idle----^^^--- */
 /* ---vvv---Laser boule---vvv---*/
+#bigboite.idle .pop {
+  transition: 3s;
+  opacity: 1;
+}
+#canvas{
+  position: absolute;
+  top: -130px;
+  left: 0px;
+  transform-origin: left;
+  transform: rotate(356deg) scale(0.25);
+  opacity: 0;
+}  
+#bigboite.idle #canvas {
+  transition: 5s;
+  opacity: 0.8;
+}
 .spinner-box {
   top: -80px;
   left: -88px;
@@ -166,6 +202,7 @@ body {
   background-color: transparent;
   position: absolute;
   overflow: visible;
+  opacity: 0;
 }
 .leo-border-1 {
   position: absolute;
@@ -257,19 +294,6 @@ body {
   position: absolute;
   animation: laserfloat 2s ease-in-out infinite;
 }
-#bigboite.flash #flashbox {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: rgb(255,255,255);
-  background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
-  animation: flash 5s ease-in-out forwards;
-}
-@keyframes flash {
-  0% {transform: scale(0); opacity: 1;}
-  25% {transform: scale(150); opacity: 0.8;}
-  100% {transform: scale(150); opacity: 0;}
-}
 @keyframes spingrow {
   0% {transform: scale(0);}
   33% {transform: scale(0.10);}
@@ -282,17 +306,29 @@ body {
   100% {transform: rotate3d(-0.5,-0.5,-0.5, 360deg);}
 }
 @keyframes laserfloat {
-  0% {top: -7px;}
-	50% {top: 7px;}
-	100% {top: -7px;} 
+  0% {top: 20px;}
+	50% {top: 13px;}
+	100% {top: 20px;} 
 }
-/* ---^^^-----Laser boule-----^^^---*/
-#bigboite.flash .ringl {
-  transform: translatex(-20px);
+/*---^^^------Laser boule-----^^^---*/
+/*---vvv------Timer Shot------vvv---*/
+#bigboite.shot .ringl {
+  transition: 2s;
+  animation: ringshotl 1s linear forwards;
 }
-#bigboite.flash .ringr {
-  transform: translatex(20px);
+#bigboite.shot .ringr {
+  transition: 2s;
+  animation: ringshotr 1s linear forwards;
 }
+@keyframes ringshotl {
+  50% {transform: translatex(-200px), scale(1.5);}
+  100% {transform: translatex(100px), scale(1);}
+}
+@keyframes ringshotr {
+  50% {transform: translatex(200px), scale(1.5);}
+  100% {transform: translatex(-100px), scale(1);}
+ }
+/*---^^^------Timer Shot------^^^---*/
 /* ---^^^---Timer Animation---^^^---*/
 /*---vvv---------Card---------vvv---*/
 .card {
