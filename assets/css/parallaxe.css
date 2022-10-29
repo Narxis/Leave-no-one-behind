@@ -5,7 +5,6 @@
   --darkgrey: #17181c;
   --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
 }
-
 body {
   background: var(--darkgrey);
   margin: 0;
@@ -22,7 +21,7 @@ body {
   height: 50px;
   width: 50px;
 }
-/* ---VVV---------SVG--------VVV--- */
+/* ---vvv---------SVG--------vvv--- */
 .dial svg {
   position: relative;
   transform: scale(0.13);
@@ -47,100 +46,46 @@ body {
   top: -138px;
   left: 507px;
 }
-.plugun {
-  position: absolute;
-  width: 252px;
-  height: 100px;
-  top: -249px;
-  left: 0px;
-  transform: rotate(4deg);
-}
-/* ---^^^---------SVG--------^^^--- */
-/* ---VVV-----Timer setup-----VVV--- */
-.ring1l,
-.ring2l,
-.ring3l {
-  transform: translateX(-20px);
-}
-.ring1r,
-.ring2r,
-.ring3r {
-  transform: translateX(20px);
-}
-.ring1 {
-  transform-origin: center;
-  animation: ring1setup .3s linear;
-}
-.ring2 {
-  transform-origin: center;
-  animation: ring2setup .3s linear;
-}
-.ring3 {
-  transform-origin: center;
-  animation: ring3setup .3s linear;
-}
-@keyframes ring1setup {
-  13%{transform: scale(1);}
-  23%{transform: scale(0.95);}
-  33%{transform: scale(1);}
-}
-@keyframes ring2setup {
-  46%{transform: scale(1);}
-  56%{transform: scale(0.95);}
-  66%{transform: scale(1);}
-}
-@keyframes ring3setup {
-  79%{transform: scale(1);}
-  89%{transform: scale(0.95);}
-  99%{transform: scale(1);}
-}
-
-/* ---^^^-----Timer setup-----^^^--- */
-/* ---VVV---Timer Animation---VVV--- */
-.timer {
-  position: absolute;
-  top: 62px;
-  left: 155px;
-  padding: 5px 0px 5px 5px;
-  background-color: black;
-  border: 2px inset #c5c5c5;
-  border-radius: 5px;
-  transform: rotate(10deg);
-  box-shadow: -2px -2px 5px #484848b0, 2px 2px 5px #e1e1e1, inset -1px -1px 3px 0px #ff0000c9, inset 4px 4px 20px 0px #ff00006e;
-}
-#robot-arm {
-  position: absolute;
-}
 #arm1 {
   position: absolute;
   transform: rotate(207deg);
   transform-origin: 1756px 1434px;
   animation-direction: reverse;
- /* animation: gunfloat1 2s ease-in-out infinite;*/
-  /*animation: rotate 4.225s alternate infinite; Chaos animation*/
 }
 #arm2 {
   position: absolute;
   transform: rotate(304deg);
   transform-origin: 2369px 1259px;
- /* animation: gunfloat2 2s ease-in-out infinite;*/
-  /*animation: ro tate 2.85s alternate infinite;  Chaos animation*/
 }
 #arm3 {
   position: absolute;
   transform: rotate(219deg);
   transform-origin: 2159px 717px;
- /* animation: gunfloat3 2s ease-in-out infinite;*/
-  /*animation: rotate 5.725s alternate infinite;  Chaos animation*/
 }
 #jaw-up {
   position: absolute;
   transform: rotate(309deg);
   transform-origin: 1852px 745px;
- /* animation: gunfloat4 2s ease-in-out infinite; */
-  /*animation: rotate 3.75s alternate infinite;*/
 }
-
+.ring {
+  transform-origin: center;
+}
+#timer-background, 
+#timer-text {
+  font-family: '7segments';
+  font-size: 228.26px;
+  letter-spacing: 3px;
+  fill: #383838;
+  transform: translate(1322px, 721px) rotate(4deg) scale(0.9);
+}
+#timer-text{
+  position: absolute;
+  top: 5px;
+  fill: red;
+}
+/*---^^^------------SVG----------^^^---*/
+/*---vvv-----Timer Animation-----vvv---*/
+/*---vvv-------Timer Start-------vvv---*/
 #bigboite.start #arm1 {
   transition: 2.1s;
   transform: rotate(352deg);
@@ -157,10 +102,16 @@ body {
   transition: 2.1s;
   transform: rotate(356deg);
 }
-#bigboite.start #jaw-down {
-  
+#bigboite.idle .ringl {
+  transition: 2s;
+  transform: translateX(-20px);
 }
-
+#bigboite.idle .ringr {
+  transition: 2s;
+  transform: translateX(20px);
+}
+/*---^^^-----Timer Start-----^^^---*/
+/*---vvv-----Timer Idle------vvv---*/
 #bigboite.idle #arm1 {
   transition: 1s;
   animation: gunfloat1 2s ease-in-out infinite;
@@ -202,27 +153,8 @@ body {
 	50% {transform: translatey(-10px) rotate(348deg);}
 	100% {transform: translatey(0px) rotate(346deg);}
 }
-/*@keyframes rotate {
-  0% { transform: rotate(0deg); }
-  33% { transform: rotate(25deg);}
-  50% { transform: rotate(109deg);}
-  65% { transform: rotate(155deg);}
-  80% { transform: rotate(225deg);}
-  100% { transform: rotate(360deg); }
-} Chaos animation*/
-#timer-background, #timer-text {
-  font-family: '7segments';
-  font-size: 228.26px;
-  letter-spacing: 3px;
-  fill: #383838;
-  transform: translate(1322px, 721px) rotate(4deg) scale(0.9);
-}
-#timer-text{
-  position: absolute;
-  top: 5px;
-  fill: red;
-}
-/* ---VVV---Laser boule---VVV-------------------------------------------------------- */
+/* ---^^^---Timer Idle----^^^--- */
+/* ---vvv---Laser boule---vvv---*/
 .spinner-box {
   top: -80px;
   left: -88px;
@@ -248,14 +180,12 @@ body {
   background: linear-gradient(0deg, rgba(63,249,220,0.1) 33%, rgba(63,249,220,1) 100%);
   animation: spin3D 1.8s linear 0s infinite;
 }
-
 .leo-core-1 {
   width: 100%;
   height: 100%;
   background-color: #37474faa;
   border-radius: 50%;
 }
-
 .leo-border-2 {
   position: absolute;
   width: 150px;
@@ -268,7 +198,6 @@ body {
   background: rgb(251, 91, 83);
   background: linear-gradient(0deg, rgba(251, 91, 83, 0.1) 33%, rgba(251, 91, 83, 1) 100%);
 }
-
 .leo-core-2 {
   width: 100%;
   height: 100%;
@@ -282,7 +211,6 @@ body {
 	align-items: center;
 	border-radius: 50%;
 }
-
 .blue-orbit {
 	width: 165px;
 	height: 165px;
@@ -291,7 +219,6 @@ body {
   background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
   animation: spin3D 1s linear .2s infinite;
 }
-
 .green-orbit {
 	width: 120px;
 	height: 120px;
@@ -300,7 +227,6 @@ body {
   background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
   animation: spin3D .95s reverse 0s infinite;
 }
-
 .red-orbit {
 	width: 90px;
 	height: 90px;
@@ -309,22 +235,18 @@ body {
   background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
   animation: spin3D .5s linear 0s infinite;
 }
-
 .white-orbit {
 	width: 60px;
 	height: 60px;
   border: 2px solid #ffffff;
   animation: spin3D .01s reverse 0s infinite;
 }
-
 .w1 {
   transform: rotate3D(1, 1, 1, 90deg);
 }
-
 .w2 {
   transform: rotate3D(1, 2, .5, 90deg);
 }
-
 .w3 {
   transform: rotate3D(.5, 1, 2, 90deg);
 }
@@ -359,33 +281,93 @@ body {
   50% {transform: rotate3d(0,0,0, 180deg);}
   100% {transform: rotate3d(-0.5,-0.5,-0.5, 360deg);}
 }
-
 @keyframes laserfloat {
   0% {top: -7px;}
 	50% {top: 7px;}
 	100% {top: -7px;} 
 }
-/* ---^^^---Laser boule---^^^-------------------------------------------------------- */
+/* ---^^^-----Laser boule-----^^^---*/
 #bigboite.flash .ringl {
   transform: translatex(-20px);
 }
 #bigboite.flash .ringr {
   transform: translatex(20px);
 }
-/* ---^^^---Timer Animation---^^^---------------------------------------------------- */
-
-/* Parrallax effect by Asan using: ".main, .wrap, .container"  
-https://codepen.io/SabAsan/pen/dyPOzZY */
+/* ---^^^---Timer Animation---^^^---*/
+/*---vvv---------Card---------vvv---*/
 .card {
   position: absolute;
   height: 470px;
   width: 760px;
 }
+.card-text {
+  position: absolute;
+  display: flex;
+  height: 300px;
+  width: 590px;
+  font-size: 28px;
+  text-align: justify;
+  align-items: center;
+  margin: 30px;
+  color: rgb(255, 255, 255);
+  text-shadow: rgba(238, 232, 232, 0.418) 3px 3px 3px;
+}
 .wrap {
-/*  transform-style: preserve-3d;
-  transform: perspective(100rem); */
   position: absolute;
 } 
+.container-card {
+  --bX: 50%;
+  --bY: 80%;
+  width: 650px;
+  height: 360px;
+  border: 5px solid rgb(180 180 180);
+  border-radius: 40px;
+  padding: 50px;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+  background: var(--lgrad), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
+  background-position: var(--bY) var(--bX);
+  background-size: 800px auto;
+  transition: transform .6s 1s;
+}
+.container-card:before,
+.container-card:after {
+  content: "";
+  width: 33px;
+  height: 33px;
+  border: 1px solid #fff;
+  position: absolute;
+  z-index: 2;
+  opacity: .3;
+  transition: .3s;
+}
+.container-card:before {
+  top: 33px;
+  right: 33px;
+  border-bottom-width: 0;
+  border-left-width: 0;
+}
+.container-card:after {
+  bottom: 33px;
+  left: 33px;
+  border-top-width: 0;
+  border-right-width: 0;
+}
+.wrap:hover .container-card:before,
+.wrap:hover .container-card:after {
+  width: calc(100% - 68px);
+  height: calc(100% - 68px);
+}
+.bg-dot {
+  background-image: radial-gradient( rgba(255, 255, 255, 0.15) 9%, transparent 9% );
+  background-position: 0% 0%;
+  background-size: 20px 20px;
+  position: absolute;
+  inset: 37px;
+}
+/*---^^^------Card------^^^---*/
+/*---vvv--- Mod-Tabs ---vvv---*/
 .mod-stats {
   display: grid;
   position: absolute;
@@ -397,7 +379,6 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
   grid-template-rows: repeat(6, 1fr);
   grid-template-columns: 1fr;
 }
-
 .modform {
   position: absolute;
   height: 30px;
@@ -495,73 +476,8 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
 .open {
   transform: translateX(175px) !important;
 }
-.container-card {
-  --rX: 0;
-  --rY: 0;
-  --bX: 50%;
-  --bY: 80%;
-  width: 650px;
-  height: 360px;
-  border: 5px solid rgb(180 180 180);
-  border-radius: 40px;
-  padding: 50px;
-  display: flex;
-  align-items: flex-end;
-  position: relative;
-  /* transform: rotate(calc(var(--rX) * 0.08deg)) rotateY(calc(var(--rY) * 0.6deg)); */
-  background: var(--lgrad), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
-  background-position: var(--bY) var(--bX);
-  background-size: 800px auto;
-  transition: transform .6s 1s;
-}
-.container-card:before,
-.container-card:after {
-  content: "";
-  width: 33px;
-  height: 33px;
-  border: 1px solid #fff;
-  position: absolute;
-  z-index: 2;
-  opacity: .3;
-  transition: .3s;
-}
-.container-card:before {
-  top: 33px;
-  right: 33px;
-  border-bottom-width: 0;
-  border-left-width: 0;
-}
-.container-card:after {
-  bottom: 33px;
-  left: 33px;
-  border-top-width: 0;
-  border-right-width: 0;
-}
-.wrap:hover .container-card:before,
-.wrap:hover .container-card:after {
-  width: calc(100% - 68px);
-  height: calc(100% - 68px);
-}
-.bg-dot {
-  background-image: radial-gradient( rgba(255, 255, 255, 0.15) 9%, transparent 9% );
-  background-position: 0% 0%;
-  background-size: 20px 20px;
-  position: absolute;
-  inset: 37px;
-}
-/*------------------------------------------------------------------------------------*/
-.card-text {
-  position: absolute;
-  display: flex;
-  height: 300px;
-  width: 590px;
-  font-size: 28px;
-  text-align: justify;
-  align-items: center;
-  margin: 30px;
-  color: rgb(255, 255, 255);
-  text-shadow: rgba(238, 232, 232, 0.418) 3px 3px 3px;
-}
+/*---^^^-----Mod-Tabs-----^^^---*/
+/*---vvv---Choices-tabs---vvv---*/
 .choices {
   display: flex;
   position: absolute;
@@ -612,4 +528,4 @@ https://codepen.io/SabAsan/pen/dyPOzZY */
 .choice:hover {
   transform: translateY(5px);
 }
-/*---------------------------------------------------------------------*/
+/*---^^^---Choices-tabs---^^^---*/
