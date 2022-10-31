@@ -45,27 +45,31 @@ body {
   height: 100px;
   top: -138px;
   left: 507px;
+  z-index: 1000;
 }
 #arm1 {
   position: absolute;
-  transform: rotate(207deg);
+  opacity: 0;
   transform-origin: 1756px 1434px;
   animation-direction: reverse;
 }
 #arm2 {
   position: absolute;
-  transform: rotate(304deg);
+  
   transform-origin: 2369px 1259px;
 }
 #arm3 {
   position: absolute;
-  transform: rotate(219deg);
+  
   transform-origin: 2159px 717px;
 }
 #jaw-up {
   position: absolute;
-  transform: rotate(309deg);
+  
   transform-origin: 1852px 745px;
+}
+#jaw-down {
+  transform-origin: right;
 }
 .ring {
   transform-origin: center;
@@ -87,24 +91,38 @@ body {
 /*---vvv-----Timer Animation-----vvv---*/
 /*---vvv-------Timer Start-------vvv---*/
 #bigboite.start #arm1 {
-  transition: 2s ease-out;
-  transform: rotate(352deg);
+  animation: gunstart1 2s ease-out forwards;
 }
 #bigboite.start #arm2 {
-  transition: 2s ease-out;
-  transform: rotate(20deg);
+  animation: gunstart2 2s ease-out forwards;
 }
 #bigboite.start #arm3 {
-  transition: 2s ease-out;
-  transform: rotate(344deg);
+  animation: gunstart3 2s ease-out forwards;
 }
 #bigboite.start #jaw-up {
-  transition: 2s ease-out;
-  transform: rotate(356deg);
+  animation: gunstart4 2s ease-out forwards;
+}
+@keyframes gunstart1 {
+  0% {opacity: 0; transform: rotate(207deg);}
+  0.1% {opacity: 1;}
+  100% {opacity: 1; transform: rotate(352deg);}
+}
+@keyframes gunstart2 {
+  0% {transform: rotate(304deg);}
+  100% {transform: rotate(20deg);}
+}
+@keyframes gunstart3 {
+  0% {transform: rotate(219deg);}
+  100% {transform: rotate(344deg);}
+}
+@keyframes gunstart4 {
+  0% {transform: rotate(309deg);}
+  100% {transform: rotate(356deg);}
 }
 /*---^^^-----Timer Start-----^^^---*/
 /*---vvv-----Timer Idle------vvv---*/
 #bigboite.idle #arm1 {
+  opacity: 1;
   animation: gunfloat1 2s ease-out infinite;
 }
 #bigboite.idle #arm2 {
@@ -328,6 +346,41 @@ body {
   50% {transform: translatex(200px), scale(1.5);}
   100% {transform: translatex(-100px), scale(1);}
  }
+ #bigboite.shot #arm1 {
+  animation: shotarm1 5s forwards;
+}
+#bigboite.shot #arm2 {
+  animation: shotarm2 5s forwards;
+}
+#bigboite.shot #arm3 {
+  animation: shotarm3 5s fowards;
+}
+#bigboite.shot #jaw-up {
+  animation: shotjaw-up 5s forwards;
+}
+#bigboite.shot #jaw-down {
+  animation: shotjaw-down 5s forwards;
+}
+@keyframes shotarm1 {
+  0% {}
+  100% {transform: rotate(6deg);}
+}
+@keyframes shotarm2 {
+  0% {}
+  100% {transform: rotate(60deg);}
+}
+@keyframes shotarm3 {
+  0% {}
+  100% {transform: rotate(304deg);}
+}
+@keyframes shotjaw-up {
+  0% {}
+  100% {transform: rotate(-65deg);}
+}
+@keyframes shotjaw-down {
+  0% {}
+  100% {transform: rotate(0deg);}
+}
 /*---^^^------Timer Shot------^^^---*/
 /* ---^^^---Timer Animation---^^^---*/
 /*---vvv---------Card---------vvv---*/
