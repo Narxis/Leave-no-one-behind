@@ -1,3 +1,5 @@
+const Ship = require('ship.js')
+
 class Player {
     id;
     name;
@@ -97,6 +99,19 @@ class Player {
         }
 
         return this;
+    }
+
+    async roll(stat, modules = false) {
+        let ship = new Ship.Ship().getData().then();
+        let dice = Math.floor(Math.random()*100);
+        let res;
+        let moyMod = ship.scanner + ship.proximity + ship.motors + ship.shield + ship.oxygen+ ship.energy + ship.gravity + ship.landing + ship.construction;
+        moyMod = moyMod/900;
+        if (modules)
+            res = dice * moyMod * this[stat]/100 + (this.moral-50)/2;
+        else
+            res = dice * this[stat]/100 + (this.moral-50)/4;
+        return res >= 50;
     }
 }
 
