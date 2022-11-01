@@ -55,21 +55,19 @@ body {
 }
 #arm2 {
   position: absolute;
-  
   transform-origin: 2369px 1259px;
 }
 #arm3 {
   position: absolute;
-  
   transform-origin: 2159px 717px;
 }
 #jaw-up {
   position: absolute;
-  
   transform-origin: 1852px 745px;
 }
 #jaw-down {
-  transform-origin: right;
+  position: absolute;
+  transform-origin: 1865px 791px;
 }
 .ring {
   transform-origin: center;
@@ -347,13 +345,14 @@ body {
   100% {transform: translatex(-100px), scale(1);}
  }
  #bigboite.shot #arm1 {
+  opacity: 1;
   animation: shotarm1 5s forwards;
 }
 #bigboite.shot #arm2 {
   animation: shotarm2 5s forwards;
 }
 #bigboite.shot #arm3 {
-  animation: shotarm3 5s fowards;
+  animation: shotarm3 5s forwards;
 }
 #bigboite.shot #jaw-up {
   animation: shotjaw-up 5s forwards;
@@ -363,23 +362,28 @@ body {
 }
 @keyframes shotarm1 {
   0% {}
+  50% {transform: rotate(6deg);}
   100% {transform: rotate(6deg);}
 }
 @keyframes shotarm2 {
   0% {}
-  100% {transform: rotate(60deg);}
+  50% {transform: rotate(120deg);}
+  100% {transform: rotate(120deg);}
 }
 @keyframes shotarm3 {
   0% {}
-  100% {transform: rotate(304deg);}
+  50% {transform: rotate(10deg);}
+  100% {transform: rotate(99deg);}
 }
 @keyframes shotjaw-up {
   0% {}
-  100% {transform: rotate(-65deg);}
+  50% {transform: rotate(-65deg) translate(0, 0)}
+  100% {}
 }
 @keyframes shotjaw-down {
   0% {}
-  100% {transform: rotate(0deg);}
+  50% {transform: translate(0, 0)}
+  100% {transform: translate(0, 0);}
 }
 /*---^^^------Timer Shot------^^^---*/
 /* ---^^^---Timer Animation---^^^---*/
