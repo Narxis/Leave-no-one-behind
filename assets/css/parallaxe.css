@@ -69,6 +69,10 @@ body {
   position: absolute;
   transform-origin: 1865px 791px;
 }
+#plugun {
+  position: absolute;
+  transform-origin: 1421px 623px;
+}
 .ring {
   transform-origin: center;
 }
@@ -346,44 +350,58 @@ body {
  }
  #bigboite.shot #arm1 {
   opacity: 1;
-  animation: shotarm1 5s forwards;
+  animation: shotarm1 6s ease-out forwards;
 }
 #bigboite.shot #arm2 {
-  animation: shotarm2 5s forwards;
+  animation: shotarm2 6s ease-out forwards;
 }
 #bigboite.shot #arm3 {
-  animation: shotarm3 5s forwards;
+  animation: shotarm3 6s ease-out forwards;
 }
 #bigboite.shot #jaw-up {
-  animation: shotjaw-up 5s forwards;
+  animation: shotjaw-up 6s ease-out forwards;
 }
 #bigboite.shot #jaw-down {
-  animation: shotjaw-down 5s forwards;
+  animation: shotjaw-down 6s ease-out forwards;
+}
+#bigboite.shot #plugun {
+  animation: yeet 6s ease-in forwards;
 }
 @keyframes shotarm1 {
   0% {}
-  50% {transform: rotate(6deg);}
-  100% {transform: rotate(6deg);}
+  30% {transform: rotate(20deg);}
+  70% {transform: rotate(-65deg);}
+  100% {transform: rotate(-190deg);}
 }
 @keyframes shotarm2 {
   0% {}
-  50% {transform: rotate(120deg);}
-  100% {transform: rotate(120deg);}
+  40% {transform: rotate(120deg);}
+  70% {transform: rotate(-10deg);}
+  100% {transform: rotate(-30deg);}
 }
 @keyframes shotarm3 {
   0% {}
-  50% {transform: rotate(10deg);}
-  100% {transform: rotate(99deg);}
+  50% {transform: rotate(99deg);}
+  70% {transform: rotate(-20deg);}
+  100% {transform: rotate(180deg);}
 }
 @keyframes shotjaw-up {
   0% {}
-  50% {transform: rotate(-65deg) translate(0, 0)}
+  25% {transform: rotate(-50deg);}
+  70% {transform: rotate(15deg)}
   100% {}
 }
 @keyframes shotjaw-down {
+  0% {transform: rotate(0deg);}
+  50% {transform: rotate(0deg);}
+  70% {transform: rotate(-15deg); position: relative;}
+  100% {transform: rotate(0deg); position: relative;}
+}
+@keyframes yeet {
   0% {}
-  50% {transform: translate(0, 0)}
-  100% {transform: translate(0, 0);}
+  50% {}
+  70% {position: relative; transform: translateX(-2000px);}
+  100% {position: relative; transform: translateX(-2000px);}
 }
 /*---^^^------Timer Shot------^^^---*/
 /* ---^^^---Timer Animation---^^^---*/
