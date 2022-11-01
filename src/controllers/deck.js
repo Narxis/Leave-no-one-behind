@@ -72,7 +72,8 @@ const deckGenerator = async function (gameMode = 'Fair', nbPla = 5, nbTot = 6, n
 
     for (let card of deck){
         await DB.tables.deck.create({
-            cardId: card.id,
+            deck_id: 0,
+            card_id: card.id,
             played: 0
         })
     }
@@ -108,24 +109,22 @@ const getCards = async function (type = 0, quantity = ALL, valMinMax= [-1,0], or
     return cards;
 }
 
-const cardPop = function (){
-    let deck = JSON.parse(fs.readFileSync('jsonFiles/deck.json').toString());
-    let card = deck.pop();
+const cardPop = async function (){
+    let row = await DB.tables.deck.findOne({
+        where: {played: 0},
+        order: [['id', 'ASC']]
+    }).then(result => {
+        DB.tables.deck.update({
+            played: 1
+        }, {
+            where: {
+                id: result.id,
+            }
+        })
+    })
 
-    fs.writeFileSync('jsonFiles/deck.json', JSON.stringify(deck));
-    
-    let history = fs.readFileSync('jsonFiles/history.json').toString();
-    if (history.length === 0){
-        let list = [];
-        list.push(card);
-        fs.writeFileSync('jsonFiles/history.json', JSON.stringify(list));
-        return;
-    }
-    history = JSON.parse(history);
-
-    history.push(card);
-    fs.writeFileSync('jsonFiles/history.json', JSON.stringify(history));
-    //console.log(history)
+    let card = new Card(row.id)
+    return await card.getData();
 }
 
 const shuffle = function (array) {

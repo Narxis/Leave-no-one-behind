@@ -244,7 +244,12 @@ class DB {
                 primaryKey: true,
                 autoIncrement: true
             },
-            cardId: {
+            deck_id: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            card_id: {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
