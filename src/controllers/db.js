@@ -238,11 +238,30 @@ class DB {
             },
         })
 
+        let deck = this.sequelize.define('deck', {
+            id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            cardId: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            played: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            }
+        })
+
         this.tables = {
             cards: cards,
             card_modules: card_modules,
             players: players,
             ship: ship,
+            deck: deck
         };
 
         for (let table in this.tables) {

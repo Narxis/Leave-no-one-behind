@@ -68,9 +68,17 @@ const deckGenerator = async function (gameMode = 'Fair', nbPla = 5, nbTot = 6, n
             deck.push(thirdPlaSlice.pop());
     }
 
-    deck = deck.reverse();
-    fs.writeFileSync('jsonFiles/deck.json', JSON.stringify(deck))
-    return JSON.stringify(deck);
+    //deck = deck.reverse();
+
+    for (let card of deck){
+        await DB.tables.deck.create({
+            cardId: card.id,
+            played: 0
+        })
+    }
+
+    // fs.writeFileSync('jsonFiles/deck.json', JSON.stringify(deck))
+    // return JSON.stringify(deck);
 }
 
 const getCards = async function (type = 0, quantity = ALL, valMinMax= [-1,0], order_rand = true) {
