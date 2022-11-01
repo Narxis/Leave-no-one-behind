@@ -101,9 +101,8 @@ class Player {
         return this;
     }
 
-    async roll(stat, modules = false) {
+    async roll(dice, stat, modules = false) {
         let ship = new Ship.Ship().getData().then();
-        let dice = Math.floor(Math.random()*100);
         let res;
         let moyMod = ship.scanner + ship.proximity + ship.motors + ship.shield + ship.oxygen+ ship.energy + ship.gravity + ship.landing + ship.construction;
         moyMod = moyMod/900;
