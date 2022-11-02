@@ -670,7 +670,16 @@ body {
   align-content: center;
   flex-direction: column;
   transition: 2s cubic-bezier(0, 0, 0.1, 0.99);
-  transform: translateY(385px);
+  /*transform: translateY(385px);*/
+}
+.expand {
+  /*placeholder pour le bouton expand*/
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: aliceblue;
+  left: 215px;
+  top: 5px;
 }
 .player-roll {
   display: flex;
