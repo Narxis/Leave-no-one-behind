@@ -640,3 +640,23 @@ body {
   transform: translateY(5px);
 }
 /*---^^^---Choices-tabs---^^^---*/
+/*---vvv---Player-tabs----vvv---*/
+.player-tabs {
+  position: absolute;
+  width: 1200px;
+  height: 100px;
+  background-color: #fff;
+  bottom: 0px;
+  display: flex;
+  justify-content: center;
+  align-content: flex-end;
+  align-items: flex-end;
+  gap: 2px;
+}
+.player-tab {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  background-color: rgb(212, 45, 45);
+}
+/*---^^^---Player-tabs----^^^---*/
