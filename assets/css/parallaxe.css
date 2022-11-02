@@ -678,18 +678,27 @@ body {
   width: 40px;
   height: 30px;
   /* background-color: #FFFFFF; */
-  margin: 19px 0px 0px 0px;
-  border: 3px solid rgb(180 180 180);
+  margin: 25px 0px 0px 8px;
+  /* border: 3px solid rgb(180 180 180); */
 }
 
 .output-roll {
   top: 0px;
   left: 0px;
-  width: 70px;
-  height: 45px;
+  /* width: 70px; */
+  /* height: 45px; */
   /* background-color: #750b0b; */
-  margin: 5px 20px 0px 20px;
-  border: 3px solid rgb(180 180 180);
+  margin: 5px 30px 0px 60px;
+  /* border: 3px solid rgb(180 180 180); */
+  width: 60px;
+  height: 45px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Jura', sans-serif;
+  text-align: center;
+  color: #fff;
+  box-shadow: 1.5px 1.5px 3px #c8d0e71f, -1px -1px 2.5px #ffffff29;
+  background-color: rgba(0, 0, 0, 0.26);
 }
 .roll-type {
   display: flex;
@@ -719,10 +728,15 @@ body {
   height: 20px;
   left: 18px;
 }
-.rocket-icon {
+.roll-type2 svg {
   /* position: absolute; */
   width: 20px;
   height: 20px;
   left: 18px;
 }
+.form-roll {
+  width: 50px;
+  box-shadow: 1.5px 1.5px 3px #c8d0e71f, -1px -1px 2.5px #ffffff29;
+}
+
 /*---^^^---Player-tabs----^^^---*/
