@@ -657,7 +657,7 @@ body {
   gap: 5px;
 }
 .player-tab {
-  padding: 12px 0px 0px 0px;
+  padding: 25px 0px 0px 0px;
   position: relative;
   width: 238px;
   height: 444px;
@@ -666,57 +666,84 @@ body {
   border: 4px solid rgb(180 180 180);
   border-radius: 15px 15px 0px 0px;
   display: flex;
-  align-content: flex-start;
+  justify-content: flex-start;
+  align-content: center;
+  flex-direction: column;
+  transition: 2s cubic-bezier(0, 0, 0.1, 0.99);
+  transform: translateY(385px);
+}
+.player-roll {
+  display: flex;
   justify-content: center;
 }
 .player-name {
   position: absolute;
-  top: 0px;
-  left: 5px;
+  top: 2px;
+  left: 6px;
   color: rgb(255, 255, 255);
-  text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
+  text-shadow: rgb(238 232 232 / 42%) 2px 1px 4px;
+  font-size: 16px;
+}
+.player-race {
+  font-size: 13px;
+  text-align: start;
+  text-decoration: underline;
 }
 .input-roll {
-  top: 0px;
+  position: relative;
+  top: -5px;
   left: 0px;
   width: 40px;
   height: 30px;
-  margin: 25px 0px 0px 8px;
+  margin: 25px 0px 0px 0px;
 }
 
 .output-roll {
   top: 0px;
   left: 0px;
-  margin: 5px 20px 0px 50px;
+  margin: 5px 20px 0px 30px;
   width: 85px;
   height: 45px;
   border: none;
   border-radius: 10px;
   font-family: 'Jura', sans-serif;
-  text-align: center;
+  font-size: 30px;
+  letter-spacing: 2px;
+  text-shadow: rgb(238 232 232 / 42%) 2px 2px 4px;
   color: #fff;
   box-shadow: 1.5px 1.5px 3px #c8d0e71f, -1px -1px 2.5px #ffffff29;
   background-color: rgba(0, 0, 0, 0.26);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .roll-type {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  height: 55px;
 }
 .roll-type1 {
   top: 0px;
   left: 0px;
-  width: 25px;
-  height: 25px;
+  width: 50px;
+  height: 33px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  align-items: center;
 }
 .roll-type2 {
   top: 0px;
   left: 0px;
-  width: 25px;
-  height: 25px;
+  width: 50px;
+  height: 33px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  align-items: center;
+}
+.dice-type {
+  margin: 0px;
 }
 .player-icon {
   width: 20px;
@@ -724,31 +751,36 @@ body {
   left: 18px;
 }
 .roll-type1 svg {
-  /*on dirait c'est pas aligné mais en fait si*/
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  left: 211px;
-  top: 17px;
+  /* position: absolute; */
+  width: 21px;
+  /* height: 18px; */
+  /* left: 129px; */
+  /* top: 17px; */
   fill: rgb(180, 180, 180);
+  margin: 0px 0px 0px 7px;
 }
 .roll-type2 svg {
-  /*on dirait c'est pas aligné mais en fait si*/
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  left: 210px;
-  top: 42px;
+  /* position: absolute; */
+  width: 21px;
+  /* height: 18px; */
+  /* left: 129px; */
+  /* top: 17px; */
   fill: rgb(180, 180, 180);
+  margin: 0px 0px 0px 7px;
 }
 .form-roll {
   width: 50px;
   box-shadow: 1.5px 1.5px 3px #c8d0e71f, -1px -1px 2.5px #ffffff29;
 }
+.player-stat {
+  display: flex;
+  flex-direction: column;
+}
 hr.separateur {
-  width: 600px;
+  width: 238px;
   height: 12px;
   border: 0;
-  box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
+  margin: 13px 0px 0px 0px;
 }
 /*---^^^---Player-tabs----^^^---*/
