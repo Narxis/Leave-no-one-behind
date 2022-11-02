@@ -729,10 +729,11 @@ body {
   left: 18px;
 }
 .roll-type2 svg {
-  /* position: absolute; */
+  position: absolute;
   width: 20px;
   height: 20px;
   left: 18px;
+  fill: rgb(180, 180, 180);
 }
 .form-roll {
   width: 50px;
