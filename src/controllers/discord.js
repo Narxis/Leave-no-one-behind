@@ -4,7 +4,7 @@ const { Client, Collection, GatewayIntentBits, Routes } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const token = process.env.DS_TOKEN;
 
-module.exports.start = function () {
+const start = function () {
     // Require the necessary discord.js classes
 // Create a new client instance
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -24,6 +24,10 @@ module.exports.start = function () {
 
 // When the client is ready, run this code (only once)
     client.once('ready', () => {
+        let guilds = client.guilds.cache;
+        for (let guild_data of guilds) {
+            deployCommands(guild_data[1])
+        }
         console.log('Bot Ready!');
     });
 
@@ -46,11 +50,10 @@ module.exports.start = function () {
     client.login(token);
 }
 
-module.exports.deployCommands = function () {
+const deployCommands = function (guild) {
 
     let clientId = process.env.DS_CLIENT_ID;
     let token = process.env.DS_TOKEN;
-    let guildId = process.env.DS_GUILD_ID     // TODO GET GUILD ID
 
     const commands = [];
     const commandsPath = path.join(__dirname, './../commands');
@@ -64,7 +67,9 @@ module.exports.deployCommands = function () {
 
     const rest = new REST({ version: '10' }).setToken(token);
 
-    rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
-        .then(() => console.log('Successfully registered application commands.'))
+    rest.put(Routes.applicationGuildCommands(clientId, guild.id), { body: commands })
+        .then(() => console.log(`Successfully registered application commands on "${guild.name}"`))
         .catch(console.error);
 }
+
+module.exports = {start, deployCommands}

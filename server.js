@@ -34,7 +34,6 @@ const startServer = async function() {
     WS.init(wss);
 
     Bot.start();
-    Bot.deployCommands();
 }
 
 startServer().then(e => {
