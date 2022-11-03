@@ -17,6 +17,79 @@ body {
   align-items: center;
   overflow: hidden;
 }
+.ad {
+  cursor: pointer;
+}
+.pub {
+  position: absolute;
+  height: 400px;
+  width: 100px;
+  top: 150px;
+  left: 0px;
+}
+.pub2 {
+  position: absolute;
+  height: 400px;
+  width: 100px;
+  top: 800px;
+  left: 1525px;
+  z-index: 100;
+}
+.lul {
+  border-radius: 15px;
+}
+.pkjfaisca {
+  position: absolute;
+  height: 400px;
+  width: 100px;
+  top: 0px;
+  left: 1620px;
+}
+.ctrop {
+  position: absolute;
+  height: 400px;
+  width: 100px;
+  top: 0px;
+  left: 1300px;
+}
+.aledmourir {
+  position: absolute;
+  height: 400px;
+  width: 100px;
+  top: 0px;
+  left: 985px;
+}
+.apresjarrete {
+  position: absolute;
+  height: 400px;
+  width: 100px;
+  top: 6px;
+  left: 741px;
+  z-index: 2;
+}
+.jppmdr {
+  position: absolute;
+  height: 400px;
+  width: 100px;
+  top: 0px;
+  left: 678px;
+  z-index: 1;
+}
+.lalast {
+  position: absolute;
+  height: 400px;
+  width: 100px;
+  top: 6px;
+  left: 196px;
+}
+.pranked {
+  position: absolute;
+  height: 400px;
+  width: 100px;
+  top: 172px;
+  left: 741px;
+  z-index: 2;
+}
 .container {
   height: 50px;
   width: 50px;
@@ -893,34 +966,3 @@ hr.separateur {
   margin: 10px;
 }
 /*---^^^---Player-tabs----^^^---*/
-.pub {
-  position: absolute;
-  height: 400px;
-  width: 100px;
-  top: 150px;
-  left: 0px;
-}
-.pub2 {
-  position: absolute;
-  height: 400px;
-  width: 100px;
-  top: 800px;
-  left: 1525px;
-}
-.lul {
-  border-radius: 15px;
-}
-.pkjfaisca {
-  position: absolute;
-  height: 400px;
-  width: 100px;
-  top: 0px;
-  left: 1620px;
-}
-.ctrop {
-  position: absolute;
-  height: 400px;
-  width: 100px;
-  top: 0px;
-  left: 1620px;
-}
