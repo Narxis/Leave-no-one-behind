@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "prod" ]
   pull_request:
     branches: [ "prod" ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -15,9 +15,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
     - name: Use Node.js
-      uses: actions/setup-node@v3
       with:
         node-version: 12
         cache: 'npm'
