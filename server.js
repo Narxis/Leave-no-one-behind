@@ -4,6 +4,7 @@ const WS = require('./src/controllers/ws');
 const constants = require('./src/config/constants');
 const db = require ('./src/controllers/db');
 const PORT = process.env.PORT || 8080;
+const Bot = require('./src/controllers/discord');
 
 const startServer = async function() {
 
@@ -31,6 +32,9 @@ const startServer = async function() {
     });
 
     WS.init(wss);
+
+    Bot.start();
+    Bot.deployCommands();
 }
 
 startServer().then(e => {
