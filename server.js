@@ -4,6 +4,7 @@ const WS = require('./src/controllers/ws');
 const constants = require('./src/config/constants');
 const db = require ('./src/controllers/db');
 const PORT = process.env.PORT || 8080;
+const Bot = require('./src/controllers/discord');
 
 const startServer = async function() {
 
@@ -17,20 +18,20 @@ const startServer = async function() {
     require('./src/routers/api')(router);
     app.use('/', router);
 
-    global.WSS = new WebSocketServer({ noServer: true });
-    WSS.on('connection', socket => {
+    let wss = new WebSocketServer({ noServer: true });
+    wss.on('connection', socket => {
         socket.on('message', message => console.log(message));
     });
 
     const server = app.listen(PORT);
 
     server.on('upgrade', (request, socket, head) => {
-        WSS.handleUpgrade(request, socket, head, socket => {
-            WSS.emit('connection', socket, request);
+        wss.handleUpgrade(request, socket, head, socket => {
+            wss.emit('connection', socket, request);
         });
     });
 
-    WS.init(WSS);
+    WS.init(wss);
     Bot.start();
 }
 
