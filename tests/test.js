@@ -5,21 +5,26 @@ const db = require ('./../src/controllers/db');
 const type = require("./../src/config/constants");
 const {getCards, deckGenerator} = require("../src/controllers/deck");
 
+process.env.DB_URL = '';
+type.register();
+
 test();
 
 async function test() {
     await setup();
     await test_cards_setup();
     await test_deck_generation();
+    await DB.tables.card_modules.drop();
+    await DB.tables.deck.drop();
+    await DB.tables.cards.drop();
 }
 
 async function setup(){
     let DB = new db.DB;
     global.DB = await DB.init();
-    type.register();
 
-    await DB.tables.cards.destroy();
-    await DB.tables.players.destroy()
+    //await DB.tables.cards.drop();
+    //await DB.tables.players.drop();
     await DB.test();
 }
 
@@ -81,12 +86,12 @@ async function test_cards_setup(){
     console.log('OK');
 
     console.log('Medium planet cards');
-    for (let card of firstPlaSlice)
+    for (let card of secondPlaSlice)
         console.assert(card.type === TYPE_PLANET && card.value > 500 && card.value < 801);
     console.log('OK');
 
     console.log('High planet cards');
-    for (let card of firstPlaSlice)
+    for (let card of thirdPlaSlice)
         console.assert(card.type === TYPE_PLANET && card.value > 800 && card.value < 1001);
     console.log('OK');
 
@@ -96,14 +101,24 @@ async function test_cards_setup(){
 async function test_deck_generation(gameMode = 'Fair', nbPla = 5, nbTot = 6, nbNeg=2, nbPos=1, nbNeu=3){
     await deckGenerator(gameMode, nbPla, nbTot, nbNeg, nbPos, nbNeu);
     let deck = await DB.tables.deck.findAll();
+    deck = deck.map(r => r.dataValues);
+
+    let card_deck = [];
+
+    for (let elt of deck)
+        card_deck.push(await DB.tables.cards.findOne({where: {id: elt.card_id}}))
+
+    card_deck = card_deck.map(r => r.dataValues);
+
+    console.log(card_deck);
     let neu_count = 0;
     let neg_count = 0;
     let pos_count = 0;
     let pla_count = 0;
 
-    console.log('Testing deck generation')
+    console.log('Testing deck generation');
 
-    for (let card of deck){
+    for (let card of card_deck){
         if (card.type === TYPE_POSITIVE)
             pos_count++;
         else if (card.type === TYPE_NEUTRAL)
@@ -124,6 +139,9 @@ async function test_deck_generation(gameMode = 'Fair', nbPla = 5, nbTot = 6, nbN
                 console.assert(card.value > 800 && card.value < 1001);
             console.log('OK');
             pla_count++;
+            pos_count = 0;
+            neu_count = 0;
+            neg_count = 0;
         }
     }
     console.log('Testing number of planets');
@@ -132,3 +150,5 @@ async function test_deck_generation(gameMode = 'Fair', nbPla = 5, nbTot = 6, nbN
 
     console.log('Deck generation OK')
 }
+
+module.exports = {test};
