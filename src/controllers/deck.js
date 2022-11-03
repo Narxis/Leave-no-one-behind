@@ -68,9 +68,13 @@ const deckGenerator = async function (gameMode = 'Fair', nbPla = 5, nbTot = 6, n
             deck.push(thirdPlaSlice.pop());
     }
 
-    deck = deck.reverse();
-    fs.writeFileSync('jsonFiles/deck.json', JSON.stringify(deck))
-    return JSON.stringify(deck);
+    for (let card of deck){
+        await DB.tables.deck.create({
+            deck_id: 0,
+            card_id: card.id,
+            played: 0
+        })
+    }
 }
 
 const getCards = async function (type = 0, quantity = ALL, valMinMax= [-1,0], order_rand = true) {
@@ -100,24 +104,31 @@ const getCards = async function (type = 0, quantity = ALL, valMinMax= [-1,0], or
     return cards;
 }
 
-const cardPop = function (){
-    let deck = JSON.parse(fs.readFileSync('jsonFiles/deck.json').toString());
-    let card = deck.pop();
+const cardPop = async function (){
+    let row = await DB.tables.deck.findOne({
+        where: {
+            deck_id: 0,
+            played: 0
+        },
+        order: [['id', 'ASC']]
+    }).then(result => {
+        DB.tables.deck.update({
+            played: 1
+        }, {
+            where: {
+                id: result.id,
+            }
+        })
+    })
 
-    fs.writeFileSync('jsonFiles/deck.json', JSON.stringify(deck));
-    
-    let history = fs.readFileSync('jsonFiles/history.json').toString();
-    if (history.length === 0){
-        let list = [];
-        list.push(card);
-        fs.writeFileSync('jsonFiles/history.json', JSON.stringify(list));
-        return;
-    }
-    history = JSON.parse(history);
+    let card = new Card(row.id)
+    return await card.getData();
+}
 
-    history.push(card);
-    fs.writeFileSync('jsonFiles/history.json', JSON.stringify(history));
-    //console.log(history)
+const destroyDeck = async function (deck_id = 0){
+    DB.tables.deck.destroy({
+        where: {deck_id: deck_id}
+    })
 }
 
 const shuffle = function (array) {
@@ -138,4 +149,4 @@ const shuffle = function (array) {
     return array;
 }
 
-module.exports = {deckGenerator, cardPop, getCards, shuffle}
+module.exports = {deckGenerator, cardPop, getCards, destroyDeck, shuffle}
