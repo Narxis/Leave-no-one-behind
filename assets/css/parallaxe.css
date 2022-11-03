@@ -735,56 +735,79 @@ body {
   justify-content: center;
   align-items: center;
 }
+/*---vvv---Role-type----vvv---*/
 .roll-type {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   align-content: center;
   height: 55px;
 }
-.roll-type1 {
-  top: 0px;
-  left: 0px;
-  width: 50px;
-  height: 33px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+.roll-type * {
+  cursor: pointer;
 }
+.roll-type svg {
+  position: absolute;
+  transform: scale(0.8);
+  left: 15px;
+  top: -4px;
+  width: 21px;
+  fill: #ffffff27;
+  margin: 0px 0px 0px 4px;
+}
+
+.roll-type1,
 .roll-type2 {
   top: 0px;
   left: 0px;
-  width: 50px;
-  height: 33px;
+  width: 42px;
+  height: 17px;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
 }
+.dice-type-input {
+  z-index: 1;
+  width: 35px;
+  opacity: 0;
+}
+.dice-type-label {
+  margin-left: 5.4px;
+  margin-top: 3.3px;
+  border-radius: 50%;
+  position: absolute;
+  background-color: #fff;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(145deg, #a2a2a200, #c1c1c12a);
+  box-shadow: 1px 1px 6px #9999993a, -1px -1px 6px #cfcfcf3f;
+}
+.dice-type-label::after {
+  opacity: 0;
+  content: "";
+  border-radius: 50%;
+  position: absolute;
+  background-color: #fff;
+  width: 12px;
+  height: 12px;
+  border-radius: 50px;
+  background: linear-gradient(145deg, #c1c1c1, #a2a2a2);
+  box-shadow: 1px 1px 6px #99999954, -1px -1px 6px #cfcfcf36;
+}
+/*.roll-check {
+  fill: #ffffff !important;
+}*/
+/*-/!\-Doliprane-requiered-to-read-this-selector-/!\-*/
+.dice-type-input:checked ~ .dice-type-label.dice-type-label::after {
+  transition: .5s ease-in-out;
+  opacity: 1;
+}
+.dice-type-input:checked ~ .dice-type-label.dice-type-label svg {
+  fill: #ffffff !important;
+  transition: .5s ease-in-out;
+}
+/*---^^^---Role-type----^^^---*/
 .dice-type {
   margin: 0px;
-}
-.player-icon {
-  width: 20px;
-  height: 20px;
-  left: 18px;
-}
-.roll-type1 svg {
-  /* position: absolute; */
-  width: 21px;
-  /* height: 18px; */
-  /* left: 129px; */
-  /* top: 17px; */
-  fill: rgb(180, 180, 180);
-  margin: 0px 0px 0px 7px;
-}
-.roll-type2 svg {
-  /* position: absolute; */
-  width: 21px;
-  /* height: 18px; */
-  /* left: 129px; */
-  /* top: 17px; */
-  fill: rgb(180, 180, 180);
-  margin: 0px 0px 0px 7px;
 }
 .form-roll {
   width: 50px;
