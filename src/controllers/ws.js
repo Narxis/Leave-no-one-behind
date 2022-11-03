@@ -6,7 +6,13 @@ module.exports.init = function (wss){
 
             //log the received message and send it back to the client
             console.log('received: %s', message);
-            ws.send(`Hello, you sent -> ${message}`);
+            // ws.send(`-> ${message}`);  // Unique
+            // All
+            wss.clients.forEach(function each(client) {
+                if (client !== ws && client.readyState === ws.OPEN) {
+                    client.send(`-> ${message}`);
+                }
+            });
         });
 
         //send immediatly a feedback to the incoming connection

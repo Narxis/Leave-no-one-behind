@@ -6,5 +6,7 @@ module.exports.register = function () {
 
     global.ALL = null;
 
+    global.WS_URL = 'ws://localhost:' + (process.env.PORT || 8080)
+
     global.API_VER = 1;
 }

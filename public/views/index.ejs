@@ -1,1 +1,10 @@
-test
+<div id="test">test</div>
+<script>
+    const socketLNOB = new WebSocket("ws://localhost:8080")
+    socketLNOB.onmessage = (event) => {
+        console.log(event.data)
+        let resp = document.createElement('p');
+        resp.innerText = event.data;
+        document.getElementById('test').append(resp)
+    }
+</script>
