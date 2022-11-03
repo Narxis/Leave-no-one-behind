@@ -655,6 +655,7 @@ body {
   align-content: flex-end;
   align-items: flex-end;
   gap: 5px;
+  z-index: 100;
 }
 .player-tab {
   padding: 25px 0px 0px 0px;
@@ -670,16 +671,24 @@ body {
   align-content: center;
   flex-direction: column;
   transition: 2s cubic-bezier(0, 0, 0.1, 0.99);
-  /*transform: translateY(385px);*/
+  /* transform: translateY(385px); */
 }
 .expand {
-  /*placeholder pour le bouton expand*/
   position: absolute;
   width: 20px;
-  height: 20px;
-  background: aliceblue;
-  left: 215px;
+  height: 30px;
+  left: 206px;
   top: 5px;
+  z-index: -1;
+  transition: 1s ease-out;
+  transform: translateY(-29px);
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+  border: 3px solid rgb(180 180 180);
+  border-radius: 8px 8px 0px 0px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: 13px;
 }
 .player-roll {
   display: flex;
@@ -794,7 +803,7 @@ hr.separateur {
 }
 .player-stat {
   width: 238px;
-  height: 52px;
+  height: 60px;
   margin: 0px 0px 0px 0px;
   display: flex;
   flex-direction: row;
@@ -808,22 +817,31 @@ hr.separateur {
 .player-stat #Calque_1 {
   transform: scale(1.25);
 }
-.player-stat-name {
+
+/*.player-stat-name {
   width: 101px;
   height: 30px;
   text-align: center;
   text-decoration: underline;
   font-size: 14px;
   margin: 10px 0px 0px 2px;
-}
+}*/
+
 .player-stat-icon {
   width: 30px;
   height: 30px;
-  margin: 0px 40px 0px 15px;
+  margin: 0px 40px 0px 35px;
 }
 .player-stat-icon svg {
   fill: rgb(180, 180, 180);
 }
+.player-stat-down {
+  position: relative;
+  height: 30px;
+  width: 30px;
+  margin: 10px;
+}
+
 .player-stat-value {
   width: 30px;
   height: 30px;
@@ -840,4 +858,10 @@ hr.separateur {
   align-items: center;
 }
 
+.player-stat-up {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  margin: 10px;
+}
 /*---^^^---Player-tabs----^^^---*/
