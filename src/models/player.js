@@ -1,4 +1,4 @@
-const Ship = require('ship.js')
+const {Ship} = require('./ship')
 
 class Player {
     id;
@@ -102,7 +102,9 @@ class Player {
     }
 
     async roll(dice, stat, modules = false) {
-        let ship = new Ship.Ship().getData().then();
+        let ship = new Ship();
+        ship = await ship.getData();
+
         let res;
         let moyMod = ship.scanner + ship.proximity + ship.motors + ship.shield + ship.oxygen+ ship.energy + ship.gravity + ship.landing + ship.construction;
         moyMod = moyMod/900;
