@@ -15,10 +15,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Use Node.js
-      with:
-        node-version: 12
-        cache: 'npm'
     - run: npm install
     - run: npm run build --if-present
     - run: npm test
