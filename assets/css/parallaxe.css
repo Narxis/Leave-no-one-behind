@@ -743,9 +743,10 @@ body {
   left: 15px;
   top: -4px;
   width: 21px;
-  fill: rgb(180, 180, 180);
+  fill: #ffffff27;
   margin: 0px 0px 0px 4px;
 }
+
 .roll-type1,
 .roll-type2 {
   top: 0px;
@@ -782,10 +783,17 @@ body {
   background: linear-gradient(145deg, #c1c1c1, #a2a2a2);
   box-shadow: 1px 1px 6px #99999954, -1px -1px 6px #cfcfcf36;
 }
+/*.roll-check {
+  fill: #ffffff !important;
+}*/
 /*-/!\-Doliprane-requiered-to-read-this-selector-/!\-*/
 .dice-type-input:checked ~ .dice-type-label.dice-type-label::after {
   transition: .5s ease-in-out;
   opacity: 1;
+}
+.dice-type-input:checked ~ .dice-type-label.dice-type-label svg {
+  fill: #ffffff !important;
+  transition: .5s ease-in-out;
 }
 /*---^^^---Role-type----^^^---*/
 .dice-type {
