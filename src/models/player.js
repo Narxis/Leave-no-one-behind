@@ -102,7 +102,7 @@ class Player {
     }
 
     async roll(dice, stat, modules = false) {
-        let ship = new Ship();
+        let ship = new Ship(1);
         ship = await ship.getData();
 
         let res;

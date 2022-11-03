@@ -1,9 +1,9 @@
-let {Card} = require('./../src/models/card');
-let deck = require('./../src/controllers/deck')
-const fs = require("fs")
 const db = require ('./../src/controllers/db');
 const type = require("./../src/config/constants");
+const fs = require('fs')
 const {getCards, deckGenerator} = require("../src/controllers/deck");
+const assert = require("node:assert");
+const {Player} = require("../src/models/player");
 
 process.env.DB_URL = '';
 type.register();
@@ -11,20 +11,19 @@ type.register();
 test();
 
 async function test() {
+    try {await fs.unlinkSync('./test_db.sqlite'); console.log('db deleted')}
+    catch (e){console.log(e)}
+
     await setup();
     await test_cards_setup();
     await test_deck_generation();
-    await DB.tables.card_modules.drop();
-    await DB.tables.deck.drop();
-    await DB.tables.cards.drop();
+    await test_roll();
 }
 
 async function setup(){
     let DB = new db.DB;
-    global.DB = await DB.init();
+    global.DB = await DB.init(true);
 
-    //await DB.tables.cards.drop();
-    //await DB.tables.players.drop();
     await DB.test();
 }
 
@@ -40,59 +39,59 @@ async function test_cards_setup(){
     console.log('Testing for select in DB');
 
     console.log('Neutral cards');
-    console.assert(neuCardList.length > 0);
+    assert(neuCardList.length > 0);
     console.log('OK');
 
     console.log('Negative cards');
-    console.assert(negCardList.length > 0);
+    assert(negCardList.length > 0);
     console.log('OK');
 
     console.log('Positive cards');
-    console.assert(posCardList.length > 0);
+    assert(posCardList.length > 0);
     console.log('OK');
 
     console.log('Low planet cards');
-    console.assert(firstPlaSlice.length > 0);
+    assert(firstPlaSlice.length > 0);
     console.log('OK');
 
     console.log('Medium planet cards');
-    console.assert(secondPlaSlice.length > 0);
+    assert(secondPlaSlice.length > 0);
     console.log('OK');
 
     console.log('High planet cards');
-    console.assert(thirdPlaSlice.length > 0);
+    assert(thirdPlaSlice.length > 0);
     console.log('OK');
 
     console.log('Testing for select correctness');
 
     console.log('Neutral cards');
     for (let card of neuCardList)
-        console.assert(card.type === TYPE_NEUTRAL && card.value === -1);
+        assert(card.type === TYPE_NEUTRAL && card.value === -1);
     console.log('OK');
 
     console.log('Negative cards');
     for (let card of negCardList)
-        console.assert(card.type === TYPE_NEGATIVE && card.value === -1);
+        assert(card.type === TYPE_NEGATIVE && card.value === -1);
     console.log('OK');
 
     console.log('Positive cards');
     for (let card of posCardList)
-        console.assert(card.type === TYPE_POSITIVE && card.value === -1);
+        assert(card.type === TYPE_POSITIVE && card.value === -1);
     console.log('OK');
 
     console.log('Low planet cards');
     for (let card of firstPlaSlice)
-        console.assert(card.type === TYPE_PLANET && card.value > 0 && card.value < 501);
+        assert(card.type === TYPE_PLANET && card.value > 0 && card.value < 501);
     console.log('OK');
 
     console.log('Medium planet cards');
     for (let card of secondPlaSlice)
-        console.assert(card.type === TYPE_PLANET && card.value > 500 && card.value < 801);
+        assert(card.type === TYPE_PLANET && card.value > 500 && card.value < 801);
     console.log('OK');
 
     console.log('High planet cards');
     for (let card of thirdPlaSlice)
-        console.assert(card.type === TYPE_PLANET && card.value > 800 && card.value < 1001);
+        assert(card.type === TYPE_PLANET && card.value > 800 && card.value < 1001);
     console.log('OK');
 
     console.log('Card setup DB OK')
@@ -110,7 +109,6 @@ async function test_deck_generation(gameMode = 'Fair', nbPla = 5, nbTot = 6, nbN
 
     card_deck = card_deck.map(r => r.dataValues);
 
-    console.log(card_deck);
     let neu_count = 0;
     let neg_count = 0;
     let pos_count = 0;
@@ -127,16 +125,16 @@ async function test_deck_generation(gameMode = 'Fair', nbPla = 5, nbTot = 6, nbN
             neg_count++;
         else if (card.type === TYPE_PLANET){
             console.log('Testing card distribution per slice');
-            console.assert(neu_count === nbNeu && neg_count === nbNeg && pos_count === nbPos);
+            assert(neu_count === nbNeu && neg_count === nbNeg && pos_count === nbPos);
             console.log('OK');
 
             console.log('Testing planet value');
             if (pla_count < nbPla / 3)
-                console.assert(card.value > 0 && card.value < 501);
+                assert(card.value > 0 && card.value < 501);
             else if (pla_count < 2 * nbPla / 3)
-                console.assert(card.value > 500 && card.value < 801);
+                assert(card.value > 500 && card.value < 801);
             else
-                console.assert(card.value > 800 && card.value < 1001);
+                assert(card.value > 800 && card.value < 1001);
             console.log('OK');
             pla_count++;
             pos_count = 0;
@@ -145,10 +143,28 @@ async function test_deck_generation(gameMode = 'Fair', nbPla = 5, nbTot = 6, nbN
         }
     }
     console.log('Testing number of planets');
-    console.assert(pla_count === nbPla);
+    assert(pla_count === nbPla);
     console.log('OK');
 
     console.log('Deck generation OK')
+}
+
+async function test_roll(){
+    console.log('Testing roll');
+
+    let player = await new Player().create({combat: 100, moral: 50});
+
+    console.log('Testing without modules');
+    assert(!await player.roll(0, 'combat'));
+    assert(await player.roll(100, 'combat'));
+    console.log('OK');
+
+    console.log('Testing with modules');
+    assert(!await player.roll(0, 'combat', true));
+    assert(await player.roll(100, 'combat', true));
+    console.log('OK');
+
+    console.log('Roll OK');
 }
 
 module.exports = {test};

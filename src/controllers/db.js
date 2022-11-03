@@ -5,15 +5,16 @@ class DB {
     sequelize;
     tables;
     constructor() {}
-    async init() {
+    async init(test = false) {
 
         if (process.env.DB_URL === '') {
+            let db_name = test ? 'test_db' : 'database';
             console.log('Using local DB')
-            this.sequelize =  new Sequelize('database', '', '', {
+            this.sequelize =  new Sequelize(db_name, '', '', {
                 host: 'localhost',
                 dialect: 'sqlite',
                 logging: false,
-                storage: 'database.sqlite'
+                storage: db_name + '.sqlite'
             });
         }
         else {
@@ -303,6 +304,8 @@ class DB {
                 'moral': Math.floor(Math.random() * 100)
             })
         }
+
+        await this.tables.ship.create();
     }
 }
 
