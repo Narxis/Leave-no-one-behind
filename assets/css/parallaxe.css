@@ -812,8 +812,10 @@ hr.separateur {
 .player-stat-icon {
   width: 30px;
   height: 30px;
-  background-color: #15ff00;
   margin: 0px 40px 0px 15px;
+}
+.player-stat-icon svg {
+  fill: rgb(180, 180, 180);
 }
 .player-stat-value {
   width: 30px;
