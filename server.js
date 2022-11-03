@@ -1,9 +1,11 @@
 require('dotenv').config()
+const {WebSocketServer} = require('ws');
+const WS = require('./src/controllers/ws');
 const constants = require('./src/config/constants');
 const db = require ('./src/controllers/db');
 const PORT = process.env.PORT || 8080;
 
-const start = async function() {
+const startServer = async function() {
 
     constants.register();
     let DB = new db.DB;
@@ -14,7 +16,23 @@ const start = async function() {
     require('./src/routers/default')(router);
     require('./src/routers/api')(router);
     app.use('/', router);
-    app.listen(PORT);
+
+    const wss = new WebSocketServer({ noServer: true });
+    wss.on('connection', socket => {
+        socket.on('message', message => console.log(message));
+    });
+
+    const server = app.listen(PORT);
+
+    server.on('upgrade', (request, socket, head) => {
+        wss.handleUpgrade(request, socket, head, socket => {
+            wss.emit('connection', socket, request);
+        });
+    });
+
+    WS.init(wss);
 }
 
-start().then(e => {console.log(`Server launched on port ${PORT}`)});
+startServer().then(e => {
+    console.log(`Server launched on port ${PORT}`);
+});
