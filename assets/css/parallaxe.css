@@ -752,12 +752,13 @@ body {
   top: 0px;
   left: 0px;
   width: 42px;
-  height: 12px;
+  height: 17px;
   display: flex;
   justify-content: flex-start;
 }
 .dice-type-input {
   z-index: 1;
+  width: 35px;
   opacity: 0;
 }
 .dice-type-label {
