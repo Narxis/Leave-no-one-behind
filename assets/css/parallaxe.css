@@ -801,6 +801,13 @@ hr.separateur {
   align-items: center;
   justify-content: flex-start;
 }
+.player-stat svg {
+  overflow: visible;
+  transform: scale(0.8);
+}
+.player-stat #Calque_1 {
+  transform: scale(1.25);
+}
 .player-stat-name {
   width: 101px;
   height: 30px;
