@@ -420,7 +420,7 @@ body {
 @keyframes ringshotr {
   50% {transform: translatex(200px), scale(1.5);}
   100% {transform: translatex(-100px), scale(1);}
- }
+}
  #bigboite.shot #arm1 {
   opacity: 1;
   animation: shotarm1 6s ease-out forwards;
@@ -832,7 +832,6 @@ body {
   fill: #ffffff27;
   margin: 0px 0px 0px 4px;
 }
-
 .roll-type1,
 .roll-type2 {
   top: 0px;
@@ -870,10 +869,7 @@ body {
   background: linear-gradient(145deg, #c1c1c1, #a2a2a2);
   box-shadow: 1px 1px 6px #99999954, -1px -1px 6px #cfcfcf36;
 }
-/*.roll-check {
-  fill: #ffffff !important;
-}*/
-/*-/!\-Doliprane-requiered-to-read-this-selector-/!\-*/
+/*-/!\-Doliprane-requiered-to-read-these-selectors-/!\-*/
 .dice-type-input:checked ~ .dice-type-label.dice-type-label::after {
   transition: .5s ease-in-out;
   opacity: 1;
@@ -918,16 +914,6 @@ hr.separateur {
 .player-stat #Calque_1 {
   transform: scale(1.25);
 }
-
-/*.player-stat-name {
-  width: 101px;
-  height: 30px;
-  text-align: center;
-  text-decoration: underline;
-  font-size: 14px;
-  margin: 10px 0px 0px 2px;
-}*/
-
 .player-stat-icon {
   width: 30px;
   height: 30px;
@@ -942,7 +928,6 @@ hr.separateur {
   height: 25px;
   margin: 10px;
 }
-
 .player-stat-value {
   width: 60px;
   height: 30px;
@@ -958,7 +943,6 @@ hr.separateur {
   justify-content: center;
   align-items: center;
 }
-
 .player-stat-up {
   position: relative;
   width: 25px;
