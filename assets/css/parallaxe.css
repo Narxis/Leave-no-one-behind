@@ -658,7 +658,7 @@ body {
   z-index: 100;
 }
 .player-tab {
-  padding: 25px 0px 0px 0px;
+  padding: 4px 0px 0px 0px;
   position: relative;
   width: 238px;
   height: 444px;
@@ -671,10 +671,10 @@ body {
   align-content: center;
   flex-direction: column;
   transition: 2s cubic-bezier(0, 0, 0.1, 0.99);
-  /* transform: translateY(385px); */
 }
-.expand {
+.expander {
   position: absolute;
+  cursor: pointer;
   width: 20px;
   height: 30px;
   left: 206px;
@@ -690,9 +690,13 @@ body {
   justify-content: center;
   font-size: 13px;
 }
+.move-up {
+  transform: translateY(385px);
+}
 .player-roll {
   display: flex;
-  justify-content: center;
+  padding: 11px 14px 11px 14px;
+  height: 60px;
 }
 .player-name {
   position: absolute;
@@ -703,25 +707,24 @@ body {
   font-size: 16px;
 }
 .player-race {
-  font-size: 13px;
+  font-size: 12px;
   text-align: start;
   text-decoration: underline;
 }
 .input-roll {
   position: relative;
-  top: -5px;
+  top: 0px;
   left: 0px;
-  width: 40px;
+  width: 50px;
   height: 30px;
-  margin: 25px 0px 0px 0px;
+  margin: 30px 0px 0px -3px;
 }
-
 .output-roll {
   top: 0px;
   left: 0px;
-  margin: 5px 20px 0px 30px;
-  width: 85px;
-  height: 45px;
+  margin: 10px 2px 0px 18px;
+  width: 88px;
+  height: 50px;
   border: none;
   border-radius: 10px;
   font-family: 'Jura', sans-serif;
@@ -737,6 +740,8 @@ body {
 }
 /*---vvv---Role-type----vvv---*/
 .roll-type {
+  margin-top: 6px;
+  /* margin-right: 20px; */
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

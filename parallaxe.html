@@ -192,7 +192,7 @@
 <!-----------------------------------------------------------vvv-Player-1-vvv---------------------------------------------------->
     <div id="player-tab1" class="player-tab">
 
-      <div class="expand">?</div>
+      <div class="expander">?</div>
 
       <div class="player-roll">
         <div class="player-name">Narxis
@@ -311,7 +311,7 @@
 <!-----------------------------------------------------------vvv-Player-2-vvv---------------------------------------------------->
     <div id="player-tab2" class="player-tab">
 
-      <div class="expand">?</div>
+      <div class="expander">?</div>
 
       <div class="player-roll">
 
@@ -429,7 +429,7 @@
 <!-----------------------------------------------------------vvv-Player-3-vvv---------------------------------------------------->
     <div id="player-tab3" class="player-tab">
 
-      <div class="expand">?</div>
+      <div class="expander">?</div>
 
       <div class="player-roll">
 
@@ -546,7 +546,7 @@
 <!-----------------------------------------------------------vvv-Player-4-vvv---------------------------------------------------->
     <div id="player-tab4" class="player-tab">
 
-      <div class="expand">?</div>
+      <div class="expander">?</div>
 
       <div class="player-roll">
         <div class="player-name">Nebulon
@@ -662,7 +662,7 @@
 <!-----------------------------------------------------------vvv-Player-5-vvv---------------------------------------------------->
     <div id="player-tab5" class="player-tab">
 
-      <div class="expand">?</div>
+      <div class="expander">?</div>
 
       <div class="player-roll">
         <div class="player-name">Goldombre
@@ -777,7 +777,7 @@
 <!-----------------------------------------------------------^^^-Player-5-^^^---------------------------------------------------->
 <!-----------------------------------------------------------vvv-Player-6-vvv---------------------------------------------------->
     <div id="player-tab6" class="player-tab">
-      <div class="expand">?</div>
+      <div class="expander">?</div>
 
       <div class="player-roll">
         <div class="player-name">Tarzan
@@ -967,6 +967,13 @@
 
   window.onload = function() {
       startCountDown();
+  }
+
+  let ptabs = document.querySelectorAll('.expander');
+  for (let i=0; i<tabs.length; i++) {
+      ptabs.item(i).addEventListener('mouseup', function() {
+          this.closest('.player-tab').classList.toggle('move-up')
+      })
   }
 </script>
 
