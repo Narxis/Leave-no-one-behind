@@ -958,9 +958,9 @@ button, input, select, textarea {
 }
 .todoList {
   position: absolute;
-  top: 150px;
-  left: -160px;
-  transform: translate(-50%, -50%);
+  top: 200;
+  left: -315px;
+  transform: translate(0%,-100%);
   width: 302px;
   /* height: 280px; */
   background: #fff;
@@ -969,6 +969,7 @@ button, input, select, textarea {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+  /* transform-origin: bottom; */
 }
 
 .content {
@@ -976,7 +977,7 @@ button, input, select, textarea {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 .content form {
   display: flex;
@@ -1012,8 +1013,7 @@ button, input, select, textarea {
   letter-spacing: none;
   /* height: 284px; */
   overflow: auto;
-  flex-direction: row;
-  align-content: stretch;
+  flex-direction: column;
   flex-wrap: wrap;
 }
 .content li {
@@ -1021,6 +1021,7 @@ button, input, select, textarea {
   margin-bottom: 10px;
   display: inline-flex;
   justify-content: space-between;
+  flex-grow: 1;
 }
 .content li i {
   color: #6c717b;
