@@ -956,24 +956,25 @@ button, input, select, textarea {
   font-size: inherit;
   line-height: inherit;
 }
+
 .todoList {
   position: absolute;
   top: 200;
   left: -315px;
   transform: translate(0%,-100%);
   width: 302px;
-  /* height: 280px; */
-  background: #fff;
-  border-radius: 10px;
   box-shadow: 0 7px 30px rgb(62 9 11 / 30%);
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  /* transform-origin: bottom; */
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(61 17 102 / 85%) 0%, rgb(19 9 63 / 85%) 100%);
+  backdrop-filter: blur(3px);
+  border: 3.5px solid rgb(180, 180, 180);
 }
 
 .content {
-  padding: 10px 20px;
+  padding: 10px 13.9px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -994,8 +995,9 @@ button, input, select, textarea {
 .content input[type='text'] {
   padding: 0 5px;
   font-weight: 700;
-  font-size: 1.2rem;
-  color: #6c717b;
+  font-size: 21px;
+  color: rgb(180, 180, 180);
+  text-shadow: rgb(0 0 0 / 42%) 2px 1px 4px;
   outline: none;
 }
 .content .input-buttons a{
@@ -1010,8 +1012,6 @@ button, input, select, textarea {
   display: flex;
   margin-left: 0;
   padding: 0;
-  letter-spacing: none;
-  /* height: 284px; */
   overflow: auto;
   flex-direction: column;
   flex-wrap: wrap;
@@ -1022,9 +1022,10 @@ button, input, select, textarea {
   display: inline-flex;
   justify-content: space-between;
   flex-grow: 1;
+  padding-top: 2px;
 }
 .content li i {
-  color: #6c717b;
+  color: rgb(180, 180, 180);
   font-size: 15px;
   cursor: pointer;
   padding: 5px 10px;
@@ -1033,28 +1034,28 @@ button, input, select, textarea {
   display: none;
 }
 .content input[type="checkbox"] + label {
-  color: #6c717b;
+  color: rgb(180, 180, 180);
+  text-shadow: rgb(238 232 232 / 27%) 2px 1px 4px;
   font-size: 15px;
   cursor: pointer;
   position: relative;
-  border-radius: 3px;
+  border-radius: 20px;
   display: inline-block;
-  padding: 5px 5px 5px 30px;
+  padding: 5px 10px 5px 35px;
 }
 .content input[type="checkbox"] + label:hover {
-  color: #353a42;
-  background-color: #f4f7fa;
+  background-color: #ffffff0f;
 }
 .content input[type="checkbox"] + label span.check {
   left: 4px;
-  top: 50%;
+  top: 13px;
   position: absolute;
   transform: translatey(-50%);
   width: 18px;
   height: 18px;
   display: block;
   background: white;
-  border-radius: 3px;
+  border-radius: 50%;
   border: 1px solid #b8bfcc;
   box-shadow: 0 2px 3px #f0f4f8;
 }
