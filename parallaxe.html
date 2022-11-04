@@ -2,6 +2,7 @@
   <link rel="stylesheet" href="assets\css\parallaxe.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
   <script src="assets/js/lightning.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 </head>
 <body>
 <!--  <div class="ad pub">
@@ -176,7 +177,62 @@
           <div class="tab-txt">Gravité artificielle</div>
         </div>
       </div>
-      
+      <div class="status-bar">
+        <div class="status-tab">
+          <div class="status-up">
+            <div class="todoList">
+              <div class="content">
+                <form class="add">
+                  <input type="text" name="add" placeholder="Add item...">
+                  <div class="input-buttons">
+                    <a href="#0" class="add-todo">
+                      <i class="fas fa-plus add"></i>
+                    </a>
+                  </div>
+                </form>
+                <ul class="todos">
+                  <li>
+                    <input type="checkbox" id="todo_1">
+                    <label for="todo_1">
+                      <span class="check"></span>
+                      Buy Flight Tickets
+                    </label>
+                    <i class="far fa-trash-alt delete"></i>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="todo_2">
+                    <label for="todo_2">
+                      <span class="check"></span>
+                      Find AirBnbB
+                    </label>
+                    <i class="far fa-trash-alt delete"></i>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="todo_3">
+                    <label for="todo_3">
+                      <span class="check"></span>
+                      Look up things to do
+                    </label>
+                    <i class="far fa-trash-alt delete"></i>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="todo_4">
+                    <label for="todo_4">
+                      <span class="check"></span>
+                      Passport
+                    </label>
+                    <i class="far fa-trash-alt delete"></i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="status-down">
+            <div class="mods-left"></div>
+            <div class="bdd"></div>
+          </div>
+        </div>
+      </div>
       <div class="choices" id="choicetab">
           <div class="choice move-down" id="choice1">Utiliser une bouteille pour "convaincre" la douane</div>
           <div class="choice move-down" id="choice2">Menacer de les attaquer en justice grâce a votre avo-cat-e</div>
@@ -1062,5 +1118,46 @@
           this.closest('.player-tab').classList.toggle('move-up')
       })
   }
+
+  const submitForm = document.querySelector('.add');
+  const addButton = document.querySelector('.add-todo');
+  const todoList = document.querySelector('.todos');
+  const list = document.querySelectorAll('.todos li'); 
+
+  let listLenght = list.lenght;
+
+  const generateTempalate = (todo) => {
+  
+  const html = `<li>
+                    <input type="checkbox" id="todo_${listLenght}">
+                    <label for="todo_${listLenght}">
+                      <span class="check"></span>
+                      ${todo}
+                    </label>
+                    <i class="far fa-trash-alt delete"></i>
+                  </li>`
+  todoList.innerHTML += html;
+  };
+
+  function addTodos(e) {
+    e.preventDefault();
+    const todo = submitForm.add.value.trim();
+    if (todo.length) {
+      listLenght = listLenght + 1;
+      generateTempalate(todo);
+      submitForm.reset();
+    }
+  }
+
+  submitForm.addEventListener('submit', addTodos);
+  addButton.addEventListener('click', addTodos);
+
+  function deleteTodos(e) {
+    if (e.target.classList.contains('delete')) {
+      e.target.parentElement.remove();
+    }
+  }
+
+  todoList.addEventListener('click', deleteTodos);
 </script>
 
