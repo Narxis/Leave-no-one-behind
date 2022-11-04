@@ -1,10 +1,30 @@
 <div id="test">test</div>
+<button id="roll" style="cursor: pointer" onclick="rollDice()">roll</button>
 <script>
-    const socketLNOB = new WebSocket("ws://localhost:8080")
+    const socketLNOB = new WebSocket("ws://" + window.location.host)
     socketLNOB.onmessage = (event) => {
-        console.log(event.data)
-        let resp = document.createElement('p');
-        resp.innerText = event.data;
-        document.getElementById('test').append(resp)
+
+        try {
+            let resp = JSON.parse(event.data);
+            document.getElementById('roll').style.backgroundColor = resp.data.success ? 'limegreen' : 'red'
+        }
+        catch {
+            console.log(event.data);
+        }
+    }
+
+    const rollDice = function () {
+        let dice_result = Math.floor(Math.random() * 100) + 1
+        let payload = {
+            action: 'roll',
+            data: {
+                player_id: 1,
+                dice_result: dice_result,
+                stat: 'combat',
+                module: false
+            }
+        }
+        payload = JSON.stringify(payload);
+        socketLNOB.send(payload);
     }
 </script>
