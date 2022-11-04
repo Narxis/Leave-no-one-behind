@@ -34,7 +34,7 @@ const makeAction = async function (raw_response) {
             let dice_result = Math.floor(Math.random() * 100) + 1;
             let result = await player.roll(dice_result, response.data.stat, response.data.module)
             response.data['success'] = result;
-            response.data['dice_result'] = response.data.dice_result;
+            response.data['dice_result'] = dice_result;
             payload = {
                 action: 'roll',
                 error: false,
