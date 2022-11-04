@@ -30,16 +30,7 @@ const makeAction = async function (raw_response) {
 
     switch (response.action) {
         case 'roll':
-            let player = await new Player(response.data.player_id).getData();
-            let dice_result = Math.floor(Math.random() * 100) + 1;
-            let result = await player.roll(dice_result, response.data.stat, response.data.module)
-            response.data['success'] = result;
-            response.data['dice_result'] = dice_result;
-            payload = {
-                action: 'roll',
-                error: false,
-                data: response.data
-            }
+            payload = actionRoll(response);
             break;
         default:
             payload = {
@@ -51,6 +42,17 @@ const makeAction = async function (raw_response) {
     return payload;
 }
 
+const actionRoll = async function (response) {
+    let player = await new Player(response.data.player_id).getData();
+    let dice_result = Math.floor(Math.random() * 100) + 1;
+    response.data['success'] = await player.roll(dice_result, response.data.stat, response.data.module);
+    response.data['dice_result'] = dice_result;
+    return  {
+        action: response.action,
+        error: false,
+        data: response.data
+    }
+}
 
 const broadcastData = function (data, ws, sendBackToSender = true) {
 
