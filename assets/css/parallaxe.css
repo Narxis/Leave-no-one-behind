@@ -108,7 +108,7 @@ body {
 }
 .dial svg text {
   font-size: 30px;
-  font-weight: bold;
+  fill: whitesmoke;
 }
 .plugship {
   position: absolute;
