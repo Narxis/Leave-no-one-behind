@@ -1,0 +1,90 @@
+{
+  "fnek": {
+    "combat": 1,
+    "pilotage": 1,
+    "engineering": 1,
+    "survival": -1,
+    "recon": -1,
+    "moral": 0
+  },
+  "omphor": {
+    "combat": -2,
+    "pilotage": 1,
+    "engineering": 1,
+    "survival": 1,
+    "recon": 0,
+    "moral": 0
+  },
+  "sylv": {
+    "combat": -1,
+    "pilotage": 0,
+    "engineering": 1,
+    "survival": 0,
+    "recon": 1,
+    "moral": 0
+  },
+  "ygrl": {
+    "combat": 0,
+    "pilotage": 0,
+    "engineering": -1,
+    "survival": 1,
+    "recon": 1,
+    "moral": 0
+  },
+  "shrymp": {
+    "combat": 0,
+    "pilotage": 0,
+    "engineering": -1,
+    "survival": 2,
+    "recon": 0,
+    "moral": 0
+  },
+  "aku": {
+    "combat": -1,
+    "pilotage": -1,
+    "engineering": 2,
+    "survival": 0,
+    "recon": 1,
+    "moral": 0
+  },
+  "yorc": {
+    "combat": 2,
+    "pilotage": 0,
+    "engineering": 0,
+    "survival": 0,
+    "recon": -1,
+    "moral": 0
+  },
+  "nek_eau": {
+    "combat": 1,
+    "pilotage": -1,
+    "engineering": 0,
+    "survival": 1,
+    "recon": 0,
+    "moral": 0
+  },
+  "nek_feu": {
+    "combat": 1,
+    "pilotage": 1,
+    "engineering": -1,
+    "survival": 0,
+    "recon": 0,
+    "moral": 0
+  },
+  "nek_terre": {
+    "combat": -1,
+    "pilotage": 0,
+    "engineering": 0,
+    "survival": 0,
+    "recon": 2,
+    "moral": 0
+  },
+  "nek_air": {
+    "combat": 0,
+    "pilotage": 2,
+    "engineering": 0,
+    "survival": -1,
+    "recon": 0,
+    "moral": 0
+  }
+}
