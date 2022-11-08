@@ -28,10 +28,10 @@ class SocketLNOB {
 
     roll(data) {
         if (data.success) {
-            console.log('%cPlayer ' + data.player_id + ' : success with a roll of ' + data.dice_result + ' on ' + data.stat, 'color:green');
+            console.log('%cPlayer ' + data.player_id + ' : success with a roll of ' + data.dice_result + ' (calculated: ' + data.result + ') on ' + data.stat, 'color:green');
         }
         else {
-            console.log('%cPlayer ' + data.player_id + ' : fail with a roll of ' + data.dice_result + ' on ' + data.stat, 'color:red');
+            console.log('%cPlayer ' + data.player_id + ' : fail with a roll of ' + data.dice_result + ' (calculated: ' + data.result + ') on ' + data.stat, 'color:red');
         }
     }
 }

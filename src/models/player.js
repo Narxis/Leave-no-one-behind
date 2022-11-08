@@ -112,7 +112,7 @@ class Player {
             res = dice * moyMod * this[stat]/100 + (this.moral-50)/2;
         else
             res = dice * this[stat]/100 + (this.moral-50)/4;
-        return res >= 50;
+        return Math.ceil(res);
     }
 }
 

@@ -154,14 +154,18 @@ async function test_roll(){
 
     let player = await new Player().create({combat: 100, moral: 50});
 
+    const rollSuccess = (result) => {
+        return result >= 50;
+    }
+
     console.log('Testing without modules');
-    assert(!await player.roll(0, 'combat'));
-    assert(await player.roll(100, 'combat'));
+    assert(!rollSuccess(await player.roll(0, 'combat')));
+    assert(rollSuccess(await player.roll(100, 'combat')));
     console.log('OK');
 
     console.log('Testing with modules');
-    assert(!await player.roll(0, 'combat', true));
-    assert(await player.roll(100, 'combat', true));
+    assert(!rollSuccess(await player.roll(0, 'combat', true)));
+    assert(rollSuccess(await player.roll(100, 'combat', true)));
     console.log('OK');
 
     console.log('Roll OK');

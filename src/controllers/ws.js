@@ -45,7 +45,9 @@ const makeAction = async function (raw_response) {
 const actionRoll = async function (response) {
     let player = await new Player(response.data.player_id).getData();
     let dice_result = Math.floor(Math.random() * 100) + 1;
-    response.data['success'] = await player.roll(dice_result, response.data.stat, response.data.module);
+    let result = await player.roll(dice_result, response.data.stat, response.data.module);
+    response.data['success'] = (result >= 50);
+    response.data['result'] = result;
     response.data['dice_result'] = dice_result;
     return  {
         action: response.action,
