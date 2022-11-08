@@ -18,20 +18,20 @@ const startServer = async function() {
     require('./src/routers/api')(router);
     app.use('/', router);
 
-    let wss = new WebSocketServer({ noServer: true });
-    wss.on('connection', socket => {
+    global.WSS = new WebSocketServer({ noServer: true });
+    WSS.on('connection', socket => {
         socket.on('message', message => console.log(message));
     });
 
     const server = app.listen(PORT);
 
     server.on('upgrade', (request, socket, head) => {
-        wss.handleUpgrade(request, socket, head, socket => {
-            wss.emit('connection', socket, request);
+        WSS.handleUpgrade(request, socket, head, socket => {
+            WSS.emit('connection', socket, request);
         });
     });
 
-    WS.init(wss);
+    WS.init();
     Bot.start();
 }
 
