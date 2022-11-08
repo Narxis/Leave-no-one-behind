@@ -2,8 +2,8 @@ const db = require ('./../src/controllers/db');
 const type = require("./../src/config/constants");
 const fs = require('fs')
 const {getCards, deckGenerator} = require("../src/controllers/deck");
-const assert = require("node:assert/strict");
 const {Player} = require("../src/models/player");
+const assert = require("assert");
 
 process.env.DB_URL = '';
 type.register();
