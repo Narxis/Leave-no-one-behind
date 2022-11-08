@@ -104,7 +104,7 @@ body {
 }
 .dial svg circle {
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset .8s ease-out;
+  transition: stroke-dashoffset .03s ease-out;
 }
 .dial svg text {
   font-size: 30px;

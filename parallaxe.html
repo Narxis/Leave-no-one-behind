@@ -1042,12 +1042,30 @@
 
 
   var observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
+    mutations.forEach(async function(mutation) {
       if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {
         let val = mutation.target.getAttribute('data-value');
+        let oldVal = mutation.oldValue;
         let elem = document.getElementById(mutation.target.id);
-        elem.getElementsByTagName('circle')[0].style.strokeDashoffset = (100 - parseInt(val)).toString()
-        elem.getElementsByTagName('text')[0].textContent = val + '%'
+        let circle = elem.getElementsByTagName('circle')[0];
+        let text = elem.getElementsByTagName('text')[0];
+        let tm = 30;
+        if (val > oldVal) {
+          do {
+            oldVal++
+            circle.style.strokeDashoffset = (100 - parseInt(oldVal)).toString()
+            text.textContent = oldVal + '%'
+            await new Promise(r => setTimeout(r, tm));
+          } while (val > oldVal)
+        }
+        else {
+          do {
+            oldVal--
+            circle.style.strokeDashoffset = (100 - parseInt(oldVal)).toString()
+            text.textContent = oldVal + '%'
+            await new Promise(r => setTimeout(r, tm));
+          } while (val < oldVal)
+        }
       }
     });
   });
@@ -1063,7 +1081,9 @@
       text[0].textContent = val + '%' ;
     }
     observer.observe(dial, {
-      attributes: true
+      attributes: true,
+      attributeFilter: [ "data-value" ],
+      attributeOldValue: true,
     });
   }
 
