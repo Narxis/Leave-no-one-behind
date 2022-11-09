@@ -22,10 +22,12 @@ class DB {
             this.sequelize = new Sequelize(process.env.DB_URL)
         }
         await this.registerDatabases();
+        this.test();
         return this;
     }
 
     async registerDatabases() {
+
         let cards = this.sequelize.define('cards', {
             id: {
                 type: Sequelize.INTEGER,
@@ -114,6 +116,11 @@ class DB {
                 primaryKey: true,
                 autoIncrement: true
             },
+            discord_id: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
             name: {
                 type: Sequelize.STRING,
                 defaultValue: '',
@@ -121,7 +128,7 @@ class DB {
             },
             race: {
                 type: Sequelize.STRING,
-                defaultValue: 'human',
+                defaultValue: '',
                 allowNull: false
             },
             combat: {
