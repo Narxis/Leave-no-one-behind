@@ -1109,7 +1109,6 @@ button, input, select, textarea {
 .status-up {
   width: 200px;
   height: 15px;
-  /* background: aliceblue; */
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -1138,7 +1137,6 @@ button, input, select, textarea {
   width: 60px;
   height: 62px;
   position: absolute;
-  /* background: aliceblue; */
   left: -50px;
   top: 202px;
 }
@@ -1243,4 +1241,11 @@ button, input, select, textarea {
   align-items: center;
   justify-content: center;
   text-shadow: rgb(255 255 255) 1px 1px 4px;
+}
+/*---vvv---Status-tab-Animation----vvv---*/
+
+.close-status{
+  transition: 1s;
+  transform-origin: bottom center;
+  transform: translate(0%, -100%) scale(0);
 }

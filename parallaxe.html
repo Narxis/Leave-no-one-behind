@@ -1154,5 +1154,12 @@
           this.closest('.player-tab').classList.toggle('move-up')
       })
   }
+
+  let stabs = document.querySelector('.status-button');
+  for (let i=0; i<tabs.length; i++) {
+    stabs.item(i).addEventListener('mouseup', function() {
+      this.closest('.todoList').classList.toggle('.close-status')
+    })
+  }
 </script>
 
