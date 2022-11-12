@@ -1152,17 +1152,14 @@
       })
   }
 
-  const open_status = function(){
-    console.log('start')
+  (function(){
     document.querySelector('.status-button').addEventListener('mouseup', function() {
       this.previousElementSibling.classList.toggle('close-status')
-      console.log('click')
-  })
-  }
+    })
+  })()
   
   window.onload = function() {
       startCountDown();
-      open_status();
   }
 </script>
 
