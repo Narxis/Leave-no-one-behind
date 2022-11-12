@@ -1162,6 +1162,7 @@ button, input, select, textarea {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .status-button svg {
   transform: scale(0.055);

@@ -1240,9 +1240,6 @@
   }
 
 
-  window.onload = function() {
-      startCountDown();
-  }
 
   let ptabs = document.querySelectorAll('.expander');
   for (let i=0; i<tabs.length; i++) {
@@ -1251,11 +1248,17 @@
       })
   }
 
-  let stabs = document.querySelector('.status-button');
-  for (let i=0; i<tabs.length; i++) {
-    stabs.item(i).addEventListener('mouseup', function() {
-      this.closest('.todoList').classList.toggle('.close-status')
-    })
+  const open_status = function(){
+    console.log('start')
+    document.querySelector('.status-button').addEventListener('mouseup', function() {
+      this.previousElementSibling.classList.toggle('close-status')
+      console.log('click')
+  })
+  }
+  
+  window.onload = function() {
+      startCountDown();
+      open_status();
   }
 </script>
 
