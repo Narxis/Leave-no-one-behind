@@ -981,6 +981,8 @@ button, input, select, textarea {
   background: linear-gradient(135deg, rgb(61 17 102 / 85%) 0%, rgb(19 9 63 / 85%) 100%);
   backdrop-filter: blur(3px);
   border: 3.5px solid rgb(180, 180, 180);
+  transform-origin: bottom center;
+  transition: 1s;
 }
 
 .content {
@@ -1172,44 +1174,27 @@ button, input, select, textarea {
   background: linear-gradient(189deg, rgb(17 3 56) 0%, rgb(41 28 96) 100%);
 }
 .grad-down svg {
-  transform: rotate(180deg) scale(0.055);
+  transform: scale(0.055);
 }
 
 .mods-left {
   position: absolute;
-  height: 95px;
+  transition: 1s;
+  transform-origin: top center;
   width: 302px;
-  top: 65px;
+  top: 50px;
   left: 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.bdd {
-  position: absolute;
-  height: 95px;
-  width: 302px;
-  top: 154.5px;
-  left: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#border {
+  padding: 15px 0px;
   border-radius: 10px;
-  position: absolute;
-  top: 47.2px;
-  left: 12px;
-  height: 205px;
-  width: 302px;
   border: 3px solid rgb(180, 180, 180);
   background: linear-gradient(45deg, rgb(61 17 102 / 85%) 0%, rgb(19 9 63 / 85%) 100%);
-  backdrop-filter: blur(3px);
 }
+
+
 .mod-left {
   display: flex;
   align-items: center;
@@ -1219,10 +1204,11 @@ button, input, select, textarea {
   flex-direction: row;
 }
 
-.container-text-mod-left{
+.container-text-mod-left {
   width: 130px;
   height: 30px;
   text-shadow: rgb(255 255 255) 1px 1px 3px;
+  margin: 0px 19px;
 }
 
 .plus {
@@ -1235,7 +1221,7 @@ button, input, select, textarea {
 }
 .moins {
   position: relative;
-  margin: 0px 10px 0px 40px;
+  margin: 0px 10px 0px 0px;
   text-shadow: rgb(255 255 255) 1px 1px 3px;
   border-radius: 15px;
   height: 22px;
@@ -1256,6 +1242,12 @@ button, input, select, textarea {
 
 .close-status{
   transition: 1s;
-  transform-origin: bottom center;
   transform: translate(0%, -100%) scale(0);
+}
+.close-mod-left{
+  transition: 1s;
+  transform: scale(0);
+}
+.rotate180{
+transform: scale(0.055) rotate(180deg)!important;
 }
