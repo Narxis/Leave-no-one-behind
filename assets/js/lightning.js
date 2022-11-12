@@ -23,7 +23,7 @@ var lines = [
 
 function doSpasme (){
 
-  ctx.clearRect(0,0,cWidth,cHeight)
+ ctx.clearRect(0,0,cWidth,cHeight)
  ctx.strokeStyle = '#00ff00';
       ctx.shadowColor = '#ffffff';
       ctx.shadowOffsetX = 0;

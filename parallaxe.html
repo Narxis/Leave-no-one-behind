@@ -1,7 +1,6 @@
 <head>
   <link rel="stylesheet" href="assets\css\parallaxe.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
-  <script src="assets/js/lightning.js"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 </head>
 <body>
@@ -1128,7 +1127,7 @@
 <script src="assets/js/parallaxe.js"></script>
 <script src="assets/js/slidingtabs.js"></script>
 <script src="assets/js/timer.js"></script>
-<script src="assets/js/lightning.js"></script>
+<!-- <script src="assets/js/lightning.js"></script> -->
 <script src="assets/js/todo.js"></script>
 <script>
 
@@ -1239,23 +1238,25 @@
       }, 1000);
   }
 
-
-
-  let ptabs = document.querySelectorAll('.expander');
-  for (let i=0; i<tabs.length; i++) {
-      ptabs.item(i).addEventListener('mouseup', function() {
-          this.closest('.player-tab').classList.toggle('move-up')
-      })
-  }
-
   (function(){
+    let ptabs = document.querySelectorAll('.expander');
+    for (let i=0; i<ptabs.length; i++) {
+        ptabs.item(i).addEventListener('mouseup', function() {
+            this.closest('.player-tab').classList.toggle('move-up')
+        })
+    }
     document.querySelector('.status-button').addEventListener('mouseup', function() {
       this.previousElementSibling.classList.toggle('close-status')
+      console.log('click')
     })
   })()
+
+
+
   
   window.onload = function() {
-      startCountDown();
+      if (document.getElementById('timer-text'))
+        startCountDown();
   }
 </script>
 
