@@ -96,10 +96,19 @@ body {
 }
 /* ---vvv---------SVG--------vvv--- */
 .dial svg {
-  position: relative;
-  transform: scale(0.13);
-  top: -171px;
-  left: 58px;
+  position: absolute;
+  top: 5px;
+  left: 235px;
+  height: 47px;
+  overflow: visible;
+}
+.dial svg circle {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .03s ease-out;
+}
+.dial svg text {
+  font-size: 30px;
+  fill: whitesmoke;
 }
 .plugship {
   position: absolute;
