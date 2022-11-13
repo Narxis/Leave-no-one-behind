@@ -1135,7 +1135,7 @@ button, input, select, textarea {
   width: 340px;
   height: 62px;
   background: linear-gradient(272deg, rgb(1 0 12) 0%, rgb(63 45 110 / 81%) 100%);
-  transform: translate(-290px, 0px);
+  transform: translate(0px, 0px);
   transition: 2s ease-out;
   display: flex;
   flex-direction: column;
@@ -1243,10 +1243,12 @@ button, input, select, textarea {
   position: absolute;
   width: 50px;
   height: 69px;
-  top: 0px;
-  left: 0px;
-  background: aliceblue;
+  top: -3px;
+  left: -4px;
   border-radius: 40px 0px 0px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .close-status{
@@ -1258,5 +1260,18 @@ button, input, select, textarea {
   transform: scale(0);
 }
 .rotate180{
-transform: scale(0.055) rotate(180deg)!important;
+  transform: scale(0.055) rotate(180deg)!important;
+}
+.open-left {
+  transform: translate(-290px, 0px);
+}
+
+.force-close-mod-left{
+  transition: 1s;
+  transform: scale(0);
+}
+
+.force-close-status{
+  transition: 1s;
+  transform: translate(0%, -100%) scale(0);
 }
