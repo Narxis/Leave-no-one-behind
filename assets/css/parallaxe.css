@@ -1239,6 +1239,15 @@ button, input, select, textarea {
   text-shadow: rgb(255 255 255) 1px 1px 4px;
 }
 /*---vvv---Status-tab-Animation----vvv---*/
+.left-button {
+  position: absolute;
+  width: 50px;
+  height: 69px;
+  top: 0px;
+  left: 0px;
+  background: aliceblue;
+  border-radius: 40px 0px 0px 40px;
+}
 
 .close-status{
   transition: 1s;
