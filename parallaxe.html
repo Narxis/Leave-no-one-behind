@@ -233,10 +233,12 @@
         </div>
       </div>
       <div class="status-bar">
-        <div class="status-tab">
-          <div class="left-button">+</div>
+        <div class="status-tab slide-right">
+          <div class="left-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"class="rotate270"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+          </div>
           <div class="status-up">
-            <div class="todoList close-status force-close-status">
+            <div class="todoList close-status">
               <div class="content">
                 <form class="add">
                   <input type="text" name="add" placeholder="Add item...">
@@ -282,12 +284,9 @@
                 </ul>
               </div>
             </div>
-            <button class="status-button">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
-            </button>
           </div>
           <div class="status-down ">
-            <div class="mods-left close-mod-left force-close-mod-left">
+            <div class="mods-left close-mod-left hidden">
               <div class="mod-left">
                 <div class="container-text-mod-left">Module d'atterrissage</div>
                 <div class="moins mod-b">-</div>
@@ -313,9 +312,6 @@
                 <div class="plus mod-b">+</div>
               </div>
             </div>
-            <button class="status-button grad-down">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="rotate180"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
-            </button>
           </div>
         </div>
       </div>
@@ -1243,18 +1239,14 @@
             this.closest('.player-tab').classList.toggle('move-up')
         })
     }
-    document.querySelector('.status-button').addEventListener('mouseup', function() {
-      this.previousElementSibling.classList.toggle('close-status')
-      this.querySelector('svg').classList.toggle('rotate180')
-    })
-    document.querySelector('.grad-down').addEventListener('mouseup', function() {
-      this.previousElementSibling.classList.toggle('close-mod-left')
-      this.querySelector('svg').classList.toggle('rotate180')
-    })
     document.querySelector('.left-button').addEventListener('mouseup', function() {
       this.closest('.status-tab').classList.toggle('open-left')
-      this.nextElementSibling.firstElementChild.classList.toggle('force-close-status')
-      this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('force-close-mod-left')
+      this.querySelector('svg').classList.toggle('rotate90')
+      this.querySelector('svg').classList.toggle('rotate270')
+      this.nextElementSibling.firstElementChild.classList.toggle('close-status')
+      this.nextElementSibling.firstElementChild.classList.toggle('open-status')
+      this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')
+      this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
     })
   })()
 

@@ -61,3 +61,12 @@ async function initialiseTimerTab() {
 }    
 
 window.addEventListener('load', initialiseTimerTab, false);
+
+async function initialiseleLeftTabs() {
+    await sleep(100);
+    document.getElementsByClassName('status-tab').classList.remove('slide-right');
+    document.getElementsByClassName('todoList').classList.remove('hidden');
+    document.getElementsByClassName('mods-left').classList.remove('hidden');
+
+}
+window.addEventListener('load', initialiseleLeftTabs, false);

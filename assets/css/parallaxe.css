@@ -1123,6 +1123,7 @@ button, input, select, textarea {
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  margin: 1px 0px 0px 0px;
 }
 .status-down {
   width: 200px;
@@ -1130,19 +1131,20 @@ button, input, select, textarea {
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
+  margin: 0px 0px 2px 0px;
 }
 .status-tab {
   width: 340px;
   height: 62px;
   background: linear-gradient(272deg, rgb(1 0 12) 0%, rgb(63 45 110 / 81%) 100%);
   transform: translate(0px, 0px);
-  transition: 2s ease-out;
+  transition: 1.2s ease-out;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
-  border-radius: 40px 0px 0px 40px;
+  border-radius: 15px 0px 0px 15px;
   border: 4px solid rgb(180, 180, 180);
+  justify-content: space-between;
 }
 .status-bar {
   width: 60px;
@@ -1152,34 +1154,8 @@ button, input, select, textarea {
   top: 202px;
 }
 
-.status-button{
-  position: relative;
-  box-shadow: none;
-  width: 200px;
-  height: 25px;
-  perspective: 230px;
-  background: linear-gradient(351deg, rgb(17 3 56) 0%, rgb(41 28 96) 100%);
-  border-radius: 9px;
-  border: 3px solid rgb(180, 180, 180);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.status-button svg {
-  transform: scale(0.055);
-  fill: rgb(180, 180, 180);
-}
-.grad-down {
-  background: linear-gradient(189deg, rgb(17 3 56) 0%, rgb(41 28 96) 100%);
-}
-.grad-down svg {
-  transform: scale(0.055);
-}
-
 .mods-left {
   position: absolute;
-  transition: 1s;
   transform-origin: top center;
   width: 302px;
   top: 50px;
@@ -1193,7 +1169,6 @@ button, input, select, textarea {
   border: 3px solid rgb(180, 180, 180);
   background: linear-gradient(45deg, rgb(61 17 102 / 85%) 0%, rgb(19 9 63 / 85%) 100%);
 }
-
 
 .mod-left {
   display: flex;
@@ -1252,26 +1227,67 @@ button, input, select, textarea {
 }
 
 .close-status{
-  transition: 1s;
-  transform: translate(0%, -100%) scale(0);
+  animation: close-status-animation 1.5s ease-out forwards;
 }
+
+@keyframes close-status-animation {
+  0% {transform: translate(0%, -100%) }
+  60% { transform: translate(0%, -100%) scale(0);}
+  100% { transform: translate(0%, -100%) scale(0);}
+}
+
 .close-mod-left{
-  transition: 1s;
-  transform: scale(0);
+  animation: close-mod-left-animation 1.5s ease-out forwards;
 }
-.rotate180{
-  transform: scale(0.055) rotate(180deg)!important;
+
+@keyframes close-mod-left-animation {
+  0% { }
+  60% { transform: scale(0);}
+  100% { transform: scale(0);}
+}
+
+.rotate90{
+  animation: rotate-arrow 1.5s forwards; 
+}
+@keyframes rotate-arrow {
+  0% { transform: rotate(270deg) scale(0.45);}
+  99% { transform: rotate(270deg) scale(0.45);}
+  100% { transform: rotate(90deg) scale(0.45);}
+}
+
+.rotate270{
+  animation: rotate-arrow2 1.5s forwards; 
+}
+@keyframes rotate-arrow2 {
+  0% { transform: rotate(90deg) scale(0.45);}
+  99% { transform: rotate(90deg) scale(0.45);}
+  100% { transform: rotate(270deg) scale(0.45);}
+}
+
+.left-button svg {
+  fill: rgb(180, 180, 180);
 }
 .open-left {
   transform: translate(-290px, 0px);
 }
-
-.force-close-mod-left{
-  transition: 1s;
-  transform: scale(0);
+.open-status {
+  animation: open-status-animation 1.5s ease-out forwards;
+}
+@keyframes open-status-animation {
+  0% { transform: translate(0%, -100%) scale(0);}
+  10% { transform: translate(0%, -100%) scale(0);}
+  100% { transform: translate(0%, -100%);}
 }
 
-.force-close-status{
-  transition: 1s;
-  transform: translate(0%, -100%) scale(0);
+.open-mod-left {
+    animation: open-mod-left-animation 1.5s ease-out forwards;
+  }
+
+  @keyframes open-mod-left-animation {
+  0% { transform: scale(0);}
+  10% { transform: scale(0);}
+  100% {  }
+}
+.hidden {
+  transform: scale(0);
 }
