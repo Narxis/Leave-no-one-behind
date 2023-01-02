@@ -199,7 +199,10 @@ button {
 #rond2,
 .o2-line,
 .o2-line2,
-.o2-linedot {
+.o2-linedot,
+.ff-line,
+.ff-line2,
+.ff-linedot {
   filter: opacity(0);
 }
 @keyframes dash {
@@ -243,17 +246,151 @@ button {
 }
 /* --^------o2 animation------^--*/
 /* --v------ff animation------v--*/
+.ff-line {
+  position: absolute;
+  rotate: 180deg;
+  top: -212px;
+  left: 329.8px;
+  height: 2px;
+  width: 150px;
+  background-color: rgb(255, 255, 255);
+  transform-origin: 0;
+}
+.ff-line2 {
+  position: absolute;
+  top: -212.2px;
+  left: 180.3px;
+  height: 2px;
+  width: 115px;
+  background-color: rgb(255, 255, 255);
+  transform-origin: 0;
+  transform: rotate(135deg);
+}
+.ff-linedot {
+  position: absolute;
+  top: -132px;
+  left: 94px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background-color: rgb(255, 255, 255);
+}
+.ff-txt:hover ~ .ff-line {
+  animation: trace 1s linear forwards;
+}
+.ff-txt:hover ~ .ff-line2 {
+  animation: trace-2 2s linear forwards;
+}
+.ff-txt:hover ~ .ff-linedot {
+  animation: dot 2s linear forwards;
+}
 .ff-tree {
-  height: 100px;
-  fill: #fff;
+  position: absolute;
   transform: scale(0);
   transform-origin: bottom;
 }
-.ff-txt:hover ~ .ff-tree {
-  animation: treepop .4s cubic-bezier(1,0,1,1.5) forwards;
+.tree1 {
+  top: -222px;
+  left: 26px;
+  rotate: 355deg;
+  height: 100px;
+  fill: #095413;
 }
-@keyframes treepop {
+.tree2 {
+  top: -178px;
+  left: 5px;
+  rotate: 324deg;
+  height: 75px;
+  fill: #175017;
+}
+.tree3 {
+  top: -222px;
+  left: 12px;
+  rotate: 346deg;
+  height: 110px;
+  fill: #206415;
+}
+.tree4 {
+  top: -207px;
+  left: 61px;
+  rotate: 3deg;
+  height: 86px;
+  fill: #0f4a06;
+}
+.tree5 {
+  top: -231px;
+  left: 30px;
+  rotate: 358deg;
+  height: 119px;
+  fill: #226c16;
+}
+.tree6 {
+  top: -207px;
+  left: 5px;
+  rotate: 339deg;
+  height: 100px;
+  fill: #227615;
+}
+.tree7 {
+  top: -195px;
+  left: 25px;
+  rotate: 350deg;
+  height: 91px;
+  fill: #117c2a;
+}
+.ff-txt:hover ~ .tree1 {
+  animation: treepop1 1.61s cubic-bezier(1,0,1,1.5) forwards;
+}
+.ff-txt:hover ~ .tree2 {
+  animation: treepop2 1.5s cubic-bezier(1,0,1,1.5) forwards;
+}
+.ff-txt:hover ~ .tree3 {
+  animation: treepop3 1.39s cubic-bezier(1,0,1,1.5) forwards;
+}
+.ff-txt:hover ~ .tree4 {
+  animation: treepop4 1.7s cubic-bezier(1,0,1,1.5) forwards;
+}
+.ff-txt:hover ~ .tree5 {
+  animation: treepop5 1.55s cubic-bezier(1,0,1,1.5) forwards;
+}
+.ff-txt:hover ~ .tree6 {
+  animation: treepop6 1.35s cubic-bezier(1,0,1,1.5) forwards;
+}
+.ff-txt:hover ~ .tree7 {
+  animation: treepop7 1.08s cubic-bezier(1,0,1,1.5) forwards;
+}
+@keyframes treepop1 {
   0% { transform: scale(0);}
-  50% { transform: scale(0.2);}
-  100% { transform: scale(1);}
+  50% { transform: scale(0.02);}
+  100% { transform: scale(0.3);}
+}
+@keyframes treepop2 {
+  0% { transform: scale(0);}
+  50% { transform: scale(0.02);}
+  100% { transform: scale(0.3);}
+}
+@keyframes treepop3 {
+  0% { transform: scale(0);}
+  50% { transform: scale(0.02);}
+  100% { transform: scale(0.3);}
+}
+@keyframes treepop4 {
+  0% { transform: scale(0);}
+  50% { transform: scale(0.02);}
+  100% { transform: scale(0.3);}
+}
+@keyframes treepop5 {
+  0% { transform: scale(0);}
+  50% { transform: scale(0.02);}
+  100% { transform: scale(0.3);}
+}
+@keyframes treepop6 {
+  0% { transform: scale(0);}
+  50% { transform: scale(0.02);}
+  100% { transform: scale(0.3);}
+}
+@keyframes treepop7 {
+  0% { transform: scale(0);}
+  50% { transform: scale(0.02);}
+  100% { transform: scale(0.3);}
 }
