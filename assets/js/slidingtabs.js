@@ -63,10 +63,13 @@ async function initialiseTimerTab() {
 window.addEventListener('load', initialiseTimerTab, false);
 
 async function initialiseleLeftTabs() {
-    await sleep(100);
-    document.getElementsByClassName('status-tab').classList.remove('slide-right');
-    document.getElementsByClassName('todoList').classList.remove('hidden');
-    document.getElementsByClassName('mods-left').classList.remove('hidden');
+    var statusTabVar = document.getElementsByClassName('status-tab');
+    var todoListVar = document.getElementsByClassName('todoList'); 
+    var modsLeftVar = document.getElementsByClassName('mods-left');
+    await sleep(1000);
+    statusTabVar.item(0).classList.remove('slide-right');
+    todoListVar.item(0).classList.remove('hidden');
+    modsLeftVar.item(0).classList.remove('hidden');
 
 }
-window.addEventListener('load', initialiseleLeftTabs, false);
+window.addEventListener('load', initialiseleLeftTabs, false); 

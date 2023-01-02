@@ -982,7 +982,6 @@ button, input, select, textarea {
   backdrop-filter: blur(3px);
   border: 3.5px solid rgb(180, 180, 180);
   transform-origin: bottom center;
-  transition: 1s;
 }
 
 .content {
@@ -1251,7 +1250,7 @@ button, input, select, textarea {
 }
 @keyframes rotate-arrow {
   0% { transform: rotate(270deg) scale(0.45);}
-  99% { transform: rotate(270deg) scale(0.45);}
+  75% { transform: rotate(270deg) scale(0.45);}
   100% { transform: rotate(90deg) scale(0.45);}
 }
 
@@ -1260,7 +1259,7 @@ button, input, select, textarea {
 }
 @keyframes rotate-arrow2 {
   0% { transform: rotate(90deg) scale(0.45);}
-  99% { transform: rotate(90deg) scale(0.45);}
+  75% { transform: rotate(90deg) scale(0.45);}
   100% { transform: rotate(270deg) scale(0.45);}
 }
 
@@ -1289,5 +1288,9 @@ button, input, select, textarea {
   100% {  }
 }
 .hidden {
-  transform: scale(0);
+  opacity: 0;
+}
+
+.slide-right { 
+  transform: translateX(50px);
 }
