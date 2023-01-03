@@ -977,7 +977,7 @@ button, input, select, textarea {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  border-radius: 15px;
+  border-radius: 10px;
   background: linear-gradient(135deg, rgb(61 17 102 / 85%) 0%, rgb(19 9 63 / 85%) 100%);
   backdrop-filter: blur(3px);
   border: 3.5px solid rgb(180, 180, 180);
@@ -1237,40 +1237,35 @@ button, input, select, textarea {
 }
 
 .close-status{
-  animation: close-status-animation 1.5s ease-out forwards !important;
-}
-
-@keyframes close-status-animation {
-  0% {transform: translate(0%, -100%) }
-  60% { transform: translate(0%, -100%) scale(0);}
-  100% { transform: translate(0%, -100%) scale(0);}
-}
-
-.close-mod-left{
-  animation: close-mod-left-animation 1.5s ease-out forwards !important;
+  animation: close-mod-left-animation 2s forwards !important;
 }
 
 @keyframes close-mod-left-animation {
-  0% { }
-  60% { transform: scale(0);}
-  100% { transform: scale(0);}
+  0% { opacity: 1; }
+  40%{opacity: 0;}
+  100% {  opacity: 0;}
 }
 
+.close-mod-left{
+  animation: close-mod-left-animation 2s forwards !important;
+}
+
+
 .rotate90{
-  animation: rotate-arrow 1.5s forwards; 
+  animation: rotate-arrow 2s ease-out forwards; 
 }
 @keyframes rotate-arrow {
   0% { transform: rotate(270deg) scale(0.45);}
-  75% { transform: rotate(270deg) scale(0.45);}
+  60% { transform: rotate(90deg) scale(0.45);}
   100% { transform: rotate(90deg) scale(0.45);}
 }
 
 .rotate270{
-  animation: rotate-arrow2 1.5s forwards; 
+  animation: rotate-arrow2 2s forwards; 
 }
 @keyframes rotate-arrow2 {
   0% { transform: rotate(90deg) scale(0.45);}
-  75% { transform: rotate(90deg) scale(0.45);}
+  35% { transform: rotate(90deg) scale(0.45);}
   100% { transform: rotate(270deg) scale(0.45);}
 }
 
@@ -1287,39 +1282,28 @@ button, input, select, textarea {
 }
 
 .open-mod-left {
-    animation: open-mod-left-animation 4s ease-out forwards;
+    animation: open-mod-left-animation 2s forwards;
   }
 
 @keyframes open-mod-left-animation {
   0% { opacity: 0 ;}
-  52% { opacity: 0;}
-  69% { opacity: 1;}
-  78% { opacity: 0.3;}
-  79% {opacity:1 ;}
-  92% { opacity: 1;}
-  97% { opacity: 0.5;}
-  98% {opacity:1 ;}
+  60% { opacity: 0;}
   100% { opacity: 1;}
 }
 
-.glitch-effect1 {
-  animation: glitch-effect1 25s infinite;
-}
-@keyframes glitch-effect1 {
-  0% { opacity: 1;}
-  38% { opacity: 1;}
-  40% {opacity: 0.3;}
-  42% { opacity: 1;}
-  78% { opacity: 1;}
-  79% {opacity: 0.3;}
-  80% {opacity: 1;}
-  98% {opacity: 1;}
-  100% {opacity: 0.3;}
-}
 .hidden {
   opacity: 0;
 }
 
 .slide-right { 
   transform: translateX(50px);
+}
+
+.close-left {
+  animation: close-left-animation 2s forwards;
+}
+@keyframes close-left-animation {
+  0%{transform: translate(-290px, 0px);}
+  35% {transform: translate(-290px, 0px);}
+  100% {transform: translate(0px, 0px);}
 }

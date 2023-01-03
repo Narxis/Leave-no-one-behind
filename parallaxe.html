@@ -260,8 +260,6 @@
                 </ul>
               </div>
             </div>
-            <div class="bar-left"></div>
-            <div class="bar-right"></div>
           </div>
           <div class="status-down ">
             <div class="mods-left hidden">
@@ -290,8 +288,6 @@
                 <div class="plus mod-b">+</div>
               </div>
             </div>
-            <div class="bar-left"></div>
-            <div class="bar-right"></div>
           </div>
         </div>
       </div>
@@ -1220,8 +1216,6 @@
         })
     }
     document.querySelector('.left-button').addEventListener('mouseup', async function() {
-      this.nextElementSibling.firstElementChild.classList.remove('glitch-effect1')
-      this.nextElementSibling.nextElementSibling.firstElementChild.classList.remove('glitch-effect2')
       this.closest('.status-tab').classList.toggle('open-left')
       this.closest('.status-tab').classList.toggle('close-left')
       this.querySelector('svg').classList.toggle('rotate90')
@@ -1231,8 +1225,6 @@
       this.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
       this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
       await sleep(5000)
-      this.nextElementSibling.firstElementChild.classList.toggle('glitch-effect1')
-      this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('glitch-effect2')
     })
   })()
 
