@@ -1137,7 +1137,7 @@ button, input, select, textarea {
   height: 62px;
   background: linear-gradient(272deg, rgb(1 0 12) 0%, rgb(63 45 110 / 81%) 100%);
   transform: translate(0px, 0px);
-  transition: 1.2s ease-out;
+  transition: 1.2s ;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1212,6 +1212,17 @@ button, input, select, textarea {
   justify-content: center;
   text-shadow: rgb(255 255 255) 1px 1px 4px;
 }
+
+.bar-left {
+  width: 10px;
+  height: 100px;
+  color: aliceblue;
+}
+.bar-right {
+  width: 10px;
+  height: 100px;
+  color: aliceblue;
+}
 /*---vvv---Status-tab-Animation----vvv---*/
 .left-button {
   position: absolute;
@@ -1226,7 +1237,7 @@ button, input, select, textarea {
 }
 
 .close-status{
-  animation: close-status-animation 1.5s ease-out forwards;
+  animation: close-status-animation 1.5s ease-out forwards !important;
 }
 
 @keyframes close-status-animation {
@@ -1236,7 +1247,7 @@ button, input, select, textarea {
 }
 
 .close-mod-left{
-  animation: close-mod-left-animation 1.5s ease-out forwards;
+  animation: close-mod-left-animation 1.5s ease-out forwards !important;
 }
 
 @keyframes close-mod-left-animation {
@@ -1267,25 +1278,43 @@ button, input, select, textarea {
   fill: rgb(180, 180, 180);
 }
 .open-left {
-  transform: translate(-290px, 0px);
+  animation: open-left-animation 1s cubic-bezier(0.38, 0.01, 0.4, 1) forwards;
 }
-.open-status {
-  animation: open-status-animation 1.5s ease-out forwards;
-}
-@keyframes open-status-animation {
-  0% { transform: translate(0%, -100%) scale(0);}
-  10% { transform: translate(0%, -100%) scale(0);}
-  100% { transform: translate(0%, -100%);}
+
+@keyframes open-left-animation {
+  0% {transform: translate(0px, 0px);}
+  100% {transform: translate(-290px, 0px);}
 }
 
 .open-mod-left {
-    animation: open-mod-left-animation 1.5s ease-out forwards;
+    animation: open-mod-left-animation 4s ease-out forwards;
   }
 
-  @keyframes open-mod-left-animation {
-  0% { transform: scale(0);}
-  10% { transform: scale(0);}
-  100% {  }
+@keyframes open-mod-left-animation {
+  0% { opacity: 0 ;}
+  52% { opacity: 0;}
+  69% { opacity: 1;}
+  78% { opacity: 0.3;}
+  79% {opacity:1 ;}
+  92% { opacity: 1;}
+  97% { opacity: 0.5;}
+  98% {opacity:1 ;}
+  100% { opacity: 1;}
+}
+
+.glitch-effect1 {
+  animation: glitch-effect1 25s infinite;
+}
+@keyframes glitch-effect1 {
+  0% { opacity: 1;}
+  38% { opacity: 1;}
+  40% {opacity: 0.3;}
+  42% { opacity: 1;}
+  78% { opacity: 1;}
+  79% {opacity: 0.3;}
+  80% {opacity: 1;}
+  98% {opacity: 1;}
+  100% {opacity: 0.3;}
 }
 .hidden {
   opacity: 0;
