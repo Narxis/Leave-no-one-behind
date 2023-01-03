@@ -394,3 +394,55 @@ button {
   50% { transform: scale(0.02);}
   100% { transform: scale(0.3);}
 }
+/* --^------ff animation------^--*/
+/* --v------cl animation------v--*/
+.cl-line {
+  height: 2px;
+  width: 167px;
+  background-color: rgb(255 255 255);
+  top: 86px;
+  position: absolute;
+  left: -193px;
+}
+
+.cl-line2 {  
+  height: 2px;  
+  width: 65px; 
+  background-color: rgb(255 255 255);  
+  top: 58px; 
+  position: absolute;  
+  left: -43px;
+  rotate: 120deg;
+}
+
+.cl-linedot {
+    
+}
+
+.cloud1 {
+  rotate: 233deg;
+  position: absolute;
+  top: 22px;
+  height: 29px;
+  left: -19px;
+  fill: white;
+}
+  
+.cloud2 {
+  rotate: 103deg;
+  position: absolute;
+  top: -24px;
+  height: 43px;
+  left: 205px;
+  fill: white;
+}
+  
+.cloud3 {
+  rotate: 323deg;
+  position: absolute;
+  top: -155px;
+  height: 39px;
+  left: -19px;
+  fill: white;
+}
+  
