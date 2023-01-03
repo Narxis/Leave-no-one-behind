@@ -202,7 +202,10 @@ button {
 .o2-linedot,
 .ff-line,
 .ff-line2,
-.ff-linedot {
+.ff-linedot,
+.cl-line,
+.cl-line2,
+.cl-linedot {
   filter: opacity(0);
 }
 @keyframes dash {
@@ -405,44 +408,95 @@ button {
   left: -193px;
 }
 
-.cl-line2 {  
-  height: 2px;  
-  width: 65px; 
-  background-color: rgb(255 255 255);  
-  top: 58px; 
-  position: absolute;  
-  left: -43px;
-  rotate: 120deg;
+.cl-line2 {
+  height: 2px;
+  width: 50px;
+  background-color: rgb(255 255 255);
+  top: 86px;
+  position: absolute;
+  left: -27px;
+  rotate: 306deg;
+  transform-origin: 0;
 }
 
-.cl-linedot {
-    
+.cl-cloud {
+  scale: 0; 
+  position: absolute
 }
-
 .cloud1 {
   rotate: 233deg;
-  position: absolute;
-  top: 22px;
-  height: 29px;
-  left: -19px;
-  fill: white;
+  top: 35px;
+  height: 26px;
+  left: -15px;
+  fill: rgb(255, 255, 255);
 }
   
 .cloud2 {
-  rotate: 103deg;
-  position: absolute;
-  top: -24px;
+  rotate: 97deg;
+  top: -40px;
   height: 43px;
-  left: 205px;
-  fill: white;
+  left: 220px;
+  fill: rgb(255, 255, 255);
 }
   
 .cloud3 {
-  rotate: 323deg;
-  position: absolute;
-  top: -155px;
+  rotate: 342deg;
+  top: -176px;
   height: 39px;
-  left: -19px;
-  fill: white;
+  left: 30px;
+  fill: rgb(255, 255, 255);
 }
-  
+
+.cl-txt:hover ~ .cl-line {
+  animation: cl-trace 1s linear forwards;
+}
+
+@keyframes cl-trace {
+  0%{filter: opacity(1); width: 0px;}
+  1% {width: 1px;}
+  30%{width: 167px;}
+  100%{width: 167px; filter: opacity(1);}
+}
+
+.cl-txt:hover ~ .cl-line2 {
+  animation: cl-trace-2 1s linear forwards;
+}
+
+@keyframes cl-trace-2 {
+  0%{width: 0px;}
+  29.9%{width: 0px;}
+  30% {width: 1px; filter: opacity(1)}
+  60%{width: 50px;}
+  100%{width: 50px; filter: opacity(1);}
+}
+
+.cl-txt:hover ~ .cloud1 {
+  animation: cloudpop1 2s cubic-bezier(1,0,1,1.5) forwards;
+}
+.cl-txt:hover ~ .cloud2 {
+  animation: cloudpop2 2s cubic-bezier(1,0,1,1.5) forwards;
+}
+.cl-txt:hover ~ .cloud3 {
+  animation: cloudpop3 2s cubic-bezier(1,0,1,1.5) forwards;
+}
+
+@keyframes cloudpop1 {
+  0%{ scale: 0;}
+  27%{scale: 0;}
+  72%{scale: 1;}
+  100%{scale: 1;}
+}
+
+@keyframes cloudpop2 {
+  0%{ scale: 0;}
+  45%{scale: 0;}
+  78%{scale: 1;}
+  100%{scale: 1;}
+}
+
+@keyframes cloudpop3 {
+  0%{ scale: 0;}
+  55%{scale: 0;}
+  85%{scale: 1;}
+  100%{scale: 1;}
+}
