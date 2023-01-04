@@ -274,8 +274,8 @@ button {
 .ff-line {
   position: absolute;
   rotate: 180deg;
-  top: -212px;
-  left: 329.8px;
+  top: -228px;
+  left: 366.8px;
   height: 2px;
   width: 150px;
   background-color: rgb(255, 255, 255);
@@ -283,8 +283,8 @@ button {
 }
 .ff-line2 {
   position: absolute;
-  top: -212.2px;
-  left: 180.3px;
+  top: -228.2px;
+  left: 217.3px;
   height: 2px;
   width: 115px;
   background-color: rgb(255, 255, 255);
@@ -293,8 +293,8 @@ button {
 }
 .ff-linedot {
   position: absolute;
-  top: -132px;
-  left: 94px;
+  top: -149px;
+  left: 132px;
   height: 8px;
   width: 8px;
   border-radius: 100%;
@@ -315,53 +315,53 @@ button {
   transform-origin: bottom;
 }
 .tree1 {
-  top: -222px;
-  left: 26px;
-  rotate: 355deg;
+  top: -227px;
+  left: 74px;
+  rotate: 375deg;
   height: 100px;
-  fill: #095413;
+  fill: #083e0f;
 }
 .tree2 {
-  top: -178px;
-  left: 5px;
-  rotate: 324deg;
+  top: -198px;
+  left: 51px;
+  rotate: 346deg;
   height: 75px;
   fill: #175017;
 }
 .tree3 {
-  top: -222px;
-  left: 12px;
-  rotate: 346deg;
+  top: -231px;
+  left: 57px;
+  rotate: 367deg;
   height: 110px;
   fill: #206415;
 }
 .tree4 {
-  top: -207px;
-  left: 61px;
-  rotate: 3deg;
+  top: -199px;
+  left: 100px;
+  rotate: 26deg;
   height: 86px;
   fill: #0f4a06;
 }
 .tree5 {
-  top: -231px;
-  left: 30px;
-  rotate: 358deg;
+  top: -232px;
+  left: 74px;
+  rotate: 379deg;
   height: 119px;
   fill: #226c16;
 }
 .tree6 {
-  top: -207px;
-  left: 5px;
-  rotate: 339deg;
+  top: -220px;
+  left: 48px;
+  rotate: 354deg;
   height: 100px;
   fill: #227615;
 }
 .tree7 {
-  top: -195px;
-  left: 25px;
-  rotate: 350deg;
+  top: -208px;
+  left: 61px;
+  rotate: 358deg;
   height: 91px;
-  fill: #117c2a;
+  fill: #188932;
 }
 .ff-txt:hover ~ .tree1 {
   animation: treepop1 1.61s cubic-bezier(1,0,1,1.5) forwards;
@@ -442,31 +442,55 @@ button {
 }
 
 .cl-cloud {
-  scale: 0; 
+  scale: 0;
   position: absolute
 }
 .cloud1 {
   rotate: 233deg;
-  top: 35px;
-  height: 26px;
-  left: -15px;
-  fill: rgb(255, 255, 255);
+  top: 32px;
+  height: 23px;
+  left: -23px;
+  fill: rgb(189 189 189);
 }
   
 .cloud2 {
   rotate: 97deg;
-  top: -40px;
-  height: 43px;
-  left: 220px;
-  fill: rgb(255, 255, 255);
+  top: -54px;
+  height: 33px;
+  left: 229px;
+  fill: rgb(209 209 209);
 }
   
 .cloud3 {
   rotate: 342deg;
-  top: -176px;
+  top: -181px;
+  height: 24px;
+  left: 47px;
+  fill: rgb(197 197 197);
+}
+
+.cloud4 {
+  rotate: 233deg;
+  top: 35px;
+  height: 26px;
+  left: -15px;
+  fill: rgb(236, 236, 236);
+}
+  
+.cloud5 {
+  rotate: 97deg;
+  top: -40px;
+  height: 43px;
+  left: 220px;
+  fill: rgb(228, 228, 228);
+}
+  
+.cloud6 {
+  rotate: 342deg;
+  top: -173px;
   height: 39px;
   left: 30px;
-  fill: rgb(255, 255, 255);
+  fill: rgb(231, 231, 231);
 }
 
 .cl-txt:hover ~ .cl-line {
@@ -493,13 +517,25 @@ button {
 }
 
 .cl-txt:hover ~ .cloud1 {
-  animation: cloudpop1 2s cubic-bezier(1,0,1,1.5) forwards;
+  animation: cloudpop1 1.85s cubic-bezier(1,0,1,1.5) forwards;
 }
 .cl-txt:hover ~ .cloud2 {
-  animation: cloudpop2 2s cubic-bezier(1,0,1,1.5) forwards;
+  animation: cloudpop2 1.92s cubic-bezier(1,0,1,1.5) forwards;
 }
 .cl-txt:hover ~ .cloud3 {
-  animation: cloudpop3 2s cubic-bezier(1,0,1,1.5) forwards;
+  animation: cloudpop3 1.95s cubic-bezier(1,0,1,1.5) forwards;
+}
+.cl-txt:hover ~ .cloud4 {
+  animation: cloudpop1 1.82s cubic-bezier(1,0,1,1.5) forwards;
+}
+.cl-txt:hover ~ .cloud5 {
+  animation: cloudpop2 2.19s cubic-bezier(1,0,1,1.5) forwards;
+}
+.cl-txt:hover ~ .cloud6 {
+  animation: cloudpop3 1.86s cubic-bezier(1,0,1,1.5) forwards;
+}
+.cl-txt:hover ~ .cloudshadow {
+  animation: cspop 1.8s linear forwards;
 }
 
 @keyframes cloudpop1 {
@@ -521,6 +557,44 @@ button {
   55%{scale: 0;}
   85%{scale: 1;}
   100%{scale: 1;}
+}
+@keyframes cspop {
+  0%{scale: 0;}
+  85%{scale: 0;}
+  100%{scale: 1;}
+}
+.cloudshadow {
+  scale: 0;
+  position: absolute;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 0, 0.288);
+}
+.cs1 {
+  top: 16px;
+  left: 11px;
+  width: 47px;
+  height: 25px;
+  rotate: 48deg;
+  background-color: #3609095e;
+  filter: blur(5px);
+}
+.cs2 {
+  top: -34px;
+  left: 152px;
+  width: 70px;
+  height: 25px;
+  rotate: 276deg;
+  filter: blur(11px);
+  background-color: #28030378;
+}
+.cs3 {
+  top: -129px;
+  left: 73px;
+  width: 65px;
+  height: 25px;
+  rotate: 2deg;
+  filter: blur(6px);
+  background-color: #3c070775;
 }
 /*---vvv---Player-tabs----vvv---*/
 .player-tabs {
