@@ -555,46 +555,47 @@ button {
 }
 
 .re-mountain {
+  transform-origin: bottom;
   position: absolute;
   scale: 1;
   fill: rgb(112 111 111);
 }
 .mountain1 {
-  height: 57px;
-  top: -128px;
-  left: 162px;
+  height: 31px;
+  top: -120px;
+  left: 156px;
   rotate: 55deg;
 }
 
 .mountain2 {
-  height: 57px;
-  top: -127px;
-  left: 162px;
-  rotate: 50deg;
+  height: 26px;
+  top: -123px;
+  left: 152px;
+  rotate: 49deg;
 }
 .mountain3 {
-  height: 57px;
+  height: 21px;
   top: -106px;
-  left: -32px;
+  left: 9px;
   rotate: 300deg;
 }
 .mountain4 {
-  height: 57px;
+  height: 26px;
   top: -101px;
-  left: -33px;
+  left: 2px;
   rotate: 290deg;
 }
 .mountain5 {
-  height: 57px;
-  top: -75px;
-  left: -41px;
+  height: 18px;
+  top: -80px;
+  left: 5px;
   rotate: 285deg;
 }
 .mountain6 {
-  height: 57px;
-  top: 50px;
+  height: 25px;
+  top: 24px;
   left: 38px;
-  rotate: 201deg;
+  rotate: 210deg;
 }
 
 .re-txt:hover ~ .re-line {
