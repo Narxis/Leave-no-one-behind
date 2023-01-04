@@ -416,7 +416,109 @@ button {
   50% { transform: scale(0.02);}
   100% { transform: scale(0.3);}
 }
+/* --^------ff animation------^--*/
+/* --v------cl animation------v--*/
+.cl-line {
+  height: 2px;
+  width: 167px;
+  background-color: rgb(255 255 255);
+  top: 86px;
+  position: absolute;
+  left: -193px;
+}
 
+.cl-line2 {
+  height: 2px;
+  width: 50px;
+  background-color: rgb(255 255 255);
+  top: 86px;
+  position: absolute;
+  left: -27px;
+  rotate: 306deg;
+  transform-origin: 0;
+}
+
+.cl-cloud {
+  scale: 0; 
+  position: absolute
+}
+.cloud1 {
+  rotate: 233deg;
+  top: 35px;
+  height: 26px;
+  left: -15px;
+  fill: rgb(255, 255, 255);
+}
+  
+.cloud2 {
+  rotate: 97deg;
+  top: -40px;
+  height: 43px;
+  left: 220px;
+  fill: rgb(255, 255, 255);
+}
+  
+.cloud3 {
+  rotate: 342deg;
+  top: -176px;
+  height: 39px;
+  left: 30px;
+  fill: rgb(255, 255, 255);
+}
+
+.cl-txt:hover ~ .cl-line {
+  animation: cl-trace 1s linear forwards;
+}
+
+@keyframes cl-trace {
+  0%{filter: opacity(1); width: 0px;}
+  1% {width: 1px;}
+  30%{width: 167px;}
+  100%{width: 167px; filter: opacity(1);}
+}
+
+.cl-txt:hover ~ .cl-line2 {
+  animation: cl-trace-2 1s linear forwards;
+}
+
+@keyframes cl-trace-2 {
+  0%{width: 0px;}
+  29.9%{width: 0px;}
+  30% {width: 1px; filter: opacity(1)}
+  60%{width: 50px;}
+  100%{width: 50px; filter: opacity(1);}
+}
+
+.cl-txt:hover ~ .cloud1 {
+  animation: cloudpop1 2s cubic-bezier(1,0,1,1.5) forwards;
+}
+.cl-txt:hover ~ .cloud2 {
+  animation: cloudpop2 2s cubic-bezier(1,0,1,1.5) forwards;
+}
+.cl-txt:hover ~ .cloud3 {
+  animation: cloudpop3 2s cubic-bezier(1,0,1,1.5) forwards;
+}
+
+@keyframes cloudpop1 {
+  0%{ scale: 0;}
+  27%{scale: 0;}
+  72%{scale: 1;}
+  100%{scale: 1;}
+}
+
+@keyframes cloudpop2 {
+  0%{ scale: 0;}
+  45%{scale: 0;}
+  78%{scale: 1;}
+  100%{scale: 1;}
+}
+
+@keyframes cloudpop3 {
+  0%{ scale: 0;}
+  55%{scale: 0;}
+  85%{scale: 1;}
+  100%{scale: 1;}
+}
 /*---vvv---Player-tabs----vvv---*/
 .player-tabs {
   position: absolute;
