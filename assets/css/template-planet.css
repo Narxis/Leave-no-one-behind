@@ -224,7 +224,10 @@ button {
 .o2-linedot,
 .ff-line,
 .ff-line2,
-.ff-linedot {
+.ff-linedot,
+.cl-line,
+.cl-line2,
+.cl-linedot {
   filter: opacity(0);
 }
 @keyframes dash {
