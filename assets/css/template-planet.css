@@ -227,7 +227,8 @@ button {
 .ff-linedot,
 .cl-line,
 .cl-line2,
-.cl-linedot {
+.re-line,
+.re-line2 {
   filter: opacity(0);
 }
 @keyframes dash {
@@ -522,7 +523,129 @@ button {
   85%{scale: 1;}
   100%{scale: 1;}
 }
-/*---vvv---Player-tabs----vvv---*/
+/*---^---cl-animation----^---*/
+/*---v---re-animation----v---*/
+
+.re-txt {
+  left: 354px;
+  top: -150px;
+  width: 229px;
+  height: 90px;
+}
+.re-line {
+  transform-origin: 0;
+  position: absolute;
+  top: -139px;
+  left: 349px;
+  height: 2px;
+  width: 121px;
+  background-color: rgb(255 255 255);
+  rotate: 180deg;
+}
+
+.re-line2 {
+  position: absolute;
+  top: -139px;
+  left: 228px;
+  height: 2px;
+  width: 68px;
+  background-color: rgb(255 255 255);
+  transform-origin: 0;
+  rotate: 138deg;
+}
+
+.re-mountain {
+  position: absolute;
+  scale: 1;
+  fill: rgb(112 111 111);
+}
+.mountain1 {
+  height: 57px;
+  top: -128px;
+  left: 162px;
+  rotate: 55deg;
+}
+
+.mountain2 {
+  height: 57px;
+  top: -127px;
+  left: 162px;
+  rotate: 50deg;
+}
+.mountain3 {
+  height: 57px;
+  top: -106px;
+  left: -32px;
+  rotate: 300deg;
+}
+.mountain4 {
+  height: 57px;
+  top: -101px;
+  left: -33px;
+  rotate: 290deg;
+}
+.mountain5 {
+  height: 57px;
+  top: -75px;
+  left: -41px;
+  rotate: 285deg;
+}
+.mountain6 {
+  height: 57px;
+  top: 50px;
+  left: 38px;
+  rotate: 201deg;
+}
+
+.re-txt:hover ~ .re-line {
+  animation: re-trace 1s linear forwards;
+}
+@keyframes re-trace {
+  0%{filter: opacity(1); width: 0px;}
+  1% {width: 1px;}
+  30%{width: 121px;}
+  100%{width: 121px; filter: opacity(1);}
+}
+.re-txt:hover ~ .re-line2 {
+  animation: re-trace2 1s linear forwards;
+}
+@keyframes re-trace2 {
+  0%{width: 0px;}
+  29.9%{width: 0px;}
+  30% {width: 1px; filter: opacity(1)}
+  60%{width: 66px;}
+  100%{width: 66px; filter: opacity(1);}
+}
+
+.re-txt:hover ~ .mountain1 {
+  animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
+}
+.re-txt:hover ~ .mountain2 {
+  animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
+}
+.re-txt:hover ~ .mountain3{
+  animation: mountainpop1 1.64s cubic-bezier(1,0,1,1.5) forwards;
+}
+.re-txt:hover ~ .mountain4 {
+  animation: mountainpop1 1.67s cubic-bezier(1,0,1,1.5) forwards;
+}
+.re-txt:hover ~ .mountain5 {
+  animation: mountainpop1 1.62s cubic-bezier(1,0,1,1.5) forwards;
+}
+.re-txt:hover ~ .mountain6 {
+  animation: mountainpop1 1.49s cubic-bezier(1,0,1,1.5) forwards;
+}
+
+@keyframes mountainpop1 {
+  0%{ scale: 0;}
+  27%{scale: 0;}
+  72%{scale: 1;}
+  100%{scale: 1;}
+}
+
+
+/*---^---cl-animation----^---*/
+/*---v----Player-tabs----v---*/
 .player-tabs {
   position: absolute;
   width: 1500px;
