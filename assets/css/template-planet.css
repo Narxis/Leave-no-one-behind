@@ -3,6 +3,9 @@
 :root {
   --planet-color: #C25447;
   --darkgrey: #17181c;
+  --purple: rgb(123, 31, 162);
+    --violet: rgb(103,58, 183);
+    --pink: rgb(244, 143, 177);
 }
 
 body {
@@ -557,7 +560,7 @@ button {
 .re-mountain {
   transform-origin: bottom;
   position: absolute;
-  scale: 1;
+  scale: 0;
   fill: rgb(112 111 111);
 }
 .mountain1 {
@@ -644,8 +647,111 @@ button {
   100%{scale: 1;}
 }
 
+.place1 {
+  left: 167px;
+  top: -108px;
+  width: 15px;
+  height: 15px;
+}
+  
+.place2 {
+  top: -93px;
+  left: -25px;
+  height: 20px;
+  width: 15px;
+}
+  
+.place3 {  
+  top: 32px;
+  left: -2px;
+  height: 10px;
+  width: 10px;
+}
+.re-background {
+  opacity: 0;
+}
+.re-txt:hover ~ .re-background {
+  animation: opac 2s linear forwards;
+}
+@keyframes opac {
+  0% {opacity: 0;}
+  65% {opacity: 0;}
+  100% {  opacity: 1;}
+}
 
-/*---^---cl-animation----^---*/
+.ress > .re-background {
+    display: inline-block;
+    position: relative;
+}
+.ress >.re-background > .magic-star {
+    --size: clamp(20px, 1.5vw, 30px);
+  
+    animation: scale 700ms ease forwards;
+    display: block;
+    height: var(--size);
+    left: var(--star-left);
+    position: absolute;
+    top: var(--star-top);
+    width: var(--size);
+}
+  
+.ress >.re-background > .magic-star > svg {
+    animation: rotate 1000ms linear infinite;
+    display: block;
+    opacity: 0.7;
+}
+  
+.ress > .re-background > .magic-star > svg > path {
+    fill: var(--violet);
+  
+}
+  
+.ress > .re-background > .star-place {
+    animation: background-pan 3s linear infinite;
+    background: linear-gradient(to right,
+    var(--purple),
+    var(--violet),
+    var(--pink),
+    var(--purple)
+    );
+    background-size: 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    white-space: nowrap;
+} 
+
+@keyframes background-pan {
+    from {
+        background-position: 0% center;
+    }
+  
+    to {
+       background-position: -200% center;
+    }
+}
+  
+@keyframes scale {
+    from, to {
+        transform: scale(0);
+    }
+  
+    50% {
+        transform: scale(1);
+    }
+}
+  
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+  
+    to {
+        transform: rotate(180deg);
+    }
+}
+
+/*---^---re-animation----^---*/
 /*---v----Player-tabs----v---*/
 .player-tabs {
   position: absolute;
@@ -895,3 +1001,23 @@ hr.separateur {
   margin: 10px;
 }
 /*---^^^---Player-tabs----^^^---*/
+/*---vvv---Tout-en-bas----vvv---*/
+
+/*body {
+  background-color: rgb(10, 10, 10);
+  display: grid;
+  height: 100vh;
+  margin: 0px;
+  overflow: hidden;
+  place-items: center;
+}
+
+h1 {
+  color: rgb(255, 255, 255);
+  font-family: "Rubik", sans-serif;
+  font-size: clamp(2em, 2vw, 4em);
+  font-weight: 400;
+  margin: 0px;
+  padding: 20px;
+  text-align: center;
+}*/
