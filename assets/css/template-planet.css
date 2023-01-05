@@ -561,7 +561,7 @@ button {
   transform-origin: bottom;
   position: absolute;
   scale: 0;
-  fill: rgb(112 111 111);
+  fill: rgb(68 42 42);
 }
 .mountain1 {
   height: 31px;
@@ -684,15 +684,15 @@ button {
     position: relative;
 }
 .ress >.re-background > .magic-star {
-    --size: clamp(20px, 1.5vw, 30px);
-  
-    animation: scale 700ms ease forwards;
-    display: block;
-    height: var(--size);
-    left: var(--star-left);
-    position: absolute;
-    top: var(--star-top);
-    width: var(--size);
+  --size:
+clamp(10px, 1.5vw, 20px);
+  animation: scale 700ms ease forwards;
+  display: block;
+  height: var(--size);
+  left: var(--star-left);
+  position: absolute;
+  top: var(--star-top);
+  width: var(--size);
 }
   
 .ress >.re-background > .magic-star > svg {
@@ -702,8 +702,7 @@ button {
 }
   
 .ress > .re-background > .magic-star > svg > path {
-    fill: var(--violet);
-  
+  fill: rgb(255 158 0);
 }
   
 .ress > .re-background > .star-place {
