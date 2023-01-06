@@ -673,7 +673,7 @@ button {
 .eau-linedot{
   position: absolute;
   top: 1px;
-  left: 174px;
+  left: 173px;
   height: 8px;
   width: 8px;
   border-radius: 100%;
@@ -684,6 +684,7 @@ button {
   position: absolute;
   top: -116px;
   left: 18px;
+  filter: opacity(0);
 }
 .eau-color{
   fill: #2bc5c0;
@@ -693,6 +694,7 @@ button {
   position: absolute;
   top: -116px;
   left: 18px;
+  filter: opacity(0);
 }
 .eau-border-color{
   fill: var(--planet-color);
@@ -703,19 +705,39 @@ button {
   animation: eau-trace  1s linear forwards;
 }
 .eau-txt:hover ~ .eau-line2{
-  animation: eau-trace2 2s linear forwards;
+  animation: eau-trace2 1s linear forwards;
 }
 .eau-txt:hover ~ .eau-linedot{
-  animation: eau-dot 2s linear forwards;
+  animation: dot 1s linear forwards;
 }
-.eau-txt:hover ~ .eau-svg{
-  animation: eau-fill 2s linear forwards;
+.eau-txt:hover ~ .eau-fill{
+  animation: eau-fill-animation 2s ease-in forwards;
 }
 .eau-txt:hover ~ .eau-border{
-  animation: eau-border 2s linear forwards;
+  animation: eau-border-animation 2s cubic-bezier(1,0,1,1.5) forwards;
 }
-
-
+@keyframes eau-trace {
+  0%{filter: opacity(1); width: 0px;}
+  1% {width: 1px;}
+  30%{width: 160px;}
+  100%{width: 160px; filter: opacity(1);}
+}
+@keyframes eau-trace2 {
+  0%{width:0; filter: opacity(0);}
+  29.9%{width:0; filter: opacity(0);}
+  30%{width: 0; filter: opacity(1);}
+  60% {width: 75px;}
+  100% {width: 75px; filter: opacity(1);}
+}
+@keyframes eau-fill-animation {
+  0%{filter: opacity(0);}
+  100%{filter: opacity(1);}
+}
+@keyframes eau-border-animation {
+  0%{filter: opacity(0);}
+  50%{filter: opacity(0);}
+  100%{filter: opacity(1);}
+}
 
 
 /*---^---eau-animation---^---*/
