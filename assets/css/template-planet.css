@@ -244,7 +244,10 @@ button {
 .re-linedot,
 .gr-line,
 .gr-line2,
-.gr-linedot {
+.gr-linedot,
+.eau-line,
+.eau-line2,
+.eau-linedot {
   filter: opacity(0);
 }
 @keyframes dash {
@@ -645,6 +648,75 @@ button {
   width: 365px;
   height: 174px;
 }
+.eau-line{
+  transform-origin: 0;
+  position: absolute;
+  top: 59px;
+  left: 392px;
+  height: 2px;
+  width: 160px;
+  background-color: rgb(255 255 255);
+  rotate: 180deg;
+}
+
+.eau-line2{
+  transform-origin: 0;
+  position: absolute;
+  top: 59px;
+  left: 232px;
+  height: 2px;
+  width: 75px;
+  background-color: rgb(255 255 255);
+  rotate: 225deg;
+}
+
+.eau-linedot{
+  position: absolute;
+  top: 1px;
+  left: 174px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background-color: rgb(255 255 255);
+}
+.eau-fill{
+  height: 164px;
+  position: absolute;
+  top: -116px;
+  left: 18px;
+}
+.eau-color{
+  fill: #8dfffe;
+}
+.eau-border{
+  height: 164px;
+  position: absolute;
+  top: -116px;
+  left: 18px;
+}
+.eau-border-color{
+  fill: var(--planet-color);
+  filter: brightness(0.5);
+}
+
+.eau-txt:hover ~ .eau-line{
+  animation: eau-trace  1s linear forwards;
+}
+.eau-txt:hover ~ .eau-line2{
+  animation: eau-trace2 2s linear forwards;
+}
+.eau-txt:hover ~ .eau-linedot{
+  animation: eau-dot 2s linear forwards;
+}
+.eau-txt:hover ~ .eau-svg{
+  animation: eau-fill 2s linear forwards;
+}
+.eau-txt:hover ~ .eau-border{
+  animation: eau-border 2s linear forwards;
+}
+
+
+
 
 /*---^---eau-animation---^---*/
 /*---v---re-animation----v---*/
