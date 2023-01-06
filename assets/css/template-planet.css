@@ -147,10 +147,10 @@ button {
   width: 250px;
 }
 .o2-circle {
-  height: 202px;
-  width: auto;
-  top: -131px;
-  left: -1px;
+  top: -179px;
+  left: -49.1px;
+  height: 300px;
+  width: 300px;
   position: absolute;
   transform: rotate(231deg);
 }
@@ -168,19 +168,19 @@ button {
   top: -190.2px;
   left: -43.7px;
   height: 2px;
-  width: 115px;
+  width: 69px;
   background-color: rgb(255, 255, 255);
   transform-origin: 0;
   transform: rotate(45deg);
 }
 .o2-linedot {
-  position: absolute;
-  top: -112px;
-  left: 33px;
-  height: 8px;
-  width: 8px;
-  border-radius: 100%;
-  background-color: rgb(255, 255, 255);
+    position: absolute;
+    top: -146px;
+    left: -1px;
+    height: 8px;
+    width: 8px;
+    border-radius: 100%;
+    background-color: rgb(255, 255, 255);
 }
 .cls-1 {
   fill:none;
@@ -201,20 +201,22 @@ button {
   content: "";
   filter: opacity(0);
   position: absolute;
-  top: -130px;
-  height: 200px;
-  width: 200px;
+  top: -179px;
+  left: -49.1px;
+  height: 300px;
+  width: 300px;
   border-radius: 100%;
+  transform-origin: center;
 }
 .o2-txt:hover ~ .o2-blur {
-  box-shadow: inset 0px 0px 20px 3px var(--o2-color, #8dfffd);
+  box-shadow: inset 0px 0px 50px 3px var(--o2-color, #8dfffd);
   animation: blur 2s linear forwards;
 }
 .o2-txt:hover ~ .o2-line {
   animation: trace 1s linear forwards;
 }
 .o2-txt:hover ~ .o2-line2 {
-  animation: trace-2 2s linear forwards;
+  animation: trace-4 2s linear forwards;
 }
 .o2-txt:hover ~ .o2-linedot {
   animation: dot 2s linear forwards;
@@ -230,8 +232,13 @@ button {
 .ff-linedot,
 .cl-line,
 .cl-line2,
+.cl-linedot,
 .re-line,
-.re-line2 {
+.re-line2,
+.re-linedot,
+.gr-line,
+.gr-line2,
+.gr-linedot {
   filter: opacity(0);
 }
 @keyframes dash {
@@ -264,6 +271,20 @@ button {
   14.9% { width: 0px;}
   15% { width: 1px;}
   30% { width: 115px; filter: opacity(1);}
+  100% { filter: opacity(1);}
+}
+@keyframes trace-3 {
+  0% { width: 0px; filter: opacity(1);}
+  14.9% { width: 0px;}
+  15% { width: 1px;}
+  30% { width: 222px; filter: opacity(1);}
+  100% { filter: opacity(1);}
+}
+@keyframes trace-4 {
+  0% { width: 0px; filter: opacity(1);}
+  14.9% { width: 0px;}
+  15% { width: 1px;}
+  30% { width: 69px; filter: opacity(1);}
   100% { filter: opacity(1);}
 }
 @keyframes dot {
@@ -427,7 +448,7 @@ button {
 /* --v------cl animation------v--*/
 .cl-line {
   height: 2px;
-  width: 167px;
+  width: 155px;
   background-color: rgb(255 255 255);
   top: 86px;
   position: absolute;
@@ -436,15 +457,23 @@ button {
 
 .cl-line2 {
   height: 2px;
-  width: 50px;
+  width: 55px;
   background-color: rgb(255 255 255);
   top: 86px;
   position: absolute;
-  left: -27px;
-  rotate: 306deg;
+  left: -38px;
+  rotate: 315deg;
   transform-origin: 0;
 }
-
+.cl-linedot {
+  position: absolute;
+  top: 52px;
+  left: -11px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background-color: rgb(255, 255, 255);
+}
 .cl-cloud {
   scale: 0;
   position: absolute
@@ -504,8 +533,8 @@ button {
 @keyframes cl-trace {
   0%{filter: opacity(1); width: 0px;}
   1% {width: 1px;}
-  30%{width: 167px;}
-  100%{width: 167px; filter: opacity(1);}
+  30%{width: 155px;}
+  100%{width: 155px; filter: opacity(1);}
 }
 
 .cl-txt:hover ~ .cl-line2 {
@@ -516,10 +545,12 @@ button {
   0%{width: 0px;}
   29.9%{width: 0px;}
   30% {width: 1px; filter: opacity(1)}
-  60%{width: 50px;}
-  100%{width: 50px; filter: opacity(1);}
+  60%{width: 45px;}
+  100%{width: 45px; filter: opacity(1);}
 }
-
+.cl-txt:hover ~ .cl-linedot {
+  animation: dot2 2s linear forwards;
+}
 .cl-txt:hover ~ .cloud1 {
   animation: cloudpop1 1.85s cubic-bezier(1,0,1,1.5) forwards;
 }
@@ -579,8 +610,7 @@ button {
   width: 47px;
   height: 25px;
   rotate: 48deg;
-  background-color: #3609095e;
-  filter: blur(5px);
+  filter: blur(11px)drop-shadow(2px 4px 6px black);
 }
 .cs2 {
   top: -34px;
@@ -588,8 +618,7 @@ button {
   width: 70px;
   height: 25px;
   rotate: 276deg;
-  filter: blur(11px);
-  background-color: #28030378;
+  filter: blur(9px)drop-shadow(2px 4px 6px black);
 }
 .cs3 {
   top: -129px;
@@ -597,10 +626,8 @@ button {
   width: 65px;
   height: 25px;
   rotate: 2deg;
-  filter: blur(6px);
-  background-color: #3c070775;
+  filter: blur(8px)drop-shadow(2px 4px 6px black);
 }
-
 /*---^---cl-animation----^---*/
 /*---v---re-animation----v---*/
 
@@ -616,7 +643,7 @@ button {
   top: -139px;
   left: 349px;
   height: 2px;
-  width: 121px;
+  width: 134px;
   background-color: rgb(255 255 255);
   rotate: 180deg;
 }
@@ -624,19 +651,28 @@ button {
 .re-line2 {
   position: absolute;
   top: -139px;
-  left: 228px;
+  left: 215px;
   height: 2px;
-  width: 68px;
+  width: 55px;
   background-color: rgb(255 255 255);
   transform-origin: 0;
-  rotate: 138deg;
+  rotate: 135deg;
 }
-
+.re-linedot {
+  position: absolute;
+  top: -115px;
+  left: 184px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background-color: rgb(255, 255, 255);
+}
 .re-mountain {
   transform-origin: bottom;
   position: absolute;
   scale: 0;
-  fill: rgb(68 42 42);
+  fill: var(--planet-color);
+  filter: brightness(0.6);
 }
 .mountain1 {
   height: 31px;
@@ -682,8 +718,8 @@ button {
 @keyframes re-trace {
   0%{filter: opacity(1); width: 0px;}
   1% {width: 1px;}
-  30%{width: 121px;}
-  100%{width: 121px; filter: opacity(1);}
+  30%{width: 134px;}
+  100%{width: 134px; filter: opacity(1);}
 }
 .re-txt:hover ~ .re-line2 {
   animation: re-trace2 1s linear forwards;
@@ -692,10 +728,12 @@ button {
   0%{width: 0px;}
   29.9%{width: 0px;}
   30% {width: 1px; filter: opacity(1)}
-  60%{width: 66px;}
-  100%{width: 66px; filter: opacity(1);}
+  60%{width: 45px;}
+  100%{width: 45px; filter: opacity(1);}
 }
-
+.re-txt:hover ~ .re-linedot {
+  animation: dot2 2s linear forwards;
+}
 .re-txt:hover ~ .mountain1 {
   animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
@@ -811,7 +849,7 @@ clamp(10px, 1.5vw, 20px);
     }
   
     50% {
-        transform: scale(1);
+        transform: scale(0.7);
     }
 }
   
@@ -826,6 +864,76 @@ clamp(10px, 1.5vw, 20px);
 }
 
 /*---^---re-animation----^---*/
+/*---v---gr-animation----v---*/
+.gr-line {
+  position: absolute;
+  rotate: 180deg;
+  top: 203px;
+  left: 466.8px;
+  height: 2px;
+  width: 150px;
+  background-color: rgb(255, 255, 255);
+  transform-origin: 0;
+}
+.gr-line2 {
+  position: absolute;
+  top: 202.8px;
+  left: 317.3px;
+  height: 2px;
+  width: 222px;
+  background-color: rgb(255, 255, 255);
+  transform-origin: 0;
+  transform: rotate(225deg);
+}
+.gr-linedot {
+  position: absolute;
+  top: 46px;
+  left: 159px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background-color: rgb(255, 255, 255);
+}
+.gr-txt:hover ~ .gr-line {
+  animation: trace 1.5s linear forwards;
+}
+.gr-txt:hover ~ .gr-line2 {
+  animation: trace-3 3s linear forwards;
+}
+.gr-txt:hover ~ .gr-linedot {
+  animation: dot2 1s linear forwards;
+}
+.gr-txt:hover ~ .gr-circle {
+  animation: grav 1.9s cubic-bezier(.42,.02,.15,.96) infinite;
+}
+@keyframes grav {
+0% {scale: 1; opacity: 0;}
+49.9% {scale: 1; opacity: 0;}
+50% {scale:1; opacity: 1;}
+75%{opacity: 0;}
+100% {scale: 0; opacity: 0;}
+}
+@keyframes dot2 {
+  0% { filter: opacity(0); transform: scale(0);}
+  29.9% { filter: opacity(0.01);}
+  30% { filter: opacity(1);}
+  90% {  transform: scale(0.01); filter: opacity(1);}
+  100% { transform: scale(1); filter: opacity(1);}
+}
+.gr-circle {
+  position: absolute;
+  top: -133px;
+  left: -2px;
+  height: 195px;
+  width: 195px;
+  border-radius: 100%;
+  border-color: #ffffff91;
+  border-width: 5px;
+  border-style: solid;
+  transform-origin: center;
+  opacity: 0;
+}
+/*---^---gr-animation----^---*/
 /*---vvv---Player-tabs----vvv---*/
 .player-tabs {
   position: absolute;

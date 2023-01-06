@@ -5,9 +5,6 @@
     <div class="planet">
         <div class="crat1"></div>
         <div class="crat2"></div>
-        <div class="orbit">
-          <div class="moon"></div>
-        </div>
         <div class="p-stat o2" style="--o2-color:#8dfffe">
           <button class="p-txt o2-txt" style="display: flex;left: -448px;top: -303px;align-items: flex-end;text-align: end;justify-content: flex-end;">Présence d'oxygène</button> 
           <div class="o2-blur"></div>
@@ -21,8 +18,20 @@
                     <circle pathLength="360" id="rond2" class="cls-1" cx="121.5" cy="121.5" r="120"/>
                 </g>
             </g>
-        </svg>
+          </svg>
         </div>
+        <div class="orbit">
+          <div class="moon"></div>
+        </div>
+
+        <div class="p-stat grav">
+          <div class="gr-txt p-txt" style="display: flex;left: 473px;top: 39px;align-items: flex-end;text-align: end;justify-content: flex-start;width: 365px;height: 174px;">Tout comme l'eau la grav est vers la gauche up</div>
+          <div class="gr-line"></div>
+          <div class="gr-line2"></div>
+          <div class="gr-linedot"></div>
+          <div class="gr-circle"></div>
+        </div>
+
         <div class="p-stat eau">
           <div class="p-txt" style="left: 401px; top: 0px;">Puis ici c'est l'eau vers la droite up</div>
         </div>
@@ -31,6 +40,7 @@
           <div class="p-txt re-txt">Les ressources c'est aussi vers la gauche down</div>
           <div class="re-line"></div>
           <div class="re-line2"></div>
+          <div class="re-linedot"></div>
           <svg class="re-mountain mountain1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190.12 166.85">
             <g id="mountain1">
               <path id="mountain1-big" d="M20.79,166.85H169.34a20.77,20.77,0,0,0,17.76-31.56L109,6.68a13.89,13.89,0,0,0-23.57-.27L3.28,134.87a20.78,20.78,0,0,0,17.51,32Z" stroke="#000" stroke-miterlimit="10"/>
@@ -135,6 +145,7 @@
           <div class="p-txt cl-txt" style="left: -465px;top: 74px;">La c'est le climat vers la gauche down</div>
           <div class="cl-line"></div>
           <div class="cl-line2"></div>
+          <div class="cl-linedot"></div>
           <svg class="cl-cloud cloud1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M0 336c0 79.5 64.5 144 144 144H512c70.7 0 128-57.3 128-128c0-61.9-44-113.6-102.4-125.4c4.1-10.7 6.4-22.4 6.4-34.6c0-53-43-96-96-96c-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32C167.6 32 96 103.6 96 192c0 2.7 .1 5.4 .2 8.1C40.2 219.8 0 273.2 0 336z"/></svg>
           <svg class="cl-cloud cloud2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M0 336c0 79.5 64.5 144 144 144H512c70.7 0 128-57.3 128-128c0-61.9-44-113.6-102.4-125.4c4.1-10.7 6.4-22.4 6.4-34.6c0-53-43-96-96-96c-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32C167.6 32 96 103.6 96 192c0 2.7 .1 5.4 .2 8.1C40.2 219.8 0 273.2 0 336z"/></svg>
           <svg class="cl-cloud cloud3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M0 336c0 79.5 64.5 144 144 144H512c70.7 0 128-57.3 128-128c0-61.9-44-113.6-102.4-125.4c4.1-10.7 6.4-22.4 6.4-34.6c0-53-43-96-96-96c-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32C167.6 32 96 103.6 96 192c0 2.7 .1 5.4 .2 8.1C40.2 219.8 0 273.2 0 336z"/></svg>
@@ -146,9 +157,6 @@
           <div class="cloudshadow cs3"></div>
         </div>
 
-        <div class="p-stat grav">
-          <div class="p-txt" style="left: 350px;top: 165px;">Tout comme l'eau la grav est vers la gauche up</div>
-        </div>
     </div>
     <div class="player-tabs">
       <!-----------------------------------------------------------vvv-Player-1-vvv---------------------------------------------------->
