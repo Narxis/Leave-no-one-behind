@@ -686,7 +686,7 @@ button {
   left: 18px;
 }
 .eau-color{
-  fill: #8dfffe;
+  fill: #2bc5c0;
 }
 .eau-border{
   height: 164px;
@@ -696,7 +696,7 @@ button {
 }
 .eau-border-color{
   fill: var(--planet-color);
-  filter: brightness(0.5);
+  filter: brightness(0.7);
 }
 
 .eau-txt:hover ~ .eau-line{
