@@ -19,7 +19,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: 'Jura', sans-serif;
-  font-size: 15px;
+  font-size: 12px;
 }
 
 .container-player{
@@ -34,10 +34,13 @@ body {
 }
 
 .player{
-  width: 373px;
+  width: 360px;
   height: 392px;
   display: flex;
   justify-content: space-between;
+  border: 4px solid rgb(180 180 180);
+  border-radius: 23px;
+
 }
 .player-sac{
   display: flex;
@@ -51,24 +54,40 @@ body {
    width: 223px;
   justify-content: flex-end;
 }
-.player-name{
-  width: 120px;
-  height: 20px;
-  margin: 5px;
+.player-name {
+  width: 142px;
+  height: 26px;
+  margin: 15px;
+  border-radius: 5px;
+  border: 2px solid rgb(180 180 180);
+  font-family: 'Jura', sans-serif;
+  text-align: center;
+  color: #fff;
+  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
+  background-color: rgba(0, 0, 0, 0.26);
 }
-.race-img{
+.player-name:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
+}
+.race-img {
   height: 125px;
-   width: 100px;
-  margin: 0px 5px;
+  width: 100px;
+  margin: -2px -2px;
+  border-radius: 8px 23px 8px 8px;
+  border: 2px solid rgb(180 180 180);
 }
  .player-stats{
   width: 140px;
   height: 352px;
   margin: 5px 0px;
 }
-.race-desc{
-  width: 223px;
-  height: 267px;
+.race-desc {
+  margin: 26px -2px 0px 16px;
+  width: 178px;
+  height: 240px;
+  border-radius: 8px 8px 23px 8px;
+  border: 2px solid rgb(180 180 180);
 }
 
 .form-container{
