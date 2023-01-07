@@ -1,0 +1,128 @@
+:root {
+    --planet-color: #227826;
+    --darkgrey: #17181c;
+    --purple: rgb(123, 31, 162);
+      --violet: rgb(103,58, 183);
+      --pink: rgb(244, 143, 177);
+  }
+
+body {
+  background: var(--darkgrey);
+  margin: 0;
+  color: whitesmoke;
+  font: 1em Hind, sans-serif;
+  height: 100vh;
+  line-height: 1.5;
+  padding: 1.5em 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Jura', sans-serif;
+  font-size: 15px;
+}
+
+.container-player{
+  position: absolute;
+  width: 1150px;
+   height: 800px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  flex-direction: row;
+  transform: translateX(-250px);
+}
+
+.player{
+  width: 373px;
+  height: 392px;
+  display: flex;
+  justify-content: space-between;
+}
+.player-sac{
+  display: flex;
+  flex-wrap: wrap;
+  width: 150px;
+  height: 391px;
+}
+.player-sac2{
+  display: flex;
+  flex-wrap: wrap;
+   width: 223px;
+  justify-content: flex-end;
+}
+.player-name{
+  width: 120px;
+  height: 20px;
+  margin: 5px;
+}
+.race-img{
+  height: 125px;
+   width: 100px;
+  margin: 0px 5px;
+}
+ .player-stats{
+  width: 140px;
+  height: 352px;
+  margin: 5px 0px;
+}
+.race-desc{
+  width: 223px;
+  height: 267px;
+}
+
+.form-container{
+  position: absolute;
+  height: 600px;
+  width: 400px;
+ top: 184px;
+  left: 1321px;
+  background-color: aliceblue;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  transform: translate(0px, -93px);
+}
+.form-name{
+  height: 30px;
+  width: 200px;
+   margin: 20px;
+}
+.form-pp{
+  height: 125px;
+  width: 100px;
+}
+.form-stats{
+   height: 450px;
+  width: 200px;
+  margin: 10px;
+}
+ .form-race-desc{
+  height: 500px;
+  width: 180px;
+}
+.player-delete{
+  position: absolute;
+    width: 150px;
+    height: 50px;
+    top: 824px;
+    left: 1446px;
+    background: #1671c1;
+}
+.player-create{
+  position: absolute;  
+  width: 150px;  
+  height: 50px; 
+  top: 740px;  
+  left: 1322px;  
+  background: #5a6c0f;
+}
+.game-start{   
+  position: absolute;    
+  width: 150px;    
+  height: 50px;  
+  top: 740px;  
+  left: 1571px;  
+  background: #1671c1;
+  }
+  
