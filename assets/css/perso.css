@@ -18,7 +18,6 @@
     line-height: 1.17;
     padding: 1.5em 0;
     overflow: hidden;
-    display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Jura', sans-serif;
@@ -28,12 +27,13 @@
 .container-player{
   position: absolute;
   width: 1150px;
-   height: 800px;
+  height: 800px;
+  left: 100px;
+  top: 115px;
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   flex-direction: row;
-  transform: translateX(-250px);
 }
 
 .player{
@@ -212,13 +212,14 @@ input[type=number]::-webkit-outer-spin-button
   position: absolute;
   height: 600px;
   width: 400px;
- top: 184px;
+  top: 115px;
   left: 1321px;
-  background-color: aliceblue;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  transform: translate(0px, -93px);
+  border: 4px solid rgb(180 180 180);
+  border-radius: 23px;
+  background: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.199)), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
 }
 .form-name{
   height: 30px;
@@ -238,28 +239,46 @@ input[type=number]::-webkit-outer-spin-button
   height: 500px;
   width: 180px;
 }
-.player-delete{
+.player-delete {
+  display: grid;
+  text-align: center;
+  align-content: center;
   position: absolute;
-    width: 150px;
-    height: 50px;
-    top: 824px;
-    left: 1446px;
-    background: #1671c1;
-}
-.player-create{
-  position: absolute;  
-  width: 150px;  
-  height: 50px; 
-  top: 740px;  
-  left: 1322px;  
-  background: #5a6c0f;
-}
-.game-start{   
-  position: absolute;    
-  width: 150px;    
-  height: 50px;  
-  top: 740px;  
-  left: 1571px;  
+  width: 150px;
+  height: 50px;
+  top: 574px;
+  left: 215px;
   background: #1671c1;
-  }
+  border-radius: 8px 8px 8px 8px;
+  border: 2px solid rgb(180 180 180);
+  backdrop-filter: blur(1.5px);
+}
+.player-create {
+  display: grid;
+  text-align: center;
+  align-content: center;
+  position: absolute;
+  width: 150px;
+  height: 50px;
+  top: 574px;
+  left: 31px;
+  background: #5a6c0f;
+  border-radius: 8px 8px 8px 8px;
+  border: 2px solid rgb(180 180 180);
+  backdrop-filter: blur(1.5px);
+}
+.game-start {
+  display: grid;
+  text-align: center;
+  align-content: center;
+  position: absolute;
+  width: 150px;
+  height: 50px;
+  top: 665px;
+  left: 122px;
+  background: #1671c1;
+  border-radius: 8px 8px 8px 8px;
+  border: 2px solid rgb(180 180 180);
+  backdrop-filter: blur(1.5px);
+}
   
