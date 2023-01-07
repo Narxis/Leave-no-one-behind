@@ -37,12 +37,12 @@ button {
 /* vvv---Planet animation---vvv */
 
 .orbit {
-  width: 300px;
-  height: 300px;
+  width: 500px;
+  height: 500px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   position: absolute;
   border-radius: 100%;
-  margin: -180px -50px;
+  margin: -281px -151px;
   animation: orbit 12.81216s linear infinite;
 }
 
@@ -80,7 +80,7 @@ button {
   width: 50px;
   height: 50px;
   border-radius: 100%;
-  margin: 20px;
+  margin: 49px;
 }
 .moon:before {
   content: "";
@@ -1021,7 +1021,7 @@ clamp(10px, 1.5vw, 20px);
   background-color: rgb(255, 255, 255);
 }
 .gr-txt:hover ~ .gr-line {
-  animation: gr-trace 1.5s linear forwards;
+  animation: gr-trace 1s linear forwards;
 }
 
 @keyframes gr-trace {
@@ -1031,7 +1031,7 @@ clamp(10px, 1.5vw, 20px);
   100%{width: 75px; filter: opacity(1);}
 }
 .gr-txt:hover ~ .gr-line2 {
-  animation: trace-3 3s linear forwards;
+  animation: trace-3 2s linear forwards;
 }
 .gr-txt:hover ~ .gr-linedot {
   animation: dot2 1s linear forwards;
