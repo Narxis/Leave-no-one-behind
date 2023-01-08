@@ -45,6 +45,7 @@
   border-radius: 23px;
   background: linear-gradient(45deg, #0c093c , #0a030e);
   box-shadow: #5e5e5e4f 3px -3px 6px 2px;
+  overflow: hidden;
 }
 #p1 {
   background-position: 0% 0%;
