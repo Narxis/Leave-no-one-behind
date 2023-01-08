@@ -43,7 +43,8 @@
   justify-content: space-between;
   border: 4px solid rgb(180 180 180);
   border-radius: 23px;
-  background: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.199)), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
+  background: linear-gradient(45deg, #0c093c , #0a030e);
+  box-shadow: #5e5e5e4f 3px -3px 6px 2px;
 }
 #p1 {
   background-position: 0% 0%;
@@ -206,8 +207,16 @@ input[type=number]::-webkit-outer-spin-button
   border: 2px solid rgb(180 180 180);
   padding: 6px;
   backdrop-filter: blur(1.5px);
+  overflow: auto;
 }
-
+::-webkit-scrollbar {
+  width: 0.2em;
+  background-color: #000000;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: #F5F5F5;
+}
 .form-container{
   position: absolute;
   height: 600px;
@@ -219,7 +228,8 @@ input[type=number]::-webkit-outer-spin-button
   justify-content: space-between;
   border: 4px solid rgb(180 180 180);
   border-radius: 23px;
-  background: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.199)), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
+  background: linear-gradient(45deg, #0c093c , #0a030e);
+  box-shadow: #5e5e5e4f 3px -3px 6px 2px;
 }
 .form-name{
   height: 30px;
@@ -248,7 +258,7 @@ input[type=number]::-webkit-outer-spin-button
   height: 50px;
   top: 574px;
   left: 215px;
-  background: #1671c1;
+  background: #9f0f0f;
   border-radius: 8px 8px 8px 8px;
   border: 2px solid rgb(180 180 180);
   backdrop-filter: blur(1.5px);
@@ -262,11 +272,12 @@ input[type=number]::-webkit-outer-spin-button
   height: 50px;
   top: 574px;
   left: 31px;
-  background: #5a6c0f;
+  background: #183e95;
   border-radius: 8px 8px 8px 8px;
   border: 2px solid rgb(180 180 180);
   backdrop-filter: blur(1.5px);
 }
+
 .game-start {
   display: grid;
   text-align: center;
@@ -276,7 +287,7 @@ input[type=number]::-webkit-outer-spin-button
   height: 50px;
   top: 665px;
   left: 122px;
-  background: #1671c1;
+  background: #228f1a;
   border-radius: 8px 8px 8px 8px;
   border: 2px solid rgb(180 180 180);
   backdrop-filter: blur(1.5px);
