@@ -61,3 +61,36 @@ async function initialiseTimerTab() {
 }    
 
 window.addEventListener('load', initialiseTimerTab, false);
+
+async function write (fulltext, place) {
+    let currenttext = ''
+    for (let i=0; i<fulltext.length; i++) {
+        document.querySelector(place).append(currenttext)
+        currenttext = fulltext.substring(i,i+1)
+        await sleep(30)
+    }
+}
+window.addEventListener('load', write("Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer. ", '.card-text'), false);
+
+( function(){
+    let linetab = document.querySelectorAll('.line');
+    document.querySelector('#choice1').addEventListener('mouseup',async function() {
+        document.querySelector('.card-text').classList.toggle('invisibility')
+        document.querySelector('.answer1').classList.toggle('visibility')
+        await sleep(1200)
+        write("Vous donnez la bouteille à la douane qui vous laisse passer. ", '.answer1')
+    })
+    document.querySelector('#choice2').addEventListener('mouseup',async function() { 
+        document.querySelector('.card-text').classList.toggle('invisibility')
+        document.querySelector('.answer2').classList.toggle('visibility')
+        await sleep(1200)
+        write("La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ", '.answer2')
+ 
+    })
+    document.querySelector('#choice3').addEventListener('mouseup',async function() {
+        document.querySelector('.card-text').classList.toggle('invisibility')
+        document.querySelector('.answer3').classList.toggle('visibility')
+        await sleep(1200)
+        write("Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ", '.answer3')
+    })
+})();

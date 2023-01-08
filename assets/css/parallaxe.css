@@ -422,11 +422,32 @@ body {
   height: 300px;
   width: 590px;
   font-size: 28px;
-  text-align: justify;
-  align-items: center;
+  line-height: 30px;
+  align-items: baseline;
   margin: 30px;
   color: rgb(255, 255, 255);
   text-shadow: rgba(238, 232, 232, 0.418) 3px 3px 3px;
+}
+.card-text::before{
+  content: '';
+} 
+.answer{
+  position: absolute;
+  display: flex;
+  height: 300px;
+  width: 590px;
+  font-size: 28px;
+  align-items: baseline;
+  margin: 30px;
+  color: rgb(255, 255, 255);
+  text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
+  overflow: hidden;
+  line-height: 30px;
+}
+.answer1,
+.answer2,
+.answer3{
+  filter: opacity(0);
 }
 .wrap {
   position: absolute;
@@ -486,6 +507,23 @@ body {
   opacity: 0.5;
 }
 /*---^^^------Card------^^^---*/
+/*---vvv------Card-text-animation------vvv---*/
+.visibility{
+  animation: show 1s linear forwards;
+}
+@keyframes show{
+  0% {filter: opacity(0);}
+  99%{filter: opacity(0);}
+  100%{filter: opacity(1);}
+}
+.invisibility{
+  animation: hide 1s linear forwards;
+}
+@keyframes hide{
+  0% {filter: opacity(1);}
+  100%{filter: opacity(0);}
+}
+/*---^^^------Card-text-animation------^^^---*/
 /*---vvv--- Mod-Tabs ---vvv---*/
 .mod-stats {
   display: grid;
@@ -1198,3 +1236,4 @@ button, input, select, textarea {
   transition: 1s;
   transform: translate(0%, -100%) scale(0);
 }
+/*---^^^---Status-tab-Animation----^^^---*/
