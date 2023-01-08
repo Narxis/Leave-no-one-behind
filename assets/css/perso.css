@@ -122,7 +122,7 @@ hr.separateur {
 .player-stat {
   width: 238px;
   height: 60px;
-  margin: 0px 0px 0px 0px;
+  margin: 0px 0px 6px 0px;
   display: flex;
   flex-direction: row;
   align-items: center;
