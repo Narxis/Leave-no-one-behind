@@ -944,6 +944,10 @@ button, input, select, textarea {
   border: 3.5px solid rgb(180, 180, 180);
   transform-origin: bottom center;
 }
+@keyframes nothing{
+  0%{position: absolute;}
+  100%{position: absolute;}
+}
 
 .content {
   padding: 10px 13.9px;
@@ -1197,10 +1201,6 @@ button, input, select, textarea {
   align-items: center;
 }
 
-.close-status{
-  animation: close-mod-left-animation 2s forwards !important;
-}
-
 @keyframes close-mod-left-animation {
   0% { opacity: 1; }
   40%{opacity: 0;}
@@ -1258,7 +1258,7 @@ button, input, select, textarea {
 }
 
 .hidden {
-  opacity: 0;
+  filter: opacity(0);
 }
 
 .slide-right { 

@@ -198,12 +198,12 @@
         </div>
       </div>
       <div class="status-bar">
-        <div class="status-tab slide-right">
+        <div class="status-tab slide-right close-left" style="animation: nothing 1s linear forwards!important;">
           <div class="left-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="rotate270"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
           </div>
           <div class="status-up">
-            <div class="todoList hidden">
+            <div class="todoList hidden close-mod-left">
               <div class="content">
                 <form class="add">
                   <input type="text" name="add" placeholder="Add item...">
@@ -222,12 +222,36 @@
                     </label>
                     <i class="far fa-trash-alt delete"></i>
                   </li>
+                  <li>
+                    <input type="checkbox" id="todo_1">
+                    <label for="todo_1">
+                      <span class="check"></span>
+                      Drone
+                    </label>
+                    <i class="far fa-trash-alt delete"></i>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="todo_1">
+                    <label for="todo_1">
+                      <span class="check"></span>
+                      Drone
+                    </label>
+                    <i class="far fa-trash-alt delete"></i>
+                  </li>
+                  <li>
+                    <input type="checkbox" id="todo_1">
+                    <label for="todo_1">
+                      <span class="check"></span>
+                      Drone
+                    </label>
+                    <i class="far fa-trash-alt delete"></i>
+                  </li>
                 </ul>
               </div>
             </div>
           </div>
           <div class="status-down ">
-            <div class="mods-left hidden">
+            <div class="mods-left hidden close-mod-left">
               <div class="mod-left">
                 <div class="container-text-mod-left">Module d'atterrissage</div>
                 <div class="moins mod-b">-</div>
@@ -985,11 +1009,12 @@
         })
     }
     document.querySelector('.left-button').addEventListener('mouseup', async function() {
+      this.closest('.status-tab').style.animation = null
       this.closest('.status-tab').classList.toggle('open-left')
       this.closest('.status-tab').classList.toggle('close-left')
       this.querySelector('svg').classList.toggle('rotate90')
       this.querySelector('svg').classList.toggle('rotate270')
-      this.nextElementSibling.firstElementChild.classList.toggle('close-status')
+      this.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')
       this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')
       this.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
       this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')

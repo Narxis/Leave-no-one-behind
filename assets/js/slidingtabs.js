@@ -100,16 +100,10 @@ async function initialiseleLeftTabs() {
     var statusTabVar = document.getElementsByClassName('status-tab');
     var todoListVar = document.getElementsByClassName('todoList'); 
     var modsLeftVar = document.getElementsByClassName('mods-left');
-    statusTabVar.item(0).firstElementChild.querySelector('svg').classList.remove('rotate270')
-    statusTabVar.item(0).firstElementChild.querySelector('svg').classList.add('rotate90')
     await sleep(1000);
     statusTabVar.item(0).classList.remove('slide-right');
-    await sleep(900);
+    await sleep(3000);
     todoListVar.item(0).classList.remove('hidden');
     modsLeftVar.item(0).classList.remove('hidden');
-    statusTabVar.item(0).classList.add('open-left');
-    todoListVar.item(0).classList.add('open-mod-left');
-    modsLeftVar.item(0).classList.add('open-mod-left');
-    await sleep(5000);
 }
 window.addEventListener('load', initialiseleLeftTabs, false);
