@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
 
 :root {
-  --planet-color: #C25447;
+  --planet-color: #227826;
   --darkgrey: #17181c;
   --purple: rgb(123, 31, 162);
     --violet: rgb(103,58, 183);
@@ -37,12 +37,12 @@ button {
 /* vvv---Planet animation---vvv */
 
 .orbit {
-  width: 300px;
-  height: 300px;
+  width: 500px;
+  height: 500px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   position: absolute;
   border-radius: 100%;
-  margin: -180px -50px;
+  margin: -281px -151px;
   animation: orbit 12.81216s linear infinite;
 }
 
@@ -80,7 +80,7 @@ button {
   width: 50px;
   height: 50px;
   border-radius: 100%;
-  margin: 20px;
+  margin: 49px;
 }
 .moon:before {
   content: "";
@@ -145,6 +145,12 @@ button {
 .o2-txt {
   height: 125px;
   width: 250px;
+  display: flex;
+  left: -448px;
+  top: -305px;
+  align-items: flex-end;
+  text-align: end;
+  justify-content: flex-end;
 }
 .o2-circle {
   top: -179px;
@@ -213,7 +219,7 @@ button {
   animation: blur 2s linear forwards;
 }
 .o2-txt:hover ~ .o2-line {
-  animation: trace 1s linear forwards;
+  animation: trace-5 1s linear forwards;
 }
 .o2-txt:hover ~ .o2-line2 {
   animation: trace-4 2s linear forwards;
@@ -238,7 +244,10 @@ button {
 .re-linedot,
 .gr-line,
 .gr-line2,
-.gr-linedot {
+.gr-linedot,
+.eau-line,
+.eau-line2,
+.eau-linedot {
   filter: opacity(0);
 }
 @keyframes dash {
@@ -263,8 +272,8 @@ button {
 @keyframes trace {
   0% { width: 0px; filter: opacity(1);}
   1% { width: 1px;}
-  30% { width: 150px;}
-  100% { width: 150px; filter: opacity(1);}
+  30% { width: 175px;}
+  100% { width: 175px; filter: opacity(1);}
 }
 @keyframes trace-2 {
   0% { width: 0px; filter: opacity(1);}
@@ -287,6 +296,12 @@ button {
   30% { width: 69px; filter: opacity(1);}
   100% { filter: opacity(1);}
 }
+@keyframes trace-5 {
+  0% { width: 0px; filter: opacity(1);}
+  1% { width: 1px;}
+  30% { width: 150px;}
+  100% { width: 150px; filter: opacity(1);}
+}
 @keyframes dot {
   0% { filter: opacity(0); transform: scale(0);}
   29.9% { filter: opacity(0.01);}
@@ -296,11 +311,23 @@ button {
 }
 /* --^------o2 animation------^--*/
 /* --v------ff animation------v--*/
+.ff-txt {
+  display: flex;
+  left: 400px;
+  top: -355px;
+  align-items: flex-end;
+  text-align: end;
+  justify-content: flex-start;
+  width: 150px;
+  height: 135px;
+  padding: 0px;
+  transform-origin: bottom left;
+}
 .ff-line {
   position: absolute;
   rotate: 180deg;
   top: -228px;
-  left: 366.8px;
+  left: 392px;
   height: 2px;
   width: 150px;
   background-color: rgb(255, 255, 255);
@@ -389,63 +416,43 @@ button {
   fill: #188932;
 }
 .ff-txt:hover ~ .tree1 {
-  animation: treepop1 1.61s cubic-bezier(1,0,1,1.5) forwards;
+  animation: treepop 1.61s cubic-bezier(1,0,1,1.5) forwards;
 }
 .ff-txt:hover ~ .tree2 {
-  animation: treepop2 1.5s cubic-bezier(1,0,1,1.5) forwards;
+  animation: treepop 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
 .ff-txt:hover ~ .tree3 {
-  animation: treepop3 1.39s cubic-bezier(1,0,1,1.5) forwards;
+  animation: treepop 1.39s cubic-bezier(1,0,1,1.5) forwards;
 }
 .ff-txt:hover ~ .tree4 {
-  animation: treepop4 1.7s cubic-bezier(1,0,1,1.5) forwards;
+  animation: treepop 1.7s cubic-bezier(1,0,1,1.5) forwards;
 }
 .ff-txt:hover ~ .tree5 {
-  animation: treepop5 1.55s cubic-bezier(1,0,1,1.5) forwards;
+  animation: treepop 1.55s cubic-bezier(1,0,1,1.5) forwards;
 }
 .ff-txt:hover ~ .tree6 {
-  animation: treepop6 1.35s cubic-bezier(1,0,1,1.5) forwards;
+  animation: treepop 1.35s cubic-bezier(1,0,1,1.5) forwards;
 }
 .ff-txt:hover ~ .tree7 {
-  animation: treepop7 1.08s cubic-bezier(1,0,1,1.5) forwards;
+  animation: treepop 1.08s cubic-bezier(1,0,1,1.5) forwards;
 }
-@keyframes treepop1 {
-  0% { transform: scale(0);}
-  50% { transform: scale(0.02);}
-  100% { transform: scale(0.3);}
-}
-@keyframes treepop2 {
-  0% { transform: scale(0);}
-  50% { transform: scale(0.02);}
-  100% { transform: scale(0.3);}
-}
-@keyframes treepop3 {
-  0% { transform: scale(0);}
-  50% { transform: scale(0.02);}
-  100% { transform: scale(0.3);}
-}
-@keyframes treepop4 {
-  0% { transform: scale(0);}
-  50% { transform: scale(0.02);}
-  100% { transform: scale(0.3);}
-}
-@keyframes treepop5 {
-  0% { transform: scale(0);}
-  50% { transform: scale(0.02);}
-  100% { transform: scale(0.3);}
-}
-@keyframes treepop6 {
-  0% { transform: scale(0);}
-  50% { transform: scale(0.02);}
-  100% { transform: scale(0.3);}
-}
-@keyframes treepop7 {
+@keyframes treepop {
   0% { transform: scale(0);}
   50% { transform: scale(0.02);}
   100% { transform: scale(0.3);}
 }
 /* --^------ff animation------^--*/
 /* --v------cl animation------v--*/
+.cl-txt {
+  left: -571px;
+  top: -77px;
+  display: flex;
+  align-items: flex-end;
+  text-align: end;
+  justify-content: flex-end;
+  width: 365px;
+  height: 174px;
+}
 .cl-line {
   height: 2px;
   width: 155px;
@@ -629,19 +636,127 @@ button {
   filter: blur(8px)drop-shadow(2px 4px 6px black);
 }
 /*---^---cl-animation----^---*/
+/*---v---eau-animation---v---*/
+
+.eau-txt {
+  left: 400px;
+  top: -104px;
+  display: flex;
+  align-items: flex-end;
+  text-align: end;
+  justify-content: flex-start;
+  width: 365px;
+  height: 174px;
+}
+.eau-line{
+  transform-origin: 0;
+  position: absolute;
+  top: 59px;
+  left: 392px;
+  height: 2px;
+  width: 160px;
+  background-color: rgb(255 255 255);
+  rotate: 180deg;
+}
+
+.eau-line2{
+  transform-origin: 0;
+  position: absolute;
+  top: 59px;
+  left: 232px;
+  height: 2px;
+  width: 75px;
+  background-color: rgb(255 255 255);
+  rotate: 225deg;
+}
+
+.eau-linedot{
+  position: absolute;
+  top: 1px;
+  left: 173px;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background-color: rgb(255 255 255);
+}
+.eau-fill{
+  height: 164px;
+  position: absolute;
+  top: -116px;
+  left: 18px;
+  filter: opacity(0);
+}
+.eau-color{
+  fill: #2bc5c0;
+}
+.eau-border{
+  height: 164px;
+  position: absolute;
+  top: -116px;
+  left: 18px;
+  filter: opacity(0);
+}
+.eau-border-color{
+  fill: var(--planet-color);
+  filter: brightness(0.7);
+}
+
+.eau-txt:hover ~ .eau-line{
+  animation: eau-trace  1s linear forwards;
+}
+.eau-txt:hover ~ .eau-line2{
+  animation: eau-trace2 1s linear forwards;
+}
+.eau-txt:hover ~ .eau-linedot{
+  animation: dot 1s linear forwards;
+}
+.eau-txt:hover ~ .eau-fill{
+  animation: eau-fill-animation 2s ease-in forwards;
+}
+.eau-txt:hover ~ .eau-border{
+  animation: eau-border-animation 2s cubic-bezier(1,0,1,1.5) forwards;
+}
+@keyframes eau-trace {
+  0%{filter: opacity(1); width: 0px;}
+  1% {width: 1px;}
+  30%{width: 160px;}
+  100%{width: 160px; filter: opacity(1);}
+}
+@keyframes eau-trace2 {
+  0%{width:0; filter: opacity(0);}
+  29.9%{width:0; filter: opacity(0);}
+  30%{width: 0; filter: opacity(1);}
+  60% {width: 75px;}
+  100% {width: 75px; filter: opacity(1);}
+}
+@keyframes eau-fill-animation {
+  0%{filter: opacity(0);}
+  100%{filter: opacity(1);}
+}
+@keyframes eau-border-animation {
+  0%{filter: opacity(0);}
+  50%{filter: opacity(0);}
+  100%{filter: opacity(1);}
+}
+
+
+/*---^---eau-animation---^---*/
 /*---v---re-animation----v---*/
 
 .re-txt {
-  left: 354px;
-  top: -150px;
+  left: 400px;
+  top: -216px;
   width: 229px;
   height: 90px;
+  display: flex;
+  align-items: flex-end;
+  text-align: end;
 }
 .re-line {
   transform-origin: 0;
   position: absolute;
-  top: -139px;
-  left: 349px;
+  top: -137px;
+  left: 392px;
   height: 2px;
   width: 134px;
   background-color: rgb(255 255 255);
@@ -650,8 +765,8 @@ button {
 
 .re-line2 {
   position: absolute;
-  top: -139px;
-  left: 215px;
+  top: -137px;
+  left: 228px;
   height: 2px;
   width: 55px;
   background-color: rgb(255 255 255);
@@ -660,8 +775,8 @@ button {
 }
 .re-linedot {
   position: absolute;
-  top: -115px;
-  left: 184px;
+  top: -110px;
+  left: 194px;
   height: 8px;
   width: 8px;
   border-radius: 100%;
@@ -718,8 +833,8 @@ button {
 @keyframes re-trace {
   0%{filter: opacity(1); width: 0px;}
   1% {width: 1px;}
-  30%{width: 134px;}
-  100%{width: 134px; filter: opacity(1);}
+  30%{width: 164px;}
+  100%{width: 164px; filter: opacity(1);}
 }
 .re-txt:hover ~ .re-line2 {
   animation: re-trace2 1s linear forwards;
@@ -732,7 +847,7 @@ button {
   100%{width: 45px; filter: opacity(1);}
 }
 .re-txt:hover ~ .re-linedot {
-  animation: dot2 2s linear forwards;
+  animation: dot2 1.5s linear forwards;
 }
 .re-txt:hover ~ .mountain1 {
   animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
@@ -865,11 +980,22 @@ clamp(10px, 1.5vw, 20px);
 
 /*---^---re-animation----^---*/
 /*---v---gr-animation----v---*/
+
+.gr-txt {
+  display: flex;
+    left: 400px;
+    top: 39px;
+    align-items: flex-end;
+    text-align: end;
+    justify-content: flex-start;
+    width: 365px;
+    height: 174px;
+}
 .gr-line {
   position: absolute;
   rotate: 180deg;
   top: 203px;
-  left: 466.8px;
+  left: 392px;
   height: 2px;
   width: 150px;
   background-color: rgb(255, 255, 255);
@@ -895,10 +1021,17 @@ clamp(10px, 1.5vw, 20px);
   background-color: rgb(255, 255, 255);
 }
 .gr-txt:hover ~ .gr-line {
-  animation: trace 1.5s linear forwards;
+  animation: gr-trace 1s linear forwards;
+}
+
+@keyframes gr-trace {
+  0%{filter: opacity(1); width: 0px;}
+  1% {width: 1px;}
+  30%{width: 75px;}
+  100%{width: 75px; filter: opacity(1);}
 }
 .gr-txt:hover ~ .gr-line2 {
-  animation: trace-3 3s linear forwards;
+  animation: trace-3 2s linear forwards;
 }
 .gr-txt:hover ~ .gr-linedot {
   animation: dot2 1s linear forwards;
@@ -922,12 +1055,13 @@ clamp(10px, 1.5vw, 20px);
 }
 .gr-circle {
   position: absolute;
-  top: -133px;
-  left: -2px;
-  height: 195px;
-  width: 195px;
+  top: -130px;
+  left: 0px;
+  height: 190px;
+  width: 190px;
   border-radius: 100%;
-  border-color: #ffffff91;
+  border-color: var(--planet-color);
+  filter: brightness(1.5);
   border-width: 5px;
   border-style: solid;
   transform-origin: center;

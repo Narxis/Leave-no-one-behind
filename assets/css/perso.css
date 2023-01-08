@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+
+:root {
+    --planet-color: #227826;
+    --darkgrey: #17181c;
+    --purple: rgb(123, 31, 162);
+    --violet: rgb(103,58, 183);
+    --pink: rgb(244, 143, 177);
+    --darkgrey: #17181c;
+    --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
+  }
+  body {
+    background: var(--darkgrey);
+    margin: 0;
+    color: whitesmoke;
+    font: 1em Hind, sans-serif;
+    height: 100vh;
+    line-height: 1.17;
+    padding: 1.5em 0;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Jura', sans-serif;
+    font-size: 13px;
+}
+
+.container-player{
+  position: absolute;
+  width: 1150px;
+  height: 800px;
+  left: 100px;
+  top: 115px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  flex-direction: row;
+}
+
+.player{
+  width: 360px;
+  height: 392px;
+  display: flex;
+  justify-content: space-between;
+  border: 4px solid rgb(180 180 180);
+  border-radius: 23px;
+  background: linear-gradient(45deg, #0c093c , #0a030e);
+  box-shadow: #5e5e5e4f 3px -3px 6px 2px;
+  overflow: hidden;
+}
+#p1 {
+  background-position: 0% 0%;
+}
+#p2 {
+  background-position: 33% 0%;
+}
+#p3 {
+  background-position: 66% 0%;
+}
+#p4 {
+  background-position: 0% 50%;
+}
+#p5 {
+  background-position: 33% 50%;
+}
+#p6 {
+  background-position: 66% 50%;
+}
+.player-sac{
+  display: flex;
+  flex-wrap: wrap;
+  width: 150px;
+  height: 391px;
+}
+.player-sac2{
+  display: flex;
+  flex-wrap: wrap;
+   width: 223px;
+  justify-content: flex-end;
+}
+.player-name {
+  width: 142px;
+  height: 37px;
+  margin: 16px 12px 3px 12px;
+  border-radius: 5px;
+  border: 2px solid rgb(180 180 180);
+  font-family: 'Jura', sans-serif;
+  text-align: center;
+  color: #fff;
+  box-shadow: 1px 1px 5px #c8d0e73d, -1px -1px 5px #ffffff46;
+  background-color: rgba(0, 0, 0, 0.514);
+  backdrop-filter: blur(1.5px);
+}
+.player-name:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
+}
+.race-img {
+  height: 125px;
+  width: 100px;
+  margin: 10px 42px;
+  border-radius: 8px 8px 8px 8px;
+  border: 2px solid rgb(180 180 180);
+  backdrop-filter: blur(1.5px);
+}
+.player-stats {
+  width: 160px;
+  height: 320px;
+  margin: 14px -12px -2px -2px;
+  border-radius: 0px 8px 0px 23px;
+  border: 2px solid rgb(180 180 180);
+  backdrop-filter: blur(1.5px);
+  display: flex;
+  flex-direction: column;
+}
+hr.separateur {
+  width: 160px;
+  height: 12px;
+  border: 0;
+  box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
+  margin: 3px 0px -10px 0px;
+}
+.player-stat {
+  width: 238px;
+  height: 60px;
+  margin: 0px 0px 6px 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+.player-stat svg {
+  overflow: visible;
+  transform: scale(0.8);
+}
+.player-stat #Calque_1 {
+  transform: scale(1.25);
+}
+.player-stat-icon {
+  width: 30px;
+  height: 30px;
+  margin: 0px 15px 0px 30px;
+}
+.player-stat-icon svg {
+  fill: rgb(180, 180, 180);
+}
+.player-stat-down {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  margin: 10px;
+}
+.player-stat-value {
+  width: 60px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Jura', sans-serif;
+  text-align: center;
+  color: #fff;
+  text-shadow: rgb(238 232 232 / 42%) 1px 1px 4px;
+  box-shadow: 1.5px 1.5px 3px #ffffff26, -1px -1px 2.5px #ffffff26;
+  background-color: rgba(0, 0, 0, 0.26);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+.player-stat-up {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  margin: 10px;
+}
+.mod-b {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 13px;
+  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.6s ease;
+  background: rgba(0, 0, 0, 0.26);
+  border: none;
+  color: #FFFFFF;
+  padding-bottom: 3px;
+}
+.mod-b:active {
+  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
+  color: rgba(255, 255, 255, 0.301);
+}
+
+.race-desc {
+  margin: 3px -2px 0px 8px;
+  width: 175px;
+  height: 227px;
+  border-radius: 8px 0px 23px 0px;
+  border: 2px solid rgb(180 180 180);
+  padding: 6px;
+  backdrop-filter: blur(1.5px);
+  overflow: auto;
+}
+::-webkit-scrollbar {
+  width: 0.2em;
+  background-color: #000000;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: #F5F5F5;
+}
+.form-container{
+  position: absolute;
+  height: 600px;
+  width: 400px;
+  top: 115px;
+  left: 1321px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  border: 4px solid rgb(180 180 180);
+  border-radius: 23px;
+  background: linear-gradient(45deg, #0c093c , #0a030e);
+  box-shadow: #5e5e5e4f 3px -3px 6px 2px;
+}
+.form-name{
+  height: 30px;
+  width: 200px;
+   margin: 20px;
+}
+.form-pp{
+  height: 125px;
+  width: 100px;
+}
+.form-stats{
+   height: 450px;
+  width: 200px;
+  margin: 10px;
+}
+.form-race-desc{
+  height: 500px;
+  width: 180px;
+}
+.player-delete {
+  display: grid;
+  text-align: center;
+  align-content: center;
+  position: absolute;
+  width: 150px;
+  height: 50px;
+  top: 574px;
+  left: 215px;
+  background: #9f0f0f;
+  border-radius: 8px 8px 8px 8px;
+  border: 2px solid rgb(180 180 180);
+  backdrop-filter: blur(1.5px);
+}
+.player-create {
+  display: grid;
+  text-align: center;
+  align-content: center;
+  position: absolute;
+  width: 150px;
+  height: 50px;
+  top: 574px;
+  left: 31px;
+  background: #183e95;
+  border-radius: 8px 8px 8px 8px;
+  border: 2px solid rgb(180 180 180);
+  backdrop-filter: blur(1.5px);
+}
+
+.game-start {
+  display: grid;
+  text-align: center;
+  align-content: center;
+  position: absolute;
+  width: 150px;
+  height: 50px;
+  top: 665px;
+  left: 122px;
+  background: #228f1a;
+  border-radius: 8px 8px 8px 8px;
+  border: 2px solid rgb(180 180 180);
+  backdrop-filter: blur(1.5px);
+}
+  
