@@ -49,6 +49,16 @@ body {
   align-items: center;
   flex-direction: row-reverse;
 }
+.leftcenter {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 0px;
+  height: 0px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
 .planet-card {
   width: 100vw;
 }
@@ -393,74 +403,74 @@ button {
   transform: scale(0);
   transform-origin: bottom;
 }
-.tree1 {
+.tree0 {
   top: -227px;
   left: 74px;
   rotate: 375deg;
   height: 100px;
   fill: #083e0f;
 }
-.tree2 {
+.tree1 {
   top: -198px;
   left: 51px;
   rotate: 346deg;
   height: 75px;
   fill: #175017;
 }
-.tree3 {
+.tree2 {
   top: -231px;
   left: 57px;
   rotate: 367deg;
   height: 110px;
   fill: #206415;
 }
-.tree4 {
+.tree3 {
   top: -199px;
   left: 100px;
   rotate: 26deg;
   height: 86px;
   fill: #0f4a06;
 }
-.tree5 {
+.tree4 {
   top: -232px;
   left: 74px;
   rotate: 379deg;
   height: 119px;
   fill: #226c16;
 }
-.tree6 {
+.tree5 {
   top: -220px;
   left: 48px;
   rotate: 354deg;
   height: 100px;
   fill: #227615;
 }
-.tree7 {
+.tree6 {
   top: -208px;
   left: 61px;
   rotate: 358deg;
   height: 91px;
   fill: #188932;
 }
-.trace-tree1 {
+.trace-tree0 {
   animation: treepop 1.61s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-tree2 {
+.trace-tree1 {
   animation: treepop 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-tree3 {
+.trace-tree2 {
   animation: treepop 1.39s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-tree4 {
+.trace-tree3 {
   animation: treepop 1.7s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-tree5 {
+.trace-tree4 {
   animation: treepop 1.55s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-tree6 {
+.trace-tree5 {
   animation: treepop 1.35s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-tree7 {
+.trace-tree6 {
   animation: treepop 1.08s cubic-bezier(1,0,1,1.5) forwards;
 }
 @keyframes treepop {
@@ -512,7 +522,7 @@ button {
   scale: 0;
   position: absolute
 }
-.cloud1 {
+.cloud0 {
   rotate: 233deg;
   top: 32px;
   height: 23px;
@@ -520,7 +530,7 @@ button {
   fill: rgb(189 189 189);
 }
   
-.cloud2 {
+.cloud1 {
   rotate: 97deg;
   top: -54px;
   height: 33px;
@@ -528,7 +538,7 @@ button {
   fill: rgb(209 209 209);
 }
   
-.cloud3 {
+.cloud2 {
   rotate: 342deg;
   top: -181px;
   height: 24px;
@@ -536,7 +546,7 @@ button {
   fill: rgb(197 197 197);
 }
 
-.cloud4 {
+.cloud3 {
   rotate: 233deg;
   top: 35px;
   height: 26px;
@@ -544,7 +554,7 @@ button {
   fill: rgb(236, 236, 236);
 }
   
-.cloud5 {
+.cloud4 {
   rotate: 97deg;
   top: -40px;
   height: 43px;
@@ -552,7 +562,7 @@ button {
   fill: rgb(228, 228, 228);
 }
   
-.cloud6 {
+.cloud5 {
   rotate: 342deg;
   top: -173px;
   height: 39px;
@@ -585,22 +595,22 @@ button {
 .trace-cl-linedot {
   animation: dot2 2s linear forwards;
 }
-.trace-cloud1 {
+.trace-cloud0 {
   animation: cloudpop1 1.85s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-cloud2 {
+.trace-cloud1 {
   animation: cloudpop2 1.92s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-cloud3 {
+.trace-cloud2 {
   animation: cloudpop3 1.95s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-cloud4 {
+.trace-cloud3 {
   animation: cloudpop1 1.82s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-cloud5 {
+.trace-cloud4 {
   animation: cloudpop2 2.19s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-cloud6 {
+.trace-cloud5 {
   animation: cloudpop3 1.86s cubic-bezier(1,0,1,1.5) forwards;
 }
 .trace-cloudshadow {
@@ -816,38 +826,38 @@ button {
   fill: var(--planet-color);
   filter: brightness(0.6);
 }
-.mountain1 {
+.mountain0 {
   height: 31px;
   top: -120px;
   left: 156px;
   rotate: 55deg;
 }
 
-.mountain2 {
+.mountain1 {
   height: 26px;
   top: -123px;
   left: 152px;
   rotate: 49deg;
 }
-.mountain3 {
+.mountain2 {
   height: 21px;
   top: -106px;
   left: 9px;
   rotate: 300deg;
 }
-.mountain4 {
+.mountain3 {
   height: 26px;
   top: -101px;
   left: 2px;
   rotate: 290deg;
 }
-.mountain5 {
+.mountain4 {
   height: 18px;
   top: -80px;
   left: 5px;
   rotate: 285deg;
 }
-.mountain6 {
+.mountain5 {
   height: 25px;
   top: 24px;
   left: 38px;
@@ -876,22 +886,22 @@ button {
 .trace-re-linedot {
   animation: dot2 1.5s linear forwards;
 }
+.trace-mountain0 {
+  animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
+}
 .trace-mountain1 {
   animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-mountain2 {
-  animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
-}
-.trace-mountain3{
+.trace-mountain2{
   animation: mountainpop1 1.64s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-mountain4 {
+.trace-mountain3 {
   animation: mountainpop1 1.67s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-mountain5 {
+.trace-mountain4 {
   animation: mountainpop1 1.62s cubic-bezier(1,0,1,1.5) forwards;
 }
-.trace-mountain6 {
+.trace-mountain5 {
   animation: mountainpop1 1.49s cubic-bezier(1,0,1,1.5) forwards;
 }
 
@@ -1351,16 +1361,86 @@ hr.separateur {
   display: flex;
   height: 600px;
   width: 300px;
+  flex-direction: column;
+  align-items: center;
+  border: 5px solid rgb(180 180 180);
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
 }
 .ship-summary-line{
-
+  width: 300px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .module{
-
+  height: 70px;
+  width: 145px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .separateur-horizontal{
-
+  box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
+  height:6px ;
+  width: 300px;
 }
 .separateur-vertical{
+  box-shadow: inset 12px 0px 12px -12px rgb(0 0 0 / 50%);
+  height:70px;
+  width: 8px;
+}
+.mod-text{
+  width: 120px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin: 0px 0px 0px 10px;
+  font-size: 12;
+}
+.mod-value{
+  width: 20px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin: 0px 10px 0px 0px;
+  font-size: 12;
+}
+.planet-summary{
+  position: absolute;
+  left: 80px;
+  display: flex;
+  height: 600px;
+  width: 300px;
+  flex-direction: column;
+  align-items: center;
+  border: 5px solid rgb(180 180 180);
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+}
+.planet-summary-line{
+  width: 300px;
+  height: 95px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.planet-reading{
+  font-size: 12px;
+  margin: 5px 0px 0px 5px;
+}
 
+.scanning::after {
+  content: '';
+  animation: threedots 3s steps(10,end) infinite;
+}
+
+@keyframes threedots {
+  0%{content: '.';}
+  10%{content: '..';}
+  20%{content: '...';}
+  100%{content: '...';}
 }

@@ -1,3 +1,23 @@
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+let texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
+let textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
+let textff = "blabla Animal blabla planette blabla plante bla bla ";
+let textre = "blabla Fer blabla planette blabla diamant bla bla ";
+let texteau = "blabla Eau blabla planette blabla boire bla bla ";
+let textgr = "blabla Gravité blabla planette blabla pomme bla bla ";
+
+async function write (fulltext, place) {
+    let currenttext = ''
+    for (let i=0; i<fulltext.length; i++) {
+        document.querySelector(place).innerText = currenttext ;
+        currenttext +=fulltext.substring(i,i+1)
+        await sleep(30)
+    }
+}
+
 (function() {
     let tree = document.querySelectorAll('.ff-tree')
     let cloud = document.querySelectorAll('.cl-cloud')
@@ -11,6 +31,8 @@
         document.querySelector('.o2-line').classList.add('trace-o2-line')
         document.querySelector('.o2-line2').classList.add('trace-o2-line2')
         document.querySelector('.o2-linedot').classList.add('trace-o2-linedot')
+        document.querySelector('#reading-1').classList.remove('scanning')
+        write(texto2,'#planet-line-1')
     })
     document.querySelector('.ff-txt').addEventListener('mouseup',function(){
         document.querySelector('.ff-line').classList.add('trace-ff-line')
@@ -18,6 +40,8 @@
         document.querySelector('.ff-linedot').classList.add('trace-ff-linedot')
         for (let i=0; i<tree.length; i++) {
             tree.item(i).classList.add('trace-tree'+i);}
+        document.querySelector('#reading-3').classList.remove('scanning')
+        write(textff,'#planet-line-3')
     })
     document.querySelector('.cl-txt').addEventListener('mouseup',function(){
         document.querySelector('.cl-line').classList.add('trace-cl-line')
@@ -27,6 +51,8 @@
             cloud.item(i).classList.add('trace-cloud'+i);}
         for (let i=0; i<cloudshadow.length; i++) {
             cloudshadow.item(i).classList.add('trace-cloudshadow');}
+        document.querySelector('#reading-2').classList.remove('scanning')
+        write(textcl,'#planet-line-2')
     })
     document.querySelector('.eau-txt').addEventListener('mouseup',function(){
         document.querySelector('.eau-line').classList.add('trace-eau-line')
@@ -34,6 +60,8 @@
         document.querySelector('.eau-linedot').classList.add('trace-eau-linedot')
         document.querySelector('.eau-fill').classList.add('trace-eau-fill')
         document.querySelector('.eau-border').classList.add('trace-eau-border')
+        document.querySelector('#reading-5').classList.remove('scanning')
+        write(texteau,'#planet-line-5')
     })
     document.querySelector('.re-txt').addEventListener('mouseup',function(){
         document.querySelector('.re-line').classList.add('trace-re-line')
@@ -43,12 +71,17 @@
             mountain.item(i).classList.add('trace-mountain'+i);}
         for (let i=0; i<mountainstar.length; i++) {
             mountainstar.item(i).classList.add('trace-re-background');}
+        document.querySelector('#reading-4').classList.remove('scanning')
+        write(textre,'#planet-line-4')
     })
     document.querySelector('.gr-txt').addEventListener('mouseup',function(){
         document.querySelector('.gr-line').classList.add('trace-gr-line')
         document.querySelector('.gr-line2').classList.add('trace-gr-line2')
         document.querySelector('.gr-linedot').classList.add('trace-gr-linedot')
         document.querySelector('.gr-circle').classList.add('trace-gr-circle')
+        document.querySelector('#reading-6').classList.remove('scanning')
+        write(textgr,'#planet-line-6')
     })
 
 })()
+
