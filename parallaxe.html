@@ -197,12 +197,12 @@
           <div class="tab-txt">Gravité artificielle</div>
         </div>
       </div>
-      <div class="status-bar">
-        <div class="status-tab slide-right close-left" style="animation: nothing 1s linear forwards!important;">
+      <div class="consommable-bar">
+        <div class="consommable-tab slide-right close-left" style="animation: nothing 1s linear forwards!important;">
           <div class="left-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="rotate270"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
           </div>
-          <div class="status-up">
+          <div class="consommable-up">
             <div class="todoList hidden close-mod-left">
               <div class="content">
                 <form class="add">
@@ -223,24 +223,24 @@
                     <i class="far fa-trash-alt delete"></i>
                   </li>
                   <li>
-                    <input type="checkbox" id="todo_1">
-                    <label for="todo_1">
+                    <input type="checkbox" id="todo_2">
+                    <label for="todo_2">
                       <span class="check"></span>
                       Drone
                     </label>
                     <i class="far fa-trash-alt delete"></i>
                   </li>
                   <li>
-                    <input type="checkbox" id="todo_1">
-                    <label for="todo_1">
+                    <input type="checkbox" id="todo_3">
+                    <label for="todo_3">
                       <span class="check"></span>
                       Drone
                     </label>
                     <i class="far fa-trash-alt delete"></i>
                   </li>
                   <li>
-                    <input type="checkbox" id="todo_1">
-                    <label for="todo_1">
+                    <input type="checkbox" id="todo_4">
+                    <label for="todo_4">
                       <span class="check"></span>
                       Drone
                     </label>
@@ -250,7 +250,7 @@
               </div>
             </div>
           </div>
-          <div class="status-down ">
+          <div class="consommable-down ">
             <div class="mods-left hidden close-mod-left">
               <div class="mod-left">
                 <div class="container-text-mod-left">Module d'atterrissage</div>
@@ -318,6 +318,20 @@
         <div class="answer answer1"></div>
         <div class="answer answer2"></div>
         <div class="answer answer3"></div>
+      </div>
+    </div>
+  </div>
+  <div class="human-status">
+    <div class="human">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
+      <div class="human-title">Humains:</div>
+      <div class="human-alive">1000</div>
+    </div>
+    <div class="status-separateur"></div>
+    <div class="status">
+      <div class="status-title-line">
+        <div class="status-title1">Status :</div>
+        <div class="status-title2">Durée</div>
       </div>
     </div>
   </div>
@@ -887,12 +901,14 @@
     </div>
 <!-----------------------------------------------------------^^^-Player-6-^^^---------------------------------------------------->
   </div>
+  <div class="next-button"></div>
 </body>
 <script src="assets/js/parallaxe.js"></script>
 <script src="assets/js/slidingtabs.js"></script>
 <script src="assets/js/timer.js"></script>
 <!-- <script src="assets/js/lightning.js"></script> -->
 <script src="assets/js/todo.js"></script>
+<script src="assets/js/status.js"></script>
 <script>
 
   var observer = new MutationObserver(function(mutations) {
@@ -1009,9 +1025,9 @@
         })
     }
     document.querySelector('.left-button').addEventListener('mouseup', async function() {
-      this.closest('.status-tab').style.animation = null
-      this.closest('.status-tab').classList.toggle('open-left')
-      this.closest('.status-tab').classList.toggle('close-left')
+      this.closest('.consommable-tab').style.animation = null
+      this.closest('.consommable-tab').classList.toggle('open-left')
+      this.closest('.consommable-tab').classList.toggle('close-left')
       this.querySelector('svg').classList.toggle('rotate90')
       this.querySelector('svg').classList.toggle('rotate270')
       this.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')

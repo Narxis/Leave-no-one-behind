@@ -97,12 +97,11 @@ window.addEventListener('load', write("Vous rencontrez un barrage de la premièr
 })();
 
 async function initialiseleLeftTabs() {
-    var statusTabVar = document.getElementsByClassName('status-tab');
+    var consommableTabVar = document.getElementsByClassName('consommable-tab');
     var todoListVar = document.getElementsByClassName('todoList'); 
     var modsLeftVar = document.getElementsByClassName('mods-left');
     await sleep(1000);
-    statusTabVar.item(0).classList.remove('slide-right');
-    await sleep(3000);
+    consommableTabVar.item(0).classList.remove('slide-right');
     todoListVar.item(0).classList.remove('hidden');
     modsLeftVar.item(0).classList.remove('hidden');
 }

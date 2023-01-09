@@ -9,12 +9,9 @@ body {
   background: var(--darkgrey);
   margin: 0;
   color: whitesmoke;
-  display: flex;
   height: 100vh;
   font-family: 'Jura', sans-serif;
   font-size: 15px;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
 }
 /* ---vvv---------SVG--------vvv--- */
@@ -415,6 +412,9 @@ body {
   position: absolute;
   height: 470px;
   width: 760px;
+  margin: 0px 0px 25px 0px;
+  top: 221px;
+  left: 569px;
 }
 .card-text {
   position: absolute;
@@ -690,6 +690,7 @@ body {
 /*---vvv---Player-tabs----vvv---*/
 .player-tabs {
   position: absolute;
+  left: 199px;
   width: 1500px;
   height: 100px;
   bottom: -23px;
@@ -921,7 +922,7 @@ hr.separateur {
   margin: 10px;
 }
 /*---^^^---Player-tabs----^^^---*/
-/*---vvv---Status-tab-----vvv---*/
+/*---vvv---consommable-tab-----vvv---*/
 button, input, select, textarea {
   font-family: inherit;
   font-size: inherit;
@@ -1081,7 +1082,7 @@ button, input, select, textarea {
 }
 
 
-.status-up {
+.consommable-up {
   width: 200px;
   height: 15px;
   display: flex;
@@ -1089,7 +1090,7 @@ button, input, select, textarea {
   justify-content: center;
   margin: 1px 0px 0px 0px;
 }
-.status-down {
+.consommable-down {
   width: 200px;
   height: 15px;
   display: flex;
@@ -1097,7 +1098,7 @@ button, input, select, textarea {
   align-items: center;
   margin: 0px 0px 2px 0px;
 }
-.status-tab {
+.consommable-tab {
   width: 340px;
   height: 62px;
   background: linear-gradient(272deg, rgb(1 0 12) 0%, rgb(63 45 110 / 81%) 100%);
@@ -1110,7 +1111,7 @@ button, input, select, textarea {
   border: 4px solid rgb(180, 180, 180);
   justify-content: space-between;
 }
-.status-bar {
+.consommable-bar {
   width: 60px;
   height: 62px;
   position: absolute;
@@ -1188,7 +1189,7 @@ button, input, select, textarea {
   height: 100px;
   color: aliceblue;
 }
-/*---vvv---Status-tab-Animation----vvv---*/
+/*---vvv---consommable-tab-Animation----vvv---*/
 .left-button {
   position: absolute;
   width: 50px;
@@ -1242,34 +1243,139 @@ button, input, select, textarea {
   100% {transform: translate(-290px, 0px);}
 }
 
-.force-close-status{
+.force-close-consommable{
   transition: 1s;
   transform: translate(0%, -100%) scale(0);
 }
-/*---^^^---Status-tab-Animation----^^^---*/
 .open-mod-left {
-    animation: open-mod-left-animation 2s forwards;
-  }
+  animation: open-mod-left-animation 2s forwards;
+}
 
 @keyframes open-mod-left-animation {
-  0% { opacity: 0 ;}
-  60% { opacity: 0;}
-  100% { opacity: 1;}
+0% { opacity: 0 ;}
+60% { opacity: 0;}
+100% { opacity: 1;}
 }
 
 .hidden {
-  filter: opacity(0);
+filter: opacity(0);
 }
 
 .slide-right { 
-  transform: translateX(50px);
+transform: translateX(50px);
 }
 
 .close-left {
-  animation: close-left-animation 2s forwards;
+animation: close-left-animation 2s forwards;
 }
 @keyframes close-left-animation {
-  0%{transform: translate(-290px, 0px);}
-  35% {transform: translate(-290px, 0px);}
-  100% {transform: translate(0px, 0px);}
+0%{transform: translate(-290px, 0px);}
+35% {transform: translate(-290px, 0px);}
+100% {transform: translate(0px, 0px);}
+}
+/*---^^^---consommable-tab-Animation----^^^---*/
+/*---vvv---human-status----vvv---*/
+.human-status {
+  position: absolute;
+  top: 170px;
+  left: 1650px;
+  width: 230px;
+  border: 5px solid rgb(180 180 180);
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.human{
+  width: 181px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 10px 0px;
+}
+.human svg{
+  width: 25px;
+  height: 25px;
+  fill: aliceblue;
+  /* scale: 0.15; */
+  /* margin: 0px 38px 0px 0px; */
+}
+.human-title{
+  width: 66px;
+  margin: 0px 3px 0px 30px;
+}
+.human-alive{
+  width: 40px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.status-separateur{
+  width: 230px;
+  height: 12px;
+  border: 0;
+  box-shadow: inset 0px 12px 12px -12px rgb(0 0 0 / 50%);
+  margin: 3px 0px -10px 0px;
+}
+.status{
+  width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+.status-title-line{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 210px;
+  height: 30px;
+  margin: 5px 0px 5px 0px;
+}
+.status-title2{
+  height: 30px;
+  display: flex;
+  align-items: center;
+  margin: 0px 0px 0px 34px;
+}
+.status-line {
+  display: flex;
+  align-items: center;
+  width: 230px;
+  justify-content: center;
+}
+
+.status svg {
+  height: 25px;
+  width: 25px;
+  fill: aliceblue;
+}
+.status-name{
+  height: 40px;
+  width: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.status-duration{
+  height: 25px;
+  width: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+  /*---^^^---human-status----^^^---*/
+  
+.next-button {
+  position: absolute;
+  top: 878px;
+  left: 1727px;
+  width: 148px;
+  height: 55px;
+  background: linear-gradient(272deg, rgb(1 0 12) 0%, rgb(63 45 110 / 81%) 100%);
+  border: 4px solid rgb(180, 180, 180);
 }
