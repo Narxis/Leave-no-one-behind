@@ -30,6 +30,25 @@ body {
   justify-content: center;
   align-items: center;
 }
+.bottomcenter{
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rightcenter{
+  position: absolute;
+  top: 50%;
+  right: 0%;
+  height: 0px;
+  width: 0px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row-reverse;
+}
 .planet-card {
   width: 100vw;
 }
@@ -134,7 +153,7 @@ button {
   color: #FFFFFF;
   padding-bottom: 3px;
 }
-.mod-b:active {
+.mod-b:hover {
   box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
   color: rgba(255, 255, 255, 0.301);
 }
@@ -202,11 +221,11 @@ button {
   stroke-width:3px;
   stroke-dasharray: 360;
 }
-.o2-txt:hover ~ .o2-circle #rond1 {
+.rond1{
   stroke-dashoffset: 360;
   animation: dash 2s linear forwards;
 }
-.o2-txt:hover ~ .o2-circle #rond2 {
+.rond2 {
   stroke-dashoffset: -360;
   animation: dash2 2s linear forwards;
 }
@@ -221,17 +240,18 @@ button {
   border-radius: 100%;
   transform-origin: center;
 }
-.o2-txt:hover ~ .o2-blur {
+
+.blurring {
   box-shadow: inset 0px 0px 50px 3px var(--o2-color, #8dfffd);
   animation: blur 2s linear forwards;
 }
-.o2-txt:hover ~ .o2-line {
+.trace-o2-line {
   animation: trace-5 1s linear forwards;
 }
-.o2-txt:hover ~ .o2-line2 {
+.trace-o2-line2 {
   animation: trace-4 2s linear forwards;
 }
-.o2-txt:hover ~ .o2-linedot {
+.trace-o2-linedot {
   animation: dot 2s linear forwards;
 }
 
@@ -359,13 +379,13 @@ button {
   border-radius: 100%;
   background-color: rgb(255, 255, 255);
 }
-.ff-txt:hover ~ .ff-line {
+.trace-ff-line {
   animation: trace 1s linear forwards;
 }
-.ff-txt:hover ~ .ff-line2 {
+.trace-ff-line2 {
   animation: trace-2 2s linear forwards;
 }
-.ff-txt:hover ~ .ff-linedot {
+.trace-ff-linedot {
   animation: dot 2s linear forwards;
 }
 .ff-tree {
@@ -422,25 +442,25 @@ button {
   height: 91px;
   fill: #188932;
 }
-.ff-txt:hover ~ .tree1 {
+.trace-tree1 {
   animation: treepop 1.61s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree2 {
+.trace-tree2 {
   animation: treepop 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree3 {
+.trace-tree3 {
   animation: treepop 1.39s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree4 {
+.trace-tree4 {
   animation: treepop 1.7s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree5 {
+.trace-tree5 {
   animation: treepop 1.55s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree6 {
+.trace-tree6 {
   animation: treepop 1.35s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree7 {
+.trace-tree7 {
   animation: treepop 1.08s cubic-bezier(1,0,1,1.5) forwards;
 }
 @keyframes treepop {
@@ -540,7 +560,7 @@ button {
   fill: rgb(231, 231, 231);
 }
 
-.cl-txt:hover ~ .cl-line {
+.trace-cl-line {
   animation: cl-trace 1s linear forwards;
 }
 
@@ -551,7 +571,7 @@ button {
   100%{width: 155px; filter: opacity(1);}
 }
 
-.cl-txt:hover ~ .cl-line2 {
+.trace-cl-line2 {
   animation: cl-trace-2 1s linear forwards;
 }
 
@@ -562,28 +582,28 @@ button {
   60%{width: 45px;}
   100%{width: 45px; filter: opacity(1);}
 }
-.cl-txt:hover ~ .cl-linedot {
+.trace-cl-linedot {
   animation: dot2 2s linear forwards;
 }
-.cl-txt:hover ~ .cloud1 {
+.trace-cloud1 {
   animation: cloudpop1 1.85s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud2 {
+.trace-cloud2 {
   animation: cloudpop2 1.92s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud3 {
+.trace-cloud3 {
   animation: cloudpop3 1.95s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud4 {
+.trace-cloud4 {
   animation: cloudpop1 1.82s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud5 {
+.trace-cloud5 {
   animation: cloudpop2 2.19s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud6 {
+.trace-cloud6 {
   animation: cloudpop3 1.86s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloudshadow {
+.trace-cloudshadow {
   animation: cspop 1.8s linear forwards;
 }
 
@@ -708,19 +728,19 @@ button {
   filter: brightness(0.7);
 }
 
-.eau-txt:hover ~ .eau-line{
+.trace-eau-line{
   animation: eau-trace  1s linear forwards;
 }
-.eau-txt:hover ~ .eau-line2{
+.trace-eau-line2{
   animation: eau-trace2 1s linear forwards;
 }
-.eau-txt:hover ~ .eau-linedot{
+.trace-eau-linedot{
   animation: dot 1s linear forwards;
 }
-.eau-txt:hover ~ .eau-fill{
+.trace-eau-fill{
   animation: eau-fill-animation 2s ease-in forwards;
 }
-.eau-txt:hover ~ .eau-border{
+.trace-eau-border{
   animation: eau-border-animation 2s cubic-bezier(1,0,1,1.5) forwards;
 }
 @keyframes eau-trace {
@@ -834,7 +854,7 @@ button {
   rotate: 210deg;
 }
 
-.re-txt:hover ~ .re-line {
+.trace-re-line {
   animation: re-trace 1s linear forwards;
 }
 @keyframes re-trace {
@@ -843,7 +863,7 @@ button {
   30%{width: 164px;}
   100%{width: 164px; filter: opacity(1);}
 }
-.re-txt:hover ~ .re-line2 {
+.trace-re-line2 {
   animation: re-trace2 1s linear forwards;
 }
 @keyframes re-trace2 {
@@ -853,25 +873,25 @@ button {
   60%{width: 45px;}
   100%{width: 45px; filter: opacity(1);}
 }
-.re-txt:hover ~ .re-linedot {
+.trace-re-linedot {
   animation: dot2 1.5s linear forwards;
 }
-.re-txt:hover ~ .mountain1 {
+.trace-mountain1 {
   animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain2 {
+.trace-mountain2 {
   animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain3{
+.trace-mountain3{
   animation: mountainpop1 1.64s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain4 {
+.trace-mountain4 {
   animation: mountainpop1 1.67s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain5 {
+.trace-mountain5 {
   animation: mountainpop1 1.62s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain6 {
+.trace-mountain6 {
   animation: mountainpop1 1.49s cubic-bezier(1,0,1,1.5) forwards;
 }
 
@@ -905,7 +925,7 @@ button {
 .re-background {
   opacity: 0;
 }
-.re-txt:hover ~ .re-background {
+.trace-re-background {
   animation: opac 2s linear forwards;
 }
 @keyframes opac {
@@ -1027,7 +1047,7 @@ clamp(10px, 1.5vw, 20px);
   border-radius: 100%;
   background-color: rgb(255, 255, 255);
 }
-.gr-txt:hover ~ .gr-line {
+.trace-gr-line {
   animation: gr-trace 1s linear forwards;
 }
 
@@ -1037,13 +1057,13 @@ clamp(10px, 1.5vw, 20px);
   30%{width: 75px;}
   100%{width: 75px; filter: opacity(1);}
 }
-.gr-txt:hover ~ .gr-line2 {
+.trace-gr-line2 {
   animation: trace-3 2s linear forwards;
 }
-.gr-txt:hover ~ .gr-linedot {
+.trace-gr-linedot {
   animation: dot2 1s linear forwards;
 }
-.gr-txt:hover ~ .gr-circle {
+.trace-gr-circle {
   animation: grav 1.9s cubic-bezier(.42,.02,.15,.96) infinite;
 }
 @keyframes grav {
@@ -1256,7 +1276,7 @@ clamp(10px, 1.5vw, 20px);
   box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
   background-color: rgba(0, 0, 0, 0.26);
 }
-.form-input:focus {
+.form-input:hover {
   outline: none;
   box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
 }
@@ -1326,7 +1346,11 @@ hr.separateur {
 /*---^^^---Player-tabs----^^^---*/
 /*---vvv---Tout-en-bas----vvv---*/
 .ship-summary{
-
+  position: absolute;
+  right: 80px;
+  display: flex;
+  height: 600px;
+  width: 300px;
 }
 .ship-summary-line{
 

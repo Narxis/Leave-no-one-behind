@@ -31,7 +31,7 @@ body {
   height: 0px;
   width: 0px;
   display: flex;
- justify-content: flex-start;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: row-reverse;
 }
