@@ -10,7 +10,7 @@ let statusList = document.querySelectorAll(".status-line");
 let statusListLength = statusList.length;
 let statushtml = document.querySelector(".status");
  
-let addstatus = (statusname) => {
+const addstatus = (statusname) => {
     let svg = eval(`svg_${statusname}`);
     let duration = eval(`duration_${statusname}`);
     const html = ` <div class="status-line" id="line_${statusListLength}">
