@@ -32,7 +32,7 @@ async function write (fulltext, place) {
         document.querySelector('.o2-line2').classList.add('trace-o2-line2')
         document.querySelector('.o2-linedot').classList.add('trace-o2-linedot')
         document.querySelector('#reading-1').classList.remove('scanning')
-        write(texto2,'#planet-line-1')
+        write(texto2,'#reading-1')
     })
     document.querySelector('.ff-txt').addEventListener('mouseup',function(){
         document.querySelector('.ff-line').classList.add('trace-ff-line')
@@ -41,7 +41,7 @@ async function write (fulltext, place) {
         for (let i=0; i<tree.length; i++) {
             tree.item(i).classList.add('trace-tree'+i);}
         document.querySelector('#reading-3').classList.remove('scanning')
-        write(textff,'#planet-line-3')
+        write(textff,'#reading-3')
     })
     document.querySelector('.cl-txt').addEventListener('mouseup',function(){
         document.querySelector('.cl-line').classList.add('trace-cl-line')
@@ -52,7 +52,7 @@ async function write (fulltext, place) {
         for (let i=0; i<cloudshadow.length; i++) {
             cloudshadow.item(i).classList.add('trace-cloudshadow');}
         document.querySelector('#reading-2').classList.remove('scanning')
-        write(textcl,'#planet-line-2')
+        write(textcl,'#reading-2')
     })
     document.querySelector('.eau-txt').addEventListener('mouseup',function(){
         document.querySelector('.eau-line').classList.add('trace-eau-line')
@@ -61,7 +61,7 @@ async function write (fulltext, place) {
         document.querySelector('.eau-fill').classList.add('trace-eau-fill')
         document.querySelector('.eau-border').classList.add('trace-eau-border')
         document.querySelector('#reading-5').classList.remove('scanning')
-        write(texteau,'#planet-line-5')
+        write(texteau,'#reading-5')
     })
     document.querySelector('.re-txt').addEventListener('mouseup',function(){
         document.querySelector('.re-line').classList.add('trace-re-line')
@@ -72,7 +72,7 @@ async function write (fulltext, place) {
         for (let i=0; i<mountainstar.length; i++) {
             mountainstar.item(i).classList.add('trace-re-background');}
         document.querySelector('#reading-4').classList.remove('scanning')
-        write(textre,'#planet-line-4')
+        write(textre,'#reading-4')
     })
     document.querySelector('.gr-txt').addEventListener('mouseup',function(){
         document.querySelector('.gr-line').classList.add('trace-gr-line')
@@ -80,7 +80,7 @@ async function write (fulltext, place) {
         document.querySelector('.gr-linedot').classList.add('trace-gr-linedot')
         document.querySelector('.gr-circle').classList.add('trace-gr-circle')
         document.querySelector('#reading-6').classList.remove('scanning')
-        write(textgr,'#planet-line-6')
+        write(textgr,'#reading-6')
     })
 
 })()
