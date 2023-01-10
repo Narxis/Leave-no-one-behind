@@ -1382,6 +1382,38 @@ hr.separateur {
   align-items: center;
   justify-content: space-between;
 }
+.drone{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.drone-text{
+  width: 100px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin: 19px 0px 0px 10px;
+  font-size: 12;
+}
+.drone-value{
+  width: 20px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin: 19px 10px 0px 0px;
+  font-size: 12;
+}
+.use-drone{
+  margin: -10px 0px 0px 45px;
+  cursor: pointer;
+  width: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .separateur-horizontal{
   box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
   height:6px ;
