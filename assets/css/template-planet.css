@@ -189,12 +189,12 @@ button {
   height: 75px;
   width: 100px;
   display: flex;
-  left: -278px;
-  top: -229px;
+  left: -282px;
+  top: -219px;
   align-items: center;
   text-align: end;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 .o2-circle {
   top: -179px;
@@ -359,15 +359,15 @@ button {
 .ff-txt {
   display: flex;
   left: 381px;
-  top: -266px;
+  top: -256px;
   align-items: center;
   text-align: end;
   justify-content: center;
-  flex-wrap: wrap;
   width: 130px;
   height: 75px;
   padding: 0px;
   transform-origin: bottom left;
+  flex-direction: column;
 }
 .ff-line {
   position: absolute;
@@ -490,15 +490,15 @@ button {
 /* --^------ff animation------^--*/
 /* --v------cl animation------v--*/
 .cl-txt {
-  left: -269px;
-  top: 48px;
+  left: -273px;
+  top: 58px;
   display: flex;
   align-items: center;
   text-align: end;
   justify-content: center;
-  flex-wrap: wrap;
   width: 100px;
   height: 75px;
+  flex-direction: column;
 }
 .cl-line {
   height: 2px;
@@ -686,15 +686,15 @@ button {
 /*---v---eau-animation---v---*/
 
 .eau-txt {
-  left: 390px;
-  top: 23px;
+  left: 389px;
+  top: 31px;
   display: flex;
   align-items: center;
   text-align: end;
-  flex-wrap: wrap;
   width: 130px;
   height: 75px;
   justify-content: center;
+  flex-direction: column;
 }
 .eau-line{
   transform-origin: 0;
@@ -792,15 +792,15 @@ button {
 /*---v---re-animation----v---*/
 
 .re-txt {
-  left: 392px;
-  top: -180px;
+  left: 389px;
+  top: -164px;
   width: 178px;
   height: 75px;
   display: flex;
   align-items: center;
   text-align: end;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 .re-line {
   transform-origin: 0;
@@ -1034,13 +1034,13 @@ clamp(10px, 1.5vw, 20px);
 .gr-txt {
   display: flex;
   left: 374px;
-  top: 167px;
+  top: 175px;
   align-items: center;
   text-align: end;
   justify-content: center;
-  flex-wrap: wrap;
   width: 100px;
   height: 75px;
+  flex-direction: column;
 }
 .gr-line {
   position: absolute;
