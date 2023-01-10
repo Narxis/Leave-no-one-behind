@@ -1532,7 +1532,7 @@ hr.separateur {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 5px solid rgb(180 180 180);
+  border: 3px solid rgb(180 180 180);
   border-radius: 15px;
   background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
 }
@@ -1546,7 +1546,7 @@ hr.separateur {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 5px solid rgb(180 180 180);
+  border: 3px solid rgb(180 180 180);
   border-radius: 15px;
   background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
 }
