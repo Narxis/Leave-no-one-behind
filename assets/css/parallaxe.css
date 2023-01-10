@@ -1330,7 +1330,7 @@ animation: close-left-animation 2s forwards;
 .human svg{
   width: 25px;
   height: 25px;
-  fill: aliceblue;
+  fill: rgb(180 180 180);
   /* scale: 0.15; */
   /* margin: 0px 38px 0px 0px; */
 }
@@ -1383,7 +1383,7 @@ animation: close-left-animation 2s forwards;
 .status svg {
   height: 25px;
   width: 25px;
-  fill: aliceblue;
+  fill: rgb(180 180 180);
 }
 .status-name{
   height: 40px;

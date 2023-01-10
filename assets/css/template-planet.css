@@ -178,6 +178,13 @@ button {
 .p-txt {
   cursor: pointer;
 }
+.points-required{
+  width: 90px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .o2-txt {
   height: 75px;
   width: 100px;
@@ -187,6 +194,7 @@ button {
   align-items: center;
   text-align: end;
   justify-content: center;
+  flex-wrap: wrap;
 }
 .o2-circle {
   top: -179px;
@@ -355,6 +363,7 @@ button {
   align-items: center;
   text-align: end;
   justify-content: center;
+  flex-wrap: wrap;
   width: 130px;
   height: 75px;
   padding: 0px;
@@ -487,6 +496,7 @@ button {
   align-items: center;
   text-align: end;
   justify-content: center;
+  flex-wrap: wrap;
   width: 100px;
   height: 75px;
 }
@@ -681,6 +691,7 @@ button {
   display: flex;
   align-items: center;
   text-align: end;
+  flex-wrap: wrap;
   width: 130px;
   height: 75px;
   justify-content: center;
@@ -789,6 +800,7 @@ button {
   align-items: center;
   text-align: end;
   justify-content: center;
+  flex-wrap: wrap;
 }
 .re-line {
   transform-origin: 0;
@@ -1026,6 +1038,7 @@ clamp(10px, 1.5vw, 20px);
   align-items: center;
   text-align: end;
   justify-content: center;
+  flex-wrap: wrap;
   width: 100px;
   height: 75px;
 }
