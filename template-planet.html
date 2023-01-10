@@ -205,36 +205,90 @@
         <div class="ship-summary-line" id="ship-line-3">
           <div class="module" id="module-3">
             <div class="mod-text">Moteurs:</div>
-            <div class="mod-value">86%</div>
+            <div id="dial-moteurs" class="container moteurs dial" data-value="100">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#78F8EC" />
+                  <stop offset="100%" stop-color="#6E4AE2" />
+                </linearGradient>
+                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)"/>
+                <text x="20" y="60">100%</text>
+              </svg>
+            </div>
           </div>
           <div class="separateur-vertical"></div>
           <div class="module" id="module-4">
             <div class="mod-text">Scanner:</div>
-            <div class="mod-value">79%</div>
+            <div id="dial-scan" class="container scan dial" data-value="66">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#78F8EC" />
+                  <stop offset="100%" stop-color="#6E4AE2" />
+                </linearGradient>
+                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)"/>
+                <text x="20" y="60">100%</text>
+              </svg>
+            </div>
           </div>
         </div>
         <div class="separateur-horizontal"></div>
         <div class="ship-summary-line" id="ship-line-4">
           <div class="module" id="module-5">
             <div class="mod-text">Detecteur:</div>
-            <div class="mod-value">100%</div>
+            <div id="dial-detect" class="container detect dial" data-value="87">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#78F8EC" />
+                  <stop offset="100%" stop-color="#6E4AE2" />
+                </linearGradient>
+                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)"/>
+                <text x="20" y="60">100%</text>
+              </svg>
+            </div>
           </div>
           <div class="separateur-vertical"></div>
           <div class="module" id="module-6">
             <div class="mod-text">Oxygène:</div>
-            <div class="mod-value">59%</div>
+            <div id="dial-o2" class="container o2 dial" data-value="30">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#78F8EC" />
+                  <stop offset="100%" stop-color="#6E4AE2" />
+                </linearGradient>
+                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)"/>
+                <text x="20" y="60">100%</text>
+              </svg>
+            </div>
           </div>
         </div>
         <div class="separateur-horizontal"></div>
         <div class="ship-summary-line" id="ship-line-5">
           <div class="module" id="module-7">
             <div class="mod-text">Electricité:</div>
-            <div class="mod-value">40%</div>
+            <div id="dial-elec" class="container elec dial" data-value="56">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#78F8EC" />
+                  <stop offset="100%" stop-color="#6E4AE2" />
+                </linearGradient>
+                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)"/>
+                <text x="20" y="60">100%</text>
+              </svg>
+            </div>
           </div>
           <div class="separateur-vertical"></div>
           <div class="module" id="module-8">
             <div class="mod-text">Gravité:</div>
-            <div class="mod-value"> 69%</div>
+            <div id="dial-grav" class="container grav dial" data-value="80">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#78F8EC" />
+                  <stop offset="100%" stop-color="#6E4AE2" />
+                </linearGradient>
+                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)"/>
+                <text x="20" y="60">100%</text>
+              </svg>
+            </div>
           </div>
         </div>
         <div class="separateur-horizontal"></div>
@@ -1073,3 +1127,52 @@
 </body>
   
 <script src="assets\js\planet.js"></script>
+<script>
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(async function(mutation) {
+      if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {
+        let val = mutation.target.getAttribute('data-value');
+        let oldVal = mutation.oldValue;
+        let elem = document.getElementById(mutation.target.id);
+        let circle = elem.getElementsByTagName('circle')[0];
+        let text = elem.getElementsByTagName('text')[0];
+        let tm = 30;
+        if (val > oldVal) {
+          do {
+            oldVal++
+            circle.style.strokeDashoffset = (100 - parseInt(oldVal)).toString()
+            text.textContent = oldVal + '%'
+            await new Promise(r => setTimeout(r, tm));
+          } while (val > oldVal)
+        }
+        else {
+          do {
+            oldVal--
+            circle.style.strokeDashoffset = (100 - parseInt(oldVal)).toString()
+            text.textContent = oldVal + '%'
+            await new Promise(r => setTimeout(r, tm));
+          } while (val < oldVal)
+        }
+      }
+    });
+  });
+
+  let dials = document.getElementsByClassName("dial");
+  for (let i = 0; i < dials.length; i++) {
+    let dial = dials.item(i);
+    let val = dial.getAttribute('data-value');
+    let circle = dial.getElementsByTagName('circle');
+    if (circle[0]) {
+      let text = dial.getElementsByTagName('text')
+      circle[0].style.strokeDashoffset = (100 - parseInt(val)).toString()
+      text[0].textContent = val + '%' ;
+    }
+    observer.observe(dial, {
+      attributes: true,
+      attributeFilter: [ "data-value" ],
+      attributeOldValue: true,
+    });
+  }
+
+
+</script>

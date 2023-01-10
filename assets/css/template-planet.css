@@ -1371,7 +1371,7 @@ hr.separateur {
 /*---vvv---Tout-en-bas----vvv---*/
 .ship-summary{
   position: absolute;
-  right: 80px;
+  right: 25px;
   display: flex;
   height: 600px;
   width: 300px;
@@ -1388,12 +1388,30 @@ hr.separateur {
   align-items: center;
   justify-content: center;
 }
+.title {
+  font-size: 18px;
+}
 .module{
   height: 70px;
   width: 145px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.dial svg {
+  position: relative;
+  top: 0px;
+  left: -11px;
+  height: 40px;
+  overflow: visible;
+}
+.dial svg circle {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .03s ease-out;
+}
+.dial svg text {
+  font-size: 30px;
+  fill: whitesmoke;
 }
 .drone{
   display: flex;
@@ -1457,7 +1475,7 @@ hr.separateur {
 }
 .planet-summary{
   position: absolute;
-  left: 80px;
+  left: 25px;
   display: flex;
   height: 600px;
   width: 300px;
@@ -1481,12 +1499,14 @@ hr.separateur {
 
 .scanning::after {
   content: '';
-  animation: threedots 3s steps(10,end) infinite;
+  animation: threedots 3s steps(6,end) infinite;
 }
 
 @keyframes threedots {
   0%{content: '.';}
-  10%{content: '..';}
-  20%{content: '...';}
-  100%{content: '...';}
+  33%{content: '..';}
+  50%{content: '...';}
+  70%{content: '...';}
+  71.1%{content: ' ';}
+  100%{content: ' ';}
 }
