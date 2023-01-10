@@ -1059,40 +1059,4 @@
     </div>
 </body>
   
-<script>
-  (function(){
-    let ptabs = document.querySelectorAll('.expander');
-    for (let i=0; i<ptabs.length; i++) {
-        ptabs.item(i).addEventListener('mouseup', function() {
-            this.closest('.player-tab').classList.toggle('move-up')
-        })
-    }
-  })()
-
-
-  let index = 0,
-    interval = 1000;
-
-const rand = (min, max) => 
-  Math.floor(Math.random() * (max - min + 1)) + min;
-
-const animate = star => {
-  star.style.setProperty("--star-left", `${rand(-10, 100)}%`);
-  star.style.setProperty("--star-top", `${rand(-40, 80)}%`);
-
-  star.style.animation = "none";
-  star.offsetHeight;
-  star.style.animation = "";
-}
-
-for(const star of document.getElementsByClassName("magic-star")) {
-  setTimeout(() => {
-    animate(star);
-    
-    setInterval(() => animate(star), 2500);
-  }, index++ * (interval / 3))
-} 
-  
-
-</script>
 <script src="assets\js\planet.js"></script>

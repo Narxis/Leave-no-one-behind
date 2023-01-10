@@ -61,17 +61,20 @@ async function initialiseTimerTab() {
 }    
 
 window.addEventListener('load', initialiseTimerTab, false);
-
 var cardtextstr = "Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer. ";
 var answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
 var answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
 var answer3str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr= 0;
+var cardnbrUntilPlanet = 5;
 
 function nextoption () {
     if (textprintednbr == 2) {
-        document.querySelector('.next-button').classList.add('next-show')
+        document.querySelector('#next1').classList.add('next-show')
+    }
+    if (textprintednbr == 3) {
+        document.querySelector('#next2').classList.add('next-show')
     }
 }
 
@@ -108,38 +111,73 @@ window.addEventListener('load', write(cardtextstr, '.card-text'), false);
         await sleep(1200)
         write(answer3str, '.answer3')
     })
-    document.querySelector('.next-button').addEventListener('mouseup', async function (){
-        //hide text animation and 'next-button'
-        document.querySelector('.next-button').classList.add('next-button-invisibility')
-        document.querySelector('.card-text').classList.remove('visibility')
-        document.querySelector('.answer1').classList.remove('visibility')
-        document.querySelector('.answer2').classList.remove('visibility')
-        document.querySelector('.answer3').classList.remove('visibility')
-        document.querySelector('.card-text').classList.add('invisibility')
-        document.querySelector('.answer1').classList.add('invisibility')
-        document.querySelector('.answer2').classList.add('invisibility')
-        document.querySelector('.answer3').classList.add('invisibility')
-        await sleep(1000)
-        //clear text and move next button
-        document.querySelector('.next-button').classList.remove('next-show')
-        document.querySelector('.card-text').innerHTML = ""
-        document.querySelector('.answer1').innerHTML = ""
-        document.querySelector('.answer2').innerHTML = ""
-        document.querySelector('.answer3').innerHTML = ""
-        //ready to show new text
-        document.querySelector('.next-button').classList.remove('next-button-invisibility')
-        document.querySelector('.card-text').classList.remove('invisibility')
-        document.querySelector('.answer1').classList.remove('invisibility')
-        document.querySelector('.answer2').classList.remove('invisibility')
-        document.querySelector('.answer3').classList.remove('invisibility')
-        //set up new text
-        cardtextstr = "Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer. ";
-        answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
-        answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
-        answer3str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
-        textprintednbr = 0;
-        write(cardtextstr,'.card-text')
+    document.querySelector('#next1').addEventListener('mouseup', async function (){
+        if (cardnbrUntilPlanet == 1) {
+                    //hide text animation and 'next-button'
+            document.querySelector('.next-button').classList.add('next-button-invisibility')
+            document.querySelector('.card-text').classList.remove('visibility')
+            document.querySelector('.answer1').classList.remove('visibility')
+            document.querySelector('.answer2').classList.remove('visibility')
+            document.querySelector('.answer3').classList.remove('visibility')
+            document.querySelector('.card-text').classList.add('invisibility')
+            document.querySelector('.answer1').classList.add('invisibility')
+            document.querySelector('.answer2').classList.add('invisibility')
+            document.querySelector('.answer3').classList.add('invisibility')
+            await sleep(1000)
+            //clear text and move next button
+            document.querySelector('.next-button').classList.remove('next-show')
+            document.querySelector('.card-text').innerHTML = ""
+            document.querySelector('.answer1').innerHTML = ""
+            document.querySelector('.answer2').innerHTML = ""
+            document.querySelector('.answer3').innerHTML = ""
+            //ready to show new text
+            document.querySelector('.next-button').classList.remove('next-button-invisibility')
+            document.querySelector('.card-text').classList.remove('invisibility')
+            document.querySelector('.answer1').classList.remove('invisibility')
+            document.querySelector('.answer2').classList.remove('invisibility')
+            document.querySelector('.answer3').classList.remove('invisibility')
+            //new text
+            cardtextstr = "Votre vaisseau est entrée dans l'orbite d'une planète, allez dans la salle des scanners pour voir les informations sur cette planète ";
+            write (cardtextstr,'.card-text')
+            document.querySelector('#next2').addEventListener('mouseup',function(){
+                window.open('template-planet.html','_self')
+                })
+            }
+        if (cardnbrUntilPlanet != 1) {
+            //hide text animation and 'next-button'
+            document.querySelector('.next-button').classList.add('next-button-invisibility')
+            document.querySelector('.card-text').classList.remove('visibility')
+            document.querySelector('.answer1').classList.remove('visibility')
+            document.querySelector('.answer2').classList.remove('visibility')
+            document.querySelector('.answer3').classList.remove('visibility')
+            document.querySelector('.card-text').classList.add('invisibility')
+            document.querySelector('.answer1').classList.add('invisibility')
+            document.querySelector('.answer2').classList.add('invisibility')
+            document.querySelector('.answer3').classList.add('invisibility')
+            await sleep(1000)
+            //clear text and move next button
+            document.querySelector('.next-button').classList.remove('next-show')
+            document.querySelector('.card-text').innerHTML = ""
+            document.querySelector('.answer1').innerHTML = ""
+            document.querySelector('.answer2').innerHTML = ""
+            document.querySelector('.answer3').innerHTML = ""
+            //ready to show new text
+            document.querySelector('.next-button').classList.remove('next-button-invisibility')
+            document.querySelector('.card-text').classList.remove('invisibility')
+            document.querySelector('.answer1').classList.remove('invisibility')
+            document.querySelector('.answer2').classList.remove('invisibility')
+            document.querySelector('.answer3').classList.remove('invisibility')
+            //set up new text
+            cardtextstr = "Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer. ";
+            answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
+            answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
+            answer3str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
+            textprintednbr = 0;
+            cardnbrUntilPlanet -= 1; 
+            write(cardtextstr,'.card-text')
+            }
     })
+
 })();
 
 async function initialiseleLeftTabs() {

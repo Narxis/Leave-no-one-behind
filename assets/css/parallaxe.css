@@ -1313,7 +1313,12 @@ animation: close-left-animation 2s forwards;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  animation: hologramme 1.5s linear forwards;
 }
+@keyframes hologramme {
+
+}
+
 .human{
   width: 181px;
   height: 50px;
