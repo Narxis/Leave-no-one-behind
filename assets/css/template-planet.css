@@ -59,6 +59,16 @@ body {
   justify-content: left;
   align-items: center;
 }
+.topcenter{
+  position: absolute;
+  left: 50%;
+  top: 0%;
+  width: 0px;
+  height: 0px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;  
+}
 .planet-card {
   width: 100vw;
 }
@@ -1368,7 +1378,7 @@ hr.separateur {
   margin: 10px;
 }
 /*---^^^---Player-tabs----^^^---*/
-/*---vvv---Tout-en-bas----vvv---*/
+/*---vvv---Summary--------vvv---*/
 .ship-summary{
   position: absolute;
   right: 25px;
@@ -1510,3 +1520,38 @@ hr.separateur {
   71.1%{content: ' ';}
   100%{content: ' ';}
 }
+
+/*---^^^---Summary--------^^^---*/
+/*---vvv---Land&Leave-----vvv---*/
+.land-button {
+  position: absolute;
+  top: 70px;
+  left: -190px;
+  width: 212px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid rgb(180 180 180);
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+}
+
+.leave-button {
+  position: absolute;
+  top: 70px;
+  left: 139px;
+  width: 212px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid rgb(180 180 180);
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+}
+
+
+
+/*---^^^---Land&Leave-----^^^---*/
+/*---vvv---Tout-en-bas----vvv---*/
