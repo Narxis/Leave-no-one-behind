@@ -1494,8 +1494,8 @@ hr.separateur {
   content: 'Points de detections: ' ;
 }
 
-.drone::after{
-  content: var(--drones);
+.drone::before{
+  content: 'Drones : ';
 }
 .use-drone{
   margin: 0px 0px 0px 45px;

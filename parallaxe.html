@@ -932,7 +932,10 @@
         </div>
   </div>
   <div class="next-button" id="next1"></div>
-  <div class="next-button" id="next2"></div>
+  <a href="template-planet.html">
+    <div class="next-button" id="next2"></div>
+  </a>
+
 </body>
 <script src="assets/js/parallaxe.js"></script>
 <script src="assets/js/slidingtabs.js"></script>
@@ -951,8 +954,10 @@
         let circle = elem.getElementsByTagName('circle')[0];
         let text = elem.getElementsByTagName('text')[0];
         let tm = 30;
+        console.log(val,oldVal)
         if (val > oldVal) {
           do {
+            console.log('+')
             oldVal++
             circle.style.strokeDashoffset = (100 - parseInt(oldVal)).toString()
             text.textContent = oldVal + '%'
@@ -961,6 +966,7 @@
         }
         else {
           do {
+            console.log('-')
             oldVal--
             circle.style.strokeDashoffset = (100 - parseInt(oldVal)).toString()
             text.textContent = oldVal + '%'

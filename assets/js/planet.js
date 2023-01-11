@@ -15,9 +15,11 @@ var costre  = 5;//coût en points de detection
 var costeau  = 4;//coût en points de detection
 var costgr  = 6;//coût en points de detection
 var costList = [costo2, costcl, costff, costre, costeau, costgr,];
-var points = 14//total de detection
-var showbuttons = false
-var writting = [];
+var points = 14;//total de detection
+var showbuttons = false;
+var dronenbr = 3
+var iswritting = 0;
+var droneUse = false;
 
 function writePoints (place, number) {
     document.querySelector(place).innerText = String(number);
@@ -29,7 +31,8 @@ function initialisePlanet (){
     writePoints('#pointsre',costre);
     writePoints('#pointseau',costeau);
     writePoints('#pointsgr',costgr);
-    writePoints('.detection-point',points)
+    writePoints('.detection-point',points);
+    writePoints('.drone',dronenbr);
 }
 window.addEventListener('load', initialisePlanet, false);
 
@@ -43,7 +46,7 @@ function pointsLeft (){
 }
 async function showbuttons_fun (){
     if (showbuttons) {
-        while (writting.length != 0){
+        while (iswritting > 0){
             await sleep(100)
         }
         document.querySelector('.land-button').classList.add('show-buttons')
@@ -64,14 +67,14 @@ window.addEventListener('load', initialisePlayerTab, false);
 
 
 async function write (fulltext, place) {
-    writting.push('e')
+    iswritting++
     let currenttext = ''
     for (let i=0; i<=fulltext.length; i++) {
         document.querySelector(place).innerText = currenttext ;
         currenttext +=fulltext.substring(i,i+1)
         await sleep(30)
     }
-    writting.shift()
+    iswritting--
 }
 
 (function() {
@@ -81,9 +84,16 @@ async function write (fulltext, place) {
     let mountain = document.querySelectorAll('.re-mountain')
     let mountainstar = document.querySelectorAll('.re-background')
     document.querySelector('.o2-txt').addEventListener('mouseup',function(){
-        if (points >= costo2) {
+        if (points >= costo2 || droneUse) {
             document.querySelector('#o2-button').disabled = 'disabled'
-            points = points - costo2;
+            if (!droneUse){
+                points = points - costo2;
+            }
+            else {
+                droneUse = !droneUse;
+                dronenbr--;
+                writePoints('.drone',dronenbr);
+            }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costo2)
             costList.splice(index,1);
@@ -100,9 +110,16 @@ async function write (fulltext, place) {
         }
     })
     document.querySelector('.ff-txt').addEventListener('mouseup',function(){
-        if (points >= costff){
+        if (points >= costff || droneUse){
             document.querySelector('#ff-button').disabled = 'disabled'
-            points = points - costff;
+            if (!droneUse){
+                points = points - costff;
+            }
+            else {
+                droneUse = !droneUse;
+                dronenbr--;
+                writePoints('.drone',dronenbr);
+            }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costff)
             costList.splice(index,1);
@@ -118,9 +135,16 @@ async function write (fulltext, place) {
         }
     })
     document.querySelector('.cl-txt').addEventListener('mouseup',function(){
-        if (points >= costcl){
+        if (points >= costcl || droneUse){
             document.querySelector('#cl-button').disabled = 'disabled'
-            points = points - costcl;
+            if (!droneUse){
+                points = points - costcl;
+            }
+            else {
+                droneUse = !droneUse;
+                dronenbr--;
+                writePoints('.drone',dronenbr);
+            }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costcl)
             costList.splice(index,1);
@@ -138,9 +162,16 @@ async function write (fulltext, place) {
         }
     })
     document.querySelector('.eau-txt').addEventListener('mouseup',function(){
-        if (points >= costeau){
+        if (points >= costeau || droneUse){
             document.querySelector('#eau-button').disabled = 'disabled'
-            points = points - costeau;
+            if (!droneUse){
+                points = points - costeau;
+            }
+            else {
+                droneUse = !droneUse;
+                dronenbr--;
+                writePoints('.drone',dronenbr);
+            }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costeau)
             costList.splice(index,1);
@@ -156,9 +187,16 @@ async function write (fulltext, place) {
         }
     })
     document.querySelector('.re-txt').addEventListener('mouseup',function(){
-        if (points >= costre){
+        if (points >= costre || droneUse){
             document.querySelector('#re-button').disabled = 'disabled'
-            points = points - costre;
+            if (!droneUse){
+                points = points - costre;
+            }
+            else {
+                droneUse = !droneUse;
+                dronenbr--;
+                writePoints('.drone',dronenbr);
+            }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costre)
             costList.splice(index,1);
@@ -176,9 +214,16 @@ async function write (fulltext, place) {
         }
     })
     document.querySelector('.gr-txt').addEventListener('mouseup',function(){
-        if (points >= costgr){
+        if (points >= costgr || droneUse){
             document.querySelector('#gr-button').disabled = 'disabled';
-            points = points - costre;
+            if (!droneUse){
+                points = points - costre;
+            }
+            else {
+                droneUse = !droneUse;
+                dronenbr--;
+                writePoints('.drone',dronenbr);
+            }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costgr)
             costList.splice(index,1);
@@ -192,7 +237,12 @@ async function write (fulltext, place) {
             showbuttons_fun();
         }
     })
-
+    document.querySelector('.use-drone').addEventListener('mouseup',function(){
+        if (dronenbr>0){
+            droneUse = !droneUse;
+            //rajouter un visuel
+        }
+    })
 })();
 
 (function(){
