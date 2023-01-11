@@ -764,6 +764,9 @@ body {
 .move-up {
   transform: translateY(385px);
 }
+.load-in{
+  transform: translateY(510px);
+}
 .player-roll {
   display: flex;
   padding: 11px 14px 11px 14px;

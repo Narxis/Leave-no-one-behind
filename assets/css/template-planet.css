@@ -197,6 +197,9 @@ button {
   align-items: center;
   justify-content: center;
 }
+.points-required::before{
+  content: 'coût : ';
+}
 .o2-txt {
   height: 75px;
   width: 100px;
@@ -1180,6 +1183,9 @@ clamp(10px, 1.5vw, 20px);
 .move-up {
   transform: translateY(385px);
 }
+.load-in{
+  transform: translateY(510px);
+}
 .player-roll {
   display: flex;
   padding: 11px 14px 11px 14px;
@@ -1484,8 +1490,8 @@ hr.separateur {
   border-radius: 15px;
   background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
 }
-.detection-point::after{
-  content: var(--detection-points) ;
+.detection-point::before{
+  content: 'Points de detections: ' ;
 }
 
 .drone::after{
@@ -1525,6 +1531,16 @@ hr.separateur {
 
 /*---^^^---Summary--------^^^---*/
 /*---vvv---Land&Leave-----vvv---*/
+.land-button, .leave-button {
+  filter: opacity(0);
+}
+.show-buttons{
+  animation: appear 1s linear forwards;
+}
+@keyframes appear {
+  0%{filter: opacity(0);}
+  100%{filter: opacity(1);}
+}
 .land-button {
   position: absolute;
   top: 70px;

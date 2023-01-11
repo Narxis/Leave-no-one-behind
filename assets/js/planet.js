@@ -2,20 +2,76 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-let texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
-let textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
-let textff = "blabla Animal blabla planette blabla plante bla bla ";
-let textre = "blabla Fer blabla planette blabla diamant bla bla ";
-let texteau = "blabla Eau blabla planette blabla boire bla bla ";
-let textgr = "blabla Gravité blabla planette blabla pomme bla bla ";
+var texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
+var textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
+var textff = "blabla Animal blabla planette blabla plante bla bla ";
+var textre = "blabla Fer blabla planette blabla diamant bla bla ";
+var texteau = "blabla Eau blabla planette blabla boire bla bla ";
+var textgr = "blabla Gravité blabla planette blabla pomme bla bla ";
+var costo2  = 2; //coût en points de detection
+var costcl  = 3;//coût en points de detection
+var costff  = 2;//coût en points de detection
+var costre  = 5;//coût en points de detection
+var costeau  = 4;//coût en points de detection
+var costgr  = 6;//coût en points de detection
+var costList = [costo2, costcl, costff, costre, costeau, costgr,];
+var points = 14//total de detection
+var showbuttons = false
+var writting = false
+
+function writePoints (place, number) {
+    document.querySelector(place).innerText = String(number);
+};
+function initialisePlanet (){
+    writePoints('#pointso2',costo2);
+    writePoints('#pointscl',costcl);
+    writePoints('#pointsff',costff);
+    writePoints('#pointsre',costre);
+    writePoints('#pointseau',costeau);
+    writePoints('#pointsgr',costgr);
+    writePoints('.detection-point',points)
+}
+window.addEventListener('load', initialisePlanet, false);
+
+function pointsLeft (){
+    showbuttons = true
+    for (let i=0; i<costList.length; i++){
+        if ( points >= costList[i]) {
+            showbuttons = false
+        }
+    }
+}
+async function showbuttons_fun (){
+    if (showbuttons) {
+        while (writting){
+            await sleep(100)
+        }
+        document.querySelector('.land-button').classList.add('show-buttons')
+        document.querySelector('.leave-button').classList.add('show-buttons')
+    }
+}
+
+
+async function initialisePlayerTab(){
+    var playerTab = document.querySelectorAll('.player-tab');
+    for (let i=0; i<playerTab.length; i++) {
+        playerTab.item(i).classList.remove('load-in');
+        await sleep(100)
+    }
+}
+
+window.addEventListener('load', initialisePlayerTab, false);
+
 
 async function write (fulltext, place) {
+    writting = true
     let currenttext = ''
     for (let i=0; i<fulltext.length; i++) {
         document.querySelector(place).innerText = currenttext ;
         currenttext +=fulltext.substring(i,i+1)
         await sleep(30)
     }
+    writting = false
 }
 
 (function() {
@@ -25,16 +81,27 @@ async function write (fulltext, place) {
     let mountain = document.querySelectorAll('.re-mountain')
     let mountainstar = document.querySelectorAll('.re-background')
     document.querySelector('.o2-txt').addEventListener('mouseup',function(){
-        document.querySelector('#rond1').classList.add('rond1')
-        document.querySelector('#rond2').classList.add('rond2')
-        document.querySelector('.o2-blur').classList.add('blurring')
-        document.querySelector('.o2-line').classList.add('trace-o2-line')
-        document.querySelector('.o2-line2').classList.add('trace-o2-line2')
-        document.querySelector('.o2-linedot').classList.add('trace-o2-linedot')
-        document.querySelector('#reading-1').classList.remove('scanning')
-        write(texto2,'#reading-1')
+        points = points - costo2;
+        writePoints ('.detection-point', points);
+        let index = costList.indexOf(costo2)
+        costList.splice(index,1);
+        pointsLeft();
+        document.querySelector('#rond1').classList.add('rond1');
+        document.querySelector('#rond2').classList.add('rond2');
+        document.querySelector('.o2-blur').classList.add('blurring');
+        document.querySelector('.o2-line').classList.add('trace-o2-line');
+        document.querySelector('.o2-line2').classList.add('trace-o2-line2');
+        document.querySelector('.o2-linedot').classList.add('trace-o2-linedot');
+        document.querySelector('#reading-1').classList.remove('scanning');
+        write(texto2,'#reading-1');
+        showbuttons_fun();
     })
     document.querySelector('.ff-txt').addEventListener('mouseup',function(){
+        points = points - costff;
+        writePoints ('.detection-point', points);
+        let index = costList.indexOf(costff)
+        costList.splice(index,1);
+        pointsLeft();
         document.querySelector('.ff-line').classList.add('trace-ff-line')
         document.querySelector('.ff-line2').classList.add('trace-ff-line2')
         document.querySelector('.ff-linedot').classList.add('trace-ff-linedot')
@@ -42,8 +109,14 @@ async function write (fulltext, place) {
             tree.item(i).classList.add('trace-tree'+i);}
         document.querySelector('#reading-3').classList.remove('scanning')
         write(textff,'#reading-3')
+        showbuttons_fun();
     })
     document.querySelector('.cl-txt').addEventListener('mouseup',function(){
+        points = points - costcl;
+        writePoints ('.detection-point', points);
+        let index = costList.indexOf(costcl)
+        costList.splice(index,1);
+        pointsLeft();
         document.querySelector('.cl-line').classList.add('trace-cl-line')
         document.querySelector('.cl-line2').classList.add('trace-cl-line2')
         document.querySelector('.cl-linedot').classList.add('trace-cl-linedot')
@@ -53,8 +126,14 @@ async function write (fulltext, place) {
             cloudshadow.item(i).classList.add('trace-cloudshadow');}
         document.querySelector('#reading-2').classList.remove('scanning')
         write(textcl,'#reading-2')
+        showbuttons_fun();
     })
     document.querySelector('.eau-txt').addEventListener('mouseup',function(){
+        points = points - costeau;
+        writePoints ('.detection-point', points);
+        let index = costList.indexOf(costeau)
+        costList.splice(index,1);
+        pointsLeft();
         document.querySelector('.eau-line').classList.add('trace-eau-line')
         document.querySelector('.eau-line2').classList.add('trace-eau-line2')
         document.querySelector('.eau-linedot').classList.add('trace-eau-linedot')
@@ -62,8 +141,14 @@ async function write (fulltext, place) {
         document.querySelector('.eau-border').classList.add('trace-eau-border')
         document.querySelector('#reading-5').classList.remove('scanning')
         write(texteau,'#reading-5')
+        showbuttons_fun();
     })
     document.querySelector('.re-txt').addEventListener('mouseup',function(){
+        points = points - costre;
+        writePoints ('.detection-point', points);
+        let index = costList.indexOf(costre)
+        costList.splice(index,1);
+        pointsLeft();
         document.querySelector('.re-line').classList.add('trace-re-line')
         document.querySelector('.re-line2').classList.add('trace-re-line2')
         document.querySelector('.re-linedot').classList.add('trace-re-linedot')
@@ -73,14 +158,21 @@ async function write (fulltext, place) {
             mountainstar.item(i).classList.add('trace-re-background');}
         document.querySelector('#reading-4').classList.remove('scanning')
         write(textre,'#reading-4')
+        showbuttons_fun();
     })
     document.querySelector('.gr-txt').addEventListener('mouseup',function(){
+        points = points - costre;
+        writePoints ('.detection-point', points);
+        let index = costList.indexOf(costgr)
+        costList.splice(index,1);
+        pointsLeft();
         document.querySelector('.gr-line').classList.add('trace-gr-line')
         document.querySelector('.gr-line2').classList.add('trace-gr-line2')
         document.querySelector('.gr-linedot').classList.add('trace-gr-linedot')
         document.querySelector('.gr-circle').classList.add('trace-gr-circle')
         document.querySelector('#reading-6').classList.remove('scanning')
         write(textgr,'#reading-6')
+        showbuttons_fun();
     })
 
 })();

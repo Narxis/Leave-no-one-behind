@@ -61,6 +61,16 @@ async function initialiseTimerTab() {
 }    
 
 window.addEventListener('load', initialiseTimerTab, false);
+
+async function initialisePlayerTab(){
+    var playerTab = document.querySelectorAll('.player-tab');
+    for (let i=0; i<playerTab.length; i++) {
+        playerTab.item(i).classList.remove('load-in');
+        await sleep(100)
+    }
+}
+
+window.addEventListener('load', initialisePlayerTab, false);
 var cardtextstr = "Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer. ";
 var answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
 var answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
