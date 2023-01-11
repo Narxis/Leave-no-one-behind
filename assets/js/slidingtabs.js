@@ -71,7 +71,7 @@ async function initialisePlayerTab(){
 }
 
 window.addEventListener('load', initialisePlayerTab, false);
-var cardtextstr = "Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer. ";
+var cardtextstr = "Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer.";
 var answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
 var answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
 var answer3str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
@@ -90,7 +90,7 @@ function nextoption () {
 
 async function write (fulltext, place) {
     let currenttext = ''
-    for (let i=0; i<fulltext.length; i++) {
+    for (let i=0; i<=fulltext.length; i++) {
         document.querySelector(place).innerText = currenttext ;
         currenttext +=fulltext.substring(i,i+1)
         await sleep(30)
