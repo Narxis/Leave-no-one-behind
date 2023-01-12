@@ -104,6 +104,7 @@ async function write (fulltext, place) {
             document.querySelector('.o2-line').classList.add('trace-o2-line');
             document.querySelector('.o2-line2').classList.add('trace-o2-line2');
             document.querySelector('.o2-linedot').classList.add('trace-o2-linedot');
+            document.querySelector('.o2-pulsebox').classList.add('pulse')
             document.querySelector('#reading-1').classList.remove('scanning');
             write(texto2,'#reading-1');
             showbuttons_fun();
@@ -127,6 +128,7 @@ async function write (fulltext, place) {
             document.querySelector('.ff-line').classList.add('trace-ff-line')
             document.querySelector('.ff-line2').classList.add('trace-ff-line2')
             document.querySelector('.ff-linedot').classList.add('trace-ff-linedot')
+            document.querySelector('.ff-pulsebox').classList.add('pulse')
             for (let i=0; i<tree.length; i++) {
                 tree.item(i).classList.add('trace-tree'+i);}
             document.querySelector('#reading-3').classList.remove('scanning')
@@ -152,6 +154,7 @@ async function write (fulltext, place) {
             document.querySelector('.cl-line').classList.add('trace-cl-line')
             document.querySelector('.cl-line2').classList.add('trace-cl-line2')
             document.querySelector('.cl-linedot').classList.add('trace-cl-linedot')
+            document.querySelector('.cl-pulsebox').classList.add('pulse')
             for (let i=0; i<cloud.length; i++) {
                 cloud.item(i).classList.add('trace-cloud'+i);}
             for (let i=0; i<cloudshadow.length; i++) {
@@ -182,6 +185,7 @@ async function write (fulltext, place) {
             document.querySelector('.eau-linedot').classList.add('trace-eau-linedot')
             document.querySelector('.eau-fill').classList.add('trace-eau-fill')
             document.querySelector('.eau-border').classList.add('trace-eau-border')
+            document.querySelector('.eau-pulsebox').classList.add('pulse')
             document.querySelector('#reading-5').classList.remove('scanning')
             write(texteau,'#reading-5')
             showbuttons_fun();
@@ -205,6 +209,7 @@ async function write (fulltext, place) {
             document.querySelector('.re-line').classList.add('trace-re-line')
             document.querySelector('.re-line2').classList.add('trace-re-line2')
             document.querySelector('.re-linedot').classList.add('trace-re-linedot')
+            document.querySelector('.re-pulsebox').classList.add('pulse')
             for (let i=0; i<mountain.length; i++) {
                 mountain.item(i).classList.add('trace-mountain'+i);}
             for (let i=0; i<mountainstar.length; i++) {
@@ -234,6 +239,7 @@ async function write (fulltext, place) {
             document.querySelector('.gr-line2').classList.add('trace-gr-line2')
             document.querySelector('.gr-linedot').classList.add('trace-gr-linedot')
             document.querySelector('.gr-circle').classList.add('trace-gr-circle')
+            document.querySelector('.gr-pulsebox').classList.add('pulse')
             document.querySelector('#reading-6').classList.remove('scanning')
             write(textgr,'#reading-6')
             showbuttons_fun();

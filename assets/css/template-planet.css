@@ -1516,7 +1516,26 @@ hr.separateur {
   content: 'Utiliser';
 }
 .switch-on::before{
-  content: 'Ne pas utiliser';
+  content: 'Annuler';
+}
+
+.pulse {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgb(100, 100, 100) 55%, rgba(255,255,255,0) 56%);
+  animation: flash 1s ease-in-out forwards;
+}
+@keyframes flash {
+  0% {transform: scale(0); opacity: 1;}
+  99.99% {transform: scale(3); opacity: 0;}
+  100% {transform: scale(0); opacity: 0;}
+}
+@keyframes pulse-animation {
+  0% {box-shadow: 0 0 0 0px rgba(70, 70, 70, 0.2); }
+  100% {box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0);}
 }
 
 .planet-txt{
