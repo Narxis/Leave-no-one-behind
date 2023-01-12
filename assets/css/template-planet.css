@@ -1723,3 +1723,9 @@ hr.separateur {
 .cursor-on-txt{
   fill: rgb(51 185 181) !important;
 }
+
+.noclic {
+  position: fixed;
+  height: 75px;
+  width: 180px;
+}
