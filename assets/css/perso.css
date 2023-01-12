@@ -144,12 +144,6 @@ hr.separateur {
 .player-stat-icon svg {
   fill: rgb(180, 180, 180);
 }
-.player-stat-down {
-  position: relative;
-  width: 25px;
-  height: 25px;
-  margin: 10px;
-}
 .player-stat-value {
   width: 60px;
   height: 30px;
@@ -171,33 +165,6 @@ input[type=number]::-webkit-outer-spin-button
 {
   -webkit-appearance: none;
   margin: 0;
-}
-.player-stat-up {
-  position: relative;
-  width: 25px;
-  height: 25px;
-  margin: 10px;
-}
-.mod-b {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  border-radius: 13px;
-  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.6s ease;
-  background: rgba(0, 0, 0, 0.26);
-  border: none;
-  color: #FFFFFF;
-  padding-bottom: 3px;
-}
-.mod-b:active {
-  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
-  color: rgba(255, 255, 255, 0.301);
 }
 
 .race-desc {
@@ -242,10 +209,59 @@ input[type=number]::-webkit-outer-spin-button
   width: 100px;
 }
 .form-stats{
-   height: 450px;
+  height: 473px;
   width: 200px;
-  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 3px solid rgb(180 180 180);
+  border-left: none;
+  border-radius: 0px 30px 0px 23px;
+  align-items: flex-start;
 }
+
+.form-stat {
+  width: 238px;
+  height: 60px;
+  margin: 0px 0px 6px 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+.form-stat svg {
+  overflow: visible;
+  transform: scale(0.8);
+}
+.form-stat #Calque_1 {
+  transform: scale(1.25);
+}
+.form-stat-icon {
+  width: 30px;
+  height: 30px;
+  margin: 0px 15px 0px 30px;
+}
+.form-stat-icon svg {
+  fill: rgb(180, 180, 180);
+}
+.form-stat-value {
+  width: 60px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Jura', sans-serif;
+  text-align: center;
+  color: #fff;
+  text-shadow: rgb(238 232 232 / 42%) 1px 1px 4px;
+  box-shadow: 1.5px 1.5px 3px #ffffff26, -1px -1px 2.5px #ffffff26;
+  background-color: rgba(0, 0, 0, 0.26);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 .form-race-desc{
   height: 500px;
   width: 180px;
