@@ -953,22 +953,19 @@
         let circle = elem.getElementsByTagName('circle')[0];
         let text = elem.getElementsByTagName('text')[0];
         let tm = 30;
-        console.log(val,oldVal)
         if (val > oldVal) {
           do {
-            console.log('+')
-            oldVal++
-            circle.style.strokeDashoffset = (100 - oldVal).toString()
-            text.textContent = oldVal + '%'
+            oldVal++;
+            circle.style.strokeDashoffset = (100 - oldVal).toString();
+            text.textContent = oldVal + '%';
             await new Promise(r => setTimeout(r, tm));
           } while (val > oldVal)
         }
         else {
           do {
-            console.log('-')
-            oldVal--
-            circle.style.strokeDashoffset = (100 - oldVal).toString()
-            text.textContent = oldVal + '%'
+            oldVal--;
+            circle.style.strokeDashoffset = (100 - oldVal).toString();
+            text.textContent = oldVal + '%';
             await new Promise(r => setTimeout(r, tm));
           } while (val < oldVal)
         }
