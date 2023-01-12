@@ -1,18 +1,13 @@
 <div id="test">test</div>
-<button id="roll" style="cursor: pointer" onclick="rollDice()">roll</button>
+<button onclick="wsLNOB.rollDice(1, 'combat', false)">roll</button>
+<button onclick="wsLNOB.addConso('drone')">addConso</button>
+<button onclick="wsLNOB.delConso('drone')">delConso</button>
+<button onclick="wsLNOB.setModule('motors', Math.floor(Math.random()*99))">setModule</button>
+<button onclick="wsLNOB.setStatus('blackout', Math.floor(Math.random()*3))">setStatus</button>
+<button onclick="wsLNOB.setStatistic('pilotage', Math.floor(Math.random()*99))">setStatistic</button>
+<button onclick="wsLNOB.setPlanetDetection(Math.floor(Math.random()*20))">setDetection</button>
+
 <script src="/js/socketLNOB.js"></script>
 <script>
-    const wsLNOB = new SocketLNOB()
-
-    const rollDice = function () {
-        let payload = {
-            action: 'roll',
-            data: {
-                player_id: 1,
-                stat: 'combat',
-                module: false
-            }
-        }
-        wsLNOB.send(payload);
-    }
+    const wsLNOB = new SocketLNOB();
 </script>
