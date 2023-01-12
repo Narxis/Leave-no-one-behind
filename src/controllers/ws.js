@@ -31,6 +31,7 @@ const makeAction = async function (raw_response) {
         };
     }
 
+    console.log(response);
     switch (response.action) {
         case 'playerStat':
             payload = actionSetPlayerStat(response);

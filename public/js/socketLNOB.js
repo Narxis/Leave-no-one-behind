@@ -79,6 +79,7 @@ class SocketLNOB {
                 name: name
             }
         }
+        this.send(payload);
     }
 
     setPlanetDetection(value) {
