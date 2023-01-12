@@ -4,8 +4,10 @@
   --planet-color: #227826;
   --darkgrey: #17181c;
   --purple: rgb(123, 31, 162);
-    --violet: rgb(103,58, 183);
-    --pink: rgb(244, 143, 177);
+  --violet: rgb(103,58, 183);
+  --pink: rgb(244, 143, 177);
+  --detection-points: '2';
+  --drones:'3'
 }
 
 body {
@@ -17,11 +19,57 @@ body {
   line-height: 1.5;
   padding: 1.5em 0;
   overflow: hidden;
+  font-family: 'Jura', sans-serif;
+    font-size: 15px;
+}
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0px;
+  height: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bottomcenter{
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Jura', sans-serif;
-    font-size: 15px;
+}
+.rightcenter{
+  position: absolute;
+  top: 50%;
+  right: 0%;
+  height: 0px;
+  width: 0px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+.leftcenter {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 0px;
+  height: 0px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.topcenter{
+  position: absolute;
+  left: 50%;
+  top: 0%;
+  width: 0px;
+  height: 0px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;  
 }
 .planet-card {
   width: 100vw;
@@ -127,7 +175,7 @@ button {
   color: #FFFFFF;
   padding-bottom: 3px;
 }
-.mod-b:active {
+.mod-b:hover {
   box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
   color: rgba(255, 255, 255, 0.301);
 }
@@ -142,15 +190,24 @@ button {
 .p-txt {
   cursor: pointer;
 }
+.points-required{
+  width: 90px;
+  height: 20px;
+  text-align: center;
+}
+.points-required::before{
+  content: 'coût: ';
+}
 .o2-txt {
-  height: 125px;
-  width: 250px;
+  height: 75px;
+  width: 100px;
   display: flex;
-  left: -448px;
-  top: -305px;
-  align-items: flex-end;
+  left: -282px;
+  top: -219px;
+  align-items: center;
   text-align: end;
-  justify-content: flex-end;
+  justify-content: center;
+  flex-direction: column;
 }
 .o2-circle {
   top: -179px;
@@ -195,11 +252,11 @@ button {
   stroke-width:3px;
   stroke-dasharray: 360;
 }
-.o2-txt:hover ~ .o2-circle #rond1 {
+.rond1{
   stroke-dashoffset: 360;
   animation: dash 2s linear forwards;
 }
-.o2-txt:hover ~ .o2-circle #rond2 {
+.rond2 {
   stroke-dashoffset: -360;
   animation: dash2 2s linear forwards;
 }
@@ -214,17 +271,18 @@ button {
   border-radius: 100%;
   transform-origin: center;
 }
-.o2-txt:hover ~ .o2-blur {
+
+.blurring {
   box-shadow: inset 0px 0px 50px 3px var(--o2-color, #8dfffd);
   animation: blur 2s linear forwards;
 }
-.o2-txt:hover ~ .o2-line {
+.trace-o2-line {
   animation: trace-5 1s linear forwards;
 }
-.o2-txt:hover ~ .o2-line2 {
+.trace-o2-line2 {
   animation: trace-4 2s linear forwards;
 }
-.o2-txt:hover ~ .o2-linedot {
+.trace-o2-linedot {
   animation: dot 2s linear forwards;
 }
 
@@ -286,7 +344,7 @@ button {
   0% { width: 0px; filter: opacity(1);}
   14.9% { width: 0px;}
   15% { width: 1px;}
-  30% { width: 222px; filter: opacity(1);}
+  30% { width: 220px; filter: opacity(1);}
   100% { filter: opacity(1);}
 }
 @keyframes trace-4 {
@@ -313,15 +371,16 @@ button {
 /* --v------ff animation------v--*/
 .ff-txt {
   display: flex;
-  left: 400px;
-  top: -355px;
-  align-items: flex-end;
+  left: 381px;
+  top: -256px;
+  align-items: center;
   text-align: end;
-  justify-content: flex-start;
-  width: 150px;
-  height: 135px;
+  justify-content: center;
+  width: 130px;
+  height: 75px;
   padding: 0px;
   transform-origin: bottom left;
+  flex-direction: column;
 }
 .ff-line {
   position: absolute;
@@ -352,13 +411,13 @@ button {
   border-radius: 100%;
   background-color: rgb(255, 255, 255);
 }
-.ff-txt:hover ~ .ff-line {
+.trace-ff-line {
   animation: trace 1s linear forwards;
 }
-.ff-txt:hover ~ .ff-line2 {
+.trace-ff-line2 {
   animation: trace-2 2s linear forwards;
 }
-.ff-txt:hover ~ .ff-linedot {
+.trace-ff-linedot {
   animation: dot 2s linear forwards;
 }
 .ff-tree {
@@ -366,74 +425,74 @@ button {
   transform: scale(0);
   transform-origin: bottom;
 }
-.tree1 {
+.tree0 {
   top: -227px;
   left: 74px;
   rotate: 375deg;
   height: 100px;
   fill: #083e0f;
 }
-.tree2 {
+.tree1 {
   top: -198px;
   left: 51px;
   rotate: 346deg;
   height: 75px;
   fill: #175017;
 }
-.tree3 {
+.tree2 {
   top: -231px;
   left: 57px;
   rotate: 367deg;
   height: 110px;
   fill: #206415;
 }
-.tree4 {
+.tree3 {
   top: -199px;
   left: 100px;
   rotate: 26deg;
   height: 86px;
   fill: #0f4a06;
 }
-.tree5 {
+.tree4 {
   top: -232px;
   left: 74px;
   rotate: 379deg;
   height: 119px;
   fill: #226c16;
 }
-.tree6 {
+.tree5 {
   top: -220px;
   left: 48px;
   rotate: 354deg;
   height: 100px;
   fill: #227615;
 }
-.tree7 {
+.tree6 {
   top: -208px;
   left: 61px;
   rotate: 358deg;
   height: 91px;
   fill: #188932;
 }
-.ff-txt:hover ~ .tree1 {
+.trace-tree0 {
   animation: treepop 1.61s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree2 {
+.trace-tree1 {
   animation: treepop 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree3 {
+.trace-tree2 {
   animation: treepop 1.39s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree4 {
+.trace-tree3 {
   animation: treepop 1.7s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree5 {
+.trace-tree4 {
   animation: treepop 1.55s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree6 {
+.trace-tree5 {
   animation: treepop 1.35s cubic-bezier(1,0,1,1.5) forwards;
 }
-.ff-txt:hover ~ .tree7 {
+.trace-tree6 {
   animation: treepop 1.08s cubic-bezier(1,0,1,1.5) forwards;
 }
 @keyframes treepop {
@@ -444,14 +503,15 @@ button {
 /* --^------ff animation------^--*/
 /* --v------cl animation------v--*/
 .cl-txt {
-  left: -571px;
-  top: -77px;
+  left: -273px;
+  top: 58px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   text-align: end;
-  justify-content: flex-end;
-  width: 365px;
-  height: 174px;
+  justify-content: center;
+  width: 100px;
+  height: 75px;
+  flex-direction: column;
 }
 .cl-line {
   height: 2px;
@@ -485,7 +545,7 @@ button {
   scale: 0;
   position: absolute
 }
-.cloud1 {
+.cloud0 {
   rotate: 233deg;
   top: 32px;
   height: 23px;
@@ -493,7 +553,7 @@ button {
   fill: rgb(189 189 189);
 }
   
-.cloud2 {
+.cloud1 {
   rotate: 97deg;
   top: -54px;
   height: 33px;
@@ -501,7 +561,7 @@ button {
   fill: rgb(209 209 209);
 }
   
-.cloud3 {
+.cloud2 {
   rotate: 342deg;
   top: -181px;
   height: 24px;
@@ -509,7 +569,7 @@ button {
   fill: rgb(197 197 197);
 }
 
-.cloud4 {
+.cloud3 {
   rotate: 233deg;
   top: 35px;
   height: 26px;
@@ -517,7 +577,7 @@ button {
   fill: rgb(236, 236, 236);
 }
   
-.cloud5 {
+.cloud4 {
   rotate: 97deg;
   top: -40px;
   height: 43px;
@@ -525,7 +585,7 @@ button {
   fill: rgb(228, 228, 228);
 }
   
-.cloud6 {
+.cloud5 {
   rotate: 342deg;
   top: -173px;
   height: 39px;
@@ -533,7 +593,7 @@ button {
   fill: rgb(231, 231, 231);
 }
 
-.cl-txt:hover ~ .cl-line {
+.trace-cl-line {
   animation: cl-trace 1s linear forwards;
 }
 
@@ -544,7 +604,7 @@ button {
   100%{width: 155px; filter: opacity(1);}
 }
 
-.cl-txt:hover ~ .cl-line2 {
+.trace-cl-line2 {
   animation: cl-trace-2 1s linear forwards;
 }
 
@@ -555,28 +615,28 @@ button {
   60%{width: 45px;}
   100%{width: 45px; filter: opacity(1);}
 }
-.cl-txt:hover ~ .cl-linedot {
+.trace-cl-linedot {
   animation: dot2 2s linear forwards;
 }
-.cl-txt:hover ~ .cloud1 {
+.trace-cloud0 {
   animation: cloudpop1 1.85s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud2 {
+.trace-cloud1 {
   animation: cloudpop2 1.92s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud3 {
+.trace-cloud2 {
   animation: cloudpop3 1.95s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud4 {
+.trace-cloud3 {
   animation: cloudpop1 1.82s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud5 {
+.trace-cloud4 {
   animation: cloudpop2 2.19s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloud6 {
+.trace-cloud5 {
   animation: cloudpop3 1.86s cubic-bezier(1,0,1,1.5) forwards;
 }
-.cl-txt:hover ~ .cloudshadow {
+.trace-cloudshadow {
   animation: cspop 1.8s linear forwards;
 }
 
@@ -639,14 +699,15 @@ button {
 /*---v---eau-animation---v---*/
 
 .eau-txt {
-  left: 400px;
-  top: -104px;
+  left: 389px;
+  top: 31px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   text-align: end;
-  justify-content: flex-start;
-  width: 365px;
-  height: 174px;
+  width: 130px;
+  height: 75px;
+  justify-content: center;
+  flex-direction: column;
 }
 .eau-line{
   transform-origin: 0;
@@ -701,19 +762,19 @@ button {
   filter: brightness(0.7);
 }
 
-.eau-txt:hover ~ .eau-line{
+.trace-eau-line{
   animation: eau-trace  1s linear forwards;
 }
-.eau-txt:hover ~ .eau-line2{
+.trace-eau-line2{
   animation: eau-trace2 1s linear forwards;
 }
-.eau-txt:hover ~ .eau-linedot{
+.trace-eau-linedot{
   animation: dot 1s linear forwards;
 }
-.eau-txt:hover ~ .eau-fill{
+.trace-eau-fill{
   animation: eau-fill-animation 2s ease-in forwards;
 }
-.eau-txt:hover ~ .eau-border{
+.trace-eau-border{
   animation: eau-border-animation 2s cubic-bezier(1,0,1,1.5) forwards;
 }
 @keyframes eau-trace {
@@ -744,13 +805,15 @@ button {
 /*---v---re-animation----v---*/
 
 .re-txt {
-  left: 400px;
-  top: -216px;
-  width: 229px;
-  height: 90px;
+  left: 389px;
+  top: -164px;
+  width: 178px;
+  height: 75px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   text-align: end;
+  justify-content: center;
+  flex-direction: column;
 }
 .re-line {
   transform-origin: 0;
@@ -789,45 +852,45 @@ button {
   fill: var(--planet-color);
   filter: brightness(0.6);
 }
-.mountain1 {
+.mountain0 {
   height: 31px;
   top: -120px;
   left: 156px;
   rotate: 55deg;
 }
 
-.mountain2 {
+.mountain1 {
   height: 26px;
   top: -123px;
   left: 152px;
   rotate: 49deg;
 }
-.mountain3 {
+.mountain2 {
   height: 21px;
   top: -106px;
   left: 9px;
   rotate: 300deg;
 }
-.mountain4 {
+.mountain3 {
   height: 26px;
   top: -101px;
   left: 2px;
   rotate: 290deg;
 }
-.mountain5 {
+.mountain4 {
   height: 18px;
   top: -80px;
   left: 5px;
   rotate: 285deg;
 }
-.mountain6 {
+.mountain5 {
   height: 25px;
   top: 24px;
   left: 38px;
   rotate: 210deg;
 }
 
-.re-txt:hover ~ .re-line {
+.trace-re-line {
   animation: re-trace 1s linear forwards;
 }
 @keyframes re-trace {
@@ -836,7 +899,7 @@ button {
   30%{width: 164px;}
   100%{width: 164px; filter: opacity(1);}
 }
-.re-txt:hover ~ .re-line2 {
+.trace-re-line2 {
   animation: re-trace2 1s linear forwards;
 }
 @keyframes re-trace2 {
@@ -846,25 +909,25 @@ button {
   60%{width: 45px;}
   100%{width: 45px; filter: opacity(1);}
 }
-.re-txt:hover ~ .re-linedot {
+.trace-re-linedot {
   animation: dot2 1.5s linear forwards;
 }
-.re-txt:hover ~ .mountain1 {
+.trace-mountain0 {
   animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain2 {
+.trace-mountain1 {
   animation: mountainpop1 1.5s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain3{
+.trace-mountain2{
   animation: mountainpop1 1.64s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain4 {
+.trace-mountain3 {
   animation: mountainpop1 1.67s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain5 {
+.trace-mountain4 {
   animation: mountainpop1 1.62s cubic-bezier(1,0,1,1.5) forwards;
 }
-.re-txt:hover ~ .mountain6 {
+.trace-mountain5 {
   animation: mountainpop1 1.49s cubic-bezier(1,0,1,1.5) forwards;
 }
 
@@ -898,7 +961,7 @@ button {
 .re-background {
   opacity: 0;
 }
-.re-txt:hover ~ .re-background {
+.trace-re-background {
   animation: opac 2s linear forwards;
 }
 @keyframes opac {
@@ -983,13 +1046,14 @@ clamp(10px, 1.5vw, 20px);
 
 .gr-txt {
   display: flex;
-    left: 400px;
-    top: 39px;
-    align-items: flex-end;
-    text-align: end;
-    justify-content: flex-start;
-    width: 365px;
-    height: 174px;
+  left: 374px;
+  top: 175px;
+  align-items: center;
+  text-align: end;
+  justify-content: center;
+  width: 100px;
+  height: 75px;
+  flex-direction: column;
 }
 .gr-line {
   position: absolute;
@@ -1006,7 +1070,7 @@ clamp(10px, 1.5vw, 20px);
   top: 202.8px;
   left: 317.3px;
   height: 2px;
-  width: 222px;
+  width: 220px;
   background-color: rgb(255, 255, 255);
   transform-origin: 0;
   transform: rotate(225deg);
@@ -1020,7 +1084,7 @@ clamp(10px, 1.5vw, 20px);
   border-radius: 100%;
   background-color: rgb(255, 255, 255);
 }
-.gr-txt:hover ~ .gr-line {
+.trace-gr-line {
   animation: gr-trace 1s linear forwards;
 }
 
@@ -1030,13 +1094,13 @@ clamp(10px, 1.5vw, 20px);
   30%{width: 75px;}
   100%{width: 75px; filter: opacity(1);}
 }
-.gr-txt:hover ~ .gr-line2 {
+.trace-gr-line2 {
   animation: trace-3 2s linear forwards;
 }
-.gr-txt:hover ~ .gr-linedot {
+.trace-gr-linedot {
   animation: dot2 1s linear forwards;
 }
-.gr-txt:hover ~ .gr-circle {
+.trace-gr-circle {
   animation: grav 1.9s cubic-bezier(.42,.02,.15,.96) infinite;
 }
 @keyframes grav {
@@ -1116,6 +1180,9 @@ clamp(10px, 1.5vw, 20px);
 }
 .move-up {
   transform: translateY(385px);
+}
+.load-in{
+  transform: translateY(510px);
 }
 .player-roll {
   display: flex;
@@ -1249,7 +1316,7 @@ clamp(10px, 1.5vw, 20px);
   box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
   background-color: rgba(0, 0, 0, 0.26);
 }
-.form-input:focus {
+.form-input:hover {
   outline: none;
   box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
 }
@@ -1317,4 +1384,197 @@ hr.separateur {
   margin: 10px;
 }
 /*---^^^---Player-tabs----^^^---*/
+/*---vvv---Summary--------vvv---*/
+.ship-summary{
+  position: absolute;
+  right: 25px;
+  display: flex;
+  height: 600px;
+  width: 300px;
+  flex-direction: column;
+  align-items: center;
+  border: 5px solid rgb(180 180 180);
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+}
+.ship-summary-line{
+  width: 300px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.title {
+  font-size: 18px;
+}
+.module{
+  height: 70px;
+  width: 145px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dial svg {
+  position: relative;
+  top: 0px;
+  left: -11px;
+  height: 40px;
+  overflow: visible;
+}
+.dial svg circle {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .03s ease-out;
+}
+.dial svg text {
+  font-size: 30px;
+  fill: whitesmoke;
+}
+.separateur-horizontal{
+  box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
+  height:6px ;
+  width: 300px;
+}
+.separateur-vertical{
+  box-shadow: inset 12px 0px 12px -12px rgb(0 0 0 / 50%);
+  height:70px;
+  width: 8px;
+}
+#module-1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 225px;
+}
+#module-1 svg {
+  height: 40px;
+  width: 40px;
+  fill: rgb(180 180 180);
+}
+
+.humain-text {
+  font-size: 18px;
+}
+.humain-value {
+  font-size: 18px;
+}
+
+.mod-text{
+  width: 120px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin: 0px 0px 0px 10px;
+  font-size: 12;
+}
+.mod-value{
+  width: 20px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin: 0px 10px 0px 0px;
+  font-size: 12;
+}
+.planet-summary{
+  position: absolute;
+  left: 25px;
+  display: flex;
+  height: 600px;
+  width: 300px;
+  flex-direction: column;
+  align-items: center;
+  border: 5px solid rgb(180 180 180);
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+}
+.detection-point::before{
+  content: 'Points de detections: ' ;
+}
+
+.drone::before{
+  content: 'Drones: ';
+}
+.use-drone{
+  margin: 0px -20px 0px 25px;
+  cursor: pointer;
+  width: 115px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.use-drone::before{
+  content: 'Utiliser';
+}
+.switch-on::before{
+  content: 'Ne pas utiliser';
+}
+
+.planet-txt{
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.planet-reading{
+  font-size: 12px;
+  margin: 5px 0px 0px 5px;
+}
+
+.scanning::after {
+  content: '';
+  animation: threedots 3s steps(6,end) infinite;
+}
+
+@keyframes threedots {
+  0%{content: '.';}
+  33%{content: '..';}
+  50%{content: '...';}
+  70%{content: '...';}
+  71.1%{content: ' ';}
+  100%{content: ' ';}
+}
+
+/*---^^^---Summary--------^^^---*/
+/*---vvv---Land&Leave-----vvv---*/
+.land-button, .leave-button {
+  filter: opacity(0);
+}
+.show-buttons{
+  animation: appear 1s linear forwards;
+}
+@keyframes appear {
+  0%{filter: opacity(0);}
+  100%{filter: opacity(1);}
+}
+.land-button {
+  position: absolute;
+  top: 70px;
+  left: -333px;
+  width: 212px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid rgb(180 180 180);
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+}
+
+.leave-button {
+  position: absolute;
+  top: 70px;
+  left: 139px;
+  width: 212px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid rgb(180 180 180);
+  border-radius: 15px;
+  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+}
+
+
+
+/*---^^^---Land&Leave-----^^^---*/
 /*---vvv---Tout-en-bas----vvv---*/
