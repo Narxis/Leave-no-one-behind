@@ -1174,14 +1174,14 @@ clamp(10px, 1.5vw, 20px);
 }
 .expander {
   position: absolute;
-  cursor: pointer;
+  cursor: help;
   width: 20px;
   height: 17px;
   left: 201px;
-  top: 5px;
+  top: 10px;
   transition: 1s ease-out;
   transform: translateY(-29px);
-  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+  background: linear-gradient(180deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
   border-top: 2px solid rgb(180 180 180);
   border-right: 2px solid rgb(180 180 180);
   border-left: 2px solid rgb(180 180 180);
@@ -1721,5 +1721,5 @@ hr.separateur {
   transition: .5s;
 }
 .cursor-on-txt{
-  fill: turquoise !important;
+  fill: rgb(51 185 181) !important;
 }

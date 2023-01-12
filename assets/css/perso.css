@@ -323,6 +323,8 @@ input[type=number]::-webkit-outer-spin-button
   overflow: hidden;
 }
 
+/* /!\ Chaque étoiles ont été séléctionnées et positionées à la main par nos expert en étoiles pixélisés, merci de ne pas toucher. /!\ */
+
 #stars {
   filter: blur(1px);
   position: absolute;
@@ -382,7 +384,7 @@ input[type=number]::-webkit-outer-spin-button
   background: transparent;
   box-shadow: 1304px 1552px #FFF , 218px 598px #FFF , 316px 1522px #FFF , 1803px 1002px #FFF , 1187px 1797px #FFF , 582px 1096px #FFF , 1020px 529px #FFF , 1783px 1199px #FFF , 246px 760px #FFF , 1987px 87px #FFF , 537px 22px #FFF , 548px 675px #FFF , 79px 543px #FFF , 1876px 1038px #FFF , 57px 1352px #FFF , 419px 396px #FFF , 146px 1085px #FFF , 938px 686px #FFF , 1126px 557px #FFF , 801px 1292px #FFF , 647px 1833px #FFF , 178px 1299px #FFF , 317px 1531px #FFF , 644px 1306px #FFF , 1323px 1420px #FFF , 1365px 1304px #FFF , 481px 1684px #FFF , 40px 920px #FFF , 1854px 904px #FFF , 1575px 1989px #FFF , 1306px 184px #FFF , 1124px 336px #FFF , 1441px 1351px #FFF , 276px 235px #FFF , 625px 930px #FFF , 705px 1707px #FFF , 1775px 1924px #FFF , 998px 915px #FFF , 565px 663px #FFF , 1385px 1052px #FFF , 1245px 896px #FFF , 23px 1562px #FFF , 920px 1800px #FFF , 97px 573px #FFF , 1097px 503px #FFF , 668px 760px #FFF , 299px 1850px #FFF , 1332px 1296px #FFF , 966px 1283px #FFF , 929px 883px #FFF , 968px 1472px #FFF , 1252px 1585px #FFF , 975px 1651px #FFF , 802px 1483px #FFF , 1688px 1563px #FFF , 684px 966px #FFF , 899px 1148px #FFF , 1896px 302px #FFF , 230px 363px #FFF , 281px 1453px #FFF , 380px 1323px #FFF , 1425px 1240px #FFF , 1405px 385px #FFF , 501px 1322px #FFF , 1332px 1px #FFF , 803px 1733px #FFF , 1708px 608px #FFF , 87px 455px #FFF , 1030px 840px #FFF , 1217px 1004px #FFF , 398px 954px #FFF , 1407px 1808px #FFF , 1830px 1361px #FFF , 1869px 1907px #FFF , 1831px 1370px #FFF , 1250px 1487px #FFF , 1051px 17px #FFF , 1675px 998px #FFF , 590px 478px #FFF , 233px 430px #FFF , 1224px 886px #FFF , 1284px 401px #FFF , 231px 1805px #FFF , 364px 1997px #FFF , 88px 353px #FFF , 452px 465px #FFF , 1174px 1030px #FFF , 478px 763px #FFF , 542px 1789px #FFF , 1524px 557px #FFF , 821px 1508px #FFF , 1835px 1452px #FFF , 106px 1634px #FFF , 1685px 175px #FFF , 1973px 223px #FFF , 855px 1621px #FFF , 320px 89px #FFF , 1914px 794px #FFF , 1043px 64px #FFF , 23px 1829px #FFF;
 }
-
+/* /!\ Chaque étoiles ont été séléctionnées et positionées à la main par nos expert en étoiles pixélisés, merci de ne pas toucher. /!\ */
 @keyframes animStar {
   from {
     transform: rotate(0deg);
