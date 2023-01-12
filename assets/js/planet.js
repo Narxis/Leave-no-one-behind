@@ -85,6 +85,7 @@ async function write (fulltext, place) {
     let mountainstar = document.querySelectorAll('.re-background')
     document.querySelector('.o2-txt').addEventListener('mouseup',function(){
         if (points >= costo2 || droneUse) {
+            document.querySelector('#o2-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costo2;
             }
@@ -108,9 +109,10 @@ async function write (fulltext, place) {
             write(texto2,'#reading-1');
             showbuttons_fun();
         }
-    },{once : true})
+    })
     document.querySelector('.ff-txt').addEventListener('mouseup',function(){
         if (points >= costff || droneUse){
+            document.querySelector('#ff-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costff;
             }
@@ -133,9 +135,10 @@ async function write (fulltext, place) {
             write(textff,'#reading-3')
             showbuttons_fun();
         }
-    },{once : true})
+    })
     document.querySelector('.cl-txt').addEventListener('mouseup',function(){
         if (points >= costcl || droneUse){
+            document.querySelector('#cl-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costcl;
             }
@@ -160,10 +163,10 @@ async function write (fulltext, place) {
             write(textcl,'#reading-2')
             showbuttons_fun();
         }
-    },{once : true})
+    })
     document.querySelector('.eau-txt').addEventListener('mouseup',function(){
         if (points >= costeau || droneUse){
-
+            document.querySelector('#eau-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costeau;
             }
@@ -186,9 +189,10 @@ async function write (fulltext, place) {
             write(texteau,'#reading-5')
             showbuttons_fun();
         }
-    },{once : true})
+    })
     document.querySelector('.re-txt').addEventListener('mouseup',function(){
         if (points >= costre || droneUse){
+            document.querySelector('#re-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costre;
             }
@@ -213,10 +217,10 @@ async function write (fulltext, place) {
             write(textre,'#reading-4')
             showbuttons_fun();
         }
-    },{once : true})
+    })
     document.querySelector('.gr-txt').addEventListener('mouseup',function(){
         if (points >= costgr || droneUse){
-
+            document.querySelector('#gr-button').disabled = 'disabled';
             if (!droneUse){
                 points = points - costre;
             }
@@ -238,7 +242,7 @@ async function write (fulltext, place) {
             write(textgr,'#reading-6')
             showbuttons_fun();
         }
-    },{once : true})
+    })
     document.querySelector('.use-drone').addEventListener('mouseup',function(){
         if (dronenbr>0){
             droneUse = !droneUse;
