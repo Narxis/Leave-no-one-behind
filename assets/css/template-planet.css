@@ -1717,6 +1717,7 @@ hr.separateur {
   filter: opacity(1);
 }
 .cursor svg {
+  transform-origin: 20px 20px;
   fill: rgb(180, 180, 180);
   transition: .5s;
 }
@@ -1728,4 +1729,47 @@ hr.separateur {
   position: fixed;
   height: 75px;
   width: 180px;
+}
+.o2-cursor{
+  animation: o2-focus .5s ease-out forwards;
+}
+.ff-cursor{
+  animation: ff-focus .5s ease-out forwards;
+}
+.cl-cursor{
+  animation: cl-focus .5s ease-out forwards;
+}
+.re-cursor{
+  animation: re-focus .5s ease-out forwards;
+}
+.eau-cursor{
+  animation: eau-focus .5s ease-out forwards;
+}
+.gr-cursor{
+  animation: gr-focus .5s ease-out forwards;
+}
+
+@keyframes o2-focus {
+  0%{}
+  100%{transform: translate(609px, 296px);}
+}
+@keyframes ff-focus {
+  0%{}
+  100%{transform: translate(1283px, 259px);}
+}
+@keyframes cl-focus {
+  0%{}
+  100%{transform: translate(617px, 573px);}
+}
+@keyframes re-focus {
+  0%{}
+  100%{transform: translate(1310px, 350px);}
+}
+@keyframes eau-focus {
+  0%{}
+  100%{transform: translate(1288px, 544px);}
+}
+@keyframes gr-focus {
+  0%{}
+  100%{transform: translate(1260px, 690px);}
 }

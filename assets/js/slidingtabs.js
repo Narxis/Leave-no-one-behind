@@ -261,7 +261,7 @@ function applystatus(statusname){
         let index = statusNameList.findIndex(e => e === statusname)
         let duration = statusDurationList[index];
         let lineindex = statusList.findIndex(e => e === statusname)
-        let selector = '#'+'line_'+String(lineindex+1)
+        let selector = '#line_'+String(lineindex+1)
         document.querySelector(selector).firstElementChild.nextElementSibling.nextElementSibling.innerHTML = String(duration)
     }
 };

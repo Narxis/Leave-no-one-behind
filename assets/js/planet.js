@@ -84,19 +84,25 @@ async function write (fulltext, place) {
     let mountain = document.querySelectorAll('.re-mountain')
     let mountainstar = document.querySelectorAll('.re-background')
     let txt = document.querySelectorAll('.p-txt')
-    document.querySelector('.o2-txt').addEventListener('mouseup',function(){
+    document.querySelector('.o2-txt').addEventListener('mouseup',async function(){
         if (points >= costo2 || droneUse) {
             document.querySelector('#o2-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costo2;
             }
             else {
+                document.querySelector('.cursor').classList.add('o2-cursor')
+                droneCursor = document.querySelector('.transparent')
+                await sleep(500)
+                droneCursor = document.querySelector('.position')
+                document.querySelector('.o2-pulsebox').classList.add('pulse')
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
+                document.querySelector('.cursor').classList.remove('o2-cursor')
             }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costo2)
@@ -108,25 +114,30 @@ async function write (fulltext, place) {
             document.querySelector('.o2-line').classList.add('trace-o2-line');
             document.querySelector('.o2-line2').classList.add('trace-o2-line2');
             document.querySelector('.o2-linedot').classList.add('trace-o2-linedot');
-            document.querySelector('.o2-pulsebox').classList.add('pulse')
             document.querySelector('#reading-1').classList.remove('scanning');
             write(texto2,'#reading-1');
             showbuttons_fun();
         }
     })
-    document.querySelector('.ff-txt').addEventListener('mouseup',function(){
+    document.querySelector('.ff-txt').addEventListener('mouseup',async function(){
         if (points >= costff || droneUse){
             document.querySelector('#ff-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costff;
             }
             else {
+                document.querySelector('.cursor').classList.add('ff-cursor')
+                droneCursor = document.querySelector('.transparent')
+                await sleep(500)
+                droneCursor = document.querySelector('.position')
+                document.querySelector('.ff-pulsebox').classList.add('pulse')
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
+                document.querySelector('.cursor').classList.remove('ff-cursor')
             }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costff)
@@ -135,7 +146,6 @@ async function write (fulltext, place) {
             document.querySelector('.ff-line').classList.add('trace-ff-line')
             document.querySelector('.ff-line2').classList.add('trace-ff-line2')
             document.querySelector('.ff-linedot').classList.add('trace-ff-linedot')
-            document.querySelector('.ff-pulsebox').classList.add('pulse')
             for (let i=0; i<tree.length; i++) {
                 tree.item(i).classList.add('trace-tree'+i);}
             document.querySelector('#reading-3').classList.remove('scanning')
@@ -143,19 +153,25 @@ async function write (fulltext, place) {
             showbuttons_fun();
         }
     })
-    document.querySelector('.cl-txt').addEventListener('mouseup',function(){
+    document.querySelector('.cl-txt').addEventListener('mouseup',async function(){
         if (points >= costcl || droneUse){
             document.querySelector('#cl-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costcl;
             }
             else {
+                document.querySelector('.cursor').classList.add('cl-cursor')
+                droneCursor = document.querySelector('.transparent')
+                await sleep(500)
+                droneCursor = document.querySelector('.position')
+                document.querySelector('.cl-pulsebox').classList.add('pulse')
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
+                document.querySelector('.cursor').classList.remove('cl-cursor')
             }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costcl)
@@ -164,7 +180,6 @@ async function write (fulltext, place) {
             document.querySelector('.cl-line').classList.add('trace-cl-line')
             document.querySelector('.cl-line2').classList.add('trace-cl-line2')
             document.querySelector('.cl-linedot').classList.add('trace-cl-linedot')
-            document.querySelector('.cl-pulsebox').classList.add('pulse')
             for (let i=0; i<cloud.length; i++) {
                 cloud.item(i).classList.add('trace-cloud'+i);}
             for (let i=0; i<cloudshadow.length; i++) {
@@ -174,19 +189,25 @@ async function write (fulltext, place) {
             showbuttons_fun();
         }
     })
-    document.querySelector('.eau-txt').addEventListener('mouseup',function(){
+    document.querySelector('.eau-txt').addEventListener('mouseup',async function(){
         if (points >= costeau || droneUse){
             document.querySelector('#eau-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costeau;
             }
             else {
+                document.querySelector('.cursor').classList.add('eau-cursor')
+                droneCursor = document.querySelector('.transparent')
+                await sleep(500)
+                droneCursor = document.querySelector('.position')
+                document.querySelector('.eau-pulsebox').classList.add('pulse')
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
+                document.querySelector('.cursor').classList.remove('eau-cursor')
             }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costeau)
@@ -197,25 +218,31 @@ async function write (fulltext, place) {
             document.querySelector('.eau-linedot').classList.add('trace-eau-linedot')
             document.querySelector('.eau-fill').classList.add('trace-eau-fill')
             document.querySelector('.eau-border').classList.add('trace-eau-border')
-            document.querySelector('.eau-pulsebox').classList.add('pulse')
+
             document.querySelector('#reading-5').classList.remove('scanning')
             write(texteau,'#reading-5')
             showbuttons_fun();
         }
     })
-    document.querySelector('.re-txt').addEventListener('mouseup',function(){
+    document.querySelector('.re-txt').addEventListener('mouseup',async function(){
         if (points >= costre || droneUse){
             document.querySelector('#re-button').disabled = 'disabled'
             if (!droneUse){
                 points = points - costre;
             }
             else {
+                document.querySelector('.cursor').classList.add('re-cursor')
+                droneCursor = document.querySelector('.transparent')
+                await sleep(500)
+                droneCursor = document.querySelector('.position')
+                document.querySelector('.re-pulsebox').classList.add('pulse')
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
+                document.querySelector('.cursor').classList.remove('re-cursor')
             }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costre)
@@ -224,7 +251,6 @@ async function write (fulltext, place) {
             document.querySelector('.re-line').classList.add('trace-re-line')
             document.querySelector('.re-line2').classList.add('trace-re-line2')
             document.querySelector('.re-linedot').classList.add('trace-re-linedot')
-            document.querySelector('.re-pulsebox').classList.add('pulse')
             for (let i=0; i<mountain.length; i++) {
                 mountain.item(i).classList.add('trace-mountain'+i);}
             for (let i=0; i<mountainstar.length; i++) {
@@ -234,19 +260,25 @@ async function write (fulltext, place) {
             showbuttons_fun();
         }
     })
-    document.querySelector('.gr-txt').addEventListener('mouseup',function(){
+    document.querySelector('.gr-txt').addEventListener('mouseup',async function(){
         if (points >= costgr || droneUse){
             document.querySelector('#gr-button').disabled = 'disabled';
             if (!droneUse){
                 points = points - costre;
             }
             else {
+                document.querySelector('.cursor').classList.add('gr-cursor')
+                droneCursor = document.querySelector('.transparent')
+                await sleep(500)
+                droneCursor = document.querySelector('.position')
+                document.querySelector('.gr-pulsebox').classList.add('pulse')
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
+                document.querySelector('.cursor').classList.remove('gr-cursor')
             }
             writePoints ('.detection-point', points);
             let index = costList.indexOf(costgr)
@@ -256,13 +288,12 @@ async function write (fulltext, place) {
             document.querySelector('.gr-line2').classList.add('trace-gr-line2')
             document.querySelector('.gr-linedot').classList.add('trace-gr-linedot')
             document.querySelector('.gr-circle').classList.add('trace-gr-circle')
-            document.querySelector('.gr-pulsebox').classList.add('pulse')
             document.querySelector('#reading-6').classList.remove('scanning')
             write(textgr,'#reading-6')
             showbuttons_fun();
         }
     })
-    document.querySelector('.use-drone').addEventListener('mouseup',function(){
+    document.querySelector('.use-drone').addEventListener('mouseup',async function(){
         if (dronenbr>0){
             droneUse = !droneUse;
             document.querySelector('.use-drone').classList.toggle('switch-on') //class pour le visuel
@@ -312,7 +343,7 @@ for(const star of document.getElementsByClassName("magic-star")) {
   }, index++ * (interval / 3))
 } 
 
-const droneCursor = document.querySelector('.cursor');
+var droneCursor = document.querySelector('.position');
 
 window.onmousemove = e => {
     const x = e.clientX + droneCursor.offsetWidth / 2,
