@@ -38,6 +38,58 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    setModule(name, value) {
+        let payload = {
+            action: 'setModule',
+            data: {
+                name: name,
+                value: value
+            }
+        }
+        this.send(payload);
+    }
+
+    addConso(name) {
+        let payload = {
+            action: 'addConso',
+            data: {
+                name: name,
+            }
+        }
+        this.send(payload);
+    }
+
+    delConso(name) {
+        let payload = {
+            action: 'delConso',
+            data: {
+                name: name
+            }
+        }
+    }
+
+    setPlanetDetection(value) {
+        let payload = {
+            action: 'detection',
+            data: {
+                value: value
+            }
+        }
+        this.send(payload);
+    }
+
+    setStatistic(player_id, name, value) {
+        let payload = {
+            action: 'playerStat',
+            data: {
+                player_id: player_id,
+                name: name,
+                value: value
+            }
+        }
+        this.send(payload);
+    }
+
     roll(data) {
         if (data.success) {
             console.log('%cPlayer ' + data.player_id + ' : success with a roll of ' + data.dice_result + ' (calculated: ' + data.result + ') on ' + data.stat, 'color:green');
