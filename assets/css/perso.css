@@ -10,6 +10,7 @@
     --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
   }
   body {
+    
     background: var(--darkgrey);
     margin: 0;
     color: whitesmoke;
@@ -23,7 +24,14 @@
     font-family: 'Jura', sans-serif;
     font-size: 13px;
 }
-
+::-webkit-scrollbar {
+  width: 0.2em;
+  background-color: #000000;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: #F5F5F5;
+}
 .container-player{
   position: absolute;
   width: 1150px;
@@ -178,14 +186,7 @@ input[type=number]::-webkit-outer-spin-button
   backdrop-filter: blur(1.5px);
   overflow: auto;
 }
-::-webkit-scrollbar {
-  width: 0.2em;
-  background-color: #000000;
-}
- 
-::-webkit-scrollbar-thumb {
-  background-color: #F5F5F5;
-}
+
 .form-container{
   position: absolute;
   height: 600px;

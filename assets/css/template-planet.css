@@ -23,6 +23,14 @@ body {
   font-family: 'Jura', sans-serif;
     font-size: 15px;
 }
+::-webkit-scrollbar {
+  width: 0.2em;
+  background-color: #000000;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: #F5F5F5;
+}
 .center {
   position: absolute;
   top: 50%;
@@ -1546,10 +1554,11 @@ hr.separateur {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
+  overflow: auto;
 }
 .planet-reading{
   font-size: 12px;
-  margin: 5px 0px 0px 5px;
+  margin: 10px 10px 0px 10px;
 }
 
 .scanning::after {
