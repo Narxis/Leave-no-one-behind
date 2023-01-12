@@ -39,7 +39,7 @@ function updatestatus(){
         console.log(oldVal)
         currentStatus.item(i).innerHTML = String(oldVal-1)
         if (oldVal == 1){
-            currentStatus.item(i).closest('.status-line').remove()
+            currentStatus.item(i).closest('.status-line').remove()//removes status if it's duration is 0
         }
     }
 }
@@ -137,7 +137,6 @@ async function write (fulltext, place) {
 window.addEventListener('load', write(cardtextstr, '.card-text'), false);
 
 ( function(){
-    let linetab = document.querySelectorAll('.line');
     document.querySelector('#choice1').addEventListener('mouseup',async function() {
         document.querySelector('.card-text').classList.toggle('invisibility')
         document.querySelector('.answer1').classList.toggle('visibility')
