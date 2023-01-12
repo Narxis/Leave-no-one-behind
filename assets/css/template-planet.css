@@ -1446,9 +1446,18 @@ hr.separateur {
   width: 225px;
 }
 #module-1 svg {
-  height: 40px;
-  width: 40px;
-  fill: rgb(180 180 180);
+  width: 25px;
+  height: 25px;
+  fill: rgb(148, 38, 38);
+  animation: heartbeat 1.5s infinite;
+}
+@keyframes heartbeat {
+  0%{transform: scale(0.8);}
+  5%{transform: scale(0.9);}
+  10%{transform: scale(0.8);}
+  15%{transform: scale(1);}
+  50%{transform: scale(0.8);}
+  100%{transform: scale(0.8);}
 }
 
 .humain-text {
