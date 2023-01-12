@@ -49,11 +49,23 @@ class SocketLNOB {
         this.send(payload);
     }
 
-    addConso(name) {
+    setStatus(name, value) {
         let payload = {
-            action: 'addConso',
+            action: 'setStatus',
             data: {
                 name: name,
+                value: value
+            }
+        }
+        this.send(payload);
+    }
+
+    addConso(name) {
+        let payload = {
+            action: 'conso',
+            data: {
+                remove: false,
+                name: name
             }
         }
         this.send(payload);
@@ -61,8 +73,9 @@ class SocketLNOB {
 
     delConso(name) {
         let payload = {
-            action: 'delConso',
+            action: 'conso',
             data: {
+                remove: true,
                 name: name
             }
         }
