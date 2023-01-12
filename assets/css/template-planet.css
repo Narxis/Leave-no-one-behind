@@ -193,12 +193,10 @@ button {
 .points-required{
   width: 90px;
   height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
 }
 .points-required::before{
-  content: 'coût : ';
+  content: 'coût: ';
 }
 .o2-txt {
   height: 75px;
@@ -346,7 +344,7 @@ button {
   0% { width: 0px; filter: opacity(1);}
   14.9% { width: 0px;}
   15% { width: 1px;}
-  30% { width: 222px; filter: opacity(1);}
+  30% { width: 220px; filter: opacity(1);}
   100% { filter: opacity(1);}
 }
 @keyframes trace-4 {
@@ -1072,7 +1070,7 @@ clamp(10px, 1.5vw, 20px);
   top: 202.8px;
   left: 317.3px;
   height: 2px;
-  width: 222px;
+  width: 220px;
   background-color: rgb(255, 255, 255);
   transform-origin: 0;
   transform: rotate(225deg);
@@ -1495,16 +1493,23 @@ hr.separateur {
 }
 
 .drone::before{
-  content: 'Drones : ';
+  content: 'Drones: ';
 }
 .use-drone{
-  margin: 0px 0px 0px 45px;
+  margin: 0px -20px 0px 25px;
   cursor: pointer;
-  width: 55px;
+  width: 115px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.use-drone::before{
+  content: 'Utiliser';
+}
+.switch-on::before{
+  content: 'Ne pas utiliser';
+}
+
 .planet-txt{
   display: flex;
   align-items: flex-start;

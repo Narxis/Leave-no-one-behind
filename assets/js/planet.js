@@ -91,6 +91,7 @@ async function write (fulltext, place) {
             }
             else {
                 droneUse = !droneUse;
+                document.querySelector('.use-drone').classList.toggle('switch-on')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -117,6 +118,7 @@ async function write (fulltext, place) {
             }
             else {
                 droneUse = !droneUse;
+                document.querySelector('.use-drone').classList.toggle('switch-on')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -142,6 +144,7 @@ async function write (fulltext, place) {
             }
             else {
                 droneUse = !droneUse;
+                document.querySelector('.use-drone').classList.toggle('switch-on')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -169,6 +172,7 @@ async function write (fulltext, place) {
             }
             else {
                 droneUse = !droneUse;
+                document.querySelector('.use-drone').classList.toggle('switch-on')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -194,6 +198,7 @@ async function write (fulltext, place) {
             }
             else {
                 droneUse = !droneUse;
+                document.querySelector('.use-drone').classList.toggle('switch-on')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -221,6 +226,7 @@ async function write (fulltext, place) {
             }
             else {
                 droneUse = !droneUse;
+                document.querySelector('.use-drone').classList.toggle('switch-on')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -240,7 +246,7 @@ async function write (fulltext, place) {
     document.querySelector('.use-drone').addEventListener('mouseup',function(){
         if (dronenbr>0){
             droneUse = !droneUse;
-            //rajouter un visuel
+            document.querySelector('.use-drone').classList.toggle('switch-on') //class pour le visuel
         }
     })
 })();
