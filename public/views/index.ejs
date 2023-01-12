@@ -2,17 +2,6 @@
 <button id="roll" style="cursor: pointer" onclick="rollDice()">roll</button>
 <script src="/js/socketLNOB.js"></script>
 <script>
-    const wsLNOB = new SocketLNOB()
-
-    const rollDice = function () {
-        let payload = {
-            action: 'roll',
-            data: {
-                player_id: 1,
-                stat: 'combat',
-                module: false
-            }
-        }
-        wsLNOB.send(payload);
-    }
+    const wsLNOB = new SocketLNOB();
+    wsLNOB.rollDice(1, 'combat', false);
 </script>

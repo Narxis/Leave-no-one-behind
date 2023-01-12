@@ -26,6 +26,18 @@ class SocketLNOB {
         this.socket.send(JSON.stringify(data));
     }
 
+    rollDice(player_id, stat, module) {
+        let payload = {
+            action: 'roll',
+            data: {
+                player_id: player_id,
+                stat: stat,
+                module: module
+            }
+        }
+        this.send(payload);
+    }
+
     roll(data) {
         if (data.success) {
             console.log('%cPlayer ' + data.player_id + ' : success with a roll of ' + data.dice_result + ' (calculated: ' + data.result + ') on ' + data.stat, 'color:green');
