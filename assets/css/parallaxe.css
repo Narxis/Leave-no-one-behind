@@ -646,27 +646,27 @@ body {
 
 .tab-moteurs {
   background: rgb(142,181,240);
-  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(148,208,231,1) 100%);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(148,208,231,50%) 100%);
 }
 .tab-scan {
   background: rgb(133,138,227);
-  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(142,181,240,1) 100%);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(142,181,240,50%) 100%);
 }
 .tab-detect {
   background: rgb(97,61,193);
-  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(133,138,227,1) 100%);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(133,138,227,50%) 100%);
 }
 .tab-o2 {
   background: rgb(78,20,140);
-  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(97,61,193,1) 100%);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(97,61,193,50%) 100%);
 }
 .tab-elec {
   background: rgb(44,7,53);
-  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(78,20,140,1) 100%);
+  background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgba(78,20,140,50%) 100%);
 }
 .tab-grav {
   background: rgb(0,0,0);
-  background: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(44,7,53,1) 100%);
+  background: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(44,7,53,50%) 100%);
 }
 .move-right {
   transform: translateX(-100px);
@@ -1087,6 +1087,7 @@ button, input, select, textarea {
   background-size: 16px 16px;
   transform: scale(0);
   transition: transform 300ms cubic-bezier(.3, 0, 0, 1.5);
+  filter: hue-rotate(45deg);
 }
 .content input[type="checkbox"]:checked + label span.check::after {
   transform: scale(1);
@@ -1311,8 +1312,8 @@ animation: close-left-animation 2s forwards;
 /*---vvv---human-status----vvv---*/
 .human-status {
   position: absolute;
-  top: -235px;
-  right: 25;
+  top: -143px;
+  right: 48px;
   width: 230px;
   border: 3px solid rgb(180 180 180);
   border-radius: 15px;
