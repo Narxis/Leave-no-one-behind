@@ -1347,9 +1347,16 @@ animation: close-left-animation 2s forwards;
 .human svg{
   width: 25px;
   height: 25px;
-  fill: rgb(180 180 180);
-  /* scale: 0.15; */
-  /* margin: 0px 38px 0px 0px; */
+  fill: rgb(148, 38, 38);
+  animation: heartbeat 1.5s infinite;
+}
+@keyframes heartbeat {
+  0%{transform: scale(0.8);}
+  5%{transform: scale(0.9);}
+  10%{transform: scale(0.8);}
+  15%{transform: scale(1);}
+  50%{transform: scale(0.8);}
+  100%{transform: scale(0.8);}
 }
 .human-title{
   width: 66px;
