@@ -199,10 +199,14 @@ button {
 .p-txt {
   cursor: pointer;
 }
-.points-required{
+.points-required {
+  position: relative;
   width: 90px;
   height: 20px;
   text-align: center;
+  top: 2px;
+  font-size: 12px;
+  color: #afafaf;
 }
 .points-required::before{
   content: 'coût: ';
@@ -1525,9 +1529,13 @@ hr.separateur {
 }
 .use-drone::before{
   content: 'Utiliser';
+  transition: 1s;
 }
-.switch-on::before{
+.switch-on::before {
   content: 'Annuler';
+  color: #fff;
+  text-shadow: -1px -1px 1px #f00, 1px -1px 1px #f00, -1px 1px 1px #f00, 1px 1px 1px #f00;
+  transition: 1s;
 }
 
 .pulse {
@@ -1696,4 +1704,22 @@ hr.separateur {
   to {
     transform: rotate(360deg);
   }
+}
+.cursor {
+  height: 40px;
+  width: 40px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  filter: opacity(0);
+}
+.visible {
+  filter: opacity(1);
+}
+.cursor svg {
+  fill: rgb(180, 180, 180);
+  transition: .5s;
+}
+.cursor-on-txt{
+  fill: turquoise !important;
 }

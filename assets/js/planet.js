@@ -83,6 +83,7 @@ async function write (fulltext, place) {
     let cloudshadow = document.querySelectorAll('.cloudshadow')
     let mountain = document.querySelectorAll('.re-mountain')
     let mountainstar = document.querySelectorAll('.re-background')
+    let txt = document.querySelectorAll('.p-txt')
     document.querySelector('.o2-txt').addEventListener('mouseup',function(){
         if (points >= costo2 || droneUse) {
             document.querySelector('#o2-button').disabled = 'disabled'
@@ -92,6 +93,8 @@ async function write (fulltext, place) {
             else {
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
+                document.querySelector('.cursor').classList.toggle('visible')
+                document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -120,6 +123,8 @@ async function write (fulltext, place) {
             else {
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
+                document.querySelector('.cursor').classList.toggle('visible')
+                document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -147,6 +152,8 @@ async function write (fulltext, place) {
             else {
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
+                document.querySelector('.cursor').classList.toggle('visible')
+                document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -176,6 +183,8 @@ async function write (fulltext, place) {
             else {
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
+                document.querySelector('.cursor').classList.toggle('visible')
+                document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -203,6 +212,8 @@ async function write (fulltext, place) {
             else {
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
+                document.querySelector('.cursor').classList.toggle('visible')
+                document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -232,6 +243,8 @@ async function write (fulltext, place) {
             else {
                 droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
+                document.querySelector('.cursor').classList.toggle('visible')
+                document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
                 writePoints('.drone',dronenbr);
             }
@@ -253,8 +266,17 @@ async function write (fulltext, place) {
         if (dronenbr>0){
             droneUse = !droneUse;
             document.querySelector('.use-drone').classList.toggle('switch-on') //class pour le visuel
+            document.querySelector('.cursor').classList.toggle('visible')
         }
     })
+    for (let i=0; i<txt.length; i++) {
+        txt.item(i).addEventListener('mouseover',function() {
+            document.querySelector('.drone-svg').classList.add('cursor-on-txt')
+        })
+        txt.item(i).addEventListener('mouseleave',function() {
+            document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
+        })
+    }
 })();
 
 (function(){
@@ -289,4 +311,13 @@ for(const star of document.getElementsByClassName("magic-star")) {
     setInterval(() => animate(star), 2500);
   }, index++ * (interval / 3))
 } 
+
+const droneCursor = document.querySelector('.cursor');
+
+window.onmousemove = e => {
+    const x = e.clientX + droneCursor.offsetWidth / 2,
+        y = e.clientY + droneCursor.offsetHeight / 2;
+
+        droneCursor.style.transform = `translate(${x}px, ${y}px)`;
+}
 
