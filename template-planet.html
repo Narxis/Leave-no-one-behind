@@ -946,8 +946,8 @@
   var observer = new MutationObserver(function(mutations) {
     mutations.forEach(async function(mutation) {
       if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {
-        let val = mutation.target.getAttribute('data-value');
-        let oldVal = mutation.oldValue;
+        let val = parseInt(mutation.target.getAttribute('data-value'));
+        let oldVal = parseInt(mutation.oldValue);
         let elem = document.getElementById(mutation.target.id);
         let circle = elem.getElementsByTagName('circle')[0];
         let text = elem.getElementsByTagName('text')[0];
@@ -955,7 +955,7 @@
         if (val > oldVal) {
           do {
             oldVal++
-            circle.style.strokeDashoffset = (100 - parseInt(oldVal)).toString()
+            circle.style.strokeDashoffset = (100 - oldVal).toString()
             text.textContent = oldVal + '%'
             await new Promise(r => setTimeout(r, tm));
           } while (val > oldVal)
@@ -963,7 +963,7 @@
         else {
           do {
             oldVal--
-            circle.style.strokeDashoffset = (100 - parseInt(oldVal)).toString()
+            circle.style.strokeDashoffset = (100 - oldVal).toString()
             text.textContent = oldVal + '%'
             await new Promise(r => setTimeout(r, tm));
           } while (val < oldVal)
