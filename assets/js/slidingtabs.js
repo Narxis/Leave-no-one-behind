@@ -35,9 +35,12 @@ function updatestatus(){
     let currentStatus = document.querySelectorAll('.status-duration')
     console.log(currentStatus)
     for (let i=0; i<currentStatus.length; i++) {
-        let oldVal = Number(currentStatus.item(i).innerHTML)
+        let oldVal = parseInt(currentStatus.item(i).innerHTML)
         console.log(oldVal)
         currentStatus.item(i).innerHTML = String(oldVal-1)
+        if (oldVal == 1){
+            currentStatus.item(i).closest('.status-line').remove()
+        }
     }
 }
 
