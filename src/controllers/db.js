@@ -262,12 +262,36 @@ class DB {
             }
         })
 
+        let bonuses = this.sequelize.define('bonuses', {
+            id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            name: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            value: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            is_conso: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            }
+        })
+
         this.tables = {
             cards: cards,
             card_modules: card_modules,
             players: players,
             ship: ship,
-            deck: deck
+            deck: deck,
+            bonuses: bonuses
         };
 
         for (let table in this.tables) {
