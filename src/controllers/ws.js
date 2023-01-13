@@ -1,4 +1,5 @@
 const {Player} = require("../models/player");
+const {Bonuses} = require("../models/bonuses");
 const {response} = require("express");
 const {Ship} = require("../models/ship");
 const shipId = 1;
@@ -103,8 +104,12 @@ const actionSetStatus = async function(response) {
 
     let status = response.data.name;
     let val = response.data.value;
+    let bonuses = new Bonuses();
 
-    // TODO implement status
+    if (await bonuses.exists(status))
+        await bonuses.updateStatus(status, val);
+    else
+        await bonuses.create(status, val, 0);
 
     return {
         action: response.action,
@@ -130,7 +135,12 @@ const actionConso = async function (response) {
 
     let name = response.data.name;
     let remove = response.data.remove;
-    // TODO implement consomable and add a method to add or remove it
+    let bonuses = new Bonuses();
+
+    if (remove)
+        await bonuses.deleteOne(name);
+    else
+        await bonuses.create(name);
 
     return {
         action: response.action,
