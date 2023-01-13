@@ -1,5 +1,9 @@
 const {Player} = require("../models/player");
+const {Bonuses} = require("../models/bonuses");
 const {response} = require("express");
+const {Ship} = require("../models/ship");
+const shipId = 1;
+
 const init = function (){
 
     WSS.on('connection', (ws) => {
@@ -28,9 +32,25 @@ const makeAction = async function (raw_response) {
         };
     }
 
+    console.log(response);
     switch (response.action) {
+        case 'playerStat':
+            payload = actionSetPlayerStat(response);
+            break;
         case 'roll':
             payload = actionRoll(response);
+            break;
+        case 'setModule':
+            payload = actionSetModule(response);
+            break;
+        case 'setStatus':
+            payload = actionSetStatus(response);
+            break;
+        case 'detection':
+            payload = actionSetDetection(response);
+            break;
+        case 'conso':
+            payload = actionConso(response);
             break;
         default:
             payload = {
@@ -40,6 +60,93 @@ const makeAction = async function (raw_response) {
             };
     }
     return payload;
+}
+
+// set to given value
+const actionSetPlayerStat = async function(response) {
+
+    let player = new Player(response.data.player_id);
+    let val = parseInt(response.data.val);
+    let stat = response.data.stat;
+
+    player = await player.getData();
+    if (player) {
+        let data = {};
+        data[stat] = val;
+        await player.update(data);
+    }
+
+    return {
+        action: response.action,
+        error: false,
+        data: response.data
+    }
+}
+
+const actionSetModule = async function(response) {
+    let ship = new Ship(shipId);
+    let module = response.data.name;
+    let val = response.data.value;
+
+    let data = {};
+    data[module] = val;
+
+    await ship.update(data);
+
+    return {
+        action: response.action,
+        error: false,
+        data: response.data
+    }
+}
+
+const actionSetStatus = async function(response) {
+
+    let status = response.data.name;
+    let val = response.data.value;
+    let bonuses = new Bonuses();
+
+    if (await bonuses.exists(status))
+        await bonuses.updateStatus(status, val);
+    else
+        await bonuses.create(status, val, 0);
+
+    return {
+        action: response.action,
+        error: false,
+        data: response.data
+    }
+}
+
+const actionSetDetection = async function(response) {
+
+    let val = response.data.value;
+
+    // TODO implement detection points on ship
+
+    return {
+        action: response.action,
+        error: false,
+        data: response.data
+    }
+}
+
+const actionConso = async function (response) {
+
+    let name = response.data.name;
+    let remove = response.data.remove;
+    let bonuses = new Bonuses();
+
+    if (remove)
+        await bonuses.deleteOne(name);
+    else
+        await bonuses.create(name);
+
+    return {
+        action: response.action,
+        error: false,
+        data: response.data
+    }
 }
 
 const actionRoll = async function (response) {
