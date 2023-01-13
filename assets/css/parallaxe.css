@@ -716,9 +716,10 @@ body {
   margin: 3px;
   background: linear-gradient(0deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
   backdrop-filter: blur(1px);
+  color: whitesmoke;
 }
 
-.choice:hover {
+.choice-hover {
   transform: translateY(5px);
 }
 /*---^^^---Choices-tabs---^^^---*/
@@ -1426,33 +1427,6 @@ animation: close-left-animation 2s forwards;
 }
   /*---^^^---human-status----^^^---*/
   
-.next-button {
-  position: absolute;
-  bottom: -108px;
-  left: 1727px;
-  width: 148px;
-  height: 100px;
-  background: linear-gradient(272deg, rgb(1 0 12) 0%, rgb(63 45 110 / 81%) 100%);
-  border: 4px solid rgb(180, 180, 180);
-  border-radius: 15px;
-}
-.next-show{
-  animation: next-button-show 2s ease-out forwards;
-}
-@keyframes next-button-show{
-  0%{bottom: -108px;}
-  50%{bottom: -108px;}
-  100%{bottom:-16px}
-}
-.next-button-invisibility{
-  animation: next-button-not-show 2s ease-out forwards;
-}
-
-@keyframes next-button-not-show{
-  0%{bottom: -16px; filter: opacity(1);}
-  50%{bottom: -16px; filter: opacity(0);}
-  100%{filter: opacity(0);}
-}
 .startrek {
   position: absolute;
   top: 0;

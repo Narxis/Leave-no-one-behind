@@ -6,6 +6,7 @@ var cardtextstr = "Vous rencontrez un barrage de la première douane galactique 
 var answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
 var answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
 var answer3str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
+var answerlist =[answer1str, answer2str, answer3str]
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr= 0;
 var cardnbrUntilPlanet = 5;
@@ -29,6 +30,9 @@ var statusDurationList = [duration_blackout,cardnbrUntilPlanet,cardnbrUntilPlane
 var statusList = []; //status present dans le html 
 var statusListLength = statusList.length;
 var statushtml = document.querySelector(".status");
+//html bouton suivant
+let nextbuttonhtml = `<button class="next-button choice move-down" id="next1">Continuer votre chemin</button>`;
+let nextbuttonhtml2 = `<a href="template-planet.html"><button class="next-button choice move-down" id="next2">Aller dans la salle des scanners</button></a>`;
 
 function updatestatus(){
     statusDurationList = [duration_blackout,cardnbrUntilPlanet,cardnbrUntilPlanet,duration_anticipation] //updates to new cardnbrUntilPlanet value
@@ -115,12 +119,19 @@ async function initialisePlayerTab(){
 
 window.addEventListener('load', initialisePlayerTab, false);
 
-function nextoption () {
+async function nextoption () {
     if (textprintednbr == 2) {
-        document.querySelector('#next1').classList.add('next-show')
+        document.querySelector('.choices').innerHTML = nextbuttonhtml
+        await sleep(100)//ça marche pas sans on pose pas de question
+        document.querySelector('.choice').classList.remove('move-down')
+        initialiseNextButton()
+
     }
     if (textprintednbr == 3) {
-        document.querySelector('#next2').classList.add('next-show')
+        document.querySelector('.choices').innerHTML = nextbuttonhtml2
+        await sleep(100)//ça marche pas sans on pose pas de question
+        document.querySelector('.choice').classList.remove('move-down')
+        initialiseNextButton()
     }
 }
 
@@ -137,29 +148,45 @@ async function write (fulltext, place) {
 window.addEventListener('load', write(cardtextstr, '.card-text'), false);
 
 ( function(){
-    document.querySelector('#choice1').addEventListener('mouseup',async function() {
-        document.querySelector('.card-text').classList.toggle('invisibility')
-        document.querySelector('.answer1').classList.toggle('visibility')
-        await sleep(1200)
-        write(answer1str, '.answer1')
+    var choice = document.getElementById('choicetab');
+    var choiceTabs = choice.getElementsByClassName('choice');
+    for (let i=0; i<choiceTabs.length; i++){
+        document.querySelector('#choice'+String(i+1)).addEventListener('mouseup',async function() {
+            document.querySelector('.card-text').classList.toggle('invisibility')
+            document.querySelector('.answer'+String(i+1)).classList.toggle('visibility')
+            for (let k=0; k<choiceTabs.length; k++) {
+                choiceTabs.item(k).disabled ='true'
+                choiceTabs.item(k).classList.add('move-down');
+                choiceTabs.item(k).classList.remove('choice-hover')
+            }
+            await sleep(1200)
+            console.log(answerlist[i])
+            write(answerlist[i], '.answer'+String(i+1))
+        })
+        document.querySelector('#choice'+String(i+1)).addEventListener('mouseover',function() {
+            this.classList.add('choice-hover')
+        })
+        document.querySelector('#choice'+String(i+1)).addEventListener('mouseleave',function() {
+            this.classList.remove('choice-hover')
+        })
+    }})();
+
+    
+
+function initialiseNextButton() {
+    document.querySelector('.next-button').addEventListener('mouseover',function() {
+        this.classList.add('choice-hover')
     })
-    document.querySelector('#choice2').addEventListener('mouseup',async function() { 
-        document.querySelector('.card-text').classList.toggle('invisibility')
-        document.querySelector('.answer2').classList.toggle('visibility')
-        await sleep(1200)
-        write(answer2str, '.answer2')
- 
-    })
-    document.querySelector('#choice3').addEventListener('mouseup',async function() {
-        document.querySelector('.card-text').classList.toggle('invisibility')
-        document.querySelector('.answer3').classList.toggle('visibility')
-        await sleep(1200)
-        write(answer3str, '.answer3')
+    document.querySelector('.next-button').addEventListener('mouseleave',function() {
+        this.classList.remove('choice-hover')
     })
     document.querySelector('#next1').addEventListener('mouseup', async function (){
+        
         if (cardnbrUntilPlanet == 1) {
                     //hide text animation and 'next-button'
-            document.querySelector('.next-button').classList.add('next-button-invisibility')
+                    document.querySelector('.next-button').disabled = 'true'
+            document.querySelector('.next-button').classList.add('move-down')
+            document.querySelector('.next-button').classList.remove('choice-hover')
             document.querySelector('.card-text').classList.remove('visibility')
             document.querySelector('.answer1').classList.remove('visibility')
             document.querySelector('.answer2').classList.remove('visibility')
@@ -224,8 +251,7 @@ window.addEventListener('load', write(cardtextstr, '.card-text'), false);
             write(cardtextstr,'.card-text')
             }
     })
-
-})();
+}
 
 async function initialiseleLeftTabs() {
     var consommableTabVar = document.getElementsByClassName('consommable-tab');
