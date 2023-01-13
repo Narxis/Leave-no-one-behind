@@ -1,4 +1,5 @@
 const {Player} = require("../models/player");
+const {Bonuses} = require("../models/bonuses");
 const {response} = require("express");
 const {Ship} = require("../models/ship");
 const shipId = 1;

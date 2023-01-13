@@ -50,3 +50,5 @@ class Bonuses {
         return result.map(r => r.dataValues);
     }
 }
+
+module.exports = {Bonuses}
