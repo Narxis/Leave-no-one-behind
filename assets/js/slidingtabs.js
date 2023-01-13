@@ -6,6 +6,7 @@ var cardtextstr = "Vous rencontrez un barrage de la première douane galactique 
 var answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
 var answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
 var answer3str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
+var choicelist = ['Utiliser une bouteille pour "convaincre" la douane', "Menacer de les attaquer en justice grâce a votre avo-cat-e", "Donner vos consommables" ]
 var answerlist =[answer1str, answer2str, answer3str]
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr= 0;
@@ -34,13 +35,12 @@ var statushtml = document.querySelector(".status");
 let nextbuttonhtml = `<button class="next-button choice move-down" id="next1">Continuer votre chemin</button>`;
 let nextbuttonhtml2 = `<a href="template-planet.html"><button class="next-button choice move-down" id="next2">Aller dans la salle des scanners</button></a>`;
 
+
 function updatestatus(){
     statusDurationList = [duration_blackout,cardnbrUntilPlanet,cardnbrUntilPlanet,duration_anticipation] //updates to new cardnbrUntilPlanet value
     let currentStatus = document.querySelectorAll('.status-duration')
-    console.log(currentStatus)
     for (let i=0; i<currentStatus.length; i++) {
         let oldVal = parseInt(currentStatus.item(i).innerHTML)
-        console.log(oldVal)
         currentStatus.item(i).innerHTML = String(oldVal-1)
         if (oldVal == 1){
             currentStatus.item(i).closest('.status-line').remove()//removes status if it's duration is 0
@@ -119,7 +119,40 @@ async function initialisePlayerTab(){
 
 window.addEventListener('load', initialisePlayerTab, false);
 
+function eventchoices(){
+    var choice = document.getElementById('choicetab');
+    var choiceTabs = choice.getElementsByClassName('choice');
+    for (let i=0; i<choiceTabs.length; i++){
+        document.querySelector('#choice'+String(i)).addEventListener('mouseup',async function() {
+            document.querySelector('.card-text').classList.toggle('invisibility')
+            document.querySelector('.answer'+(i+1)).classList.toggle('visibility')
+            for (let k=0; k<choiceTabs.length; k++) {
+                choiceTabs.item(k).disabled ='true'
+                choiceTabs.item(k).classList.add('move-down');
+                choiceTabs.item(k).classList.remove('choice-hover')
+            }
+            await sleep(1200)
+            write(answerlist[i], '.answer'+(i+1))
+        })
+        document.querySelector('#choice'+String(i)).addEventListener('mouseover',function() {
+            this.classList.add('choice-hover')
+        })
+        document.querySelector('#choice'+String(i)).addEventListener('mouseleave',function() {
+            this.classList.remove('choice-hover')
+        })
+    }};
+
 async function nextoption () {
+    if (textprintednbr == 1) {
+        for (let i=0; i<choicelist.length; i++) {
+            let choiceshtml = `<button class="choice move-down" id="choice${i}"></button>` 
+            document.querySelector('.choices').innerHTML += choiceshtml
+            document.querySelector('#choice'+String(i)).innerHTML = choicelist[i]
+        }
+        await sleep(500)
+        initialiseChoiceTabs()
+        eventchoices()
+    }
     if (textprintednbr == 2) {
         document.querySelector('.choices').innerHTML = nextbuttonhtml
         await sleep(100)//ça marche pas sans on pose pas de question
@@ -147,30 +180,6 @@ async function write (fulltext, place) {
 }
 window.addEventListener('load', write(cardtextstr, '.card-text'), false);
 
-( function(){
-    var choice = document.getElementById('choicetab');
-    var choiceTabs = choice.getElementsByClassName('choice');
-    for (let i=0; i<choiceTabs.length; i++){
-        document.querySelector('#choice'+String(i+1)).addEventListener('mouseup',async function() {
-            document.querySelector('.card-text').classList.toggle('invisibility')
-            document.querySelector('.answer'+String(i+1)).classList.toggle('visibility')
-            for (let k=0; k<choiceTabs.length; k++) {
-                choiceTabs.item(k).disabled ='true'
-                choiceTabs.item(k).classList.add('move-down');
-                choiceTabs.item(k).classList.remove('choice-hover')
-            }
-            await sleep(1200)
-            console.log(answerlist[i])
-            write(answerlist[i], '.answer'+String(i+1))
-        })
-        document.querySelector('#choice'+String(i+1)).addEventListener('mouseover',function() {
-            this.classList.add('choice-hover')
-        })
-        document.querySelector('#choice'+String(i+1)).addEventListener('mouseleave',function() {
-            this.classList.remove('choice-hover')
-        })
-    }})();
-
     
 
 function initialiseNextButton() {
@@ -183,8 +192,8 @@ function initialiseNextButton() {
     document.querySelector('#next1').addEventListener('mouseup', async function (){
         
         if (cardnbrUntilPlanet == 1) {
-                    //hide text animation and 'next-button'
-                    document.querySelector('.next-button').disabled = 'true'
+            //hide text animation and 'next-button'
+            document.querySelector('.next-button').disabled = 'true'
             document.querySelector('.next-button').classList.add('move-down')
             document.querySelector('.next-button').classList.remove('choice-hover')
             document.querySelector('.card-text').classList.remove('visibility')
@@ -197,13 +206,12 @@ function initialiseNextButton() {
             document.querySelector('.answer3').classList.add('invisibility')
             await sleep(1000)
             //clear text and move next button
-            document.querySelector('.next-button').classList.remove('next-show')
             document.querySelector('.card-text').innerHTML = ""
             document.querySelector('.answer1').innerHTML = ""
             document.querySelector('.answer2').innerHTML = ""
             document.querySelector('.answer3').innerHTML = ""
+            document.querySelector('.choices').innerHTML = ""
             //ready to show new text
-            document.querySelector('.next-button').classList.remove('next-button-invisibility')
             document.querySelector('.card-text').classList.remove('invisibility')
             document.querySelector('.answer1').classList.remove('invisibility')
             document.querySelector('.answer2').classList.remove('invisibility')
@@ -218,7 +226,9 @@ function initialiseNextButton() {
             }
         if (cardnbrUntilPlanet != 1) {
             //hide text animation and 'next-button'
-            document.querySelector('.next-button').classList.add('next-button-invisibility')
+            document.querySelector('.next-button').disabled = 'true'
+            document.querySelector('.next-button').classList.add('move-down')
+            document.querySelector('.next-button').classList.remove('choice-hover')
             document.querySelector('.card-text').classList.remove('visibility')
             document.querySelector('.answer1').classList.remove('visibility')
             document.querySelector('.answer2').classList.remove('visibility')
@@ -229,13 +239,13 @@ function initialiseNextButton() {
             document.querySelector('.answer3').classList.add('invisibility')
             await sleep(1000)
             //clear text and move next button
-            document.querySelector('.next-button').classList.remove('next-show')
             document.querySelector('.card-text').innerHTML = ""
             document.querySelector('.answer1').innerHTML = ""
             document.querySelector('.answer2').innerHTML = ""
             document.querySelector('.answer3').innerHTML = ""
+            document.querySelector('.choices').innerHTML = ""
+
             //ready to show new text
-            document.querySelector('.next-button').classList.remove('next-button-invisibility')
             document.querySelector('.card-text').classList.remove('invisibility')
             document.querySelector('.answer1').classList.remove('invisibility')
             document.querySelector('.answer2').classList.remove('invisibility')
