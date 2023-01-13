@@ -393,3 +393,44 @@ input[type=number]::-webkit-outer-spin-button
     transform: rotate(360deg);
   }
 }
+.race-selector-container{
+
+}
+.select-affichage{
+  border: 1px solid white;
+  width: 128px;
+  height: 25.2;
+  text-indent: 25px;
+  display: flex;
+  align-items: center;
+}
+
+.options-affichage{
+  display: none;
+  width: 130px;
+  height: 0px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.options-affichage li {
+  text-indent: 25px;
+  margin: 0;
+  padding: 5px 0;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+  width: 128px;
+}
+
+.display-options{
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: flex-start;
+  overflow: hidden;
+  height: 300px;
+}
+@keyframes display{
+  0%{height: 0px;}
+  100%{height: 300px;}
+}
