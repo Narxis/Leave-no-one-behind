@@ -1,0 +1,315 @@
+/*---vvv-----Timer Animation-----vvv---*/
+/*---vvv-------Timer Start-------vvv---*/
+#bigboite.start #arm1 {
+    animation: gunstart1 2s ease-out forwards;
+  }
+  #bigboite.start #arm2 {
+    animation: gunstart2 2s ease-out forwards;
+  }
+  #bigboite.start #arm3 {
+    animation: gunstart3 2s ease-out forwards;
+  }
+  #bigboite.start #jaw-up {
+    animation: gunstart4 2s ease-out forwards;
+  }
+  @keyframes gunstart1 {
+    0% {opacity: 0; transform: rotate(207deg);}
+    0.1% {opacity: 1;}
+    100% {opacity: 1; transform: rotate(352deg);}
+  }
+  @keyframes gunstart2 {
+    0% {transform: rotate(304deg);}
+    100% {transform: rotate(20deg);}
+  }
+  @keyframes gunstart3 {
+    0% {transform: rotate(219deg);}
+    100% {transform: rotate(344deg);}
+  }
+  @keyframes gunstart4 {
+    0% {transform: rotate(309deg);}
+    100% {transform: rotate(356deg);}
+  }
+  /*---^^^-----Timer Start-----^^^---*/
+  /*---vvv-----Timer Idle------vvv---*/
+  #bigboite.idle #arm1 {
+    opacity: 1;
+    animation: gunfloat1 2s ease-out infinite;
+  }
+  #bigboite.idle #arm2 {
+    animation: gunfloat2 2s ease-out infinite;
+  }
+  #bigboite.idle #arm3 {
+    animation: gunfloat3 2s ease-out infinite;
+  }
+  #bigboite.idle #jaw-up {
+    animation: gunfloat4 2s ease-out infinite;
+  }
+  @keyframes gunfloat1 {
+    0% {transform: rotate(352deg);}
+      50% {transform: rotate(354deg);}
+      100% {transform: rotate(352deg);}
+  }
+  @keyframes gunfloat2 {
+    0% {transform: rotate(20deg);}
+      50% {transform: rotate(18deg);}
+      100% {transform: rotate(20deg);} 
+  }
+  @keyframes gunfloat3 {
+    0% {transform: rotate(344deg);}
+      50% {transform: rotate(346deg);}
+      100% {transform: rotate(344deg);} 
+  }
+  @keyframes gunfloat4 {
+    0% {transform: rotate(356deg);}
+      50% {transform: rotate(353deg);}
+      100% {transform: rotate(356deg);} 
+  }
+  @keyframes shipfloat {
+      0% {transform: translatey(0px) rotate(346deg);}
+      50% {transform: translatey(-10px) rotate(348deg);}
+      100% {transform: translatey(0px) rotate(346deg);}
+  }
+  #bigboite.idle .ringl {
+    transition: 6s;
+    transform: translateX(-20px);
+  }
+  #bigboite.idle .ringr {
+    transition: 6s;
+    transform: translateX(20px);
+  }
+  /* ---^^^---Timer Idle----^^^--- */
+  /* ---vvv---Timer Flash----vvv--- */
+  #bigboite.flash #flashbox {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgb(255,255,255);
+    background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgb(80, 80, 80) 55%, rgba(255,255,255,0) 56%);
+    animation: flash 2s ease-in-out forwards;
+  }
+  @keyframes flash {
+    0% {transform: scale(0); opacity: 1;}
+    25% {transform: scale(150); opacity: 0.8;}
+    100% {transform: scale(150); opacity: 0;}
+  }
+  #bigboite.flash .ringl {
+    transition: .3s;
+    transform: translatex(-60px);
+  }
+  #bigboite.flash .ringr {
+    transition: .3s;
+    transform: translatex(60px);
+  }
+  /* ---^^^---Timer Flash----^^^--- */
+  /* ---^^^---Timer Idle----^^^--- */
+  /* ---vvv---Laser boule---vvv---*/
+  #bigboite.idle .pop {
+    transition: 3s;
+    opacity: 1;
+  }
+  #canvas{
+    position: absolute;
+    top: -130px;
+    left: 0px;
+    transform-origin: left;
+    transform: rotate(356deg) scale(0.25);
+    opacity: 0;
+  }  
+  #bigboite.idle #canvas {
+    transition: 5s;
+    opacity: 0.8;
+  }
+  .spinner-box {
+    top: -80px;
+    left: -88px;
+    width: 175px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    position: absolute;
+    overflow: visible;
+    opacity: 0;
+  }
+  .leo-border-1 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: rgb(255, 255, 255);
+    background: linear-gradient(0deg, rgba(63,249,220,0.1) 33%, rgba(63,249,220,1) 100%);
+    animation: spin3D 1.8s linear 0s infinite;
+  }
+  .leo-core-1 {
+    width: 100%;
+    height: 100%;
+    background-color: #37474faa;
+    border-radius: 50%;
+  }
+  .leo-border-2 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: rgb(251, 91, 83);
+    background: linear-gradient(0deg, rgba(251, 91, 83, 0.1) 33%, rgba(251, 91, 83, 1) 100%);
+  }
+  .leo-core-2 {
+    width: 100%;
+    height: 100%;
+    background-color: #1d2630aa;
+    border-radius: 50%;
+  }
+  .leo {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+  }
+  .blue-orbit {
+      width: 165px;
+      height: 165px;
+    border: 1px solid #ffffff;
+    background: rgb(255,255,255);
+    background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
+    animation: spin3D 1s linear .2s infinite;
+  }
+  .green-orbit {
+      width: 120px;
+      height: 120px;
+    border: 1px solid #ffffff;
+    background: rgb(255,255,255);
+    background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
+    animation: spin3D .95s reverse 0s infinite;
+  }
+  .red-orbit {
+      width: 90px;
+      height: 90px;
+    border: 1px solid #ffffff;
+    background: rgb(255,255,255);
+    background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 36%, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 56%);
+    animation: spin3D .5s linear 0s infinite;
+  }
+  .white-orbit {
+      width: 60px;
+      height: 60px;
+    border: 2px solid #ffffff;
+    animation: spin3D .01s reverse 0s infinite;
+  }
+  .w1 {
+    transform: rotate3D(1, 1, 1, 90deg);
+  }
+  .w2 {
+    transform: rotate3D(1, 2, .5, 90deg);
+  }
+  .w3 {
+    transform: rotate3D(.5, 1, 2, 90deg);
+  }
+  .grow {
+    animation: spingrow 9s linear forwards;
+  }
+  .float {
+    position: absolute;
+    animation: laserfloat 2s ease-in-out infinite;
+  }
+  @keyframes spingrow {
+    0% {transform: scale(0);}
+    33% {transform: scale(0.10);}
+    66% {transform: scale(0.10);}
+    100% {transform: scale(0.8);}
+  }
+  @keyframes spin3D {
+    0% {transform: rotate3d(.5,.5,.5, 360deg);}
+    50% {transform: rotate3d(0,0,0, 180deg);}
+    100% {transform: rotate3d(-0.5,-0.5,-0.5, 360deg);}
+  }
+  @keyframes laserfloat {
+    0% {top: 20px;}
+      50% {top: 13px;}
+      100% {top: 20px;} 
+  }
+  /*---^^^------Laser boule-----^^^---*/
+  /*---vvv------Timer Shot------vvv---*/
+  #bigboite.shot .ringl {
+    transition: 2s;
+    animation: ringshotl 1s linear forwards;
+  }
+  #bigboite.shot .ringr {
+    transition: 2s;
+    animation: ringshotr 1s linear forwards;
+  }
+  @keyframes ringshotl {
+    50% {transform: translatex(-200px), scale(1.5);}
+    100% {transform: translatex(100px), scale(1);}
+  }
+  @keyframes ringshotr {
+    50% {transform: translatex(200px), scale(1.5);}
+    100% {transform: translatex(-100px), scale(1);}
+  }
+   #bigboite.shot #arm1 {
+    opacity: 1;
+    animation: shotarm1 6s ease-out forwards;
+  }
+  #bigboite.shot #arm2 {
+    animation: shotarm2 6s ease-out forwards;
+  }
+  #bigboite.shot #arm3 {
+    animation: shotarm3 6s ease-out forwards;
+  }
+  #bigboite.shot #jaw-up {
+    animation: shotjaw-up 6s ease-out forwards;
+  }
+  #bigboite.shot #jaw-down {
+    animation: shotjaw-down 6s ease-out forwards;
+  }
+  #bigboite.shot #plugun {
+    animation: yeet 6s ease-in forwards;
+  }
+  @keyframes shotarm1 {
+    0% {}
+    30% {transform: rotate(20deg);}
+    70% {transform: rotate(-65deg);}
+    100% {transform: rotate(-190deg);}
+  }
+  @keyframes shotarm2 {
+    0% {}
+    40% {transform: rotate(120deg);}
+    70% {transform: rotate(-10deg);}
+    100% {transform: rotate(-30deg);}
+  }
+  @keyframes shotarm3 {
+    0% {}
+    50% {transform: rotate(99deg);}
+    70% {transform: rotate(-20deg);}
+    100% {transform: rotate(180deg);}
+  }
+  @keyframes shotjaw-up {
+    0% {}
+    25% {transform: rotate(-50deg);}
+    70% {transform: rotate(15deg)}
+    100% {}
+  }
+  @keyframes shotjaw-down {
+    0% {transform: rotate(0deg);}
+    50% {transform: rotate(0deg);}
+    70% {transform: rotate(-15deg); position: relative;}
+    100% {transform: rotate(0deg); position: relative;}
+  }
+  @keyframes yeet {
+    0% {}
+    50% {}
+    70% {position: relative; transform: translateX(-2000px);}
+    100% {position: relative; transform: translateX(-2000px);}
+  }
+  /*---^^^------Timer Shot------^^^---*/
+  /* ---^^^---Timer Animation---^^^---*/

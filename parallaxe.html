@@ -1,5 +1,6 @@
 <head>
   <link rel="stylesheet" href="assets\css\parallaxe.css">
+  <link rel="stylesheet" href="assets\css\timer-animation.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 </head>
@@ -12,8 +13,11 @@
   <div class="center">
     <div class="card">
       <div class="wrap wrap--1">
-        <!--<div id="bigboite" class="robot-arm">
-          <!--<div class="float">
+
+         <!-- SVG TIMER + PLUG -->
+
+        <div id="bigboite" class="robot-arm">
+          <div class="float">
             <canvas id="canvas" width="600" height="400px"></canvas>
             <div class="spinner-box grow pop">
               <div class="blue-orbit leo"></div>
@@ -92,7 +96,10 @@
             <path id="base-fill" d="M1902.4,1262.7v396c0,36.7-21.3,66.5-47.5,66.5h-248V1196.1h248C1881.2,1196.2,1902.4,1225.9,1902.4,1262.7Z" fill="#555"/>
             <path id="base-stroke" d="M1860.3,1189.9H1598.9v541.6h261.4c27.7,0,50.1-30.5,50.1-68.1V1258C1910.4,1220.4,1888,1189.9,1860.3,1189.9Zm42.1,468.8c0,36.7-21.3,66.5-47.5,66.5h-248V1196.1h248c26.3,0,47.5,29.8,47.5,66.5Z"/>
           </svg>
-        </div>-->
+        </div>
+
+        <!-- SVG TIMER + PLUG -->
+
         <div class="mod-stats" id="modtab">
           <div class="tab tab-moteurs move-right">
             <div class="tab-txt">Moteurs</div>
@@ -932,6 +939,7 @@
 <script src="assets/js/timer.js"></script>
 <!-- <script src="assets/js/lightning.js"></script> -->
 <script src="assets/js/todo.js"></script>
+<script src="assets/js/timer-animation.js"></script>
 <script>
 
   var observer = new MutationObserver(function(mutations) {
