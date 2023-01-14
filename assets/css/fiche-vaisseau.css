@@ -54,6 +54,7 @@ body {
     border: 5px solid #686868;
     box-shadow: 14px 14px 18px 0px #222222;
 }
+
 .cadre {
     position: relative;
     height: 207px;
@@ -62,11 +63,13 @@ body {
     left: -37px;
     padding: 32px;
 }
+
 .vsaut {
     position: relative;
     left: 0px;
     height: 242px;
 }
+
 .modules {
     position: relative;
     display: grid;
@@ -82,6 +85,7 @@ body {
     text-decoration: #6E4DE0;
     top: -35px;
 }
+
 .modtxt {
     top: 50px;
     color: #EBEBEB;
@@ -89,6 +93,7 @@ body {
     box-shadow: -2px -2px 0px 0px #7649ed;
     padding: 0px 4px;
 }
+
 .module {
     position: relative;
     width: 254px;
@@ -97,12 +102,14 @@ body {
     left: 0px;
     top: 0px;
 }
+
 .bars {
     position: relative;
     top: -2px;
     left: -23px;
     z-index: -1;
 }
+
 .bar {
     display: grid;
     height: 23px;
@@ -123,22 +130,27 @@ body {
     color: whitesmoke;
     font-family: 'Jura', sans-serif;
 }
+
 .titre {
     position: relative;
     top: -11px;
 }
+
 .text {
     position: relative;
     top: 8px;
     font-size: 15.8px;
     /*box-shadow: -11px 11px 14px 0px #76b2ef;*/
 }
+
 hr {
     border: none;
 }
+
 aside {
     font-size: 10px;
 }
+
 .wrapper {
     position: relative;
     width: 77px;
@@ -151,11 +163,13 @@ aside {
     display: flex;
     flex-direction: row;
 }
+
 .container {
     top: 100px;
-	flex: 1;
-	padding: 0 20px;
+    flex: 1;
+    padding: 0 20px;
 }
+
 svg {
     position: absolute;
     top: -160px;

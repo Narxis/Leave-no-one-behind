@@ -3,7 +3,7 @@
 :root {
     --darkgrey: #17181c;
 }
-  
+
 body {
     background: var(--darkgrey);
     margin: 0;
@@ -16,23 +16,28 @@ body {
     align-items: center;
     overflow: hidden;
 }
+
 .container {
     margin: auto;
     width: 400px;
 }
+
 .path--background {
     fill: rgb(34, 213, 201);
     stroke: #fff;
     stroke-width: 0px;
 }
+
 .pulse {
     fill: rgb(255, 74, 74);
 }
+
 .path--foreground {
     fill: var(--darkgrey);
     stroke: var(--darkgrey);
     stroke-width: 2px;
 }
+
 .label {
     font: 90px "Open Sans";
     font-weight: 900;

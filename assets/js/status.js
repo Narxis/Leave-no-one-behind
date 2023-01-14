@@ -16,7 +16,7 @@ let duration_anticipation = 5;
 var statusList = document.querySelectorAll(".status-line");
 var statusListLength = statusList.length;
 var statushtml = document.querySelector(".status");
- 
+
 const addstatus = (statusname) => {
     let svg = eval(`svg_${statusname}`);
     let duration = eval(`duration_${statusname}`);
@@ -28,7 +28,7 @@ const addstatus = (statusname) => {
     statushtml.innerHTML += html
 };
 
-function applystatus(statusname){
-    statusListLength +=1;
-    addstatus (statusname); 
+function applystatus(statusname) {
+    statusListLength += 1;
+    addstatus(statusname);
 };
