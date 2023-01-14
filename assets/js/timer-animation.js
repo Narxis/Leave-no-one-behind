@@ -20,10 +20,10 @@ var plugShip2 = document.querySelector('#plugship2');
         timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
         timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
         switch (time_left){
-           case 15:
+           case 30:
             bigBoite.classList.add('start')
             break;
-          case 13:
+          case 28:
             bigBoite.classList.add('idle')
             bigBoite.classList.remove('start')
             break;
@@ -39,7 +39,6 @@ var plugShip2 = document.querySelector('#plugship2');
             break;
           case 3:
             bigBoite.classList.add('shot')
-            bigBoite.classList.remove('idle')
             await sleep(300)
             break;
           case 2:
