@@ -48,7 +48,7 @@
   width: 279px;
   height: 769px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   border: 2.5px solid rgb(180 180 180);
   border-radius: 23px;
   background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
@@ -77,7 +77,7 @@
   background-position: 66% 50%;
 }
 .player-name {
-  width: 142px;
+  width: 190px;
   height: 37px;
   margin: 16px 12px 3px 12px;
   border-radius: 5px;
@@ -100,26 +100,27 @@
   border-radius: 8px 8px 8px 8px;
   border: 2px solid rgb(180 180 180);
   backdrop-filter: blur(1.5px);
+  /*background-image: url(https://cdn.discordapp.com/attachments/616675777974632483/1063798705964208149/image.png);*/
 }
 .player-stats {
-  width: 160px;
-  height: 320px;
-  margin: 14px -12px -2px -2px;
-  border-radius: 0px 8px 0px 23px;
+  width: 280px;
+  height: 216px;
+  margin: 0px -1px -2px -2px;
   border: 2px solid rgb(180 180 180);
   backdrop-filter: blur(1.5px);
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
 }
 hr.separateur {
-  width: 160px;
+  width: 140px;
   height: 12px;
   border: 0;
   box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
   margin: 3px 0px -10px 0px;
 }
 .player-stat {
-  width: 238px;
+  width: 130px;
   height: 60px;
   margin: 0px 0px 6px 0px;
   display: flex;
@@ -138,7 +139,7 @@ hr.separateur {
 .player-stat-icon {
   width: 30px;
   height: 30px;
-  margin: 0px 15px 0px 30px;
+  margin: 0px 20px 0px 15px;
 }
 .player-stat-icon svg {
   fill: rgb(180, 180, 180);
@@ -167,16 +168,13 @@ input[type=number]::-webkit-outer-spin-button
 }
 
 .race-desc {
-  margin: 3px -2px 0px 8px;
-  width: 175px;
-  height: 227px;
-  border-radius: 8px 0px 23px 0px;
-  border: 2px solid rgb(180 180 180);
+  width: 270px;
+  height: 320px;
   padding: 6px;
   backdrop-filter: blur(1.5px);
   overflow: auto;
+  font-size: 14.6px;
 }
-
 .form-container{
   display: none;
   position: absolute;
@@ -385,15 +383,13 @@ input[type=number]::-webkit-outer-spin-button
   }
 }
 .race-selector-container{
-
+  position: absolute;
+  top: 58px;
+  height: 125px;
+  width: 100px;  
 }
 .select-affichage{
-  border: 1px solid white;
-  width: 128px;
-  height: 25.2;
-  text-indent: 25px;
-  display: flex;
-  align-items: center;
+  height: 125px;
 }
 
 .options-affichage{
@@ -420,6 +416,8 @@ input[type=number]::-webkit-outer-spin-button
   justify-content: flex-start;
   overflow: hidden;
   height: 300px;
+  z-index: 1;
+  position: absolute;
 }
 @keyframes display{
   0%{height: 0px;}
