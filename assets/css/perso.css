@@ -34,7 +34,7 @@
 }
 .container-player{
   position: absolute;
-  width: 1150px;
+  width: 1780px;
   height: 800px;
   left: 100px;
   top: 115px;
@@ -45,8 +45,8 @@
 }
 
 .player{
-  width: 360px;
-  height: 392px;
+  width: 279px;
+  height: 769px;
   display: flex;
   justify-content: space-between;
   border: 2.5px solid rgb(180 180 180);
@@ -55,6 +55,8 @@
   backdrop-filter: blur(1px);
   box-shadow: #5e5e5e4f 3px -3px 6px 2px;
   overflow: hidden;
+  flex-direction: column;
+  align-items: center;
 }
 #p1 {
   background-position: 0% 0%;
@@ -73,18 +75,6 @@
 }
 #p6 {
   background-position: 66% 50%;
-}
-.player-sac{
-  display: flex;
-  flex-wrap: wrap;
-  width: 150px;
-  height: 391px;
-}
-.player-sac2{
-  display: flex;
-  flex-wrap: wrap;
-   width: 223px;
-  justify-content: flex-end;
 }
 .player-name {
   width: 142px;
@@ -188,12 +178,13 @@ input[type=number]::-webkit-outer-spin-button
 }
 
 .form-container{
+  display: none;
   position: absolute;
   height: 600px;
   width: 400px;
   top: 115px;
   left: 1321px;
-  display: flex;
+  /*display: flex;*/
   flex-wrap: wrap;
   justify-content: space-between;
   border: 2.5px solid rgb(180 180 180);

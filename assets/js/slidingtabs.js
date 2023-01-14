@@ -220,9 +220,6 @@ function initialiseNextButton() {
             cardtextstr = "Votre vaisseau est entrée dans l'orbite d'une planète, allez dans la salle des scanners pour voir les informations sur cette planète ";
             updatestatus();
             write (cardtextstr,'.card-text')
-            document.querySelector('#next2').addEventListener('mouseup',function(){
-                window.open('template-planet.html','_self')
-                })
             }
         if (cardnbrUntilPlanet != 1) {
             //hide text animation and 'next-button'
