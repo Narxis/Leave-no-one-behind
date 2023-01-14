@@ -1606,7 +1606,8 @@ hr.separateur {
   justify-content: center;
   border: 3px solid rgb(180 180 180);
   border-radius: 15px;
-  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+  background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  backdrop-filter: blur(1px);
 }
 
 .leave-button {
@@ -1620,7 +1621,8 @@ hr.separateur {
   justify-content: center;
   border: 3px solid rgb(180 180 180);
   border-radius: 15px;
-  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+  background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  backdrop-filter: blur(1px);
 }
 
 
