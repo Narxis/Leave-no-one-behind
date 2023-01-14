@@ -82,67 +82,6 @@ body {
   font-size: 30px;
   fill: whitesmoke;
 }
-.plugship {
-  position: absolute;
-  width: 180px;
-  height: 130px;
-  top: -119px;
-  left: 36px;
-  animation: shipfloat 10s ease-in-out infinite;
-}
-.robot-arm svg {
-  overflow: visible;
-  }
-.robot-arm {
-  position: absolute;
-  width: 432px;
-  height: 100px;
-  top: -138px;
-  left: 507px;
-  z-index: 1000;
-}
-#arm1 {
-  position: absolute;
-  opacity: 0;
-  transform-origin: 1756px 1434px;
-  animation-direction: reverse;
-}
-#arm2 {
-  position: absolute;
-  transform-origin: 2369px 1259px;
-}
-#arm3 {
-  position: absolute;
-  transform-origin: 2159px 717px;
-}
-#jaw-up {
-  position: absolute;
-  transform-origin: 1852px 745px;
-}
-#jaw-down {
-  position: absolute;
-  transform-origin: 1865px 791px;
-}
-#plugun {
-  position: absolute;
-  transform-origin: 1421px 623px;
-}
-.ring {
-  transform-origin: center;
-}
-#timer-background, 
-#timer-text {
-  font-family: '7segments';
-  font-size: 228.26px;
-  letter-spacing: 3px;
-  fill: #383838;
-  transform: translate(1322px, 721px) rotate(4deg) scale(0.9);
-}
-#timer-text{
-  position: absolute;
-  top: 5px;
-  fill: red;
-}
 /*---^^^------------SVG----------^^^---*/
 
 /*---vvv---------Card---------vvv---*/

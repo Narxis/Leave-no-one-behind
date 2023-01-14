@@ -1,3 +1,71 @@
+@font-face {font-family: '7segments'; src: url('/assets/fonts/7segments.ttf') format('truetype');}
+
+.plugship {
+    position: absolute;
+    width: 180px;
+    height: 130px;
+    top: -119px;
+    left: 36px;
+  }
+  .shipflotte {
+    animation: shipfloat 10s ease-in-out infinite;
+  }
+  .robot-arm svg {
+    overflow: visible;
+    }
+  .robot-arm {
+    position: absolute;
+    width: 432px;
+    height: 100px;
+    top: -138px;
+    left: 507px;
+  }
+  #arm1 {
+    position: absolute;
+    opacity: 0;
+    transform-origin: 1756px 1434px;
+    animation-direction: reverse;
+  }
+  #arm2 {
+    position: absolute;
+    transform-origin: 2369px 1259px;
+  }
+  #arm3 {
+    position: absolute;
+    transform-origin: 2159px 717px;
+  }
+  #jaw-up {
+    position: absolute;
+    transform-origin: 1852px 745px;
+  }
+  #jaw-down {
+    position: absolute;
+    transform-origin: 1865px 791px;
+  }
+  #plugun,
+  #plugun2 {
+    position: absolute;
+    transform-origin: 1421px 623px;
+  }
+  .ring {
+    transform-origin: center;
+  }
+  #timer-background, 
+  #timer-text,
+  #timer-background2, 
+  #timer-text2 {
+    font-family: '7segments';
+    font-size: 228.26px;
+    letter-spacing: 3px;
+    fill: #383838;
+    transform: translate(1322px, 721px) rotate(4deg) scale(0.9);
+  }
+  #timer-text,
+  #timer-text2{
+    position: absolute;
+    top: 5px;
+    fill: red;
+  }
 /*---vvv-----Timer Animation-----vvv---*/
 /*---vvv-------Timer Start-------vvv---*/
 #bigboite.start #arm1 {
@@ -69,11 +137,13 @@
       50% {transform: translatey(-10px) rotate(348deg);}
       100% {transform: translatey(0px) rotate(346deg);}
   }
-  #bigboite.idle .ringl {
+  #bigboite.idle .ringl,
+  #bigboite.idle .ringl2 {
     transition: 6s;
     transform: translateX(-20px);
   }
-  #bigboite.idle .ringr {
+  #bigboite.idle .ringr,
+  #bigboite.idle .ringr2 {
     transition: 6s;
     transform: translateX(20px);
   }
@@ -92,11 +162,13 @@
     25% {transform: scale(150); opacity: 0.8;}
     100% {transform: scale(150); opacity: 0;}
   }
-  #bigboite.flash .ringl {
+  #bigboite.flash .ringl,
+  #bigboite.flash .ringl2 {
     transition: .3s;
     transform: translatex(-60px);
   }
-  #bigboite.flash .ringr {
+  #bigboite.flash .ringr,
+  #bigboite.flash .ringr2 {
     transition: .3s;
     transform: translatex(60px);
   }
@@ -107,6 +179,7 @@
     transition: 3s;
     opacity: 1;
   }
+
   #canvas{
     position: absolute;
     top: -130px;
@@ -131,6 +204,14 @@
     position: absolute;
     overflow: visible;
     opacity: 0;
+  }
+  #bigboite.plop #boulboite {
+    animation: plop .3s ease-in-out forwards;
+  }
+  @keyframes plop {
+    0% {transform: scale(1);}
+    20%{transform: scale(1.5);}
+    100%{transform: scale(0);}
   }
   .leo-border-1 {
     position: absolute;
@@ -240,10 +321,12 @@
   }
   /*---^^^------Laser boule-----^^^---*/
   /*---vvv------Timer Shot------vvv---*/
-  #bigboite.shot .ringl {
+  #bigboite.shot .ringl,
+  #bigboite.shot .ringl2 {
     transition: 2s;
     animation: ringshotl 1s linear forwards;
   }
+  #bigboite.shot .ringr,
   #bigboite.shot .ringr {
     transition: 2s;
     animation: ringshotr 1s linear forwards;
@@ -258,23 +341,21 @@
   }
    #bigboite.shot #arm1 {
     opacity: 1;
-    animation: shotarm1 6s ease-out forwards;
+    animation: shotarm1 2.67s ease-in-out forwards;
   }
   #bigboite.shot #arm2 {
-    animation: shotarm2 6s ease-out forwards;
+    animation: shotarm2 2.67s ease-in-out forwards;
   }
   #bigboite.shot #arm3 {
-    animation: shotarm3 6s ease-out forwards;
+    animation: shotarm3 2.67s ease-in-out forwards;
   }
   #bigboite.shot #jaw-up {
-    animation: shotjaw-up 6s ease-out forwards;
+    animation: shotjaw-up 2.67s ease-in-out forwards;
   }
   #bigboite.shot #jaw-down {
-    animation: shotjaw-down 6s ease-out forwards;
+    animation: shotjaw-down 2.67s ease-in-out forwards;
   }
-  #bigboite.shot #plugun {
-    animation: yeet 6s ease-in forwards;
-  }
+
   @keyframes shotarm1 {
     0% {}
     30% {transform: rotate(20deg);}
@@ -305,11 +386,49 @@
     70% {transform: rotate(-15deg); position: relative;}
     100% {transform: rotate(0deg); position: relative;}
   }
-  @keyframes yeet {
+  /*@keyframes yeet {
     0% {}
     50% {}
     70% {position: relative; transform: translateX(-2000px);}
     100% {position: relative; transform: translateX(-2000px);}
-  }
+  }*/
+
   /*---^^^------Timer Shot------^^^---*/
+  #robot-arm2 {
+    display: none;
+  }
+
+  #bigboite.show-plugun #robot-arm2 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    rotate: 31deg;
+    animation: yeet 1s ease-out forwards;
+    display: block;
+  }
+  #bigboite.hide-plugun #plugun {
+    opacity: 0;
+  }
+
+  @keyframes yeet {
+    0%{transform: translate(-72px, -75px) rotate(31deg);}
+    100%{transform: translate(-1120px, 275px) rotate(-280deg);}
+  }
+  .bonk {
+    animation: bonk 1.2s cubic-bezier(.22,-0.02,.14,1.16) forwards;
+  }
+
+  @keyframes bonk {
+    0%{transform: translate(0px, 0px) rotate(0deg);}
+    25% {transform: translate(-328px, 275px) rotate(31deg);}
+    100% {transform: translate(-328px, 275px) rotate(10deg);}
+  }
+  .comeback {
+    animation: reguys 1.6s ease-in-out forwards;
+  }
+
+  @keyframes reguys {
+    0% {transform: translate(-328px, 275px) rotate(10deg);}
+    100% {transform: translate(0px, 0px) rotate(-14deg);}
+  }
   /* ---^^^---Timer Animation---^^^---*/
