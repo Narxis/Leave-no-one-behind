@@ -133,8 +133,58 @@ body {
   text-indent: 10px;
 }
 
-.dial {
-  /*jsp lol*/
-  width: 50px;
-  height: 50px;
+.dial svg {
+  height: 53px;
+  overflow: visible;
+}
+
+.dial svg circle {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .03s ease-out;
+}
+
+.dial svg text {
+  font-size: 30px;
+  fill: whitesmoke;
+}
+
+#module-1 svg {
+  width: 25px;
+  height: 25px;
+  fill: rgb(148, 38, 38);
+  animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(0.8);
+  }
+
+  5% {
+    transform: scale(0.9);
+  }
+
+  10% {
+    transform: scale(0.8);
+  }
+
+  15% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.8);
+  }
+
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+.humain-text {
+  font-size: 18px;
+}
+
+.humain-value {
+  font-size: 18px;
 }
