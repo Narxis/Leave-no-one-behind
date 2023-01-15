@@ -92,11 +92,11 @@ async function write(fulltext, place) {
             }
             else {
                 document.querySelector('.cursor').classList.add('o2-cursor')
+                droneUse = !droneUse;
                 droneCursor = document.querySelector('.transparent')
                 await sleep(500)
                 droneCursor = document.querySelector('.position')
                 document.querySelector('.o2-pulsebox').classList.add('pulse')
-                droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
@@ -128,10 +128,10 @@ async function write(fulltext, place) {
             else {
                 document.querySelector('.cursor').classList.add('ff-cursor')
                 droneCursor = document.querySelector('.transparent')
+                droneUse = !droneUse;
                 await sleep(500)
                 droneCursor = document.querySelector('.position')
                 document.querySelector('.ff-pulsebox').classList.add('pulse')
-                droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
@@ -162,11 +162,11 @@ async function write(fulltext, place) {
             }
             else {
                 document.querySelector('.cursor').classList.add('cl-cursor')
+                droneUse = !droneUse;
                 droneCursor = document.querySelector('.transparent')
                 await sleep(500)
                 droneCursor = document.querySelector('.position')
                 document.querySelector('.cl-pulsebox').classList.add('pulse')
-                droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
@@ -200,11 +200,11 @@ async function write(fulltext, place) {
             }
             else {
                 document.querySelector('.cursor').classList.add('eau-cursor')
+                droneUse = !droneUse;
                 droneCursor = document.querySelector('.transparent')
                 await sleep(500)
                 droneCursor = document.querySelector('.position')
                 document.querySelector('.eau-pulsebox').classList.add('pulse')
-                droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
@@ -235,11 +235,11 @@ async function write(fulltext, place) {
             }
             else {
                 document.querySelector('.cursor').classList.add('re-cursor')
+                droneUse = !droneUse;
                 droneCursor = document.querySelector('.transparent')
                 await sleep(500)
                 droneCursor = document.querySelector('.position')
                 document.querySelector('.re-pulsebox').classList.add('pulse')
-                droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
@@ -273,11 +273,11 @@ async function write(fulltext, place) {
             }
             else {
                 document.querySelector('.cursor').classList.add('gr-cursor')
+                droneUse = !droneUse;
                 droneCursor = document.querySelector('.transparent')
                 await sleep(500)
                 droneCursor = document.querySelector('.position')
                 document.querySelector('.gr-pulsebox').classList.add('pulse')
-                droneUse = !droneUse;
                 document.querySelector('.use-drone').classList.toggle('switch-on')
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
