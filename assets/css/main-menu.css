@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
+
+:root {
+    --darkgrey: #17181c;
+    --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
+  }
+  
+  body {
+    background: var(--darkgrey);
+    margin: 0;
+    color: whitesmoke;
+    height: 100vh;
+    font-family: 'Jura', sans-serif;
+    font-size: 15px;
+    overflow: hidden;
+  }
+  ::-webkit-scrollbar {
+    width: 0.2em;
+    background-color: #000000;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #F5F5F5;
+  }
+  
+  .center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0px;
+    height: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
