@@ -83,21 +83,13 @@ body {
 }
 
 .ship-recap {
-
   width: 469px;
-
   height: 370px;
-
   border-right: 2px solid rgb(180 180 180);
-
   padding: 30px 30px 0px 30px;
-
   display: flex;
-
   flex-direction: row;
-
   flex-wrap: wrap;
-
   justify-content: center;
 }
 
@@ -110,13 +102,19 @@ body {
 .module {
   display: flex;
   width: 234px;
-  height: 50px;
+  height: 68px;
   align-items: center;
   justify-content: space-evenly;
 }
-
+.secondaire{
+  height: 40px;
+}
 #humain {
-  width: 350px;
+  width: 287px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .icon {
@@ -131,6 +129,7 @@ body {
   justify-content: flex-start;
   align-items: center;
   text-indent: 10px;
+  font-size: 15px;
 }
 
 .dial svg {
@@ -148,12 +147,14 @@ body {
   fill: whitesmoke;
 }
 
-#module-1 svg {
+#humain svg {
   width: 25px;
   height: 25px;
   fill: rgb(148, 38, 38);
   animation: heartbeat 1.5s infinite;
+  margin: 0px 0px 0px 40px;
 }
+
 
 @keyframes heartbeat {
   0% {
@@ -180,11 +181,11 @@ body {
     transform: scale(0.8);
   }
 }
-
 .humain-text {
   font-size: 18px;
 }
 
 .humain-value {
   font-size: 18px;
+  padding: 0px 40px 0px 0px;
 }
