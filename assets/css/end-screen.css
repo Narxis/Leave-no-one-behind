@@ -2,35 +2,139 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
 
 :root {
-    --darkgrey: #17181c;
-    --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
-  }
-  
-  body {
-    background: var(--darkgrey);
-    margin: 0;
-    color: whitesmoke;
-    height: 100vh;
-    font-family: 'Jura', sans-serif;
-    font-size: 15px;
-    overflow: hidden;
-  }
-  ::-webkit-scrollbar {
-    width: 0.2em;
-    background-color: #000000;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background-color: #F5F5F5;
-  }
-  
-  .center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0px;
-    height: 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  --darkgrey: #17181c;
+  --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
+}
+
+body {
+  background: var(--darkgrey);
+  margin: 0;
+  color: whitesmoke;
+  height: 100vh;
+  font-family: 'Jura', sans-serif;
+  font-size: 15px;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0.2em;
+  background-color: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #F5F5F5;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0px;
+  height: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.endscreen-container {
+  display: flex;
+  position: absolute;
+  width: 1060px;
+  height: 800px;
+  border: 4px solid rgb(180 180 180);
+  border-radius: 40px;
+  background: linear-gradient(0deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  backdrop-filter: blur(1px);
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/*---vvv---score---vvv---*/
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0px;
+  height: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.endscreen-container {
+  display: flex;
+  position: absolute;
+  width: 1060px;
+  height: 800px;
+  border: 4px solid rgb(180 180 180);
+  border-radius: 40px;
+  background: linear-gradient(0deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  backdrop-filter: blur(1px);
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/*---vvv---score---vvv---*/
+.score {
+  width: 1056px;
+  height: 368px;
+  border-bottom: 2px solid rgb(180 180 180);
+  padding: 30px 30px 0px 30px;
+}
+
+.ship-recap {
+
+  width: 469px;
+
+  height: 370px;
+
+  border-right: 2px solid rgb(180 180 180);
+
+  padding: 30px 30px 0px 30px;
+
+  display: flex;
+
+  flex-direction: row;
+
+  flex-wrap: wrap;
+
+  justify-content: center;
+}
+
+.planet-recap {
+  width: 469px;
+  height: 370px;
+  padding: 30px 30px 0px 30px;
+}
+
+.module {
+  display: flex;
+  width: 234px;
+  height: 50px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+#humain {
+  width: 350px;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+}
+
+.name {
+  display: flex;
+  width: 120px;
+  height: 50px;
+  justify-content: flex-start;
+  align-items: center;
+  text-indent: 10px;
+}
+
+.dial {
+  /*jsp lol*/
+  width: 50px;
+  height: 50px;
+}
