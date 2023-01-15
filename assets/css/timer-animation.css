@@ -437,7 +437,7 @@
 }
 
 .grow {
-  animation: spingrow 18s linear forwards;
+  animation: spingrow 21s linear forwards;
 }
 
 .float {
@@ -454,8 +454,12 @@
     transform: scale(0.10);
   }
 
-  66% {
-    transform: scale(0.10);
+  97% {
+    transform: scale(0.12);
+  }
+
+  99.9% {
+    transform: scale(1.2);
   }
 
   100% {
@@ -645,7 +649,7 @@
   top: 0px;
   left: 0px;
   rotate: 31deg;
-  animation: yeet 1s ease-out forwards;
+  animation: yeet .8s ease-out forwards;
   display: block;
 }
 
