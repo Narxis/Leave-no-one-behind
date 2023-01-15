@@ -87,7 +87,6 @@ body {
     position: absolute;
     text-shadow: 8px 6px 11px #48484899;
     text-align: center;
-    animation: blink 3s linear infinite;
     top: 85px;
     cursor: pointer;
 }
@@ -104,4 +103,27 @@ body {
     100% {
         filter: opacity(0.3);
     }
+}
+
+.hello {
+    animation: start 3s ease-in-out forwards;
+}
+
+@keyframes start {
+    0% {transform:scaleY(0);}
+    100% {transform:scaleY(1);}
+}
+
+.hello2 {
+   animation: start2 3s ease-in forwards; 
+}
+
+@keyframes start2 {
+    0% {opacity: 0;}
+    99.999% {opacity: 0;}
+    100%{opacity: 1;}
+}
+
+.hello3 {
+    animation: blink 3s linear infinite;
 }
