@@ -1,0 +1,4 @@
+Le score affiche le score max obtenable et enlève petit à petit des points pour arriver au score de la partie.
+le score est retiré ligne par ligne (consommables non utilisé, score planete, score vaisseau) avec un effet de scrambling.
+le recap des modules affiche les modules après atterissage avec une animation (avant-après)et on a une tooltip pour voir la valeur (avant->après) (ex 98% --> 80%)
+recap planète avec les stats de la planetes améliorer par les modules (ecrit d'une couleur différentes par exemple)
