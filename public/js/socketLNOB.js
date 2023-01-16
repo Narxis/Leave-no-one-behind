@@ -17,6 +17,8 @@ class SocketLNOB {
                     case 'join':
                         this.addPlayerSheet(resp);
                         break;
+                    case 'set-race':
+                        this.setRace(resp);
                 }
             }
             catch {
@@ -36,6 +38,11 @@ class SocketLNOB {
             div.innerHTML = sheet.trim();
             container.append(div.firstChild);
         });
+    }
+
+    setRace(response) {
+        // TODO, set image race from response content
+        console.log(response);
     }
 
     async getPlayerSheet(response) {

@@ -5,8 +5,7 @@ const { REST } = require('@discordjs/rest');
 const token = process.env.DS_TOKEN;
 
 const start = function () {
-    // Require the necessary discord.js classes
-// Create a new client instance
+
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
     client.commands = new Collection();
@@ -17,9 +16,19 @@ const start = function () {
     for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
         const command = require(filePath);
-        // Set a new item in the Collection
-        // With the key as the command name and the value as the exported module
         client.commands.set(command.data.name, command);
+    }
+
+    client.selectMenus = new Collection();
+
+    const selectMenusPath = path.join(__dirname, './../commands/selectMenus');
+    const selectMenusFiles = fs.readdirSync(selectMenusPath).filter(file => file.endsWith('.js'));
+
+    for (const file of selectMenusFiles) {
+        console.log(file);
+        const filePath = path.join(selectMenusPath, file);
+        const selectMenu = require(filePath);
+        client.selectMenus.set(selectMenu.data.name, selectMenu);
     }
 
 // When the client is ready, run this code (only once)
@@ -31,6 +40,7 @@ const start = function () {
         console.log('Bot Ready!');
     });
 
+    /* SLASH COMMANDS */
     client.on('interactionCreate', async interaction => {
         if (!interaction.isChatInputCommand()) return;
 
@@ -40,6 +50,23 @@ const start = function () {
 
         try {
             await command.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
+    });
+
+    /* SELECT MENU */
+    client.on('interactionCreate', async interaction => {
+
+        if (!interaction.isSelectMenu()) return;
+
+        const selectMenu = client.selectMenus.get(interaction.customId);
+
+        if (!selectMenu) return;
+
+        try {
+            await selectMenu.execute(interaction);
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
