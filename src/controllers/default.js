@@ -30,6 +30,14 @@ module.exports.deckGenerator = function (req, res) {
 
 }
 
+module.exports.renderSingleSheet = function (req, res) {
+    res.render('partials/fiche-perso', {player: req.body});
+}
+
+module.exports.persos = function (req, res) {
+    res.render('perso');
+}
+
 module.exports.manageCards = function (req, res) {
     res.render('forms/cardEdit')
 }

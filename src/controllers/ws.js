@@ -52,6 +52,9 @@ const makeAction = async function (raw_response) {
         case 'conso':
             payload = actionConso(response);
             break;
+        case 'join':
+            payload = actionJoin(response);
+            break;
         default:
             payload = {
                 error: true,
@@ -60,6 +63,12 @@ const makeAction = async function (raw_response) {
             };
     }
     return payload;
+}
+
+const actionJoin = async function(response) {
+
+    // TODO add player to the game
+    return response;
 }
 
 // set to given value

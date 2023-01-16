@@ -14,6 +14,9 @@ class SocketLNOB {
                     case 'roll':
                         this.roll(resp.data);
                         break;
+                    case 'join':
+                        this.addPlayerSheet(resp);
+                        break;
                 }
             }
             catch {
@@ -24,6 +27,27 @@ class SocketLNOB {
 
     send(data) {
         this.socket.send(JSON.stringify(data));
+    }
+
+    addPlayerSheet(response) {
+        let container = document.getElementById('players_create');
+        this.getPlayerSheet(response).then(sheet => {
+            let div = document.createElement('div');
+            div.innerHTML = sheet.trim();
+            container.append(div.firstChild);
+        });
+    }
+
+    async getPlayerSheet(response) {
+        const rawResponse = await fetch('/fiche', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(response)
+        });
+        return rawResponse.text();
     }
 
     rollDice(player_id, stat, module) {
