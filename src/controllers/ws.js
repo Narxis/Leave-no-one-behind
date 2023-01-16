@@ -55,6 +55,9 @@ const makeAction = async function (raw_response) {
         case 'join':
             payload = actionJoin(response);
             break;
+        case 'set-race':
+            payload = actionSetRace(response);
+            break;
         default:
             payload = {
                 error: true,
@@ -65,9 +68,15 @@ const makeAction = async function (raw_response) {
     return payload;
 }
 
+const actionSetRace = async function(response) {
+
+    // TODO setRace for player in DB
+    return response;
+}
+
 const actionJoin = async function(response) {
 
-    // TODO add player to the game
+    // TODO add player to the game in DB
     return response;
 }
 

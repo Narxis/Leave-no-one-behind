@@ -14,7 +14,7 @@ module.exports = {
 
         for (let i in raceStats) {
             let stats = raceStats[i];
-            let desc = `[⚔` + stats.combat + `] [🕹️` + stats.pilotage + `] [🔧` + stats.engineering + `] [🛰️` + stats.recon + `] [🧠` + stats.moral + `]`;
+            let desc = `[⚔` + stats.combat + `] [🕹️` + stats.pilotage + `] [🔧` + stats.engineering + `] [🛰️` + stats.recon + `] [🫀` + stats.survival + `] [🧠` + stats.moral + `]`;
 
             options.push({
                 label: i,
