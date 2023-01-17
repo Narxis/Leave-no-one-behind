@@ -92,14 +92,19 @@ async function scoreDown(oldscore, newscore, interval) {
         document.getElementById('amountid').innerText = fromArr.join('');
     }
 
-
 }
-function scoreAdd(oldscore, newscore, interval) {
+async function scoreAdd(oldscore, newscore, interval) {
     if (oldscore <= newscore){
-        scoreUp(oldscore, newscore, interval)
+        scoreUp(oldscore, newscore, interval).then (async function() {
+            await sleep (1000)
+            scoring = false
+        })
     }
     else
-        scoreDown(oldscore, newscore, interval)
+        scoreDown(oldscore, newscore, interval).then (async function() {
+            await sleep (1000)
+            scoring = false
+        })
 }
 
 
@@ -133,8 +138,10 @@ async function scoreCalcul() {
         while (scoring) {
             await sleep(100)
         }
+        await sleep(1000)
         score = parseInt(currentscore, 10) + valueScoreAdder[i];
         scoreAdd(currentscore, "" + score, speed).then(async function () {
+            console.log('then')
             await sleep(1000)
             scoring = false
             currentscore = "" + score;
