@@ -58,15 +58,15 @@ body {
 }
 
 #big-l {
-    fill: rgb(84, 138, 219);
+    fill: rgb(72, 72, 72);
 }
 
 #big-b {
-    fill: rgb(83, 89, 204);
+    fill: rgb(143, 143, 143);
 }
 
 #ship-trail {
-    fill: rgb(78, 34, 199);
+    fill: rgb(248, 248, 248);
 }
 
 #ship-fill {
@@ -74,11 +74,9 @@ body {
 }
 
 .title {
-    width: 1920px;
-    font-size: 162px;
     position: absolute;
-    text-shadow: 8px 6px 11px #48484899;
-    text-align: center;
+    height: 105px;
+    fill: #fff;
 }
 
 .pas-title {
@@ -110,8 +108,9 @@ body {
 }
 
 @keyframes start {
-    0% {transform:scaleY(0);}
-    100% {transform:scaleY(1);}
+    0% {transform: scaleX(0) scaleY(0);}
+    50% {transform: scaleX(0.5) scaleY(0.1);}
+    100% {transform:scaleX(1) scaleY(1);}
 }
 
 .hello2 {
