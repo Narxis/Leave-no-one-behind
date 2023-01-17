@@ -58,19 +58,19 @@ body {
 }
 
 #big-l {
-    fill: #54C600;
+    fill: rgb(84, 138, 219);
 }
 
 #big-b {
-    fill: #FB0102;
+    fill: rgb(83, 89, 204);
 }
 
 #ship-trail {
-    fill: #EDBA98;
+    fill: rgb(78, 34, 199);
 }
 
 #ship-fill {
-    fill: #ECEB9B;
+    fill: rgb(88, 88, 88);
 }
 
 .title {
