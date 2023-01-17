@@ -70,8 +70,12 @@ const makeAction = async function (raw_response) {
 
 const actionSetRace = async function(response) {
 
-    // TODO setRace for player in DB
-    return response;
+    await new Player().update({race: response.race}, response.uid);
+    return {
+        action: response.action,
+        error: false,
+        data: response.data
+    };
 }
 
 const actionJoin = async function(response) {
@@ -84,7 +88,7 @@ const actionJoin = async function(response) {
     return {
         action: response.action,
         error: true,
-        error_msg: 'Player already exists',
+        message: 'Player already exists',
         data: response.data
     };
 }

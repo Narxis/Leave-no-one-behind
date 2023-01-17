@@ -58,8 +58,14 @@ class Player {
         return await DB.tables.players.findOne({where: {discord_id: discord_id}});
     }
 
-    async update(data = {}) {
-        await this.getData();
+    async update(data = {}, discord_id=null) {
+
+        let whereClause = { id: this.id };
+        if (discord_id) {
+            whereClause = { discord_id: discord_id };
+        }
+
+        await this.getData(discord_id);
 
         for (let dat in this.accepted_datas)
             this[dat] = (typeof data[dat] === 'undefined' ? this[dat] : data[dat]);
@@ -75,19 +81,27 @@ class Player {
             recon: this.recon,
             moral: this.moral
         }, {
-            where: {
-                id: this.id
-            }
+            where: whereClause
         });
 
         return await this.getData();
     }
 
-    async delete() {
-        await DB.tables.players.destroy({ where: { id: this.id } });
+    async delete(discord_id=null) {
+        let whereClause = { id: this.id };
+        if (discord_id) {
+            whereClause = { discord_id: discord_id };
+        }
+        await DB.tables.players.destroy({ where: whereClause });
     }
 
-    async getData() {
+    async getData(discord_id=null) {
+
+        let whereClause = { id: this.id };
+        if (discord_id) {
+            whereClause = { discord_id: discord_id };
+        }
+
         let player = await DB.tables.players.findOne({
             attributes: [
                 'id',
@@ -101,9 +115,7 @@ class Player {
                 'recon',
                 'moral'
             ],
-            where: {
-                id: this.id
-            }
+            where: whereClause
         })
 
         if (!player) return false;
