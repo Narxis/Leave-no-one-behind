@@ -84,8 +84,11 @@ body {
 }
 
 .dial svg {
+  position: absolute;
   height: 47px;
   overflow: visible;
+  left: 11px;
+  top: 5.5px;
 }
 
 .dial svg circle {
