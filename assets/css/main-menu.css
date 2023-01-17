@@ -43,16 +43,16 @@ body {
 
 #lnob-logo {
     position: absolute;
-    height: 350px;
+    height: 313px;
     stroke: #fff0;
-    top: -451px;
+    top: -418px;
 }
 
 #lnob-logo2 {
     position: absolute;
-    height: 350px;
+    height: 336px;
     stroke: #fff0;
-    top: -441px;
+    top: -427px;
     left: -126px;
     filter: blur(3.5px) opacity(0.2);
 }
