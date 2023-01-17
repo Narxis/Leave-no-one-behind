@@ -8,40 +8,24 @@ const start = function () {
 
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-    // INIT COMMANDS
-    client.commands = new Collection();
+    const commandsType = [
+        'selectMenus',
+        'modals',
+        'slash'
+    ];
 
-    const commandsPath = path.join(__dirname, './../commands');
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+    for (let i of commandsType) {
 
-    for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file);
-        const command = require(filePath);
-        client.commands.set(command.data.name, command);
-    }
+        client[i] = new Collection();
 
-    client.selectMenus = new Collection();
+        const comsPath = path.join(__dirname, './../commands/' + i);
+        const comsFiles = fs.readdirSync(comsPath).filter(file => file.endsWith('.js'));
 
-    // INIT SELECT MENUS
-    const selectMenusPath = path.join(__dirname, './../commands/selectMenus');
-    const selectMenusFiles = fs.readdirSync(selectMenusPath).filter(file => file.endsWith('.js'));
-
-    for (const file of selectMenusFiles) {
-        const filePath = path.join(selectMenusPath, file);
-        const selectMenu = require(filePath);
-        client.selectMenus.set(selectMenu.data.name, selectMenu);
-    }
-
-    //INIT MODALS
-    client.modals = new Collection();
-
-    const modalsPath = path.join(__dirname, './../commands/modals');
-    const modalsFiles = fs.readdirSync(modalsPath).filter(file => file.endsWith('.js'));
-
-    for (const file of modalsFiles) {
-        const filePath = path.join(modalsPath, file);
-        const modal = require(filePath);
-        client.modals.set(modal.data.name, modal);
+        for (const file of comsFiles) {
+            const filePath = path.join(comsPath, file);
+            const com = require(filePath);
+            client[i].set(com.data.name, com);
+        }
     }
 
 // When the client is ready, run this code (only once)
@@ -57,12 +41,12 @@ const start = function () {
     client.on('interactionCreate', async interaction => {
         if (!interaction.isChatInputCommand()) return;
 
-        const command = client.commands.get(interaction.commandName);
+        const slash = client.slash.get(interaction.commandName);
 
-        if (!command) return;
+        if (!slash) return;
 
         try {
-            await command.execute(interaction);
+            await slash.execute(interaction);
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
@@ -113,7 +97,7 @@ const deployCommands = function (guild) {
     let token = process.env.DS_TOKEN;
 
     const commands = [];
-    const commandsPath = path.join(__dirname, './../commands');
+    const commandsPath = path.join(__dirname, './../commands/slash');
     const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
     for (const file of commandFiles) {
