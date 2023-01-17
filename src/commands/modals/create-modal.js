@@ -1,5 +1,5 @@
 const ws = require("ws");
-const {ActionRowBuilder, StringSelectMenuBuilder} = require("discord.js");
+const {ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle} = require("discord.js");
 const fs = require("fs");
 
 module.exports = {
@@ -41,10 +41,18 @@ module.exports = {
             .setPlaceholder('Nothing is selected.')
             .setMinValues(1)
             .setMaxValues(1)
-            .addOptions(options)
+            .addOptions(options);
 
-        const actionRow = new ActionRowBuilder().addComponents(raceInput);
+        const confirmRace = new ButtonBuilder()
+            .setCustomId('confirm')
+            .setLabel('Confirmer')
+            .setStyle(ButtonStyle.Success)
+            .setEmoji('✅')
+            .setDisabled(true);
 
-        await interaction.reply({ content: `Pick a race : `, components: [actionRow], ephemeral:true });
+        const actionSelect = new ActionRowBuilder().addComponents(raceInput);
+        const actionConfirm = new ActionRowBuilder().addComponents(confirmRace);
+
+        await interaction.reply({ content: `Pick a race : `, components: [actionSelect, actionConfirm], ephemeral:true });
     },
 };
