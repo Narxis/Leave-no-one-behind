@@ -76,7 +76,7 @@ const actionSetRace = async function(response) {
 
 const actionJoin = async function(response) {
 
-    // TODO add player to the game in DB
+    // TODO add player to the game in DB, return exception if exists
     return response;
 }
 

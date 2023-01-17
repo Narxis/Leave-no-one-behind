@@ -19,10 +19,12 @@ class SocketLNOB {
                         break;
                     case 'set-race':
                         this.setRace(resp);
+                        break;
                 }
             }
-            catch {
-                console.log(event.data)
+            catch (e) {
+                console.log(event.data);
+                console.log(e);
             }
         }
     }
@@ -37,12 +39,12 @@ class SocketLNOB {
             let div = document.createElement('div');
             div.innerHTML = sheet.trim();
             container.append(div.firstChild);
+            setPlayerRaceListeners(response.uid);
         });
     }
 
     setRace(response) {
-        // TODO, set image race from response content
-        console.log(response);
+        setPlayerRace(null, response.race, response.uid);
     }
 
     async getPlayerSheet(response) {
