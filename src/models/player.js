@@ -3,6 +3,7 @@ const {Ship} = require('./ship')
 class Player {
     id;
     name;
+    discord_id;
     race;
     combat;
     pilotage;
@@ -12,6 +13,7 @@ class Player {
     moral;
     accepted_datas = {
         'name': '',
+        'discord_id': '',
         'race': '',
         'combat': 0,
         'pilotage': 0,
@@ -27,11 +29,17 @@ class Player {
     }
 
     async create(data = {}) {
+
+        console.log(data);
         for (let dat in this.accepted_datas)
             this[dat] = (typeof data[dat] === 'undefined' ? this.accepted_datas[dat]: data[dat]);
 
+        if (await this.playerExists(this.discord_id)) {
+            return null;
+        }
         await DB.tables.players.create({
             name: this.name,
+            discord_id: this.discord_id,
             race: this.race,
             combat: this.combat,
             pilotage: this.pilotage,
@@ -46,6 +54,10 @@ class Player {
         return await this.getData()
     }
 
+    async playerExists(discord_id) {
+        return await DB.tables.players.findOne({where: {discord_id: discord_id}});
+    }
+
     async update(data = {}) {
         await this.getData();
 
@@ -54,6 +66,7 @@ class Player {
 
         await DB.tables.players.update({
             name: this.name,
+            discord_id: this.discord_id,
             race: this.race,
             combat: this.combat,
             pilotage: this.pilotage,
@@ -79,6 +92,7 @@ class Player {
             attributes: [
                 'id',
                 'name',
+                'discord_id',
                 'race',
                 'combat',
                 'pilotage',

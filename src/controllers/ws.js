@@ -76,8 +76,17 @@ const actionSetRace = async function(response) {
 
 const actionJoin = async function(response) {
 
-    // TODO add player to the game in DB, return exception if exists
-    return response;
+    let player = await new Player().create({discord_id: response.uid, name: response.nick});
+
+    if (player) {
+        return response;
+    }
+    return {
+        action: response.action,
+        error: true,
+        error_msg: 'Player already exists',
+        data: response.data
+    };
 }
 
 // set to given value
