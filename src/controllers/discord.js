@@ -11,7 +11,8 @@ const start = function () {
     const commandsType = [
         'selectMenus',
         'modals',
-        'slash'
+        'slash',
+        'buttons'
     ];
 
     for (let i of commandsType) {
@@ -81,6 +82,23 @@ const start = function () {
 
         try {
             await modal.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
+    });
+
+    /* BUTTONS */
+    client.on('interactionCreate', async interaction => {
+
+        if (!interaction.isButton()) return;
+
+        const button = client.buttons.get(interaction.customId);
+
+        if (!button) return;
+
+        try {
+            await button.execute(interaction);
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
