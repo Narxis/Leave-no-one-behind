@@ -145,27 +145,22 @@ body {
 
 /* test */
 
-h1 {
+.l-ob {
     width: 1830px;
-    font-size: 163px;
+    font-size: 139px;
     text-align: center;
     position: absolute;
-    color: #2d2d2d;
+    color: #ffcc00;
+    animation: flicker 5.2s linear infinite;
 }
 
-h1:before {
-    content: attr(data-heading);
+.no {
     position: absolute;
     overflow: hidden;
-    color: #ffcc00;
-    text-shadow: none;
-    text-align: center;
-    animation: flicker 5.2s linear infinite;
-    left: -0.9px;
-    top: 0px;
+    color: #2d2d2d;
+    left: -292px;
     width: 1830px;
-    font-size: 162.7px;
-    transform: scaleX(0.989);
+    font-size: 139px;
 }
 
 @keyframes flicker {
