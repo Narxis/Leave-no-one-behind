@@ -22,7 +22,7 @@ class DB {
             this.sequelize = new Sequelize(process.env.DB_URL)
         }
         await this.registerDatabases();
-        this.test();
+        // this.test();
         return this;
     }
 
