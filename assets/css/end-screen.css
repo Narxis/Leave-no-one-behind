@@ -103,7 +103,9 @@ body {
 .scoretext {
   width: 200px;
   height: 45px;
-  font-size: 18px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .scorevalue {
@@ -115,7 +117,8 @@ body {
 }
 
 .amount{
-
+  font-size: 20px;
+  margin: 0px 305px 0px 0px;
 }
 /*---^^^---Score---^^^---*/
 .ship-recap {

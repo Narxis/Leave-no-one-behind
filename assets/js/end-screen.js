@@ -11,12 +11,10 @@ var planetState = 37875;
 var other = 0;
 var valueScoreMultiplier = [humans, shipState, planetState, bonusCarte, other];
 var valueScoreAdder = [bonusCarte, other];
-var amount = document.getElementById('amountid');
 var currentscore = "1";
 var scoring = false;
 
-
-async function scoreUp(oldscore, newscore, interval) {
+async function scoreUp(oldscore, newscore, place, interval) {
     scoring = true;
     var from = oldscore;
     var to = newscore;
@@ -44,12 +42,13 @@ async function scoreUp(oldscore, newscore, interval) {
             }
 
             await sleep(interval)
-            document.getElementById('amountid').innerText = fromArr.join('');
+            var output = fromArr.join('');
+            document.getElementById(place).innerText = (parseInt(output)).toLocaleString()
         }
     }
 }
 
-async function scoreDown(oldscore, newscore, interval) {
+async function scoreDown(oldscore, newscore, place, interval) {
     scoring = true;
     var from = oldscore;
     var to = newscore;
@@ -82,26 +81,20 @@ async function scoreDown(oldscore, newscore, interval) {
             }
             fromArr[i] = fromArr[i] % 10;
             await sleep(interval)
-            document.getElementById('amountid').innerText = fromArr.join('');
+            var output = fromArr.join('');
+            document.getElementById(place).innerText = (parseInt(output)).toLocaleString()
         }
     }
-
-    while (fromArr[0] === 0) {
-        await sleep(150)
-        fromArr.shift()
-        document.getElementById('amountid').innerText = fromArr.join('');
-    }
-
 }
-async function scoreAdd(oldscore, newscore, interval) {
+async function scoreAdd(oldscore, newscore, place, interval) {
     if (oldscore <= newscore){
-        scoreUp(oldscore, newscore, interval).then (async function() {
+        scoreUp(oldscore, newscore, place, interval).then (async function() {
             await sleep (1000)
             scoring = false
         })
     }
     else
-        scoreDown(oldscore, newscore, interval).then (async function() {
+        scoreDown(oldscore, newscore, place, interval).then (async function() {
             await sleep (1000)
             scoring = false
         })
@@ -115,9 +108,10 @@ async function scoreCalcul() {
         while (scoring) {
             await sleep(100)
         }
+        scoreUp('0',''+valueScoreMultiplier[i], 'amount'+i, 75)
         score = parseInt(currentscore, 10) * valueScoreMultiplier[i];
-        scoreUp(currentscore, "" + score, speed).then(async function () {
-            await sleep(1000)
+        scoreUp(currentscore, "" + score, 'amountfinal', speed).then(async function () {
+            await sleep(500)
             scoring = false
             speed = speed - 25;
             currentscore = "" + score;
@@ -128,19 +122,20 @@ async function scoreCalcul() {
     }
     await sleep(1000);
     score = Math.floor(score / 500000);
-    scoreDown(currentscore, '' + score, 75).then(async function () {
+    scoreDown(currentscore, '' + score, 'amountfinal', 75).then(async function () {
         await sleep(1000)
         scoring = false
         currentscore = "" + score;
     });
-    speed = 125;
+    speed = 100;
     for (let i = 0; i < scoreAdder.length; i++) {
         while (scoring) {
             await sleep(100)
         }
         await sleep(1000)
+        scoreUp('0',''+valueScoreAdder[i], 'amount'+(i+3), 75)
         score = parseInt(currentscore, 10) + valueScoreAdder[i];
-        scoreAdd(currentscore, "" + score, speed).then(async function () {
+        scoreAdd(currentscore, "" + score, 'amountfinal', speed).then(async function () {
             console.log('then')
             await sleep(1000)
             scoring = false
