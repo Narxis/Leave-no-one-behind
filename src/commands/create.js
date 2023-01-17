@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ActionRowBuilder, SelectMenuBuilder } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 const fs = require("fs");
 
 module.exports = {
@@ -8,31 +8,21 @@ module.exports = {
         .setDescription('create sheet'),
     async execute(interaction) {
 
-        let rawData = fs.readFileSync(__dirname  + './../config/raceStats.json');
-        let raceStats = JSON.parse(rawData);
-        let options = [];
+        // TODO check if player exists
+        const modal = new ModalBuilder()
+            .setCustomId('create-modal')
+            .setTitle('Création du personnage');
 
-        for (let i in raceStats) {
-            let stats = raceStats[i];
-            let desc = `[⚔` + stats.combat + `] [🕹️` + stats.pilotage + `] [🔧` + stats.engineering + `] [🛰️` + stats.recon + `] [🫀` + stats.survival + `] [🧠` + stats.moral + `]`;
+        const nameInput = new TextInputBuilder()
+            .setCustomId('set-name')
+            .setLabel("Quel est le nom de votre personnage ?")
+            .setStyle(TextInputStyle.Short);
 
-            options.push({
-                label: i,
-                description: desc,
-                value: i
-            })
-        }
+        const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
 
-        const actionRow = new ActionRowBuilder()
-            .addComponents(
-                new SelectMenuBuilder()
-                    .setCustomId('set-race')
-                    .setPlaceholder('Nothing is selected.')
-                    .setMinValues(1)
-                    .setMaxValues(1)
-                    .addOptions(options)
-            );
+        modal.addComponents(firstActionRow);
 
-        await interaction.reply({ content: `Pick a race : `, components: [actionRow], ephemeral:true });
+        // Show the modal to the user
+        await interaction.showModal(modal);
     },
 };

@@ -20,6 +20,8 @@ class SocketLNOB {
                     case 'set-race':
                         this.setRace(resp);
                         break;
+                    case 'set-name':
+                        this.setName(resp);
                 }
             }
             catch (e) {
@@ -44,7 +46,13 @@ class SocketLNOB {
     }
 
     setRace(response) {
-        setPlayerRace(null, response.race, response.uid);
+        setPlayerRace(null, response.data.race, response.data.uid);
+    }
+
+    setName(response) {
+        console.log(response);
+        console.log(document.querySelector('#p'+ response.data.uid + ' .player-name'));
+        document.querySelector('#p'+ response.data.uid + ' .player-name').value = response.data.nick;
     }
 
     async getPlayerSheet(response) {

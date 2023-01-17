@@ -58,6 +58,9 @@ const makeAction = async function (raw_response) {
         case 'set-race':
             payload = actionSetRace(response);
             break;
+        case 'set-name':
+            payload = actionSetName(response);
+            break;
         default:
             payload = {
                 error: true,
@@ -74,7 +77,17 @@ const actionSetRace = async function(response) {
     return {
         action: response.action,
         error: false,
-        data: response.data
+        data: response
+    };
+}
+
+const actionSetName = async function(response) {
+
+    await new Player().update({name: response.nick}, response.uid);
+    return {
+        action: response.action,
+        error: false,
+        data: response
     };
 }
 

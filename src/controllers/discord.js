@@ -8,6 +8,7 @@ const start = function () {
 
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
+    // INIT COMMANDS
     client.commands = new Collection();
 
     const commandsPath = path.join(__dirname, './../commands');
@@ -21,14 +22,26 @@ const start = function () {
 
     client.selectMenus = new Collection();
 
+    // INIT SELECT MENUS
     const selectMenusPath = path.join(__dirname, './../commands/selectMenus');
     const selectMenusFiles = fs.readdirSync(selectMenusPath).filter(file => file.endsWith('.js'));
 
     for (const file of selectMenusFiles) {
-        console.log(file);
         const filePath = path.join(selectMenusPath, file);
         const selectMenu = require(filePath);
         client.selectMenus.set(selectMenu.data.name, selectMenu);
+    }
+
+    //INIT MODALS
+    client.modals = new Collection();
+
+    const modalsPath = path.join(__dirname, './../commands/modals');
+    const modalsFiles = fs.readdirSync(modalsPath).filter(file => file.endsWith('.js'));
+
+    for (const file of modalsFiles) {
+        const filePath = path.join(modalsPath, file);
+        const modal = require(filePath);
+        client.modals.set(modal.data.name, modal);
     }
 
 // When the client is ready, run this code (only once)
@@ -59,7 +72,7 @@ const start = function () {
     /* SELECT MENU */
     client.on('interactionCreate', async interaction => {
 
-        if (!interaction.isSelectMenu()) return;
+        if (!interaction.isStringSelectMenu()) return;
 
         const selectMenu = client.selectMenus.get(interaction.customId);
 
@@ -67,6 +80,23 @@ const start = function () {
 
         try {
             await selectMenu.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
+    });
+
+    /* MODALS */
+    client.on('interactionCreate', async interaction => {
+
+        if (!interaction.isModalSubmit()) return;
+
+        const modal = client.modals.get(interaction.customId);
+
+        if (!modal) return;
+
+        try {
+            await modal.execute(interaction);
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
