@@ -20,6 +20,10 @@ module.exports = {
         wsClient.on('open', () => {
             wsClient.send(data);
         });
+
+        let keyCache = interaction.user.id;
+        CACHE.set( keyCache, {}, 10000 );
+
         await interaction.reply({
             content: "Joined !",
             ephemeral: true

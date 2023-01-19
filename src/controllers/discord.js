@@ -93,7 +93,13 @@ const start = function () {
 
         if (!interaction.isButton()) return;
 
-        const button = client.buttons.get(interaction.customId);
+        let customId = interaction.customId;
+
+        // Pass rolled dice through custom ID
+        if (customId.startsWith('roll-stats'))
+            customId = 'roll-stats';
+
+        const button = client.buttons.get(customId);
 
         if (!button) return;
 

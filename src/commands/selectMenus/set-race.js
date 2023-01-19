@@ -47,7 +47,7 @@ module.exports = {
             .addOptions(options);
 
         const confirmRace = new ButtonBuilder()
-            .setCustomId('confirm-race')
+            .setCustomId('roll-stats')
             .setLabel('Confirmer')
             .setStyle(ButtonStyle.Success)
             .setEmoji('✅')

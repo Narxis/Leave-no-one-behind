@@ -5,12 +5,15 @@ const constants = require('./src/config/constants');
 const db = require ('./src/controllers/db');
 const PORT = process.env.PORT || 8080;
 const Bot = require('./src/controllers/discord');
+const NodeCache = require( "node-cache" );
 
 const startServer = async function() {
 
     constants.register();
     let DB = new db.DB;
     global.DB = await DB.init();
+
+    global.CACHE = new NodeCache();
 
     let app = require('./bin/express')();
     let router = require('./bin/express-router')();

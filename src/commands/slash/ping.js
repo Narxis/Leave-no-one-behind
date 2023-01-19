@@ -14,6 +14,13 @@ module.exports = {
         wsClient.on('open', () => {
             wsClient.send('Pong');
         });
-        await interaction.reply('Pong', {ephemeral: true});
+
+        let key = interaction.user.id;
+        console.log(CACHE.get(key));
+
+        await interaction.reply({
+            content: "Pong !",
+            ephemeral: true
+        });
     },
 };
