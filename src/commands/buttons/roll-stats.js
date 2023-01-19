@@ -1,7 +1,7 @@
 const ws = require("ws");
 const {StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder} = require("discord.js");
 const fs = require("fs");
-const Player = require('./../../models/player')
+const {Player} = require(__dirname + '/../../models/player');
 
 // TODO use node-cache during creation ?
 
@@ -12,10 +12,10 @@ module.exports = {
     },
     async execute(interaction) {
 
-        let player = new Player.getData(interaction.user.id);
+        let player = await new Player().getData(interaction.user.id);
         let race = player.race;
 
-        let rawData = fs.readFileSync(__dirname  + './../../config/raceStats.json');
+        let rawData = fs.readFileSync(__dirname  + '/../../config/raceStats.json');
         let raceStats = JSON.parse(rawData)[race];
 
         let components = [];
@@ -28,12 +28,30 @@ module.exports = {
 
             return {
                 stat: dat[1],
-                val: dat[2]
+                val: parseInt(dat[2])
             };
         };
 
+        let keyCache = interaction.user.id;
+        let playerCache = CACHE.get(keyCache);
 
+        if (!playerCache) {
+            playerCache = {
+                stats: {
+                    combat: [],
+                    pilotage: [],
+                    engineering: [],
+                    survival: [],
+                    recon: [],
+                    moral: []
+                }
+            }
+        }
 
+        if (currentRoll()) {
+            playerCache['stats'][currentRoll().stat][currentRoll().val] = Math.floor(Math.random() * 50);
+            CACHE.set(keyCache, playerCache, 10000);
+        }
 
         let getRolls = (statVal) => {
             return Math.abs(statVal) + 1;
@@ -42,23 +60,56 @@ module.exports = {
         // TODO change command once all rolls are done
         for (let stat in raceStats) {
 
-            // TODO CREATE ACTIONROW
+            if (stat === 'moral') continue;
+
             const actionRow = new ActionRowBuilder();
-            let val = raceStats[stat];
+            let val = parseInt(raceStats[stat]);
             let ctRolls = getRolls(val);
 
             let buttons = [];
 
+            buttons.push(
+                new ButtonBuilder()
+                .setCustomId('roll-stats_'+ stat)
+                .setLabel(stat)
+                .setStyle(ButtonStyle.Primary)
+                .setDisabled(true)
+            );
+
             for (let i=0; i < ctRolls; i++) {
-                // TODO CREATE A ROLL BUTTON FOR EACH STAT
-                // reduce dice from 3 to 1    (less space used)
-                // or show rolled val on a disabled button after each roll ? (more infos on discord)
+                let cachedVal = playerCache.stats[stat][i];
+                let disabled = typeof cachedVal !== 'undefined';
+                let label = disabled ? cachedVal.toString() : '?';
+
+                let isSelected = false;
+
+                if (disabled) {
+
+                    Math.max.apply(Math, playerCache.stats[stat]);
+
+                    if (val > 0) {
+                        if (cachedVal === Math.max.apply(Math, playerCache.stats[stat])) {
+                            isSelected = true;
+                        }
+                    }
+                    else if (val < 0) {
+                        if (cachedVal === Math.min.apply(Math, playerCache.stats[stat])) {
+                            isSelected = true;
+                        }
+                    }
+                    else {
+                        isSelected = true;
+                    }
+                }
+
+                let btnStyle = isSelected ? ButtonStyle.Success : ButtonStyle.Secondary;
+
                 let rollStat = new ButtonBuilder()
                     .setCustomId('roll-stats_' + stat + '_' + i)
-                    .setLabel(stat)
-                    .setStyle(ButtonStyle.Primary)
+                    .setLabel(label)
+                    .setStyle(btnStyle)
                     .setEmoji('🎲')
-                    .setDisabled(false);
+                    .setDisabled(disabled);
 
                 buttons.push(rollStat);
             }
@@ -67,6 +118,7 @@ module.exports = {
             components.push(actionRow);
         }
 
+        // await interaction.update({ content: `Allez c'est l'heure de roll des stats !`, components: [], ephemeral:true });
         await interaction.update({ content: `Allez c'est l'heure de roll des stats !`, components: components, ephemeral:true });
     },
 };

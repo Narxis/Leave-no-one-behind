@@ -96,6 +96,7 @@ const start = function () {
         let customId = interaction.customId;
 
         // Pass rolled dice through custom ID
+
         if (customId.startsWith('roll-stats'))
             customId = 'roll-stats';
 
