@@ -28,9 +28,7 @@ function toggleDiv(place, div) {
 async function boot() {
     title.classList.add('hello');
     pasTitle.classList.add('hello2');
-    console.log('oui');
     await sleep(3050);
-    console.log('oui mais après');
     pasTitle.classList.remove('hello2');
     pasTitle.classList.add('hello3');
 }

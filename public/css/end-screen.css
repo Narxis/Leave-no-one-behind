@@ -81,7 +81,7 @@ body {
 
 /*---vvv---score---vvv---*/
 .score {
-  width: 1056px;
+  width: 471px;
   height: 348px;
   border-bottom: 2px solid rgb(180 180 180);
   padding: 30px 30px 20px 30px;
@@ -100,24 +100,127 @@ body {
   justify-content: flex-start;
 }
 
+.title-score {
+  width: 200px;
+  height: 45px;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .scoretext {
   width: 200px;
   height: 45px;
-  font-size: 18px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .scorevalue {
-  width: 400px;
+  width: 240px;
   height: 45px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
 
-.amount{
+.amount {
+  font-size: 20px;
+  margin: 0px 40px 0px 0px;
+}
 
+.consolescore{
+  position: absolute;
+  top: 200px;
+  left: 650px;
+  width: 300px;
+  height: 70px;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 /*---^^^---Score---^^^---*/
+/*---vvv---Console---vvv---*/
+.blink {
+  animation: blinking 2s linear infinite;
+}
+
+@keyframes blinking {
+  0% {
+    filter: opacity(1);
+  }
+
+  49.99% {
+    filter: opacity(1);
+  }
+
+  50% {
+    filter: opacity(0);
+  }
+
+  100% {
+    filter: opacity(0);
+  }
+}
+
+.console-container {
+  height: 200px;
+  width: 435px;
+  display: block;
+  color: white;
+  font-size: 20px;
+  margin: 90px 0px 0px 40px;
+  line-height: 40px;
+}
+
+.console-underscore {
+  display: inline-block;
+  position: relative;
+  left: -5px;
+  font-size: 40px;
+  text-indent: 0px;
+  top: -10px;
+}
+
+#text {
+  vertical-align: top;
+}
+
+.aftereffect::after {
+  content: '';
+  animation: threedots 3s steps(6, end) infinite;
+}
+
+@keyframes threedots {
+  0% {
+    content: '.';
+  }
+
+  33% {
+    content: '..';
+  }
+
+  50% {
+    content: '...';
+  }
+
+  70% {
+    content: '...';
+  }
+
+  71.1% {
+    content: ' ';
+  }
+
+  100% {
+    content: ' ';
+  }
+}
+
+/*---^^^---Console---^^^---*/
+/*---vvv---Ship-recap---vvv---*/
 .ship-recap {
   width: 469px;
   height: 370px;
@@ -232,4 +335,3 @@ body {
   font-size: 18px;
   padding: 0px 40px 0px 0px;
 }
-

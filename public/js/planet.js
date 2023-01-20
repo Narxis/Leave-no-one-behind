@@ -115,6 +115,7 @@ async function write(fulltext, place) {
             document.querySelector('.o2-line2').classList.add('trace-o2-line2');
             document.querySelector('.o2-linedot').classList.add('trace-o2-linedot');
             document.querySelector('#reading-1').classList.remove('scanning');
+            document.querySelector('#pointso2').classList.add('display-off');
             write(texto2, '#reading-1');
             showbuttons_fun();
         }
@@ -150,6 +151,7 @@ async function write(fulltext, place) {
                 tree.item(i).classList.add('trace-tree' + i);
             }
             document.querySelector('#reading-3').classList.remove('scanning')
+            document.querySelector('#pointsff').classList.add('display-off');
             write(textff, '#reading-3')
             showbuttons_fun();
         }
@@ -188,6 +190,7 @@ async function write(fulltext, place) {
                 cloudshadow.item(i).classList.add('trace-cloudshadow');
             }
             document.querySelector('#reading-2').classList.remove('scanning')
+            document.querySelector('#pointscl').classList.add('display-off');
             write(textcl, '#reading-2')
             showbuttons_fun();
         }
@@ -223,6 +226,7 @@ async function write(fulltext, place) {
             document.querySelector('.eau-border').classList.add('trace-eau-border')
 
             document.querySelector('#reading-5').classList.remove('scanning')
+            document.querySelector('#pointseau').classList.add('display-off');
             write(texteau, '#reading-5')
             showbuttons_fun();
         }
@@ -261,6 +265,7 @@ async function write(fulltext, place) {
                 mountainstar.item(i).classList.add('trace-re-background');
             }
             document.querySelector('#reading-4').classList.remove('scanning')
+            document.querySelector('#pointsre').classList.add('display-off');
             write(textre, '#reading-4')
             showbuttons_fun();
         }
@@ -294,6 +299,7 @@ async function write(fulltext, place) {
             document.querySelector('.gr-linedot').classList.add('trace-gr-linedot')
             document.querySelector('.gr-circle').classList.add('trace-gr-circle')
             document.querySelector('#reading-6').classList.remove('scanning')
+            document.querySelector('#pointsgr').classList.add('display-off');
             write(textgr, '#reading-6')
             showbuttons_fun();
         }

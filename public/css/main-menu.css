@@ -43,42 +43,40 @@ body {
 
 #lnob-logo {
     position: absolute;
-    height: 350px;
+    height: 313px;
     stroke: #fff0;
-    top: -451px;
+    top: -418px;
 }
 
 #lnob-logo2 {
     position: absolute;
-    height: 350px;
+    height: 336px;
     stroke: #fff0;
-    top: -441px;
+    top: -427px;
     left: -126px;
     filter: blur(3.5px) opacity(0.2);
 }
 
 #big-l {
-    fill: #54C600;
+    fill: rgb(72, 72, 72);
 }
 
 #big-b {
-    fill: #FB0102;
+    fill: rgb(143, 143, 143);
 }
 
 #ship-trail {
-    fill: #EDBA98;
+    fill: rgb(248, 248, 248);
 }
 
 #ship-fill {
-    fill: #ECEB9B;
+    fill: rgb(88, 88, 88);
 }
 
 .title {
-    width: 1920px;
-    font-size: 162px;
     position: absolute;
-    text-shadow: 8px 6px 11px #48484899;
-    text-align: center;
+    height: 105px;
+    fill: #fff;
 }
 
 .pas-title {
@@ -110,20 +108,83 @@ body {
 }
 
 @keyframes start {
-    0% {transform:scaleY(0);}
-    100% {transform:scaleY(1);}
+    0% {
+        transform: scaleX(0) scaleY(0);
+    }
+
+    50% {
+        transform: scaleX(0.5) scaleY(0.1);
+    }
+
+    100% {
+        transform: scaleX(1) scaleY(1);
+    }
 }
 
 .hello2 {
-   animation: start2 3s ease-in forwards; 
+    animation: start2 3s ease-in forwards;
 }
 
 @keyframes start2 {
-    0% {opacity: 0;}
-    99.999% {opacity: 0;}
-    100%{opacity: 1;}
+    0% {
+        opacity: 0;
+    }
+
+    99.999% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .hello3 {
     animation: blink 3s linear infinite;
+}
+
+/* test */
+
+.l-ob {
+    width: 1830px;
+    font-size: 139px;
+    text-align: center;
+    position: absolute;
+    color: #ffcc00;
+    animation: flicker 5.2s linear infinite;
+}
+
+.no {
+    position: absolute;
+    overflow: hidden;
+    color: #ffcc00;
+    left: -292px;
+    width: 1830px;
+    font-size: 139px;
+    filter: brightness(0.5);
+}
+
+@keyframes flicker {
+
+    0%,
+    19.999%,
+    22%,
+    62.999%,
+    64%,
+    64.999%,
+    70%,
+    100% {
+        opacity: 0.99;
+        text-shadow: -1px -1px 0 rgba(255, 255, 255, 0.4), 1px -1px 0 rgba(255, 255, 255, 0.4), -1px 1px 0 rgba(255, 255, 255, 0.4), 1px 1px 0 rgba(255, 255, 255, 0.4), 0 -2px 8px, 0 0 2px, 0 0 5px #ff7e00, 0 0 15px #ff4444, 0 0 2px #ff7e00, 0 2px 3px #000;
+    }
+
+    20%,
+    21.999%,
+    63%,
+    63.999%,
+    65%,
+    69.999% {
+        opacity: 0.4;
+        text-shadow: none;
+    }
 }

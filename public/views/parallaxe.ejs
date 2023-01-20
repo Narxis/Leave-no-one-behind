@@ -1,11 +1,11 @@
 <head>
-  <link rel="stylesheet" href="css\parallaxe.css">
-  <link rel="stylesheet" href="css\timer-animation.css">
-  <link rel="stylesheet" href="css\stars.css">
+  <link rel="stylesheet" href="assets\css\parallaxe.css">
+  <link rel="stylesheet" href="assets\css\timer-animation.css">
+  <link rel="stylesheet" href="assets\css\stars.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 </head>
 
-<body>
+<body class="wrap--1">
   <div class="startrek">
     <div id='stars'></div>
     <div id='stars2'></div>
@@ -13,7 +13,7 @@
   </div>
   <div class="center">
     <div class="card">
-      <div class="wrap wrap--1">
+      <div class="wrap">
         <div id="bigboite" class="robot-arm">
           <div class="float">
             <canvas id="canvas" width="600" height="400px"></canvas>
@@ -372,10 +372,11 @@
         <div class="consommable-bar">
           <div class="consommable-tab slide-right close-left" style="animation: nothing 1s linear forwards!important;">
             <div class="left-button">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="rotate270">
-                <path
-                  d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" />
-              </svg>
+              <div class="wrapper-menu">
+                <div class="line-menu half start"></div>
+                <div class="line-menu"></div>
+                <div class="line-menu half end"></div>
+              </div>
             </div>
             <div class="consommable-up">
               <div class="todoList hidden close-mod-left">
@@ -1214,11 +1215,11 @@
     <div class="next-button" id="next2"></div>
   </a>
 </body>
-<script src="js/parallaxe.js"></script>
-<script src="js/slidingtabs.js"></script>
-<script src="js/timer.js"></script>
-<script src="js/todo.js"></script>
-<script src="js/timer-animation.js"></script>
+<script src="assets/js/parallaxe.js"></script>
+<script src="assets/js/slidingtabs.js"></script>
+<script src="assets/js/timer.js"></script>
+<script src="assets/js/todo.js"></script>
+<script src="assets/js/timer-animation.js"></script>
 <script>
 
   var observer = new MutationObserver(function (mutations) {
@@ -1295,8 +1296,8 @@
       this.closest('.consommable-tab').style.animation = null
       this.closest('.consommable-tab').classList.toggle('open-left')
       this.closest('.consommable-tab').classList.toggle('close-left')
-      this.querySelector('svg').classList.toggle('rotate90')
-      this.querySelector('svg').classList.toggle('rotate270')
+      //this.querySelector('svg').classList.toggle('rotate90')
+      //this.querySelector('svg').classList.toggle('rotate270')
       this.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')
       this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')
       this.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
@@ -1304,6 +1305,12 @@
       await sleep(5000)
     })
   })()
+
+  var wrapperMenu = document.querySelector('.wrapper-menu');
+
+  wrapperMenu.addEventListener('click', function () {
+    wrapperMenu.classList.toggle('open-but');
+  })
 
   window.onload = function () {
     if (document.getElementById('timer-text'))

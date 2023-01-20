@@ -24,7 +24,6 @@ body {
     position: fixed;
     height: 879.1875px;
     width: 1040px;
-    z-index: -2;
 }
 
 .card {
@@ -53,6 +52,15 @@ body {
     overflow: hidden;
     border: 3px solid rgb(180 180 180);
     border-radius: 15px;
+}
+
+.vaisseau svg {
+    position: absolute;
+    left: 79px;
+    top: 26px;
+    transform: scaleX(-1) rotate(333deg);
+    width: 233px;
+    height: 150px;
 }
 
 .cadre {

@@ -1,6 +1,6 @@
 <head>
-    <link rel="stylesheet" href="css\end-screen.css">
-    <link rel="stylesheet" href="css\stars.css">
+    <link rel="stylesheet" href="assets\css\end-screen.css">
+    <link rel="stylesheet" href="assets\css\stars.css">
 </head>
 
 <body>
@@ -13,11 +13,47 @@
         <div class="endscreen-container">
             <div class="score">
                 <div class="line">
-                    <div class="scoretext" id="text0"></div>
+                    <div class="title-score">Score:</div>
+                </div>
+                <div class="line">
+                    <div class="scoretext" id="text0">Humains en vie: </div>
                     <div class="scorevalue" id="score0">
-                        <span class="amount" id="amountid">0</span>
+                        <span class="amount" id="amount0">0</span>
                     </div>
                 </div>
+                <div class="line">
+                    <div class="scoretext" id="text1">Score vaisseau: </div>
+                    <div class="scorevalue" id="score0">
+                        <span class="amount" id="amount1">0</span>
+                    </div>
+                </div>
+                <div class="line">
+                    <div class="scoretext" id="text2">Score planète: </div>
+                    <div class="scorevalue" id="score0">
+                        <span class="amount" id="amount2">0</span>
+                    </div>
+                </div>
+                <div class="line">
+                    <div class="scoretext" id="text3">Bonus cartes: </div>
+                    <div class="scorevalue" id="score0">
+                        <span class="amount" id="amount3">0</span>
+                    </div>
+                </div>
+                <div class="line">
+                    <div class="scoretext" id="text4">Autres </div>
+                    <div class="scorevalue" id="score0">
+                        <span class="amount" id="amount4">0</span>
+                    </div>
+                </div>
+                <div class="line">
+                    <div class="scoretext" id="text5">Score total: </div>
+                    <div class="scorevalue" id="score0">
+                        <span class="amount" id="amountfinal">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class='console-container'><span id='text'></span>
+                <div class='console-underscore blink' id='console'>&#95;</div>
             </div>
             <div class="ship-recap">
                 <div class="module" id="humain">
@@ -129,12 +165,14 @@
                     <div class="dial"></div>
                 </div>
             </div>
-            <div class="planet-recap"></div>
+            <div class="planet-recap">
+            </div>
+            <div class="consolescore"></div>
         </div>
     </div>
 </body>
 
-<script src="js/end-screen.js"></script>
+<script src="assets/js/end-screen.js"></script>
 <script>
 
     var observer = new MutationObserver(function (mutations) {

@@ -44,6 +44,7 @@ body {
   flex-wrap: wrap;
   gap: 15px;
   flex-direction: row;
+  justify-content: center;
 }
 
 .player {
@@ -369,6 +370,7 @@ input[type=number]::-webkit-outer-spin-button {
   height: 300px;
   z-index: 1;
   position: absolute;
+  background-color: #0d1048;
 }
 
 @keyframes display {

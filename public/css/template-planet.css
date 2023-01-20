@@ -2,6 +2,7 @@
 
 :root {
   --planet-color: #227826;
+  --eau-color: #2bc5c0;
   --darkgrey: #17181c;
   --purple: rgb(123, 31, 162);
   --violet: rgb(103, 58, 183);
@@ -627,7 +628,8 @@ button {
   left: 74px;
   rotate: 375deg;
   height: 100px;
-  fill: #083e0f;
+  fill: var(--planet-color);
+  filter: brightness(0.4);
 }
 
 .tree1 {
@@ -635,7 +637,8 @@ button {
   left: 51px;
   rotate: 346deg;
   height: 75px;
-  fill: #175017;
+  fill: var(--planet-color);
+  filter: brightness(0.45);
 }
 
 .tree2 {
@@ -643,7 +646,8 @@ button {
   left: 57px;
   rotate: 367deg;
   height: 110px;
-  fill: #206415;
+  fill: var(--planet-color);
+  filter: brightness(0.55);
 }
 
 .tree3 {
@@ -651,7 +655,8 @@ button {
   left: 100px;
   rotate: 26deg;
   height: 86px;
-  fill: #0f4a06;
+  fill: var(--planet-color);
+  filter: brightness(0.5);
 }
 
 .tree4 {
@@ -659,7 +664,8 @@ button {
   left: 74px;
   rotate: 379deg;
   height: 119px;
-  fill: #226c16;
+  fill: var(--planet-color);
+  filter: brightness(0.8);
 }
 
 .tree5 {
@@ -667,7 +673,8 @@ button {
   left: 48px;
   rotate: 354deg;
   height: 100px;
-  fill: #227615;
+  fill: var(--planet-color);
+  filter: brightness(0.75);
 }
 
 .tree6 {
@@ -675,8 +682,10 @@ button {
   left: 61px;
   rotate: 358deg;
   height: 91px;
-  fill: #188932;
+  fill: var(--planet-color);
+  filter: brightness(0.85);
 }
+
 
 .trace-tree0 {
   animation: treepop 1.61s cubic-bezier(1, 0, 1, 1.5) forwards;
@@ -1059,7 +1068,7 @@ button {
 }
 
 .eau-color {
-  fill: #2bc5c0;
+  fill: var(--eau-color);
 }
 
 .eau-border {
@@ -2324,4 +2333,9 @@ hr.separateur {
   100% {
     transform: translate(1260px, 690px);
   }
+}
+
+.display-off {
+  transition: .2s;
+  opacity: 0;
 }
