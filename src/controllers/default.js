@@ -2,6 +2,7 @@ var fs = require('fs');
 let {deckGenerator,getCards} = require('./../controllers/deck')
 const {Card} = require("./../models/card");
 const {cardPop} = require("./deck");
+const {Player} = require("../models/player");
 
 module.exports.index = function(req, res) {
     res.render('index');
@@ -30,8 +31,10 @@ module.exports.deckGenerator = function (req, res) {
 
 }
 
-module.exports.renderSingleSheet = function (req, res) {
-    res.render('partials/fiche-perso', {player: req.body});
+module.exports.renderSingleSheet = async function (req, res) {
+
+    let player = await new Player().getData(req.body.discord_id);
+    res.render('partials/fiche-perso', {player: player});
 }
 
 module.exports.persos = function (req, res) {

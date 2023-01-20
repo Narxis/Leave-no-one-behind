@@ -1,9 +1,10 @@
 var controller = require('./../controllers/api');
-var basePath = '/api/v' + API_VER;
+var basePath = '/api';
 
 module.exports = function(router) {
     router.get(basePath + '/', controller.index);
 
+    router.get(basePath + '/players', controller.getAllPlayers);
     router.get(basePath + '/player/:playerId', controller.getPlayer);
     router.get(basePath + '/player/:playerId/:stat/:val', controller.updatePlayer); // :val can be SIGNED
 

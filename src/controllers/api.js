@@ -22,6 +22,12 @@ module.exports.getPlayer = async function (req, res) {
     }
 }
 
+module.exports.getAllPlayers = async function (req, res) {
+
+    let players = await DB.tables.players.findAll();
+    res.json(players);
+}
+
 module.exports.updatePlayer = async function (req, res) {
     let player = new Player(req.params.playerId);
     let stat = req.params.stat;

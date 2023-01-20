@@ -15,7 +15,7 @@ class SocketLNOB {
                         this.roll(resp.data);
                         break;
                     case 'join':
-                        this.addPlayerSheet(resp);
+                        this.actionJoin(resp);
                         break;
                     case 'set-race':
                         this.setRace(resp);
@@ -39,14 +39,8 @@ class SocketLNOB {
         this.socket.send(JSON.stringify(data));
     }
 
-    addPlayerSheet(response) {
-        let container = document.getElementById('players_create');
-        this.getPlayerSheet(response).then(sheet => {
-            let div = document.createElement('div');
-            div.innerHTML = sheet.trim();
-            container.append(div.firstChild);
-            setPlayerRaceListeners(response.uid);
-        });
+    actionJoin(resp) {
+        addPlayerSheet(resp.uid).then();
     }
 
     setRollPlayerStats(response) {
@@ -62,18 +56,6 @@ class SocketLNOB {
         console.log(response);
         console.log(document.querySelector('#p'+ response.data.uid + ' .player-name'));
         document.querySelector('#p'+ response.data.uid + ' .player-name').value = response.data.nick;
-    }
-
-    async getPlayerSheet(response) {
-        const rawResponse = await fetch('/fiche', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(response)
-        });
-        return rawResponse.text();
     }
 
     rollDice(player_id, stat, module) {
