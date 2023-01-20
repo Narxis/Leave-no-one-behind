@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
+
+:root {
+    --darkgrey: #17181c;
+    --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
+}
+
+body {
+    background: var(--darkgrey);
+    margin: 0;
+    color: whitesmoke;
+    height: 100vh;
+    font-family: 'Jura', sans-serif;
+    font-size: 15px;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0.2em;
+    background-color: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #F5F5F5;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0px;
+    height: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    position: absolute;
+    display: contents;
+}
+
+#lnob-logo {
+    position: absolute;
+    height: 313px;
+    stroke: #fff0;
+    top: -418px;
+}
+
+#lnob-logo2 {
+    position: absolute;
+    height: 336px;
+    stroke: #fff0;
+    top: -427px;
+    left: -126px;
+    filter: blur(3.5px) opacity(0.2);
+}
+
+#big-l {
+    fill: rgb(72, 72, 72);
+}
+
+#big-b {
+    fill: rgb(143, 143, 143);
+}
+
+#ship-trail {
+    fill: rgb(248, 248, 248);
+}
+
+#ship-fill {
+    fill: rgb(88, 88, 88);
+}
+
+.title {
+    position: absolute;
+    height: 105px;
+    fill: #fff;
+}
+
+.pas-title {
+    width: 1920px;
+    font-size: 26px;
+    position: absolute;
+    text-shadow: 8px 6px 11px #48484899;
+    text-align: center;
+    top: 85px;
+    cursor: pointer;
+}
+
+@keyframes blink {
+    0% {
+        filter: opacity(0.3);
+    }
+
+    50% {
+        filter: opacity(0.6);
+    }
+
+    100% {
+        filter: opacity(0.3);
+    }
+}
+
+.hello {
+    animation: start 3s ease-in-out forwards;
+}
+
+@keyframes start {
+    0% {
+        transform: scaleX(0) scaleY(0);
+    }
+
+    50% {
+        transform: scaleX(0.5) scaleY(0.1);
+    }
+
+    100% {
+        transform: scaleX(1) scaleY(1);
+    }
+}
+
+.hello2 {
+    animation: start2 3s ease-in forwards;
+}
+
+@keyframes start2 {
+    0% {
+        opacity: 0;
+    }
+
+    99.999% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.hello3 {
+    animation: blink 3s linear infinite;
+}
+
+/* test */
+
+.l-ob {
+    width: 1830px;
+    font-size: 139px;
+    text-align: center;
+    position: absolute;
+    color: #ffcc00;
+    animation: flicker 5.2s linear infinite;
+}
+
+.no {
+    position: absolute;
+    overflow: hidden;
+    color: #ffcc00;
+    left: -292px;
+    width: 1830px;
+    font-size: 139px;
+    filter: brightness(0.5);
+}
+
+@keyframes flicker {
+
+    0%,
+    19.999%,
+    22%,
+    62.999%,
+    64%,
+    64.999%,
+    70%,
+    100% {
+        opacity: 0.99;
+        text-shadow: -1px -1px 0 rgba(255, 255, 255, 0.4), 1px -1px 0 rgba(255, 255, 255, 0.4), -1px 1px 0 rgba(255, 255, 255, 0.4), 1px 1px 0 rgba(255, 255, 255, 0.4), 0 -2px 8px, 0 0 2px, 0 0 5px #ff7e00, 0 0 15px #ff4444, 0 0 2px #ff7e00, 0 2px 3px #000;
+    }
+
+    20%,
+    21.999%,
+    63%,
+    63.999%,
+    65%,
+    69.999% {
+        opacity: 0.4;
+        text-shadow: none;
+    }
+}

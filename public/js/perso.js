@@ -72,4 +72,3 @@ async function loadPlayerSheets() {
         await addPlayerSheet(players[i].discord_id);
     }
 }
-
