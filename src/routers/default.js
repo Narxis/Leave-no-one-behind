@@ -7,6 +7,13 @@ module.exports = function(router) {
     router.get('/deck', controller.deckGenerator);
     router.get('/persos', controller.persos);
 
+    router.get('/end-screen', controller.endScreen);
+    router.get('/fiche-vaisseau', controller.ficheVaisseau)
+    router.get('/main-menu', controller.mainMenu);
+    router.get('/parallaxe', controller.parallaxe);
+    router.get('/template-planet', controller.templatePlanet);
+
+
     router.post('/fiche', controller.renderSingleSheet)
 
     // router.get('/createCard', controller.cardEdit);

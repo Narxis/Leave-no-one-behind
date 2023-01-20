@@ -33,6 +33,26 @@ module.exports.persos = function (req, res) {
     res.render('perso');
 }
 
+module.exports.ficheVaisseau = function (req, res) {
+    res.render('fiche-vaisseau');
+}
+
+module.exports.mainMenu = function (req, res) {
+    res.render('main-menu');
+}
+
+module.exports.parallaxe = function (req, res) {
+    res.render('parallaxe');
+}
+
+module.exports.templatePlanet = function (req, res) {
+    res.render('template-planet');
+}
+
+module.exports.endScreen = function (req, res) {
+    res.render('end-screen');
+}
+
 // module.exports.manageCards = function (req, res) {
 //     res.render('forms/cardEdit')
 // }
