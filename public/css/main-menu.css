@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
+
+:root {
+    --darkgrey: #17181c;
+    --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
+}
+
+body {
+    background: var(--darkgrey);
+    margin: 0;
+    color: whitesmoke;
+    height: 100vh;
+    font-family: 'Jura', sans-serif;
+    font-size: 15px;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0.2em;
+    background-color: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #F5F5F5;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0px;
+    height: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    position: absolute;
+    display: contents;
+}
+
+#lnob-logo {
+    position: absolute;
+    height: 350px;
+    stroke: #fff0;
+    top: -451px;
+}
+
+#lnob-logo2 {
+    position: absolute;
+    height: 350px;
+    stroke: #fff0;
+    top: -441px;
+    left: -126px;
+    filter: blur(3.5px) opacity(0.2);
+}
+
+#big-l {
+    fill: #54C600;
+}
+
+#big-b {
+    fill: #FB0102;
+}
+
+#ship-trail {
+    fill: #EDBA98;
+}
+
+#ship-fill {
+    fill: #ECEB9B;
+}
+
+.title {
+    width: 1920px;
+    font-size: 162px;
+    position: absolute;
+    text-shadow: 8px 6px 11px #48484899;
+    text-align: center;
+}
+
+.pas-title {
+    width: 1920px;
+    font-size: 26px;
+    position: absolute;
+    text-shadow: 8px 6px 11px #48484899;
+    text-align: center;
+    top: 85px;
+    cursor: pointer;
+}
+
+@keyframes blink {
+    0% {
+        filter: opacity(0.3);
+    }
+
+    50% {
+        filter: opacity(0.6);
+    }
+
+    100% {
+        filter: opacity(0.3);
+    }
+}
+
+.hello {
+    animation: start 3s ease-in-out forwards;
+}
+
+@keyframes start {
+    0% {transform:scaleY(0);}
+    100% {transform:scaleY(1);}
+}
+
+.hello2 {
+   animation: start2 3s ease-in forwards; 
+}
+
+@keyframes start2 {
+    0% {opacity: 0;}
+    99.999% {opacity: 0;}
+    100%{opacity: 1;}
+}
+
+.hello3 {
+    animation: blink 3s linear infinite;
+}

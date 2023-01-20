@@ -9,6 +9,6 @@ module.exports = function(router) {
 
     router.post('/fiche', controller.renderSingleSheet)
 
-    router.get('/createCard', controller.cardEdit);
-    router.post('/createCard', controller.cardCreate);
+    // router.get('/createCard', controller.cardEdit);
+    // router.post('/createCard', controller.cardCreate);
 };

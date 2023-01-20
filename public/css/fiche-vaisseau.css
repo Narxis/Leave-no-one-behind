@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
 
 :root {
     --darkgrey: #17181c;
@@ -13,56 +14,62 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    z-index: -10;
 }
 
 .wrapper-0 {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    position: relative;
+    position: fixed;
     height: 879.1875px;
+    width: 1040px;
     z-index: -2;
 }
 
 .card {
     /*display: none;*/
-    background: radial-gradient(rgb(34, 34, 34), rgb(39, 39, 39));
     position: relative;
-    background-color: rgb(245, 245, 245);
+    background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+    backdrop-filter: blur(1px);
     grid-column: 2 / 6;
     grid-row: 1 / 6;
     left: -115.2px;
     z-index: -1;
+    border: 3px solid rgb(180 180 180);
+    border-radius: 15px;
 }
 
 .vaisseau {
-    height: 224px;
-    width: 515.2px;
-    background-color: rebeccapurple;
+    height: 235px;
+    width: 400px;
+    background-color: rgb(255, 255, 255);
     margin: 72px 32px 56px 96px;
     grid-column: 1 / 4;
     grid-row: 1 / 3;
-    left: -123px;
+    top: -14px;
+    left: -56px;
     position: relative;
     overflow: hidden;
-    border: 2px, solid, #fff;
+    border: 3px solid rgb(180 180 180);
+    border-radius: 15px;
 }
+
 .cadre {
     position: relative;
-    height: 192px;
-    width: 480px;
-    top: -16px;
-    left: -16px;
+    height: 207px;
+    width: 489px;
+    top: -36px;
+    left: -37px;
     padding: 32px;
 }
+
 .vsaut {
-    height: 100%;
-    background-image: url(https://i.imgur.com/NDR40Tt.png);
-    background-size: cover;
-    background-position: center -18px;
-    background-repeat: no-repeat;
-    border: 16px, solid,whitesmoke;
+    position: relative;
+    left: 0px;
+    height: 242px;
 }
+
 .modules {
     position: relative;
     display: grid;
@@ -73,10 +80,12 @@ body {
     grid-column: 1 / 4;
     grid-row: 3 / 6;
     width: 344px;
-    font-family: orbitron;
+    font-family: 'Jura', sans-serif;
     font-size: 13px;
     text-decoration: #6E4DE0;
+    top: -35px;
 }
+
 .modtxt {
     top: 50px;
     color: #EBEBEB;
@@ -84,6 +93,7 @@ body {
     box-shadow: -2px -2px 0px 0px #7649ed;
     padding: 0px 4px;
 }
+
 .module {
     position: relative;
     width: 254px;
@@ -92,12 +102,14 @@ body {
     left: 0px;
     top: 0px;
 }
+
 .bars {
     position: relative;
     top: -2px;
     left: -23px;
     z-index: -1;
 }
+
 .bar {
     display: grid;
     height: 23px;
@@ -110,12 +122,33 @@ body {
 
 .descriptif {
     position: relative;
-    background-color: lightcoral;
     margin: 32px;
     grid-column: 4 / 6;
     grid-row: 1 / 6;
     width: 352px;
     left: -123px;
+    color: whitesmoke;
+    font-family: 'Jura', sans-serif;
+}
+
+.titre {
+    position: relative;
+    top: -11px;
+}
+
+.text {
+    position: relative;
+    top: 8px;
+    font-size: 15.8px;
+    /*box-shadow: -11px 11px 14px 0px #76b2ef;*/
+}
+
+hr {
+    border: none;
+}
+
+aside {
+    font-size: 10px;
 }
 
 .wrapper {
@@ -130,14 +163,30 @@ body {
     display: flex;
     flex-direction: row;
 }
+
 .container {
     top: 100px;
-	flex: 1;
-	padding: 0 20px;
+    flex: 1;
+    padding: 0 20px;
 }
+
 svg {
     position: absolute;
-    top: -160px;
-    transform: scale(0.17);
-    left: -160px;
+    top: 10%;
+    left: 10%;
+}
+
+.dial svg {
+    height: 53px;
+    overflow: visible;
+}
+
+.dial svg circle {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset .03s ease-out;
+}
+
+.dial svg text {
+    font-size: 30px;
+    fill: whitesmoke;
 }
