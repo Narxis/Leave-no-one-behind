@@ -9,8 +9,6 @@ module.exports = {
     },
     async execute(interaction) {
 
-        const wsClient = new ws(WS_URL);
-
         let rawData = fs.readFileSync(__dirname  + './../../config/raceStats.json');
         let raceStats = JSON.parse(rawData);
         let options = [];
@@ -23,6 +21,7 @@ module.exports = {
             race: interaction.values[0]
         });
 
+        const wsClient = new ws(WS_URL);
         wsClient.on('open', () => {
             wsClient.send(data);
         });

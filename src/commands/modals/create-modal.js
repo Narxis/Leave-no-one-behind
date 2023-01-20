@@ -12,7 +12,6 @@ module.exports = {
         let rawData = fs.readFileSync(__dirname  + './../../config/raceStats.json');
         let raceStats = JSON.parse(rawData);
         let options = [];
-        const wsClient = new ws(WS_URL);
 
         let name = interaction.fields.getTextInputValue('set-name');
 
@@ -22,6 +21,7 @@ module.exports = {
             nick: name,
         });
 
+        const wsClient = new ws(WS_URL);
         wsClient.on('open', () => {
             wsClient.send(data);
         });

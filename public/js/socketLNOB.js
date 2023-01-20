@@ -22,6 +22,10 @@ class SocketLNOB {
                         break;
                     case 'set-name':
                         this.setName(resp);
+                        break;
+                    case 'roll-stats':
+                        this.setRollPlayerStats(resp);
+                        break;
                 }
             }
             catch (e) {
@@ -43,6 +47,11 @@ class SocketLNOB {
             container.append(div.firstChild);
             setPlayerRaceListeners(response.uid);
         });
+    }
+
+    setRollPlayerStats(response) {
+        // TODO implement front interaction to a player roll
+        console.log(response);
     }
 
     setRace(response) {

@@ -1,9 +1,7 @@
 const ws = require("ws");
-const {StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder} = require("discord.js");
+const { ButtonBuilder, ButtonStyle, ActionRowBuilder} = require("discord.js");
 const fs = require("fs");
 const {Player} = require(__dirname + '/../../models/player');
-
-// TODO use node-cache during creation ?
 
 module.exports = {
 
@@ -14,12 +12,9 @@ module.exports = {
 
         let player = await new Player().getData(interaction.user.id);
         let race = player.race;
-
         let dataStats = {};
-
         let rawData = fs.readFileSync(__dirname  + '/../../config/raceStats.json');
         let raceStats = JSON.parse(rawData)[race];
-
         let components = [];
 
         let currentRoll = () => {
@@ -126,6 +121,17 @@ module.exports = {
 
             components.push(actionRow);
         }
+
+        let data = JSON.stringify({
+            action: 'roll-stats',
+            uid: interaction.user.id,
+            data: playerCache.stats
+        });
+
+        const wsClient = new ws(WS_URL);
+        wsClient.on('open', () => {
+            wsClient.send(data);
+        });
 
         if (!hasRollsLeft) {
             await player.update(dataStats);

@@ -8,8 +8,6 @@ module.exports = {
         .setDescription('join game'),
     async execute(interaction) {
 
-        const wsClient = new ws(WS_URL);
-
         // SEND Data through WebSocket
         let data = JSON.stringify({
             action: 'join',
@@ -17,6 +15,7 @@ module.exports = {
             nick: interaction.user.tag
         });
 
+        const wsClient = new ws(WS_URL);
         wsClient.on('open', () => {
             wsClient.send(data);
         });

@@ -61,6 +61,9 @@ const makeAction = async function (raw_response) {
         case 'set-name':
             payload = actionSetName(response);
             break;
+        case 'roll-stats':
+            payload = actionRollStats(response);
+            break;
         default:
             payload = {
                 error: true,
@@ -71,6 +74,25 @@ const makeAction = async function (raw_response) {
     return payload;
 }
 
+/**
+ * Set stat during creation
+ * * @param response
+ * @returns {Promise<*>}
+ */
+const actionRollStats = async function (response) {
+    // TODO
+    return {
+        action: response.action,
+        error: false,
+        data: response
+    };
+}
+
+/**
+ * Set Race during creation
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
 const actionSetRace = async function(response) {
 
     await new Player().update({race: response.race}, response.uid);
@@ -81,6 +103,11 @@ const actionSetRace = async function(response) {
     };
 }
 
+/**
+ * Set Name during creation
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
 const actionSetName = async function(response) {
 
     await new Player().update({name: response.nick}, response.uid);
@@ -91,6 +118,11 @@ const actionSetName = async function(response) {
     };
 }
 
+/**
+ * Join game
+ * @param response
+ * @returns {Promise<{data, action, error: boolean, message: string}|*>}
+ */
 const actionJoin = async function(response) {
 
     let player = await new Player().create({discord_id: response.uid, name: response.nick});
@@ -106,7 +138,11 @@ const actionJoin = async function(response) {
     };
 }
 
-// set to given value
+/**
+ * Update specific player stat
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
 const actionSetPlayerStat = async function(response) {
 
     let player = new Player(response.data.player_id);
@@ -127,6 +163,11 @@ const actionSetPlayerStat = async function(response) {
     }
 }
 
+/**
+ * Update specific module
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
 const actionSetModule = async function(response) {
     let ship = new Ship(shipId);
     let module = response.data.name;
@@ -144,6 +185,11 @@ const actionSetModule = async function(response) {
     }
 }
 
+/**
+ * Update | Create Specific status
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
 const actionSetStatus = async function(response) {
 
     let status = response.data.name;
@@ -162,6 +208,11 @@ const actionSetStatus = async function(response) {
     }
 }
 
+/**
+ * Update detection Value
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
 const actionSetDetection = async function(response) {
 
     let val = response.data.value;
@@ -175,6 +226,11 @@ const actionSetDetection = async function(response) {
     }
 }
 
+/**
+ * Add | Remove a consumable with a given name
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
 const actionConso = async function (response) {
 
     let name = response.data.name;
@@ -193,6 +249,12 @@ const actionConso = async function (response) {
     }
 }
 
+/**
+ * Return the result of a roll for a player
+ * @deprecated
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
 const actionRoll = async function (response) {
     let player = await new Player(response.data.player_id).getData();
     let dice_result = Math.floor(Math.random() * 100) + 1;
