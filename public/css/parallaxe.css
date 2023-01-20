@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: '7segments';
-  src: url('/assets/fonts/7segments.ttf') format('truetype');
+  src: url('/fonts/7segments.ttf') format('truetype');
 }
 
 :root {
