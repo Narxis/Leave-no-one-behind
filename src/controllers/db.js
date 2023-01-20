@@ -158,7 +158,7 @@ class DB {
             },
             moral: {
                 type: Sequelize.INTEGER,
-                defaultValue: 0,
+                defaultValue: 100,
                 allowNull: false
             }
         });

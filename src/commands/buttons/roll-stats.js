@@ -15,6 +15,8 @@ module.exports = {
         let player = await new Player().getData(interaction.user.id);
         let race = player.race;
 
+        let dataStats = {};
+
         let rawData = fs.readFileSync(__dirname  + '/../../config/raceStats.json');
         let raceStats = JSON.parse(rawData)[race];
 
@@ -57,7 +59,8 @@ module.exports = {
             return Math.abs(statVal) + 1;
         }
 
-        // TODO change command once all rolls are done
+        let hasRollsLeft = false;
+
         for (let stat in raceStats) {
 
             if (stat === 'moral') continue;
@@ -90,16 +93,22 @@ module.exports = {
                     if (val > 0) {
                         if (cachedVal === Math.max.apply(Math, playerCache.stats[stat])) {
                             isSelected = true;
+                            dataStats[stat] = cachedVal+50;
                         }
                     }
                     else if (val < 0) {
                         if (cachedVal === Math.min.apply(Math, playerCache.stats[stat])) {
                             isSelected = true;
+                            dataStats[stat] = cachedVal+50;
                         }
                     }
                     else {
                         isSelected = true;
+                        dataStats[stat] = cachedVal+50;
                     }
+                }
+                else if (!hasRollsLeft) {
+                    hasRollsLeft = true;
                 }
 
                 let btnStyle = isSelected ? ButtonStyle.Success : ButtonStyle.Secondary;
@@ -118,7 +127,10 @@ module.exports = {
             components.push(actionRow);
         }
 
-        // await interaction.update({ content: `Allez c'est l'heure de roll des stats !`, components: [], ephemeral:true });
+        if (!hasRollsLeft) {
+            await player.update(dataStats);
+        }
+
         await interaction.update({ content: `Allez c'est l'heure de roll des stats !`, components: components, ephemeral:true });
     },
 };
