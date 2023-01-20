@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const ws = require("ws");
 
+// Fake ping, used for discord sided debug 🥷
 module.exports = {
 
     data: new SlashCommandBuilder()
