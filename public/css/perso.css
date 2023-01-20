@@ -44,6 +44,7 @@ body {
   flex-wrap: wrap;
   gap: 15px;
   flex-direction: row;
+  justify-content: center;
 }
 
 .player {
