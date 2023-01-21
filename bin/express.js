@@ -10,6 +10,8 @@ module.exports = function() {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
+    app.use(express.static('public'));
+
     app.use('/', express.static('./public/views'));
     app.use('/css', express.static('./public/css'));
     app.use('/js', express.static('./public/js'));
