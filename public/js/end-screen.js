@@ -7,7 +7,7 @@ var bonusCarte = 303500;
 var shipState = 48875;
 var humans = 997;
 var planetState = 37875;
-var other = 0;
+var other = 69;
 var valueScoreMultiplier = [humans, shipState, planetState, bonusCarte, other];
 var valueScoreAdder = [bonusCarte, other];
 var currentscore = "1";
@@ -118,7 +118,7 @@ async function scoreAdd(oldscore, newscore, place, interval) {
         })
 }
 
-async function write(fulltext, place, previoustext) {
+async function write(fulltext, place, previoustext, noeffect) {
     iswritting++
     place.classList.remove('aftereffect')
     let currenttext = ''
@@ -136,7 +136,32 @@ async function write(fulltext, place, previoustext) {
 
     }
     place.classList.add('aftereffect')
+    if (noeffect) {
+        place.classList.remove('aftereffect')
+    }
     iswritting--
+}
+
+async function writeNoWait(fulltext, place, previoustext, noeffect, interval) {
+    place.classList.remove('aftereffect')
+    let currenttext = ''
+    for (let i = 0; i <= fulltext.length; i++) {
+        if (previoustext != '') {
+            place.innerText = previoustext + '\n' + currenttext;
+            currenttext += fulltext.substring(i, i + 1)
+            await sleep(interval)
+        }
+        else {
+            place.innerText = currenttext;
+            currenttext += fulltext.substring(i, i + 1)
+            await sleep(interval)
+        }
+
+    }
+    place.classList.add('aftereffect')
+    if (noeffect) {
+        place.classList.remove('aftereffect')
+    }
 }
 
 //Console var :
@@ -168,8 +193,12 @@ async function scoreCalcul() {
         while (scoring) {
             await sleep(100)
         }
+        write('', id, '', false)
+        while (iswritting != 0) {
+            await sleep(100)
+        }
         text = id.innerText
-        write(textArr[i], id, text)
+        write(textArr[i], id, '', false)
         while (iswritting != 0) {
             await sleep(100)
         }
@@ -187,7 +216,11 @@ async function scoreCalcul() {
     }
     text = id.innerText
     await sleep(1000);
-    write(textArr[3], id, text)
+    write ('', id, '', false)
+    while (iswritting != 0) {
+        await sleep(100)
+    }
+    write(textArr[3], id,'', false)
     while (iswritting != 0) {
         await sleep(100)
     }
@@ -204,7 +237,7 @@ async function scoreCalcul() {
         }
         await sleep(1000)
         text = id.innerText;
-        write(textArr[4 + i], id, text);
+        write(textArr[4 + i], id, '', false);
         while (iswritting != 0) {
             await sleep(100)
         }
@@ -217,29 +250,36 @@ async function scoreCalcul() {
         });
     }
     id.classList.remove('aftereffect')
-    write("Clear Console", id, text);
-    while (iswritting != 0) {
-        await sleep(100)
-    }
     await sleep (2000)
-    write("", id, "")
+    write("", id, "",true)
     while (iswritting != 0) {
         await sleep(100)
     }
-    id.classList.remove('aftereffect')
-    await sleep(1000)
-    write ("Your total score is :", id ,"")
+    write ("Your total score is :", id ,"", true)
     while (iswritting != 0) {
         await sleep(100)
     }
     document.getElementById('console').innerText = '';
-    id.classList.remove('aftereffect')
-    write((parseInt(currentscore)).toLocaleString(), document.querySelector(".consolescore"), "" )
+    write((parseInt(currentscore)).toLocaleString(), document.querySelector(".consolescore"), "", true )
     while (iswritting != 0) {
         await sleep(100)
     }
-    document.querySelector(".consolescore").classList.remove('aftereffect')
 }
 
 window.addEventListener('load', scoreCalcul(), 'false')
 
+var texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
+var textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
+var textff = "blabla Animal blabla planette blabla plante bla bla ";
+var textre = "blabla Fer blabla planette blabla diamant bla bla ";
+var texteau = "blabla Eau blabla planette blabla boire bla bla ";
+var textgr = "blabla Gravité blabla planette blabla pomme bla bla";
+var recapText = [texto2, textcl, textff, textre, texteau, textgr]
+
+function initialiseShipRecap(){
+    for (let i=0; i<recapText.length; i++){
+        let interval = 50 + Math.floor(Math.random()*30)
+        writeNoWait(recapText[i], document.getElementById('reading-'+(i+1)), '', true, interval)
+    }
+}
+window.addEventListener('load', initialiseShipRecap(), 'false')

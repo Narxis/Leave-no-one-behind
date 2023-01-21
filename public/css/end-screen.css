@@ -83,7 +83,6 @@ body {
 .score {
   width: 471px;
   height: 348px;
-  border-bottom: 2px solid rgb(180 180 180);
   padding: 30px 30px 20px 30px;
   display: flex;
   flex-direction: column;
@@ -230,12 +229,7 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-.planet-recap {
-  width: 469px;
-  height: 370px;
-  padding: 30px 30px 0px 30px;
+  border-top: 2px solid rgb(180 180 180);
 }
 
 .module {
@@ -335,3 +329,25 @@ body {
   font-size: 18px;
   padding: 0px 40px 0px 0px;
 }
+
+/*---^^^---Ship-recap---^^^---*/
+/*---vvv--Planet-recap--vvv---*/
+.planet-recap {
+  width: 469px;
+  height: 370px;
+  padding: 30px 30px 0px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  border-top: 2px solid rgb(180 180 180);
+}
+
+.planet-recap-line{
+  height: 60px;
+  width: 470px;
+}
+
+.planet-reading{
+  font-size: 14px ;
+}
+/*---^^^--Planet-recap--^^^---*/
