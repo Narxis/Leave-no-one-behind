@@ -164,6 +164,16 @@ async function writeNoWait(fulltext, place, previoustext, noeffect, interval) {
     }
 }
 
+async function writePercent(number, place) {
+    let fulltext = ''+number;
+    let currenttext = ''
+    for (let i = 0; i <= fulltext.length; i++) {
+        place.innerText = currenttext + '%';
+        currenttext += fulltext.substring(i, i + 1)
+        await sleep(50)
+    }
+}
+
 //Console var :
 const  humanTextArr = ['HumanText1', 'HumanText2', 'HumanText3'];
 const  shipTextArr = ['ShipText1', 'ShipText2', 'ShipText3'];
@@ -183,12 +193,22 @@ var cardText = pickRandom(cardTextArr);
 var nerfText = pickRandom(nerfTextArr);
 var otherText = pickRandom(otherTextArr);
 var textArr = [humanText, shipText, planetText, nerfText, cardText, other];
+//Recap var :
+var texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
+var textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
+var textff = "blabla Animal blabla planette blabla plante bla bla ";
+var textre = "blabla Fer blabla planette blabla diamant bla bla ";
+var texteau = "blabla Eau blabla planette blabla boire bla bla ";
+var textgr = "blabla Gravité blabla planette blabla pomme bla bla";
+var recapText = [texto2, textcl, textff, textre, texteau, textgr]
+var etatVaisseau = [100,100,100,100,100,100,100,100,100,100]
 
 async function scoreCalcul() {
     let id = document.getElementById('text');
     await sleep(2000);
     let speed = 125;
     let text = id.innerText;
+    let score = parseInt(currentscore, 10);
     for (let i = 0; i < scoreMultiplier.length; i++) {
         while (scoring) {
             await sleep(100)
@@ -203,6 +223,25 @@ async function scoreCalcul() {
             await sleep(100)
         }
         scoreUp('1', '' + valueScoreMultiplier[i], 'amount' + i, speed)
+        if (i==0){
+            scoreUp('1','' + valueScoreMultiplier[i], 'humain-value', speed)
+        }
+        if (i==1){
+            for (let j=0; j<6; j++){
+                let place = document.querySelectorAll('.dial')
+                place.item(j).setAttribute('data-value',etatVaisseau[j])
+            }
+            for (let j=1; j<=4; j++){
+                let place = document.getElementById('mod-sec'+j)
+                writePercent(etatVaisseau[j+5],place)
+            }
+        }
+        if (i==2){
+            for (let j=0; j<recapText.length; j++){
+                let interval = 50 + Math.floor(Math.random()*30)
+                writeNoWait(recapText[j], document.getElementById('reading-'+(j+1)), '', true, interval)
+            }
+        }
         score = parseInt(currentscore, 10) * valueScoreMultiplier[i];
         scoreUp(currentscore, "" + score, 'amountfinal', speed).then(async function () {
             await sleep(500)
@@ -268,18 +307,5 @@ async function scoreCalcul() {
 
 window.addEventListener('load', scoreCalcul(), 'false')
 
-var texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
-var textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
-var textff = "blabla Animal blabla planette blabla plante bla bla ";
-var textre = "blabla Fer blabla planette blabla diamant bla bla ";
-var texteau = "blabla Eau blabla planette blabla boire bla bla ";
-var textgr = "blabla Gravité blabla planette blabla pomme bla bla";
-var recapText = [texto2, textcl, textff, textre, texteau, textgr]
 
-function initialiseShipRecap(){
-    for (let i=0; i<recapText.length; i++){
-        let interval = 50 + Math.floor(Math.random()*30)
-        writeNoWait(recapText[i], document.getElementById('reading-'+(i+1)), '', true, interval)
-    }
-}
-window.addEventListener('load', initialiseShipRecap(), 'false')
+
