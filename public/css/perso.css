@@ -1,45 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
-
-:root {
-  --planet-color: #227826;
-  --darkgrey: #17181c;
-  --purple: rgb(123, 31, 162);
-  --violet: rgb(103, 58, 183);
-  --pink: rgb(244, 143, 177);
-  --darkgrey: #17181c;
-  --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
-}
-
-body {
-
-  background: var(--darkgrey);
-  margin: 0;
-  color: whitesmoke;
-  font: 1em Hind, sans-serif;
-  height: 100vh;
-  line-height: 1.17;
-  padding: 1.5em 0;
-  overflow: hidden;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Jura', sans-serif;
-  font-size: 13px;
-}
-
-::-webkit-scrollbar {
-  width: 0.2em;
-  background-color: #000000;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #F5F5F5;
-}
-
 .container-player {
   position: absolute;
   width: 1780px;
   height: 774px;
-  top: -387px;
+  top: -340px;
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
@@ -54,7 +17,7 @@ body {
   justify-content: flex-start;
   border: 2.5px solid rgb(180 180 180);
   border-radius: 23px;
-  background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
   box-shadow: #5e5e5e4f 3px -3px 6px 2px;
   overflow: hidden;
@@ -86,7 +49,7 @@ body {
   background-position: 66% 50%;
 }
 
-.player-name {
+.player .player-name {
   width: 190px;
   height: 37px;
   margin: 16px 12px 3px 12px;
@@ -115,7 +78,7 @@ body {
   /*background-image: url(https://cdn.discordapp.com/attachments/616675777974632483/1063798705964208149/image.png);*/
 }
 
-.player-stats {
+.player .player-stats {
   width: 280px;
   height: 216px;
   margin: 0px -1px -2px -2px;
@@ -126,7 +89,7 @@ body {
   flex-wrap: wrap;
 }
 
-hr.separateur {
+.player hr.separateur {
   width: 140px;
   height: 12px;
   border: 0;
@@ -134,7 +97,7 @@ hr.separateur {
   margin: 3px 0px -10px 0px;
 }
 
-.player-stat {
+.player .player-stat {
   width: 130px;
   height: 60px;
   margin: 0px 0px 6px 0px;
@@ -188,7 +151,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .race-desc {
   width: 270px;
-  height: 320px;
+  height: 333px;
   padding: 6px;
   backdrop-filter: blur(1.5px);
   overflow: auto;
@@ -383,20 +346,8 @@ input[type=number]::-webkit-outer-spin-button {
   }
 }
 
-.center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0px;
-  height: 0px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-}
-
 .bouton-suivant {
   position: absolute;
-  top: -450px;
   width: 212px;
   height: 56px;
   display: flex;
@@ -404,6 +355,7 @@ input[type=number]::-webkit-outer-spin-button {
   justify-content: center;
   border: 3px solid rgb(180 180 180);
   border-radius: 15px;
-  background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
+  margin: 40px;
 }

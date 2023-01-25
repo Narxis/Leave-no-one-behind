@@ -1,19 +1,17 @@
 <head>
     <link rel="stylesheet" href="/css/perso.css">
-    <link rel="stylesheet" href="/css/stars.css">
+    <link rel="stylesheet" href="/css/style.css">
     <script src="/js/test.js"></script>
 </head>
 
 <body>
-    <div class="startrek">
-        <div id='stars'></div>
-        <div id='stars2'></div>
-        <div id='stars3'></div>
-    </div>
-    <div class="center">
-        <div class="container-player" id="players_create"></div>
-        <div class="bouton-suivant">Commencer la partie</div>
-    </div>
+    <%- include("partials/nav") %>
+        <div class="center">
+            <div class="container-player" id="players_create"></div>
+        </div>
+        <div class="topcenter">
+            <div class="bouton-suivant">Commencer la partie</div>
+        </div>
 </body>
 <script src="/js/perso.js"></script>
 

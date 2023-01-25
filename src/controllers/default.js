@@ -21,7 +21,7 @@ module.exports.randCard = function (req, res) {
 
 module.exports.deckGenerator = function (req, res) {
     deckGenerator().then(
-        res.render('index')
+        res.render('index-legacy')
     );
 
 }
@@ -41,7 +41,7 @@ module.exports.ficheVaisseau = function (req, res) {
 }
 
 module.exports.mainMenu = function (req, res) {
-    res.render('main-menu');
+    res.render('index');
 }
 
 module.exports.parallaxe = function (req, res) {
@@ -54,6 +54,10 @@ module.exports.templatePlanet = function (req, res) {
 
 module.exports.endScreen = function (req, res) {
     res.render('end-screen');
+}
+
+module.exports.indexLegacy = function (req, res) {
+    res.render('index-legacy');
 }
 
 // module.exports.manageCards = function (req, res) {
