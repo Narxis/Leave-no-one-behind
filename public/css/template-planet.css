@@ -92,31 +92,7 @@ button {
 }
 
 /* ^^^----Planet animation----^^^ */
-/* -vvv---------Buttons-------vvv-*/
-.mod-b {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  border-radius: 13px;
-  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.6s ease;
-  background: rgba(0, 0, 0, 0.26);
-  border: none;
-  color: #FFFFFF;
-  padding-bottom: 3px;
-}
 
-.mod-b:hover {
-  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
-  color: rgba(255, 255, 255, 0.301);
-}
-
-/* -^^^---------Buttons-------^^^--*/
 /* vvv---Planet description---vvv */
 /* -v--------o2 animation------v--*/
 .p-stat,
@@ -1558,7 +1534,7 @@ button {
   align-items: center;
   border: 3px solid rgb(180 180 180);
   border-radius: 15px;
-  background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
 }
 
@@ -1690,7 +1666,7 @@ button {
   align-items: center;
   border: 3px solid rgb(180 180 180);
   border-radius: 15px;
-  background: linear-gradient(315deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
 }
 
