@@ -10,7 +10,7 @@
         <div class="output-roll" id="p<%= player.discord_id %>-roll">00</div>
         <div class="roll-type">
             <div class="roll-type1">
-                <input class="dice-type-input" type="radio" name="roll1[<%= player.discord_id %>]" id="roll-1-<%= player.discord_id %>" value="0" checked>
+                <input class="dice-type-input" type="radio" name="roll[<%= player.discord_id %>]" id="roll-1-<%= player.discord_id %>" value="0" checked>
                 <label class="dice-type-label" for="roll-1-<%= player.discord_id %>">
                     <svg id="player-icon1" class="player-icon" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 707 703">
@@ -20,7 +20,7 @@
                 </label>
             </div>
             <div class="roll-type2">
-                <input class="dice-type-input" type="radio" name="roll2[<%= player.discord_id %>]" id="roll-2-<%= player.discord_id %>" value="1">
+                <input class="dice-type-input" type="radio" name="roll[<%= player.discord_id %>]" id="roll-2-<%= player.discord_id %>" value="1">
                 <label class="dice-type-label" for="roll-2-<%= player.discord_id %>">
                     <svg id="ship-icon<%= player.discord_id %>" class="rocket-icon" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 707 703">

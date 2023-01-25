@@ -560,12 +560,15 @@
     <div class="next-button" id="next2"></div>
   </a>
 </body>
+<script src="/js/socketLNOB.js"></script>
 <script src="/js/parallaxe.js"></script>
 <script src="/js/slidingtabs.js"></script>
 <script src="/js/timer.js"></script>
 <script src="/js/todo.js"></script>
+<script src="/js/rolls.js"></script>
 <script src="/js/timer-animation.js"></script>
 <script>
+  const wsLNOB = new SocketLNOB();
 
   var observer = new MutationObserver(function (mutations) {
     mutations.forEach(async function (mutation) {

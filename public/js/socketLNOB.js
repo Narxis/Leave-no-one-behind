@@ -58,11 +58,11 @@ class SocketLNOB {
         document.querySelector('#p'+ response.data.uid + ' .player-name').value = response.data.nick;
     }
 
-    rollDice(player_id, stat, module) {
+    rollDice(discord_id, stat, module) {
         let payload = {
             action: 'roll',
             data: {
-                player_id: player_id,
+                discord_id: discord_id,
                 stat: stat,
                 module: module
             }
@@ -137,6 +137,7 @@ class SocketLNOB {
     }
 
     roll(data) {
+        doPlayerRoll(data);
         if (data.success) {
             console.log('%cPlayer ' + data.player_id + ' : success with a roll of ' + data.dice_result + ' (calculated: ' + data.result + ') on ' + data.stat, 'color:green');
         }

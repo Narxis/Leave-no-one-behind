@@ -382,6 +382,15 @@ body {
     align-items: center;
 }
 
+.output-roll.success {
+    color: limegreen;
+    transition: color 1s ease-in;
+}
+.output-roll.fail {
+    color: red;
+    transition: color 1s ease-in;
+}
+
 /*---vvv---Role-type----vvv---*/
 .roll-type {
     margin-top: 6px;
