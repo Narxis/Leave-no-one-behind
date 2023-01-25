@@ -44,8 +44,10 @@ module.exports.mainMenu = function (req, res) {
     res.render('index');
 }
 
-module.exports.parallaxe = function (req, res) {
-    res.render('parallaxe');
+module.exports.renderCardEvent = async function (req, res) {
+
+    let players = await DB.tables.players.findAll();
+    res.render('parallaxe', {players: players});
 }
 
 module.exports.templatePlanet = function (req, res) {

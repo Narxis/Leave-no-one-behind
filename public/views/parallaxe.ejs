@@ -1,7 +1,7 @@
 <head>
-  <link rel="stylesheet" href="css\parallaxe.css">
-  <link rel="stylesheet" href="css\timer-animation.css">
-  <link rel="stylesheet" href="css\style.css">
+  <link rel="stylesheet" href="/css/parallaxe.css">
+  <link rel="stylesheet" href="/css/timer-animation.css">
+  <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 </head>
 
@@ -548,18 +548,23 @@
     </div>
   </div>
   <div class="bottomcenter">
-    <%- include("partials/player-tabs") %>
+    <div class="player-tabs" id="playertabs_container">
+
+      <% players.forEach(function(player) { %>
+        <%- include("partials/player-tabs", {player:player}) %>
+      <% }); %>
+    </div>
   </div>
   <div class="next-button" id="next1"></div>
   <a href="template-planet.html">
     <div class="next-button" id="next2"></div>
   </a>
 </body>
-<script src="js/parallaxe.js"></script>
-<script src="js/slidingtabs.js"></script>
-<script src="js/timer.js"></script>
-<script src="js/todo.js"></script>
-<script src="js/timer-animation.js"></script>
+<script src="/js/parallaxe.js"></script>
+<script src="/js/slidingtabs.js"></script>
+<script src="/js/timer.js"></script>
+<script src="/js/todo.js"></script>
+<script src="/js/timer-animation.js"></script>
 <script>
 
   var observer = new MutationObserver(function (mutations) {
