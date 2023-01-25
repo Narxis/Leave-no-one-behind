@@ -8,6 +8,23 @@
         <div id='stars'></div>
         <div id='stars2'></div>
         <div id='stars3'></div>
+        <nav role="navigation">
+            <div id="menuToggle">
+              <input type="checkbox" />
+              <span></span>
+              <span></span>
+              <span></span>
+              <ul id="menu">
+                <a href="index-legacy"><li>Index (Legacy)</li></a>
+                <a href="#"><li>Main Menu</li></a>
+                <a href="persos"><li>Fiche Personnages</li></a>
+                <a href="fiche-vaisseau"><li>Fiche Vaisseau</li></a>
+                <a href="parallaxe"><li>Template Carte</li></a>
+                <a href="template-planet"><li>Template Planète</li></a>
+                <a href="end-screen"><li>End Screen</li></a>
+              </ul>
+            </div>
+          </nav>
     </div>
     <div class="center">
         <div class="logo">
@@ -59,40 +76,7 @@
         <div class="l-ob">LEAVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ONE BEHIND</div>
         <div class="no">NO</div>
         <div class="pas-title">(Appuyez sur une touche pour continuer)</div>
-        <div class="quickNav">
-            <button onclick="quickNav1()">Index (Legacy)</button>
-            <button onclick="quickNav2()">Main Menu</button>
-            <button onclick="quickNav3()">Fiche Personnages</button>
-            <button onclick="quickNav4()">Fiche Vaisseau</button>
-            <button onclick="quickNav5()">Template Carte</button>
-            <button onclick="quickNav6()">Template Planète</button>
-            <button onclick="quickNav7()">End Screen</button>
-        </div>
     </div>
 </body>
 
 <script src="js/main-menu.js"></script>
-
-<script>
-    function quickNav1() {
-        location.href = "http://localhost:8080/index-legacy"
-    }
-    function quickNav2() {
-        location.href = "http://localhost:8080"
-    }
-    function quickNav3() {
-        location.href = "http://localhost:8080/persos"
-    }
-    function quickNav4() {
-        location.href = "http://localhost:8080/fiche-vaisseau"
-    }
-    function quickNav5() {
-        location.href = "http://localhost:8080/parallaxe"
-    }
-    function quickNav6() {
-        location.href = "http://localhost:8080/template-planet"
-    }
-    function quickNav7() {
-        location.href = "http://localhost:8080/end-screen"
-    }
-</script>
