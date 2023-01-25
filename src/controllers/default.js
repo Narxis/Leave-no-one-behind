@@ -41,7 +41,7 @@ module.exports.ficheVaisseau = function (req, res) {
 }
 
 module.exports.mainMenu = function (req, res) {
-    res.render('main-menu');
+    res.render('index-legacy');
 }
 
 module.exports.parallaxe = function (req, res) {

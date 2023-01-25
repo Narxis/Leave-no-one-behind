@@ -188,3 +188,38 @@ body {
         text-shadow: none;
     }
 }
+
+.quickNav {
+    display: flex;
+    height: 50px;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    position: absolute;
+    top: 212px;
+}
+
+.quickNav button {
+    width: 218px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgb(180 180 180);
+    border-radius: 10px;
+    background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+    color: #fff;
+    margin: 5px;
+    transition: 400ms;
+}
+
+.quickNav button:hover {
+    background-color: #5a4800;
+   }
+
+.quickNav button:active {
+    background-color: #ffcc00;
+    box-shadow: #ffcc00 0px 0px 0px 0px;
+    transform: translateY(2px);
+   }
