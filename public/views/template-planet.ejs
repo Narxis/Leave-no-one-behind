@@ -455,7 +455,11 @@
       <button class="leave-button">Continuer votre voyage.</button>
     </div>
     <div class="bottomcenter">
-      <%- include("partials/player-tabs") %>
+      <div class="player-tabs" id="playertabs_container">
+        <% players.forEach(function(player) { %>
+          <%- include("partials/player-tabs", {player:player}) %>
+        <% }); %>
+      </div>
     </div>
     <div class="cursor position">
       <svg class="drone-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 377.57">
@@ -469,8 +473,12 @@
     <div class="transparent"></div>
 </body>
 
-<script src="js\planet.js"></script>
+<script src="/js/socketLNOB.js"></script>
+<script src="/js/planet.js"></script>
+<script src="/js/rolls.js"></script>
+
 <script>
+  const wsLNOB = new SocketLNOB();
   var observer = new MutationObserver(function (mutations) {
     mutations.forEach(async function (mutation) {
       if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {

@@ -50,8 +50,10 @@ module.exports.renderCardEvent = async function (req, res) {
     res.render('parallaxe', {players: players});
 }
 
-module.exports.templatePlanet = function (req, res) {
-    res.render('template-planet');
+module.exports.templatePlanet = async function (req, res) {
+
+    let players = await DB.tables.players.findAll();
+    res.render('template-planet', {players: players});
 }
 
 module.exports.endScreen = function (req, res) {
