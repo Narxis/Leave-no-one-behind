@@ -338,7 +338,7 @@ body {
     height: 60px;
 }
 
-.player-name {
+.player-roll .player-name {
     position: absolute;
     top: 2px;
     left: 6px;
@@ -492,17 +492,20 @@ body {
     flex-direction: column;
 }
 
-hr.separateur {
-    width: 238px;
-    height: 12px;
-    border: 0;
-    box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
-    margin: 3px 0px -10px 0px;
-}
-
 #menu hr.separateur {
     margin: 10px 0px -19px -40px;
     width: 260px;
+    height: 12px;
+    border: 0;
+    box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
+}
+
+.player-tab hr.separateur {
+    margin: 0px 0px -10px 0px;
+    width: 238px;
+    height: 14px;
+    border: 0;
+    box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
 }
 
 .player-stat {
