@@ -198,6 +198,7 @@ body {
 }
 
 #menuToggle a:hover {
+    transition: 300ms;
     text-shadow: -1px -1px 1px rgb(255 255 255 / 30%), 1px -1px 1px rgb(255 255 255 / 30%), -1px 1px 1px rgb(255 255 255 / 30%), 1px 1px 1px rgb(255 255 255 / 30%), 0 -2px 8px, 0 0 2px, 0 0 5px #0100ff, 0 0 15px #4467ff, 0 0 2px #0008ff, 0 2px 3px #000;
 }
 
@@ -263,7 +264,7 @@ body {
     border: 3px solid rgb(180 180 180);
     border-radius: 15px;
     background: var(--lgrad);
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(3px);
 }
 
 #menu li {

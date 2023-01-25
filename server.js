@@ -35,7 +35,7 @@ const startServer = async function() {
     });
 
     WS.init();
-    Bot.start();
+    //Bot.start(); Je sais que j'vais l'oublier lui :)
 }
 
 startServer().then(e => {
