@@ -574,7 +574,7 @@ textarea {
 }
 
 .consommable-tab:hover {
-  transform: translate(0px, -5px);
+  transform: translateX(-5px);
 }
 
 .consommable-bar {

@@ -1526,7 +1526,7 @@ button {
 /*---vvv---Summary--------vvv---*/
 .ship-summary {
   position: absolute;
-  right: 25px;
+  right: 35px;
   display: flex;
   height: 600px;
   width: 300px;
@@ -1658,7 +1658,7 @@ button {
 
 .planet-summary {
   position: absolute;
-  left: 25px;
+  left: 35px;
   display: flex;
   height: 600px;
   width: 300px;
