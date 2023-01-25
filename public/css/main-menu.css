@@ -214,7 +214,7 @@ body {
 }
 
 #menuToggle a:hover {
-    color: tomato;
+    text-shadow: -1px -1px 0 rgb(255 255 255 / 40%), 1px -1px 0 rgb(255 255 255 / 40%), -1px 1px 0 rgb(255 255 255 / 40%), 1px 1px 0 rgb(255 255 255 / 40%), 0 -2px 8px, 0 0 2px, 0 0 5px #ff7e00, 0 0 15px #ff4444, 0 0 2px #ff7e00, 0 2px 3px #000;
 }
 
 #menuToggle input {
@@ -273,12 +273,11 @@ body {
 
 #menu {
     position: absolute;
-    width: 300px;
+    width: 188px;
     margin: -100px 0 0 -50px;
     padding: 50px;
     padding-top: 125px;
-
-    background: #ededed;
+    background: linear-gradient(113deg, #ffffff4f 0%, transparent 40%, transparent 100%);
     list-style-type: none;
     transform-origin: 0% 0%;
     transform: translate(-100%, 0);
