@@ -202,6 +202,17 @@ body {
     text-shadow: -1px -1px 1px rgb(255 255 255 / 30%), 1px -1px 1px rgb(255 255 255 / 30%), -1px 1px 1px rgb(255 255 255 / 30%), 1px 1px 1px rgb(255 255 255 / 30%), 0 -2px 8px, 0 0 2px, 0 0 5px #0100ff, 0 0 15px #4467ff, 0 0 2px #0008ff, 0 2px 3px #000;
 }
 
+#menuToggle a:active {
+    text-shadow: -1px -1px 1px rgb(255 255 255 / 0%), 1px -1px 1px rgb(255 255 255 / 0%), -1px 1px 1px rgb(255 255 255 / 0%), 1px 1px 1px rgb(255 255 255 / 0%), 0 -2px 8px, 0 0 2px, 0 0 5px #1b003a, 0 0 15px #430085, 0 0 2px #b400ff, 0 2px 3px #d800ff;
+}
+
+#menuToggle svg {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    fill: #fff;
+}
+
 #menuToggle input {
     display: block;
     width: 40px;
