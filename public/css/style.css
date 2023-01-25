@@ -207,10 +207,13 @@ body {
 }
 
 #menuToggle svg {
-    width: 15px;
-    height: 15px;
-    position: relative;
+    cursor: pointer;
+    display: block;
+    width: 25px;
+    position: absolute;
     fill: #fff;
+    left: 224px;
+    top: 13px;
 }
 
 #menuToggle input {
