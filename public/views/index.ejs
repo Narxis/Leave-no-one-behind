@@ -1,31 +1,10 @@
 <head>
     <link rel="stylesheet" href="css\main-menu.css">
-    <link rel="stylesheet" href="css\stars.css">
+    <link rel="stylesheet" href="css\style.css">
 </head>
 
 <body>
-    <div class="startrek">
-        <div id='stars'></div>
-        <div id='stars2'></div>
-        <div id='stars3'></div>
-        <nav role="navigation">
-            <div id="menuToggle">
-              <input type="checkbox" />
-              <span></span>
-              <span></span>
-              <span></span>
-              <ul id="menu">
-                <a href="index-legacy"><li>Index (Legacy)</li></a>
-                <a href="#"><li>Main Menu</li></a>
-                <a href="persos"><li>Fiche Personnages</li></a>
-                <a href="fiche-vaisseau"><li>Fiche Vaisseau</li></a>
-                <a href="parallaxe"><li>Template Carte</li></a>
-                <a href="template-planet"><li>Template Planète</li></a>
-                <a href="end-screen"><li>End Screen</li></a>
-              </ul>
-            </div>
-          </nav>
-    </div>
+    <%- include("partials/nav") %>
     <div class="center">
         <div class="logo">
             <svg id="lnob-logo2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 589.34 811.97">

@@ -1,50 +1,17 @@
-<style>
-  body {
-    background: #333333;
-  }
-</style>
+<link rel="stylesheet" href="css\style.css">
+<%- include("partials/nav") %>
+  <div class="center">
+    <div id="test">test</div>
+    <button onclick="wsLNOB.rollDice(1, 'combat', false)">roll</button>
+    <button onclick="wsLNOB.addConso('drone')">addConso</button>
+    <button onclick="wsLNOB.delConso('drone')">delConso</button>
+    <button onclick="wsLNOB.setModule('motors', Math.floor(Math.random()*99))">setModule</button>
+    <button onclick="wsLNOB.setStatus('blackout', Math.floor(Math.random()*3))">setStatus</button>
+    <button onclick="wsLNOB.setStatistic('pilotage', Math.floor(Math.random()*99))">setStatistic</button>
+    <button onclick="wsLNOB.setPlanetDetection(Math.floor(Math.random()*20))">setDetection</button>
+  </div>
 
-<div id="test">test</div>
-<button onclick="wsLNOB.rollDice(1, 'combat', false)">roll</button>
-<button onclick="wsLNOB.addConso('drone')">addConso</button>
-<button onclick="wsLNOB.delConso('drone')">delConso</button>
-<button onclick="wsLNOB.setModule('motors', Math.floor(Math.random()*99))">setModule</button>
-<button onclick="wsLNOB.setStatus('blackout', Math.floor(Math.random()*3))">setStatus</button>
-<button onclick="wsLNOB.setStatistic('pilotage', Math.floor(Math.random()*99))">setStatistic</button>
-<button onclick="wsLNOB.setPlanetDetection(Math.floor(Math.random()*20))">setDetection</button>
-<button onclick="quickNav1()">Index (Legacy)</button>
-<button onclick="quickNav2()">Main Menu</button>
-<button onclick="quickNav3()">Fiche Personnages</button>
-<button onclick="quickNav4()">Fiche Vaisseau</button>
-<button onclick="quickNav5()">Template Carte</button>
-<button onclick="quickNav6()">Template Planète</button>
-<button onclick="quickNav7()">End Screen</button>
-
-<script>
-  function quickNav1() {
-    location.href = "http://localhost:8080/index-legacy"
-  }
-  function quickNav2() {
-    location.href = "http://localhost:8080"
-  }
-  function quickNav3() {
-    location.href = "http://localhost:8080/persos"
-  }
-  function quickNav4() {
-    location.href = "http://localhost:8080/fiche-vaisseau"
-  }
-  function quickNav5() {
-    location.href = "http://localhost:8080/parallaxe"
-  }
-  function quickNav6() {
-    location.href = "http://localhost:8080/template-planet"
-  }
-  function quickNav7() {
-    location.href = "http://localhost:8080/end-screen"
-  }
-</script>
-
-<script src="/js/socketLNOB.js"></script>
-<script>
-  const wsLNOB = new SocketLNOB();
-</script>
+  <script src="/js/socketLNOB.js"></script>
+  <script>
+    const wsLNOB = new SocketLNOB();
+  </script>
