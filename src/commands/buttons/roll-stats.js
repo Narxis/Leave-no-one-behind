@@ -40,7 +40,7 @@ module.exports = {
                     engineering: [],
                     survival: [],
                     recon: [],
-                    moral: []
+                    moral: 100
                 }
             }
         }
