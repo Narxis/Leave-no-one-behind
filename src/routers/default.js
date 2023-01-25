@@ -9,10 +9,9 @@ module.exports = function(router) {
 
     router.get('/end-screen', controller.endScreen);
     router.get('/fiche-vaisseau', controller.ficheVaisseau)
-    router.get('/index', controller.mainMenu);
+    router.get('/main-menu', controller.mainMenu);
     router.get('/parallaxe', controller.parallaxe);
     router.get('/template-planet', controller.templatePlanet);
-    router.get('/index-legacy', controller.indexLegacy);
 
 
     router.post('/fiche', controller.renderSingleSheet)
