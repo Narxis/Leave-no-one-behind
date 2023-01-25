@@ -12,7 +12,9 @@ module.exports = {
 
         let player = await new Player().getData(interaction.user.id);
         let race = player.race;
-        let dataStats = {};
+        let dataStats = {
+            moral: 100
+        };
         let rawData = fs.readFileSync(__dirname  + '/../../config/raceStats.json');
         let raceStats = JSON.parse(rawData)[race];
         let components = [];
