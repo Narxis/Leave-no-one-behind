@@ -369,7 +369,7 @@
   width: 238px;
   height: 487px;
   background: rgb(44, 7, 53);
-  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   border: 2px solid rgb(180 180 180);
   border-radius: 15px 15px 0px 0px;
   display: flex;
@@ -641,7 +641,7 @@ textarea {
   border-radius: 15px;
   border: 2.5px solid rgb(180, 180, 180);
   transform-origin: bottom center;
-  background: linear-gradient(180deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: linear-gradient(180deg, rgb(32 26 87 / 0%) 0%, rgb(8 0 44) 100%);
   backdrop-filter: blur(1px);
 }
 
@@ -827,7 +827,7 @@ textarea {
 .consommable-tab {
   width: 340px;
   height: 62px;
-  background: linear-gradient(270deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: linear-gradient(270deg, rgb(32 26 87 / 0%) 0%, rgb(8 0 44) 100%);
   backdrop-filter: blur(1px);
   transform: translate(0px, 0px);
   transition: 1.2s;
@@ -835,7 +835,7 @@ textarea {
   flex-direction: column;
   align-items: center;
   border-radius: 15px 0px 0px 15px;
-  border: 2px solid rgb(180, 180, 180);
+  border: 3px solid rgb(180, 180, 180);
   justify-content: space-between;
 }
 
@@ -864,7 +864,7 @@ textarea {
   padding: 15px 0px;
   border-radius: 15px;
   border: 2.5px solid rgb(180, 180, 180);
-  background: linear-gradient(0deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: linear-gradient(0deg, rgb(32 26 87 / 0%) 0%, rgb(8 0 44) 100%);
   backdrop-filter: blur(1px);
 }
 
@@ -1118,7 +1118,7 @@ textarea {
   justify-content: flex-start;
   align-items: center;
   animation: hologramme 1.5s linear forwards;
-  background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
 }
 

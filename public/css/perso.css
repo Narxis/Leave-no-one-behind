@@ -2,7 +2,7 @@
   position: absolute;
   width: 1780px;
   height: 774px;
-  top: -387px;
+  top: -340px;
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
@@ -17,7 +17,7 @@
   justify-content: flex-start;
   border: 2.5px solid rgb(180 180 180);
   border-radius: 23px;
-  background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
   box-shadow: #5e5e5e4f 3px -3px 6px 2px;
   overflow: hidden;
@@ -346,20 +346,8 @@ input[type=number]::-webkit-outer-spin-button {
   }
 }
 
-.center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0px;
-  height: 0px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-}
-
 .bouton-suivant {
   position: absolute;
-  top: -450px;
   width: 212px;
   height: 56px;
   display: flex;
@@ -367,6 +355,7 @@ input[type=number]::-webkit-outer-spin-button {
   justify-content: center;
   border: 3px solid rgb(180 180 180);
   border-radius: 15px;
-  background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
+  margin: 40px;
 }

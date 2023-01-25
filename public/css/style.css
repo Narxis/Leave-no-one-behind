@@ -8,7 +8,7 @@
 
 :root {
     --darkgrey: #17181c;
-    --lgrad: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+    --lgrad: linear-gradient(45deg, rgb(0 0 0 / 50%) 0%, rgb(11 0 60 / 90%) 100%);
     --lcolor: rgb(72, 72, 72);
     --bcolor: rgb(143, 143, 143);
     --trailcolor: rgb(248, 248, 248);
@@ -191,14 +191,13 @@ body {
 
 #menuToggle a {
     text-decoration: none;
-    color: var(--jaune);
+    color: #fff;
     transition: color 0.3s ease;
     cursor: pointer;
 }
 
 #menuToggle a:hover {
-    text-shadow: -1px -1px 0 rgb(255 255 255 / 40%), 1px -1px 0 rgb(255 255 255 / 40%), -1px 1px 0 rgb(255 255 255 / 40%), 1px 1px 0 rgb(255 255 255 / 40%), 0 -2px 8px, 0 0 2px, 0 0 5px #ff7e00, 0 0 15px #ff4444, 0 0 2px #ff7e00, 0 2px 3px #000;
-    transform: translateX(15px);
+    text-shadow: -1px -1px 1px rgb(255 255 255 / 30%), 1px -1px 1px rgb(255 255 255 / 30%), -1px 1px 1px rgb(255 255 255 / 30%), 1px 1px 1px rgb(255 255 255 / 30%), 0 -2px 8px, 0 0 2px, 0 0 5px #0100ff, 0 0 15px #4467ff, 0 0 2px #0008ff, 0 2px 3px #000;
 }
 
 #menuToggle input {
@@ -239,7 +238,7 @@ body {
 #menuToggle input:checked~span {
     opacity: 1;
     transform: rotate(45deg) translate(-2px, -1px);
-    background: var(--jaune);
+    background: #fff;
 }
 
 #menuToggle input:checked~span:nth-last-child(3) {

@@ -10,7 +10,7 @@
 .card {
     /*display: none;*/
     position: relative;
-    background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+    background: var(--lgrad);
     backdrop-filter: blur(1px);
     grid-column: 2 / 6;
     grid-row: 1 / 6;
