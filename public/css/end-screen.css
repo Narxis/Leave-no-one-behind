@@ -13,40 +13,14 @@
   height: 800px;
   border: 4px solid rgb(180 180 180);
   border-radius: 40px;
-  background: linear-gradient(0deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
   flex-direction: row;
   flex-wrap: wrap;
 }
 
 /*---vvv---score---vvv---*/
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0px;
-  height: 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.endscreen-container {
-  display: flex;
-  position: absolute;
-  width: 1060px;
-  height: 800px;
-  border: 4px solid rgb(180 180 180);
-  border-radius: 40px;
-  background: linear-gradient(0deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
-  backdrop-filter: blur(1px);
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-
-
-/*---vvv---score---vvv---*/
 .score {
   width: 471px;
   height: 348px;
@@ -96,7 +70,7 @@
   margin: 0px 40px 0px 0px;
 }
 
-.consolescore{
+.consolescore {
   position: absolute;
   top: 200px;
   left: 650px;
@@ -107,8 +81,10 @@
   justify-content: center;
   align-items: center;
 }
+
 /*---^^^---Score---^^^---*/
 /*---vvv---Console---vvv---*/
+
 .blink {
   animation: blinking 2s linear infinite;
 }
@@ -187,6 +163,7 @@
 
 /*---^^^---Console---^^^---*/
 /*---vvv---Ship-recap---vvv---*/
+
 .ship-recap {
   width: 469px;
   height: 370px;
@@ -299,6 +276,7 @@
 
 /*---^^^---Ship-recap---^^^---*/
 /*---vvv--Planet-recap--vvv---*/
+
 .planet-recap {
   width: 469px;
   height: 370px;
@@ -309,12 +287,13 @@
   border-top: 2px solid rgb(180 180 180);
 }
 
-.planet-recap-line{
+.planet-recap-line {
   height: 60px;
   width: 470px;
 }
 
-.planet-reading{
-  font-size: 14px ;
+.planet-reading {
+  font-size: 14px;
 }
+
 /*---^^^--Planet-recap--^^^---*/

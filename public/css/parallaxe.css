@@ -341,7 +341,7 @@
   margin: 3px 1px 1px 1px;
   text-align: center;
   margin: 3px;
-  background: linear-gradient(0deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
   color: whitesmoke;
 }
