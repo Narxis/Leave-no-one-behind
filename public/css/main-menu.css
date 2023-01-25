@@ -4,6 +4,10 @@
 :root {
     --darkgrey: #17181c;
     --lgrad: linear-gradient(rgba(9, 116, 216, 0.137), rgba(54, 13, 66, 0.486));
+    --lcolor: rgb(72, 72, 72);
+    --bcolor: rgb(143, 143, 143);
+    --trailcolor: rgb(248, 248, 248);
+    --shipcolor: rgb(88, 88, 88);
 }
 
 body {
@@ -58,19 +62,19 @@ body {
 }
 
 #big-l {
-    fill: rgb(72, 72, 72);
+    fill: var(--lcolor);
 }
 
 #big-b {
-    fill: rgb(143, 143, 143);
+    fill: var(--bcolor);
 }
 
 #ship-trail {
-    fill: rgb(248, 248, 248);
+    fill: var(--trailcolor);
 }
 
 #ship-fill {
-    fill: rgb(88, 88, 88);
+    fill: var(--shipcolor);
 }
 
 .title {
@@ -222,4 +226,5 @@ body {
     background-color: #ffcc00;
     box-shadow: #ffcc00 0px 0px 0px 0px;
     transform: translateY(2px);
+    border: 3px solid #ffcc00;
    }
