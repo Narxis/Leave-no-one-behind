@@ -122,3 +122,4 @@ dist
 # IDE
 .idea
 .idea/
+public/views/index-legacy.ejs
