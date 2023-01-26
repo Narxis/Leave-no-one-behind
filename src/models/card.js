@@ -34,12 +34,13 @@ class Card {
             timer: this.timer
         }).then(async result => {
             this.id = result.id;
-            for (let choice of this.choices)
+            for (let choice in this.choices)
             {
                 await DB.tables.card_modules.create({
                     card_id: this.id,
                     type: 'choice',
-                    value: choice.toString(),
+                    value: this.choices[choice].value,
+                    reveal: this.choices[choice].reveal,
                     cost: -1,
                 });
             }
@@ -61,6 +62,11 @@ class Card {
         return await this.getData()
     }
 
+    /**
+     * @deprecated choices might not work anymore
+     * @param data
+     * @returns {Promise<void>}
+     */
     async update(data = {}) {
         await this.getData();
 
@@ -84,7 +90,8 @@ class Card {
             await DB.tables.card_modules.update({
                 card_id: this.id,
                 type: 'choice',
-                value: choice.toString(),
+                value: choice.value,
+                reveal: choice.reveal,
                 cost: -1,
             }, {
                 where: {

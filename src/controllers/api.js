@@ -1,5 +1,6 @@
 const {Player} = require("./../models/player");
 const {Ship} = require("./../models/ship");
+const {hydrateCardDB} = require("./deck");
 
 // TODO replace shipId with current game ship ID
 const shipId = 1;
@@ -26,6 +27,11 @@ module.exports.getAllPlayers = async function (req, res) {
 
     let players = await DB.tables.players.findAll();
     res.json(players);
+}
+
+module.exports.reset = async function (req, res) {
+    await hydrateCardDB();
+    showError(res, 'no error but flemme');
 }
 
 module.exports.updatePlayer = async function (req, res) {

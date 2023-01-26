@@ -1,0 +1,84 @@
+{
+  "positive": {
+    "cardPos1": {
+      "desc": "மிகவும் வேடிக்கையானது, என் கடிதங்கள் சிறிய சுருட்டை\nநான் என் விசைப்பலகையால் வரைகிறேன் பார்\nநான் ஜாவாஸ்கிரிப்ட் டுடோரியல்களை செய்ய ஆரம்பிக்கிறேன்",
+      "timer": false,
+      "choices": {
+        "1": {
+          "value": "Ajouter d'autres petites boucles",
+          "reveal": "Indian scammer guy attacks you, you bloody fuck !"
+        },
+        "2": {
+          "value": "Jeter de l'eau",
+          "reveal": "I am under the water, please help"
+        }
+      }
+    }
+  },
+  "negative": {
+    "cardNeg1": {
+      "desc": "மிகவும் வேடிக்கையானது, என் கடிதங்கள் சிறிய சுருட்டை\nநான் என் விசைப்பலகையால் வரைகிறேன் பார்\nநான் ஜாவாஸ்கிரிப்ட் டுடோரியல்களை செய்ய ஆரம்பிக்கிறேன்",
+      "timer": false,
+      "choices": {
+        "1": {
+          "value": "Ajouter d'autres petites boucles",
+          "reveal": "Indian scammer guy attacks you, you bloody fuck !"
+        },
+        "2": {
+          "value": "Jeter de l'eau",
+          "reveal": "I am under the water, please help"
+        }
+      }
+    }
+  },
+  "neutral": {
+    "cardNeu1": {
+      "desc": "மிகவும் வேடிக்கையானது, என் கடிதங்கள் சிறிய சுருட்டை\nநான் என் விசைப்பலகையால் வரைகிறேன் பார்\nநான் ஜாவாஸ்கிரிப்ட் டுடோரியல்களை செய்ய ஆரம்பிக்கிறேன்",
+      "timer": false,
+      "choices": {
+        "1": {
+          "value": "Ajouter d'autres petites boucles",
+          "reveal": "Indian scammer guy attacks you, you bloody fuck !"
+        },
+        "2": {
+          "value": "Jeter de l'eau",
+          "reveal": "I am under the water, please help"
+        }
+      }
+    }
+  },
+  "place": {
+
+  },
+  "planet": {
+    "cardPlanet1": {
+      "value": 645,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    }
+  }
+}

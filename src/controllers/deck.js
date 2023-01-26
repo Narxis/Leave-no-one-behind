@@ -149,4 +149,49 @@ const shuffle = function (array) {
     return array;
 }
 
-module.exports = {deckGenerator, cardPop, getCards, destroyDeck, shuffle}
+const hydrateCardDB = async function (cleanInstall = true) {
+
+    if (cleanInstall) {
+        DB.tables.cards.destroy({truncate: true});
+        DB.tables.card_modules.destroy({truncate: true});
+    }
+    let cardManager = new Card();
+    let baseCardsRaw = fs.readFileSync(__dirname + '/../config/baseCards.json');
+    let baseCards = JSON.parse(baseCardsRaw);
+
+    for (let i in baseCards) {
+        let type;
+        let card = baseCards[i];
+        switch (i) {
+            case 'positive':
+                type = TYPE_POSITIVE;
+                break;
+            case 'negative':
+                type = TYPE_NEGATIVE;
+                break;
+            case 'neutral':
+                type = TYPE_NEGATIVE;
+                break;
+            case 'place':
+                type = TYPE_PLACE;
+                break;
+            case 'planet':
+                type = TYPE_PLANET;
+                break;
+        }
+        for (let j in card) {
+            let data = {};
+            data['name'] = j;
+            data['type'] = type;
+            let infos = card[j];
+
+            for (let k in infos) {
+                data[k] = infos[k];
+            }
+
+            await cardManager.create(data);
+        }
+    }
+}
+
+module.exports = {deckGenerator, cardPop, getCards, destroyDeck, shuffle, hydrateCardDB}

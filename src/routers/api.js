@@ -4,6 +4,8 @@ var basePath = '/api';
 module.exports = function(router) {
     router.get(basePath + '/', controller.index);
 
+    router.get(basePath + '/reset', controller.reset);
+
     router.get(basePath + '/players', controller.getAllPlayers);
     router.get(basePath + '/player/:playerId', controller.getPlayer);
     router.get(basePath + '/player/:playerId/:stat/:val', controller.updatePlayer); // :val can be SIGNED

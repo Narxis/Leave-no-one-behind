@@ -1,5 +1,5 @@
 var fs = require('fs');
-let {deckGenerator,getCards} = require('./../controllers/deck')
+let {deckGenerator,getCards, hydrateCardDB} = require('./../controllers/deck')
 const {Card} = require("./../models/card");
 const {cardPop} = require("./deck");
 const {Player} = require("../models/player");
