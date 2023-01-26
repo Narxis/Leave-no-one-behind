@@ -41,6 +41,7 @@ class Card {
                     type: 'choice',
                     value: this.choices[choice].value,
                     reveal: this.choices[choice].reveal,
+                    next: this.choices[choice].next,
                     cost: -1,
                 });
             }

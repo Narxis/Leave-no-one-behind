@@ -98,7 +98,39 @@
     }
   ],
   "place": [
-
+    {
+      "desc": "Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter ce chez d'oeuvre architectural et culturel.\nAlors que vous penetrez dans le hall d'entrée vous pouvez appercevoir un [race1] assis à une table au milieu de la pièce, un [race2] en train de lire un livre dans une allée secondaire, et une porte entre-ouverte au fond de l'allée principale.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Parler au [race1] assis à la table au milieu de la pièce",
+          "next": "bibli1"
+        },
+        {
+          "value": "Parler au [race2] dans l'allée \"Trépas & Trésor\"",
+          "next": "bibli2"
+        },
+        {
+          "value": "Pousser la porte du fond",
+          "next": "bibli3"
+        }
+      ]
+    },
+    {
+      "desc": "Vous appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\nLe livre est usé, vous pouvez difficllement lire [livre] écrit sur la couverture.",
+      "name": "bibli3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Prendre le livre",
+          "reveal": "Vous ramassez le livre et le rangez sous votre manteau avant que quelqu'un ne vous apperçoive"
+        },
+        {
+          "value": "Faire comme si vous n'aviez rien vu",
+          "reveal": "La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\nElle vous tend le [livre] en pensant que c'est le votre"
+        }
+      ]
+    }
   ],
   "planet": [
     {

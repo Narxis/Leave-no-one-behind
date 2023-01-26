@@ -108,6 +108,11 @@ class DB {
                 defaultValue: 0,
                 allowNull: false
             },
+            next: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
             reveal: {
                 type: Sequelize.TEXT,
                 defaultValue: '',
