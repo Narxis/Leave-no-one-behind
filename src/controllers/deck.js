@@ -181,7 +181,6 @@ const hydrateCardDB = async function (cleanInstall = true) {
         }
         for (let j in card) {
             let data = {};
-            data['name'] = j;
             data['type'] = type;
             let infos = card[j];
 
