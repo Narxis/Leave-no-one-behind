@@ -137,7 +137,9 @@ const cardPop = async function (setPlayed = true){
 
 const destroyDeck = async function (deck_id = 0){
     DB.tables.deck.destroy({
-        where: {deck_id: deck_id}
+        where: {deck_id: deck_id},
+        truncate: true,
+        restartIdentity: true
     })
 }
 

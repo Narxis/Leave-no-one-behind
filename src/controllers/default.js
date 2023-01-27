@@ -47,6 +47,8 @@ module.exports.mainMenu = function (req, res) {
 module.exports.renderCardEvent = async function (req, res) {
 
     let players = await DB.tables.players.findAll();
+    let ship = await new Ship().getData();
+
     // TODO get ship
     // TODO do it with card pop once baseCard.json is completed
     let current_card = await cardPop();
@@ -57,7 +59,8 @@ module.exports.renderCardEvent = async function (req, res) {
 
     let vars = {
         players: players,
-        card: current_card
+        card: current_card,
+        ship: ship
     }
 
     switch (current_card.type) {
@@ -97,9 +100,28 @@ module.exports.renderTestCardEvent = async function (req, res) {
             }
         ]
     }
+    let ship = {
+        id: 0,
+        name: '',
+        cryopods: 1000,
+        scanner: 100,
+        proximity: 100,
+        motors: 100,
+        shield: 100,
+        oxygen: 100,
+        energy: 100,
+        gravity: 100,
+        landing: 100,
+        construction: 100,
+        scanner_up: 0,
+        oxygen_up: 0,
+        energy_up: 0,
+        gravity_up: 0
+    }
     let vars = {
         players: players,
-        card: card
+        card: card,
+        ship: ship
     }
     console.l
 
@@ -121,9 +143,28 @@ module.exports.templatePlanet = async function (req, res) {
             res: {cost: '1', val: '40'}
         },
     }
+    let ship = {
+        id: 0,
+        name: '',
+        cryopods: 1000,
+        scanner: 100,
+        proximity: 100,
+        motors: 100,
+        shield: 100,
+        oxygen: 100,
+        energy: 100,
+        gravity: 100,
+        landing: 100,
+        construction: 100,
+        scanner_up: 0,
+        oxygen_up: 0,
+        energy_up: 0,
+        gravity_up: 0
+    }
     let vars = {
         players: players,
-        card: card
+        card: card,
+        ship: ship
     }
 
     res.render('template-planet', vars);
@@ -139,7 +180,7 @@ module.exports.indexLegacy = function (req, res) {
 
 module.exports.reset = async function (req, res) {
 
-    await DB.tables.ship.destroy({truncate: true});
+    await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
     await destroyDeck();
     await hydrateCardDB();
     await deckGenerator();

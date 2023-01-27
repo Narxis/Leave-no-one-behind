@@ -240,7 +240,7 @@
         <div class="mod-stats" id="modtab">
           <div class="tab tab-moteurs move-right">
             <div class="tab-txt">Moteurs</div>
-            <div id="dial-moteurs" class="container moteurs dial" data-value="100">
+            <div id="dial-moteurs" class="container moteurs dial" data-value="<%= ship.motors %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -261,7 +261,7 @@
           </div>
           <div class="tab tab-scan move-right">
             <div class="tab-txt">Scanner de surface</div>
-            <div id="dial-scan" class="container scan dial" data-value="66">
+            <div id="dial-scan" class="container scan dial" data-value="<%= ship.scanner %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -282,7 +282,7 @@
           </div>
           <div class="tab tab-detect move-right">
             <div class="tab-txt">Détecteur de proximité</div>
-            <div id="dial-detect" class="container detect dial" data-value="87">
+            <div id="dial-detect" class="container detect dial" data-value="<%= ship.proximity %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -303,7 +303,7 @@
           </div>
           <div class="tab tab-o2 move-right">
             <div class="tab-txt">Oxygène</div>
-            <div id="dial-o2" class="container o2 dial" data-value="30">
+            <div id="dial-o2" class="container o2 dial" data-value="<%= ship.oxygen %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -324,7 +324,7 @@
           </div>
           <div class="tab tab-elec move-right">
             <div class="tab-txt">Électricité</div>
-            <div id="dial-elec" class="container elec dial" data-value="56">
+            <div id="dial-elec" class="container elec dial" data-value="<%= ship.energy %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -345,7 +345,7 @@
           </div>
           <div class="tab tab-grav move-right">
             <div class="tab-txt">Gravité artificielle</div>
-            <div id="dial-grav" class="container grav dial" data-value="80">
+            <div id="dial-grav" class="container grav dial" data-value="<%= ship.gravity %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -427,13 +427,13 @@
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module d'atterrissage</div>
                   <div class="moins mod-b">-</div>
-                  <div class="mod-left-value"></div>
+                  <div class="mod-left-value"><%= ship.landing %></div>
                   <div class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module de construction</div>
                   <div class="moins mod-b">-</div>
-                  <div class="mod-left-value">0</div>
+                  <div class="mod-left-value"><%= ship.construction %></div>
                   <div class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
