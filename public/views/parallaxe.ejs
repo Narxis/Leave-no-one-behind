@@ -561,6 +561,17 @@
     <div class="next-button" id="next2"></div>
   </a>
 </body>
+
+<script>
+  var cardtextstr = `<%- card.desc %>`;
+  var choicelist = [];
+  var answerlist = [];
+  <% card.choices.forEach(function(choice) {%>
+    choicelist.push(`<%- choice.value %>`);
+    answerlist.push(`<%- choice.reveal %>`);
+    <% }); %>
+</script>
+
 <script src="/js/socketLNOB.js"></script>
 <script src="/js/parallaxe.js"></script>
 <script src="/js/slidingtabs.js"></script>

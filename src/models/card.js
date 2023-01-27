@@ -169,7 +169,10 @@ class Card {
             let type = splitMod[1];
 
             if (name === 'choice') {
-                choices.push(mod.value);
+                choices.push({
+                    value: mod.value,
+                    reveal: mod.reveal
+                });
             }
             else {
                 if (typeof this.modules[name] === 'undefined')

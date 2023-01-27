@@ -2,12 +2,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 //variables cartes
-var cardtextstr = "Vous rencontrez un barrage de la première douane galactique et vous demande de vous mettre sur le bas côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer.";
-var answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
-var answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
-var answer3str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
-var choicelist = ['Utiliser une bouteille pour "convaincre" la douane', "Menacer de les attaquer en justice grâce a votre avo-cat-e", "Donner vos consommables"]
-var answerlist = [answer1str, answer2str, answer3str]
+
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr = 0;
 var cardnbrUntilPlanet = 5;
@@ -48,7 +43,6 @@ function updatestatus() {
     }
 }
 
-
 async function initialiseChoiceTabs() {
     var choice = document.getElementById('choicetab');
     var choiceTabs = choice.getElementsByClassName('choice');
@@ -66,8 +60,6 @@ async function initialiseChoiceTabs() {
     // await sleep(150);
     // choiceTabs[3].classList.remove('move-down');
 }
-
-window.addEventListener('load', initialiseChoiceTabs, false);
 
 async function initialiseModTabs() {
     var mod = document.getElementById('modtab');
@@ -92,8 +84,6 @@ async function initialiseModTabs() {
     // modTabs[5].classList.remove('move-right');
 }
 
-window.addEventListener('load', initialiseModTabs, false);
-
 async function initialiseTimerTab() {
     var timerTab = document.getElementsByClassName('timertab');
     console.log(timerTab.tagName);
@@ -107,8 +97,6 @@ async function initialiseTimerTab() {
 
 }
 
-window.addEventListener('load', initialiseTimerTab, false);
-
 async function initialisePlayerTab() {
     var playerTab = document.querySelectorAll('.player-tab');
     for (let i = 0; i < playerTab.length; i++) {
@@ -116,8 +104,6 @@ async function initialisePlayerTab() {
         await sleep(100)
     }
 }
-
-window.addEventListener('load', initialisePlayerTab, false);
 
 function eventchoices() {
     var choice = document.getElementById('choicetab');
@@ -179,9 +165,6 @@ async function write(fulltext, place) {
     textprintednbr += 1;
     nextoption();
 }
-window.addEventListener('load', write(cardtextstr, '.card-text'), false);
-
-
 
 function initialiseNextButton() {
     document.querySelector('.next-button').addEventListener('mouseover', function () {
@@ -270,7 +253,6 @@ async function initialiseleLeftTabs() {
     todoListVar.item(0).classList.remove('hidden');
     modsLeftVar.item(0).classList.remove('hidden');
 }
-window.addEventListener('load', initialiseleLeftTabs, false);
 
 
 const addstatus = (statusname) => {
@@ -299,3 +281,13 @@ function applystatus(statusname) {
         document.querySelector(selector).firstElementChild.nextElementSibling.nextElementSibling.innerHTML = String(duration)
     }
 };
+
+// EXECUTION AU CHARGEMENT DE LA PAGE
+(function(){
+    initialiseChoiceTabs();
+    initialiseModTabs();
+    initialiseTimerTab();
+    initialisePlayerTab()
+    write(cardtextstr, '.card-text');
+    initialiseleLeftTabs();
+})();
