@@ -278,7 +278,7 @@
         <div class="ship-summary-line" id="ship-line-3">
           <div class="module" id="module-3">
             <div class="mod-text">Moteurs:</div>
-            <div id="dial-moteurs" class="container moteurs dial" data-value="100">
+            <div id="dial-moteurs" class="container moteurs dial" data-value="<%= ship.motors %>">
               <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#78F8EC" />
@@ -293,7 +293,7 @@
           <div class="separateur-vertical"></div>
           <div class="module" id="module-4">
             <div class="mod-text">Scanner:</div>
-            <div id="dial-scan" class="container scan dial" data-value="66">
+            <div id="dial-scan" class="container scan dial" data-value="<%= ship.scanner %>">
               <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#78F8EC" />
@@ -310,7 +310,7 @@
         <div class="ship-summary-line" id="ship-line-4">
           <div class="module" id="module-5">
             <div class="mod-text">Detecteur:</div>
-            <div id="dial-detect" class="container detect dial" data-value="87">
+            <div id="dial-detect" class="container detect dial" data-value="<%= ship.proximity %>">
               <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#78F8EC" />
@@ -325,7 +325,7 @@
           <div class="separateur-vertical"></div>
           <div class="module" id="module-6">
             <div class="mod-text">Oxygène:</div>
-            <div id="dial-o2" class="container o2 dial" data-value="30">
+            <div id="dial-o2" class="container o2 dial" data-value="<%= ship.oxygen %>">
               <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#78F8EC" />
@@ -342,7 +342,7 @@
         <div class="ship-summary-line" id="ship-line-5">
           <div class="module" id="module-7">
             <div class="mod-text">Electricité:</div>
-            <div id="dial-elec" class="container elec dial" data-value="56">
+            <div id="dial-elec" class="container elec dial" data-value="<%= ship.energy %>">
               <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#78F8EC" />
@@ -357,7 +357,7 @@
           <div class="separateur-vertical"></div>
           <div class="module" id="module-8">
             <div class="mod-text">Gravité:</div>
-            <div id="dial-grav" class="container grav dial" data-value="80">
+            <div id="dial-grav" class="container grav dial" data-value="<%= ship.gravity %>">
               <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#78F8EC" />
