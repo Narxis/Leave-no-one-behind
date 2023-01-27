@@ -7,7 +7,6 @@ function doPlayerRoll(resp) {
     let randomDisp = setInterval(function() {
         rollDiv.innerText = Math.floor(Math.random()*99).toString();
         i--;
-        console.log(i);
         if (i<0) {
             rollDiv.innerText = resp.result;
             rollDiv.classList.add((resp.success ? 'success' : 'fail'));

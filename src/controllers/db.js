@@ -107,6 +107,16 @@ class DB {
                 type: Sequelize.STRING,
                 defaultValue: 0,
                 allowNull: false
+            },
+            next: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            reveal: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
             }
         })
 
@@ -319,6 +329,7 @@ class DB {
             await this.tables.card_modules.create({
                 card_id: Math.floor(Math.random()*8),
                 value: 'CHOICE '+i,
+                reveal: 'Reveal' +i+i+i+i+i+i+i+i+i+i+i+i+i+i+i+i+i+i,
                 cost: -1,
             });
         }

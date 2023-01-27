@@ -1,8 +1,8 @@
 var fs = require('fs');
-let {deckGenerator,getCards} = require('./../controllers/deck')
+let {cardPop, deckGenerator,getCards, hydrateCardDB, destroyDeck} = require('./deck')
 const {Card} = require("./../models/card");
-const {cardPop} = require("./deck");
 const {Player} = require("../models/player");
+const {Ship} = require("../models/ship");
 
 module.exports.index = function(req, res) {
     res.render('index');
@@ -47,13 +47,201 @@ module.exports.mainMenu = function (req, res) {
 module.exports.renderCardEvent = async function (req, res) {
 
     let players = await DB.tables.players.findAll();
-    res.render('parallaxe', {players: players});
+    let ship = await new Ship().getData();
+
+    // TODO get ship
+    // TODO do it with card pop once baseCard.json is completed
+    let current_card = await cardPop();
+    // TESTING :
+
+    if (!current_card)
+        res.render('end-screen');
+
+    let vars = {
+        players: players,
+        card: current_card,
+        ship: ship
+    }
+
+    switch (current_card.type) {
+        case TYPE_PLANET:
+            res.render('template-planet', vars);
+            break;
+        case TYPE_NEGATIVE:
+        case TYPE_NEUTRAL:
+        case TYPE_POSITIVE:
+            res.render('parallaxe', vars);
+            break;
+        case TYPE_PLACE:
+            res.render('parallaxe', vars);
+            break;
+    }
 }
 
+// TEST TPL PARALLAXE
+module.exports.renderTestCardEvent = async function (req, res) {
+
+    let players = [
+        {
+            id: 1,
+            discord_id: '14487794',
+            name: 'test#6554',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '14475523584',
+            name: 'test#8444',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '144877584',
+            name: 'test#8354',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        }
+    ];
+    let card = {
+        desc: 'Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.',
+        timer: 1,
+        choices: [
+            {
+                value: "Minimiser la casse\n(Ingénieur)",
+                reveal: "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module"
+            },
+            {
+                value: "Tenter une manoeuvre d'évitement\n(Pilote)",
+                reveal: "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+            },
+            {
+                value: "Ne rien faire",
+                reveal: ""
+            }
+        ]
+    }
+    let ship = {
+        id: 0,
+        name: '',
+        cryopods: 1000,
+        scanner: 100,
+        proximity: 100,
+        motors: 100,
+        shield: 100,
+        oxygen: 100,
+        energy: 100,
+        gravity: 100,
+        landing: 100,
+        construction: 100,
+        scanner_up: 0,
+        oxygen_up: 0,
+        energy_up: 0,
+        gravity_up: 0
+    }
+    let vars = {
+        players: players,
+        card: card,
+        ship: ship
+    }
+
+    res.render('parallaxe', vars);
+}
+
+// TEST TPL PLANET
 module.exports.templatePlanet = async function (req, res) {
 
-    let players = await DB.tables.players.findAll();
-    res.render('template-planet', {players: players});
+    let players = [
+        {
+            id: 1,
+            discord_id: '14487794',
+            name: 'test#6554',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '14475523584',
+            name: 'test#8444',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '144877584',
+            name: 'test#8354',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        }
+    ];
+
+    let card =  {
+        value: 890,
+        modules: {
+            oxy: {cost: '2', val: '50'},
+            grv: {cost: '3', val: '30'},
+            wtr: {cost: '2', val: '30'},
+            fau: {cost: '4', val: '60'},
+            cli: {cost: '2', val: '30'},
+            res: {cost: '1', val: '40'}
+        },
+    }
+    let ship = {
+        id: 0,
+        name: '',
+        cryopods: 1000,
+        scanner: 100,
+        proximity: 100,
+        motors: 100,
+        shield: 100,
+        oxygen: 100,
+        energy: 100,
+        gravity: 100,
+        landing: 100,
+        construction: 100,
+        scanner_up: 0,
+        oxygen_up: 0,
+        energy_up: 0,
+        gravity_up: 0
+    }
+    let vars = {
+        players: players,
+        card: card,
+        ship: ship
+    }
+
+    res.render('template-planet', vars);
 }
 
 module.exports.endScreen = function (req, res) {
@@ -64,26 +252,15 @@ module.exports.indexLegacy = function (req, res) {
     res.render('index-legacy');
 }
 
-// module.exports.manageCards = function (req, res) {
-//     res.render('forms/cardEdit')
-// }
-// module.exports.cardEdit = async function (req, res) {
-//     let card = new Card(req.body.id);
-//     switch (req.body.mode) {
-//         case 'add':
-//             await card.create(req.body);
-//             break;
-//         case 'edit':
-//             await card.update(req.body);
-//             break;
-//         case 'del':
-//             await card.delete();
-//             break;
-//     }
-//     res.render('forms/cardEdit')
-// }
-// module.exports.cardCreate = async function (req, res) {
-//     let card = new Card(0);
-//     await card.create(req.body);
-//     res.render('forms/cardEdit');
-// }
+module.exports.reset = async function (req, res) {
+
+    await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
+    await destroyDeck();
+    await hydrateCardDB();
+    await deckGenerator();
+
+    let ship = new Ship();
+    await ship.create();
+
+    res.redirect('/');
+}

@@ -240,7 +240,7 @@
         <div class="mod-stats" id="modtab">
           <div class="tab tab-moteurs move-right">
             <div class="tab-txt">Moteurs</div>
-            <div id="dial-moteurs" class="container moteurs dial" data-value="100">
+            <div id="dial-moteurs" class="container moteurs dial" data-value="<%= ship.motors %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -249,7 +249,7 @@
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
                     stroke-width="8" fill="none" transform="rotate(90 50 50)" />
-                  <text x="20" y="60">100%</text>
+                  <text x="20" y="60"><%= ship.motors %>%</text>
                 </svg>
               </button>
             </div>
@@ -261,7 +261,7 @@
           </div>
           <div class="tab tab-scan move-right">
             <div class="tab-txt">Scanner de surface</div>
-            <div id="dial-scan" class="container scan dial" data-value="66">
+            <div id="dial-scan" class="container scan dial" data-value="<%= ship.scanner %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -270,7 +270,7 @@
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
                     stroke-width="8" fill="none" transform="rotate(90 50 50)" />
-                  <text x="20" y="60">100%</text>
+                  <text x="20" y="60"><%= ship.scanner %>%</text>
                 </svg>
               </button>
             </div>
@@ -282,7 +282,7 @@
           </div>
           <div class="tab tab-detect move-right">
             <div class="tab-txt">Détecteur de proximité</div>
-            <div id="dial-detect" class="container detect dial" data-value="87">
+            <div id="dial-detect" class="container detect dial" data-value="<%= ship.proximity %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -291,7 +291,7 @@
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
                     stroke-width="8" fill="none" transform="rotate(90 50 50)" />
-                  <text x="20" y="60">100%</text>
+                  <text x="20" y="60"><%= ship.proximity %>%</text>
                 </svg>
               </button>
             </div>
@@ -303,7 +303,7 @@
           </div>
           <div class="tab tab-o2 move-right">
             <div class="tab-txt">Oxygène</div>
-            <div id="dial-o2" class="container o2 dial" data-value="30">
+            <div id="dial-o2" class="container o2 dial" data-value="<%= ship.oxygen %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -312,7 +312,7 @@
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
                     stroke-width="8" fill="none" transform="rotate(90 50 50)" />
-                  <text x="20" y="60">100%</text>
+                  <text x="20" y="60"><%= ship.oxygen %>%</text>
                 </svg>
               </button>
             </div>
@@ -324,7 +324,7 @@
           </div>
           <div class="tab tab-elec move-right">
             <div class="tab-txt">Électricité</div>
-            <div id="dial-elec" class="container elec dial" data-value="56">
+            <div id="dial-elec" class="container elec dial" data-value="<%= ship.energy %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -333,7 +333,7 @@
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
                     stroke-width="8" fill="none" transform="rotate(90 50 50)" />
-                  <text x="20" y="60">100%</text>
+                  <text x="20" y="60"><%= ship.energy %>%</text>
                 </svg>
               </button>
             </div>
@@ -345,7 +345,7 @@
           </div>
           <div class="tab tab-grav move-right">
             <div class="tab-txt">Gravité artificielle</div>
-            <div id="dial-grav" class="container grav dial" data-value="80">
+            <div id="dial-grav" class="container grav dial" data-value="<%= ship.gravity %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -354,7 +354,7 @@
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
                     stroke-width="8" fill="none" transform="rotate(90 50 50)" />
-                  <text x="20" y="60">100%</text>
+                  <text x="20" y="60"><%= ship.gravity %>%</text>
                 </svg>
               </button>
             </div>
@@ -427,13 +427,13 @@
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module d'atterrissage</div>
                   <div class="moins mod-b">-</div>
-                  <div class="mod-left-value"></div>
+                  <div class="mod-left-value"><%= ship.landing %></div>
                   <div class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module de construction</div>
                   <div class="moins mod-b">-</div>
-                  <div class="mod-left-value">0</div>
+                  <div class="mod-left-value"><%= ship.construction %></div>
                   <div class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
@@ -536,7 +536,7 @@
             d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
         </svg>
         <div class="human-title">Humains:</div>
-        <div class="human-alive">1000</div>
+        <div class="human-alive"><%= ship.cryopods %></div>
       </div>
       <div class="status-separateur"></div>
       <div class="status">
@@ -561,6 +561,17 @@
     <div class="next-button" id="next2"></div>
   </a>
 </body>
+
+<script>
+  var cardtextstr = `<%- card.desc %>`;
+  var choicelist = [];
+  var answerlist = [];
+  <% card.choices.forEach(function(choice) {%>
+    choicelist.push(`<%- choice.value %>`);
+    answerlist.push(`<%- choice.reveal %>`);
+    <% }); %>
+</script>
+
 <script src="/js/socketLNOB.js"></script>
 <script src="/js/parallaxe.js"></script>
 <script src="/js/slidingtabs.js"></script>

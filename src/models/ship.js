@@ -86,11 +86,13 @@ class Ship{
             oxygen_up: this.oxygen_up,
             energy_up: this.energy_up,
             gravity_up: this.gravity_up
-        }, {
-            where: {
-                id: this.id
-            }
-        });
+        },
+        // {
+        //     where: {
+        //         id: this.id
+        //     }
+        // }
+        );
 
         return await this.getData();
     }
@@ -118,9 +120,9 @@ class Ship{
                 'energy_up',
                 'gravity_up'
             ],
-            where: {
-                id: this.id
-            }
+            // where: {
+            //     id: this.id
+            // }
         })
 
         if (!ship)
