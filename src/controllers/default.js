@@ -63,27 +63,3 @@ module.exports.endScreen = function (req, res) {
 module.exports.indexLegacy = function (req, res) {
     res.render('index-legacy');
 }
-
-// module.exports.manageCards = function (req, res) {
-//     res.render('forms/cardEdit')
-// }
-// module.exports.cardEdit = async function (req, res) {
-//     let card = new Card(req.body.id);
-//     switch (req.body.mode) {
-//         case 'add':
-//             await card.create(req.body);
-//             break;
-//         case 'edit':
-//             await card.update(req.body);
-//             break;
-//         case 'del':
-//             await card.delete();
-//             break;
-//     }
-//     res.render('forms/cardEdit')
-// }
-// module.exports.cardCreate = async function (req, res) {
-//     let card = new Card(0);
-//     await card.create(req.body);
-//     res.render('forms/cardEdit');
-// }

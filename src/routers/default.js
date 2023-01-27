@@ -14,9 +14,5 @@ module.exports = function(router) {
     router.get('/template-planet', controller.templatePlanet);
     router.get('/index-legacy', controller.indexLegacy);
 
-
-    router.post('/fiche', controller.renderSingleSheet)
-
-    // router.get('/createCard', controller.cardEdit);
-    // router.post('/createCard', controller.cardCreate);
+    router.post('/fiche', controller.renderSingleSheet);
 };
