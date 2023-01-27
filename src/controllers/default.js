@@ -81,7 +81,44 @@ module.exports.renderCardEvent = async function (req, res) {
 // TEST TPL PARALLAXE
 module.exports.renderTestCardEvent = async function (req, res) {
 
-    let players = await DB.tables.players.findAll();
+    let players = [
+        {
+            id: 1,
+            discord_id: '14487794',
+            name: 'test#6554',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '14475523584',
+            name: 'test#8444',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '144877584',
+            name: 'test#8354',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        }
+    ];
     let card = {
         desc: 'Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.',
         timer: 1,
@@ -123,7 +160,6 @@ module.exports.renderTestCardEvent = async function (req, res) {
         card: card,
         ship: ship
     }
-    console.l
 
     res.render('parallaxe', vars);
 }
@@ -131,7 +167,45 @@ module.exports.renderTestCardEvent = async function (req, res) {
 // TEST TPL PLANET
 module.exports.templatePlanet = async function (req, res) {
 
-    let players = await DB.tables.players.findAll();
+    let players = [
+        {
+            id: 1,
+            discord_id: '14487794',
+            name: 'test#6554',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '14475523584',
+            name: 'test#8444',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '144877584',
+            name: 'test#8354',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        }
+    ];
+
     let card =  {
         value: 890,
         modules: {
