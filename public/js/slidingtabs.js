@@ -28,7 +28,8 @@ var statusListLength = statusList.length;
 var statushtml = document.querySelector(".status");
 //html bouton suivant
 var nextbuttonhtml = `<button class="next-button choice move-down" id="next1">Continuer votre chemin</button>`;
-var nextbuttonhtml2 = `<a href="/next"><button class="next-button choice move-down" id="next2">Aller dans la salle des scanners</button></a>`;
+//TODO remove test ternary at the end of the dev
+var nextbuttonhtml2 = `<a href="`+(location.href.endsWith('/next') ? '/next' : '/template-planet')+`"><button class="next-button choice move-down" id="next2">Aller dans la salle des scanners</button></a>`;
 
 
 function updatestatus() {

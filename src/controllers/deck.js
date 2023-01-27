@@ -118,17 +118,21 @@ const cardPop = async function (setPlayed = true){
         },
         order: [['id', 'ASC']]
     });
-    if (setPlayed) {
-        await DB.tables.deck.update({
-            played: 1
-        }, {
-            where: {
-                id: result.id,
-            }
-        })
+    if (result) {
+        if (setPlayed) {
+            await DB.tables.deck.update({
+                played: 1
+            }, {
+                where: {
+                    id: result.id,
+                }
+            })
+        }
+
+        let card = new Card(result.card_id);
+        return await card.getData();
     }
-    let card = new Card(result.card_id)
-    return await card.getData();
+    return false;
 }
 
 const destroyDeck = async function (deck_id = 0){

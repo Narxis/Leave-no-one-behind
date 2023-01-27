@@ -1,5 +1,5 @@
 var fs = require('fs');
-let {cardPop, deckGenerator,getCards} = require('./deck')
+let {cardPop, deckGenerator,getCards, hydrateCardDB, destroyDeck} = require('./deck')
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 
@@ -50,6 +50,9 @@ module.exports.renderCardEvent = async function (req, res) {
     // TODO do it with card pop once baseCard.json is completed
     let current_card = await cardPop();
     // TESTING :
+
+    if (!current_card)
+        res.render('end-screen');
 
     let vars = {
         players: players,
@@ -131,4 +134,11 @@ module.exports.endScreen = function (req, res) {
 
 module.exports.indexLegacy = function (req, res) {
     res.render('index-legacy');
+}
+
+module.exports.reset = async function (req, res) {
+    await destroyDeck();
+    await hydrateCardDB();
+    await deckGenerator();
+    res.render('index');
 }
