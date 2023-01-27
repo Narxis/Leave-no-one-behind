@@ -109,24 +109,25 @@ const getCards = async function (type = TYPE_PLANET, quantity = ALL, valMinMax= 
     return cards;
 }
 
-const cardPop = async function (){
-    let row = await DB.tables.deck.findOne({
+const cardPop = async function (setPlayed = true){
+
+    let result = await DB.tables.deck.findOne({
         where: {
             deck_id: 0,
             played: 0
         },
         order: [['id', 'ASC']]
-    }).then(result => {
-        DB.tables.deck.update({
+    });
+    if (setPlayed) {
+        await DB.tables.deck.update({
             played: 1
         }, {
             where: {
                 id: result.id,
             }
         })
-    })
-
-    let card = new Card(row.id)
+    }
+    let card = new Card(result.card_id)
     return await card.getData();
 }
 
@@ -175,7 +176,7 @@ const hydrateCardDB = async function (cleanInstall = true) {
                 type = TYPE_NEGATIVE;
                 break;
             case 'neutral':
-                type = TYPE_NEGATIVE;
+                type = TYPE_NEUTRAL;
                 break;
             case 'place':
                 type = TYPE_PLACE;

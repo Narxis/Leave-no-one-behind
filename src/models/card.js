@@ -152,7 +152,8 @@ class Card {
         let raw_modules = await DB.tables.card_modules.findAll({
             attributes: [
                 'type',
-                'value'
+                'value',
+                'reveal'
             ],
             where: {
                 card_id: this.id

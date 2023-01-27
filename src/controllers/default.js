@@ -48,18 +48,15 @@ module.exports.renderCardEvent = async function (req, res) {
     let players = await DB.tables.players.findAll();
     // TODO get ship
     // TODO do it with card pop once baseCard.json is completed
-    // let next_card = cardPop();
+    let current_card = await cardPop();
     // TESTING :
-    let next_card = await getCards(ALL, 1);
-    next_card = next_card[0];
-
 
     let vars = {
         players: players,
-        card: next_card
+        card: current_card
     }
 
-    switch (next_card.type) {
+    switch (current_card.type) {
         case TYPE_PLANET:
             res.render('template-planet', vars);
             break;

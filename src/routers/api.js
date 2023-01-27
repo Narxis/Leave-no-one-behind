@@ -6,6 +6,9 @@ module.exports = function(router) {
 
     router.get(basePath + '/reset', controller.reset);
 
+    router.get(basePath + '/getNextCard', controller.getNextCard);
+    router.get(basePath + '/popNextCard', controller.popNextCard);
+
     router.get(basePath + '/players', controller.getAllPlayers);
     router.get(basePath + '/player/:playerId', controller.getPlayer);
     router.get(basePath + '/player/:playerId/:stat/:val', controller.updatePlayer); // :val can be SIGNED
