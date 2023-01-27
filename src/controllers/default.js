@@ -2,6 +2,7 @@ var fs = require('fs');
 let {cardPop, deckGenerator,getCards, hydrateCardDB, destroyDeck} = require('./deck')
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
+const {Ship} = require("../models/ship");
 
 module.exports.index = function(req, res) {
     res.render('index');
@@ -137,8 +138,14 @@ module.exports.indexLegacy = function (req, res) {
 }
 
 module.exports.reset = async function (req, res) {
+
+    await DB.tables.ship.destroy({truncate: true});
     await destroyDeck();
     await hydrateCardDB();
     await deckGenerator();
-    res.render('index');
+
+    let ship = new Ship();
+    await ship.create();
+
+    res.redirect('/');
 }
