@@ -2,6 +2,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+var interval_cd;
 var timerText = document.querySelector('#timer-text');
 var timerText2 = document.querySelector('#timer-text2');
 var bigBoite = document.querySelector('#bigboite');
@@ -13,7 +14,7 @@ function startCountDown() {
   // On récupère le texte dans le timer (en tant qu'entier)
   let time_left = parseInt(timerText.textContent);
   // On lance une fonction toutes les secondes (1000ms)
-  let interval_cd = setInterval(async function () {
+  interval_cd = setInterval(async function () {
     // aucune idée, une sorte de magie noire
     time_left = time_left - 1;
     // On change le texte dans le timer (avec un 0 devant si on est en dessous de 10)
@@ -62,4 +63,8 @@ function startCountDown() {
         break;
     }
   }, 1000);
+}
+
+function stopCountdown() {
+  clearInterval(interval_cd)
 }
