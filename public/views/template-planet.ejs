@@ -16,7 +16,7 @@
           <button class="p-txt o2-txt" id="o2-button">Oxygène
             <div class="noclic"></div>
             <div class="o2-pulsebox"></div>
-            <div class="points-required" id="pointso2"></div>
+            <div class="points-required" data-value="<%= card.modules.oxy.val %>" id="pointso2"><%= card.modules.oxy.cost %></div>
           </button>
           <div class="o2-blur"></div>
           <div class="o2-line"></div>
@@ -31,11 +31,12 @@
             </g>
           </svg>
         </div>
+
         <div class="p-stat grav">
           <button class="gr-txt p-txt" id="gr-button">Gravité
             <div class="noclic"></div>
             <div class="gr-pulsebox"></div>
-            <div class="points-required" id="pointsgr"></div>
+            <div class="points-required" data-value="<%= card.modules.grv.val %>" id="pointsgr"><%= card.modules.grv.cost %></div>
           </button>
           <div class="gr-line"></div>
           <div class="gr-line2"></div>
@@ -47,7 +48,7 @@
           <button class="p-txt eau-txt" id="eau-button">Présence d'eau
             <div class="noclic"></div>
             <div class="eau-pulsebox"></div>
-            <div class="points-required" id="pointseau"></div>
+            <div class="points-required" data-value="<%= card.modules.wtr.val %>" id="pointseau"><%= card.modules.wtr.cost %></div>
           </button>
           <svg class="eau-fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182 164">
             <path class="eau-color" id="Water" data-name="Water"
@@ -66,7 +67,7 @@
           <button class="p-txt re-txt" id="re-button">Ressources &amp; minerais
             <div class="noclic"></div>
             <div class="re-pulsebox"></div>
-            <div class="points-required" id="pointsre"></div>
+            <div class="points-required" data-value="<%= card.modules.res.val %>" id="pointsre"><%= card.modules.res.cost %></div>
           </button>
           <div class="re-line"></div>
           <div class="re-line2"></div>
@@ -182,7 +183,7 @@
           <button class="p-txt ff-txt" id="ff-button">Faune &amp; flore
             <div class="noclic"></div>
             <div class="ff-pulsebox"></div>
-            <div class="points-required" id="pointsff"></div>
+            <div class="points-required" data-value="<%= card.modules.fau.val %>" id="pointsff"><%= card.modules.fau.cost %></div>
           </button>
           <div class="ff-line"></div>
           <div class="ff-line2"></div>
@@ -221,7 +222,7 @@
           <button class="p-txt cl-txt" id="cl-button">Climat
             <div class="noclic"></div>
             <div class="cl-pulsebox"></div>
-            <div class="points-required" id="pointscl"></div>
+            <div class="points-required" data-value="<%= card.modules.cli.val %>" id="pointscl"><%= card.modules.cli.cost %></div>
           </button>
           <div class="cl-line"></div>
           <div class="cl-line2"></div>

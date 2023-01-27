@@ -77,20 +77,25 @@ const deckGenerator = async function (gameMode = 'Fair', nbPla = 5, nbTot = 6, n
     }
 }
 
-const getCards = async function (type = 0, quantity = ALL, valMinMax= [-1,0], order_rand = true) {
+const getCards = async function (type = TYPE_PLANET, quantity = ALL, valMinMax= [-1,0], order_rand = true) {
+
     let cards = [];
+    let whereClause = {};
+
+    if (type !== null) {
+        whereClause['value'] = {
+            [Op.between]: valMinMax
+        }
+        whereClause['type'] = {
+            [Op.eq] : type
+        }
+    }
+
     let rows = await DB.tables.cards.findAll({
         attributes: [
             'id',
         ],
-        where: {
-            type: {
-                [Op.eq] : type
-            },
-            value: {
-                [Op.between]: valMinMax
-            }
-        },
+        where: whereClause,
         limit: quantity,
         order: (order_rand ? literal('random()') : 'id'), logging: console.log
     })

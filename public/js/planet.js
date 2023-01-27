@@ -8,12 +8,28 @@ var textff = "blabla Animal blabla planette blabla plante bla bla ";
 var textre = "blabla Fer blabla planette blabla diamant bla bla ";
 var texteau = "blabla Eau blabla planette blabla boire bla bla ";
 var textgr = "blabla Gravité blabla planette blabla pomme bla bla";
-var costo2 = 2; //coût en points de detection
-var costcl = 3;//coût en points de detection
-var costff = 2;//coût en points de detection
-var costre = 5;//coût en points de detection
-var costeau = 4;//coût en points de detection
-var costgr = 6;//coût en points de detection
+
+var o2 = document.getElementById('pointso2');
+var cl = document.getElementById('pointscl');
+var ff = document.getElementById('pointsff');
+var re = document.getElementById('pointsre');
+var gr = document.getElementById('pointsgr');
+var eau = document.getElementById('pointseau');
+
+var costo2 = o2.innerText; //coût en points de detection
+var costcl = cl.innerText;//coût en points de detection
+var costff = ff.innerText;//coût en points de detection
+var costre = re.innerText;//coût en points de detection
+var costgr = gr.innerText;//coût en points de detection
+var costeau = eau.innerText;//coût en points de detection
+
+var valueo2 = o2.getAttribute('data-value');
+var valuecl = cl.getAttribute('data-value');
+var valueff = ff.getAttribute('data-value');
+var valuere = re.getAttribute('data-value');
+var valuegr = gr.getAttribute('data-value');
+var valueeau = eau.getAttribute('data-value');
+
 var costList = [costo2, costcl, costff, costre, costeau, costgr,];
 var points = 14;//total de detection
 var showbuttons = false;
@@ -25,12 +41,6 @@ function writePoints(place, number) {
     document.querySelector(place).innerText = String(number);
 };
 function initialisePlanet() {
-    writePoints('#pointso2', costo2);
-    writePoints('#pointscl', costcl);
-    writePoints('#pointsff', costff);
-    writePoints('#pointsre', costre);
-    writePoints('#pointseau', costeau);
-    writePoints('#pointsgr', costgr);
     writePoints('.detection-point', points);
     writePoints('.drone', dronenbr);
 }

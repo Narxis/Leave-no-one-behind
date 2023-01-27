@@ -1,7 +1,6 @@
 var fs = require('fs');
-let {deckGenerator,getCards, hydrateCardDB} = require('./../controllers/deck')
+let {cardPop, deckGenerator,getCards} = require('./deck')
 const {Card} = require("./../models/card");
-const {cardPop} = require("./deck");
 const {Player} = require("../models/player");
 
 module.exports.index = function(req, res) {
@@ -45,6 +44,37 @@ module.exports.mainMenu = function (req, res) {
 }
 
 module.exports.renderCardEvent = async function (req, res) {
+
+    let players = await DB.tables.players.findAll();
+    // TODO do it with card pop once baseCard.json is completed
+    // let next_card = cardPop();
+    // TESTING :
+    let next_card = await getCards(ALL, 1);
+    next_card = next_card[0];
+
+    console.log(next_card);
+
+    let vars = {
+        players: players,
+        card: next_card
+    }
+
+    switch (next_card.type) {
+        case TYPE_PLANET:
+            res.render('template-planet', vars);
+            break;
+        case TYPE_NEGATIVE:
+        case TYPE_NEUTRAL:
+        case TYPE_POSITIVE:
+            res.render('parallaxe', vars);
+            break;
+        case TYPE_PLACE:
+            res.render('parallaxe', vars);
+            break;
+    }
+}
+
+module.exports.renderTestCardEvent = async function (req, res) {
 
     let players = await DB.tables.players.findAll();
     res.render('parallaxe', {players: players});
