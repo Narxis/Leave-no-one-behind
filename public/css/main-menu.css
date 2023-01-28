@@ -119,6 +119,8 @@
     align-items: baseline;
     justify-content: center;
     flex-wrap: wrap;
+    cursor: default;
+    pointer-events: none;
 }
 
 .l-ob span {

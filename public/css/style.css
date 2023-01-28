@@ -145,11 +145,17 @@ body {
 /*----^^^--Star-Background--^^^---*/
 /*----vvv-----Nav-Menu-----vvv---*/
 
+nav {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
 #menuToggle {
     display: block;
-    position: relative;
-    top: 50px;
-    left: 50px;
+    position: absolute;
+    top: 5.2vh;
+    left: 5.2vh;
     z-index: 1;
     user-select: none;
 }
@@ -174,10 +180,10 @@ body {
     cursor: pointer;
     display: block;
     width: 25px;
-    position: absolute;
+    position: relative;
     fill: #fff;
-    left: 224px;
-    top: 13px;
+    left: 195px;
+    top: -30px;
 }
 
 #menuToggle input {
@@ -185,8 +191,8 @@ body {
     width: 40px;
     height: 32px;
     position: absolute;
-    top: -7px;
-    left: -5px;
+    top: -12px;
+    left: -12px;
     cursor: pointer;
     opacity: 0;
     z-index: 2;
@@ -232,12 +238,14 @@ body {
 
 #menu {
     position: absolute;
+    max-height: 80vh;
+    max-width: 20vw;
     width: 188px;
-    margin: -60px 0 0 -30px;
-    padding: 62px 32px 20px 40px;
+    margin: -48px 0 0 -21px;
+    padding: 40px;
     list-style-type: none;
     transform-origin: 0% 0%;
-    transform: translate(-115%, 0);
+    transform: translate(-50vw, 0);
     transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
     border: 3px solid rgb(180 180 180);
     border-radius: 15px;
@@ -247,7 +255,7 @@ body {
 
 #menu li {
     margin: 15px 0;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 #menuToggle input:checked~ul {
