@@ -32,6 +32,10 @@ module.exports.renderSingleSheet = async function (req, res) {
     res.render('partials/fiche-perso', {player: player});
 }
 
+module.exports.mjMenu = function (req, res) {
+    res.render('mj-menu');
+}
+
 module.exports.persos = function (req, res) {
     res.render('perso');
 }
@@ -70,15 +74,15 @@ module.exports.renderCardEvent = async function (req, res) {
         case TYPE_NEGATIVE:
         case TYPE_NEUTRAL:
         case TYPE_POSITIVE:
-            res.render('parallaxe', vars);
+            res.render('template-card', vars);
             break;
         case TYPE_PLACE:
-            res.render('parallaxe', vars);
+            res.render('template-card', vars);
             break;
     }
 }
 
-// TEST TPL PARALLAXE
+// TEST TPL template-card
 module.exports.renderTestCardEvent = async function (req, res) {
 
     let players = [
@@ -161,7 +165,7 @@ module.exports.renderTestCardEvent = async function (req, res) {
         ship: ship
     }
 
-    res.render('parallaxe', vars);
+    res.render('template-card', vars);
 }
 
 // TEST TPL PLANET
