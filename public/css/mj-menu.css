@@ -100,7 +100,7 @@
     height: 600px;
     border-left: 1px solid rgb(180, 180, 180);
 }
-.console-container {
+#console-container {
     padding-top: 10px ;
     margin-top: 40px;
     text-indent: 50px;
