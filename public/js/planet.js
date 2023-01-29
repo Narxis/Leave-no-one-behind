@@ -75,6 +75,53 @@ async function initialisePlayerTab() {
 
 window.addEventListener('load', initialisePlayerTab, false);
 
+//les bouttons playertab
+function addPlayerNumber (form, dial){
+    let formValue = parseInt(form.value);
+    console.log(form)
+    console.log(formValue)
+    let dialValue = parseInt(dial.innerText);
+    console.log(dial,dialValue)
+    console.log(formValue + dialValue)
+    if ((formValue + dialValue)>100){
+        dial.innerText = 100
+    }
+    else {
+        dial.innerText = formValue+dialValue
+    }
+}
+function substractPlayerNumber (form, dial){
+    let formValue = parseInt(form.value);
+    console.log(form)
+    console.log(formValue)
+    let dialValue = parseInt(dial.innerText);
+    console.log(dial,dialValue)
+    console.log(dialValue-formValue)
+    if ((dialValue-formValue)<0){
+        dial.innerText = 0
+    }
+    else {
+        dial.innerText = dialValue-formValue
+    }
+}
+
+function eventListenerPlayerButtons (){
+    let plusbuttons = document.getElementById('playertabs_container').getElementsByClassName('player-stat-up')
+    let moinsbuttons = document.getElementById('playertabs_container').getElementsByClassName('player-stat-down')
+    let form = document.getElementById('playertabs_container').getElementsByClassName('form-roll')
+    let dial = document.getElementById('playertabs_container').getElementsByClassName('player-stat-value')
+    for (let i=0;i<plusbuttons.length; i++){
+        plusbuttons.item(i).addEventListener('mouseup', function(){
+            addPlayerNumber(form.item(Math.floor(i/6)), dial.item(i))
+        })
+        moinsbuttons.item(i).addEventListener('mouseup', function(){
+            substractPlayerNumber(form.item(Math.floor(i/6)), dial.item(i))
+        })
+    }
+}
+
+window.addEventListener('load', eventListenerPlayerButtons, false);
+
 
 async function write(fulltext, place) {
     iswritting++
