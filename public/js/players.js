@@ -17,12 +17,30 @@ function doPlayerRoll(resp) {
     },50);
 }
 
+function quickUpdateStat(el, id, stat) {
+
+    let currentVal = parseInt(document.querySelector('#player-tab'+id+' .'+stat+' .player-stat-value').innerText);
+    let modifier = 1;
+    if (el.classList.contains('player-stat-down')) {
+        modifier = -1;
+    }
+    if (this.event.shiftKey) {
+        modifier *= 10;
+    }
+    else if (this.event.ctrlKey) {
+        modifier *= 5;
+    }
+    let newValue = currentVal + modifier;
+
+    setPlayerStat(id, stat, newValue);
+}
+
 function setPlayerStat(id, stat, newValue) {
     if (typeof wsLNOB === 'undefined'){
         console.error('YOU MUST INCLUDE socketLNOB.js before this');
     }
 
-    let statVal = document.querySelector('#player-tab'+id+' .'+stat+'-block .player-stat-value');
+    let statVal = document.querySelector('#player-tab'+id+' .'+stat+' .player-stat-value');
     statVal.innerText = newValue;
     wsLNOB.setStatistic(id, stat, newValue);
 }
