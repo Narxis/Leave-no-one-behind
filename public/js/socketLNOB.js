@@ -10,29 +10,7 @@ class SocketLNOB {
                     return false;
                 }
 
-                switch (resp.action) {
-                    case 'roll':
-                        this.roll(resp.data);
-                        break;
-                    case 'join':
-                        this.actionJoin(resp);
-                        break;
-                    case 'set-race':
-                        this.setRace(resp);
-                        break;
-                    case 'set-name':
-                        this.setName(resp);
-                        break;
-                    case 'roll-stats':
-                        this.setRollPlayerStats(resp);
-                        break;
-                    case 'playerStat':
-                        this.playerStatUpdatedAction(resp.data);
-                        break;
-                }
-
                 let custom_event = new CustomEvent(resp.action, {detail: resp});
-                console.log(resp);
                 document.dispatchEvent(custom_event);
             }
             catch (e) {
@@ -45,34 +23,6 @@ class SocketLNOB {
     // Send payload to backend
     send(data) {
         this.socket.send(JSON.stringify(data));
-    }
-
-    // After player joined with /join (discord)
-    actionJoin(resp) {
-        addPlayerSheet(resp.uid).then();
-    }
-
-    // After a player rolled a stat with /create (discord)
-    setRollPlayerStats(response) {
-        // TODO implement front interaction to a player roll
-        console.log(response);
-    }
-
-    // After a stat has been updated in DB with this.setStatistic()
-    playerStatUpdatedAction(response) {
-        // console.log(response);
-    }
-
-    // After a player chose a race with /create (discord)
-    setRace(response) {
-        setPlayerRace(null, response.data.race, response.data.uid);
-    }
-
-    // After a player chose a name with /create (discord)
-    setName(response) {
-        console.log(response);
-        console.log(document.querySelector('#p'+ response.data.uid + ' .player-name'));
-        document.querySelector('#p'+ response.data.uid + ' .player-name').value = response.data.nick;
     }
 
     // Send a roll request to the backend

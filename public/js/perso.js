@@ -10,12 +10,12 @@ function setPlayerRaceListeners(discord_id) {
         })
         let race_list = races.querySelectorAll('.race-possible');
         for (let k = 0; k < race_list.length; k++) {
-            race_list.item(k).addEventListener('mouseup', setPlayerRace)
+            race_list.item(k).addEventListener('mouseup', setRaceSelect)
         }
     }
 }
 
-function setPlayerRace(e=null, race=null, discord_id=null) {
+function setRaceSelect(e=null, race=null, discord_id=null) {
 
     if (e) {
         if (!race) {
@@ -64,6 +64,19 @@ async function getExistingPlayers() {
     return JSON.parse(await rawResponse.text());
 }
 
+function setName(e) {
+    document.querySelector('#p'+ e.detail.data.uid + ' .player-name').value = e.detail.data.nick;
+}
+
+function setRace(e) {
+    let img = document.querySelector('#p' + e.detail.data.uid + ' .race-img');
+    img.src = '/img/races/' + race + '.png';
+}
+
+async function join(e) {
+    await addPlayerSheet(e.detail.uid)
+}
+
 async function loadPlayerSheets() {
 
     let players = await getExistingPlayers();
@@ -72,3 +85,7 @@ async function loadPlayerSheets() {
         await addPlayerSheet(players[i].discord_id);
     }
 }
+
+document.addEventListener('set-name', join);
+document.addEventListener('set-name', setName);
+document.addEventListener('set-race', setRace);
