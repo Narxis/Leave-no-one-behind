@@ -26,6 +26,9 @@ class SocketLNOB {
                     case 'roll-stats':
                         this.setRollPlayerStats(resp);
                         break;
+                    case 'playerStat':
+                        this.playerStatUpdatedAction(resp.data);
+                        break;
                 }
             }
             catch (e) {
@@ -35,29 +38,40 @@ class SocketLNOB {
         }
     }
 
+    // Send payload to backend
     send(data) {
         this.socket.send(JSON.stringify(data));
     }
 
+    // After player joined with /join (discord)
     actionJoin(resp) {
         addPlayerSheet(resp.uid).then();
     }
 
+    // After a player rolled a stat with /create (discord)
     setRollPlayerStats(response) {
         // TODO implement front interaction to a player roll
         console.log(response);
     }
 
+    // After a stat has been updated in DB with this.setStatistic()
+    playerStatUpdatedAction(response) {
+        console.log(response);
+    }
+
+    // After a player chose a race with /create (discord)
     setRace(response) {
         setPlayerRace(null, response.data.race, response.data.uid);
     }
 
+    // After a player chose a name with /create (discord)
     setName(response) {
         console.log(response);
         console.log(document.querySelector('#p'+ response.data.uid + ' .player-name'));
         document.querySelector('#p'+ response.data.uid + ' .player-name').value = response.data.nick;
     }
 
+    // Send a roll request to the backend
     rollDice(discord_id, stat, module) {
         let payload = {
             action: 'roll',
@@ -70,6 +84,7 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    //Update a module integrity value in DB
     setModule(name, value) {
         let payload = {
             action: 'setModule',
@@ -81,6 +96,7 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    //Update a status value in DB
     setStatus(name, value) {
         let payload = {
             action: 'setStatus',
@@ -92,6 +108,7 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    // Add a conso in DB
     addConso(name) {
         let payload = {
             action: 'conso',
@@ -103,6 +120,7 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    // Delete a conso in DB
     delConso(name) {
         let payload = {
             action: 'conso',
@@ -114,6 +132,10 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    /**
+     * @deprecated // might be calculated from front
+     * @param value
+     */
     setPlanetDetection(value) {
         let payload = {
             action: 'detection',
@@ -124,6 +146,7 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    // Update a player statistic in DB
     setStatistic(player_id, name, value) {
         let payload = {
             action: 'playerStat',
@@ -136,6 +159,7 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    // Post roll action after a /roll (discord) or a this.rollDice
     roll(data) {
         doPlayerRoll(data);
         if (data.success) {

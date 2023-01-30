@@ -32,7 +32,6 @@ const makeAction = async function (raw_response) {
         };
     }
 
-    console.log(response);
     switch (response.action) {
         case 'playerStat':
             payload = actionSetPlayerStat(response);
@@ -145,21 +144,21 @@ const actionJoin = async function(response) {
  */
 const actionSetPlayerStat = async function(response) {
 
-    let player = new Player(response.data.player_id);
-    let val = parseInt(response.data.val);
-    let stat = response.data.stat;
+    let player = new Player();
+    let val = parseInt(response.data.value);
+    let stat = response.data.name;
 
-    player = await player.getData();
+    player = await player.getData(response.data.player_id);
     if (player) {
         let data = {};
         data[stat] = val;
-        await player.update(data);
+        await player.update(data, response.data.player_id);
     }
 
     return {
         action: response.action,
         error: false,
-        data: response.data
+        data: player
     }
 }
 
