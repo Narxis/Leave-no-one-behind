@@ -1,3 +1,5 @@
+// ACTIONS ON PLAYER TABS
+
 function doPlayerRoll(resp) {
 
     let i=20;
@@ -13,4 +15,14 @@ function doPlayerRoll(resp) {
             clearInterval(randomDisp);
         }
     },50);
+}
+
+function setPlayerStat(id, stat, newValue) {
+    if (typeof wsLNOB === 'undefined'){
+        console.error('YOU MUST INCLUDE socketLNOB.js before this');
+    }
+
+    let statVal = document.querySelector('#player-tab'+id+' .'+stat+'-block .player-stat-value');
+    statVal.innerText = newValue;
+    wsLNOB.setStatistic(id, stat, newValue);
 }
