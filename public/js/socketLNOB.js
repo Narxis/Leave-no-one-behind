@@ -30,6 +30,10 @@ class SocketLNOB {
                         this.playerStatUpdatedAction(resp.data);
                         break;
                 }
+
+                let custom_event = new CustomEvent(resp.action, {detail: resp});
+                console.log(resp);
+                document.dispatchEvent(custom_event);
             }
             catch (e) {
                 console.log(event.data);
@@ -56,7 +60,7 @@ class SocketLNOB {
 
     // After a stat has been updated in DB with this.setStatistic()
     playerStatUpdatedAction(response) {
-        console.log(response);
+        // console.log(response);
     }
 
     // After a player chose a race with /create (discord)
@@ -170,3 +174,5 @@ class SocketLNOB {
         }
     }
 }
+
+const wsLNOB = new SocketLNOB();
