@@ -40,6 +40,8 @@ function setPlayerStat(id, stat, newValue) {
         console.error('YOU MUST INCLUDE socketLNOB.js before this');
     }
 
+    newValue = Math.min(Math.max(newValue, 0), 100);
+
     let statVal = document.querySelector('#player-tab'+id+' .'+stat+' .player-stat-value');
     statVal.innerText = newValue;
     wsLNOB.setStatistic(id, stat, newValue);
