@@ -280,10 +280,35 @@ function applystatus(statusname) {
     }
 };
 
+function quickUpdateModule(el, mod) {
 
+    let currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value'));
+    let modifier = 1;
+    if (el.classList.contains('tab-moins')) {
+        modifier = -1;
+    }
+    if (this.event.shiftKey) {
+        modifier *= 10;
+    }
+    else if (this.event.ctrlKey) {
+        modifier *= 5;
+    }
+    let newValue = currentVal + modifier;
 
+    setModuleVal(mod, newValue);
+}
 
+function setModuleVal(mod, newValue) {
+    if (typeof wsLNOB === 'undefined'){
+        console.error('YOU MUST INCLUDE socketLNOB.js before this');
+    }
 
+    newValue = Math.min(Math.max(newValue, 0), 100);
+
+    let statVal = document.querySelector('#modtab #dial-'+mod);
+    statVal.setAttribute('data-value', newValue);
+    wsLNOB.setModule(mod, newValue);
+}
 
 // EXECUTION AU CHARGEMENT DE LA PAGE
 (function(){
