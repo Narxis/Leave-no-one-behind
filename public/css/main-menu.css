@@ -49,6 +49,8 @@
     text-align: center;
     top: 7vw;
     cursor: pointer;
+    text-decoration: none;
+    color: #ffffff29;
 }
 
 @keyframes blink {
