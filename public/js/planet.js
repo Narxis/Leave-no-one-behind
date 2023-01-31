@@ -110,14 +110,6 @@ function eventListenerPlayerButtons (){
     let moinsbuttons = document.getElementById('playertabs_container').getElementsByClassName('player-stat-down')
     let form = document.getElementById('playertabs_container').getElementsByClassName('form-roll')
     let dial = document.getElementById('playertabs_container').getElementsByClassName('player-stat-value')
-    for (let i=0;i<plusbuttons.length; i++){
-        plusbuttons.item(i).addEventListener('mouseup', function(){
-            addPlayerNumber(form.item(Math.floor(i/6)), dial.item(i))
-        })
-        moinsbuttons.item(i).addEventListener('mouseup', function(){
-            substractPlayerNumber(form.item(Math.floor(i/6)), dial.item(i))
-        })
-    }
 }
 
 window.addEventListener('load', eventListenerPlayerButtons, false);

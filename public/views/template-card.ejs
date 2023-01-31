@@ -240,7 +240,7 @@
         <div class="mod-stats" id="modtab">
           <div class="tab tab-moteurs move-right">
             <div class="tab-txt">Moteurs</div>
-            <div id="dial-moteurs" class="container moteurs dial" data-value="<%= ship.motors %>">
+            <div id="dial-motors" class="container moteurs dial" data-value="<%= ship.motors %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -253,15 +253,15 @@
                 </svg>
               </button>
             </div>
-            <button class="mod-b tab-moins" id="moins-mot">-</button>
+            <button onclick="quickUpdateModule(this,'motors');" class="mod-b tab-moins" id="moins-mot">-</button>
             <div class="modform form-mot">
               <input type="text" class="form-input" placeholder="1-100">
             </div>
-            <button class="mod-b tab-plus" id="plus-mot">+</button>
+            <button onclick="quickUpdateModule(this,'motors');" class="mod-b tab-plus" id="plus-mot">+</button>
           </div>
           <div class="tab tab-scan move-right">
             <div class="tab-txt">Scanner de surface</div>
-            <div id="dial-scan" class="container scan dial" data-value="<%= ship.scanner %>">
+            <div id="dial-scanner" class="container scan dial" data-value="<%= ship.scanner %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -274,15 +274,15 @@
                 </svg>
               </button>
             </div>
-            <button class="mod-b tab-moins" id="moins-scan">-</button>
+            <button onclick="quickUpdateModule(this,'scanner');" class="mod-b tab-moins" id="moins-scan">-</button>
             <div class="modform form-scan">
               <input type="text" class="form-input" placeholder="1-100">
             </div>
-            <button class="mod-b tab-plus" id="plus-scan">+</button>
+            <button onclick="quickUpdateModule(this,'scanner');" class="mod-b tab-plus" id="plus-scan">+</button>
           </div>
           <div class="tab tab-detect move-right">
             <div class="tab-txt">Détecteur de proximité</div>
-            <div id="dial-detect" class="container detect dial" data-value="<%= ship.proximity %>">
+            <div id="dial-proximity" class="container detect dial" data-value="<%= ship.proximity %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -295,15 +295,15 @@
                 </svg>
               </button>
             </div>
-            <button class="mod-b tab-moins" id="moins-detect">-</button>
+            <button onclick="quickUpdateModule(this,'proximity');" class="mod-b tab-moins" id="moins-detect">-</button>
             <div class="modform form-detect">
               <input type="text" class="form-input" placeholder="1-100">
             </div>
-            <button class="mod-b tab-plus" id="plus-detect">+</button>
+            <button onclick="quickUpdateModule(this,'proximity');" class="mod-b tab-plus" id="plus-detect">+</button>
           </div>
           <div class="tab tab-o2 move-right">
             <div class="tab-txt">Oxygène</div>
-            <div id="dial-o2" class="container o2 dial" data-value="<%= ship.oxygen %>">
+            <div id="dial-oxygen" class="container o2 dial" data-value="<%= ship.oxygen %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -316,15 +316,15 @@
                 </svg>
               </button>
             </div>
-            <button class="mod-b tab-moins" id="moins-o2">-</button>
+            <button onclick="quickUpdateModule(this,'oxygen');" class="mod-b tab-moins" id="moins-o2">-</button>
             <div class="modform form-o2">
               <input type="text" class="form-input" placeholder="1-100">
             </div>
-            <button class="mod-b tab-plus" id="plus-o2">+</button>
+            <button onclick="quickUpdateModule(this,'oxygen');" class="mod-b tab-plus" id="plus-o2">+</button>
           </div>
           <div class="tab tab-elec move-right">
             <div class="tab-txt">Électricité</div>
-            <div id="dial-elec" class="container elec dial" data-value="<%= ship.energy %>">
+            <div id="dial-energy" class="container elec dial" data-value="<%= ship.energy %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -337,15 +337,15 @@
                 </svg>
               </button>
             </div>
-            <button class="mod-b tab-moins" id="moins-elec">-</button>
+            <button onclick="quickUpdateModule(this,'energy');" class="mod-b tab-moins" id="moins-elec">-</button>
             <div class="modform form-elec">
               <input type="text" class="form-input" placeholder="1-100">
             </div>
-            <button class="mod-b tab-plus" id="plus-elec">+</button>
+            <button onclick="quickUpdateModule(this,'energy');" class="mod-b tab-plus" id="plus-elec">+</button>
           </div>
           <div class="tab tab-grav move-right">
             <div class="tab-txt">Gravité artificielle</div>
-            <div id="dial-grav" class="container grav dial" data-value="<%= ship.gravity %>">
+            <div id="dial-gravity" class="container grav dial" data-value="<%= ship.gravity %>">
               <button class="mod-button">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -358,11 +358,11 @@
                 </svg>
               </button>
             </div>
-            <button class="mod-b tab-moins" id="moins-grav">-</button>
+            <button onclick="quickUpdateModule(this,'gravity');" class="mod-b tab-moins" id="moins-grav">-</button>
             <div class="modform form-grav">
               <input type="text" class="form-input" placeholder="1-100">
             </div>
-            <button class="mod-b tab-plus" id="plus-grav">+</button>
+            <button onclick="quickUpdateModule(this,'gravity');" class="mod-b tab-plus" id="plus-grav">+</button>
           </div>
         </div>
         <div class="consommable-bar">

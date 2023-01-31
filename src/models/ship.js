@@ -1,3 +1,5 @@
+const {Op} = require("sequelize");
+
 class Ship{
     id;
     name;
@@ -87,11 +89,11 @@ class Ship{
             energy_up: this.energy_up,
             gravity_up: this.gravity_up
         },
-        // {
-        //     where: {
-        //         id: this.id
-        //     }
-        // }
+        {
+            where: {
+                id: {[Op.gt]:0}
+            }
+        }
         );
 
         return await this.getData();
