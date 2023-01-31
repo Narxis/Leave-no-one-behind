@@ -171,3 +171,32 @@ GET /api/ship'
   "gravity_up": 0
 }
 ```
+### Statuses
+```http
+GET /api/statuses'
+# Obtient un tableau contenant tous les statuts
+```
+```json
+[
+  {
+    "id": 1,
+    "name": "",
+    "desc": "",
+    "duration": 0
+  }
+]
+```
+```http
+GET /api/statuses/active'
+# Obtient un tableau contenant tous les statuts actifs (duration > 0)
+```
+```json
+[
+  {
+    "id": 1,
+    "name": "",
+    "desc": "",
+    "duration": 1
+  }
+]
+```

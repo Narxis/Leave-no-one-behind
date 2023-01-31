@@ -11,6 +11,9 @@ module.exports = function(router) {
     router.get(basePath + '/player/:discordId', controller.getPlayer);
     // router.get(basePath + '/player/:playerId/:stat/:val', controller.updatePlayer); // :val can be SIGNED
 
+    router.get(basePath + '/statuses', controller.getAllStatuses);
+    router.get(basePath + '/statuses/active', controller.getActiveStatuses);
+
     router.get(basePath + '/ship', controller.getShip);
     // router.get(basePath + '/ship/upgrade/:module', controller.upgradeShipModule);
     // router.get(basePath + '/ship/:module/:val', controller.updateShipModule);

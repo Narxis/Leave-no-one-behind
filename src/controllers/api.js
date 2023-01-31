@@ -13,6 +13,20 @@ module.exports.index = async function(req, res) {
     res.json({});
 };
 
+module.exports.getAllStatuses = async function(req, res) {
+    let statuses = new Statuses();
+    statuses = await statuses.getAllStatuses(false);
+
+    res.json(statuses);
+}
+
+module.exports.getActiveStatuses = async function(req, res) {
+    let statuses = new Statuses();
+    statuses = await statuses.getAllStatuses();
+
+    res.json(statuses);
+}
+
 module.exports.getPlayer = async function (req, res) {
     let player = new Player();
     player = await player.getData(req.params.discordId);

@@ -70,13 +70,15 @@ class Statuses {
         if (active) {
             whereClause = {
                 where: {
-                    quantity: {
+                    duration: {
                         [Op.gt]: 0
                     }
                 }
             }
         }
         let result = await DB.tables.statuses.findAll(whereClause);
+
+        console.log(result);
 
         return result.map(r => r.dataValues);
     }
