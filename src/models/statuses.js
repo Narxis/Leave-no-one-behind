@@ -78,8 +78,6 @@ class Statuses {
         }
         let result = await DB.tables.statuses.findAll(whereClause);
 
-        console.log(result);
-
         return result.map(r => r.dataValues);
     }
 

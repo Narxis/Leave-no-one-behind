@@ -27,6 +27,20 @@ module.exports.getActiveStatuses = async function(req, res) {
     res.json(statuses);
 }
 
+module.exports.getAllItems = async function(req, res) {
+    let items = new Items();
+    items = await items.getAllItems(false);
+
+    res.json(items);
+}
+
+module.exports.getOwnedItems = async function(req, res) {
+    let items = new Items();
+    items = await items.getAllItems();
+
+    res.json(items);
+}
+
 module.exports.getPlayer = async function (req, res) {
     let player = new Player();
     player = await player.getData(req.params.discordId);

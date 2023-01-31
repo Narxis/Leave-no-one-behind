@@ -200,3 +200,32 @@ GET /api/statuses/active'
   }
 ]
 ```
+### Items
+```http
+GET /api/items'
+# Obtient un tableau contenant tous les items
+```
+```json
+[
+  {
+    "id": 1,
+    "name": "",
+    "desc": "",
+    "duration": 0
+  }
+]
+```
+```http
+GET /api/items/owned'
+# Obtient un tableau contenant tous les items possédéss (quantity > 0)
+```
+```json
+[
+  {
+    "id": 1,
+    "name": "",
+    "desc": "",
+    "duration": 1
+  }
+]
+```
