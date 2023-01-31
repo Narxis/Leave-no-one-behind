@@ -300,6 +300,11 @@ class DB {
                 defaultValue: '',
                 allowNull: false
             },
+            race: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
             quantity: {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,

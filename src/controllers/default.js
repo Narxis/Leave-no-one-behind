@@ -3,6 +3,8 @@ let {cardPop, deckGenerator,getCards, hydrateCardDB, destroyDeck} = require('./d
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
+const {Statuses} = require("../models/statuses");
+const {Items} = require("../models/items");
 
 module.exports.index = function(req, res) {
     res.render('index');
@@ -265,6 +267,12 @@ module.exports.reset = async function (req, res) {
 
     let ship = new Ship();
     await ship.create();
+
+    let statuses = new Statuses();
+    await statuses.hydrateDB();
+
+    let items = new Items();
+    await items.hydrateDB();
 
     res.redirect('/');
 }

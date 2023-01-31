@@ -85,12 +85,11 @@ class Statuses {
         if (cleanInstall) {
             DB.tables.statuses.destroy({truncate: true});
         }
-        let statusManager = new Statuses();
         let baseStatusRaw = fs.readFileSync(__dirname + '/../config/statuses.json');
         let baseStatuses = JSON.parse(baseStatusRaw);
 
         for (let i in baseStatuses) {
-            await statusManager.create(baseStatuses[i]);
+            await this.create(baseStatuses[i]);
         }
     }
 }
