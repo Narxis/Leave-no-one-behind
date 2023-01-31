@@ -31,12 +31,12 @@ Il suffira d'un `src="/js/script.js"` ou `href="/img/image.png"` pour y accèder
 
 Ajouter sa route dans `src/routers/default.js` à la suite des autres :
 
-```
+```javascript
 router.get('/nouvelle_route', controller.nouvelle_fonction);
 ```
 
 Il faudra ensuite créer la fonction qui gère l'affichage dans `src/controllers/default.js` :
-```
+```javascript
 module.exports.nouvelle_fonction = function (req, res) {
     res.render('nom_du_template');
 }
@@ -47,26 +47,26 @@ Il faudra que les templates soient au format ejs. Le html est accepté donc il s
 
 Il est également possible de passer des variables dans le template.
 Il suffira de les passer dans un bojet, dans la fonction `res.render()` appelée dans le controller comme suit :
-```
+```javascript
 module.exports.nouvelle_fonction = function (req, res) {
     let variable_texte = 'Texte random';
     res.render('nom_du_template', {var_text: variable_texte});
 }
 ```
 Puis, pour l'appeler dans le template, dans notre `nom_du_template.ejs`, on pourra afficher la variable avec la balise suivante :
-```
+```ejs
 <%= var_text %>
 ```
 
 Il est aussi possible d'insérer un template dans un autre en utilisant cette balise dans notre template :
-```
+```ejs
 <%- include("nom_du_template_a_inclure") %>
 ```
 
 ## EVENT LISTENERS
 
 Le websocket va trigger des events listener qu'il sera possible d'utiliser  via un addEventListener() sur le document.
-```
+```javascript
 document.addEventListener('set-race', function(e) {
   console.log(e);
   // e.detail contiendra les infos propres à l'action, ici l'ID du joueur et la race choisie
