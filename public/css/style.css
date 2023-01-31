@@ -312,7 +312,45 @@ nav {
 }
 
 .expander-item {
-    left: 178px;
+    left: 175px;
+    position: absolute;
+    width: 20px;
+    height: 17px;
+    top: 10px;
+    transition: 1s ease-out;
+    transform: translateY(-29px);
+    background: linear-gradient(180deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
+    border-top: 2px solid rgb(180 180 180);
+    border-right: 2px solid rgb(180 180 180);
+    border-left: 2px solid rgb(180 180 180);
+    border-radius: 8px 8px 0px 0px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 13px;
+}
+
+.chestimg {
+    position: absolute;
+    filter: invert(1);
+    height: 15px;
+    top: 1px;
+}
+
+#itemlist {
+    position: absolute;
+    top: 5px;
+    left: -170px;
+    width: 218px;
+    height: 156px;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background: var(--lgrad);
+    align-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .move-up {
