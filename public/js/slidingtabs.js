@@ -295,6 +295,9 @@ function quickUpdateModule(el, mod) {
     }
     let newValue = currentVal + modifier;
 
+    newValue = Math.min(Math.max(newValue, 0), 100);
+    if (currentVal === newValue) return;
+
     setModuleVal(mod, newValue);
 }
 
