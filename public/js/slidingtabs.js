@@ -284,16 +284,28 @@ function quickUpdateModule(el, mod) {
 
     let currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value'));
     let modifier = 1;
+    let input = document.getElementsByName('i-'+ mod)[0];
+    let inputVal = input.value;
+    let newValue;
+
     if (el.classList.contains('tab-moins')) {
         modifier = -1;
     }
-    if (this.event.shiftKey) {
-        modifier *= 10;
+
+    if (inputVal !== ''){
+        modifier *= inputVal;
     }
-    else if (this.event.ctrlKey) {
-        modifier *= 5;
+    else {
+        if (this.event.shiftKey) {
+            modifier *= 10;
+        }
+        else if (this.event.ctrlKey) {
+            modifier *= 5;
+        }
     }
-    let newValue = currentVal + modifier;
+
+    newValue = currentVal + modifier;
+    input.value = '';
 
     newValue = Math.min(Math.max(newValue, 0), 100);
     if (currentVal === newValue) return;
