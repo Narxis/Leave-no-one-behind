@@ -97,7 +97,7 @@ const getCards = async function (type = TYPE_PLANET, quantity = ALL, valMinMax= 
         ],
         where: whereClause,
         limit: quantity,
-        order: (order_rand ? literal('random()') : 'id'), logging: console.log
+        order: (order_rand ? literal('random()') : 'id')
     })
     rows = rows.map(r => r.dataValues);
 
