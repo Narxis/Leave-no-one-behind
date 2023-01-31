@@ -1,4 +1,5 @@
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
     <link rel="stylesheet" href="css\style.css">
     <link rel="stylesheet" href="css\mj-menu.css">
 </head>
@@ -10,14 +11,14 @@
             <div class="choice-reveal">
                 <% for(var i=0; i<3; i++) {%>
                     <div class="choice" id="choice<%= i %>">
-                        <div class="button-text">elo</div>
-                        <div class="reveal-text">byebye</div>
+                        <div class="button-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. </div>
+                        <div class="reveal-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi sunt quae dolorem dignissimos, beatae nesciunt sint tenetur eaque assumenda. Officia, cumque! Provident neque doloribus cumque ipsa eius consectetur aut libero? </div>
                     </div>
                     <% } %>
             </div>
             <div class="life-container">
                 <div class="ennemy">
-                    <input type="text" id="search-ennemy" list="bestiaire">
+                    <input type="text" id="search-ennemy" list="bestiaire" placeholder="Adversaire">
                     <datalist id="bestiaire">
                         <!--Oui les ennemis c'est là dedans probablement un menu avec scroll bar et ce serait giga cool une barre de recherche-->
                         <option value="mob1"></option>
@@ -30,10 +31,11 @@
                         <option value="monstre3"></option>
                         <option value="monstre4"></option>
                     </datalist>
-                    <button class="add-life" id="add-monstre">Ajouter un adversaire</button>
+                    <button class="add-life" id="add-monstre">+</button>
+                    <button class="add-life" id="monstre-list" >X</button>
                 </div>
                 <div class="ally">
-                    <input type="text" id="search-ally" list="compagnon">
+                    <input type="text" id="search-ally" list="compagnon" placeholder="Compagnon">
                     <datalist id="compagnon">
                         <!--Oui les compagnons/alliés c'est là dedans probablement un menu avec scroll bar et ce serait giga cool une barre de recherche-->
                         <option value="ally1"></option>
@@ -46,12 +48,13 @@
                         <option value="friend3"></option>
                         <option value="friend4"></option>
                     </datalist>
-                    <button class="add-life" id="add-friend">Ajouter un compagnon</button>
+                    <button class="add-life" id="add-friend">+</button>
+                    <button class="add-life" id="friend-list" >X</button>
                 </div>
             </div>
             <div class="combat">
                 <!--Un espace pour chaque joueurs pour un boutton join-->
-                <button class="add-life" id="combat-start"> Commencer le combat</button>
+                <button class="add-life fight" id="combat-start"> Commencer le combat</button>
                 <div id="console-container"> Texte
 
                 </div>

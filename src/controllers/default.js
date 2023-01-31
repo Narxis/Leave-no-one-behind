@@ -254,6 +254,10 @@ module.exports.endScreen = function (req, res) {
     res.render('end-screen');
 }
 
+module.exports.leaderboard = function (req, res) {
+    res.render('leaderboard');
+}
+
 module.exports.indexLegacy = function (req, res) {
     res.render('index-legacy');
 }

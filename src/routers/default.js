@@ -16,6 +16,7 @@ module.exports = function(router) {
     router.get('/index', controller.index);
     router.get('/template-card', controller.renderTestCardEvent);
     router.get('/template-planet', controller.templatePlanet);
+    router.get('/leaderboard', controller.leaderboard);
     router.get('/index-legacy', controller.indexLegacy);
 
     router.post('/fiche', controller.renderSingleSheet);

@@ -359,3 +359,17 @@ input[type=number]::-webkit-outer-spin-button {
   backdrop-filter: blur(1px);
   margin: 40px;
 }
+
+.lecadre {
+  position: absolute;
+  display: flex;
+  height: 148px;
+  width: 800px;
+  border-radius: 20px;
+  border: 2px solid #fff;
+  background: var(--lgrad);
+  font-size: 1.5em;
+  align-items: center;
+  text-align: center;
+  backdrop-filter: blur(1px);
+}
