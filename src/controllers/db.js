@@ -1,6 +1,9 @@
 const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
+const DB_VERSION = 1; // increment when structure changes are added
+const DB_FOLDER = 'storage/databases/';
+
 class DB {
     sequelize;
     tables;
@@ -8,13 +11,13 @@ class DB {
     async init(test = false) {
 
         if (process.env.DB_URL === '') {
-            let db_name = test ? 'test_db' : 'database';
+            let db_name = test ? 'test_db' : 'database' + DB_VERSION;
             console.log('Using local DB')
             this.sequelize =  new Sequelize(db_name, '', '', {
                 host: 'localhost',
                 dialect: 'sqlite',
                 logging: false,
-                storage: db_name + '.sqlite'
+                storage: DB_FOLDER + db_name + '.sqlite'
             });
         }
         else {

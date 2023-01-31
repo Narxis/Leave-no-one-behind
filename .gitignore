@@ -1,5 +1,5 @@
-database.sqlite
-test_db.sqlite
+storage/databases/
+
 # Logs
 logs
 *.log
