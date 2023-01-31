@@ -1,7 +1,8 @@
 const {Player} = require("../models/player");
-const {Bonuses} = require("../models/bonuses");
+const {Items} = require("../models/items");
 const {response} = require("express");
 const {Ship} = require("../models/ship");
+const {Statuses} = require("../models/statuses");
 const shipId = 1;
 
 const init = function (){
@@ -42,14 +43,14 @@ const makeAction = async function (raw_response) {
         case 'setModule':
             payload = actionSetModule(response);
             break;
-        case 'setStatus':
+        case 'status':
             payload = actionSetStatus(response);
             break;
         case 'detection':
             payload = actionSetDetection(response);
             break;
-        case 'conso':
-            payload = actionConso(response);
+        case 'item':
+            payload = actionItem(response);
             break;
         case 'join':
             payload = actionJoin(response);
@@ -193,12 +194,9 @@ const actionSetStatus = async function(response) {
 
     let status = response.data.name;
     let val = response.data.value;
-    let bonuses = new Bonuses();
+    let statuses = new Statuses();
 
-    if (await bonuses.exists(status))
-        await bonuses.updateStatus(status, val);
-    else
-        await bonuses.create(status, val, 0);
+    await statuses.updateStatus(status, val);
 
     return {
         action: response.action,
@@ -230,16 +228,16 @@ const actionSetDetection = async function(response) {
  * @param response
  * @returns {Promise<{data, action, error: boolean}>}
  */
-const actionConso = async function (response) {
+const actionItem = async function (response) {
 
     let name = response.data.name;
     let remove = response.data.remove;
-    let bonuses = new Bonuses();
+    let items = new Items();
 
     if (remove)
-        await bonuses.deleteOne(name);
+        await items.remove(name);
     else
-        await bonuses.create(name);
+        await items.add(name);
 
     return {
         action: response.action,

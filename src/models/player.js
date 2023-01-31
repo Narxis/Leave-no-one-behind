@@ -30,7 +30,6 @@ class Player {
 
     async create(data = {}) {
 
-        console.log(data);
         for (let dat in this.accepted_datas)
             this[dat] = (typeof data[dat] === 'undefined' ? this.accepted_datas[dat]: data[dat]);
 

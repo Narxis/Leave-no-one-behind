@@ -63,9 +63,9 @@ class SocketLNOB {
     }
 
     // Add a conso in DB
-    addConso(name) {
+    addItem(name) {
         let payload = {
-            action: 'conso',
+            action: 'item',
             data: {
                 remove: false,
                 name: name
@@ -75,9 +75,9 @@ class SocketLNOB {
     }
 
     // Delete a conso in DB
-    delConso(name) {
+    delItem(name) {
         let payload = {
-            action: 'conso',
+            action: 'item',
             data: {
                 remove: true,
                 name: name

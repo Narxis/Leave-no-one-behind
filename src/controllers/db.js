@@ -279,7 +279,7 @@ class DB {
             }
         })
 
-        let bonuses = this.sequelize.define('bonuses', {
+        let items = this.sequelize.define('items', {
             id: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
@@ -290,14 +290,42 @@ class DB {
                 defaultValue: '',
                 allowNull: false
             },
-            value: {
+            desc: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
+            },
+            pool: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            quantity: {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
-            },
-            is_conso: {
+            }
+        })
+
+        let statuses = this.sequelize.define('statuses', {
+            id: {
                 type: Sequelize.INTEGER,
-                defaultValue: 0,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            name: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            desc: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
+            },
+            duration: {
+                type: Sequelize.INTEGER,
+                defaultValue: '',
                 allowNull: false
             }
         })
@@ -308,7 +336,8 @@ class DB {
             players: players,
             ship: ship,
             deck: deck,
-            bonuses: bonuses
+            items: items,
+            statuses: statuses
         };
 
         for (let table in this.tables) {

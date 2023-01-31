@@ -1,16 +1,18 @@
 const {Player} = require("./../models/player");
 const {Ship} = require("./../models/ship");
 const {hydrateCardDB, getCards, cardPop} = require("./deck");
+const {Statuses} = require("../models/statuses");
 
 // TODO replace shipId with current game ship ID
 const shipId = 1;
 
-// module.exports.index = function(req, res) {
-//     res.status(200);
-//     res.json({
-//         version: API_VER
-//     });
-// };
+module.exports.index = async function(req, res) {
+
+    let statuses = new Statuses();
+    await statuses.hydrateDB();
+    res.status(200);
+    res.json({});
+};
 
 module.exports.getPlayer = async function (req, res) {
     let player = new Player();
