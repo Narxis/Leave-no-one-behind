@@ -1,0 +1,18 @@
+.next {
+    position: absolute;
+    top: 271px;
+    left: 580px;
+    display: flex;
+    height: 70px;
+    width: 200px;
+    border-radius: 20px;
+    border: 2px solid #fff;
+    background: var(--lgrad);
+    font-size: 1.5em;
+    align-items: center;
+    text-align: center;
+    backdrop-filter: blur(1px);
+    text-decoration: none;
+    color: #fff;
+    justify-content: center;
+  } 
