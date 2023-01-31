@@ -8,6 +8,8 @@
     - [Cards](#cards)
     - [Players](#players)
     - [Spaceship](#spaceship)
+    - [Statuses](#statuses)
+    - [Items](#items)
 
 
 
@@ -210,10 +212,11 @@ GET /api/items'
 ```json
 [
   {
-    "id": 1,
     "name": "",
     "desc": "",
-    "duration": 0
+    "race": "",
+    "pool": "",
+    "quantity": ""
   }
 ]
 ```
@@ -224,10 +227,11 @@ GET /api/items/owned'
 ```json
 [
   {
-    "id": 1,
     "name": "",
     "desc": "",
-    "duration": 1
+    "race": "",
+    "pool": "",
+    "quantity": ""
   }
 ]
 ```
