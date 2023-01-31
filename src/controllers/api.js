@@ -1,16 +1,45 @@
 const {Player} = require("./../models/player");
 const {Ship} = require("./../models/ship");
 const {hydrateCardDB, getCards, cardPop} = require("./deck");
+const {Statuses} = require("../models/statuses");
+const {Items} = require("../models/items");
 
 // TODO replace shipId with current game ship ID
 const shipId = 1;
 
-// module.exports.index = function(req, res) {
-//     res.status(200);
-//     res.json({
-//         version: API_VER
-//     });
-// };
+module.exports.index = async function(req, res) {
+
+    res.status(200);
+    res.json({});
+};
+
+module.exports.getAllStatuses = async function(req, res) {
+    let statuses = new Statuses();
+    statuses = await statuses.getAllStatuses(false);
+
+    res.json(statuses);
+}
+
+module.exports.getActiveStatuses = async function(req, res) {
+    let statuses = new Statuses();
+    statuses = await statuses.getAllStatuses();
+
+    res.json(statuses);
+}
+
+module.exports.getAllItems = async function(req, res) {
+    let items = new Items();
+    items = await items.getAllItems(false);
+
+    res.json(items);
+}
+
+module.exports.getOwnedItems = async function(req, res) {
+    let items = new Items();
+    items = await items.getAllItems();
+
+    res.json(items);
+}
 
 module.exports.getPlayer = async function (req, res) {
     let player = new Player();
