@@ -311,6 +311,10 @@ nav {
     font-size: 13px;
 }
 
+.expander-item {
+    left: 178px;
+}
+
 .move-up {
     transform: translateY(385px);
 }

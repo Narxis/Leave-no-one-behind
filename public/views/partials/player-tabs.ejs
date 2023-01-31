@@ -1,5 +1,6 @@
 <div id="player-tab<%= player.discord_id %>" class="player-tab move-up load-in">
     <div class="expander">?</div>
+    <div class="expander expander-item">?</div>
     <div class="player-roll">
         <div class="player-name"><%= player.name %>
             <div class="player-race">(<%= player.race %>)</div>
@@ -10,17 +11,18 @@
         <div class="output-roll" id="p<%= player.discord_id %>-roll">00</div>
         <div class="roll-type">
             <div class="roll-type1">
-                <input class="dice-type-input" type="radio" name="roll[<%= player.discord_id %>]" id="roll-1-<%= player.discord_id %>" value="0" checked>
+                <input class="dice-type-input" type="radio" name="roll[<%= player.discord_id %>]"
+                    id="roll-1-<%= player.discord_id %>" value="0" checked>
                 <label class="dice-type-label" for="roll-1-<%= player.discord_id %>">
-                    <svg id="player-icon1" class="player-icon" xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 707 703">
+                    <svg id="player-icon1" class="player-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 707 703">
                         <path id="player-path"
                             d="M359.06,655.44H55.89c-19.56,0-28.64-8.89-28.09-28.58q4-145.5,111.48-243.6c11.72-10.7,25.92-10.42,35.36.19,9.24,10.37,7.57,24.82-4,35.28C117.14,467.17,86.07,527.36,76.84,599,75.68,608,75.71,608,85,608q274.33,0,548.68.2c7.77,0,8.72-2.33,7.75-9q-24-163.7-174.83-230.83c-4.47-2-8.13-2.44-13,.35C338.83,435.11,194.83,367,172.4,236,154.87,133.54,225,34.9,327.38,17.92,432.89.43,532,72.68,546.49,178.38c7.54,54.91-6.89,104.13-41.91,147.06-4,4.94-3.83,6.39,2,9.43q149.82,78.08,179.56,244.8a292.34,292.34,0,0,1,4.21,48.63c.14,17.63-9.15,27.13-26.63,27.13Q511.39,655.46,359.06,655.44Zm-.32-592.86C280.58,62.7,217,126.57,217.05,205S280.79,347.1,359,347.14c78.44,0,142.3-64.13,142.08-142.78C500.82,126.09,437,62.46,358.74,62.58Z" />
                     </svg>
                 </label>
             </div>
             <div class="roll-type2">
-                <input class="dice-type-input" type="radio" name="roll[<%= player.discord_id %>]" id="roll-2-<%= player.discord_id %>" value="1">
+                <input class="dice-type-input" type="radio" name="roll[<%= player.discord_id %>]"
+                    id="roll-2-<%= player.discord_id %>" value="1">
                 <label class="dice-type-label" for="roll-2-<%= player.discord_id %>">
                     <svg id="ship-icon<%= player.discord_id %>" class="rocket-icon" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 707 703">

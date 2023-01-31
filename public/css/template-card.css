@@ -19,10 +19,10 @@
 
 .dial svg {
   position: absolute;
-  height: 47px;
+  height: 53px;
   overflow: visible;
-  left: 11px;
-  top: 10.5px;
+  left: 4px;
+  top: 7px;
 }
 
 .dial svg circle {
