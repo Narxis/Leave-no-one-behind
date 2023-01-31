@@ -103,6 +103,7 @@ button {
 
 .p-txt {
   cursor: pointer;
+  font-size: 20px;
 }
 
 .points-required {
@@ -123,7 +124,7 @@ button {
   height: 75px;
   width: 100px;
   display: flex;
-  left: -282px;
+  left: -289px;
   top: -219px;
   align-items: center;
   text-align: end;
@@ -448,7 +449,7 @@ button {
 /* --v------ff animation------v--*/
 .ff-txt {
   display: flex;
-  left: 381px;
+  left: 394px;
   top: -256px;
   align-items: center;
   text-align: end;
@@ -619,7 +620,7 @@ button {
 /* --^------ff animation------^--*/
 /* --v------cl animation------v--*/
 .cl-txt {
-  left: -273px;
+  left: -280px;
   top: 58px;
   display: flex;
   align-items: center;
@@ -908,7 +909,7 @@ button {
   display: flex;
   align-items: center;
   text-align: end;
-  width: 130px;
+  width: 165px;
   height: 75px;
   justify-content: center;
   flex-direction: column;
@@ -1066,13 +1067,12 @@ button {
 /*---v---re-animation----v---*/
 
 .re-txt {
-  left: 389px;
-  top: -164px;
-  width: 178px;
+  left: 355px;
+  top: -155px;
+  width: 217px;
   height: 75px;
   display: flex;
   align-items: center;
-  text-align: end;
   justify-content: center;
   flex-direction: column;
 }
@@ -1378,7 +1378,7 @@ button {
 
 .gr-txt {
   display: flex;
-  left: 374px;
+  left: 381px;
   top: 175px;
   align-items: center;
   text-align: end;
@@ -1526,10 +1526,10 @@ button {
 /*---vvv---Summary--------vvv---*/
 .ship-summary {
   position: absolute;
-  right: 25px;
+  right: 35px;
   display: flex;
-  height: 600px;
-  width: 300px;
+  height: 700px;
+  width: 370px;
   flex-direction: column;
   align-items: center;
   border: 3px solid rgb(180 180 180);
@@ -1539,20 +1539,20 @@ button {
 }
 
 .ship-summary-line {
-  width: 300px;
-  height: 80px;
+  width: 370px;
+  height: 83px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .title {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .module {
   height: 70px;
-  width: 145px;
+  width: 170px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1579,7 +1579,7 @@ button {
 .separateur-horizontal {
   box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
   height: 6px;
-  width: 300px;
+  width: 370px;
 }
 
 .separateur-vertical {
@@ -1637,13 +1637,13 @@ button {
 }
 
 .mod-text {
-  width: 120px;
+  width: 104px;
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: left;
-  margin: 0px 0px 0px 10px;
-  font-size: 12;
+  font-size: 18px;
+  text-indent: 10px;
 }
 
 .mod-value {
@@ -1653,15 +1653,15 @@ button {
   align-items: center;
   justify-content: right;
   margin: 0px 10px 0px 0px;
-  font-size: 12;
+  font-size: 15px;
 }
 
 .planet-summary {
   position: absolute;
-  left: 25px;
+  left: 35px;
   display: flex;
-  height: 600px;
-  width: 300px;
+  height: 700px;
+  width: 370px;
   flex-direction: column;
   align-items: center;
   border: 3px solid rgb(180 180 180);
@@ -1672,10 +1672,12 @@ button {
 
 .detection-point::before {
   content: 'Points de detections: ';
+  font-size: 20px;
 }
 
 .drone::before {
   content: 'Drones: ';
+  font-size: 20px;
 }
 
 .use-drone {
@@ -1690,6 +1692,7 @@ button {
 .use-drone::before {
   content: 'Utiliser';
   transition: 1s;
+  font-size: 20px;
 }
 
 .switch-on::before {
@@ -1745,8 +1748,8 @@ button {
 }
 
 .planet-reading {
-  font-size: 12px;
-  margin: 10px 10px 0px 10px;
+  font-size: 15px;
+  margin: 5px 10px 0px 10px;
 }
 
 .scanning::after {

@@ -280,12 +280,107 @@ function applystatus(statusname) {
     }
 };
 
+//Les boutons modules
+function addNumber (form, dial){
+    let formValue = parseInt(form.value);
+    console.log(form)
+    console.log(formValue)
+    let dialValue = parseInt(dial.getAttribute('data-value'));
+    console.log(dial,dialValue)
+    console.log(formValue + dialValue)
+    if ((formValue + dialValue)>100){
+        dial.setAttribute('data-value',100)
+    }
+    else {
+        dial.setAttribute('data-value',formValue+dialValue)
+    }
+}
+function substractNumber (form, dial){
+    let formValue = parseInt(form.value);
+    console.log(form)
+    console.log(formValue)
+    let dialValue = parseInt(dial.getAttribute('data-value'));
+    console.log(dial,dialValue)
+    console.log(dialValue-formValue)
+    if ((dialValue-formValue)<0){
+        dial.setAttribute('data-value',0)
+    }
+    else {
+        dial.setAttribute('data-value',dialValue-formValue)
+    }
+}
+
+function eventListenerModButtons(){
+    let plusbuttons = document.getElementById('modtab').getElementsByClassName('tab-plus')
+    let moinsbuttons = document.getElementById('modtab').getElementsByClassName('tab-moins')
+    let inputbuttons = document.getElementById('modtab').getElementsByClassName('form-input')
+    let dial = document.getElementById('modtab').getElementsByClassName('dial')
+    //console.log(plusbuttons,moinsbuttons,inputbuttons)
+    for (let i=0; i<plusbuttons.length; i++){
+        plusbuttons.item(i).addEventListener('mouseup', function(){
+            addNumber(inputbuttons.item(i), dial.item(i))
+        })
+        moinsbuttons.item(i).addEventListener('mouseup', function(){
+            substractNumber(inputbuttons.item(i), dial.item(i))
+        })
+    }
+}
+//les bouttons playertab
+function addPlayerNumber (form, dial){
+    let formValue = parseInt(form.value);
+    console.log(form)
+    console.log(formValue)
+    let dialValue = parseInt(dial.innerText);
+    console.log(dial,dialValue)
+    console.log(formValue + dialValue)
+    if ((formValue + dialValue)>100){
+        dial.innerText = 100
+    }
+    else {
+        dial.innerText = formValue+dialValue
+    }
+}
+function substractPlayerNumber (form, dial){
+    let formValue = parseInt(form.value);
+    console.log(form)
+    console.log(formValue)
+    let dialValue = parseInt(dial.innerText);
+    console.log(dial,dialValue)
+    console.log(dialValue-formValue)
+    if ((dialValue-formValue)<0){
+        dial.innerText = 0
+    }
+    else {
+        dial.innerText = dialValue-formValue
+    }
+}
+
+function eventListenerPlayerButtons (){
+    let plusbuttons = document.getElementById('playertabs_container').getElementsByClassName('player-stat-up')
+    let moinsbuttons = document.getElementById('playertabs_container').getElementsByClassName('player-stat-down')
+    let form = document.getElementById('playertabs_container').getElementsByClassName('form-roll')
+    let dial = document.getElementById('playertabs_container').getElementsByClassName('player-stat-value')
+    for (let i=0;i<plusbuttons.length; i++){
+        plusbuttons.item(i).addEventListener('mouseup', function(){
+            addPlayerNumber(form.item(Math.floor(i/6)), dial.item(i))
+        })
+        moinsbuttons.item(i).addEventListener('mouseup', function(){
+            substractPlayerNumber(form.item(Math.floor(i/6)), dial.item(i))
+        })
+    }
+}
+
+
+
+
 // EXECUTION AU CHARGEMENT DE LA PAGE
 (function(){
     initialiseChoiceTabs();
     initialiseModTabs();
     initialiseTimerTab();
-    initialisePlayerTab()
+    initialisePlayerTab();
     write(cardtextstr, '.card-text');
     initialiseleLeftTabs();
+    eventListenerModButtons();
+    eventListenerPlayerButtons ();
 })();

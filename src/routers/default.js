@@ -10,10 +10,11 @@ module.exports = function(router) {
     router.get('/deck', controller.deckGenerator);
     router.get('/persos', controller.persos);
 
+    router.get('/mj-menu', controller.mjMenu);
     router.get('/end-screen', controller.endScreen);
     router.get('/fiche-vaisseau', controller.ficheVaisseau)
     router.get('/index', controller.index);
-    router.get('/parallaxe', controller.renderTestCardEvent);
+    router.get('/template-card', controller.renderTestCardEvent);
     router.get('/template-planet', controller.templatePlanet);
     router.get('/index-legacy', controller.indexLegacy);
 
