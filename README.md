@@ -1,19 +1,19 @@
-**SETUP**
+## SETUP
 
 Cloner le repo
 
 run `npm i`
 
-run `node server.js`
+run `npm start`
 
 http://localhost:8080
 
-**ROUTES**
+## ROUTES
 
 Les fichiers dans les dossiers `public/css`, `public/js`, `public/img` répondront respectivement sur les uri `/css`, `/js`, `/img`
 Il suffira d'un `src="/js/script.js"` ou `href="/img/image.png"` pour y accèder depuis un template.
 
-**AJOUTER UNE PAGE**
+## AJOUTER UNE PAGE
 
 Ajouter sa route dans `src/routers/default.js` à la suite des autres :
 
@@ -49,7 +49,7 @@ Il est aussi possible d'insérer un template dans un autre en utilisant cette ba
 <%- include("nom_du_template_a_inclure") %>
 ```
 
-**EVENT LISTENERS**
+## EVENT LISTENERS
 
 Le websocket va trigger des events listener qu'il sera possible d'utiliser  via un addEventListener() sur le document.
 ```
@@ -66,3 +66,94 @@ document.addEventListener('set-race', function(e) {
 | roll-stats   | player stat roll (creation) | <pre>"action": "roll-stats",<br>"data": {<br>    "action": "roll-stats",<br>    "uid": "discord_id","data": {<br>    "combat": [20,38],<br>    "pilotage": [28],<br>    "engineering": [35,36],<br>    "survival": [35],<br>    "recon": [32,44],<br>    "moral": 100<br>}}</pre>                                                                             |
 | playerStat   | update stat player (IG)     | <pre>"action": "playerStat",<br>"data": {<br>    "id": 7,        <br>    "name": "pseudo",        <br>    "discord_id": "discord_id",        <br>    "race": "race",        <br>    "combat": 0,        <br>    "pilotage": 0,        <br>    "engineering": 0,        <br>    "survival": 0,        <br>    "recon": 0,        <br>    "moral": 0<br>}</pre> |
 | roll         | player made a roll (IG)     | <pre>"action": "roll",<br>"data": {<br>    "discord_id": "discord_id",<br>    "stat": "combat",<br>    "module": false,<br>    "success": false,<br>    "result": -12,<br>    "dice_result": 87<br>}</pre>                                                                                                                                                    |
+
+## API
+
+### Cards
+```http
+GET /api/getNextCard
+# Obtient les infos de la prochaine carte (ne la marque pas comme jouée)
+GET /api/popNextCard
+# Obtient les infos de la prochaine carte (marque la carte comme jouée)
+```
+```json
+{
+  "id": 1, // id de la carte
+  "type": 1, // 0:planète,1:neutre,2:positive,3:negative,4:lieu
+  "value": -1, // >0 pour les cartes planète
+  "name": "", // renseigné si followup carte lieu
+  "desc": "", // texte de la carte
+  "timer": 0, // 0||1 
+  "choices": [  // rempli si carte !planète
+    {
+      "value": "", // texte choix
+      "reveal": "", // texte si le choix est fait (unset si il y a un followup dans le cas des cartes lieu)
+      "next": "" // name de la carte qui va suivre (carte lieu uniquement)
+    }
+  ]
+}
+```
+### Players 
+```http
+GET /api/players
+# Obtient un tableau des infos de tous les joueurs
+```
+```json
+[
+  {
+    "id": 1,
+    "discord_id": "discord_id",
+    "name": "",
+    "race": "",
+    "combat": 0,
+    "pilotage": 0,
+    "engineering": 0,
+    "survival": 0,
+    "recon": 0,
+    "moral": 0
+  }
+]
+```
+```http
+GET /api/player/:discordId'
+# Obtient les infos d'un joueur depuis son discordId
+```
+```json
+{
+    "id": 1,
+    "discord_id": "discord_id",
+    "name": "",
+    "race": "",
+    "combat": 0,
+    "pilotage": 0,
+    "engineering": 0,
+    "survival": 0,
+    "recon": 0,
+    "moral": 0
+}
+```
+### Spaceship
+```http
+GET /api/ship'
+# Obtient les infos du vaisseau
+```
+```json
+{
+  "id": 1,
+  "name": "",
+  "cryopods": 1000,
+  "scanner": 100,
+  "proximity": 100,
+  "motors": 100,
+  "shield": 100,
+  "oxygen": 100,
+  "energy": 100,
+  "gravity": 100,
+  "landing": 100,
+  "construction": 100,
+  "scanner_up": 0,
+  "oxygen_up": 0,
+  "energy_up": 0,
+  "gravity_up": 0
+}
+```
