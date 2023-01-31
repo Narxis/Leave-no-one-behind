@@ -33,12 +33,20 @@ class Statuses {
 
     async updateStatus(name, newValue) {
         await DB.tables.statuses.update({
-            value: newValue
+            duration: newValue
         }, {
             where: {
                 name: name,
             }
         })
+    }
+
+    async add(name, val=1) {
+        await DB.tables.statuses.increment({duration: val}, { where: { name: name } });
+    }
+
+    async remove(name, val=1) {
+        await DB.tables.statuses.decrement({duration: val}, { where: { name: name } });
     }
 
     async getData() {

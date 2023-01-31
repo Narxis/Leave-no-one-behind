@@ -53,7 +53,7 @@ class SocketLNOB {
     //Update a status value in DB
     setStatus(name, value) {
         let payload = {
-            action: 'setStatus',
+            action: 'status',
             data: {
                 name: name,
                 value: value

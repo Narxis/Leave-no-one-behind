@@ -63,11 +63,11 @@ class Items {
     }
 
     async add(name, quantity=1) {
-        //
+        await DB.tables.items.increment({quantity: quantity}, { where: { name: name } });
     }
 
     async remove(name, quantity=1) {
-        //
+        await DB.tables.items.decrement({quantity: quantity}, { where: { name: name } });
     }
 
     async getAllItems(possessed=true) {
