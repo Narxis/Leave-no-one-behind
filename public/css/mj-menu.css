@@ -240,6 +240,11 @@
         text-indent: 1em;
     }
 
+    .add-life {
+        font-size: 1.5em;
+        margin-bottom: 1em;
+    }
+
     .ennemy,
     .ally {
         padding-top: 2em;
