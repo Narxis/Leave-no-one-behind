@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="css\style.css">
+<%- include("partials/nav") %>
+  <div class="center">
+    <div id="test">test</div>
+    <button onclick="wsLNOB.rollDice('236112427060559872', 'combat', false)">roll</button>
+    <button onclick="wsLNOB.addItem('drone')">addConso</button>
+    <button onclick="wsLNOB.delItem('drone')">delConso</button>
+    <button onclick="wsLNOB.setModule('motors', Math.floor(Math.random()*99))">setModule</button>
+    <button onclick="wsLNOB.setStatus('blackout', Math.floor(Math.random()*3))">setStatus</button>
+    <button onclick="wsLNOB.setStatistic('pilotage', Math.floor(Math.random()*99))">setStatistic</button>
+    <button onclick="wsLNOB.setPlanetDetection(Math.floor(Math.random()*20))">setDetection</button>
+  </div>
+
+  <script src="/js/socketLNOB.js"></script>

@@ -6,6 +6,8 @@ const token = process.env.DS_TOKEN;
 
 const start = function () {
 
+    if (!process.env.DS_TOKEN) return false;
+
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
     const commandsType = [

@@ -1,22 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
-
-:root {
-    --darkgrey: #17181c;
-}
-
-body {
-    display: flex;
-    background-color: var(--darkgrey);
-    width: 100vw;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    z-index: -10;
-}
-
 .wrapper-0 {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -29,7 +10,7 @@ body {
 .card {
     /*display: none;*/
     position: relative;
-    background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+    background: var(--lgrad);
     backdrop-filter: blur(1px);
     grid-column: 2 / 6;
     grid-row: 1 / 6;
@@ -197,4 +178,23 @@ svg {
 .dial svg text {
     font-size: 30px;
     fill: whitesmoke;
+}
+
+.next {
+    position: absolute;
+    top: 271px;
+    left: 580px;
+    display: flex;
+    height: 70px;
+    width: 200px;
+    border-radius: 20px;
+    border: 2px solid #fff;
+    background: var(--lgrad);
+    font-size: 1.5em;
+    align-items: center;
+    text-align: center;
+    backdrop-filter: blur(1px);
+    text-decoration: none;
+    color: #fff;
+    justify-content: center;
 }

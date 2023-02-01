@@ -10,23 +10,8 @@ class SocketLNOB {
                     return false;
                 }
 
-                switch (resp.action) {
-                    case 'roll':
-                        this.roll(resp.data);
-                        break;
-                    case 'join':
-                        this.actionJoin(resp);
-                        break;
-                    case 'set-race':
-                        this.setRace(resp);
-                        break;
-                    case 'set-name':
-                        this.setName(resp);
-                        break;
-                    case 'roll-stats':
-                        this.setRollPlayerStats(resp);
-                        break;
-                }
+                let custom_event = new CustomEvent(resp.action, {detail: resp});
+                document.dispatchEvent(custom_event);
             }
             catch (e) {
                 console.log(event.data);
@@ -35,34 +20,17 @@ class SocketLNOB {
         }
     }
 
+    // Send payload to backend
     send(data) {
         this.socket.send(JSON.stringify(data));
     }
 
-    actionJoin(resp) {
-        addPlayerSheet(resp.uid).then();
-    }
-
-    setRollPlayerStats(response) {
-        // TODO implement front interaction to a player roll
-        console.log(response);
-    }
-
-    setRace(response) {
-        setPlayerRace(null, response.data.race, response.data.uid);
-    }
-
-    setName(response) {
-        console.log(response);
-        console.log(document.querySelector('#p'+ response.data.uid + ' .player-name'));
-        document.querySelector('#p'+ response.data.uid + ' .player-name').value = response.data.nick;
-    }
-
-    rollDice(player_id, stat, module) {
+    // Send a roll request to the backend
+    rollDice(discord_id, stat, module) {
         let payload = {
             action: 'roll',
             data: {
-                player_id: player_id,
+                discord_id: discord_id,
                 stat: stat,
                 module: module
             }
@@ -70,6 +38,7 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    //Update a module integrity value in DB
     setModule(name, value) {
         let payload = {
             action: 'setModule',
@@ -81,9 +50,10 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    //Update a status value in DB
     setStatus(name, value) {
         let payload = {
-            action: 'setStatus',
+            action: 'status',
             data: {
                 name: name,
                 value: value
@@ -92,9 +62,10 @@ class SocketLNOB {
         this.send(payload);
     }
 
-    addConso(name) {
+    // Add a conso in DB
+    addItem(name) {
         let payload = {
-            action: 'conso',
+            action: 'item',
             data: {
                 remove: false,
                 name: name
@@ -103,9 +74,10 @@ class SocketLNOB {
         this.send(payload);
     }
 
-    delConso(name) {
+    // Delete a conso in DB
+    delItem(name) {
         let payload = {
-            action: 'conso',
+            action: 'item',
             data: {
                 remove: true,
                 name: name
@@ -114,6 +86,10 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    /**
+     * @deprecated // might be calculated from front
+     * @param value
+     */
     setPlanetDetection(value) {
         let payload = {
             action: 'detection',
@@ -124,6 +100,7 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    // Update a player statistic in DB
     setStatistic(player_id, name, value) {
         let payload = {
             action: 'playerStat',
@@ -136,7 +113,9 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    // Post roll action after a /roll (discord) or a this.rollDice
     roll(data) {
+        doPlayerRoll(data);
         if (data.success) {
             console.log('%cPlayer ' + data.player_id + ' : success with a roll of ' + data.dice_result + ' (calculated: ' + data.result + ') on ' + data.stat, 'color:green');
         }
@@ -145,3 +124,5 @@ class SocketLNOB {
         }
     }
 }
+
+const wsLNOB = new SocketLNOB();

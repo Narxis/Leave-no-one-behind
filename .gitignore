@@ -1,5 +1,5 @@
-database.sqlite
-test_db.sqlite
+storage/databases/
+
 # Logs
 logs
 *.log
@@ -122,3 +122,4 @@ dist
 # IDE
 .idea
 .idea/
+public/views/index-legacy.ejs

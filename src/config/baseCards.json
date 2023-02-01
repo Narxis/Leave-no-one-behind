@@ -1,0 +1,2023 @@
+{
+  "positive": [
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer vos moteurs."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fouiller l'épave",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    }
+  ],
+  "negative": [
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau.\nCes débris vont percuter votre vaisseau au niveau au niveau du scanner.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+        },
+        {
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    }
+  ],
+  "neutral": [
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Fneks.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Fneks communiquent avec vous, ils vous apprécient et vous donne des outils pour réparer un module. \n(remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Entrer en contact",
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    }
+  ],
+  "place": [
+    {
+      "desc": "Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter ce chez d'oeuvre architectural et culturel.\nAlors que vous penetrez dans le hall d'entrée vous pouvez appercevoir un [race1] assis à une table au milieu de la pièce, un [race2] en train de lire un livre dans une allée secondaire, et une porte entre-ouverte au fond de l'allée principale.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Parler au [race1] assis à la table au milieu de la pièce",
+          "next": "bibli1"
+        },
+        {
+          "value": "Parler au [race2] dans l'allée \"Trépas & Trésor\"",
+          "next": "bibli2"
+        },
+        {
+          "value": "Pousser la porte du fond",
+          "next": "bibli3"
+        }
+      ]
+    },
+    {
+      "desc": "Vous appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\nLe livre est usé, vous pouvez difficllement lire [livre] écrit sur la couverture.",
+      "name": "bibli3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Prendre le livre",
+          "reveal": "Vous ramassez le livre et le rangez sous votre manteau avant que quelqu'un ne vous apperçoive"
+        },
+        {
+          "value": "Faire comme si vous n'aviez rien vu",
+          "reveal": "La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\nElle vous tend le [livre] en pensant que c'est le votre"
+        }
+      ]
+    }
+  ],
+  "planet": [
+    {
+      "value": 567,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 100,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 200,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 300,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 400,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 500,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 700,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 600,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    },
+    {
+      "value": 890,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 3
+        },
+        "grv": {
+          "cost": 2,
+          "value": 3
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 3
+        },
+        "fau": {
+          "cost": 2,
+          "value": 3
+        },
+        "cli": {
+          "cost": 2,
+          "value": 3
+        },
+        "res": {
+          "cost": 2,
+          "value": 3
+        }
+      }
+    }
+  ]
+}

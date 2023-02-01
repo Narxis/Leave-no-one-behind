@@ -3,19 +3,22 @@ var controller = require('./../controllers/default');
 module.exports = function(router) {
     router.get('/', controller.index);
     router.get('/200', controller.returnOk);
+
+    router.get('/reset', controller.reset);
+
     router.get('/randCard', controller.randCard);
     router.get('/deck', controller.deckGenerator);
     router.get('/persos', controller.persos);
 
+    router.get('/mj-menu', controller.mjMenu);
     router.get('/end-screen', controller.endScreen);
     router.get('/fiche-vaisseau', controller.ficheVaisseau)
-    router.get('/main-menu', controller.mainMenu);
-    router.get('/parallaxe', controller.parallaxe);
+    router.get('/index', controller.index);
+    router.get('/template-card', controller.renderTestCardEvent);
     router.get('/template-planet', controller.templatePlanet);
+    router.get('/leaderboard', controller.leaderboard);
+    router.get('/index-legacy', controller.indexLegacy);
 
-
-    router.post('/fiche', controller.renderSingleSheet)
-
-    // router.get('/createCard', controller.cardEdit);
-    // router.post('/createCard', controller.cardCreate);
+    router.post('/fiche', controller.renderSingleSheet);
+    router.get('/next', controller.renderCardEvent);
 };

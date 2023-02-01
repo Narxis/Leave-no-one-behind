@@ -1,0 +1,27 @@
+{
+  "starter": [
+    {
+      "name": "fronde-fnek",
+      "desc": "Malgrès leur avancées technologique les Fneks préfèrent utiliser une fronde pour se battre. Généralement ces frondes sont fournies avec des boules puante qui libèrent un puissant concentré d'odeur de Fnek.",
+      "race": "fnek"
+    }
+  ],
+  "electronique": [
+    {
+      "name": "Projecteur de bouclier personnel",
+      "desc": "Le projecteur de bouclier personnel est une dispositif utilisant l'énergie cosmique permettant d'absorber un coup ou un projectile ciblant l'utilisateur. Le projecteur de bouclier personnel doit être rechargé en énergie cosmique avant de pouvoir être réutilisé."
+    }
+  ],
+  "tribal": [
+
+  ],
+  "bois": [
+
+  ],
+  "nektologie": [
+
+  ],
+  "livres": [
+
+  ]
+}

@@ -1,14 +1,10 @@
 <head>
     <link rel="stylesheet" href="css\end-screen.css">
-    <link rel="stylesheet" href="css\stars.css">
+    <link rel="stylesheet" href="css\style.css">
 </head>
 
 <body>
-    <div class="startrek">
-        <div id='stars'></div>
-        <div id='stars2'></div>
-        <div id='stars3'></div>
-    </div>
+    <%- include("partials/nav") %>
     <div class="center">
         <div class="endscreen-container">
             <div class="score">
@@ -62,11 +58,11 @@
                             d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
                     </svg>
                     <div class="humain-text">Humains:</div>
-                    <div class="humain-value">1000</div>
+                    <div id="humain-value">0</div>
                 </div>
                 <div class="module" id="mot">
                     <div class="name">Moteur</div>
-                    <div id="dial-mot" class="container mot dial" data-value="80">
+                    <div id="dial-mot" class="container mot dial" data-value="0">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stop-color="#78F8EC" />
@@ -80,7 +76,7 @@
                 </div>
                 <div class="module" id="scan">
                     <div class="name">Scanner</div>
-                    <div id="dial-scan" class="container scan dial" data-value="80">
+                    <div id="dial-scanner" class="container scan dial" data-value="0">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stop-color="#78F8EC" />
@@ -94,7 +90,7 @@
                 </div>
                 <div class="module" id="detec">
                     <div class="name">Detection</div>
-                    <div id="dial-detec" class="container detec dial" data-value="80">
+                    <div id="dial-detec" class="container detec dial" data-value="0">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stop-color="#78F8EC" />
@@ -108,7 +104,7 @@
                 </div>
                 <div class="module" id="o2">
                     <div class="name">Oxygène</div>
-                    <div id="dial-o2" class="container o2 dial" data-value="80">
+                    <div id="dial-oxygen" class="container o2 dial" data-value="0">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stop-color="#78F8EC" />
@@ -122,7 +118,7 @@
                 </div>
                 <div class="module" id="elec">
                     <div class="name">Electricité</div>
-                    <div id="dial-elec" class="container elec dial" data-value="80">
+                    <div id="dial-energy" class="container elec dial" data-value="0">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stop-color="#78F8EC" />
@@ -136,7 +132,7 @@
                 </div>
                 <div class="module" id="grav">
                     <div class="name">Gravité</div>
-                    <div id="dial-grav" class="container grav dial" data-value="80">
+                    <div id="dial-gravity" class="container grav dial" data-value="0">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stop-color="#78F8EC" />
@@ -150,31 +146,49 @@
                 </div>
                 <div class="module secondaire" id="atter">
                     <div class="name">Atterrissage</div>
-                    <div class="dial"></div>
+                    <div class="dial" id="mod-sec1">0%</div>
                 </div>
                 <div class="module secondaire" id="cons">
                     <div class="name">Construction</div>
-                    <div class="dial"></div>
+                    <div class="dial" id="mod-sec2">0%</div>
                 </div>
                 <div class="module secondaire" id="bdd-sci">
                     <div class="name">BDD Scientifique</div>
-                    <div class="dial"></div>
+                    <div class="dial" id="mod-sec3">0%</div>
                 </div>
                 <div class="module secondaire" id="bdd-hist">
                     <div class="name">BDD Historique</div>
-                    <div class="dial"></div>
+                    <div class="dial" id="mod-sec4">0%</div>
                 </div>
             </div>
             <div class="planet-recap">
+                <div class="planet-recap-line" id="planet-line-1">
+                    <div class="planet-reading" id="reading-1"></div>
+                </div>
+                <div class="planet-recap-line" id="planet-line-2">
+                    <div class="planet-reading" id="reading-2"></div>
+                </div>
+                <div class="planet-recap-line" id="planet-line-3">
+                    <div class="planet-reading" id="reading-3"></div>
+                </div>
+                <div class="planet-recap-line" id="planet-line-4">
+                    <div class="planet-reading" id="reading-4"></div>
+                </div>
+                <div class="planet-recap-line" id="planet-line-5">
+                    <div class="planet-reading" id="reading-5"></div>
+                </div>
+                <div class="planet-recap-line" id="planet-line-6">
+                    <div class="planet-reading" id="reading-6"></div>
+                </div>
             </div>
             <div class="consolescore"></div>
         </div>
+        <a href="/leaderboard" class="next">Suivant</a>
     </div>
 </body>
 
 <script src="js/end-screen.js"></script>
 <script>
-
     var observer = new MutationObserver(function (mutations) {
         mutations.forEach(async function (mutation) {
             if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {
@@ -191,8 +205,7 @@
                         text.textContent = oldVal + '%';
                         await new Promise(r => setTimeout(r, tm));
                     } while (val > oldVal)
-                }
-                else {
+                } else {
                     do {
                         oldVal--;
                         circle.style.strokeDashoffset = (100 - oldVal).toString();

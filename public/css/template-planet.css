@@ -1,95 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
-
 :root {
-  --planet-color: #227826;
-  --eau-color: #2bc5c0;
-  --darkgrey: #17181c;
-  --purple: rgb(123, 31, 162);
-  --violet: rgb(103, 58, 183);
-  --pink: rgb(244, 143, 177);
   --detection-points: '2';
   --drones: '3'
-}
-
-body {
-  position: initial;
-  background: var(--darkgrey);
-  margin: 0;
-  color: whitesmoke;
-  font: 1em Hind, sans-serif;
-  height: 100vh;
-  line-height: 1.5;
-  padding: 1.5em 0;
-  overflow: hidden;
-  font-family: 'Jura', sans-serif;
-  font-size: 15px;
-}
-
-::-webkit-scrollbar {
-  width: 0.2em;
-  background-color: #000000;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #F5F5F5;
-}
-
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0px;
-  height: 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.bottomcenter {
-  position: absolute;
-  bottom: 0%;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.rightcenter {
-  position: absolute;
-  top: 50%;
-  right: 0%;
-  height: 0px;
-  width: 0px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: row-reverse;
-}
-
-.leftcenter {
-  position: absolute;
-  top: 50%;
-  left: 0%;
-  width: 0px;
-  height: 0px;
-  display: flex;
-  justify-content: left;
-  align-items: center;
-}
-
-.topcenter {
-  position: absolute;
-  left: 50%;
-  top: 0%;
-  width: 0px;
-  height: 0px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.planet-card {
-  width: 100vw;
 }
 
 button {
@@ -181,31 +92,7 @@ button {
 }
 
 /* ^^^----Planet animation----^^^ */
-/* -vvv---------Buttons-------vvv-*/
-.mod-b {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  border-radius: 13px;
-  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.6s ease;
-  background: rgba(0, 0, 0, 0.26);
-  border: none;
-  color: #FFFFFF;
-  padding-bottom: 3px;
-}
 
-.mod-b:hover {
-  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
-  color: rgba(255, 255, 255, 0.301);
-}
-
-/* -^^^---------Buttons-------^^^--*/
 /* vvv---Planet description---vvv */
 /* -v--------o2 animation------v--*/
 .p-stat,
@@ -216,6 +103,7 @@ button {
 
 .p-txt {
   cursor: pointer;
+  font-size: 20px;
 }
 
 .points-required {
@@ -236,7 +124,7 @@ button {
   height: 75px;
   width: 100px;
   display: flex;
-  left: -282px;
+  left: -289px;
   top: -219px;
   align-items: center;
   text-align: end;
@@ -561,7 +449,7 @@ button {
 /* --v------ff animation------v--*/
 .ff-txt {
   display: flex;
-  left: 381px;
+  left: 394px;
   top: -256px;
   align-items: center;
   text-align: end;
@@ -732,7 +620,7 @@ button {
 /* --^------ff animation------^--*/
 /* --v------cl animation------v--*/
 .cl-txt {
-  left: -273px;
+  left: -280px;
   top: 58px;
   display: flex;
   align-items: center;
@@ -1021,7 +909,7 @@ button {
   display: flex;
   align-items: center;
   text-align: end;
-  width: 130px;
+  width: 165px;
   height: 75px;
   justify-content: center;
   flex-direction: column;
@@ -1179,13 +1067,12 @@ button {
 /*---v---re-animation----v---*/
 
 .re-txt {
-  left: 389px;
-  top: -164px;
-  width: 178px;
+  left: 355px;
+  top: -155px;
+  width: 217px;
   height: 75px;
   display: flex;
   align-items: center;
-  text-align: end;
   justify-content: center;
   flex-direction: column;
 }
@@ -1491,7 +1378,7 @@ button {
 
 .gr-txt {
   display: flex;
-  left: 374px;
+  left: 381px;
   top: 175px;
   align-items: center;
   text-align: end;
@@ -1636,321 +1523,36 @@ button {
 }
 
 /*---^---gr-animation----^---*/
-/*---vvv---Player-tabs----vvv---*/
-.player-tabs {
-  position: absolute;
-  width: 1500px;
-  height: 100px;
-  bottom: -23px;
-  display: flex;
-  justify-content: center;
-  align-content: flex-end;
-  align-items: flex-end;
-  gap: 5px;
-}
-
-.player-tab {
-  padding: 4px 0px 0px 0px;
-  position: relative;
-  width: 238px;
-  height: 487px;
-  background: rgb(44, 7, 53);
-  background: linear-gradient(45deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
-  border: 2px solid rgb(180 180 180);
-  border-radius: 15px 15px 0px 0px;
-  display: flex;
-  justify-content: flex-start;
-  align-content: center;
-  flex-direction: column;
-  transition: 1s cubic-bezier(0, 0, 0.1, 0.99);
-}
-
-.expander {
-  position: absolute;
-  cursor: help;
-  width: 20px;
-  height: 17px;
-  left: 201px;
-  top: 10px;
-  transition: 1s ease-out;
-  transform: translateY(-29px);
-  background: linear-gradient(180deg, rgb(32, 26, 87) 0%, rgb(19, 9, 63) 100%);
-  border-top: 2px solid rgb(180 180 180);
-  border-right: 2px solid rgb(180 180 180);
-  border-left: 2px solid rgb(180 180 180);
-  border-radius: 8px 8px 0px 0px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  font-size: 13px;
-}
-
-.move-up {
-  transform: translateY(385px);
-}
-
-.load-in {
-  transform: translateY(510px);
-}
-
-.player-roll {
-  display: flex;
-  padding: 11px 14px 11px 14px;
-  height: 60px;
-}
-
-.player-name {
-  position: absolute;
-  top: 2px;
-  left: 6px;
-  color: rgb(255, 255, 255);
-  text-shadow: rgb(238 232 232 / 42%) 2px 1px 4px;
-  font-size: 16px;
-}
-
-.player-race {
-  font-size: 12px;
-  text-align: start;
-  text-decoration: underline;
-}
-
-.input-roll {
-  position: relative;
-  top: 0px;
-  left: 0px;
-  width: 50px;
-  height: 30px;
-  margin: 30px 0px 0px -3px;
-}
-
-.output-roll {
-  top: 0px;
-  left: 0px;
-  margin: 10px 2px 0px 18px;
-  width: 88px;
-  height: 50px;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Jura', sans-serif;
-  font-size: 30px;
-  letter-spacing: 2px;
-  text-shadow: rgb(238 232 232 / 42%) 2px 2px 4px;
-  color: #fff;
-  box-shadow: 1.5px 1.5px 3px #c8d0e71f, -1px -1px 2.5px #ffffff29;
-  background-color: rgba(0, 0, 0, 0.26);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/*---vvv---Role-type----vvv---*/
-.roll-type {
-  margin-top: 6px;
-  /* margin-right: 20px; */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-content: center;
-  height: 55px;
-}
-
-.roll-type * {
-  cursor: pointer;
-}
-
-.roll-type svg {
-  position: absolute;
-  transform: scale(0.8);
-  left: 15px;
-  top: -4px;
-  width: 21px;
-  fill: #ffffff27;
-  margin: 0px 0px 0px 4px;
-}
-
-.roll-type1,
-.roll-type2 {
-  top: 0px;
-  left: 0px;
-  width: 42px;
-  height: 17px;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.dice-type-input {
-  z-index: 1;
-  width: 35px;
-  opacity: 0;
-}
-
-.dice-type-label {
-  margin-left: 5.4px;
-  margin-top: 3.3px;
-  border-radius: 50%;
-  position: absolute;
-  background-color: #fff;
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(145deg, #a2a2a200, #c1c1c12a);
-  box-shadow: 1px 1px 6px #9999993a, -1px -1px 6px #cfcfcf3f;
-}
-
-.dice-type-label::after {
-  opacity: 0;
-  content: "";
-  border-radius: 50%;
-  position: absolute;
-  background-color: #fff;
-  width: 12px;
-  height: 12px;
-  border-radius: 50px;
-  background: linear-gradient(145deg, #c1c1c1, #a2a2a2);
-  box-shadow: 1px 1px 6px #99999954, -1px -1px 6px #cfcfcf36;
-}
-
-/*-/!\-Doliprane-requiered-to-read-these-selectors-/!\-*/
-.dice-type-input:checked~.dice-type-label.dice-type-label::after {
-  transition: .5s ease-in-out;
-  opacity: 1;
-}
-
-.dice-type-input:checked~.dice-type-label.dice-type-label svg {
-  fill: #ffffff !important;
-  transition: .5s ease-in-out;
-}
-
-/*---^^^---Role-type----^^^---*/
-.dice-type {
-  margin: 0px;
-}
-
-.form-roll {
-  width: 50px;
-  box-shadow: 1.5px 1.5px 3px #c8d0e71f, -1px -1px 2.5px #ffffff29;
-}
-
-.form-input {
-  width: 61px;
-  height: 30px;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Jura', sans-serif;
-  text-align: center;
-  color: #fff;
-  box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
-  background-color: rgba(0, 0, 0, 0.26);
-}
-
-.form-input:hover {
-  outline: none;
-  box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
-}
-
-.player-stats {
-  display: flex;
-  flex-direction: column;
-}
-
-hr.separateur {
-  width: 238px;
-  height: 12px;
-  border: 0;
-  box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
-  margin: 3px 0px -10px 0px;
-}
-
-.player-stat {
-  width: 238px;
-  height: 60px;
-  margin: 0px 0px 0px 0px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  align-content: flex-start;
-}
-
-.player-stat svg {
-  overflow: visible;
-  transform: scale(0.8);
-}
-
-.player-stat #Calque_1 {
-  transform: scale(1.25);
-}
-
-.player-stat-icon {
-  width: 30px;
-  height: 30px;
-  margin: 0px 15px 0px 30px;
-}
-
-.player-stat-icon svg {
-  fill: rgb(180, 180, 180);
-}
-
-.player-stat-down {
-  position: relative;
-  width: 25px;
-  height: 25px;
-  margin: 10px;
-}
-
-.player-stat-value {
-  width: 60px;
-  height: 30px;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Jura', sans-serif;
-  text-align: center;
-  color: #fff;
-  text-shadow: rgb(238 232 232 / 42%) 1px 1px 4px;
-  box-shadow: 1.5px 1.5px 3px #ffffff26, -1px -1px 2.5px #ffffff26;
-  background-color: rgba(0, 0, 0, 0.26);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.player-stat-up {
-  position: relative;
-  width: 25px;
-  height: 25px;
-  margin: 10px;
-}
-
-/*---^^^---Player-tabs----^^^---*/
 /*---vvv---Summary--------vvv---*/
 .ship-summary {
   position: absolute;
-  right: 25px;
+  right: 35px;
   display: flex;
-  height: 600px;
-  width: 300px;
+  height: 700px;
+  width: 370px;
   flex-direction: column;
   align-items: center;
   border: 3px solid rgb(180 180 180);
   border-radius: 15px;
-  background: linear-gradient(45deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
 }
 
 .ship-summary-line {
-  width: 300px;
-  height: 80px;
+  width: 370px;
+  height: 83px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .title {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .module {
   height: 70px;
-  width: 145px;
+  width: 170px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1977,7 +1579,7 @@ hr.separateur {
 .separateur-horizontal {
   box-shadow: inset 0 12px 12px -12px rgb(0 0 0 / 50%);
   height: 6px;
-  width: 300px;
+  width: 370px;
 }
 
 .separateur-vertical {
@@ -2035,13 +1637,13 @@ hr.separateur {
 }
 
 .mod-text {
-  width: 120px;
+  width: 104px;
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: left;
-  margin: 0px 0px 0px 10px;
-  font-size: 12;
+  font-size: 18px;
+  text-indent: 10px;
 }
 
 .mod-value {
@@ -2051,29 +1653,31 @@ hr.separateur {
   align-items: center;
   justify-content: right;
   margin: 0px 10px 0px 0px;
-  font-size: 12;
+  font-size: 15px;
 }
 
 .planet-summary {
   position: absolute;
-  left: 25px;
+  left: 35px;
   display: flex;
-  height: 600px;
-  width: 300px;
+  height: 700px;
+  width: 370px;
   flex-direction: column;
   align-items: center;
   border: 3px solid rgb(180 180 180);
   border-radius: 15px;
-  background: linear-gradient(315deg, rgb(32 26 87 / 0%) 0%, rgb(19, 9, 63) 100%);
+  background: var(--lgrad);
   backdrop-filter: blur(1px);
 }
 
 .detection-point::before {
   content: 'Points de detections: ';
+  font-size: 20px;
 }
 
 .drone::before {
   content: 'Drones: ';
+  font-size: 20px;
 }
 
 .use-drone {
@@ -2088,6 +1692,7 @@ hr.separateur {
 .use-drone::before {
   content: 'Utiliser';
   transition: 1s;
+  font-size: 20px;
 }
 
 .switch-on::before {
@@ -2143,8 +1748,8 @@ hr.separateur {
 }
 
 .planet-reading {
-  font-size: 12px;
-  margin: 10px 10px 0px 10px;
+  font-size: 15px;
+  margin: 5px 10px 0px 10px;
 }
 
 .scanning::after {

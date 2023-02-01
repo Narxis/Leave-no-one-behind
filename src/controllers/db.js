@@ -1,6 +1,9 @@
 const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
+const DB_VERSION = 1; // increment when structure changes are added
+const DB_FOLDER = 'storage/databases/';
+
 class DB {
     sequelize;
     tables;
@@ -8,13 +11,13 @@ class DB {
     async init(test = false) {
 
         if (process.env.DB_URL === '') {
-            let db_name = test ? 'test_db' : 'database';
+            let db_name = test ? 'test_db' : 'database' + DB_VERSION;
             console.log('Using local DB')
             this.sequelize =  new Sequelize(db_name, '', '', {
                 host: 'localhost',
                 dialect: 'sqlite',
                 logging: false,
-                storage: db_name + '.sqlite'
+                storage: DB_FOLDER + db_name + '.sqlite'
             });
         }
         else {
@@ -106,6 +109,16 @@ class DB {
             value: {
                 type: Sequelize.STRING,
                 defaultValue: 0,
+                allowNull: false
+            },
+            next: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            reveal: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
                 allowNull: false
             }
         })
@@ -269,7 +282,7 @@ class DB {
             }
         })
 
-        let bonuses = this.sequelize.define('bonuses', {
+        let items = this.sequelize.define('items', {
             id: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
@@ -280,14 +293,47 @@ class DB {
                 defaultValue: '',
                 allowNull: false
             },
-            value: {
+            desc: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
+            },
+            pool: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            race: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            quantity: {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
-            },
-            is_conso: {
+            }
+        })
+
+        let statuses = this.sequelize.define('statuses', {
+            id: {
                 type: Sequelize.INTEGER,
-                defaultValue: 0,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            name: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            desc: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
+            },
+            duration: {
+                type: Sequelize.INTEGER,
+                defaultValue: '',
                 allowNull: false
             }
         })
@@ -298,7 +344,8 @@ class DB {
             players: players,
             ship: ship,
             deck: deck,
-            bonuses: bonuses
+            items: items,
+            statuses: statuses
         };
 
         for (let table in this.tables) {
@@ -319,6 +366,7 @@ class DB {
             await this.tables.card_modules.create({
                 card_id: Math.floor(Math.random()*8),
                 value: 'CHOICE '+i,
+                reveal: 'Reveal' +i+i+i+i+i+i+i+i+i+i+i+i+i+i+i+i+i+i,
                 cost: -1,
             });
         }
