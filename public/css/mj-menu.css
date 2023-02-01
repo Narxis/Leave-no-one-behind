@@ -240,9 +240,17 @@
         text-indent: 1em;
     }
 
-    .add-life {
+    #add-friend,
+    #friend-list,
+    #add-monstre,
+    #monstre-list {
         font-size: 1.5em;
         margin-bottom: 1em;
+    }
+
+    #search-ennemy,
+    #search-ally {
+        font-size: 1.5em;
     }
 
     .ennemy,
