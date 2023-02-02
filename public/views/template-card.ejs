@@ -1,9 +1,12 @@
-<head>
-  <link rel="stylesheet" href="/css/template-card.css">
-  <link rel="stylesheet" href="/css/timer-animation.css">
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
-</head>
+<%- include("partials/head", {
+    title: "Evènement",
+    cssFiles:[
+        "/css/template-card.css",
+        "/css/timer-animation.css",
+        "/css/style.css",
+        "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    ]
+}) %>
 
 <body class="wrap--1">
   <%- include("partials/nav") %>

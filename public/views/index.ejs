@@ -1,10 +1,12 @@
-<head>
-    <title>Leave no one behind</title>
-    <link rel="icon" href="/img/PLUGS.png" type="image/icon type">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
-    <link rel="stylesheet" href="css\main-menu.css">
-    <link rel="stylesheet" href="css\style.css">
-</head>
+<html lang="fr" translate="no">
+
+<%- include("partials/head", {
+    title: "Leave No One Behind",
+    cssFiles:[
+        "/css/style.css",
+        "/css/main-menu.css"
+    ]
+}) %>
 
 <body>
     <%- include("partials/nav") %>
@@ -59,6 +61,6 @@
         <a href="/persos" class="hidden-mobile pas-title">(Appuyez sur une touche pour continuer)</a>
         <a href="/mj-menu" class="display-mobile mj-button">MJ MENU</a>
     </div>
+    <script src="js/main-menu.js"></script>
 </body>
-
-<script src="js/main-menu.js"></script>
+</html>

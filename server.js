@@ -6,6 +6,7 @@ const db = require ('./src/controllers/db');
 const PORT = process.env.PORT || 8080;
 const Bot = require('./src/controllers/discord');
 const NodeCache = require( "node-cache" );
+const os = require("os");
 
 const startServer = async function() {
 
@@ -39,5 +40,20 @@ const startServer = async function() {
 }
 
 startServer().then(e => {
+    let os = require('os');
+    let interfaces = os.networkInterfaces();
+    let addresses = [];
+    for (let k in interfaces) {
+        for (let k2 in interfaces[k]) {
+            let address = interfaces[k][k2];
+            if (address.family === 'IPv4' && !address.internal) {
+                addresses.push(address.address);
+            }
+        }
+    }
+    let ip = addresses[0];
+
     console.log(`Server launched on port ${PORT}`);
+    console.log(`Url PC : \nhttp://localhost:${PORT}`);
+    console.log(`Url Mobile (wifi network): \nhttp://${ip}:${PORT}`);
 });

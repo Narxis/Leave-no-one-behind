@@ -1,8 +1,10 @@
-<head>
-    <link rel="stylesheet" href="css\leaderboard.css">
-    <link rel="stylesheet" href="css\style.css">
-</head>
-
+<%- include("partials/head", {
+    title: "Classement",
+    cssFiles:[
+        "/css/style.css",
+        "/css/leaderboard.css"
+    ]
+}) %>
 <body>
     <%- include("partials/nav") %>
     <div class="center">
