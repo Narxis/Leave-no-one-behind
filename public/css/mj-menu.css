@@ -166,6 +166,8 @@
 
     .choice-reveal {
         width: 50%;
+        overflow: hidden scroll;
+        justify-content: flex-start;
     }
 
     .life-container,
