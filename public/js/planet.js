@@ -331,15 +331,6 @@ async function write(fulltext, place) {
     }
 })();
 
-(function () {
-    let ptabs = document.querySelectorAll('.expander');
-    for (let i = 0; i < ptabs.length; i++) {
-        ptabs.item(i).addEventListener('mouseup', function () {
-            this.closest('.player-tab').classList.toggle('move-up')
-        })
-    }
-})()
-
 
 let index = 0,
     interval = 1000;

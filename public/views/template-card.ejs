@@ -426,27 +426,27 @@
               <div class="mods-left hidden close-mod-left">
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module d'atterrissage</div>
-                  <div class="moins mod-b">-</div>
-                  <div class="mod-left-value"><%= ship.landing %></div>
-                  <div class="plus mod-b">+</div>
+                  <div onclick="quickUpdateLeftModule(this,'atter');" class="moins mod-b">-</div>
+                  <div class="mod-left-value" id="atter-value"><%= ship.landing %></div>
+                  <div onclick="quickUpdateLeftModule(this,'atter');" class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module de construction</div>
-                  <div class="moins mod-b">-</div>
-                  <div class="mod-left-value"><%= ship.construction %></div>
-                  <div class="plus mod-b">+</div>
+                  <div onclick="quickUpdateLeftModule(this,'cons');" class="moins mod-b">-</div>
+                  <div class="mod-left-value" id="cons-value"><%= ship.construction %></div>
+                  <div onclick="quickUpdateLeftModule(this,'cons');" class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Base de donnée scientifique</div>
-                  <div class="moins mod-b">-</div>
-                  <div class="mod-left-value">50</div>
-                  <div id="plus-moins" class="plus mod-b">+</div>
+                  <div onclick="quickUpdateLeftModule(this,'bdds');" class="moins mod-b">-</div>
+                  <div class="mod-left-value" id="bdds-value">50</div>
+                  <div onclick="quickUpdateLeftModule(this,'bdds');" class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Base de donnée historique</div>
-                  <div class="moins mod-b">-</div>
-                  <div class="mod-left-value">100</div>
-                  <div class="plus mod-b">+</div>
+                  <div onclick="quickUpdateLeftModule(this,'bddh');" class="moins mod-b">-</div>
+                  <div class="mod-left-value" id="bddh-value">100</div>
+                  <div onclick="quickUpdateLeftModule(this,'bddh');" class="plus mod-b">+</div>
                 </div>
               </div>
             </div>
@@ -704,15 +704,8 @@
       tabs.item(i).disabled = false;
     })
   }
-
-  (function () {
-    let ptabs = document.querySelectorAll('.expander');
-    for (let i = 0; i < ptabs.length; i++) {
-      ptabs.item(i).addEventListener('mouseup', function () {
-        this.closest('.player-tab').classList.toggle('move-up')
-      })
-    }
-    document.querySelector('.left-button').addEventListener('mouseup', async function () {
+(function (){
+  document.querySelector('.left-button').addEventListener('mouseup', async function () {
       this.closest('.consommable-tab').style.animation = null
       this.closest('.consommable-tab').classList.toggle('open-left')
       this.closest('.consommable-tab').classList.toggle('close-left')
@@ -724,7 +717,7 @@
       this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
       await sleep(5000)
     })
-  })()
+})()
 
   var wrapperMenu = document.querySelector('.wrapper-menu');
 
