@@ -167,3 +167,37 @@
         text-shadow: none;
     }
 }
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-device-height : 1920px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
+
+    /* Styles */
+
+    .l-ob {
+        display: inline-flex;
+        width: 100vw;
+        height: 40vh;
+        font-size: 16vw;
+        position: fixed;
+        color: var(--jaune);
+        animation: flicker 5.2s linear infinite;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        cursor: default;
+        pointer-events: none;
+        flex-direction: column;
+    }
+
+    #lnob-logo {
+        height: 50vw;
+        top: -40vh;
+    }
+
+    #lnob-logo2 {
+        height: 50vw;
+        top: -87vw;
+        left: -18vw;
+    }
+
+}
