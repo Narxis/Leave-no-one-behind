@@ -42,12 +42,12 @@
 }
 
 .pas-title {
-    width: 100vw;
+    width: 25vw;
     font-size: 2vw;
     position: fixed;
     text-shadow: 8px 6px 11px #48484899;
     text-align: center;
-    top: 7vw;
+    top: 10vw;
     cursor: pointer;
     text-decoration: none;
     color: #ffffff29;
@@ -112,7 +112,7 @@
 .l-ob {
     display: inline-flex;
     width: 100vw;
-    height: 33vh;
+    height: 20vh;
     font-size: 9vw;
     position: fixed;
     color: var(--jaune);
@@ -122,6 +122,7 @@
     justify-content: center;
     flex-wrap: wrap;
     cursor: default;
+    margin-bottom: 10vh;
     pointer-events: none;
 }
 
@@ -167,6 +168,7 @@
         text-shadow: none;
     }
 }
+
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-device-height : 1920px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
 
@@ -175,14 +177,14 @@
     .l-ob {
         display: inline-flex;
         width: 100vw;
-        height: 40vh;
+        height: 35vh;
         font-size: 16vw;
-        position: fixed;
+        position: absolute;
         color: var(--jaune);
         animation: flicker 5.2s linear infinite;
         align-content: center;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         flex-wrap: wrap;
         cursor: default;
         pointer-events: none;
