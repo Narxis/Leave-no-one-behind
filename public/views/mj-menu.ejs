@@ -1,10 +1,11 @@
 <html lang="fr" translate="no">
-<head>
-    <title>MJ Menu</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
-    <link rel="stylesheet" href="css\style.css">
-    <link rel="stylesheet" href="css\mj-menu.css">
-</head>
+<%- include("partials/head", {
+    title: "MJ Menu",
+    cssFiles:[
+        "/css/style.css",
+        "/css/mj-menu.css"
+    ]
+}) %>
 
 <body>
 <%- include("partials/nav") %>

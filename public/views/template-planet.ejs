@@ -1,7 +1,10 @@
-<head>
-  <link rel="stylesheet" href="css\style.css">
-  <link rel="stylesheet" href="css\template-planet.css">
-</head>
+<%- include("partials/head", {
+    title: "Planète",
+    cssFiles:[
+        "/css/style.css",
+        "/css/template-planet.css"
+    ]
+}) %>
 
 <body>
   <%- include("partials/nav") %>
