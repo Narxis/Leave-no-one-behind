@@ -228,7 +228,7 @@
 
     .life-container,
     .combat {
-        height: 25%;
+        height: auto;
     }
 
     .choice {
