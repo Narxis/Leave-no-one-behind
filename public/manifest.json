@@ -4,9 +4,8 @@
   "description": "MJ Access",
   "lang": "fr",
   "dir": "ltr",
-  "start_url": "/?utm_source=pwa",
+  "start_url": "/",
   "scope": "/",
-  "gcm_sender_id": "376695005133",
   "icons": [
     {
       "src": "/img/48.png",
