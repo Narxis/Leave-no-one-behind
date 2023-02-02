@@ -173,6 +173,21 @@
         width: 25%;
     }
 
+    #search-ally, 
+    #search-ennemy {
+        height: 3.5em;
+        width: 90%;
+        background-color: #ffffff21;
+        border: 2px solid rgb(180, 180, 180);
+        border-radius: 10px;
+        font-family: 'Jura', sans-serif;
+        font-size: 1.5em;
+        outline: none;
+        color: #fff;
+        padding: 0.5em;
+        margin: 0 1em;
+    }
+
     .choice {
         padding: 1em 0em 0em 0em;
     }
@@ -180,6 +195,15 @@
     .reveal-text,
     .button-text {
         text-indent: 1em;
+    }
+
+    #console-container {
+        overflow: hidden scroll;
+        padding: 1em;
+        text-indent: 2em;
+        width: 90%;
+        height: 100%;
+        border-top: 2px solid rgb(180, 180, 180);
     }
 }
 
