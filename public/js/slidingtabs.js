@@ -289,15 +289,23 @@ function applystatus(statusname) {
     }
 };
 
-function quickUpdateModule(el, mod) {
-
-    let currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value'));
+function quickUpdateModule(el, mod, left=false) {
+    let currentVal;
+    let input;
+    let inputVal='';
+    if (left) {
+        console.log(left)
+        currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText);
+    }
+    else {
+        currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value'));
+        input = document.getElementsByName('i-'+ mod)[0];
+        inputVal = input.value; 
+    }
     let modifier = 1;
-    let input = document.getElementsByName('i-'+ mod)[0];
-    let inputVal = input.value;
     let newValue;
 
-    if (el.classList.contains('tab-moins')) {
+    if (el.classList.contains(left ? 'moins' : 'tab-moins')) {
         modifier = -1;
     }
 
@@ -314,64 +322,38 @@ function quickUpdateModule(el, mod) {
     }
 
     newValue = currentVal + modifier;
-    input.value = '';
+    console.log(newValue,currentVal)
+    if (input)
+        input.value = '';
 
     newValue = Math.min(Math.max(newValue, 0), 100);
+    console.log(newValue,currentVal,inputVal,modifier)
     if (currentVal === newValue) return;
 
-    setModuleVal(mod, newValue);
+    setModuleVal(mod, newValue, left);
 }
 
-function setModuleVal(mod, newValue) {
+function setModuleVal(mod, newValue, left) {
+    console.log('oui')
     if (typeof wsLNOB === 'undefined'){
         console.error('YOU MUST INCLUDE socketLNOB.js before this');
     }
 
     newValue = Math.min(Math.max(newValue, 0), 100);
 
-    let statVal = document.querySelector('#modtab #dial-'+mod);
-    statVal.setAttribute('data-value', newValue);
-
-    let tooltip = statVal.querySelector('.mod-button');
-    let newTooltip = tooltip.getAttribute('data-tooltip').replace(/\d+%$/, newValue + '%');
-    tooltip.setAttribute('data-tooltip', newTooltip)
-
-    wsLNOB.setModule(mod, newValue);
-}
-
-function quickUpdateLeftModule(el, mod) {
+    if (left) {
+        let statVal = document.querySelector('#'+mod+'-value');
+        statVal.innerText = newValue;
+    }
+    else {
+        let statVal = document.querySelector('#modtab #dial-'+mod);
+        statVal.setAttribute('data-value', newValue);
     
-    let currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText);
-    let modifier = 1;
-    let newValue;
-
-    if (el.classList.contains('moins')) {
-        modifier = -1;
-    }
-    if (this.event.shiftKey) {
-        modifier *= 10;
-    }
-    else if (this.event.ctrlKey) {
-        modifier *= 5;
+        let tooltip = statVal.querySelector('.mod-button');
+        let newTooltip = tooltip.getAttribute('data-tooltip').replace(/\d+%$/, newValue + '%');
+        tooltip.setAttribute('data-tooltip', newTooltip)
     }
 
-    newValue = currentVal + modifier;
-
-    newValue = Math.min(Math.max(newValue, 0), 100);
-    if (currentVal === newValue) return;
-
-    setModuleVal(mod, newValue);
-}
-
-function setModuleVal(mod, newValue) {
-    if (typeof wsLNOB === 'undefined'){
-        console.error('YOU MUST INCLUDE socketLNOB.js before this');
-    }
-
-    newValue = Math.min(Math.max(newValue, 0), 100);
-
-    let statVal = document.querySelector('#'+mod+'-value');
-    statVal.innerText = newValue;
     wsLNOB.setModule(mod, newValue);
 }
 

@@ -459,27 +459,27 @@
               <div class="mods-left hidden close-mod-left">
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module d'atterrissage</div>
-                  <div onclick="quickUpdateLeftModule(this,'atter');" class="moins mod-b">-</div>
+                  <div onclick="quickUpdateModule(this,'atter',true);" class="moins mod-b">-</div>
                   <div class="mod-left-value" id="atter-value"><%= ship.landing %></div>
-                  <div onclick="quickUpdateLeftModule(this,'atter');" class="plus mod-b">+</div>
+                  <div onclick="quickUpdateModule(this,'atter',true);" class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module de construction</div>
-                  <div onclick="quickUpdateLeftModule(this,'cons');" class="moins mod-b">-</div>
+                  <div onclick="quickUpdateModule(this,'cons',true);" class="moins mod-b">-</div>
                   <div class="mod-left-value" id="cons-value"><%= ship.construction %></div>
-                  <div onclick="quickUpdateLeftModule(this,'cons');" class="plus mod-b">+</div>
+                  <div onclick="quickUpdateModule(this,'cons',true);" class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Base de donnée scientifique</div>
-                  <div onclick="quickUpdateLeftModule(this,'bdds');" class="moins mod-b">-</div>
+                  <div onclick="quickUpdateModule(this,'bdds',true);" class="moins mod-b">-</div>
                   <div class="mod-left-value" id="bdds-value">50</div>
-                  <div onclick="quickUpdateLeftModule(this,'bdds');" class="plus mod-b">+</div>
+                  <div onclick="quickUpdateModule(this,'bdds',true);" class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Base de donnée historique</div>
-                  <div onclick="quickUpdateLeftModule(this,'bddh');" class="moins mod-b">-</div>
+                  <div onclick="quickUpdateModule(this,'bddh',true);" class="moins mod-b">-</div>
                   <div class="mod-left-value" id="bddh-value">100</div>
-                  <div onclick="quickUpdateLeftModule(this,'bddh');" class="plus mod-b">+</div>
+                  <div onclick="quickUpdateModule(this,'bddh',true);" class="plus mod-b">+</div>
                 </div>
               </div>
             </div>
@@ -659,7 +659,7 @@
 
 <script>
   var cardtextstr = `<%- card.desc %>`;
-  var currentCardType = <%- card.type %> ; 
+  var currentCardType = parseInt(`<%- card.type %>`) ; 
   var choicelist = [];
   var answerlist = [];
   <% card.choices.forEach(function(choice) {%>
