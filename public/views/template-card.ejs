@@ -1,9 +1,12 @@
-<head>
-  <link rel="stylesheet" href="/css/template-card.css">
-  <link rel="stylesheet" href="/css/timer-animation.css">
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
-</head>
+<%- include("partials/head", {
+    title: "Evènement",
+    cssFiles:[
+        "/css/template-card.css",
+        "/css/timer-animation.css",
+        "/css/style.css",
+        "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    ]
+}) %>
 
 <body class="wrap--1">
   <%- include("partials/nav") %>
@@ -241,16 +244,21 @@
           <div class="tab tab-moteurs move-right">
             <div class="tab-txt">Moteurs</div>
             <div id="dial-motors" class="container moteurs dial" data-value="<%= ship.motors %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Moteurs <%= ship.motors %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.motors %>%</text>
                 </svg>
+                <img class="mod-img" id="img-mot" src="/img/modules/engine-motor-svgrepo-com.png" alt="Moteurs">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'motors');" class="mod-b tab-moins" id="moins-mot">-</button>
@@ -262,16 +270,21 @@
           <div class="tab tab-scan move-right">
             <div class="tab-txt">Scanner de surface</div>
             <div id="dial-scanner" class="container scan dial" data-value="<%= ship.scanner %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Scanner de surface <%= ship.scanner %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.scanner %>%</text>
                 </svg>
+                <img class="mod-img" id="img-scan" src="/img/modules/location-internet-svgrepo-com.png" alt="Scanner">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'scanner');" class="mod-b tab-moins" id="moins-scan">-</button>
@@ -283,16 +296,21 @@
           <div class="tab tab-detect move-right">
             <div class="tab-txt">Détecteur de proximité</div>
             <div id="dial-proximity" class="container detect dial" data-value="<%= ship.proximity %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Détecteur de proximité <%= ship.proximity %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.proximity %>%</text>
                 </svg>
+                <img class="mod-img" id="img-detec" src="/img/modules/radar-svgrepo-com.png" alt="Detecteur de proximité">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'proximity');" class="mod-b tab-moins" id="moins-detect">-</button>
@@ -304,16 +322,21 @@
           <div class="tab tab-o2 move-right">
             <div class="tab-txt">Oxygène</div>
             <div id="dial-oxygen" class="container o2 dial" data-value="<%= ship.oxygen %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Oxygène <%= ship.oxygen %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.oxygen %>%</text>
                 </svg>
+                <img class="mod-img" id="img-o2" src="/img/modules/oxygen-tank-svgrepo-com.png" alt="Oxygène">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'oxygen');" class="mod-b tab-moins" id="moins-o2">-</button>
@@ -325,16 +348,21 @@
           <div class="tab tab-elec move-right">
             <div class="tab-txt">Électricité</div>
             <div id="dial-energy" class="container elec dial" data-value="<%= ship.energy %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Électricité <%= ship.energy %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.energy %>%</text>
                 </svg>
+                <img class="mod-img" id="img-elec" src="/img/modules/battery-svgrepo-com.png" alt="Électricité">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'energy');" class="mod-b tab-moins" id="moins-elec">-</button>
@@ -346,16 +374,21 @@
           <div class="tab tab-grav move-right">
             <div class="tab-txt">Gravité artificielle</div>
             <div id="dial-gravity" class="container grav dial" data-value="<%= ship.gravity %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Gravité artificielle <%= ship.gravity %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.gravity %>%</text>
                 </svg>
+                <img class="mod-img" id="img-grav" src="/img/modules/artificial-gravity-svgrepo-com.png" alt="Gravité artificielle">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'gravity');" class="mod-b tab-moins" id="moins-grav">-</button>

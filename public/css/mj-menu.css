@@ -109,6 +109,7 @@
     outline: none;
     color: #fff;
     margin-top: 1em;
+    cursor: pointer;
 }
 
 .combat {
@@ -122,19 +123,22 @@
 
 .fight {
     display: flex;
+    height: 4.1em;
     width: 90%;
-    margin: 1.5em 0;
+    margin: 2em 0;
     align-items: center;
     color: #cb2e2e;
     text-shadow: 2px 2px 2px black;
+    text-align: center;
+    justify-content: center;
 }
 
 #console-container {
-    padding-top: 1.5em;
     text-indent: 2em;
-    width: 100%;
+    width: 92%;
     height: 100%;
     border-top: 2px solid rgb(180, 180, 180);
+    padding: 1em;
 }
 
 .center {
@@ -166,11 +170,28 @@
 
     .choice-reveal {
         width: 50%;
+        overflow: hidden scroll;
+        justify-content: flex-start;
     }
 
     .life-container,
     .combat {
         width: 25%;
+    }
+
+    #search-ally, 
+    #search-ennemy {
+        height: 3.5em;
+        width: 90%;
+        background-color: #ffffff21;
+        border: 2px solid rgb(180, 180, 180);
+        border-radius: 10px;
+        font-family: 'Jura', sans-serif;
+        font-size: 1.5em;
+        outline: none;
+        color: #fff;
+        padding: 0.5em;
+        margin: 0 1em;
     }
 
     .choice {
@@ -180,6 +201,15 @@
     .reveal-text,
     .button-text {
         text-indent: 1em;
+    }
+
+    #console-container {
+        overflow: hidden scroll;
+        padding: 1em;
+        text-indent: 2em;
+        width: 90%;
+        height: 100%;
+        border-top: 2px solid rgb(180, 180, 180);
     }
 }
 
@@ -228,7 +258,7 @@
 
     .life-container,
     .combat {
-        height: 25%;
+        height: auto;
     }
 
     .choice {
@@ -238,6 +268,20 @@
     .reveal-text,
     .button-text {
         text-indent: 1em;
+    }
+
+    #add-friend,
+    #friend-list,
+    #add-monstre,
+    #monstre-list {
+        font-size: 1.5em;
+        margin-bottom: 1em;
+    }
+
+    #search-ennemy,
+    #search-ally {
+        font-size: 1em;
+        height: 4em;
     }
 
     .ennemy,
@@ -253,5 +297,11 @@
     .fight {
         border-top: 2px solid rgb(180, 180, 180);
         padding: 0.5em;
+    }
+
+    #console-container {
+        padding: 2em;
+        text-indent: 1.5em;
+        width: 90%;
     }
 }

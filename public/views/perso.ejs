@@ -1,8 +1,10 @@
-<head>
-    <link rel="stylesheet" href="/css/perso.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/test.js"></script>
-</head>
+<%- include("partials/head", {
+    title: "Création des persos",
+    cssFiles:[
+        "/css/style.css",
+        "/css/perso.css"
+    ]
+}) %>
 
 <body>
     <%- include("partials/nav") %>

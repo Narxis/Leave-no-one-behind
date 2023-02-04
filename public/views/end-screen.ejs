@@ -1,7 +1,10 @@
-<head>
-    <link rel="stylesheet" href="css\end-screen.css">
-    <link rel="stylesheet" href="css\style.css">
-</head>
+<%- include("partials/head", {
+    title: "FIN",
+    cssFiles:[
+        "/css/style.css",
+        "/css/end-screen.css"
+    ]
+}) %>
 
 <body>
     <%- include("partials/nav") %>
@@ -69,7 +72,11 @@
                                 <stop offset="100%" stop-color="#6E4AE2" />
                             </linearGradient>
                             <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100"
-                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" />
+                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                            <mask id="circleMask">
+                                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                                        stroke-width="12" fill="none" />
+                            </mask>
                             <text x="20" y="60">100%</text>
                         </svg>
                     </div>
@@ -83,7 +90,11 @@
                                 <stop offset="100%" stop-color="#6E4AE2" />
                             </linearGradient>
                             <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100"
-                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" />
+                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                            <mask id="circleMask">
+                                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                                        stroke-width="12" fill="none" />
+                            </mask>
                             <text x="20" y="60">100%</text>
                         </svg>
                     </div>
@@ -97,7 +108,11 @@
                                 <stop offset="100%" stop-color="#6E4AE2" />
                             </linearGradient>
                             <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100"
-                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" />
+                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                            <mask id="circleMask">
+                                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                                        stroke-width="12" fill="none" />
+                            </mask>
                             <text x="20" y="60">100%</text>
                         </svg>
                     </div>
@@ -111,7 +126,11 @@
                                 <stop offset="100%" stop-color="#6E4AE2" />
                             </linearGradient>
                             <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100"
-                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" />
+                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                            <mask id="circleMask">
+                                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                                        stroke-width="12" fill="none" />
+                            </mask>
                             <text x="20" y="60">100%</text>
                         </svg>
                     </div>
@@ -125,7 +144,11 @@
                                 <stop offset="100%" stop-color="#6E4AE2" />
                             </linearGradient>
                             <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100"
-                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" />
+                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                            <mask id="circleMask">
+                                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                                        stroke-width="12" fill="none" />
+                            </mask>
                             <text x="20" y="60">100%</text>
                         </svg>
                     </div>
@@ -139,7 +162,11 @@
                                 <stop offset="100%" stop-color="#6E4AE2" />
                             </linearGradient>
                             <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100"
-                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" />
+                                stroke="url(#gradient)" stroke-width="8" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                            <mask id="circleMask">
+                                <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                                        stroke-width="12" fill="none" />
+                            </mask>
                             <text x="20" y="60">100%</text>
                         </svg>
                     </div>

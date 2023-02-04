@@ -32,7 +32,7 @@
 
 .dial svg text {
   font-size: 30px;
-  fill: whitesmoke;
+  fill: transparent;
 }
 
 /*---^^^------------SVG----------^^^---*/
@@ -266,6 +266,87 @@
   left: 0px;
   width: 291;
   text-align: center;
+}
+
+.mod-img {
+  filter: saturate(0.7);
+  height: 41px;
+}
+
+#img-scan {
+  transform: translate(2px, 3px);
+}
+
+#img-detec {
+  transform: translate(-0.5px, 0px);
+}
+
+#img-o2 {
+  transform: scale(0.8);
+}
+
+#img-elec {
+  transform: scale(0.8);
+}
+
+#img-grav {
+  transform: scale(0.95);
+}
+
+[data-tooltip] {
+  cursor: pointer;
+}
+
+[data-tooltip]:before,
+[data-tooltip]:after {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-tooltip]:before {
+  display: flex;
+  position: absolute;
+  top: 30%;
+  left: 240%;
+  margin-bottom: 5px;
+  margin-left: -80px;
+  padding: 7px;
+  width: 122px;
+  border-radius: 3px;
+  background-color: #000;
+  background-color: #333333e6;
+  color: #fff;
+  content: attr(data-tooltip);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.2;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+[data-tooltip]:after {
+  position: absolute;
+  top: 46%;
+  left: 104%;
+  margin-left: -5px;
+  width: 0;
+  border-top: 5px solid transparent;
+  border-right: 5px solid #333333e6;
+  border-left: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  content: " ";
+  font-size: 0;
+  line-height: 0;
+}
+
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  opacity: 1;
 }
 
 .tab-moteurs {
