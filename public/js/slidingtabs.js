@@ -322,6 +322,11 @@ function setModuleVal(mod, newValue) {
 
     let statVal = document.querySelector('#modtab #dial-'+mod);
     statVal.setAttribute('data-value', newValue);
+
+    let tooltip = statVal.querySelector('.mod-button');
+    let newTooltip = tooltip.getAttribute('data-tooltip').replace(/\d+%$/, newValue + '%');
+    tooltip.setAttribute('data-tooltip', newTooltip)
+
     wsLNOB.setModule(mod, newValue);
 }
 
