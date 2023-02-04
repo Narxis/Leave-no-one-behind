@@ -11,6 +11,7 @@ class SocketLNOB {
                 }
 
                 let custom_event = new CustomEvent(resp.action, {detail: resp});
+                //console.log(custom_event);
                 document.dispatchEvent(custom_event);
             }
             catch (e) {

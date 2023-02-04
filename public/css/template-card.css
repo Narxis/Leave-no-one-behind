@@ -1054,3 +1054,52 @@ textarea {
 }
 
 /*---^^^---human-status----^^^---*/
+.combat-container {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  width: 750px;
+  color: rgb(255, 255, 255);
+  text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
+  border: 4px solid rgb(180 180 180);
+  border-radius: 40px;
+  align-content: center;
+  row-gap: 20px;
+  top: 0px;  /*ça marche pas sans alors on laisse*/
+  left: 0px; /*ça marche pas sans alors on laisse*/
+}
+.ennemy-container{
+  width: 240px;
+  height: 142px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ennemy-name{
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+.roll-button{
+  width: 70px;
+  height: 25px;
+  background: none;
+  border: 1px solid whitesmoke;
+  border-radius: 10px;
+  margin: 0px 10px 0px 10px;
+  color: whitesmoke;
+}
+.ennemy-damage{
+  margin: 7px 0px !important;
+}
+.ennemy-separateur{
+  width: 100%;
+  height: 15px;
+  box-shadow: inset 0px 12px 12px -12px rgb(0 0 0 / 50%);
+}
+.combat-none {
+  display: none;
+}

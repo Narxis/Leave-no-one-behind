@@ -48,3 +48,18 @@ function setPlayerStat(id, stat, newValue) {
 }
 
 document.addEventListener('roll', doPlayerRoll);
+
+(function () {
+    let ptabs = document.querySelectorAll('.player-tab');
+    for (let i = 0; i < ptabs.length; i++) {
+        let expander = ptabs.item(i).querySelector('.expander');
+        expander.addEventListener('mouseup', function () {
+            this.closest('.player-tab').classList.toggle('move-up')
+        })
+        let expanderItem = ptabs.item(i).querySelector('.expander-item');
+        expanderItem.addEventListener('mouseup', function(){
+            this.firstElementChild.nextElementSibling.classList.toggle('hide')
+        })
+    }
+
+  })()

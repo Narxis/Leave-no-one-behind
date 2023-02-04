@@ -330,6 +330,43 @@ function setModuleVal(mod, newValue) {
     wsLNOB.setModule(mod, newValue);
 }
 
+function quickUpdateLeftModule(el, mod) {
+    
+    let currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText);
+    let modifier = 1;
+    let newValue;
+
+    if (el.classList.contains('moins')) {
+        modifier = -1;
+    }
+    if (this.event.shiftKey) {
+        modifier *= 10;
+    }
+    else if (this.event.ctrlKey) {
+        modifier *= 5;
+    }
+
+    newValue = currentVal + modifier;
+
+    newValue = Math.min(Math.max(newValue, 0), 100);
+    if (currentVal === newValue) return;
+
+    setModuleVal(mod, newValue);
+}
+
+function setModuleVal(mod, newValue) {
+    if (typeof wsLNOB === 'undefined'){
+        console.error('YOU MUST INCLUDE socketLNOB.js before this');
+    }
+
+    newValue = Math.min(Math.max(newValue, 0), 100);
+
+    let statVal = document.querySelector('#'+mod+'-value');
+    statVal.innerText = newValue;
+    wsLNOB.setModule(mod, newValue);
+}
+
+
 // EXECUTION AU CHARGEMENT DE LA PAGE
 (function(){
     initialiseChoiceTabs();
