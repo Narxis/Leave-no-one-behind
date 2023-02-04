@@ -123,11 +123,14 @@
 
 .fight {
     display: flex;
+    height: 4.1em;
     width: 90%;
-    margin: 1.5em 0;
+    margin: 2em 0;
     align-items: center;
     color: #cb2e2e;
     text-shadow: 2px 2px 2px black;
+    text-align: center;
+    justify-content: center;
 }
 
 #console-container {
