@@ -130,11 +130,11 @@
 }
 
 #console-container {
-    padding-top: 1.5em;
     text-indent: 2em;
-    width: 100%;
+    width: 92%;
     height: 100%;
     border-top: 2px solid rgb(180, 180, 180);
+    padding: 1em;
 }
 
 .center {
