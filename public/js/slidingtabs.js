@@ -2,7 +2,6 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 //variables cartes
-
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr = 0;
 var cardnbrUntilPlanet = 5;
@@ -90,6 +89,7 @@ function eventchoices() {
     var choiceTabs = choice.getElementsByClassName('choice');
     for (let i = 0; i < choiceTabs.length; i++) {
         document.querySelector('#choice' + String(i)).addEventListener('mouseup', async function () {
+            //currentCardType pour les lieux
             document.querySelector('.card-text').classList.toggle('invisibility')
             document.querySelector('.answer' + (i + 1)).classList.toggle('visibility')
             for (let k = 0; k < choiceTabs.length; k++) {
@@ -98,7 +98,7 @@ function eventchoices() {
                 choiceTabs.item(k).classList.remove('choice-hover')
             }
             await sleep(1200)
-            write(answerlist[i], '.answer' + (i + 1))
+            write(answerlist[i], '.answer' + (i + 1),)
         })
         document.querySelector('#choice' + String(i)).addEventListener('mouseover', function () {
             this.classList.add('choice-hover')
@@ -110,6 +110,7 @@ function eventchoices() {
 };
 
 async function nextoption() {
+    //le currentCardType pour les lieux
     if (textprintednbr === 1) {
         for (let i = 0; i < choicelist.length; i++) {
             let choiceshtml = `<button class="choice move-down" id="choice${i}"></button>`
@@ -135,10 +136,15 @@ async function nextoption() {
     }
 }
 
-async function write(fulltext, place) {
-    let currenttext = ''
-    for (let i = 0; i <= fulltext.length; i++) {
-        document.querySelector(place).innerText = currenttext;
+async function write(fulltext, place, spanclass='base-text') {
+    let currenttext = '';
+    document.querySelector(place).innerHTML = `<span class =\"${spanclass}\"></span>`
+    let start = fulltext.indexOf('>', fulltext.indexOf(''+spanclass));
+    for (let i = start+1; i <= fulltext.length; i++) {
+        document.querySelector(place).querySelector('.'+spanclass).innerText = currenttext;
+        if (fulltext.substring(i, i + 1) == "<") {
+            i = fulltext.length
+        }
         currenttext += fulltext.substring(i, i + 1)
         await sleep(30)
     }
@@ -154,6 +160,7 @@ async function getNextCard (pop=false) {
             'Content-Type': 'application/json'
         },
     });
+
     return JSON.parse(await rawResponse.text());
 }
 
@@ -198,10 +205,11 @@ async function initialiseNextButton() {
             //new text
             let textPlanetEncounter = "Votre vaisseau est entrée dans l'orbite d'une planète, allez dans la salle des scanners pour voir les informations sur cette planète ";
             updatestatus();
-            write(textPlanetEncounter, '.card-text');
+            write(textPlanetEncounter, '.card-text',);
         }
         else {
             let nextCard = await getNextCard(true);
+            currentCardType = nextCard.type
             //hide text animation and 'next-button'
             document.querySelector('.next-button').disabled = 'true'
             document.querySelector('.next-button').classList.add('move-down')
@@ -230,6 +238,7 @@ async function initialiseNextButton() {
             //set up new text
             cardtextstr = nextCard.desc;
             choicelist = nextCard.choices.map(v => v.value);
+            //Si il y a un span de class="blackout" alors on affiche uniquement ce choix là (si on a le blackout)
             answerlist = nextCard.choices.map(v => v.reveal);
             // answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
             // answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
@@ -237,7 +246,7 @@ async function initialiseNextButton() {
             textprintednbr = 0;
             cardnbrUntilPlanet -= 1;
             updatestatus();
-            write(cardtextstr, '.card-text')
+            write(cardtextstr, '.card-text',)
         }
     })
 }
@@ -373,6 +382,6 @@ function setModuleVal(mod, newValue) {
     initialiseModTabs();
     initialiseTimerTab();
     initialisePlayerTab();
-    write(cardtextstr, '.card-text');
+    write(cardtextstr, '.card-text',);
     initialiseleLeftTabs();
 })();

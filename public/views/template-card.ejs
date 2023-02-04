@@ -659,6 +659,7 @@
 
 <script>
   var cardtextstr = `<%- card.desc %>`;
+  var currentCardType = <%- card.type %> ; 
   var choicelist = [];
   var answerlist = [];
   <% card.choices.forEach(function(choice) {%>
