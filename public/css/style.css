@@ -338,11 +338,12 @@ nav {
 }
 
 .itemlist {
+    opacity: 0;
     position: absolute;
-    top: 5px;
+    top: -105px;
     left: -170px;
     width: 218px;
-    height: 156px;
+    height: 91px;
     border-radius: 10px;
     border: 2px solid #fff;
     display: flex;
@@ -351,6 +352,11 @@ nav {
     background: var(--lgrad);
     align-content: flex-start;
     flex-wrap: wrap;
+    transition: .3s;
+}
+
+.expander-item:active .itemlist {
+    opacity: 1;
 }
 
 .move-up {
