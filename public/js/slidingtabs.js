@@ -128,6 +128,7 @@ function startCountDown() {
                 await sleep(1200)
                 plugShip.classList.add('shipflotte')
                 bigBoite.classList.remove('idle')
+                bigBoite.classList.add('hide')
                 await sleep(300)
                 plugShip.classList.remove('comeback')
                 return true;
