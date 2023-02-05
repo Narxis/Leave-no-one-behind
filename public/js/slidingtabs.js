@@ -2,7 +2,6 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 //variables cartes
-
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr = 0;
 var cardnbrUntilPlanet = 5;
@@ -28,9 +27,72 @@ var statusListLength = statusList.length;
 var statushtml = document.querySelector(".status");
 //html bouton suivant
 var nextbuttonhtml = `<button class="next-button choice move-down" id="next1">Continuer votre chemin</button>`;
+// timer 
+var interval_cd;
+var timerText = document.querySelector('#timer-text');
+var timerText2 = document.querySelector('#timer-text2');
+var bigBoite = document.querySelector('#bigboite');
+var bigBoite2 = document.querySelector('#bigboite2');
+var plugShip = document.querySelector('#plugship');
+var plugShip2 = document.querySelector('#plugship2');
 //TODO remove test ternary at the end of the dev
 var nextbuttonhtml2 = `<a href="`+(location.href.endsWith('/next') ? '/next' : '/template-planet')+`"><button class="next-button choice move-down" id="next2">Aller dans la salle des scanners</button></a>`;
 
+
+function startCountDown() {
+    // On récupère le texte dans le timer (en tant qu'entier)
+    let time_left = parseInt(timerText.textContent);
+    // On lance une fonction toutes les secondes (1000ms)
+    interval_cd = setInterval(async function () {
+        // aucune idée, une sorte de magie noire
+        time_left = time_left - 1;
+        // On change le texte dans le timer (avec un 0 devant si on est en dessous de 10)
+        timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
+        timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
+        switch (time_left) {
+        case 30:
+            bigBoite.classList.add('start')
+            break;
+        case 28:
+            bigBoite.classList.add('idle')
+            bigBoite.classList.remove('start')
+            break;
+        case 10:
+            bigBoite.classList.add('flash')
+            break;
+        case 9:
+            bigBoite.classList.remove('flash')
+            break;
+        case 4:
+            await sleep(500)
+            bigBoite.classList.add('plop')
+            break;
+        case 3:
+            bigBoite.classList.add('shot')
+            await sleep(300)
+            break;
+        case 2:
+            await sleep(520)
+            bigBoite.classList.add('show-plugun')
+            bigBoite.classList.add('hide-plugun')
+            await sleep(250)
+            plugShip.classList.remove('shipflotte')
+            plugShip.classList.add('bonk')
+            await sleep(900)
+            plugShip.classList.remove('bonk')
+            plugShip.classList.add('comeback')
+            break;
+        case 0:
+            await sleep(1200)
+            plugShip.classList.remove('comeback')
+            plugShip.classList.add('shipflotte')
+            bigBoite.classList.remove('idle')
+            clearInterval(interval_cd);
+            return true;
+            break;
+        }
+    }, 1000);
+}
 
 function updatestatus() {
     statusDurationList = [duration_blackout, cardnbrUntilPlanet, cardnbrUntilPlanet, duration_anticipation] //updates to new cardnbrUntilPlanet value
@@ -66,7 +128,7 @@ async function initialiseModTabs() {
 
 async function initialiseTimerTab() {
     var timerTab = document.getElementsByClassName('timertab');
-    console.log(timerTab.tagName);
+    console.log('timerstart');
 
     for (let i = 0; i < timerTab.length; i++) {
         await sleep(100);
@@ -90,6 +152,7 @@ function eventchoices() {
     var choiceTabs = choice.getElementsByClassName('choice');
     for (let i = 0; i < choiceTabs.length; i++) {
         document.querySelector('#choice' + String(i)).addEventListener('mouseup', async function () {
+            //currentCardType pour les lieux
             document.querySelector('.card-text').classList.toggle('invisibility')
             document.querySelector('.answer' + (i + 1)).classList.toggle('visibility')
             for (let k = 0; k < choiceTabs.length; k++) {
@@ -98,7 +161,7 @@ function eventchoices() {
                 choiceTabs.item(k).classList.remove('choice-hover')
             }
             await sleep(1200)
-            write(answerlist[i], '.answer' + (i + 1))
+            write(answerlist[i], '.answer' + (i + 1),)
         })
         document.querySelector('#choice' + String(i)).addEventListener('mouseover', function () {
             this.classList.add('choice-hover')
@@ -110,6 +173,7 @@ function eventchoices() {
 };
 
 async function nextoption() {
+    //le currentCardType pour les lieux
     if (textprintednbr === 1) {
         for (let i = 0; i < choicelist.length; i++) {
             let choiceshtml = `<button class="choice move-down" id="choice${i}"></button>`
@@ -117,8 +181,10 @@ async function nextoption() {
             document.querySelector('#choice' + String(i)).innerHTML = choicelist[i]
         }
         await sleep(500)
-        initialiseChoiceTabs()
-        eventchoices()
+        initialiseChoiceTabs();
+        startCountDown();
+        initialiseTimerTab();
+        eventchoices();
     }
     if (textprintednbr === 2) {
         document.querySelector('.choices').innerHTML = nextbuttonhtml
@@ -135,10 +201,15 @@ async function nextoption() {
     }
 }
 
-async function write(fulltext, place) {
-    let currenttext = ''
-    for (let i = 0; i <= fulltext.length; i++) {
-        document.querySelector(place).innerText = currenttext;
+async function write(fulltext, place, spanclass='base-text') {
+    let currenttext = '';
+    document.querySelector(place).innerHTML = `<span class =\"${spanclass}\"></span>`
+    let start = fulltext.indexOf('>', fulltext.indexOf(''+spanclass));
+    for (let i = start+1; i <= fulltext.length; i++) {
+        document.querySelector(place).querySelector('.'+spanclass).innerText = currenttext;
+        if (fulltext.substring(i, i + 1) == "<") {
+            i = fulltext.length
+        }
         currenttext += fulltext.substring(i, i + 1)
         await sleep(30)
     }
@@ -154,6 +225,7 @@ async function getNextCard (pop=false) {
             'Content-Type': 'application/json'
         },
     });
+
     return JSON.parse(await rawResponse.text());
 }
 
@@ -198,10 +270,11 @@ async function initialiseNextButton() {
             //new text
             let textPlanetEncounter = "Votre vaisseau est entrée dans l'orbite d'une planète, allez dans la salle des scanners pour voir les informations sur cette planète ";
             updatestatus();
-            write(textPlanetEncounter, '.card-text');
+            write(textPlanetEncounter, '.card-text',);
         }
         else {
             let nextCard = await getNextCard(true);
+            currentCardType = nextCard.type
             //hide text animation and 'next-button'
             document.querySelector('.next-button').disabled = 'true'
             document.querySelector('.next-button').classList.add('move-down')
@@ -230,6 +303,7 @@ async function initialiseNextButton() {
             //set up new text
             cardtextstr = nextCard.desc;
             choicelist = nextCard.choices.map(v => v.value);
+            //Si il y a un span de class="blackout" alors on affiche uniquement ce choix là (si on a le blackout)
             answerlist = nextCard.choices.map(v => v.reveal);
             // answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
             // answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
@@ -237,7 +311,7 @@ async function initialiseNextButton() {
             textprintednbr = 0;
             cardnbrUntilPlanet -= 1;
             updatestatus();
-            write(cardtextstr, '.card-text')
+            write(cardtextstr, '.card-text',)
         }
     })
 }
@@ -280,15 +354,23 @@ function applystatus(statusname) {
     }
 };
 
-function quickUpdateModule(el, mod) {
-
-    let currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value'));
+function quickUpdateModule(el, mod, left=false) {
+    let currentVal;
+    let input;
+    let inputVal='';
+    if (left) {
+        console.log(left)
+        currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText);
+    }
+    else {
+        currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value'));
+        input = document.getElementsByName('i-'+ mod)[0];
+        inputVal = input.value; 
+    }
     let modifier = 1;
-    let input = document.getElementsByName('i-'+ mod)[0];
-    let inputVal = input.value;
     let newValue;
 
-    if (el.classList.contains('tab-moins')) {
+    if (el.classList.contains(left ? 'moins' : 'tab-moins')) {
         modifier = -1;
     }
 
@@ -305,74 +387,53 @@ function quickUpdateModule(el, mod) {
     }
 
     newValue = currentVal + modifier;
-    input.value = '';
+    console.log(newValue,currentVal)
+    if (input)
+        input.value = '';
 
     newValue = Math.min(Math.max(newValue, 0), 100);
+    console.log(newValue,currentVal,inputVal,modifier)
     if (currentVal === newValue) return;
 
-    setModuleVal(mod, newValue);
+    setModuleVal(mod, newValue, left);
 }
 
-function setModuleVal(mod, newValue) {
+function setModuleVal(mod, newValue, left) {
+    console.log('oui')
     if (typeof wsLNOB === 'undefined'){
         console.error('YOU MUST INCLUDE socketLNOB.js before this');
     }
 
     newValue = Math.min(Math.max(newValue, 0), 100);
 
-    let statVal = document.querySelector('#modtab #dial-'+mod);
-    statVal.setAttribute('data-value', newValue);
-
-    let tooltip = statVal.querySelector('.mod-button');
-    let newTooltip = tooltip.getAttribute('data-tooltip').replace(/\d+%$/, newValue + '%');
-    tooltip.setAttribute('data-tooltip', newTooltip)
-
-    wsLNOB.setModule(mod, newValue);
-}
-
-function quickUpdateLeftModule(el, mod) {
+    if (left) {
+        let statVal = document.querySelector('#'+mod+'-value');
+        statVal.innerText = newValue;
+    }
+    else {
+        let statVal = document.querySelector('#modtab #dial-'+mod);
+        statVal.setAttribute('data-value', newValue);
     
-    let currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText);
-    let modifier = 1;
-    let newValue;
-
-    if (el.classList.contains('moins')) {
-        modifier = -1;
-    }
-    if (this.event.shiftKey) {
-        modifier *= 10;
-    }
-    else if (this.event.ctrlKey) {
-        modifier *= 5;
+        let tooltip = statVal.querySelector('.mod-button');
+        let newTooltip = tooltip.getAttribute('data-tooltip').replace(/\d+%$/, newValue + '%');
+        tooltip.setAttribute('data-tooltip', newTooltip)
     }
 
-    newValue = currentVal + modifier;
-
-    newValue = Math.min(Math.max(newValue, 0), 100);
-    if (currentVal === newValue) return;
-
-    setModuleVal(mod, newValue);
-}
-
-function setModuleVal(mod, newValue) {
-    if (typeof wsLNOB === 'undefined'){
-        console.error('YOU MUST INCLUDE socketLNOB.js before this');
-    }
-
-    newValue = Math.min(Math.max(newValue, 0), 100);
-
-    let statVal = document.querySelector('#'+mod+'-value');
-    statVal.innerText = newValue;
     wsLNOB.setModule(mod, newValue);
 }
 
+function stopCountdown() {
+  clearInterval(interval_cd)
+}
+
+//timer end -> cacher tous les choix sauf ne rien faire
 
 // EXECUTION AU CHARGEMENT DE LA PAGE
 (function(){
     initialiseChoiceTabs();
     initialiseModTabs();
-    initialiseTimerTab();
+
     initialisePlayerTab();
-    write(cardtextstr, '.card-text');
+    write(cardtextstr, '.card-text',);
     initialiseleLeftTabs();
 })();
