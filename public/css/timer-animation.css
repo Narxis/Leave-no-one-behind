@@ -436,13 +436,14 @@
   transform: rotate3D(.5, 1, 2, 90deg);
 }
 
-.grow {
-  animation: spingrow 21s linear forwards;
+#bigboite.grow #boulboite{
+  animation: spingrow 20.5s linear forwards;
 }
 
-.float {
+#bigboite.float #floatboite {
   position: absolute;
   animation: laserfloat 2s ease-in-out infinite;
+  animation-direction: alternate-reverse;
 }
 
 @keyframes spingrow {
@@ -483,15 +484,11 @@
 
 @keyframes laserfloat {
   0% {
-    top: 20px;
-  }
-
-  50% {
-    top: 13px;
+    top: 15px;
   }
 
   100% {
-    top: 20px;
+    top: 9px;
   }
 }
 

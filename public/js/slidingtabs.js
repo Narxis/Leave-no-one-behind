@@ -50,8 +50,10 @@ function startCountDown() {
         timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
         timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
         switch (time_left) {
-        case 30:
+        /* case 30:
             bigBoite.classList.add('start')
+            bigBoite.classList.add('grow')
+            bigBoite.classList.add('float')
             break;
         case 28:
             bigBoite.classList.add('idle')
@@ -61,15 +63,16 @@ function startCountDown() {
             bigBoite.classList.add('flash')
             break;
         case 9:
+            await sleep(300)
             bigBoite.classList.remove('flash')
             break;
         case 4:
             await sleep(500)
+            bigBoite.classList.remove('grow')
             bigBoite.classList.add('plop')
             break;
         case 3:
             bigBoite.classList.add('shot')
-            await sleep(300)
             break;
         case 2:
             await sleep(520)
@@ -89,7 +92,45 @@ function startCountDown() {
             bigBoite.classList.remove('idle')
             clearInterval(interval_cd);
             return true;
-            break;
+            break; */
+            case 30:
+                bigBoite.classList.add('start')
+                bigBoite.classList.add('grow')
+                bigBoite.classList.add('float')
+                break;
+            case 28:
+                bigBoite.classList.add('idle')
+                bigBoite.classList.remove('start')
+                break;
+            case 10:
+                bigBoite.classList.add('flash')
+                break;
+            case 9:
+                await sleep(300)
+                bigBoite.classList.remove('flash')
+                break;
+            case 0:
+                clearInterval(interval_cd);
+                await sleep(500)
+                bigBoite.classList.remove('grow')
+                bigBoite.classList.add('plop')
+                await sleep(500)
+                bigBoite.classList.add('shot')
+                await sleep(1520)
+                bigBoite.classList.add('show-plugun')
+                bigBoite.classList.add('hide-plugun')
+                await sleep(250)
+                plugShip.classList.remove('shipflotte')
+                plugShip.classList.add('bonk')
+                await sleep(900)
+                plugShip.classList.remove('bonk')
+                plugShip.classList.add('comeback')
+                await sleep(1200)
+                plugShip.classList.remove('comeback')
+                plugShip.classList.add('shipflotte')
+                bigBoite.classList.remove('idle')
+                return true;
+                break;
         }
     }, 1000);
 }
