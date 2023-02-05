@@ -126,9 +126,10 @@ function startCountDown() {
                 plugShip.classList.remove('bonk')
                 plugShip.classList.add('comeback')
                 await sleep(1200)
-                plugShip.classList.remove('comeback')
                 plugShip.classList.add('shipflotte')
                 bigBoite.classList.remove('idle')
+                await sleep(300)
+                plugShip.classList.remove('comeback')
                 return true;
                 break;
         }
