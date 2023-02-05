@@ -674,7 +674,6 @@
 <script src="/js/timer.js"></script>
 <script src="/js/todo.js"></script>
 <script src="/js/players.js"></script>
-<script src="/js/timer-animation.js"></script>
 <script>
   var observer = new MutationObserver(function (mutations) {
     mutations.forEach(async function (mutation) {
@@ -759,8 +758,4 @@
     wrapperMenu.classList.toggle('open-but');
   })
 
-  window.onload = function () {
-    if (document.getElementById('timer-text'))
-      startCountDown();
-  }
 </script>

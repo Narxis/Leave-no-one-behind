@@ -27,9 +27,72 @@ var statusListLength = statusList.length;
 var statushtml = document.querySelector(".status");
 //html bouton suivant
 var nextbuttonhtml = `<button class="next-button choice move-down" id="next1">Continuer votre chemin</button>`;
+// timer 
+var interval_cd;
+var timerText = document.querySelector('#timer-text');
+var timerText2 = document.querySelector('#timer-text2');
+var bigBoite = document.querySelector('#bigboite');
+var bigBoite2 = document.querySelector('#bigboite2');
+var plugShip = document.querySelector('#plugship');
+var plugShip2 = document.querySelector('#plugship2');
 //TODO remove test ternary at the end of the dev
 var nextbuttonhtml2 = `<a href="`+(location.href.endsWith('/next') ? '/next' : '/template-planet')+`"><button class="next-button choice move-down" id="next2">Aller dans la salle des scanners</button></a>`;
 
+
+function startCountDown() {
+    // On récupère le texte dans le timer (en tant qu'entier)
+    let time_left = parseInt(timerText.textContent);
+    // On lance une fonction toutes les secondes (1000ms)
+    interval_cd = setInterval(async function () {
+        // aucune idée, une sorte de magie noire
+        time_left = time_left - 1;
+        // On change le texte dans le timer (avec un 0 devant si on est en dessous de 10)
+        timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
+        timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
+        switch (time_left) {
+        case 30:
+            bigBoite.classList.add('start')
+            break;
+        case 28:
+            bigBoite.classList.add('idle')
+            bigBoite.classList.remove('start')
+            break;
+        case 10:
+            bigBoite.classList.add('flash')
+            break;
+        case 9:
+            bigBoite.classList.remove('flash')
+            break;
+        case 4:
+            await sleep(500)
+            bigBoite.classList.add('plop')
+            break;
+        case 3:
+            bigBoite.classList.add('shot')
+            await sleep(300)
+            break;
+        case 2:
+            await sleep(520)
+            bigBoite.classList.add('show-plugun')
+            bigBoite.classList.add('hide-plugun')
+            await sleep(250)
+            plugShip.classList.remove('shipflotte')
+            plugShip.classList.add('bonk')
+            await sleep(900)
+            plugShip.classList.remove('bonk')
+            plugShip.classList.add('comeback')
+            break;
+        case 0:
+            await sleep(1200)
+            plugShip.classList.remove('comeback')
+            plugShip.classList.add('shipflotte')
+            bigBoite.classList.remove('idle')
+            clearInterval(interval_cd);
+            return true;
+            break;
+        }
+    }, 1000);
+}
 
 function updatestatus() {
     statusDurationList = [duration_blackout, cardnbrUntilPlanet, cardnbrUntilPlanet, duration_anticipation] //updates to new cardnbrUntilPlanet value
@@ -65,7 +128,7 @@ async function initialiseModTabs() {
 
 async function initialiseTimerTab() {
     var timerTab = document.getElementsByClassName('timertab');
-    console.log(timerTab.tagName);
+    console.log('timerstart');
 
     for (let i = 0; i < timerTab.length; i++) {
         await sleep(100);
@@ -118,8 +181,10 @@ async function nextoption() {
             document.querySelector('#choice' + String(i)).innerHTML = choicelist[i]
         }
         await sleep(500)
-        initialiseChoiceTabs()
-        eventchoices()
+        initialiseChoiceTabs();
+        startCountDown();
+        initialiseTimerTab();
+        eventchoices();
     }
     if (textprintednbr === 2) {
         document.querySelector('.choices').innerHTML = nextbuttonhtml
@@ -357,12 +422,17 @@ function setModuleVal(mod, newValue, left) {
     wsLNOB.setModule(mod, newValue);
 }
 
+function stopCountdown() {
+  clearInterval(interval_cd)
+}
+
+//timer end -> cacher tous les choix sauf ne rien faire
 
 // EXECUTION AU CHARGEMENT DE LA PAGE
 (function(){
     initialiseChoiceTabs();
     initialiseModTabs();
-    initialiseTimerTab();
+
     initialisePlayerTab();
     write(cardtextstr, '.card-text',);
     initialiseleLeftTabs();
