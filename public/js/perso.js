@@ -90,5 +90,5 @@ document.addEventListener('set-name', join);
 document.addEventListener('set-name', setName);
 document.addEventListener('set-race', setRace);
 document.addEventListener('join', function(){
-    document.querySelector('.lecadre').classList.add('hidden')
-})
+    document.querySelector('.lecadre').remove();
+}, {once : true} )
