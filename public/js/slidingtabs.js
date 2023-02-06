@@ -57,11 +57,19 @@ async function updateStatusList (){
     activeStatusList = [];
     for (let i=0; i<activeStatus.length; i++){
         activeStatusList.push(activeStatus[i].name)
-        console.log(activeStatus[i].name, activeStatus[i].duration)
     }
     blackout = activeStatusList.includes("Blackout");
 }
 
+async function initialiseStatusList (){
+    var activeStatus = await getActiveStatus()
+    activeStatusList = [];
+    for (let i=0; i<activeStatus.length; i++){
+        applystatus(activeStatus[i].name, activeStatus[i].duration)
+        activeStatusList.push(activeStatus[i].name)
+    }
+    blackout = activeStatusList.includes("Blackout");
+}
 
 function startCountDown() {
     // On récupère le texte dans le timer (en tant qu'entier)
@@ -118,20 +126,20 @@ function startCountDown() {
     }, 1000);
 }
 
-function updatestatus() {
+async function updatestatus() {
     statusDurationList = [duration_blackout, cardnbrUntilPlanet, cardnbrUntilPlanet, duration_anticipation] //updates to new cardnbrUntilPlanet value
     let currentStatusName = document.querySelectorAll('.status-name');
     let currentStatus = document.querySelectorAll('.status-duration');
     for (let i = 0; i < currentStatus.length; i++) {
         let oldVal = parseInt(currentStatus.item(i).innerText)
         currentStatus.item(i).innerText = String(oldVal - 1)
-        console.log(oldVal)
+        console.log(currentStatusName.item(i).innerText, oldVal-1,'statusname','oldVal-1')
         wsLNOB.setStatus(currentStatusName.item(i).innerText, oldVal-1)
         if (oldVal == 1) {
             currentStatus.item(i).closest('.status-line').remove()//removes status if it's duration is 0
         }
     }
-    updateStatusList();
+    await updateStatusList();
 }
 
 async function initialiseChoiceTabs() {
@@ -177,11 +185,12 @@ async function initialisePlayerTab() {
 function eventchoices() {
     var choice = document.getElementById('choicetab');
     var choiceTabs = choice.getElementsByClassName('choice');
+    console.log(choiceTabs, choiceTabs.length)
     for (let i = 0; i < choiceTabs.length; i++) {
-        document.querySelector('#choice' + String(i)).addEventListener('mouseup', async function () {
+        document.querySelector('#choice' + (i)).addEventListener('mouseup', async function () {
             //currentCardType pour les lieux
             document.querySelector('.card-text').classList.toggle('invisibility')
-            document.querySelector('.answer' + (i + 1)).classList.toggle('visibility')
+            document.querySelector('.answer' + (i)).classList.toggle('visibility')
             for (let k = 0; k < choiceTabs.length; k++) {
                 choiceTabs.item(k).disabled = 'true'
                 choiceTabs.item(k).classList.add('move-down');
@@ -189,16 +198,16 @@ function eventchoices() {
             }
             await sleep(1200)
             if (blackout){
-                write(answerlist[i], '.answer' + (i + 1),'blackout');
+                write(answerlist[i], '.answer' + (i),'blackout');
                 console.log('line 193')
             }
             else
-                write(answerlist[i], '.answer' + (i + 1),);
+                write(answerlist[i], '.answer' + (i),);
         })
-        document.querySelector('#choice' + String(i)).addEventListener('mouseover', function () {
+        document.querySelector('#choice' + (i)).addEventListener('mouseover', function () {
             this.classList.add('choice-hover')
         })
-        document.querySelector('#choice' + String(i)).addEventListener('mouseleave', function () {
+        document.querySelector('#choice' +(i)).addEventListener('mouseleave', function () {
             this.classList.remove('choice-hover')
         })
     }
@@ -207,24 +216,45 @@ function eventchoices() {
 async function nextoption() {
     //le currentCardType pour les lieux
     if (textprintednbr === 1) {
+        let str;
         let choiceshtml;
+        let spanstart = 0;
+        let spanend;
+        let spancontent;
         if (blackout){
+            let blackoutTextverif = false;
             for (let i = 0; i < choicelist.length; i++) {
-                console.log(i)
+                str = choicelist[i]
                 choiceshtml = `<button class="choice move-down" id="choice${i}"></button>`
-                document.querySelector('.choices').innerHTML = choiceshtml
-                let str = choicelist[i]
-                let spanstart = str.indexOf('>', str.indexOf('class=\"blackout\"'));
-                let spanend = str.indexOf('>', spanstart+1)
-                let spancontent =  str.substring(spanstart+1, spanend)
-                document.querySelector('#choice' + i).innerHTML = `<span class="blackout">${spancontent}</span>`
+                if (str.includes('class=\"blackout\"')){
+                    blackoutTextverif = true
+                    spanstart = str.indexOf('>', str.indexOf('class=\"blackout\"'));
+                    spanend = str.indexOf('>', spanstart+1)
+                    spancontent =  str.substring(spanstart+1, spanend)
+                    document.querySelector('.choices').innerHTML += choiceshtml
+                    document.querySelector('#choice' + i).innerHTML = `<span class="blackout">${spancontent}</span>`
+                }
+            }
+            if (!blackoutTextverif) {
+                for (let i = 0; i < choicelist.length; i++) {
+                    choiceshtml = `<button class="choice move-down" id="choice${i}"></button>`
+                    document.querySelector('.choices').innerHTML += choiceshtml
+                    document.querySelector('#choice'+ i).innerHTML = choicelist[i]
+                }
             }
         }
         else {
             for (let i = 0; i < choicelist.length; i++) {
+                str = choicelist[i]
                 choiceshtml = `<button class="choice move-down" id="choice${i}"></button>`
+                spanend = str.indexOf('<', spanstart+1)
+                console.log(spanend,'spanend line243')
+                spancontent =  str.substring(spanstart, spanend)
+                if (spanend == -1) {
+                    spancontent = str
+                }
                 document.querySelector('.choices').innerHTML += choiceshtml
-                document.querySelector('#choice'+ i).innerHTML = choicelist[i]
+                document.querySelector('#choice'+ i).innerHTML = `<span class="base-text">${spancontent}</span>`
             }
         }
         await sleep(500)
@@ -299,28 +329,28 @@ async function initialiseNextButton() {
             document.querySelector('.next-button').classList.add('move-down')
             document.querySelector('.next-button').classList.remove('choice-hover')
             document.querySelector('.card-text').classList.remove('visibility')
+            document.querySelector('.answer0').classList.remove('visibility')
             document.querySelector('.answer1').classList.remove('visibility')
             document.querySelector('.answer2').classList.remove('visibility')
-            document.querySelector('.answer3').classList.remove('visibility')
             document.querySelector('.card-text').classList.add('invisibility')
+            document.querySelector('.answer0').classList.add('invisibility')
             document.querySelector('.answer1').classList.add('invisibility')
             document.querySelector('.answer2').classList.add('invisibility')
-            document.querySelector('.answer3').classList.add('invisibility')
             await sleep(1000)
             //clear text and move next button
             document.querySelector('.card-text').innerHTML = ""
+            document.querySelector('.answer0').innerHTML = ""
             document.querySelector('.answer1').innerHTML = ""
             document.querySelector('.answer2').innerHTML = ""
-            document.querySelector('.answer3').innerHTML = ""
             document.querySelector('.choices').innerHTML = ""
             //ready to show new text
             document.querySelector('.card-text').classList.remove('invisibility')
+            document.querySelector('.answer0').classList.remove('invisibility')
             document.querySelector('.answer1').classList.remove('invisibility')
             document.querySelector('.answer2').classList.remove('invisibility')
-            document.querySelector('.answer3').classList.remove('invisibility')
             //new text
             let textPlanetEncounter = "Votre vaisseau est entrée dans l'orbite d'une planète, allez dans la salle des scanners pour voir les informations sur cette planète ";
-            updatestatus();
+            await updatestatus();
             write(textPlanetEncounter, '.card-text',);
         }
         else {
@@ -331,44 +361,37 @@ async function initialiseNextButton() {
             document.querySelector('.next-button').classList.add('move-down')
             document.querySelector('.next-button').classList.remove('choice-hover')
             document.querySelector('.card-text').classList.remove('visibility')
+            document.querySelector('.answer0').classList.remove('visibility')
             document.querySelector('.answer1').classList.remove('visibility')
             document.querySelector('.answer2').classList.remove('visibility')
-            document.querySelector('.answer3').classList.remove('visibility')
             document.querySelector('.card-text').classList.add('invisibility')
+            document.querySelector('.answer0').classList.add('invisibility')
             document.querySelector('.answer1').classList.add('invisibility')
             document.querySelector('.answer2').classList.add('invisibility')
-            document.querySelector('.answer3').classList.add('invisibility')
             await sleep(1000)
             //clear text and move next button
             document.querySelector('.card-text').innerHTML = ""
+            document.querySelector('.answer0').innerHTML = ""
             document.querySelector('.answer1').innerHTML = ""
             document.querySelector('.answer2').innerHTML = ""
-            document.querySelector('.answer3').innerHTML = ""
             document.querySelector('.choices').innerHTML = ""
 
             //ready to show new text
             document.querySelector('.card-text').classList.remove('invisibility')
+            document.querySelector('.answer0').classList.remove('invisibility')
             document.querySelector('.answer1').classList.remove('invisibility')
             document.querySelector('.answer2').classList.remove('invisibility')
-            document.querySelector('.answer3').classList.remove('invisibility')
             //set up new text
             cardtextstr = nextCard.desc;
             choicelist = nextCard.choices.map(v => v.value);
             //Si il y a un span de class="blackout" alors on affiche uniquement ce choix là (si on a le blackout)
             answerlist = nextCard.choices.map(v => v.reveal);
-            if (blackout) {
-                console.log(choicelist[0].includes('class=\"blackout\"'), choicelist[0])
-                if (choicelist[0].includes('class=\"blackout\"')) {
-                    choicelist = [choicelist[0]];
-                    answerlist = [answerlist[0]];
-                }
-            }
-            // answer1str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
-            // answer2str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
-            // answer3str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
+            // answer0str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
+            // answer1str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
+            // answer2str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
             textprintednbr = 0;
             cardnbrUntilPlanet -= 1;
-            updatestatus();
+            await updatestatus();
             if (blackout){
                 write(cardtextstr, '.card-text','blackout');
             }
@@ -389,10 +412,13 @@ async function initialiseleLeftTabs() {
 }
 
 
-const addstatus = (statusname) => {
+const addstatus = (statusname, inputDuration =-1) => {
     let index = statusNameList.findIndex(e => e === statusname)
     let svg = statusSvgList[index];
     let duration = statusDurationList[index];
+    if (inputDuration !=-1){
+        duration = inputDuration
+    }
     const html = ` <div class="status-line" id="line_${activeStatusListLength}">
                         ${svg}
                         <div class="status-name">${statusname}</div>
@@ -402,14 +428,17 @@ const addstatus = (statusname) => {
     wsLNOB.setStatus(statusname, duration)
 }
 
-function applystatus(statusname) {
-    if (!activeStatusList.includes(String(statusname))) {
+function applystatus(statusname, inputDuration = -1) {
+    if (!activeStatusList.includes(''+statusname)) {
         activeStatusListLength += 1;
-        addstatus(statusname);
+        addstatus(statusname, inputDuration);
     }
     else {
         let index = statusNameList.findIndex(e => e === statusname)
         let duration = statusDurationList[index];
+        if (inputDuration !=-1){
+            duration = inputDuration
+        }
         let lineindex = activeStatusList.findIndex(e => e === statusname)
         let selector = '#line_' + String(lineindex + 1)
         document.querySelector(selector).firstElementChild.nextElementSibling.nextElementSibling.innerHTML = String(duration)
@@ -493,7 +522,7 @@ function stopCountdown() {
     initialiseChoiceTabs();
     initialiseModTabs();
     initialisePlayerTab();
-    await updateStatusList();
+    await initialiseStatusList();
     if (blackout){
         console.log(blackout,'blackout','if')
         write(cardtextstr, '.card-text','blackout');
