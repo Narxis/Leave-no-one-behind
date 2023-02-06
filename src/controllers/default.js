@@ -55,7 +55,7 @@ module.exports.renderCardEvent = async function (req, res) {
     let players = await DB.tables.players.findAll();
     let ship = await new Ship().getData();
 
-    let statuses = await new Statuses();
+    let statuses = new Statuses();
     let activeStatuses = await statuses.getAllStatuses();
 
     for (let i of activeStatuses) {
