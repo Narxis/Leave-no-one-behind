@@ -72,9 +72,13 @@ module.exports.popNextCard = async function (req, res) {
 
     //TODO replace with card pop when baseCard.json is completed
     let next_card = await cardPop();
-    // TESTING :
-    // let next_card = await getCards(ALL, 1);
-    // next_card = next_card[0];
+
+    let statuses = await new Statuses();
+    let activeStatuses = await statuses.getAllStatuses();
+
+    for (let i of activeStatuses) {
+        await statuses.remove(i.slug);
+    }
 
     res.json(next_card);
 }

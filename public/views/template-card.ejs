@@ -554,9 +554,9 @@
         <div class="container-card container--1">
           <div class="bg-dot"></div>
           <div class="card-text"></div>
+          <div class="answer answer0"></div>
           <div class="answer answer1"></div>
           <div class="answer answer2"></div>
-          <div class="answer answer3"></div>
         </div>
         <div class="combat-container combat-none" id="combat-area">
           <div class="ennemy-container">
@@ -634,12 +634,7 @@
         <div class="human-alive"><%= ship.cryopods %></div>
       </div>
       <div class="status-separateur"></div>
-      <div class="status">
-        <div class="status-title-line">
-          <div class="status-title1">Status :</div>
-          <div class="status-title2">Durée</div>
-        </div>
-      </div>
+      <div class="status"></div>
     </div>
   </div>
   <div class="bottomcenter">
@@ -661,11 +656,25 @@
   var cardtextstr = `<%- card.desc %>`;
   var currentCardType = parseInt(`<%- card.type %>`) ; 
   var choicelist = [];
+  var statusNameList = [];
+  var statusDurationList = [];
   var answerlist = [];
+  var activeStatusList = [];
+  var statusSvgList = {};
+
   <% card.choices.forEach(function(choice) {%>
     choicelist.push(`<%- choice.value %>`);
     answerlist.push(`<%- choice.reveal %>`);
     <% }); %>
+  <% statuses.forEach(function(status) {%>
+    statusNameList.push(`<%- status.slug %>`);
+    statusDurationList[`<%- status.slug %>`] = `<%- status.duration %>`;
+    statusSvgList[`<%- status.slug %>`] = `<%- include('svg/'+(status.slug)) %>`;
+    if (<%- status.duration %> > 0) {
+      activeStatusList.push(`<%- status.slug %>`);
+    }
+
+  <% }); %>
 </script>
 
 <script src="/js/socketLNOB.js"></script>
@@ -674,7 +683,6 @@
 <script src="/js/timer.js"></script>
 <script src="/js/todo.js"></script>
 <script src="/js/players.js"></script>
-<script src="/js/timer-animation.js"></script>
 <script>
   var observer = new MutationObserver(function (mutations) {
     mutations.forEach(async function (mutation) {
@@ -759,8 +767,4 @@
     wrapperMenu.classList.toggle('open-but');
   })
 
-  window.onload = function () {
-    if (document.getElementById('timer-text'))
-      startCountDown();
-  }
 </script>

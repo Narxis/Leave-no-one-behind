@@ -1,6 +1,6 @@
 [
   {
-    "name": "Blackout des systèmes de détection",
+    "name": "Blackout",
     "desc": "le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.",
     "slug": "blackout"
   },
@@ -18,10 +18,5 @@
     "name": "Affaiblit",
     "desc": "Une ou plusieurs statistiques des joueurs sont diminuée",
     "slug": "weak"
-  },
-  {
-    "name": "Bibliothécaire",
-    "desc": "le moral des joueurs est modifié en fonction de leur capacité intellectuelles (différentes entres chaque races)",
-    "slug": "librarian"
   }
 ]
