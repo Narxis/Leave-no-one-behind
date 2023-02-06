@@ -105,21 +105,21 @@ function startCountDown() {
     }, 1000);
 }
 
-async function updatestatus() {
-    statusDurationList = [duration_blackout, cardnbrUntilPlanet, cardnbrUntilPlanet, duration_anticipation] //updates to new cardnbrUntilPlanet value
-    let currentStatusName = document.querySelectorAll('.status-name');
-    let currentStatus = document.querySelectorAll('.status-duration');
-    for (let i = 0; i < currentStatus.length; i++) {
-        let oldVal = parseInt(currentStatus.item(i).innerText)
-        currentStatus.item(i).innerText = String(oldVal - 1)
-        console.log(currentStatusName.item(i).innerText, oldVal-1,'statusname','oldVal-1')
-        wsLNOB.setStatus(currentStatusName.item(i).innerText, oldVal-1)
-        if (oldVal == 1) {
-            currentStatus.item(i).closest('.status-line').remove()//removes status if it's duration is 0
-        }
-    }
-    await updateStatusList();
-}
+// async function updatestatus() {
+//     // statusDurationList = [duration_blackout, cardnbrUntilPlanet, cardnbrUntilPlanet, duration_anticipation] //updates to new cardnbrUntilPlanet value
+//     let currentStatusName = document.querySelectorAll('.status-name');
+//     let currentStatus = document.querySelectorAll('.status-duration');
+//     for (let i = 0; i < currentStatus.length; i++) {
+//         let oldVal = parseInt(currentStatus.item(i).innerText)
+//         currentStatus.item(i).innerText = String(oldVal - 1)
+//         // console.log(currentStatusName.item(i).innerText, oldVal-1,'statusname','oldVal-1')
+//         wsLNOB.setStatus(currentStatusName.item(i).innerText, oldVal-1)
+//         if (oldVal == 1) {
+//             currentStatus.item(i).closest('.status-line').remove()//removes status if it's duration is 0
+//         }
+//     }
+//     await updateStatusList();
+// }
 
 async function initialiseChoiceTabs() {
     var choice = document.getElementById('choicetab');
@@ -264,7 +264,7 @@ async function write(fulltext, place, spanclass='base-text') {
     if (fulltext.includes(''+spanclass)) {
         start = fulltext.indexOf('>', fulltext.indexOf(''+spanclass));
     }
-    console.log(start)
+    // console.log(start)
     for (let i = start+1; i <= fulltext.length; i++) {
         document.querySelector(place).querySelector('.'+spanclass).innerText = currenttext;
         if (fulltext.substring(i, i + 1) == "<") {
@@ -329,7 +329,7 @@ async function initialiseNextButton() {
             document.querySelector('.answer2').classList.remove('invisibility')
             //new text
             let textPlanetEncounter = "Votre vaisseau est entrée dans l'orbite d'une planète, allez dans la salle des scanners pour voir les informations sur cette planète ";
-            await updatestatus();
+            await initialiseStatusList();
             write(textPlanetEncounter, '.card-text',);
         }
         else {
@@ -370,7 +370,7 @@ async function initialiseNextButton() {
             // answer2str = "Vous donnez tous vos consommables aux douanniers, ils vous laissent continuer votre route. ";
             textprintednbr = 0;
             cardnbrUntilPlanet -= 1;
-            await updatestatus();
+            await initialiseStatusList();
             if (blackout){
                 write(cardtextstr, '.card-text','blackout');
             }
@@ -393,6 +393,7 @@ async function initialiseleLeftTabs() {
 async function initialiseStatusList (){
     var activeStatus = await getActiveStatus()
     activeStatusList = [];
+    statushtml.innerHTML = '';
     for (let i=0; i<activeStatus.length; i++){
         applystatus(activeStatus[i])
         activeStatusList.push(activeStatus[i].slug)
@@ -403,15 +404,14 @@ async function initialiseStatusList (){
 const addstatus = (status) => {
     // let index = statusNameList.findIndex(e => e === statusname)
     let svg = statusSvgList[status.slug];
-    let duration = statusDurationList[status.slug];
 
     const html = ` <div class="status-line" id="line_${status.id}">
                         ${svg}
                         <div class="status-name">${status.name}</div>
-                        <div class="status-duration">${duration}</div>
+                        <div class="status-duration">${status.duration}</div>
                     </div>`;
     statushtml.innerHTML += html
-    wsLNOB.setStatus(status.slug, duration)
+    wsLNOB.setStatus(status.slug, status.duration)
 }
 
 function applystatus(status) {
@@ -421,11 +421,10 @@ function applystatus(status) {
     }
     else {
         // let index = statusNameList.findIndex(e => e === statusname)
-        let duration = statusDurationList[status.slug];
         // let lineindex = activeStatusList.findIndex(e => e === statusname)
         let selector = '#line_' + status.id;
-        document.querySelector(selector).firstElementChild.nextElementSibling.nextElementSibling.innerHTML = String(duration)
-        wsLNOB.setStatus(status.slug, duration)
+        document.querySelector(selector).firstElementChild.nextElementSibling.nextElementSibling.innerHTML = String(status.duration)
+        wsLNOB.setStatus(status.slug, status.duration)
     }
     updateStatusList()
 };
