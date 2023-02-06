@@ -661,11 +661,25 @@
   var cardtextstr = `<%- card.desc %>`;
   var currentCardType = parseInt(`<%- card.type %>`) ; 
   var choicelist = [];
+  var statusNameList = [];
+  var statusDurationList = [];
   var answerlist = [];
+  var activeStatusList = [];
+  var statusSvgList = {};
+
   <% card.choices.forEach(function(choice) {%>
     choicelist.push(`<%- choice.value %>`);
     answerlist.push(`<%- choice.reveal %>`);
     <% }); %>
+  <% statuses.forEach(function(status) {%>
+    statusNameList.push(`<%- status.slug %>`);
+    statusDurationList[`<%- status.slug %>`] = `<%- status.duration %>`;
+    statusSvgList[`<%- status.slug %>`] = `<%- include('svg/'+(status.slug)) %>`;
+    if (<%- status.duration %> > 0) {
+      activeStatusList.push(`<%- status.slug %>`);
+    }
+
+  <% }); %>
 </script>
 
 <script src="/js/socketLNOB.js"></script>
