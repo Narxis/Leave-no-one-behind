@@ -179,18 +179,6 @@ GET /api/ship'
 ```http
 GET /api/statuses'
 # Obtient un tableau contenant tous les statuts
-```
-```json
-[
-  {
-    "id": 1,
-    "name": "",
-    "desc": "",
-    "duration": 0
-  }
-]
-```
-```http
 GET /api/statuses/active'
 # Obtient un tableau contenant tous les statuts actifs (duration > 0)
 ```
@@ -200,7 +188,8 @@ GET /api/statuses/active'
     "id": 1,
     "name": "",
     "desc": "",
-    "duration": 1
+    "slug": "",
+    "duration": 0
   }
 ]
 ```
@@ -208,19 +197,6 @@ GET /api/statuses/active'
 ```http
 GET /api/items'
 # Obtient un tableau contenant tous les items
-```
-```json
-[
-  {
-    "name": "",
-    "desc": "",
-    "race": "",
-    "pool": "",
-    "quantity": ""
-  }
-]
-```
-```http
 GET /api/items/owned'
 # Obtient un tableau contenant tous les items possédéss (quantity > 0)
 ```
