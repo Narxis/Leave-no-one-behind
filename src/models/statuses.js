@@ -6,10 +6,12 @@ class Statuses {
     id;
     name;
     desc;
+    slug;
     duration;
     accepted_datas = {
         'name': '',
         'desc': '',
+        'slug': '',
         'duration': 0
     }
 
@@ -23,6 +25,7 @@ class Statuses {
         await DB.tables.statuses.create({
             name: this.name,
             desc: this.desc,
+            slug: this.slug,
             duration: this.duration
         }).then(result => {
             this.id = result.id;
@@ -56,6 +59,7 @@ class Statuses {
                 'id',
                 'name',
                 'desc',
+                'slug',
                 'duration'
             ],
             where: {
