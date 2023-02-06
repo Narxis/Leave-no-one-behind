@@ -397,13 +397,13 @@ async function initialiseStatusList (){
     statushtml.innerHTML = '<div class="status-title-line">\<div class="status-title1">Status :</div><div class="status-title2">Durée</div></div>';
     for (let i=0; i<activeStatus.length; i++){
         // applystatus(activeStatus[i])
-        addstatus(activeStatus[i]);
+        addStatus(activeStatus[i]);
         activeStatusList.push(activeStatus[i].slug)
     }
     blackout = activeStatusList.includes("blackout");
 }
 
-const addstatus = (status) => {
+const addStatus = (status) => {
     // let index = statusNameList.findIndex(e => e === statusname)
     let svg = statusSvgList[status.slug];
 
@@ -413,7 +413,11 @@ const addstatus = (status) => {
                         <div class="status-duration">${status.duration}</div>
                     </div>`;
     statushtml.innerHTML += html
-    wsLNOB.setStatus(status.slug, status.duration)
+    // wsLNOB.setStatus(status.slug, status.duration)
+}
+
+const addNewStatus = (slug, duration) => {
+    wsLNOB.setStatus(slug, duration)
 }
 
 // function applystatus(status) {
@@ -508,12 +512,13 @@ function stopCountdown() {
     initialisePlayerTab();
     await initialiseStatusList();
     if (blackout){
-        console.log(blackout,'blackout','if')
+        // console.log(blackout,'blackout','if')
         write(cardtextstr, '.card-text','blackout');
     }
     else{
-        console.log(blackout,'blackout','else')
+        // console.log(blackout,'blackout','else')
         write(cardtextstr, '.card-text');
     }
     initialiseleLeftTabs();
+    document.addEventListener('status', initialiseStatusList);
 })();
