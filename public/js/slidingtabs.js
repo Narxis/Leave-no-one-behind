@@ -13,7 +13,7 @@ let duration_anticipation = 5;
 
 // let statusNameList = ['Blackout', 'Entrainé', 'Affaiblit', 'Anticipation']//liste des status possible
 // let statusSvgList = [svg_blackout, svg_trained, svg_weak, svg_anticipation]
-var activeStatusListLength = activeStatusList.length;
+// var activeStatusListLength = activeStatusList.length;
 var statushtml = document.querySelector(".status");
 //html bouton suivant
 var nextbuttonhtml = `<button class="next-button choice move-down" id="next1">Continuer votre chemin</button>`;
@@ -41,14 +41,14 @@ async function getActiveStatus () {
     return JSON.parse(await rawResponse.text());
 }
 
-async function updateStatusList (){
-    var activeStatus = await getActiveStatus()
-    activeStatusList = [];
-    for (let i=0; i<activeStatus.length; i++){
-        activeStatusList.push(activeStatus[i].slug)
-    }
-    blackout = activeStatusList.includes("blackout");
-}
+// async function updateStatusList (){
+//     var activeStatus = await getActiveStatus()
+//     activeStatusList = [];
+//     for (let i=0; i<activeStatus.length; i++){
+//         activeStatusList.push(activeStatus[i].slug)
+//     }
+//     blackout = activeStatusList.includes("blackout");
+// }
 
 function startCountDown() {
     // On récupère le texte dans le timer (en tant qu'entier)
@@ -391,11 +391,13 @@ async function initialiseleLeftTabs() {
 }
 
 async function initialiseStatusList (){
-    var activeStatus = await getActiveStatus()
+    var activeStatus = await getActiveStatus();
+
     activeStatusList = [];
-    statushtml.innerHTML = '';
+    statushtml.innerHTML = '<div class="status-title-line">\<div class="status-title1">Status :</div><div class="status-title2">Durée</div></div>';
     for (let i=0; i<activeStatus.length; i++){
-        applystatus(activeStatus[i])
+        // applystatus(activeStatus[i])
+        addstatus(activeStatus[i]);
         activeStatusList.push(activeStatus[i].slug)
     }
     blackout = activeStatusList.includes("blackout");
@@ -414,20 +416,20 @@ const addstatus = (status) => {
     wsLNOB.setStatus(status.slug, status.duration)
 }
 
-function applystatus(status) {
-    if (!activeStatusList.includes(''+status.slug)) {
-        activeStatusListLength += 1;
-        addstatus(status);
-    }
-    else {
-        // let index = statusNameList.findIndex(e => e === statusname)
-        // let lineindex = activeStatusList.findIndex(e => e === statusname)
-        let selector = '#line_' + status.id;
-        document.querySelector(selector).firstElementChild.nextElementSibling.nextElementSibling.innerHTML = String(status.duration)
-        wsLNOB.setStatus(status.slug, status.duration)
-    }
-    updateStatusList()
-};
+// function applystatus(status) {
+//     if (!activeStatusList.includes(''+status.slug)) {
+//         activeStatusListLength += 1;
+//         addstatus(status);
+//     }
+//     else {
+//         // let index = statusNameList.findIndex(e => e === statusname)
+//         // let lineindex = activeStatusList.findIndex(e => e === statusname)
+//         let selector = '#line_' + status.id;
+//         document.querySelector(selector).firstElementChild.nextElementSibling.nextElementSibling.innerHTML = String(status.duration)
+//         wsLNOB.setStatus(status.slug, status.duration)
+//     }
+//     updateStatusList()
+// };
 
 function quickUpdateModule(el, mod, left=false) {
     let currentVal;
