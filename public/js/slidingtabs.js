@@ -321,7 +321,7 @@ async function write(fulltext, place, spanclass='base-text') {
 }
 
 async function getNextCard (pop=false) {
-    const rawResponse = await fetch('/api/'+(pop ? 'pop' : 'get')+'NextCard', {
+    const rawResponse = await fetch('/api/nextCard/'+(pop ? 'pop' : 'get'), {
         method: 'GET',
         headers: {
             'Accept': 'application/json',

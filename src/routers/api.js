@@ -4,8 +4,9 @@ var basePath = '/api';
 module.exports = function(router) {
     router.get(basePath + '/', controller.index);
 
-    router.get(basePath + '/getNextCard', controller.getNextCard);
-    router.get(basePath + '/popNextCard', controller.popNextCard);
+    router.get(basePath + '/nextCard/get', controller.getNextCard);
+    router.get(basePath + '/nextCard/pop', controller.popNextCard);
+    router.get(basePath + '/nextCard/get/:name', controller.getCardByName);
 
     router.get(basePath + '/players', controller.getAllPlayers);
     router.get(basePath + '/player/:discordId', controller.getPlayer);
