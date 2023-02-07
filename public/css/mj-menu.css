@@ -100,25 +100,6 @@
     top: -250px;
 }
 
-/*  ça fonctionne pas ça aled
-
-.life-type1-input:checked~.life-selector .ally {
-    opacity: 0  !important;
-}
-
-.life-type2-input:checked~.life-selector .ennemy {
-    opacity: 0  !important; 
-}
-
-#life-1:checked .ally {
-    opacity: 0  !important;
-}
-
-#life-2:checked .ennemy {
-    opacity: 0 !important;
-} */
-
-
 .ennemy,
 .ally {
     border-bottom: 1px solid rgb(180, 180, 180);
