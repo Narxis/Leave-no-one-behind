@@ -1286,11 +1286,33 @@
       "choices": [
         {
           "value": "Prendre le livre",
-          "reveal": "Vous ramassez le livre et le rangez sous votre manteau avant que quelqu'un ne vous apperçoive"
+          "next": "bibli3-1"
         },
         {
           "value": "Faire comme si vous n'aviez rien vu",
-          "reveal": "La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\nElle vous tend le [livre] en pensant que c'est le votre"
+          "next": "bibli3-2"
+        }
+      ]
+    },
+    {
+      "desc": "Vous ramassez le livre et le rangez sous votre manteau avant que quelqu'un ne vous apperçoive",
+      "name": "bibli3-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Quitter la bibliothèque en vitesse",
+          "reveal": "Vous vous empressez de retourner à votre vaisseau et reprenez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\nElle vous tend le [livre] en pensant que c'est le votre",
+      "name": "bibli3-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Prendre le livre et retourner à votre vaisseau",
+          "reveal": "Vous partez avant que le propriétaire du livre ne se manifeste"
         }
       ]
     }
