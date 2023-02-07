@@ -55,8 +55,15 @@ module.exports.renderCardEvent = async function (req, res) {
     let players = await DB.tables.players.findAll();
     let ship = await new Ship().getData();
 
-    // TODO get ship
-    // TODO do it with card pop once baseCard.json is completed
+    let statuses = new Statuses();
+    let activeStatuses = await statuses.getAllStatuses();
+
+    for (let i of activeStatuses) {
+        await statuses.remove(i.slug);
+    }
+
+    let statusesAll = await statuses.getAllStatuses(false);
+
     let current_card = await cardPop();
     // TESTING :
 
@@ -66,7 +73,8 @@ module.exports.renderCardEvent = async function (req, res) {
     let vars = {
         players: players,
         card: current_card,
-        ship: ship
+        ship: ship,
+        statuses: statusesAll
     }
 
     switch (current_card.type) {
@@ -143,6 +151,21 @@ module.exports.renderTestCardEvent = async function (req, res) {
             }
         ]
     }
+    let statuses = [{
+        id: 16,
+        name: 'Blackout',
+        desc: 'le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.',
+        slug: 'blackout',
+        duration: 5,
+    },
+    {
+        id: 18,
+        name: 'Entrainé',
+        desc: 'Une ou plusieurs statistiques des joueurs sont augmentées.',
+        slug: 'trained',
+        duration: 5
+    }];
+
     let ship = {
         id: 0,
         name: '',
@@ -164,7 +187,8 @@ module.exports.renderTestCardEvent = async function (req, res) {
     let vars = {
         players: players,
         card: card,
-        ship: ship
+        ship: ship,
+        statuses: statuses
     }
 
     res.render('template-card', vars);

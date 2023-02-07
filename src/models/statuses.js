@@ -6,14 +6,18 @@ class Statuses {
     id;
     name;
     desc;
+    slug;
     duration;
     accepted_datas = {
         'name': '',
         'desc': '',
+        'slug': '',
         'duration': 0
     }
 
-    constructor() {}
+    constructor(id = 0) {
+        this.id = id;
+    }
 
     async create(data = {}) {
 
@@ -23,6 +27,7 @@ class Statuses {
         await DB.tables.statuses.create({
             name: this.name,
             desc: this.desc,
+            slug: this.slug,
             duration: this.duration
         }).then(result => {
             this.id = result.id;
@@ -31,22 +36,22 @@ class Statuses {
         return await this.getData();
     }
 
-    async updateStatus(name, newValue) {
+    async updateStatus(slug, newValue) {
         await DB.tables.statuses.update({
             duration: newValue
         }, {
             where: {
-                name: name,
+                slug: slug,
             }
         })
     }
 
-    async add(name, val=1) {
-        await DB.tables.statuses.increment({duration: val}, { where: { name: name } });
+    async add(slug, val=1) {
+        await DB.tables.statuses.increment({duration: val}, { where: { slug: slug } });
     }
 
-    async remove(name, val=1) {
-        await DB.tables.statuses.decrement({duration: val}, { where: { name: name } });
+    async remove(slug, val=1) {
+        await DB.tables.statuses.decrement({duration: val}, { where: { slug: slug } });
     }
 
     async getData() {
@@ -56,6 +61,7 @@ class Statuses {
                 'id',
                 'name',
                 'desc',
+                'slug',
                 'duration'
             ],
             where: {
