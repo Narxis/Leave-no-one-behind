@@ -1269,7 +1269,7 @@
       ]
     },
     {
-      "desc": "\"Perdu c'était un [objet1] j'allais pas vous le donner de toute manière \"\nLe [race2] se replonge dans son livre et vous ignore.",
+      "desc": "\"Perdu c'était un [objet1] j'allais pas vous le donner de toute manière. \"\nLe [race2] se replonge dans son livre et vous ignore.",
       "name":"bibli2-3",
       "timer": false,
       "choices": [

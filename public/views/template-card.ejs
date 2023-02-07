@@ -655,6 +655,7 @@
 <script>
   var cardtextstr = `<%- card.desc %>`;
   var currentCardType = parseInt(`<%- card.type %>`) ; 
+  var nextlist = []
   var choicelist = [];
   var statusNameList = [];
   var statusDurationList = [];
@@ -663,6 +664,7 @@
   var statusSvgList = {};
 
   <% card.choices.forEach(function(choice) {%>
+    nextlist.push(`<%- choice.next %>`);
     choicelist.push(`<%- choice.value %>`);
     answerlist.push(`<%- choice.reveal %>`);
     <% }); %>
@@ -675,6 +677,7 @@
     }
 
   <% }); %>
+  console.log(nextlist)
 </script>
 
 <script src="/js/socketLNOB.js"></script>
