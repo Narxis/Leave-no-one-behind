@@ -1230,6 +1230,7 @@
       "desc": "Le [race2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\nIl vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque\nIl décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
       "name":"bibli2",
       "timer": false,
+      "shuffle":true,
       "choices": [
         {
           "value": "[objet1]",
