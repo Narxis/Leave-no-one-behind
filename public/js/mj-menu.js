@@ -85,7 +85,13 @@ function initialiseRadio () {
         document.querySelector('.ally').classList.remove('hide');  
     })
 }
-
+function initialiseStatus () {
+    document.getElementById('add-status').addEventListener('mouseup',function (){
+        console.log(document.getElementById('search-status').value, document.getElementById('duration-status').value)
+        wsLNOB.setStatus(''+document.getElementById('search-status').value, document.getElementById('duration-status').value )
+    })
+}
 ( function(){
     initialiseRadio();
+    initialiseStatus();
 })();
