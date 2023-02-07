@@ -1134,6 +1134,152 @@
       ]
     },
     {
+      "desc": "\"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\"\ndit le [race1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
+      "name":"bibli1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Aller vers le sous-sol",
+          "next": "bibli1-1"
+        },
+        {
+          "value": "Ignorer et quitter la bibliothèque",
+          "reveal": "Vous quittez la bibliothèque et retournez à votre vaisseau"
+        }
+      ]
+    },
+    {
+      "desc": "Vous vous frayez un chemin dans les sous-sols de la bibliothèque et les bruits étranges deviennent de plus en plus forts.\nSoudain, vous êtes face à face avec deux Yorcs armés de manches à balais, qui ont l'air décidés à vous attaquer. Vous vous préparez à vous défendre alors que vous vous demandez ce qui peut bien se passer ici.",
+      "name":"bibli1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Terminer le combat et fouiller la salle",
+          "next": "bibli1-1-1"
+        },
+        {
+          "value": "Terminer le combat et retourner voir le [race1]",
+          "next": "bibli1-1-2"
+        }
+      ]
+    },
+    {
+      "desc": "Après avoir terrasser les Yorcs vous penetrez dans la salle et vous rendez compte que les Yorcs étaient en train synthétiser des Shrips dans un laboratoire clandestin, vous découvrez également des armes et des plans détaillés pour un projet d'invasion.\nVous comprenez alors que vous venez de déjouer un complot visant à attaquer la bibliothèque et peut-être même tout le système. Vous contactez immédiatement les autorités pour les informer de la situation et leur remettre les preuves trouvées.",
+      "name":"bibli1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Attendre les autorités",
+          "next": "bibli1-1-1-1"
+        },
+        {
+          "value": "Quittez la bibliothèque",
+          "reveal": "Vous quittez la bibliothèque et retournez dans votre vaisseau."
+        }
+      ]
+    },
+    {
+      "desc": "Vous retournez dans le hall principal mais plus personne ne s'y trouve.",
+      "name":"bibli1-1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Quitter la bibliothèque",
+          "reveal": "Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "Vous et votre équipe avez réussi à neutraliser le laboratoire illégal du Groupuscule Armé de Yorcs Salvateurs et à fournir des preuves de leur activité illégale.\nLa Première Unité Tactique Expérimentale arrive sur les lieux pour procéder à l'inspection et saisir les preuves.\nLe commandant de l'unité vous félicite pour votre mission réussie et s'éxclame : \"Bravo, vous voulez une médaille ?!\"",
+      "name":"bibli1-1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Oui...",
+          "next": "bibli1-1-1-1-1"
+        },
+        {
+          "value": "Euh non?",
+          "next": "bibli1-1-1-1-2"
+        }
+      ]
+    },
+    {
+      "desc": "Le commandant vous remet une médaille pour votre dévouement.",
+      "name":"bibli1-1-1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Remercier le commandant et retourner à votre vaisseau",
+          "reveal": "Vous retournez dans le vaisseau très heureux de votre belle médaille brillante."
+        }
+      ]
+    },
+    {
+      "desc": "Le commandant est surpris de votre réponse et complimente votre humilité.",
+      "name":"bibli1-1-1-1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Quitter la bibliothèque",
+          "reveal": "Vous retournez dans le vaisseau."
+        }
+      ]
+    },
+    {
+      "desc": "Le [race2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\nIl vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque\nIl décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
+      "name":"bibli2",
+      "timer": false,
+      "shuffle":true,
+      "choices": [
+        {
+          "value": "[objet1]",
+          "next": "bibli2-1"
+        },
+        {
+          "value": "[objet2]",
+          "next": "bibli2-2"
+        },
+        {
+          "value": "[objet3]",
+          "next": "bibli2-3"
+        }
+      ]
+    },
+    {
+      "desc": "\"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet1]",
+      "name":"bibli2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Prendre l'[objet1] et quitter la bibliothèque",
+          "reveal": "Vous retournez dans le vaisseau. avec votre nouvel [objet1]"
+        }
+      ]
+    },
+    {
+      "desc": "\"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet2]",
+      "name":"bibli2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Prendre l'[objet2] et quitter la bibliothèque",
+          "reveal": "Vous retournez dans le vaisseau. avec votre nouvel [objet2]"
+        }
+      ]
+    },
+    {
+      "desc": "\"Perdu c'était un [objet1] j'allais pas vous le donner de toute manière \"\nLe [race2] se replonge dans son livre et vous ignore.",
+      "name":"bibli2-3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Quitter la bibliothèque",
+          "reveal": "Vous retournez dans le vaisseau."
+        }
+      ]
+    },
+    {
       "desc": "Vous appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\nLe livre est usé, vous pouvez difficllement lire [livre] écrit sur la couverture.",
       "name": "bibli3",
       "timer": false,
