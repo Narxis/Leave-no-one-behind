@@ -160,7 +160,8 @@ class Card {
             attributes: [
                 'type',
                 'value',
-                'reveal'
+                'reveal',
+                'next'
             ],
             where: {
                 card_id: this.id
@@ -180,7 +181,8 @@ class Card {
             if (name === 'choice') {
                 choices.push({
                     value: mod.value,
-                    reveal: mod.reveal
+                    reveal: mod.reveal,
+                    next: mod.next
                 });
             }
             else {
