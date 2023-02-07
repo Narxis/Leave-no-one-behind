@@ -56,10 +56,6 @@ document.addEventListener('roll', doPlayerRoll);
         expander.addEventListener('mouseup', function () {
             this.closest('.player-tab').classList.toggle('move-up')
         })
-        let expanderItem = ptabs.item(i).querySelector('.expander-item');
-        expanderItem.addEventListener('mouseup', function(){
-            this.firstElementChild.nextElementSibling.classList.toggle('hide')
-        })
     }
 
   })()
