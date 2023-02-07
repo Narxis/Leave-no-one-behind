@@ -332,6 +332,18 @@ async function getNextCard (pop=false) {
     return JSON.parse(await rawResponse.text());
 }
 
+async function getCardByName (name) {
+    const rawResponse = await fetch('/api/nextCard/get/' + name, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    });
+
+    return JSON.parse(await rawResponse.text());
+}
+
 async function initialiseNextButton() {
 
     document.querySelector('.next-button').addEventListener('mouseover', function () {
