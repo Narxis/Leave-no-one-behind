@@ -73,3 +73,17 @@ document.addEventListener('playerStat', async function(e){
         }
     }
 })
+function initialiseRadio () {
+    document.getElementById('life-1').addEventListener('mouseup', function(){
+        document.querySelector('.ennemy').classList.toggle('hide')
+        document.querySelector('.ally').classList.toggle('hide')    
+    })
+    document.getElementById('life-2').addEventListener('mouseup', function(){
+        document.querySelector('.ennemy').classList.toggle('hide')
+        document.querySelector('.ally').classList.toggle('hide')    
+    })
+}
+
+( function(){
+    initialiseRadio();
+})();
