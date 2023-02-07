@@ -69,6 +69,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="status-box">
+                        <input class="add-life status-search" type="text" id="search-status" list="status" placeholder="Status">
+                        <datalist id="status">
+                            <option value="Blackout"></option>
+                            <option value="Anticipation"></option>
+                            <option value="Entrainé"></option>
+                            <option value="Affaiblit"></option>
+                        </datalist>
+                        <input type="number" min="0" max="10" class="add-life status-duration-text" id="duration-status"></input>
+                        <button class="add-life" id="add-status">+</button>
+                    </div>
                 </div>
                 <div class="combat">
                     <!--Un espace pour chaque joueurs pour un boutton join-->
