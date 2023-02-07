@@ -119,11 +119,9 @@
 } */
 
 
-.ennemy {
-    border-bottom: 1px solid rgb(180, 180, 180);
-}
-
+.ennemy,
 .ally {
+    border-bottom: 1px solid rgb(180, 180, 180);
     border-top: 1px solid rgb(180, 180, 180);
 }
 
