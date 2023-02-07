@@ -74,13 +74,15 @@ document.addEventListener('playerStat', async function(e){
     }
 })
 function initialiseRadio () {
-    document.getElementById('life-1').addEventListener('mouseup', function(){
-        document.querySelector('.ennemy').classList.toggle('hide')
-        document.querySelector('.ally').classList.toggle('hide')    
+    document.querySelector('.life-type1').addEventListener('mouseup', function(){
+        document.getElementById('life-1').checked = true;
+        document.querySelector('.ennemy').classList.remove('hide');
+        document.querySelector('.ally').classList.add('hide');  
     })
-    document.getElementById('life-2').addEventListener('mouseup', function(){
-        document.querySelector('.ennemy').classList.toggle('hide')
-        document.querySelector('.ally').classList.toggle('hide')    
+    document.querySelector('.life-type2').addEventListener('mouseup', function(){
+        document.getElementById('life-2').checked = true;
+        document.querySelector('.ennemy').classList.add('hide');
+        document.querySelector('.ally').classList.remove('hide');  
     })
 }
 
