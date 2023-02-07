@@ -55,7 +55,7 @@
 .life-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 350px;
     height: 100%;
@@ -63,16 +63,55 @@
     border-right: 1px solid rgb(180, 180, 180);
 }
 
-.ennemy,
-.ally {
+.life-change {
+    display: flex;
+    margin: 15px 0px;
+    cursor: pointer;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.life-selector {
+    display: flex;
+    width: 100%;
+    height: 40%;
+}
+
+.life-type1,
+.life-type2 {
+    display: flex;
+}
+
+.ennemy, .ally {
     display: flex;
     align-items: center;
-    height: 50%;
-    width: 100%;
+    height: 240px;
+    width: 18.3%;
     flex-wrap: wrap;
     justify-content: space-around;
     align-content: center;
+    position: absolute;
+    top: -250px;
 }
+
+.life-type1-input:checked~.life-selector .ally {
+    opacity: 0  !important;
+}
+
+.life-type2-input:checked~.life-selector .ennemy {
+    opacity: 0  !important; 
+}
+
+#life-1:checked .ally {
+    opacity: 0  !important;
+}
+
+#life-2:checked .ennemy {
+    opacity: 0 !important;
+}
+
 
 .ennemy {
     border-bottom: 1px solid rgb(180, 180, 180);
