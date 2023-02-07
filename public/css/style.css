@@ -495,12 +495,12 @@ nav {
 }
 
 /*-/!\-Doliprane-requiered-to-read-these-selectors-/!\-*/
-.dice-type-input:checked~.dice-type-label.dice-type-label::after {
+.dice-type-input:checked~.dice-type-label::after {
     transition: .5s ease-in-out;
     opacity: 1;
 }
 
-.dice-type-input:checked~.dice-type-label.dice-type-label svg {
+.dice-type-input:checked~.dice-type-label svg {
     fill: #ffffff !important;
     transition: .5s ease-in-out;
 }

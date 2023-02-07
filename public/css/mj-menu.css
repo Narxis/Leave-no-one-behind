@@ -55,7 +55,7 @@
 .life-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 350px;
     height: 100%;
@@ -63,27 +63,71 @@
     border-right: 1px solid rgb(180, 180, 180);
 }
 
+.life-change {
+    display: flex;
+    cursor: pointer;
+    width: 100%;
+    height: 50%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.life-selector {
+    display: flex;
+    width: 100%;
+    height: 40%;
+}
+
+.life-type1,
+.life-type2 {
+    display: flex;
+    padding: 15px;
+}
+
 .ennemy,
-.ally {
+.ally,
+.status-box {
     display: flex;
     align-items: center;
-    height: 50%;
-    width: 100%;
+    height: 240px;
+    width: 18.3%;
     flex-wrap: wrap;
     justify-content: space-around;
     align-content: center;
+    position: absolute;
+    top: -250px;
 }
 
-.ennemy {
-    border-bottom: 1px solid rgb(180, 180, 180);
+/*  ça fonctionne pas ça aled
+
+.life-type1-input:checked~.life-selector .ally {
+    opacity: 0  !important;
 }
 
+.life-type2-input:checked~.life-selector .ennemy {
+    opacity: 0  !important; 
+}
+
+#life-1:checked .ally {
+    opacity: 0  !important;
+}
+
+#life-2:checked .ennemy {
+    opacity: 0 !important;
+} */
+
+
+.ennemy,
 .ally {
+    border-bottom: 1px solid rgb(180, 180, 180);
     border-top: 1px solid rgb(180, 180, 180);
 }
 
 #search-ally,
-#search-ennemy {
+#search-ennemy,
+#search-status {
     height: 2.5em;
     width: 90%;
     background-color: #ffffff21;
@@ -110,6 +154,29 @@
     color: #fff;
     margin-top: 1em;
     cursor: pointer;
+}
+
+.status-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 50%;
+}
+
+.status-search {
+    width: 90%;
+}
+
+.status-duration-text {
+    display: flex;
+    text-align: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .combat {
@@ -304,4 +371,7 @@
         text-indent: 1.5em;
         width: 90%;
     }
+}
+.hide {
+    display: none;
 }

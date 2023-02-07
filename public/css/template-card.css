@@ -95,7 +95,7 @@
   border-radius: 40px;
   padding: 50px;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   position: relative;
   background: var(--lgrad), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
   background-position: var(--bY) var(--bX);
