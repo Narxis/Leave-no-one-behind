@@ -66,8 +66,8 @@ startServer().then(e => {
         " ███████╗██║ ╚████║╚██████╔╝██████╔╝\n" +
         " ╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ \n" +
         "\n", "#ffcc00");
-    if (process.env.FORCE_COLOR !== 'tr1ue')
-        console.log('Ajouter FORCE_COLOR=true aux variables d\'environnement pour les couleurs sur gitbash \n');
+    if (process.env.FORCE_COLOR !== 'true')
+        log('Ajouter FORCE_COLOR=true aux variables d\'environnement pour les couleurs sur gitbash \n');
     log(`Server launched on port ${PORT}\n`);
     log(`http://localhost:${PORT}/` + chalk.hex('#aaaaaa')(' (local)'),'#0645AD')
     log(`http://${ip}:${PORT}/` + chalk.hex('#aaaaaa')(' (Wifi Network)'),'#0645AD')
