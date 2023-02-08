@@ -13,7 +13,8 @@ const init = function (){
         ws.on('message', (message, isBinary) => {
 
             let data = isBinary ? message : message.toString();
-            log('[WS] '+ chalk.hex('#aaaaaa')(JSON.parse(data).action), '#ffcc00');
+            let data_json = JSON.parse(data);
+            log('[WS] '+ chalk.hex('#aaaaaa')(data_json.action), '#ffcc00');
             makeAction(data).then(data => {broadcastData(data, ws)})
         });
 
