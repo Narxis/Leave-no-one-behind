@@ -4,6 +4,7 @@ const {response} = require("express");
 const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const shipId = 1;
+const chalk = require("chalk")
 
 const init = function (){
 
@@ -12,6 +13,7 @@ const init = function (){
         ws.on('message', (message, isBinary) => {
 
             let data = isBinary ? message : message.toString();
+            log('[WS] '+ chalk.hex('#aaaaaa')(JSON.parse(data).action), '#ffcc00');
             makeAction(data).then(data => {broadcastData(data, ws)})
         });
 
@@ -285,7 +287,7 @@ const broadcastData = function (data, ws, sendBackToSender = true) {
         });
     }
     catch (e) {
-        console.log(e)
+        log(e)
     }
 }
 

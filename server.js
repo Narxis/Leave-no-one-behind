@@ -9,6 +9,10 @@ const NodeCache = require( "node-cache" );
 const os = require("os");
 const chalk = require("chalk");
 
+// Remove les logs de buffers qui clc
+var console = {};
+console.log = function(){};
+
 const startServer = async function() {
 
     constants.register();

@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { Client, Collection, GatewayIntentBits, Routes } = require('discord.js');
 const { REST } = require('@discordjs/rest');
+const chalk = require("chalk");
 const token = process.env.DS_TOKEN;
 
 const start = function () {
@@ -50,6 +51,7 @@ const start = function () {
     client.on('interactionCreate', async interaction => {
         if (!interaction.isChatInputCommand()) return;
 
+        log('[DS] '+ chalk.hex('#aaaaaa')(interaction.user.tag + ' => ' + interaction.commandName), '#7289DA');
         const slash = client.slash.get(interaction.commandName);
 
         if (!slash) return;
@@ -67,6 +69,7 @@ const start = function () {
 
         if (!interaction.isStringSelectMenu()) return;
 
+        log('[DS] '+ chalk.hex('#aaaaaa')(interaction.user.tag + ' => ' + interaction.customId), '#7289DA');
         const selectMenu = client.selectMenus.get(interaction.customId);
 
         if (!selectMenu) return;
@@ -84,6 +87,7 @@ const start = function () {
 
         if (!interaction.isModalSubmit()) return;
 
+        log('[DS] '+ chalk.hex('#aaaaaa')(interaction.user.tag + ' => ' + interaction.customId), '#7289DA');
         const modal = client.modals.get(interaction.customId);
 
         if (!modal) return;
@@ -101,6 +105,7 @@ const start = function () {
 
         if (!interaction.isButton()) return;
 
+        log('[DS] '+ chalk.hex('#aaaaaa')(interaction.user.tag + ' => ' + interaction.customId), '#7289DA');
         let customId = interaction.customId;
 
         // Pass rolled dice through custom ID

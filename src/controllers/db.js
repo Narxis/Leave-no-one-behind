@@ -21,7 +21,7 @@ class DB {
             });
         }
         else {
-            console.log('Using remote DB')
+            log('Using remote DB')
             this.sequelize = new Sequelize(process.env.DB_URL)
         }
         await this.registerDatabases();
