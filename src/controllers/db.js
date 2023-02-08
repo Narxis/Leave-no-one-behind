@@ -12,7 +12,7 @@ class DB {
 
         if (process.env.DB_URL === '') {
             let db_name = test ? 'test_db' : 'database' + DB_VERSION;
-            console.log('Using local DB')
+            log('Using local DB', "#666666")
             this.sequelize =  new Sequelize(db_name, '', '', {
                 host: 'localhost',
                 dialect: 'sqlite',
@@ -355,7 +355,7 @@ class DB {
 
         for (let table in this.tables) {
             await this.tables[table].sync();
-            console.log('synchro ' + table)
+            log('synchro ' + table, '#666666')
         }
     }
 

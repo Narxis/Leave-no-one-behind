@@ -32,12 +32,18 @@ const start = function () {
     }
 
 // When the client is ready, run this code (only once)
-    client.once('ready', () => {
+    client.once('ready', async () => {
         let guilds = client.guilds.cache;
         for (let guild_data of guilds) {
-            deployCommands(guild_data[1])
+            await deployCommands(guild_data[1])
         }
-        console.log('Bot Ready!');
+        log('\n' +
+            '  ⢠⣴⣾⣵⣶⣶⣾⣿⣦⡄\n' +
+            ' ⢀⣾⣿⣿⢿⣿⣿⣿⣿⣿⣿⡄\n' +
+            ' ⢸⣿⣿⣧⣀⣼⣿⣄⣠⣿⣿⣿\n' +
+            ' ⠘⠻⢷⡯⠛⠛⠛⠛⢫⣿⠟⠛\n' +
+            '\n' +
+            '  Bot Ready !\n', '#7289DA');
     });
 
     /* SLASH COMMANDS */
@@ -118,7 +124,7 @@ const start = function () {
     client.login(token);
 }
 
-const deployCommands = function (guild) {
+const deployCommands = async function (guild) {
 
     let clientId = process.env.DS_CLIENT_ID;
     let token = process.env.DS_TOKEN;
@@ -136,7 +142,9 @@ const deployCommands = function (guild) {
     const rest = new REST({ version: '10' }).setToken(token);
 
     rest.put(Routes.applicationGuildCommands(clientId, guild.id), { body: commands })
-        .then(() => console.log(`Successfully registered application commands on "${guild.name}"`))
+        .then(() => {
+            //
+        })
         .catch(console.error);
 }
 
