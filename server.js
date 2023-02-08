@@ -9,10 +9,6 @@ const NodeCache = require( "node-cache" );
 const os = require("os");
 const chalk = require("chalk");
 
-// Remove les logs de buffers qui clc
-var console = {};
-console.log = function(){};
-
 const startServer = async function() {
 
     constants.register();
@@ -28,9 +24,9 @@ const startServer = async function() {
     app.use('/', router);
 
     global.WSS = new WebSocketServer({ noServer: true });
-    WSS.on('connection', socket => {
-        socket.on('message', message => console.log(message));
-    });
+    // WSS.on('connection', socket => {
+    //     socket.on('message', message => console.log(message));
+    // });
 
     const server = app.listen(PORT);
 
