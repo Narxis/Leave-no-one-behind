@@ -55,6 +55,11 @@ const start = function () {
         const slash = client.slash.get(interaction.commandName);
 
         if (!slash) return;
+        if (slash.step !== '' && slash.step !== CONFIG.gameState) {
+            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            log("[Blocked]", "#dd0000");
+            return
+        }
 
         try {
             await slash.execute(interaction);
@@ -73,6 +78,10 @@ const start = function () {
         const selectMenu = client.selectMenus.get(interaction.customId);
 
         if (!selectMenu) return;
+        if (selectMenu.step !== '' && selectMenu.step !== CONFIG.gameState) {
+            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            return
+        }
 
         try {
             await selectMenu.execute(interaction);
@@ -91,6 +100,10 @@ const start = function () {
         const modal = client.modals.get(interaction.customId);
 
         if (!modal) return;
+        if (modal.step !== '' && modal.step !== CONFIG.gameState) {
+            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            return
+        }
 
         try {
             await modal.execute(interaction);
@@ -116,6 +129,10 @@ const start = function () {
         const button = client.buttons.get(customId);
 
         if (!button) return;
+        if (button.step !== '' && button.step !== CONFIG.gameState) {
+            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            return
+        }
 
         try {
             await button.execute(interaction);

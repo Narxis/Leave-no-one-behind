@@ -8,6 +8,7 @@ module.exports = {
     data: {
         name: 'roll-stats'
     },
+    step: 'creation',
     async execute(interaction) {
 
         let player = await new Player().getData(interaction.user.id);

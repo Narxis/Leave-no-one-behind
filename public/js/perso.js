@@ -81,6 +81,9 @@ async function loadPlayerSheets() {
 
     let players = await getExistingPlayers();
 
+    if (players.length > 0)
+        document.querySelector('.lecadre').remove();
+
     for (let i in players) {
         await addPlayerSheet(players[i].discord_id);
     }

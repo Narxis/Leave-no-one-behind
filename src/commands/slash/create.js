@@ -6,6 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('create')
         .setDescription('create sheet'),
+    step: 'creation',
     async execute(interaction) {
 
         // TODO check if player exists

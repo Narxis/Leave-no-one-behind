@@ -7,6 +7,7 @@ module.exports = {
     data: {
         name: 'set-race'
     },
+    step: 'creation',
     async execute(interaction) {
 
         let rawData = fs.readFileSync(__dirname  + './../../config/raceStats.json');

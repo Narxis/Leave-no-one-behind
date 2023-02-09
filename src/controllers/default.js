@@ -39,6 +39,7 @@ module.exports.mjMenu = function (req, res) {
 }
 
 module.exports.persos = function (req, res) {
+    CONFIG.upsert('gameState', 'creation');
     res.render('perso');
 }
 
@@ -288,8 +289,12 @@ module.exports.indexLegacy = function (req, res) {
 
 module.exports.reset = async function (req, res) {
 
+    await DB.tables.config.destroy({truncate: true, restartIdentity: true});
     await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
     await destroyDeck();
+
+    await new Config().hydrateDB();
+
     await hydrateCardDB();
     await deckGenerator();
 

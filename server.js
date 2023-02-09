@@ -8,13 +8,15 @@ const Bot = require('./src/controllers/discord');
 const NodeCache = require( "node-cache" );
 const os = require("os");
 const chalk = require("chalk");
+const {Config} = require("./src/models/config")
+const {config} = require("dotenv");
 
 const startServer = async function() {
 
     constants.register();
     let DB = new db.DB;
     global.DB = await DB.init();
-
+    global.CONFIG = await new Config().get();
     global.CACHE = new NodeCache();
 
     let app = require('./bin/express')();
