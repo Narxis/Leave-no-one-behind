@@ -338,11 +338,11 @@ nav {
 }
 
 .itemlist {
+    opacity: 0;
     position: absolute;
-    top: 5px;
+    top: 105px;
     left: -170px;
     width: 218px;
-    height: 156px;
     border-radius: 10px;
     border: 2px solid #fff;
     display: flex;
@@ -351,6 +351,13 @@ nav {
     background: var(--lgrad);
     align-content: flex-start;
     flex-wrap: wrap;
+    height: 91px;
+    transition: .3s;
+}
+
+.expander-item:active .itemlist {
+    opacity: 1;
+    transform: translateY(-200px);
 }
 
 .move-up {
@@ -415,6 +422,7 @@ nav {
     color: limegreen;
     transition: color 1s ease-in;
 }
+
 .output-roll.fail {
     color: red;
     transition: color 1s ease-in;
@@ -487,12 +495,12 @@ nav {
 }
 
 /*-/!\-Doliprane-requiered-to-read-these-selectors-/!\-*/
-.dice-type-input:checked~.dice-type-label.dice-type-label::after {
+.dice-type-input:checked~.dice-type-label::after {
     transition: .5s ease-in-out;
     opacity: 1;
 }
 
-.dice-type-input:checked~.dice-type-label.dice-type-label svg {
+.dice-type-input:checked~.dice-type-label svg {
     fill: #ffffff !important;
     transition: .5s ease-in-out;
 }
@@ -636,157 +644,200 @@ nav {
 .display-mobile {
     display: none;
 }
+
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
-/* Styles */
-.hidden-mobile {
-    display: none;
-}
 
-.display-mobile {
-    display: block;
-}
+    /* Styles */
+    .hidden-mobile {
+        display: none;
+    }
 
-nav {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-}
+    .display-mobile {
+        display: block;
+    }
 
-#menuToggle {
-    display: block;
-    position: fixed;
-    top: 5.2vh;
-    left: 5.2vh;
-    z-index: 1;
-    user-select: none;
-}
+    nav {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
 
-#menuToggle a {
-    text-decoration: none;
-    color: #fff;
-    transition: color 0.3s ease;
-    cursor: pointer;
-}
+    #menuToggle {
+        display: block;
+        position: fixed;
+        top: 5.2vh;
+        left: 5.2vh;
+        z-index: 1;
+        user-select: none;
+    }
 
-#menuToggle a:hover {
-    transition: 300ms;
-    text-shadow: -1px -1px 1px rgb(255 255 255 / 30%), 1px -1px 1px rgb(255 255 255 / 30%), -1px 1px 1px rgb(255 255 255 / 30%), 1px 1px 1px rgb(255 255 255 / 30%), 0 -2px 8px, 0 0 2px, 0 0 5px #0100ff, 0 0 15px #4467ff, 0 0 2px #0008ff, 0 2px 3px #000;
-}
+    #menuToggle a {
+        text-decoration: none;
+        color: #fff;
+        transition: color 0.3s ease;
+        cursor: pointer;
+    }
 
-#menuToggle a:active {
-    text-shadow: -1px -1px 1px rgb(255 255 255 / 0%), 1px -1px 1px rgb(255 255 255 / 0%), -1px 1px 1px rgb(255 255 255 / 0%), 1px 1px 1px rgb(255 255 255 / 0%), 0 -2px 8px, 0 0 2px, 0 0 5px #1b003a, 0 0 15px #430085, 0 0 2px #b400ff, 0 2px 3px #d800ff;
-}
+    #menuToggle a:hover {
+        transition: 300ms;
+        text-shadow: -1px -1px 1px rgb(255 255 255 / 30%), 1px -1px 1px rgb(255 255 255 / 30%), -1px 1px 1px rgb(255 255 255 / 30%), 1px 1px 1px rgb(255 255 255 / 30%), 0 -2px 8px, 0 0 2px, 0 0 5px #0100ff, 0 0 15px #4467ff, 0 0 2px #0008ff, 0 2px 3px #000;
+    }
 
-#menuToggle svg {
-    left: 39vw;
-}
+    #menuToggle a:active {
+        text-shadow: -1px -1px 1px rgb(255 255 255 / 0%), 1px -1px 1px rgb(255 255 255 / 0%), -1px 1px 1px rgb(255 255 255 / 0%), 1px 1px 1px rgb(255 255 255 / 0%), 0 -2px 8px, 0 0 2px, 0 0 5px #1b003a, 0 0 15px #430085, 0 0 2px #b400ff, 0 2px 3px #d800ff;
+    }
 
-#menuToggle input {
-    display: block;
-    width: 40px;
-    height: 32px;
-    position: absolute;
-    top: -12px;
-    left: -12px;
-    cursor: pointer;
-    opacity: 0;
-    z-index: 2;
-}
+    #menuToggle svg {
+        left: 39vw;
+    }
 
-#menuToggle span {
-    display: block;
-    width: 33px;
-    height: 4px;
-    margin-bottom: 5px;
-    position: relative;
-    background: #cdcdcd;
-    border-radius: 3px;
-    z-index: 1;
-    transform-origin: 4px 0px;
-    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
-        background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
-        opacity 0.55s ease;
-}
+    #menuToggle input {
+        display: block;
+        width: 40px;
+        height: 32px;
+        position: absolute;
+        top: -12px;
+        left: -12px;
+        cursor: pointer;
+        opacity: 0;
+        z-index: 2;
+    }
 
-#menuToggle span:first-child {
-    transform-origin: 0% 0%;
-}
+    #menuToggle span {
+        display: block;
+        width: 33px;
+        height: 4px;
+        margin-bottom: 5px;
+        position: relative;
+        background: #cdcdcd;
+        border-radius: 3px;
+        z-index: 1;
+        transform-origin: 4px 0px;
+        transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+            background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+            opacity 0.55s ease;
+    }
 
-#menuToggle span:nth-last-child(2) {
-    transform-origin: 0% 100%;
-}
+    #menuToggle span:first-child {
+        transform-origin: 0% 0%;
+    }
 
-#menuToggle input:checked~span {
-    opacity: 1;
-    transform: rotate(45deg) translate(-2px, -1px);
-    background: #fff;
-}
+    #menuToggle span:nth-last-child(2) {
+        transform-origin: 0% 100%;
+    }
 
-#menuToggle input:checked~span:nth-last-child(3) {
-    opacity: 0;
-    transform: rotate(0deg) scale(0.2, 0.2);
-}
+    #menuToggle input:checked~span {
+        opacity: 1;
+        transform: rotate(45deg) translate(-2px, -1px);
+        background: #fff;
+    }
 
-#menuToggle input:checked~span:nth-last-child(2) {
-    transform: rotate(-45deg) translate(0, -1px);
-}
+    #menuToggle input:checked~span:nth-last-child(3) {
+        opacity: 0;
+        transform: rotate(0deg) scale(0.2, 0.2);
+    }
 
-#menu {
-    overflow: hidden scroll;
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    height: 100vh;
-    max-height: 100vh;
-    max-width: 40vw;
-    width: 40vw;
-    margin: 0px;
-    padding: 50px 40px 0px 22px;
-    border-radius: 0px;
-    border-top: none;
-    border-bottom: none;
-    border-left: none;
-    border-right: 2px solid #FFF;
-}
+    #menuToggle input:checked~span:nth-last-child(2) {
+        transform: rotate(-45deg) translate(0, -1px);
+    }
 
-#menu hr.separateur {
-    position: absolute;
-    width: 50vw;
-    left: 0;
-    margin: 26px 0px 0px 0px;
-    height: 3vh;
-}
+    #menu {
+        overflow: hidden scroll;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        height: 100vh;
+        max-height: 100vh;
+        max-width: 40vw;
+        width: 40vw;
+        margin: 0px;
+        padding: 50px 40px 0px 22px;
+        border-radius: 0px;
+        border-top: none;
+        border-bottom: none;
+        border-left: none;
+        border-right: 2px solid #FFF;
+    }
 
-#menu li {
-    margin: 0.8em 0;
-    font-size: 1.27rem;
-}
+    #menu hr.separateur {
+        position: absolute;
+        width: 50vw;
+        left: 0;
+        margin: 26px 0px 0px 0px;
+        height: 3vh;
+    }
 
-#menuToggle input:checked~ul {
-    transform: none;
-}
+    #menu li {
+        margin: 0.8em 0;
+        font-size: 1.27rem;
+    }
 
-.mj-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 20vh;
-    width: 20vw;
-    height: 15vh;
-    border: 2px solid #fff;
-    border-radius: 10px;
-    background: var(--lgrad);
-    color: #fff;
-    font-family: 'jura', sans-serif;
-    text-decoration: none;
-}
+    #menuToggle input:checked~ul {
+        transform: none;
+    }
+
+    .mj-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 20vh;
+        width: 20vw;
+        height: 15vh;
+        border: 2px solid #fff;
+        border-radius: 10px;
+        background: var(--lgrad);
+        color: #fff;
+        font-family: 'jura', sans-serif;
+        text-decoration: none;
+    }
 
 }
 
 /* Smartphones (portrait) ----------- */
-@media only screen and (max-width : 320px) {
-/* Styles */
+@media only screen and (max-device-height : 1920px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
 
+    /* Styles */
+
+    .hidden-mobile {
+        display: none;
+    }
+
+    .display-mobile {
+        display: block;
+    }
+
+    .mj-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 10vh;
+        width: 50vw;
+        height: 8vh;
+        border: 2px solid #fff;
+        border-radius: 10px;
+        background: var(--lgrad);
+        color: #fff;
+        font-family: 'jura', sans-serif;
+        text-decoration: none;
+    }
+    
+    #stars {
+        box-shadow: 38vh 16vh #fff, 57vh 21vh #fff, 7vh 84vh #fff, 74vh 55vh #fff, 64vh 84vh #fff, 25vh 85vh #fff, 85vh 3vh #fff, 75vh 91vh #fff, 96vh 75vh #fff, 71vh 44vh #fff, 49vh 72vh #fff, 69vh 44vh #fff, 66vh 82vh #fff, 7vh 30vh #fff, 99vh 60vh #fff, 59vh 66vh #fff, 53vh 92vh #fff, 36vh 76vh #fff, 94vh 58vh #fff, 77vh 68vh #fff, 15vh 17vh #fff, 63vh 23vh #fff, 65vh 94vh #fff, 23vh 35vh #fff, 5vh 82vh #fff, 76vh 8vh #fff, 13vh 42vh #fff, 41vh 79vh #fff, 100vh 41vh #fff, 10vh 30vh #fff, 24vh 34vh #fff, 82vh 77vh #fff, 34vh 97vh #fff, 86vh 40vh #fff, 8vh 82vh #fff, 72vh 34vh #fff, 24vh 34vh #fff, 50vh 50vh #fff, 45vh 81vh #fff, 21vh 38vh #fff, 18vh 72vh #fff, 65vh 66vh #fff, 45vh 11vh #fff, 60vh 81vh #fff, 47vh 56vh #fff, 67vh 79vh #fff, 73vh 86vh #fff, 73vh 39vh #fff, 37vh 10vh #fff, 19vh 22vh #fff, 3vh 52vh #fff, 58vh 34vh #fff, 50vh 21vh #fff, 19vh 42vh #fff, 9vh 72vh #fff, 99vh 56vh #fff, 30vh 61vh #fff, 87vh 10vh #fff, 45vh 77vh #fff, 20vh 96vh #fff, 93vh 16vh #fff, 66vh 28vh #fff, 89vh 52vh #fff, 99vh 50vh #fff, 25vh 69vh #fff, 43vh 22vh #fff, 19vh 70vh #fff, 83vh 96vh #fff, 82vh 12vh #fff, 34vh 94vh #fff, 100vh 79vh #fff, 58vh 73vh #fff, 16vh 13vh #fff, 91vh 9vh #fff, 33vh 90vh #fff, 1vh 52vh #fff, 49vh 3vh #fff, 7vh 65vh #fff, 41vh 67vh #fff, 39vh 60vh #fff, 10vh 63vh #fff, 6vh 30vh #fff, 6vh 74vh #fff, 4vh 42vh #fff, 20vh 44vh #fff, 48vh 50vh #fff, 76vh 32vh #fff, 84vh 42vh #fff, 75vh 29vh #fff, 100vh 77vh #fff, 61vh 70vh #fff, 80vh 90vh #fff, 90vh 33vh #fff, 25vh 56vh #fff, 1vh 99vh #fff, 55vh 9vh #fff, 95vh 19vh #fff, 44vh 48vh #fff, 31vh 81vh #fff, 88vh 66vh #fff, 20vh 49vh #fff, 85vh 93vh #fff, 8vh 49vh #fff, 93vh 12vh #fff, 30vh 90vh #fff, 87vh 93vh #fff, 46vh 72vh #fff, 94vh 56vh #fff, 8vh 41vh #fff, 99vh 88vh #fff, 13vh 36vh #fff, 47vh 67vh #fff, 68vh 57vh #fff, 73vh 78vh #fff, 69vh 74vh #fff, 22vh 90vh #fff, 27vh 91vh #fff, 90vh 9vh #fff, 35vh 40vh #fff, 22vh 24vh #fff, 81vh 22vh #fff, 42vh 98vh #fff, 26vh 91vh #fff, 73vh 50vh #fff, 40vh 25vh #fff, 27vh 66vh #fff, 15vh 15vh #fff, 26vh 77vh #fff, 49vh 8vh #fff, 94vh 89vh #fff, 10vh 28vh #fff, 7vh 43vh #fff, 56vh 12vh #fff, 82vh 9vh #fff, 19vh 4vh #fff, 15vh 82vh #fff, 48vh 10vh #fff, 71vh 25vh #fff, 56vh 40vh #fff, 71vh 67vh #fff, 4vh 24vh #fff, 91vh 11vh #fff, 79vh 34vh #fff, 74vh 14vh #fff, 23vh 27vh #fff, 82vh 51vh #fff, 46vh 15vh #fff, 34vh 65vh #fff, 75vh 53vh #fff, 63vh 61vh #fff, 27vh 50vh #fff, 69vh 27vh #fff, 85vh 99vh #fff, 8vh 45vh #fff, 2vh 62vh #fff, 59vh 72vh #fff, 9vh 2vh #fff, 25vh 96vh #fff, 83vh 26vh #fff, 93vh 54vh #fff, 69vh 21vh #fff, 95vh 90vh #fff, 81vh 2vh #fff, 36vh 83vh #fff, 1vh 12vh #fff, 66vh 93vh #fff, 51vh 40vh #fff, 37vh 57vh #fff, 94vh 93vh #fff, 38vh 52vh #fff, 69vh 64vh #fff, 51vh 54vh #fff, 37vh 59vh #fff, 53vh 64vh #fff, 73vh 10vh #fff, 63vh 63vh #fff, 67vh 56vh #fff, 99vh 61vh #fff, 80vh 62vh #fff, 45vh 38vh #fff, 63vh 8vh #fff, 37vh 100vh #fff, 84vh 100vh #fff, 17vh 29vh #fff, 25vh 51vh #fff, 15vh 94vh #fff, 73vh 89vh #fff, 91vh 5vh #fff, 11vh 38vh #fff, 71vh 39vh #fff, 84vh 98vh #fff, 1vh 53vh #fff, 71vh 30vh #fff, 81vh 74vh #fff, 66vh 47vh #fff, 81vh 83vh #fff, 25vh 6vh #fff, 33vh 35vh #fff, 64vh 90vh #fff, 40vh 48vh #fff, 89vh 38vh #fff, 84vh 28vh #fff, 59vh 37vh #fff, 39vh 49vh #fff, 54vh 4vh #fff, 3vh 27vh #fff, 69vh 84vh #fff, 75vh 83vh #fff, 21vh 94vh #fff, 28vh 4vh #fff, 52vh 34vh #fff, 78vh 28vh #fff, 16vh 42vh #fff, 57vh 99vh #fff, 53vh 81vh #fff, 89vh 31vh #fff, 56vh 4vh #fff, 16vh 35vh #fff, 54vh 22vh #fff, 40vh 3vh #fff, 9vh 42vh #fff, 3vh 14vh #fff, 86vh 99vh #fff, 64vh 89vh #fff, 91vh 67vh #fff, 29vh 19vh #fff, 49vh 31vh #fff, 20vh 48vh #fff, 9vh 71vh #fff, 72vh 91vh #fff, 29vh 51vh #fff, 52vh 54vh #fff, 17vh 74vh #fff, 33vh 23vh #fff, 52vh 58vh #fff, 74vh 53vh #fff, 81vh 61vh #fff, 38vh 67vh #fff, 16vh 20vh #fff, 70vh 60vh #fff, 48vh 90vh #fff, 32vh 70vh #fff, 53vh 25vh #fff, 6vh 93vh #fff, 27vh 92vh #fff, 20vh 22vh #fff, 89vh 11vh #fff, 77vh 79vh #fff, 18vh 56vh #fff, 91vh 66vh #fff, 56vh 86vh #fff, 73vh 12vh #fff, 94vh 4vh #fff, 82vh 27vh #fff, 5vh 2vh #fff, 83vh 2vh #fff, 87vh 16vh #fff, 100vh 49vh #fff, 53vh 30vh #fff, 38vh 67vh #fff, 25vh 11vh #fff, 49vh 47vh #fff, 13vh 52vh #fff, 51vh 8vh #fff, 11vh 40vh #fff, 92vh 54vh #fff, 97vh 91vh #fff, 27vh 1vh #fff, 47vh 17vh #fff, 41vh 1vh #fff, 64vh 30vh #fff, 19vh 18vh #fff, 96vh 34vh #fff, 97vh 8vh #fff, 91vh 49vh #fff, 47vh 66vh #fff, 37vh 62vh #fff, 27vh 39vh #fff, 26vh 58vh #fff, 20vh 56vh #fff, 45vh 83vh #fff, 83vh 61vh #fff, 92vh 70vh #fff, 8vh 100vh #fff, 36vh 84vh #fff, 25vh 77vh #fff, 68vh 31vh #fff, 54vh 16vh #fff, 13vh 19vh #fff, 89vh 81vh #fff, 24vh 51vh #fff, 47vh 85vh #fff, 42vh 2vh #fff, 10vh 48vh #fff, 49vh 29vh #fff, 14vh 94vh #fff, 99vh 43vh #fff, 4vh 92vh #fff, 89vh 36vh #fff, 38vh 45vh #fff, 6vh 2vh #fff, 6vh 32vh #fff, 88vh 30vh #fff, 58vh 67vh #fff, 91vh 91vh #fff, 100vh 20vh #fff, 10vh 84vh #fff, 88vh 14vh #fff, 62vh 34vh #fff, 31vh 26vh #fff, 71vh 92vh #fff, 46vh 93vh #fff, 57vh 8vh #fff, 65vh 96vh #fff, 97vh 39vh #fff, 33vh 94vh #fff, 84vh 23vh #fff, 34vh 69vh #fff, 12vh 82vh #fff, 79vh 74vh #fff, 40vh 80vh #fff, 46vh 78vh #fff, 33vh 87vh #fff, 11vh 47vh #fff, 10vh 61vh #fff, 33vh 87vh #fff, 70vh 49vh #fff, 64vh 21vh #fff, 44vh 24vh #fff, 33vh 74vh #fff, 71vh 30vh #fff, 58vh 72vh #fff, 38vh 63vh #fff, 81vh 69vh #fff, 87vh 18vh #fff, 34vh 61vh #fff, 80vh 81vh #fff, 30vh 72vh #fff, 19vh 87vh #fff, 50vh 63vh #fff, 31vh 26vh #fff, 29vh 17vh #fff, 68vh 1vh #fff, 38vh 11vh #fff, 3vh 80vh #fff, 20vh 56vh #fff, 53vh 2vh #fff, 63vh 36vh #fff, 32vh 4vh #fff, 85vh 89vh #fff, 22vh 30vh #fff, 98vh 25vh #fff, 22vh 96vh #fff, 79vh 56vh #fff, 1vh 41vh #fff, 80vh 97vh #fff, 82vh 86vh #fff, 27vh 67vh #fff, 14vh 36vh #fff, 77vh 6vh #fff, 58vh 16vh #fff, 46vh 13vh #fff, 3vh 54vh #fff, 39vh 55vh #fff, 29vh 73vh #fff, 50vh 95vh #fff, 85vh 34vh #fff, 8vh 50vh #fff, 15vh 71vh #fff, 3vh 72vh #fff, 73vh 9vh #fff, 2vh 99vh #fff, 45vh 85vh #fff, 78vh 10vh #fff, 23vh 45vh #fff, 72vh 97vh #fff, 38vh 79vh #fff, 76vh 25vh #fff, 93vh 57vh #fff, 67vh 94vh #fff, 98vh 13vh #fff, 90vh 71vh #fff, 20vh 41vh #fff, 100vh 36vh #fff, 74vh 39vh #fff, 55vh 22vh #fff, 55vh 22vh #fff, 55vh 64vh #fff, 33vh 52vh #fff, 85vh 19vh #fff, 13vh 76vh #fff, 24vh 43vh #fff, 61vh 71vh #fff, 7vh 18vh #fff, 27vh 36vh #fff, 10vh 93vh #fff, 73vh 10vh #fff, 41vh 83vh #fff, 96vh 68vh #fff, 83vh 38vh #fff, -74vh -96vh #fff, -18vh -31vh #fff, -3vh -20vh #fff, -51vh -82vh #fff, -64vh -54vh #fff, -44vh -62vh #fff, -62vh -37vh #fff, -47vh -42vh #fff, -29vh -42vh #fff, -6vh -42vh #fff, -11vh -33vh #fff, -72vh -45vh #fff, -32vh -94vh #fff, -69vh -13vh #fff, -23vh -48vh #fff, -60vh -82vh #fff, -43vh -34vh #fff, -64vh -34vh #fff, -90vh -75vh #fff, -93vh -63vh #fff, -38vh -44vh #fff, -17vh -97vh #fff, -63vh -31vh #fff, -58vh -98vh #fff, -65vh -45vh #fff, -57vh -35vh #fff, -20vh -23vh #fff, -52vh -12vh #fff, -94vh -88vh #fff, -83vh -23vh #fff, -7vh -38vh #fff, -86vh -94vh #fff, -10vh -10vh #fff, -94vh -44vh #fff, -83vh -2vh #fff, -37vh -48vh #fff, -51vh -7vh #fff, -36vh -92vh #fff, -2vh -93vh #fff, -40vh -50vh #fff, -79vh -49vh #fff, -91vh -22vh #fff, -4vh -61vh #fff, -100vh -66vh #fff, -44vh -43vh #fff, -85vh -52vh #fff, -91vh -74vh #fff, -67vh -37vh #fff, -73vh -3vh #fff, -46vh -13vh #fff, -12vh -89vh #fff, -78vh -63vh #fff, -61vh -32vh #fff, -28vh -49vh #fff, -4vh -24vh #fff, -90vh -66vh #fff, -96vh -12vh #fff, -98vh -26vh #fff, -94vh -89vh #fff, -15vh -87vh #fff, -80vh -77vh #fff, -5vh -74vh #fff, -81vh -74vh #fff, -47vh -30vh #fff, -66vh -21vh #fff, -66vh -78vh #fff, -96vh -65vh #fff, -30vh -74vh #fff, -79vh -57vh #fff, -75vh -100vh #fff, -43vh -76vh #fff, -61vh -20vh #fff, -70vh -92vh #fff, -93vh -64vh #fff, -63vh -12vh #fff, -80vh -60vh #fff, -97vh -76vh #fff, -44vh -37vh #fff, -37vh -35vh #fff, -29vh -99vh #fff, -89vh -66vh #fff, -41vh -58vh #fff, -99vh -31vh #fff, -1vh -39vh #fff, -7vh -11vh #fff, -63vh -16vh #fff, -55vh -48vh #fff, -97vh -52vh #fff, -63vh -26vh #fff, -31vh -98vh #fff, -1vh -97vh #fff, -78vh -51vh #fff, -59vh -61vh #fff, -59vh -2vh #fff, -54vh -92vh #fff, -20vh -23vh #fff, -67vh -69vh #fff, -5vh -43vh #fff, -29vh -44vh #fff, -4vh -83vh #fff, -51vh -50vh #fff, -43vh -8vh #fff, -80vh -23vh #fff, -25vh -94vh #fff, -72vh -84vh #fff, -41vh -11vh #fff, -68vh -9vh #fff, -78vh -25vh #fff, -75vh -69vh #fff, -92vh -58vh #fff, -34vh -59vh #fff, -11vh -38vh #fff, -49vh -42vh #fff, -91vh -50vh #fff, -51vh -99vh #fff, -77vh -65vh #fff, -43vh -35vh #fff, -39vh -70vh #fff, -97vh -20vh #fff, -82vh -92vh #fff, -2vh -90vh #fff, -82vh -100vh #fff, -76vh -92vh #fff, -6vh -32vh #fff, -1vh -42vh #fff, -90vh -86vh #fff, -11vh -13vh #fff, -20vh -78vh #fff, -23vh -49vh #fff, -84vh -74vh #fff, -66vh -59vh #fff, -22vh -32vh #fff, -24vh -32vh #fff, -92vh -62vh #fff, -42vh -9vh #fff, -30vh -28vh #fff, -69vh -44vh #fff, -83vh -29vh #fff, -66vh -75vh #fff, -67vh -70vh #fff, -9vh -81vh #fff, -47vh -52vh #fff, -22vh -59vh #fff, -11vh -79vh #fff, -62vh -4vh #fff, -52vh -46vh #fff, -75vh -94vh #fff, -53vh -20vh #fff, -37vh -58vh #fff, -9vh -83vh #fff, -16vh -75vh #fff, -77vh -67vh #fff, -87vh -26vh #fff, -74vh -72vh #fff, -40vh -40vh #fff, -76vh -8vh #fff, -24vh -91vh #fff, -100vh -51vh #fff, -53vh -5vh #fff, -83vh -83vh #fff, -53vh -68vh #fff, -87vh -8vh #fff, -98vh -43vh #fff, -4vh -54vh #fff, -6vh -11vh #fff, -50vh -78vh #fff, -56vh -82vh #fff, -8vh -37vh #fff, -64vh -98vh #fff, -1vh -71vh #fff, -52vh -69vh #fff, -53vh -20vh #fff, -60vh -100vh #fff, -28vh -78vh #fff, -59vh -6vh #fff, -39vh -76vh #fff, -75vh -41vh #fff, -99vh -34vh #fff, -55vh -73vh #fff, -86vh -10vh #fff, -98vh -50vh #fff, -37vh -6vh #fff, -79vh -65vh #fff, -83vh -99vh #fff, -85vh -63vh #fff, -32vh -88vh #fff, -4vh -62vh #fff, -81vh -71vh #fff, -65vh -63vh #fff, -20vh -57vh #fff, -66vh -20vh #fff, -100vh -44vh #fff, -5vh -92vh #fff, -84vh -13vh #fff, -55vh -90vh #fff, -1vh -100vh #fff, -9vh -59vh #fff, -8vh -60vh #fff, -99vh -66vh #fff, -23vh -61vh #fff, -78vh -91vh #fff, -43vh -20vh #fff, -55vh -80vh #fff, -87vh -80vh #fff, -58vh -100vh #fff, -8vh -32vh #fff, -19vh -56vh #fff, -54vh -36vh #fff, -70vh -79vh #fff, -87vh -1vh #fff, -19vh -94vh #fff, -41vh -42vh #fff, -57vh -10vh #fff, -79vh -76vh #fff, -4vh -64vh #fff, -52vh -20vh #fff, -10vh -48vh #fff, -16vh -59vh #fff, -72vh -28vh #fff, -62vh -38vh #fff, -90vh -70vh #fff, -83vh -93vh #fff, -70vh -16vh #fff, -57vh -67vh #fff, -3vh -81vh #fff, -58vh -27vh #fff, -53vh -71vh #fff, -1vh -43vh #fff, -89vh -95vh #fff, -15vh -41vh #fff, -27vh -74vh #fff, -55vh -94vh #fff, -91vh -11vh #fff, -1vh -26vh #fff, -74vh -46vh #fff, -13vh -84vh #fff, -23vh -44vh #fff, -72vh -38vh #fff, -10vh -48vh #fff, -78vh -30vh #fff, -84vh -16vh #fff, -76vh -49vh #fff, -48vh -72vh #fff, -45vh -76vh #fff, -35vh -63vh #fff, -47vh -35vh #fff, -41vh -42vh #fff, -18vh -21vh #fff, -100vh -77vh #fff, -79vh -55vh #fff, -18vh -59vh #fff, -53vh -18vh #fff, -78vh -79vh #fff, -68vh -3vh #fff, -63vh -35vh #fff, -53vh -20vh #fff, -47vh -73vh #fff, -42vh -23vh #fff, -28vh -74vh #fff, -99vh -43vh #fff, -99vh -87vh #fff, -81vh -33vh #fff, -41vh -26vh #fff, -57vh -63vh #fff, -36vh -13vh #fff, -82vh -91vh #fff, -37vh -10vh #fff, -67vh -34vh #fff, -53vh -72vh #fff, -75vh -4vh #fff, -38vh -39vh #fff, -83vh -78vh #fff, -22vh -21vh #fff, -37vh -94vh #fff, -78vh -35vh #fff, -29vh -32vh #fff, -40vh -24vh #fff, -93vh -54vh #fff, -99vh -11vh #fff, -85vh -16vh #fff, -5vh -47vh #fff, -75vh -58vh #fff, -52vh -52vh #fff, -12vh -48vh #fff, -70vh -9vh #fff, -77vh -27vh #fff, -99vh -74vh #fff, -62vh -29vh #fff, -39vh -32vh #fff, -39vh -31vh #fff, -61vh -32vh #fff, -40vh -35vh #fff, -12vh -87vh #fff, -98vh -87vh #fff, -73vh -5vh #fff, -83vh -56vh #fff, -4vh -8vh #fff, -83vh -23vh #fff, -4vh -39vh #fff, -19vh -18vh #fff, -8vh -12vh #fff, -58vh -88vh #fff, -3vh -53vh #fff, -50vh -50vh #fff, -44vh -48vh #fff, -54vh -78vh #fff, -9vh -68vh #fff, -7vh -55vh #fff, -6vh -14vh #fff, -58vh -17vh #fff, -48vh -31vh #fff, -43vh -4vh #fff, -80vh -47vh #fff, -50vh -6vh #fff, -8vh -48vh #fff, -55vh -95vh #fff, -53vh -69vh #fff, -65vh -79vh #fff, -41vh -10vh #fff, -52vh -58vh #fff, -68vh -71vh #fff, -98vh -91vh #fff, -97vh -63vh #fff, -59vh -68vh #fff, -33vh -52vh #fff, -82vh -37vh #fff, -2vh -11vh #fff, -35vh -30vh #fff, -47vh -29vh #fff, -32vh -28vh #fff, -58vh -97vh #fff, -18vh -69vh #fff, -1vh -48vh #fff, -84vh -55vh #fff, -40vh -80vh #fff, -53vh -34vh #fff, -2vh -53vh #fff, -22vh -29vh #fff, -97vh -15vh #fff, -99vh -65vh #fff, -6vh -18vh #fff, -92vh -68vh #fff, -90vh -37vh #fff, -23vh -35vh #fff, -21vh -9vh #fff, -18vh -67vh #fff, -46vh -80vh #fff, -4vh -39vh #fff, -97vh -54vh #fff, -65vh -60vh #fff, -67vh -77vh #fff, -1vh -39vh #fff, -78vh -2vh #fff, -62vh -45vh #fff, -30vh -52vh #fff, -59vh -36vh #fff, -79vh -80vh #fff, -31vh -1vh #fff, -95vh -77vh #fff, -35vh -17vh #fff, -16vh -57vh #fff, -97vh -89vh #fff, -56vh -48vh #fff, -98vh -78vh #fff, -50vh -40vh #fff, -1vh -10vh #fff, -31vh -69vh #fff, -70vh -95vh #fff, -82vh -74vh #fff, -83vh -35vh #fff, -100vh -8vh #fff, -74vh -96vh #fff, -41vh -23vh #fff, -85vh -59vh #fff, -72vh -97vh #fff, -52vh -11vh #fff, -86vh -84vh #fff, -4vh -6vh #fff, -26vh -62vh #fff, -88vh -34vh #fff, -84vh -48vh #fff, -45vh -81vh #fff, -45vh -64vh #fff, -90vh -71vh #fff, -65vh -64vh #fff, -13vh -61vh #fff, -9vh -25vh #fff, -60vh -60vh #fff, -51vh -12vh #fff, -86vh -7vh #fff, -97vh -16vh #fff, -97vh -84vh #fff, -10vh -61vh #fff, -43vh -43vh #fff, -60vh -98vh #fff, -88vh -90vh #fff, -98vh -50vh #fff, -73vh -87vh #fff, -40vh -78vh #fff, -15vh -94vh #fff, 5vh -25vh #fff, 71vh -62vh #fff, 5vh -98vh #fff, 54vh -28vh #fff, 48vh -14vh #fff, 89vh -64vh #fff, 34vh -69vh #fff, 47vh -20vh #fff, 60vh -93vh #fff, 34vh -69vh #fff, 87vh -13vh #fff, 4vh -75vh #fff, 11vh -15vh #fff, 72vh -38vh #fff, 22vh -81vh #fff, 98vh -81vh #fff, 40vh -66vh #fff, 14vh -82vh #fff, 59vh -91vh #fff, 24vh -55vh #fff, 30vh -24vh #fff, 1vh -92vh #fff, 22vh -23vh #fff, 18vh -55vh #fff, 11vh -75vh #fff, 81vh -74vh #fff, 11vh -70vh #fff, 18vh -20vh #fff, 79vh -99vh #fff, 48vh -53vh #fff, 42vh -85vh #fff, 76vh -83vh #fff, 30vh -50vh #fff, 23vh -39vh #fff, 94vh -56vh #fff, 38vh -23vh #fff, 60vh -26vh #fff, 64vh -98vh #fff, 5vh -34vh #fff, 52vh -40vh #fff, 48vh -72vh #fff, 56vh -39vh #fff, 5vh -11vh #fff, 26vh -59vh #fff, 17vh -59vh #fff, 87vh -33vh #fff, 8vh -26vh #fff, 14vh -68vh #fff, 95vh -12vh #fff, 54vh -36vh #fff, 87vh -29vh #fff, 57vh -83vh #fff, 84vh -90vh #fff, 83vh -37vh #fff, 36vh -41vh #fff, 72vh -35vh #fff, 86vh -63vh #fff, 33vh -8vh #fff, 54vh -70vh #fff, 45vh -80vh #fff, 43vh -40vh #fff, 15vh -37vh #fff, 35vh -65vh #fff, 94vh -46vh #fff, 50vh -88vh #fff, 12vh -87vh #fff, 94vh -61vh #fff, 7vh -28vh #fff, 53vh -14vh #fff, 77vh -27vh #fff, 74vh -40vh #fff, 66vh -36vh #fff, 78vh -74vh #fff, 61vh -26vh #fff, 81vh -86vh #fff, 55vh -71vh #fff, 74vh -47vh #fff, 57vh -64vh #fff, 100vh -61vh #fff, 12vh -49vh #fff, 4vh -81vh #fff, 68vh -61vh #fff, 25vh -24vh #fff, 11vh -85vh #fff, 3vh -23vh #fff, 67vh -66vh #fff, 39vh -5vh #fff, 100vh -54vh #fff, 44vh -57vh #fff, 29vh -74vh #fff, 31vh -30vh #fff, 99vh -64vh #fff, 89vh -86vh #fff, 69vh -29vh #fff, 86vh -95vh #fff, 59vh -59vh #fff, 39vh -16vh #fff, 6vh -54vh #fff, 30vh -56vh #fff, 93vh -89vh #fff, 57vh -24vh #fff, 31vh -95vh #fff, 62vh -99vh #fff, 62vh -60vh #fff, 96vh -41vh #fff, 87vh -66vh #fff, 79vh -90vh #fff, 65vh -19vh #fff, 78vh -46vh #fff, 33vh -72vh #fff, 23vh -31vh #fff, 77vh -58vh #fff, 45vh -25vh #fff, 49vh -29vh #fff, 16vh -64vh #fff, 4vh -79vh #fff, 24vh -28vh #fff, 41vh -73vh #fff, 32vh -60vh #fff, 95vh -96vh #fff, 86vh -69vh #fff, 99vh -90vh #fff, 79vh -71vh #fff, 95vh -33vh #fff, 12vh -17vh #fff, 47vh -80vh #fff, 78vh -45vh #fff, 39vh -67vh #fff, 86vh -98vh #fff, 43vh -3vh #fff, 8vh -58vh #fff, 74vh -50vh #fff, 57vh -94vh #fff, 54vh -44vh #fff, 19vh -9vh #fff, 11vh -10vh #fff, 13vh -14vh #fff, 58vh -35vh #fff, 17vh -60vh #fff, 56vh -76vh #fff, 39vh -87vh #fff, 87vh -16vh #fff, 28vh -55vh #fff, 20vh -7vh #fff, 58vh -24vh #fff, 74vh -73vh #fff, 94vh -38vh #fff, 65vh -68vh #fff, 95vh -19vh #fff, 40vh -19vh #fff, 94vh -43vh #fff, 74vh -53vh #fff, 52vh -26vh #fff, 69vh -58vh #fff, 27vh -46vh #fff, 11vh -20vh #fff, 6vh -85vh #fff, 68vh -32vh #fff, 2vh -4vh #fff, 73vh -92vh #fff, 14vh -37vh #fff, 79vh -70vh #fff, 68vh -36vh #fff, 24vh -63vh #fff, 82vh -83vh #fff, 13vh -12vh #fff, 37vh -79vh #fff, 9vh -74vh #fff, 78vh -24vh #fff, 69vh -82vh #fff, 16vh -2vh #fff, 52vh -96vh #fff, 79vh -69vh #fff, 65vh -76vh #fff, 66vh -45vh #fff, 97vh -84vh #fff, 12vh -73vh #fff, 52vh -72vh #fff, 15vh -44vh #fff, 16vh -12vh #fff, 99vh -72vh #fff, 78vh -37vh #fff, 74vh -5vh #fff, 6vh -36vh #fff, 65vh -25vh #fff, 54vh -10vh #fff, 24vh -72vh #fff, 10vh -95vh #fff, 69vh -7vh #fff, 16vh -48vh #fff, 40vh -55vh #fff, 84vh -40vh #fff, 54vh -74vh #fff, 42vh -63vh #fff, 45vh -87vh #fff, 4vh -69vh #fff, 52vh -6vh #fff, 72vh -76vh #fff, 37vh -79vh #fff, 29vh -19vh #fff, 32vh -58vh #fff, 67vh -66vh #fff, 89vh -44vh #fff, 13vh -28vh #fff, 52vh -6vh #fff, 5vh -58vh #fff, 5vh -64vh #fff, 34vh -26vh #fff, 33vh -100vh #fff, 52vh -43vh #fff, 32vh -94vh #fff, 81vh -11vh #fff, 42vh -60vh #fff, 91vh -31vh #fff, 53vh -36vh #fff, 21vh -85vh #fff, 88vh -81vh #fff, 82vh -26vh #fff, 42vh -57vh #fff, 21vh -41vh #fff, 89vh -10vh #fff, 71vh -55vh #fff, 92vh -40vh #fff, 56vh -15vh #fff, 87vh -40vh #fff, 88vh -20vh #fff, 66vh -17vh #fff, 29vh -44vh #fff, 42vh -66vh #fff, 19vh -46vh #fff, 13vh -98vh #fff, 21vh -4vh #fff, 1vh -69vh #fff, 99vh -30vh #fff, 66vh -83vh #fff, 64vh -41vh #fff, 98vh -21vh #fff, 82vh -77vh #fff, 51vh -99vh #fff, 19vh -47vh #fff, 48vh -94vh #fff, 48vh -64vh #fff, 20vh -53vh #fff, 16vh -24vh #fff, 100vh -84vh #fff, 52vh -83vh #fff, 27vh -11vh #fff, 48vh -88vh #fff, 23vh -10vh #fff, 55vh -6vh #fff, 92vh -12vh #fff, 58vh -92vh #fff, 16vh -34vh #fff, 56vh -63vh #fff, 35vh -44vh #fff, 13vh -70vh #fff, 21vh -14vh #fff, 86vh -33vh #fff, 11vh -91vh #fff, 9vh -35vh #fff, 28vh -79vh #fff, 95vh -35vh #fff, 12vh -19vh #fff, 44vh -37vh #fff, 97vh -61vh #fff, 5vh -55vh #fff, 69vh -92vh #fff, 98vh -90vh #fff, 46vh -19vh #fff, 88vh -19vh #fff, 79vh -5vh #fff, 49vh -43vh #fff, 59vh -90vh #fff, 84vh -26vh #fff, 72vh -96vh #fff, 15vh -73vh #fff, 84vh -10vh #fff, 72vh -65vh #fff, 4vh -80vh #fff, 48vh -21vh #fff, 45vh -21vh #fff, 25vh -74vh #fff, 53vh -53vh #fff, 24vh -48vh #fff, 97vh -68vh #fff, 22vh -20vh #fff, 68vh -85vh #fff, 97vh -94vh #fff, 35vh -53vh #fff, 89vh -67vh #fff, 35vh -23vh #fff, 51vh -14vh #fff, 66vh -28vh #fff, 34vh -33vh #fff, 89vh -1vh #fff, 79vh -30vh #fff, 91vh -51vh #fff, 63vh -34vh #fff, 22vh -53vh #fff, 18vh -19vh #fff, 94vh -51vh #fff, 5vh -3vh #fff, 77vh -15vh #fff, 62vh -32vh #fff, 28vh -69vh #fff, 12vh -41vh #fff, 95vh -4vh #fff, 32vh -31vh #fff, 92vh -65vh #fff, 77vh -40vh #fff, 67vh -81vh #fff, 64vh -7vh #fff, 43vh -36vh #fff, 47vh -38vh #fff, 72vh -15vh #fff, 42vh -31vh #fff, 69vh -69vh #fff, 55vh -47vh #fff, 93vh -97vh #fff, 42vh -27vh #fff, 97vh -78vh #fff, 75vh -99vh #fff, 67vh -75vh #fff, 62vh -41vh #fff, 24vh -26vh #fff, 59vh -47vh #fff, 7vh -68vh #fff, 48vh -2vh #fff, 6vh -48vh #fff, 75vh -66vh #fff, 52vh -66vh #fff, 18vh -32vh #fff, 25vh -57vh #fff, 56vh -100vh #fff, 86vh -67vh #fff, 40vh -75vh #fff, 22vh -9vh #fff, 62vh -4vh #fff, 49vh -18vh #fff, 23vh -95vh #fff, 13vh -88vh #fff, 44vh -52vh #fff, 78vh -8vh #fff, 51vh -55vh #fff, 10vh -64vh #fff, 88vh -100vh #fff, 31vh -100vh #fff, 6vh -59vh #fff, 59vh -30vh #fff, 46vh -44vh #fff, 92vh -68vh #fff, 17vh -88vh #fff, 77vh -73vh #fff, 23vh -72vh #fff, 7vh -18vh #fff, 4vh -7vh #fff, 57vh -99vh #fff, 64vh -57vh #fff, 85vh -81vh #fff, 99vh -47vh #fff, 55vh -24vh #fff, 50vh -33vh #fff, 71vh -85vh #fff, 45vh -12vh #fff, 21vh -84vh #fff, 18vh -45vh #fff, 31vh -68vh #fff, 66vh -69vh #fff, 28vh -60vh #fff, 83vh -26vh #fff, 22vh -11vh #fff, 7vh -94vh #fff, 58vh -62vh #fff, 93vh -84vh #fff, 97vh -46vh #fff, 43vh -10vh #fff, 90vh -62vh #fff, 75vh -15vh #fff, 71vh -54vh #fff, 24vh -15vh #fff, 63vh -100vh #fff, 24vh -46vh #fff, 67vh -40vh #fff, 100vh -29vh #fff, 85vh -88vh #fff, 31vh -53vh #fff, 46vh -46vh #fff, 58vh -1vh #fff, 98vh -3vh #fff, 90vh -68vh #fff, 67vh -15vh #fff, 27vh -60vh #fff, 35vh -19vh #fff, 15vh -2vh #fff, 56vh -63vh #fff, 11vh -11vh #fff, 8vh -69vh #fff, 24vh -88vh #fff, 79vh -59vh #fff, 13vh -70vh #fff, -47vh 99vh #fff, -8vh 98vh #fff, -44vh 3vh #fff, -20vh 25vh #fff, -95vh 42vh #fff, -45vh 92vh #fff, -95vh 24vh #fff, -11vh 70vh #fff, -40vh 97vh #fff, -86vh 23vh #fff, -68vh 68vh #fff, -79vh 8vh #fff, -39vh 21vh #fff, -68vh 69vh #fff, -81vh 87vh #fff, -36vh 23vh #fff, -14vh 7vh #fff, -52vh 54vh #fff, -82vh 2vh #fff, -56vh 13vh #fff, -25vh 14vh #fff, -96vh 9vh #fff, -70vh 19vh #fff, -36vh 40vh #fff, -31vh 17vh #fff, -70vh 63vh #fff, -67vh 1vh #fff, -30vh 3vh #fff, -91vh 86vh #fff, -46vh 50vh #fff, -4vh 31vh #fff, -42vh 81vh #fff, -78vh 18vh #fff, -61vh 5vh #fff, -51vh 32vh #fff, -61vh 59vh #fff, -3vh 59vh #fff, -11vh 10vh #fff, -90vh 71vh #fff, -93vh 27vh #fff, -92vh 1vh #fff, -52vh 42vh #fff, -89vh 92vh #fff, -20vh 91vh #fff, -92vh 27vh #fff, -73vh 93vh #fff, -22vh 89vh #fff, -63vh 59vh #fff, -51vh 60vh #fff, -88vh 98vh #fff, -34vh 57vh #fff, -63vh 90vh #ff7, -73vh 81vh #fff, -12vh 57vh #fff, -67vh 21vh #fff, -16vh 36vh #fff, -8vh 78vh #fff, -74vh 34vh #fff, -33vh 91vh #fff, -56vh 64vh #fff, -4vh 81vh #fff, -69vh 73vh #fff, -49vh 4vh #fff, -81vh 60vh #fff, -45vh 84vh #fff, -43vh 25vh #fff, -69vh 8vh #fff, -28vh 24vh #fff, -90vh 37vh #fff, -83vh 49vh #fff, -78vh 98vh #fff, -99vh 83vh #fff, -54vh 40vh #fff, -5vh 3vh #fff, -83vh 76vh #fff, -5vh 79vh #fff, -66vh 43vh #fff, -16vh 43vh #fff, -1vh 62vh #fff, -20vh 59vh #fff, -51vh 37vh #fff, -77vh 61vh #fff, -20vh 32vh #fff, -43vh 5vh #fff, -91vh 42vh #fff, -81vh 34vh #fff, -72vh 7vh #fff, -89vh 9vh #fff, -62vh 63vh #fff, -62vh 67vh #fff, -100vh 79vh #fff, -10vh 46vh #fff, -25vh 61vh #fff, -71vh 41vh #fff, -91vh 35vh #fff, -31vh 1vh #fff, -59vh 99vh #fff, -1vh 35vh #fff, -16vh 50vh #fff, -9vh 50vh #fff, -24vh 3vh #fff, -83vh 78vh #fff, -83vh 29vh #fff, -97vh 29vh #fff, -21vh 3vh #fff, -56vh 49vh #fff, -39vh 76vh #fff, -21vh 30vh #fff, -66vh 72vh #fff, -75vh 8vh #fff, -63vh 35vh #fff, -15vh 77vh #fff, -100vh 70vh #fff, -73vh 1vh #fff, -100vh 71vh #fff, -85vh 44vh #fff, -93vh 17vh #fff, -64vh 62vh #fff, -89vh 48vh #fff, -38vh 40vh #fff, -45vh 2vh #fff, -86vh 23vh #fff, -50vh 15vh #fff, -79vh 16vh #fff, -80vh 33vh #fff, -34vh 67vh #fff, -46vh 79vh #fff, -27vh 81vh #fff, -43vh 96vh #fff, -81vh 11vh #fff, -47vh 53vh #fff, -62vh 84vh #fff, -3vh 75vh #fff, -12vh 66vh #fff, -31vh 88vh #fff, -82vh 9vh #fff, -78vh 31vh #fff, -74vh 50vh #fff, -78vh 86vh #fff, -57vh 25vh #fff, -37vh 96vh #fff, -77vh 50vh #fff, -97vh 35vh #fff, -29vh 90vh #fff, -19vh 46vh #fff, -38vh 39vh #fff, -55vh 13vh #fff, -87vh 46vh #fff, -85vh 40vh #fff, -19vh 93vh #fff, -21vh 65vh #fff, -48vh 44vh #fff, -49vh 93vh #fff, -82vh 70vh #fff, -87vh 20vh #fff, -21vh 80vh #fff, -54vh 54vh #fff, -61vh 15vh #fff, -8vh 39vh #fff, -3vh 84vh #fff, -33vh 70vh #fff, -45vh 50vh #fff, -53vh 25vh #fff, -39vh 41vh #fff, -23vh 88vh #fff, -58vh 7vh #fff, -30vh 55vh #fff, -56vh 36vh #fff, -39vh 74vh #fff, -84vh 57vh #fff, -32vh 50vh #fff, -29vh 61vh #fff, -58vh 44vh #fff, -26vh 58vh #fff, -82vh 49vh #fff, -65vh 22vh #fff, -51vh 74vh #fff, -70vh 33vh #fff, -31vh 66vh #fff, -86vh 36vh #fff, -2vh 49vh #fff, -48vh 6vh #fff, -47vh 17vh #fff, -47vh 20vh #fff, -80vh 71vh #fff, -23vh 59vh #fff, -77vh 86vh #fff, -96vh 97vh #fff, -35vh 9vh #fff, -54vh 19vh #fff, -9vh 50vh #fff, -25vh 67vh #fff, -56vh 44vh #fff, -92vh 7vh #fff, -22vh 7vh #fff, -18vh 11vh #fff, -54vh 68vh #fff, -16vh 64vh #fff, -43vh 76vh #fff, -27vh 70vh #fff, -25vh 89vh #fff, -45vh 33vh #fff, -29vh 40vh #fff, -76vh 40vh #fff, -79vh 91vh #fff, -6vh 67vh #fff, -100vh 1vh #fff, -52vh 34vh #fff, -56vh 76vh #fff, -83vh 53vh #fff, -31vh 79vh #fff, -39vh 66vh #fff, -87vh 55vh #fff, -86vh 15vh #fff, -22vh 33vh #fff, -10vh 79vh #fff, -28vh 66vh #fff, -81vh 20vh #fff, -40vh 75vh #fff, -95vh 84vh #fff, -54vh 14vh #fff, -94vh 3vh #fff, -28vh 37vh #fff, -90vh 70vh #fff, -19vh 47vh #fff, -6vh 44vh #fff, -8vh 14vh #fff, -66vh 6vh #fff, -24vh 35vh #fff, -2vh 97vh #fff, -27vh 61vh #fff, -17vh 19vh #fff, -11vh 54vh #fff, -73vh 60vh #fff, -29vh 76vh #fff, -53vh 69vh #fff, -13vh 69vh #fff, -15vh 94vh #fff, -94vh 18vh #fff, -10vh 100vh #fff, -5vh 100vh #fff, -45vh 28vh #fff, -48vh 83vh #fff, -62vh 93vh #fff, -14vh 64vh #fff, -54vh 59vh #fff, -49vh 47vh #fff, -22vh 58vh #fff, -85vh 35vh #fff, -7vh 46vh #fff, -35vh 12vh #fff, -17vh 85vh #fff, -15vh 2vh #fff, -32vh 75vh #fff, -4vh 16vh #fff, -2vh 64vh #fff, -25vh 41vh #fff, -75vh 99vh #fff, -91vh 29vh #fff, -86vh 98vh #fff, -60vh 5vh #fff, -33vh 26vh #fff, -31vh 87vh #fff, -77vh 48vh #fff, -21vh 1vh #fff, -83vh 98vh #fff, -76vh 40vh #fff, -14vh 18vh #fff, -28vh 50vh #fff, -45vh 42vh #fff, -73vh 38vh #fff, -74vh 16vh #fff, -27vh 24vh #fff, -7vh 39vh #fff, -98vh 50vh #fff, -59vh 23vh #fff, -3vh 65vh #fff, -12vh 63vh #fff, -2vh 82vh #fff, -70vh 88vh #fff, -85vh 22vh #fff, -74vh 51vh #fff, -87vh 87vh #fff, -51vh 93vh #fff, -34vh 22vh #fff, -72vh 16vh #fff, -47vh 19vh #fff, -81vh 44vh #fff, -93vh 15vh #fff, -63vh 24vh #fff, -70vh 83vh #fff, -85vh 83vh #fff, -19vh 51vh #fff, -88vh 41vh #fff, -23vh 7vh #fff, -35vh 1vh #fff, -23vh 31vh #fff, -44vh 41vh #fff, -11vh 17vh #fff, -14vh 12vh #fff, -91vh 80vh #fff, -70vh 57vh #fff, -24vh 35vh #fff, -26vh 18vh #fff, -4vh 1vh #fff, -52vh 80vh #fff, -57vh 20vh #fff, -89vh 66vh #fff, -11vh 8vh #fff, -80vh 7vh #fff, -59vh 87vh #fff, -53vh 19vh #fff, -77vh 77vh #fff, -97vh 99vh #fff, -85vh 47vh #fff, -99vh 27vh #fff, -1vh 38vh #fff, -49vh 97vh #fff, -50vh 77vh #fff, -14vh 63vh #fff, -12vh 59vh #fff, -87vh 83vh #fff, -57vh 44vh #fff, -61vh 50vh #fff, -91vh 58vh #fff, -74vh 35vh #fff, -82vh 9vh #fff, -11vh 79vh #fff, -7vh 73vh #fff, -86vh 92vh #fff, -9vh 69vh #fff, -32vh 93vh #fff, -9vh 84vh #fff, -8vh 64vh #fff, -78vh 20vh #fff, -3vh 77vh #fff, -100vh 62vh #fff, -5vh 79vh #fff, -82vh 24vh #fff, -52vh 60vh #fff, -54vh 77vh #fff, -97vh 40vh #fff, -63vh 42vh #fff, -15vh 43vh #fff, -26vh 59vh #fff, -80vh 29vh #fff, -49vh 79vh #fff, -24vh 62vh #fff, -79vh 1vh #fff, -58vh 39vh #fff, -47vh 53vh #fff, -39vh 98vh #fff, -79vh 1vh #fff, -6vh 68vh #fff, -71vh 92vh #fff, -35vh 1vh #fff, -73vh 24vh #fff, -41vh 56vh #fff, -84vh 50vh #fff, -31vh 43vh #fff, -28vh 64vh #fff, -51vh 49vh #fff, -100vh 92vh #fff, -56vh 21vh #fff, -75vh 59vh #fff, -30vh 31vh #fff, -29vh 85vh #fff, -43vh 59vh #fff, -52vh 72vh #fff, -24vh 18vh #fff, -81vh 21vh #fff, -45vh 67vh #fff, -68vh 44vh #fff, -75vh 60vh #fff, -74vh 67vh #fff, -68vh 97vh #fff, -94vh 2vh #fff, -24vh 8vh #fff, -99vh 96vh #fff, -85vh 43vh #fff, -95vh 14vh #fff, -11vh 29vh #fff, -19vh 25vh #fff, -97vh 63vh #fff, -55vh 29vh #fff, -4vh 71vh #fff, -90vh 8vh #fff, -53vh 20vh #fff, -93vh 97vh #fff, -32vh 2vh #fff, -46vh 44vh #fff, -73vh 27vh #fff, -39vh 84vh #fff, -96vh 94vh #fff, -71vh 89vh #fff, -23vh 68vh #fff, -37vh 59vh #fff, -12vh 31vh #fff, -18vh 27vh #fff, -46vh 67vh #fff;
+    }
+
+    #stars2 {
+        box-shadow: 30vh 57vh #fff, 30vh 17vh #fff, 95vh 25vh #fff, 38vh 90vh #fff, 99vh 92vh #fff, 6vh 83vh #fff, 99vh 79vh #fff, 43vh 53vh #fff, 20vh 67vh #fff, 55vh 70vh #fff, 11vh 44vh #fff, 66vh 52vh #fff, 75vh 62vh #fff, 60vh 77vh #fff, 7vh 94vh #fff, 4vh 77vh #fff, 91vh 42vh #fff, 48vh 68vh #fff, 56vh 21vh #fff, 65vh 64vh #fff, 18vh 13vh #fff, 18vh 57vh #fff, 42vh 30vh #fff, 72vh 78vh #fff, 34vh 63vh #fff, 99vh 42vh #fff, 42vh 41vh #fff, 74vh 88vh #fff, 31vh 9vh #fff, 19vh 10vh #fff, 73vh 44vh #fff, 87vh 22vh #fff, 52vh 34vh #fff, 49vh 33vh #fff, 66vh 81vh #fff, 47vh 80vh #fff, 100vh 28vh #fff, 49vh 56vh #fff, 40vh 69vh #fff, 43vh 48vh #fff, 36vh 46vh #fff, 30vh 13vh #fff, 2vh 17vh #fff, 24vh 78vh #fff, 3vh 26vh #fff, 11vh 15vh #fff, 4vh 91vh #fff, 86vh 38vh #fff, 58vh 39vh #fff, 54vh 8vh #fff, 25vh 84vh #fff, 56vh 57vh #fff, 74vh 44vh #fff, 68vh 40vh #fff, 97vh 45vh #fff, 64vh 67vh #fff, 28vh 76vh #fff, 21vh 10vh #fff, 35vh 40vh #fff, 65vh 10vh #fff, 48vh 49vh #fff, 35vh 68vh #fff, 3vh 4vh #fff, 20vh 21vh #fff, 18vh 54vh #fff, 17vh 65vh #fff, 17vh 42vh #fff, 92vh 43vh #fff, 74vh 52vh #fff, 7vh 26vh #fff, 52vh 27vh #fff, 17vh 41vh #fff, 46vh 74vh #fff, 59vh 68vh #fff, 25vh 24vh #fff, 82vh 82vh #fff, 76vh 37vh #fff, 36vh 25vh #fff, 12vh 73vh #fff, 16vh 88vh #fff, 81vh 98vh #fff, 10vh 77vh #fff, 46vh 31vh #fff, 100vh 95vh #fff, 51vh 82vh #fff, 25vh 63vh #fff, 83vh 24vh #fff, 77vh 52vh #fff, 82vh 87vh #fff, 83vh 34vh #fff, 45vh 50vh #fff, 98vh 100vh #fff, 46vh 17vh #fff, 67vh 7vh #fff, 11vh 17vh #fff, 19vh 26vh #fff, 69vh 30vh #fff, 41vh 89vh #fff, 27vh 83vh #fff, 91vh 98vh #fff, 77vh 13vh #fff, 78vh 60vh #fff, 24vh 9vh #fff, 89vh 32vh #fff, 35vh 83vh #fff, 84vh 37vh #fff, 76vh 1vh #fff, 75vh 71vh #fff, 94vh 54vh #fff, 78vh 62vh #fff, 77vh 60vh #fff, 91vh 85vh #fff, 69vh 43vh #fff, 72vh 33vh #fff, 38vh 20vh #fff, 76vh 81vh #fff, 62vh 4vh #fff, 21vh 67vh #fff, 73vh 94vh #fff, 14vh 77vh #fff, 57vh 21vh #fff, 96vh 21vh #fff, 88vh 96vh #fff, 80vh 44vh #fff, 17vh 76vh #fff, 46vh 28vh #fff, 33vh 6vh #fff, 84vh 59vh #fff, 29vh 24vh #fff, 88vh 22vh #fff, 100vh 62vh #fff, 74vh 85vh #fff, 43vh 95vh #fff, 37vh 82vh #fff, 67vh 43vh #fff, 41vh 87vh #fff, 26vh 69vh #fff, 90vh 64vh #fff, 64vh 94vh #fff, 28vh 91vh #fff, 66vh 72vh #fff, 9vh 78vh #fff, 94vh 18vh #fff, 33vh 61vh #fff, 9vh 30vh #fff, 80vh 32vh #fff, 92vh 44vh #fff, 23vh 16vh #fff, 81vh 50vh #fff, 11vh 78vh #fff, 44vh 82vh #fff, 61vh 26vh #fff, 33vh 13vh #fff, 4vh 22vh #fff, 54vh 63vh #fff, 96vh 60vh #fff, 3vh 73vh #fff, 1vh 4vh #fff, 80vh 66vh #fff, 58vh 11vh #fff, 90vh 37vh #fff, 88vh 68vh #fff, 95vh 50vh #fff, 100vh 58vh #fff, 4vh 26vh #fff, 48vh 86vh #fff, 98vh 59vh #fff, 33vh 26vh #fff, 28vh 19vh #fff, 75vh 16vh #fff, 21vh 88vh #fff, 34vh 80vh #fff, 68vh 77vh #fff, 84vh 95vh #fff, 28vh 40vh #fff, 49vh 2vh #fff, 55vh 17vh #fff, 95vh 34vh #fff, 63vh 24vh #fff, 65vh 81vh #fff, 80vh 41vh #fff, 27vh 16vh #fff, 60vh 18vh #fff, 37vh 79vh #fff, 21vh 20vh #fff, 23vh 65vh #fff, 47vh 58vh #fff, 39vh 55vh #fff, 45vh 30vh #fff, 12vh 97vh #fff, 47vh 5vh #fff, 78vh 28vh #fff, 100vh 69vh #fff, 26vh 49vh #fff, 10vh 21vh #fff, 84vh 22vh #fff, 88vh 52vh #fff, 40vh 58vh #fff, 64vh 69vh #fff, 70vh 58vh #fff, -23vh -44vh #fff, -9vh -4vh #fff, -41vh -10vh #fff, -86vh -52vh #fff, -78vh -61vh #fff, -32vh -86vh #fff, -28vh -10vh #fff, -42vh -28vh #fff, -35vh -29vh #fff, -99vh -49vh #fff, -38vh -40vh #fff, -12vh -62vh #fff, -44vh -48vh #fff, -98vh -23vh #fff, -70vh -71vh #fff, -91vh -16vh #fff, -34vh -5vh #fff, -95vh -99vh #fff, -72vh -100vh #fff, -36vh -13vh #fff, -96vh -66vh #fff, -65vh -88vh #fff, -92vh -93vh #fff, -77vh -23vh #fff, -79vh -74vh #fff, -87vh -57vh #fff, -21vh -28vh #fff, -23vh -97vh #fff, -50vh -53vh #fff, -86vh -34vh #fff, -14vh -14vh #fff, -46vh -19vh #fff, -82vh -43vh #fff, -79vh -47vh #fff, -12vh -96vh #fff, -30vh -35vh #fff, -89vh -37vh #fff, -35vh -68vh #fff, -13vh -44vh #fff, -2vh -20vh #fff, -41vh -52vh #fff, -32vh -13vh #fff, -92vh -19vh #fff, -46vh -70vh #fff, -83vh -56vh #fff, -9vh -37vh #fff, -63vh -48vh #fff, -87vh -66vh #fff, -22vh -64vh #fff, -89vh -87vh #fff, -21vh -77vh #fff, -3vh -52vh #fff, -72vh -9vh #fff, -65vh -7vh #fff, -50vh -87vh #fff, -10vh -63vh #fff, -13vh -94vh #fff, -21vh -66vh #fff, -42vh -88vh #fff, -10vh -84vh #fff, -89vh -8vh #fff, -90vh -72vh #fff, -99vh -44vh #fff, -30vh -30vh #fff, -32vh -68vh #fff, -62vh -27vh #fff, -19vh -67vh #fff, -14vh -93vh #fff, -33vh -41vh #fff, -72vh -56vh #fff, -8vh -51vh #fff, -64vh -68vh #fff, -62vh -95vh #fff, -46vh -62vh #fff, -61vh -3vh #fff, -79vh -28vh #fff, -79vh -50vh #fff, -29vh -96vh #fff, -50vh -99vh #fff, -61vh -53vh #fff, -52vh -99vh #fff, -61vh -40vh #fff, -16vh -78vh #fff, -42vh -100vh #fff, -74vh -66vh #fff, -85vh -34vh #fff, -72vh -59vh #fff, -31vh -26vh #fff, -31vh -95vh #fff, -11vh -70vh #fff, -34vh -51vh #fff, -48vh -17vh #fff, -33vh -13vh #fff, -51vh -80vh #fff, -7vh -42vh #fff, -76vh -55vh #fff, -51vh -22vh #fff, -5vh -6vh #fff, -67vh -95vh #fff, -41vh -37vh #fff, -60vh -23vh #fff, -51vh -37vh #fff, -76vh -21vh #fff, -14vh -83vh #fff, -50vh -48vh #fff, -94vh -39vh #fff, -13vh -41vh #fff, -14vh -23vh #fff, -62vh -98vh #fff, -90vh -22vh #fff, -52vh -95vh #fff, -13vh -39vh #fff, -13vh -77vh #fff, -57vh -41vh #fff, -22vh -21vh #fff, -19vh -42vh #fff, -96vh -24vh #fff, -98vh -78vh #fff, -4vh -100vh #fff, -94vh -33vh #fff, -88vh -49vh #fff, -6vh -92vh #fff, -5vh -39vh #fff, -14vh -34vh #fff, -59vh -78vh #fff, -85vh -78vh #fff, -78vh -90vh #fff, -90vh -61vh #fff, -4vh -11vh #fff, -12vh -20vh #fff, -83vh -19vh #fff, -89vh -29vh #fff, -7vh -24vh #fff, -77vh -85vh #fff, -30vh -17vh #fff, -63vh -99vh #fff, -57vh -40vh #fff, -80vh -31vh #fff, -8vh -31vh #fff, -93vh -47vh #fff, -44vh -42vh #fff, -11vh -38vh #fff, -56vh -83vh #fff, -22vh -30vh #fff, -68vh -47vh #fff, -34vh -87vh #fff, -97vh -14vh #fff, -37vh -53vh #fff, -81vh -62vh #fff, -10vh -38vh #fff, -52vh -27vh #fff, -82vh -72vh #fff, -39vh -45vh #fff, -61vh -87vh #fff, -47vh -58vh #fff, -87vh -99vh #fff, -10vh -38vh #fff, -39vh -80vh #fff, -96vh -80vh #fff, -69vh -27vh #fff, -52vh -83vh #fff, -84vh -32vh #fff, -66vh -62vh #fff, -95vh -65vh #fff, -23vh -15vh #fff, -25vh -92vh #fff, -13vh -34vh #fff, -51vh -91vh #fff, -69vh -53vh #fff, -1vh -56vh #fff, -4vh -19vh #fff, -36vh -8vh #fff, -17vh -81vh #fff, -38vh -29vh #fff, -68vh -76vh #fff, -21vh -45vh #fff, -30vh -82vh #fff, -82vh -52vh #fff, -31vh -52vh #fff, -38vh -26vh #fff, -63vh -36vh #fff, -70vh -12vh #fff, -11vh -95vh #fff, -36vh -85vh #fff, -36vh -32vh #fff, -33vh -69vh #fff, -84vh -76vh #fff, -99vh -81vh #fff, -58vh -57vh #fff, -20vh -14vh #fff, -84vh -98vh #fff, -70vh -20vh #fff, -73vh -41vh #fff, -51vh -93vh #fff, -78vh -99vh #fff, -80vh -77vh #fff, -7vh -76vh #fff, -85vh -79vh #fff, -39vh -25vh #fff, -69vh -62vh #fff, 77vh -17vh #fff, 13vh -5vh #fff, 61vh -14vh #fff, 81vh -23vh #fff, 66vh -2vh #fff, 97vh -43vh #fff, 9vh -34vh #fff, 52vh -94vh #fff, 57vh -58vh #fff, 53vh -45vh #fff, 77vh -82vh #fff, 88vh -6vh #fff, 43vh -18vh #fff, 36vh -15vh #fff, 18vh -4vh #fff, 46vh -80vh #fff, 69vh -100vh #fff, 53vh -52vh #fff, 46vh -59vh #fff, 40vh -52vh #fff, 81vh -20vh #fff, 99vh -50vh #fff, 36vh -30vh #fff, 47vh -16vh #fff, 3vh -91vh #fff, 69vh -39vh #fff, 7vh -88vh #fff, 26vh -4vh #fff, 9vh -40vh #fff, 48vh -15vh #fff, 20vh -24vh #fff, 64vh -52vh #fff, 7vh -10vh #fff, 51vh -97vh #fff, 3vh -84vh #fff, 74vh -26vh #fff, 89vh -64vh #fff, 76vh -94vh #fff, 73vh -40vh #fff, 47vh -27vh #fff, 34vh -62vh #fff, 93vh -79vh #fff, 89vh -22vh #fff, 37vh -17vh #fff, 44vh -59vh #fff, 49vh -10vh #fff, 84vh -63vh #fff, 36vh -82vh #fff, 72vh -9vh #fff, 67vh -42vh #fff, 8vh -45vh #fff, 60vh -55vh #fff, 37vh -24vh #fff, 34vh -76vh #fff, 21vh -36vh #fff, 82vh -27vh #fff, 62vh -56vh #fff, 85vh -32vh #fff, 1vh -42vh #fff, 90vh -52vh #fff, 38vh -43vh #fff, 47vh -84vh #fff, 36vh -36vh #fff, 28vh -74vh #fff, 72vh -11vh #fff, 24vh -80vh #fff, 15vh -24vh #fff, 89vh -12vh #fff, 36vh -50vh #fff, 90vh -97vh #fff, 2vh -40vh #fff, 6vh -65vh #fff, 55vh -41vh #fff, 100vh -73vh #fff, 96vh -76vh #fff, 4vh -88vh #fff, 94vh -10vh #fff, 14vh -24vh #fff, 63vh -35vh #fff, 88vh -74vh #fff, 24vh -66vh #fff, 94vh -38vh #fff, 4vh -95vh #fff, 14vh -17vh #fff, 38vh -96vh #fff, 14vh -23vh #fff, 88vh -30vh #fff, 31vh -46vh #fff, 23vh -85vh #fff, 43vh -70vh #fff, 31vh -8vh #fff, 78vh -78vh #fff, 51vh -85vh #fff, 81vh -10vh #fff, 58vh -3vh #fff, 45vh -86vh #fff, 41vh -79vh #fff, 33vh -32vh #fff, 92vh -68vh #fff, 60vh -18vh #fff, 58vh -97vh #fff, 89vh -29vh #fff, 16vh -16vh #fff, 21vh -51vh #fff, 7vh -67vh #fff, 66vh -45vh #fff, 46vh -46vh #fff, 42vh -77vh #fff, 26vh -41vh #fff, 22vh -80vh #fff, 65vh -86vh #fff, 7vh -34vh #fff, 78vh -1vh #fff, 63vh -29vh #fff, 99vh -93vh #fff, 3vh -55vh #fff, 37vh -63vh #fff, 62vh -14vh #fff, 36vh -85vh #fff, 57vh -86vh #fff, 39vh -41vh #fff, 67vh -14vh #fff, 65vh -78vh #fff, 55vh -41vh #fff, 52vh -44vh #fff, 34vh -50vh #fff, 42vh -9vh #fff, 70vh -33vh #fff, 67vh -51vh #fff, 28vh -57vh #fff, 64vh -47vh #fff, 58vh -40vh #fff, 71vh -28vh #fff, 69vh -96vh #fff, 10vh -52vh #fff, 29vh -10vh #fff, 9vh -100vh #fff, 58vh -88vh #fff, 35vh -23vh #fff, 74vh -74vh #fff, 78vh -53vh #fff, 10vh -29vh #fff, 84vh -97vh #fff, 8vh -52vh #fff, 70vh -86vh #fff, 99vh -19vh #fff, 27vh -10vh #fff, 91vh -57vh #fff, 8vh -14vh #fff, 95vh -13vh #fff, 98vh -37vh #fff, 67vh -11vh #fff, 5vh -11vh #fff, 77vh -45vh #fff, 96vh -26vh #fff, 30vh -4vh #fff, 78vh -86vh #fff, 68vh -42vh #fff, 79vh -96vh #fff, 90vh -22vh #fff, 2vh -50vh #fff, 55vh -68vh #fff, 100vh -56vh #fff, 27vh -50vh #fff, 20vh -27vh #fff, 84vh -85vh #fff, 85vh -12vh #fff, 63vh -34vh #fff, 12vh -35vh #fff, 66vh -88vh #fff, 79vh -17vh #fff, 70vh -70vh #fff, 92vh -87vh #fff, 87vh -73vh #fff, 74vh -66vh #fff, 72vh -71vh #fff, 93vh -15vh #fff, 13vh -9vh #fff, 17vh -46vh #fff, 91vh -9vh #fff, 51vh -27vh #fff, 79vh -95vh #fff, 15vh -69vh #fff, 18vh -14vh #fff, 19vh -45vh #fff, 17vh -79vh #fff, 56vh -76vh #fff, 95vh -10vh #fff, 44vh -84vh #fff, 43vh -65vh #fff, 5vh -66vh #fff, 74vh -65vh #fff, 18vh -58vh #fff, 95vh -49vh #fff, 89vh -11vh #fff, 18vh -100vh #fff, 48vh -10vh #fff, 46vh -84vh #fff, 43vh -10vh #fff, 78vh -93vh #fff, -26vh 96vh #fff, -69vh 58vh #fff, -69vh 50vh #fff, -15vh 73vh #fff, -87vh 56vh #fff, -19vh 87vh #fff, -35vh 60vh #fff, -95vh 63vh #fff, -46vh 48vh #fff, -57vh 60vh #fff, -67vh 23vh #fff, -61vh 75vh #fff, -38vh 69vh #fff, -66vh 63vh #fff, -49vh 74vh #fff, -60vh 30vh #fff, -92vh 49vh #fff, -65vh 38vh #fff, -27vh 32vh #fff, -44vh 98vh #fff, -90vh 35vh #fff, -54vh 68vh #fff, -60vh 42vh #fff, -78vh 14vh #fff, -30vh 18vh #fff, -82vh 84vh #fff, -15vh 49vh #fff, -19vh 80vh #fff, -86vh 58vh #fff, -31vh 32vh #fff, -41vh 35vh #fff, -6vh 90vh #fff, -74vh 19vh #fff, -67vh 97vh #fff, -68vh 4vh #fff, -75vh 28vh #fff, -23vh 38vh #fff, -91vh 38vh #fff, -72vh 11vh #fff, -9vh 32vh #fff, -24vh 15vh #fff, -93vh 58vh #fff, -76vh 27vh #fff, -93vh 85vh #fff, -32vh 91vh #fff, -8vh 29vh #fff, -42vh 17vh #fff, -55vh 44vh #fff, -40vh 98vh #fff, -60vh 18vh #fff, -90vh 92vh #fff, -64vh 41vh #fff, -62vh 59vh #fff, -41vh 80vh #fff, -27vh 12vh #fff, -9vh 38vh #fff, -54vh 79vh #fff, -12vh 29vh #fff, -51vh 97vh #fff, -58vh 22vh #fff, -17vh 74vh #fff, -65vh 34vh #fff, -83vh 67vh #fff, -97vh 7vh #fff, -95vh 87vh #fff, -14vh 63vh #fff, -87vh 64vh #fff, -15vh 48vh #fff, -62vh 36vh #fff, -27vh 25vh #fff, -60vh 58vh #fff, -99vh 98vh #fff, -40vh 56vh #fff, -96vh 15vh #fff, -63vh 38vh #fff, -31vh 38vh #fff, -83vh 73vh #fff, -75vh 96vh #fff, -18vh 47vh #fff, -62vh 2vh #fff, -40vh 48vh #fff, -37vh 40vh #fff, -92vh 22vh #fff, -60vh 83vh #fff, -45vh 12vh #fff, -49vh 77vh #fff, -54vh 87vh #fff, -55vh 10vh #fff, -37vh 75vh #fff, -90vh 67vh #fff, -42vh 71vh #fff, -100vh 8vh #fff, -51vh 33vh #fff, -97vh 35vh #fff, -60vh 59vh #fff, -47vh 96vh #fff, -99vh 53vh #fff, -96vh 65vh #fff, -13vh 40vh #fff, -21vh 9vh #fff, -70vh 40vh #fff, -67vh 42vh #fff, -45vh 48vh #fff, -100vh 34vh #fff, -43vh 3vh #fff, -99vh 58vh #fff, -2vh 41vh #fff, -72vh 10vh #fff, -28vh 7vh #fff, -59vh 81vh #fff, -50vh 60vh #fff, -41vh 67vh #fff, -69vh 36vh #fff, -23vh 50vh #fff, -100vh 26vh #fff, -97vh 16vh #fff, -71vh 29vh #fff, -5vh 86vh #fff, -56vh 89vh #fff, -64vh 34vh #fff, -66vh 40vh #fff, -81vh 87vh #fff, -5vh 78vh #fff, -63vh 35vh #fff, -32vh 73vh #fff, -62vh 78vh #fff, -66vh 5vh #fff, -53vh 45vh #fff, -67vh 97vh #fff, -5vh 72vh #fff, -64vh 99vh #fff, -94vh 81vh #fff, -70vh 94vh #fff, -75vh 50vh #fff, -11vh 88vh #fff, -1vh 59vh #fff, -66vh 100vh #fff, -66vh 100vh #fff, -47vh 100vh #fff, -83vh 35vh #fff, -39vh 70vh #fff, -70vh 52vh #fff, -54vh 64vh #fff, -34vh 84vh #fff, -32vh 81vh #fff, -81vh 35vh #fff, -29vh 76vh #fff, -59vh 52vh #fff, -91vh 27vh #fff, -7vh 94vh #fff, -75vh 44vh #fff, -4vh 80vh #fff, -75vh 52vh #fff, -12vh 96vh #fff, -57vh 90vh #fff, -67vh 20vh #fff, -52vh 22vh #fff, -55vh 45vh #fff, -10vh 91vh #fff, -42vh 16vh #fff, -29vh 69vh #fff, -34vh 89vh #fff, -27vh 92vh #fff, -81vh 14vh #fff, -35vh 22vh #fff, -74vh 28vh #fff, -93vh 17vh #fff, -100vh 68vh #fff, -81vh 63vh #fff, -36vh 80vh #fff, -39vh 92vh #fff, -88vh 12vh #fff, -78vh 52vh #fff, -88vh 34vh #fff, -88vh 79vh #fff, -83vh 50vh #fff, -50vh 58vh #fff, -92vh 85vh #fff, -75vh 100vh #fff, -35vh 94vh #fff, -1vh 96vh #fff, -89vh 77vh #fff, -9vh 47vh #fff, -14vh 56vh #fff, -80vh 100vh #fff, -20vh 80vh #fff, -11vh 62vh #fff, -8vh 47vh #fff, -14vh 6vh #fff, -93vh 15vh #fff, -88vh 91vh #fff, -52vh 35vh #fff, -56vh 54vh #fff, -28vh 22vh #fff, -84vh 91vh #fff, -81vh 47vh #fff, -8vh 29vh #fff, -2vh 28vh #fff, -90vh 50vh #fff, -63vh 73vh #fff;
+    }
+
+    #stars3 {
+        box-shadow: 85vh 8vh #fff, 28vh 67vh #fff, 15vh 93vh #fff, 50vh 78vh #fff, 42vh 89vh #fff, 6vh 10vh #fff, 58vh 51vh #fff, 27vh 12vh #fff, 92vh 24vh #fff, 57vh 24vh #fff, 26vh 9vh #fff, 24vh 17vh #fff, 89vh 37vh #fff, 52vh 91vh #fff, 22vh 44vh #fff, 62vh 60vh #fff, 45vh 44vh #fff, 93vh 13vh #fff, 94vh 44vh #fff, 81vh 99vh #fff, 93vh 41vh #fff, 82vh 26vh #fff, 68vh 35vh #fff, 1vh 54vh #fff, 50vh 42vh #fff, 8vh 55vh #fff, 70vh 19vh #fff, 59vh 98vh #fff, 2vh 33vh #fff, 38vh 16vh #fff, 54vh 93vh #fff, 97vh 36vh #fff, 76vh 48vh #fff, 4vh 80vh #fff, 75vh 65vh #fff, 29vh 9vh #fff, 59vh 1vh #fff, 97vh 84vh #fff, 27vh 62vh #fff, 50vh 47vh #fff, 65vh 89vh #fff, 38vh 27vh #fff, 1vh 42vh #fff, 73vh 63vh #fff, 92vh 4vh #fff, 3vh 35vh #fff, 32vh 51vh #fff, 39vh 29vh #fff, 65vh 68vh #fff, 89vh 59vh #fff, 33vh 83vh #fff, 47vh 77vh #fff, 69vh 88vh #fff, 44vh 91vh #fff, 32vh 75vh #fff, 74vh 19vh #fff, 39vh 47vh #fff, 33vh 89vh #fff, 67vh 98vh #fff, 34vh 61vh #fff, 21vh 8vh #fff, 26vh 64vh #fff, 37vh 19vh #fff, 19vh 76vh #fff, 3vh 93vh #fff, 10vh 62vh #fff, 14vh 87vh #fff, 44vh 56vh #fff, 45vh 31vh #fff, 99vh 99vh #fff, 42vh 39vh #fff, 66vh 8vh #fff, 2vh 11vh #fff, 4vh 74vh #fff, 65vh 29vh #fff, 3vh 41vh #fff, 91vh 39vh #fff, 91vh 16vh #fff, 69vh 87vh #fff, 25vh 51vh #fff, 88vh 64vh #fff, 79vh 69vh #fff, 5vh 32vh #fff, 33vh 75vh #fff, 7vh 18vh #fff, 13vh 74vh #fff, 29vh 21vh #fff, 97vh 57vh #fff, 98vh 77vh #fff, 15vh 13vh #fff, 63vh 88vh #fff, 8vh 36vh #fff, 98vh 79vh #fff, 44vh 33vh #fff, 57vh 39vh #fff, 63vh 2vh #fff, 5vh 77vh #fff, 61vh 67vh #fff, 72vh 63vh #fff, 45vh 12vh #fff, -94vh -25vh #fff, -23vh -50vh #fff, -78vh -7vh #fff, -79vh -83vh #fff, -3vh -30vh #fff, -52vh -95vh #fff, -100vh -19vh #fff, -57vh -73vh #fff, -61vh -64vh #fff, -14vh -57vh #fff, -40vh -60vh #fff, -91vh -100vh #fff, -51vh -26vh #fff, -67vh -90vh #fff, -17vh -3vh #fff, -52vh -24vh #fff, -92vh -40vh #fff, -83vh -18vh #fff, -70vh -87vh #fff, -20vh -94vh #fff, -29vh -8vh #fff, -53vh -88vh #fff, -90vh -41vh #fff, -51vh -87vh #fff, -14vh -65vh #fff, -28vh -69vh #fff, -8vh -14vh #fff, -60vh -27vh #fff, -36vh -69vh #fff, -89vh -97vh #fff, -78vh -18vh #fff, -50vh -84vh #fff, -92vh -74vh #fff, -24vh -68vh #fff, -81vh -91vh #fff, -79vh -86vh #fff, -45vh -30vh #fff, -31vh -77vh #fff, -37vh -40vh #fff, -94vh -49vh #fff, -25vh -46vh #fff, -85vh -50vh #fff, -76vh -20vh #fff, -76vh -89vh #fff, -21vh -58vh #fff, -18vh -53vh #fff, -43vh -79vh #fff, -7vh -27vh #fff, -92vh -80vh #fff, -16vh -5vh #fff, -49vh -86vh #fff, -80vh -16vh #fff, -78vh -4vh #fff, -91vh -74vh #fff, -10vh -38vh #fff, -72vh -53vh #fff, -44vh -87vh #fff, -81vh -32vh #fff, -5vh -77vh #fff, -44vh -45vh #fff, -60vh -64vh #fff, -79vh -88vh #fff, -96vh -6vh #fff, -23vh -52vh #fff, -19vh -19vh #fff, -33vh -58vh #fff, -6vh -99vh #fff, -94vh -21vh #fff, -44vh -29vh #fff, -65vh -2vh #fff, -6vh -24vh #fff, -80vh -83vh #fff, -19vh -70vh #fff, -92vh -77vh #fff, -64vh -76vh #fff, -42vh -34vh #fff, -36vh -27vh #fff, -42vh -77vh #fff, -15vh -99vh #fff, -63vh -76vh #fff, -85vh -45vh #fff, -1vh -26vh #fff, -50vh -18vh #fff, -43vh -97vh #fff, -81vh -13vh #fff, -38vh -26vh #fff, -32vh -4vh #fff, -34vh -63vh #fff, -98vh -37vh #fff, -39vh -11vh #fff, -89vh -31vh #fff, -57vh -16vh #fff, -6vh -81vh #fff, -19vh -51vh #fff, -45vh -5vh #fff, -75vh -96vh #fff, -60vh -37vh #fff, -92vh -61vh #fff, -13vh -84vh #fff, -27vh -59vh #fff, 88vh -1vh #fff, 9vh -40vh #fff, 58vh -95vh #fff, 22vh -32vh #fff, 13vh -69vh #fff, 5vh -96vh #fff, 13vh -72vh #fff, 9vh -23vh #fff, 76vh -83vh #fff, 26vh -86vh #fff, 14vh -50vh #fff, 38vh -63vh #fff, 42vh -30vh #fff, 21vh -61vh #fff, 95vh -46vh #fff, 14vh -42vh #fff, 61vh -56vh #fff, 82vh -96vh #fff, 33vh -73vh #fff, 86vh -33vh #fff, 39vh -80vh #fff, 62vh -70vh #fff, 25vh -32vh #fff, 41vh -48vh #fff, 44vh -34vh #fff, 4vh -97vh #fff, 64vh -17vh #fff, 30vh -23vh #fff, 89vh -64vh #fff, 65vh -19vh #fff, 90vh -53vh #fff, 66vh -63vh #fff, 89vh -16vh #fff, 65vh -98vh #fff, 23vh -63vh #fff, 18vh -54vh #fff, 13vh -67vh #fff, 97vh -15vh #fff, 100vh -93vh #fff, 41vh -75vh #fff, 51vh -31vh #fff, 74vh -15vh #fff, 27vh -26vh #fff, 20vh -19vh #fff, 39vh -68vh #fff, 78vh -58vh #fff, 34vh -39vh #fff, 69vh -14vh #fff, 31vh -2vh #fff, 82vh -32vh #fff, 96vh -13vh #fff, 68vh -27vh #fff, 84vh -88vh #fff, 45vh -37vh #fff, 86vh -78vh #fff, 89vh -99vh #fff, 28vh -65vh #fff, 21vh -85vh #fff, 40vh -40vh #fff, 53vh -82vh #fff, 11vh -18vh #fff, 13vh -19vh #fff, 75vh -71vh #fff, 62vh -38vh #fff, 8vh -42vh #fff, 72vh -51vh #fff, 37vh -18vh #fff, 5vh -34vh #fff, 47vh -45vh #fff, 11vh -97vh #fff, 66vh -62vh #fff, 93vh -24vh #fff, 95vh -46vh #fff, 98vh -60vh #fff, 13vh -89vh #fff, 96vh -74vh #fff, 5vh -39vh #fff, 82vh -70vh #fff, 19vh -83vh #fff, 82vh -20vh #fff, 40vh -4vh #fff, 20vh -79vh #fff, 33vh -15vh #fff, 47vh -25vh #fff, 73vh -62vh #fff, 32vh -46vh #fff, 7vh -94vh #fff, 8vh -63vh #fff, 35vh -58vh #fff, 80vh -90vh #fff, 39vh -11vh #fff, 54vh -20vh #fff, 2vh -73vh #fff, 94vh -67vh #fff, 16vh -87vh #fff, 28vh -37vh #fff, 21vh -24vh #fff, 5vh -54vh #fff, 46vh -38vh #fff, 72vh -88vh #fff, -42vh 35vh #fff, -97vh 98vh #fff, -87vh 97vh #fff, -50vh 96vh #fff, -93vh 88vh #fff, -40vh 78vh #fff, -51vh 93vh #fff, -19vh 84vh #fff, -39vh 23vh #fff, -5vh 27vh #fff, -26vh 21vh #fff, -9vh 30vh #fff, -78vh 42vh #fff, -92vh 47vh #fff, -57vh 81vh #fff, -30vh 25vh #fff, -66vh 26vh #fff, -65vh 48vh #fff, -23vh 8vh #fff, -79vh 97vh #fff, -55vh 21vh #fff, -15vh 68vh #fff, -4vh 28vh #fff, -66vh 87vh #fff, -5vh 28vh #fff, -24vh 89vh #fff, -47vh 62vh #fff, -23vh 80vh #fff, -86vh 9vh #fff, -38vh 84vh #fff, -73vh 82vh #fff, -85vh 40vh #fff, -94vh 50vh #fff, -44vh 91vh #fff, -69vh 87vh #fff, -37vh 12vh #fff, -23vh 70vh #fff, -47vh 80vh #fff, -94vh 41vh #fff, -47vh 83vh #fff, -14vh 63vh #fff, -10vh 24vh #fff, -27vh 9vh #fff, -96vh 2vh #fff, -45vh 81vh #fff, -45vh 4vh #fff, -62vh 40vh #fff, -74vh 99vh #fff, -93vh 4vh #fff, -94vh 36vh #fff, -64vh 5vh #fff, -69vh 31vh #fff, -14vh 68vh #fff, -84vh 57vh #fff, -41vh 34vh #fff, -65vh 4vh #fff, -50vh 32vh #fff, -55vh 66vh #fff, -4vh 56vh #fff, -83vh 70vh #fff, -40vh 53vh #fff, -90vh 21vh #fff, -15vh 14vh #fff, -46vh 1vh #fff, -10vh 45vh #fff, -50vh 30vh #fff, -86vh 38vh #fff, -53vh 29vh #fff, -21vh 48vh #fff, -34vh 33vh #fff, -83vh 82vh #fff, -95vh 51vh #fff, -78vh 64vh #fff, -20vh 2vh #fff, -3vh 49vh #fff, -61vh 61vh #fff, -61vh 73vh #fff, -85vh 28vh #fff, -9vh 48vh #fff, -68vh 90vh #fff, -86vh 17vh #fff, -62vh 85vh #fff, -67vh 57vh #fff, -76vh 46vh #fff, -39vh 11vh #fff, -65vh 11vh #fff, -10vh 24vh #fff, -68vh 41vh #fff, -75vh 58vh #fff, -94vh 80vh #fff, -1vh 100vh #fff, -80vh 8vh #fff, -52vh 71vh #fff, -94vh 34vh #fff, -80vh 12vh #fff, -95vh 27vh #fff, -16vh 34vh #fff, -14vh 94vh #fff, -33vh 93vh #fff, -87vh 66vh #fff;
+    }
+
+}
+
+.hide{
+    display: none;
 }

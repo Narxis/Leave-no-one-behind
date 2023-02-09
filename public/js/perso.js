@@ -89,3 +89,6 @@ async function loadPlayerSheets() {
 document.addEventListener('set-name', join);
 document.addEventListener('set-name', setName);
 document.addEventListener('set-race', setRace);
+document.addEventListener('join', function(){
+    document.querySelector('.lecadre').remove();
+}, {once : true} )

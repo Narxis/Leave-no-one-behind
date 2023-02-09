@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { Client, Collection, GatewayIntentBits, Routes } = require('discord.js');
 const { REST } = require('@discordjs/rest');
+const chalk = require("chalk");
 const token = process.env.DS_TOKEN;
 
 const start = function () {
@@ -32,18 +33,25 @@ const start = function () {
     }
 
 // When the client is ready, run this code (only once)
-    client.once('ready', () => {
+    client.once('ready', async () => {
         let guilds = client.guilds.cache;
         for (let guild_data of guilds) {
-            deployCommands(guild_data[1])
+            await deployCommands(guild_data[1])
         }
-        console.log('Bot Ready!');
+        log('\n' +
+            '  ⢠⣴⣾⣵⣶⣶⣾⣿⣦⡄\n' +
+            ' ⢀⣾⣿⣿⢿⣿⣿⣿⣿⣿⣿⡄\n' +
+            ' ⢸⣿⣿⣧⣀⣼⣿⣄⣠⣿⣿⣿\n' +
+            ' ⠘⠻⢷⡯⠛⠛⠛⠛⢫⣿⠟⠛\n' +
+            '\n' +
+            '  Bot Ready !\n', '#7289DA');
     });
 
     /* SLASH COMMANDS */
     client.on('interactionCreate', async interaction => {
         if (!interaction.isChatInputCommand()) return;
 
+        log('[DS] '+ chalk.hex('#aaaaaa')(interaction.user.tag + ' => ' + interaction.commandName), '#7289DA');
         const slash = client.slash.get(interaction.commandName);
 
         if (!slash) return;
@@ -61,6 +69,7 @@ const start = function () {
 
         if (!interaction.isStringSelectMenu()) return;
 
+        log('[DS] '+ chalk.hex('#aaaaaa')(interaction.user.tag + ' => ' + interaction.customId), '#7289DA');
         const selectMenu = client.selectMenus.get(interaction.customId);
 
         if (!selectMenu) return;
@@ -78,6 +87,7 @@ const start = function () {
 
         if (!interaction.isModalSubmit()) return;
 
+        log('[DS] '+ chalk.hex('#aaaaaa')(interaction.user.tag + ' => ' + interaction.customId), '#7289DA');
         const modal = client.modals.get(interaction.customId);
 
         if (!modal) return;
@@ -95,6 +105,7 @@ const start = function () {
 
         if (!interaction.isButton()) return;
 
+        log('[DS] '+ chalk.hex('#aaaaaa')(interaction.user.tag + ' => ' + interaction.customId), '#7289DA');
         let customId = interaction.customId;
 
         // Pass rolled dice through custom ID
@@ -118,7 +129,7 @@ const start = function () {
     client.login(token);
 }
 
-const deployCommands = function (guild) {
+const deployCommands = async function (guild) {
 
     let clientId = process.env.DS_CLIENT_ID;
     let token = process.env.DS_TOKEN;
@@ -136,7 +147,9 @@ const deployCommands = function (guild) {
     const rest = new REST({ version: '10' }).setToken(token);
 
     rest.put(Routes.applicationGuildCommands(clientId, guild.id), { body: commands })
-        .then(() => console.log(`Successfully registered application commands on "${guild.name}"`))
+        .then(() => {
+            //
+        })
         .catch(console.error);
 }
 

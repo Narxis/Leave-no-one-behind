@@ -1,9 +1,12 @@
-<head>
-  <link rel="stylesheet" href="/css/template-card.css">
-  <link rel="stylesheet" href="/css/timer-animation.css">
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
-</head>
+<%- include("partials/head", {
+    title: "Evènement",
+    cssFiles:[
+        "/css/template-card.css",
+        "/css/timer-animation.css",
+        "/css/style.css",
+        "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    ]
+}) %>
 
 <body class="wrap--1">
   <%- include("partials/nav") %>
@@ -11,9 +14,9 @@
     <div class="card">
       <div class="wrap">
         <div id="bigboite" class="robot-arm">
-          <div class="float">
+          <div id="floatboite" class="float">
             <canvas id="canvas" width="600" height="400px"></canvas>
-            <div id="boulboite" class="spinner-box grow pop">
+            <div id="boulboite" class="spinner-box pop">
               <div class="blue-orbit leo"></div>
               <div class="green-orbit leo"></div>
               <div class="red-orbit leo"></div>
@@ -241,16 +244,21 @@
           <div class="tab tab-moteurs move-right">
             <div class="tab-txt">Moteurs</div>
             <div id="dial-motors" class="container moteurs dial" data-value="<%= ship.motors %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Moteurs <%= ship.motors %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.motors %>%</text>
                 </svg>
+                <img class="mod-img" id="img-mot" src="/img/modules/engine-motor-svgrepo-com.png" alt="Moteurs">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'motors');" class="mod-b tab-moins" id="moins-mot">-</button>
@@ -262,16 +270,21 @@
           <div class="tab tab-scan move-right">
             <div class="tab-txt">Scanner de surface</div>
             <div id="dial-scanner" class="container scan dial" data-value="<%= ship.scanner %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Scanner de surface <%= ship.scanner %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.scanner %>%</text>
                 </svg>
+                <img class="mod-img" id="img-scan" src="/img/modules/location-internet-svgrepo-com.png" alt="Scanner">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'scanner');" class="mod-b tab-moins" id="moins-scan">-</button>
@@ -283,16 +296,21 @@
           <div class="tab tab-detect move-right">
             <div class="tab-txt">Détecteur de proximité</div>
             <div id="dial-proximity" class="container detect dial" data-value="<%= ship.proximity %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Détecteur de proximité <%= ship.proximity %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.proximity %>%</text>
                 </svg>
+                <img class="mod-img" id="img-detec" src="/img/modules/radar-svgrepo-com.png" alt="Detecteur de proximité">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'proximity');" class="mod-b tab-moins" id="moins-detect">-</button>
@@ -304,16 +322,21 @@
           <div class="tab tab-o2 move-right">
             <div class="tab-txt">Oxygène</div>
             <div id="dial-oxygen" class="container o2 dial" data-value="<%= ship.oxygen %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Oxygène <%= ship.oxygen %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.oxygen %>%</text>
                 </svg>
+                <img class="mod-img" id="img-o2" src="/img/modules/oxygen-tank-svgrepo-com.png" alt="Oxygène">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'oxygen');" class="mod-b tab-moins" id="moins-o2">-</button>
@@ -325,16 +348,21 @@
           <div class="tab tab-elec move-right">
             <div class="tab-txt">Électricité</div>
             <div id="dial-energy" class="container elec dial" data-value="<%= ship.energy %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Électricité <%= ship.energy %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.energy %>%</text>
                 </svg>
+                <img class="mod-img" id="img-elec" src="/img/modules/battery-svgrepo-com.png" alt="Électricité">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'energy');" class="mod-b tab-moins" id="moins-elec">-</button>
@@ -346,16 +374,21 @@
           <div class="tab tab-grav move-right">
             <div class="tab-txt">Gravité artificielle</div>
             <div id="dial-gravity" class="container grav dial" data-value="<%= ship.gravity %>">
-              <button class="mod-button">
+              <button class="mod-button" data-tooltip="Gravité artificielle <%= ship.gravity %>%">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#78F8EC" />
                     <stop offset="100%" stop-color="#6E4AE2" />
                   </linearGradient>
                   <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="100" stroke="url(#gradient)"
-                    stroke-width="12" fill="none" transform="rotate(90 50 50)" />
+                    stroke-width="12" fill="none" transform="rotate(90 50 50)" mask="url(#circleMask)"/>
+                  <mask id="circleMask">
+                    <circle pathLength="100" cx="50" cy="50" r="50" stroke-dasharray="1" stroke="#fff"
+                            stroke-width="12" fill="none" />
+                  </mask>
                   <text x="20" y="60"><%= ship.gravity %>%</text>
                 </svg>
+                <img class="mod-img" id="img-grav" src="/img/modules/artificial-gravity-svgrepo-com.png" alt="Gravité artificielle">
               </button>
             </div>
             <button onclick="quickUpdateModule(this,'gravity');" class="mod-b tab-moins" id="moins-grav">-</button>
@@ -426,27 +459,27 @@
               <div class="mods-left hidden close-mod-left">
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module d'atterrissage</div>
-                  <div class="moins mod-b">-</div>
-                  <div class="mod-left-value"><%= ship.landing %></div>
-                  <div class="plus mod-b">+</div>
+                  <div onclick="quickUpdateModule(this,'atter',true);" class="moins mod-b">-</div>
+                  <div class="mod-left-value" id="atter-value"><%= ship.landing %></div>
+                  <div onclick="quickUpdateModule(this,'atter',true);" class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Module de construction</div>
-                  <div class="moins mod-b">-</div>
-                  <div class="mod-left-value"><%= ship.construction %></div>
-                  <div class="plus mod-b">+</div>
+                  <div onclick="quickUpdateModule(this,'cons',true);" class="moins mod-b">-</div>
+                  <div class="mod-left-value" id="cons-value"><%= ship.construction %></div>
+                  <div onclick="quickUpdateModule(this,'cons',true);" class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Base de donnée scientifique</div>
-                  <div class="moins mod-b">-</div>
-                  <div class="mod-left-value">50</div>
-                  <div id="plus-moins" class="plus mod-b">+</div>
+                  <div onclick="quickUpdateModule(this,'bdds',true);" class="moins mod-b">-</div>
+                  <div class="mod-left-value" id="bdds-value">50</div>
+                  <div onclick="quickUpdateModule(this,'bdds',true);" class="plus mod-b">+</div>
                 </div>
                 <div class="mod-left">
                   <div class="container-text-mod-left">Base de donnée historique</div>
-                  <div class="moins mod-b">-</div>
-                  <div class="mod-left-value">100</div>
-                  <div class="plus mod-b">+</div>
+                  <div onclick="quickUpdateModule(this,'bddh',true);" class="moins mod-b">-</div>
+                  <div class="mod-left-value" id="bddh-value">100</div>
+                  <div onclick="quickUpdateModule(this,'bddh',true);" class="plus mod-b">+</div>
                 </div>
               </div>
             </div>
@@ -521,9 +554,71 @@
         <div class="container-card container--1">
           <div class="bg-dot"></div>
           <div class="card-text"></div>
+          <div class="answer answer0"></div>
           <div class="answer answer1"></div>
           <div class="answer answer2"></div>
-          <div class="answer answer3"></div>
+        </div>
+        <div class="combat-container combat-none" id="combat-area">
+          <div class="ennemy-container">
+            <div class="ennemy-name">Yorc avec une épée</div>
+            <div class="offense-container">
+              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
+              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
+            </div>
+            <div class="ennemy-damage output-roll"></div>
+            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
+            <div class="ennemy-separateur"></div>
+          </div>
+          <div class="ennemy-container">
+            <div class="ennemy-name">Yorc sans épée</div>
+            <div class="offense-container">
+              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
+              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
+            </div>
+            <div class="ennemy-damage output-roll"></div>
+            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
+            <div class="ennemy-separateur"></div>
+          </div>
+          <div class="ennemy-container">
+            <div class="ennemy-name">Ygrl avec un fouet</div>
+            <div class="offense-container">
+              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
+              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
+            </div>
+            <div class="ennemy-damage output-roll"></div>
+            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
+            <div class="ennemy-separateur"></div>
+          </div>
+          <div class="ennemy-container">
+            <div class="ennemy-name">Aku</div>
+            <div class="offense-container">
+              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
+              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
+            </div>
+            <div class="ennemy-damage output-roll"></div>
+            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
+            <div class="ennemy-separateur"></div>
+          </div>
+          
+          <div class="ennemy-container">
+            <div class="ennemy-name">Sylv avec un baton</div>
+            <div class="offense-container">
+              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
+              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
+            </div>
+            <div class="ennemy-damage output-roll"></div>
+            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
+            <div class="ennemy-separateur"></div>
+          </div>
+          <div class="ennemy-container">
+            <div class="ennemy-name">Nek-air avec un gros livre</div>
+            <div class="offense-container">
+              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
+              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
+            </div>
+            <div class="ennemy-damage output-roll"></div>
+            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
+          </div>
         </div>
       </div>
     </div>
@@ -539,12 +634,7 @@
         <div class="human-alive"><%= ship.cryopods %></div>
       </div>
       <div class="status-separateur"></div>
-      <div class="status">
-        <div class="status-title-line">
-          <div class="status-title1">Status :</div>
-          <div class="status-title2">Durée</div>
-        </div>
-      </div>
+      <div class="status"></div>
     </div>
   </div>
   <div class="bottomcenter">
@@ -564,12 +654,27 @@
 
 <script>
   var cardtextstr = `<%- card.desc %>`;
+  var currentCardType = parseInt(`<%- card.type %>`) ; 
   var choicelist = [];
+  var statusNameList = [];
+  var statusDurationList = [];
   var answerlist = [];
+  var activeStatusList = [];
+  var statusSvgList = {};
+
   <% card.choices.forEach(function(choice) {%>
     choicelist.push(`<%- choice.value %>`);
     answerlist.push(`<%- choice.reveal %>`);
     <% }); %>
+  <% statuses.forEach(function(status) {%>
+    statusNameList.push(`<%- status.slug %>`);
+    statusDurationList[`<%- status.slug %>`] = `<%- status.duration %>`;
+    statusSvgList[`<%- status.slug %>`] = `<%- include('svg/'+(status.slug)) %>`;
+    if (<%- status.duration %> > 0) {
+      activeStatusList.push(`<%- status.slug %>`);
+    }
+
+  <% }); %>
 </script>
 
 <script src="/js/socketLNOB.js"></script>
@@ -578,7 +683,6 @@
 <script src="/js/timer.js"></script>
 <script src="/js/todo.js"></script>
 <script src="/js/players.js"></script>
-<script src="/js/timer-animation.js"></script>
 <script>
   var observer = new MutationObserver(function (mutations) {
     mutations.forEach(async function (mutation) {
@@ -642,15 +746,8 @@
       tabs.item(i).disabled = false;
     })
   }
-
-  (function () {
-    let ptabs = document.querySelectorAll('.expander');
-    for (let i = 0; i < ptabs.length; i++) {
-      ptabs.item(i).addEventListener('mouseup', function () {
-        this.closest('.player-tab').classList.toggle('move-up')
-      })
-    }
-    document.querySelector('.left-button').addEventListener('mouseup', async function () {
+(function (){
+  document.querySelector('.left-button').addEventListener('mouseup', async function () {
       this.closest('.consommable-tab').style.animation = null
       this.closest('.consommable-tab').classList.toggle('open-left')
       this.closest('.consommable-tab').classList.toggle('close-left')
@@ -662,7 +759,7 @@
       this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
       await sleep(5000)
     })
-  })()
+})()
 
   var wrapperMenu = document.querySelector('.wrapper-menu');
 
@@ -670,8 +767,4 @@
     wrapperMenu.classList.toggle('open-but');
   })
 
-  window.onload = function () {
-    if (document.getElementById('timer-text'))
-      startCountDown();
-  }
 </script>

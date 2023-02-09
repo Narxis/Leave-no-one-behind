@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
-const DB_VERSION = 1; // increment when structure changes are added
+const DB_VERSION = 2; // increment when structure changes are added
 const DB_FOLDER = 'storage/databases/';
 
 class DB {
@@ -12,7 +12,7 @@ class DB {
 
         if (process.env.DB_URL === '') {
             let db_name = test ? 'test_db' : 'database' + DB_VERSION;
-            console.log('Using local DB')
+            log('Using local DB', "#666666")
             this.sequelize =  new Sequelize(db_name, '', '', {
                 host: 'localhost',
                 dialect: 'sqlite',
@@ -21,7 +21,7 @@ class DB {
             });
         }
         else {
-            console.log('Using remote DB')
+            log('Using remote DB')
             this.sequelize = new Sequelize(process.env.DB_URL)
         }
         await this.registerDatabases();
@@ -331,6 +331,11 @@ class DB {
                 defaultValue: '',
                 allowNull: false
             },
+            slug: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
             duration: {
                 type: Sequelize.INTEGER,
                 defaultValue: '',
@@ -350,7 +355,7 @@ class DB {
 
         for (let table in this.tables) {
             await this.tables[table].sync();
-            console.log('synchro ' + table)
+            log('synchro ' + table, '#666666')
         }
     }
 

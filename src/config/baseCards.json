@@ -1,12 +1,12 @@
 {
   "positive": [
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer vos moteurs."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer vos moteurs.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -15,12 +15,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -29,12 +29,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -43,12 +43,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -57,12 +57,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -71,12 +71,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -85,12 +85,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -99,12 +99,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -113,12 +113,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -127,12 +127,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -141,12 +141,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -155,12 +155,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -169,12 +169,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -183,12 +183,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -197,12 +197,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -211,12 +211,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -225,12 +225,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace.",
+      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité."
+          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
+          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
         },
         {
           "value": "Ne rien faire",
@@ -241,15 +241,15 @@
   ],
   "negative": [
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau.\nCes débris vont percuter votre vaisseau au niveau au niveau du scanner.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau.\nCes débris vont percuter votre vaisseau au niveau au niveau du scanner.<span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -259,15 +259,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -277,15 +277,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -295,15 +295,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -313,15 +313,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -331,15 +331,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -349,15 +349,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -367,15 +367,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -385,15 +385,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -403,15 +403,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -421,15 +421,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -439,15 +439,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -457,15 +457,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -475,15 +475,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -493,15 +493,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -511,15 +511,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -529,15 +529,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -547,15 +547,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -565,15 +565,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -583,15 +583,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -601,15 +601,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -619,15 +619,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -637,15 +637,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -655,15 +655,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -673,15 +673,15 @@
       ]
     },
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.",
+      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
       "timer": true,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur)",
+          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote)",
+          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
@@ -693,7 +693,7 @@
   ],
   "neutral": [
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Fneks.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Fneks.\nVoulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
@@ -707,12 +707,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -721,12 +721,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -735,12 +735,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -749,12 +749,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -763,12 +763,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -777,12 +777,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -791,12 +791,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -805,12 +805,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -819,12 +819,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -833,12 +833,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -847,12 +847,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -861,12 +861,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -875,12 +875,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -889,12 +889,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -903,12 +903,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -917,12 +917,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -931,12 +931,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -945,12 +945,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -959,12 +959,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -973,12 +973,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -987,12 +987,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -1001,12 +1001,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -1015,12 +1015,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -1029,12 +1029,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -1043,12 +1043,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -1057,12 +1057,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -1071,12 +1071,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -1085,12 +1085,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",
@@ -1099,12 +1099,12 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. (remonte le moral)"
+          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
         },
         {
           "value": "Ne rien faire",

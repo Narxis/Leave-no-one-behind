@@ -1,22 +1,22 @@
 [
   {
-    "name": "Blackout des systèmes de détection",
-    "desc": "le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir."
+    "name": "Blackout",
+    "desc": "le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.",
+    "slug": "blackout"
   },
   {
     "name": "Anticipation",
-    "desc": "Les joueurs vont pouvoir éviter le prochain danger sans subir de pertes."
+    "desc": "Les joueurs vont pouvoir éviter le prochain danger sans subir de pertes.",
+    "slug": "anticipation"
   },
   {
     "name": "Entrainé",
-    "desc": "Une ou plusieurs statistiques des joueurs sont augmentées."
+    "desc": "Une ou plusieurs statistiques des joueurs sont augmentées.",
+    "slug": "trained"
   },
   {
     "name": "Affaiblit",
-    "desc": "Une ou plusieurs statistiques des joueurs sont diminuée"
-  },
-  {
-    "name": "Bibliothécaire",
-    "desc": "le moral des joueurs est modifié en fonction de leur capacité intellectuelles (différentes entres chaque races)"
+    "desc": "Une ou plusieurs statistiques des joueurs sont diminuée",
+    "slug": "weak"
   }
 ]

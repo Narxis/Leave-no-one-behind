@@ -6,6 +6,8 @@ const db = require ('./src/controllers/db');
 const PORT = process.env.PORT || 8080;
 const Bot = require('./src/controllers/discord');
 const NodeCache = require( "node-cache" );
+const os = require("os");
+const chalk = require("chalk");
 
 const startServer = async function() {
 
@@ -22,9 +24,9 @@ const startServer = async function() {
     app.use('/', router);
 
     global.WSS = new WebSocketServer({ noServer: true });
-    WSS.on('connection', socket => {
-        socket.on('message', message => console.log(message));
-    });
+    // WSS.on('connection', socket => {
+    //     socket.on('message', message => console.log(message));
+    // });
 
     const server = app.listen(PORT);
 
@@ -39,5 +41,30 @@ const startServer = async function() {
 }
 
 startServer().then(e => {
-    console.log(`Server launched on port ${PORT}`);
+    let os = require('os');
+    let interfaces = os.networkInterfaces();
+    let addresses = [];
+    for (let k in interfaces) {
+        for (let k2 in interfaces[k]) {
+            let address = interfaces[k][k2];
+            if (address.family === 'IPv4' && !address.internal) {
+                addresses.push(address.address);
+            }
+        }
+    }
+    let ip = addresses[0];
+    clear();
+    log("\n" +
+        " ██╗     ███╗   ██╗ ██████╗ ██████╗ \n" +
+        " ██║     ████╗  ██║██╔═══██╗██╔══██╗\n" +
+        " ██║     ██╔██╗ ██║██║   ██║██████╔╝\n" +
+        " ██║     ██║╚██╗██║██║   ██║██╔══██╗\n" +
+        " ███████╗██║ ╚████║╚██████╔╝██████╔╝\n" +
+        " ╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ \n" +
+        "\n", "#ffcc00");
+    if (process.env.FORCE_COLOR !== 'true')
+        log('Ajouter FORCE_COLOR=true aux variables d\'environnement pour les couleurs sur gitbash \n');
+    log(`Server launched on port ${PORT}\n`);
+    log(`http://localhost:${PORT}/` + chalk.hex('#aaaaaa')(' (local)'),'#0645AD')
+    log(`http://${ip}:${PORT}/` + chalk.hex('#aaaaaa')(' (Wifi Network)'),'#0645AD')
 });
