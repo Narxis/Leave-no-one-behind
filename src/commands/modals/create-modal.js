@@ -7,6 +7,7 @@ module.exports = {
     data: {
         name: 'create-modal'
     },
+    step: 'creation',
     async execute(interaction) {
 
         let rawData = fs.readFileSync(__dirname  + './../../config/raceStats.json');
@@ -36,6 +37,9 @@ module.exports = {
                 value: i
             })
         }
+        let keyCache = interaction.user.id;
+        let playerCache = CACHE.get(keyCache);
+
         const raceInput = new StringSelectMenuBuilder()
             .setCustomId('set-race')
             .setPlaceholder('Nothing is selected.')
@@ -44,15 +48,22 @@ module.exports = {
             .addOptions(options);
 
         const confirmRace = new ButtonBuilder()
-            .setCustomId('confirm-race')
-            .setLabel('Confirmer')
+            .setCustomId('roll-stats')
+            .setLabel(playerCache ? 'Roll Stats' : 'Confirmer')
             .setStyle(ButtonStyle.Success)
-            .setEmoji('✅')
-            .setDisabled(true);
+            .setEmoji(playerCache ? '🎲' : '✅')
+            .setDisabled(!playerCache);
 
         const actionSelect = new ActionRowBuilder().addComponents(raceInput);
         const actionConfirm = new ActionRowBuilder().addComponents(confirmRace);
 
-        await interaction.reply({ content: `Pick a race : `, components: [actionSelect, actionConfirm], ephemeral:true });
+        let components = [];
+        if (!playerCache)
+            components.push(actionSelect);
+        components.push(actionConfirm);
+
+        let content = playerCache ? '...' : 'Pick a race : ';
+
+        await interaction.reply({ content: content, components: components, ephemeral:true });
     },
 };

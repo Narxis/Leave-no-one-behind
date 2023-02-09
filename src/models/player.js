@@ -83,7 +83,7 @@ class Player {
             where: whereClause
         });
 
-        return await this.getData();
+        return await this.getData(discord_id);
     }
 
     async delete(discord_id=null) {

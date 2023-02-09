@@ -64,8 +64,12 @@ const makeAction = async function (raw_response) {
         case 'set-name':
             payload = actionSetName(response);
             break;
+        case 'roll-stats-done':
         case 'roll-stats':
             payload = actionRollStats(response);
+            break;
+        case 'game-ready':
+            payload = response;
             break;
         default:
             payload = {
@@ -87,7 +91,7 @@ const actionRollStats = async function (response) {
     return {
         action: response.action,
         error: false,
-        data: response
+        data: response.data
     };
 }
 
