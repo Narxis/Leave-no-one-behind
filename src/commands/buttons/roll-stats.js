@@ -131,14 +131,19 @@ module.exports = {
             data: playerCache.stats
         });
 
+        if (!hasRollsLeft) {
+            await player.update(dataStats);
+            data = JSON.stringify({
+                action: 'roll-stats-done',
+                uid: interaction.user.id,
+                data: player
+            });
+        }
+
         const wsClient = new ws(WS_URL);
         wsClient.on('open', () => {
             wsClient.send(data);
         });
-
-        if (!hasRollsLeft) {
-            await player.update(dataStats);
-        }
 
         await interaction.update({ content: `Allez c'est l'heure de roll des stats !`, components: components, ephemeral:true });
     },

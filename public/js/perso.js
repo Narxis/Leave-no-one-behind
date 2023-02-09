@@ -77,6 +77,17 @@ async function join(e) {
     await addPlayerSheet(e.detail.uid)
 }
 
+function setStats(e) {
+    let stats = e.detail.data;
+
+    document.querySelector('#combat input').value = stats.combat;
+    document.querySelector('#pilotage input').value = stats.pilotage;
+    document.querySelector('#engineering input').value = stats.engineering;
+    document.querySelector('#recon input').value = stats.recon;
+    document.querySelector('#survival input').value = stats.survival;
+    document.querySelector('#moral input').value = stats.moral;
+}
+
 async function loadPlayerSheets() {
 
     let players = await getExistingPlayers();
@@ -92,6 +103,7 @@ async function loadPlayerSheets() {
 document.addEventListener('join', join);
 document.addEventListener('set-name', setName);
 document.addEventListener('set-race', setRace);
+document.addEventListener('roll-stats-done', setStats);
 document.addEventListener('join', function(){
     document.querySelector('.lecadre').remove();
 }, {once : true} )
