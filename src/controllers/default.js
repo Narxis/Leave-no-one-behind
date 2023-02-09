@@ -60,6 +60,9 @@ module.exports.renderCardEvent = async function (req, res) {
     let statuses = new Statuses();
     let activeStatuses = await statuses.getAllStatuses();
 
+    if (CONFIG.gameState !== 'gameLive')
+        await CONFIG.upsert('gameState', 'gameLive');
+
     for (let i of activeStatuses) {
         await statuses.remove(i.slug);
     }
@@ -69,8 +72,10 @@ module.exports.renderCardEvent = async function (req, res) {
     let current_card = await cardPop();
     // TESTING :
 
-    if (!current_card)
+    if (!current_card) {
+        await CONFIG.upsert('gameState', 'postGame');
         res.render('end-screen');
+    }
 
     let vars = {
         players: players,
