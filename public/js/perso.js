@@ -70,7 +70,7 @@ function setName(e) {
 
 function setRace(e) {
     let img = document.querySelector('#p' + e.detail.data.uid + ' .race-img');
-    img.src = '/img/races/' + race + '.png';
+    img.src = '/img/races/' + e.detail.data.race + '.png';
 }
 
 async function join(e) {
@@ -89,7 +89,7 @@ async function loadPlayerSheets() {
     }
 }
 
-document.addEventListener('set-name', join);
+document.addEventListener('join', join);
 document.addEventListener('set-name', setName);
 document.addEventListener('set-race', setRace);
 document.addEventListener('join', function(){

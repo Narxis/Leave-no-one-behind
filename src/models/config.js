@@ -2,22 +2,21 @@ const fs = require("fs");
 
 class Config {
 
-    conf = {};
     baseConf = {
         "gameState": "init", // 0 init - 1 creation - 2 gameLive - 3 postGame
     };
 
     async upsert(key, val){
         await DB.tables.config.upsert({key: key, val: val});
-        this.conf[key] = val;
+        this[key] = val;
     }
 
     async get() {
         let conf = await DB.tables.config.findAll({raw: true});
         for (let item of conf) {
-            this.conf[item.key] = item.val;
+            this[item.key] = item.val;
         }
-        return this.conf;
+        return this;
     }
 
     async hydrateDB(cleanInstall = true) {
