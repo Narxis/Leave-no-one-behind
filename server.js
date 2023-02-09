@@ -16,7 +16,8 @@ const startServer = async function() {
     constants.register();
     let DB = new db.DB;
     global.DB = await DB.init();
-    global.CONFIG = await new Config().get();
+    global.CONFIG = await new Config();
+    await CONFIG.get();
     global.CACHE = new NodeCache();
 
     let app = require('./bin/express')();

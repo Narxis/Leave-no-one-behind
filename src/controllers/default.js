@@ -5,6 +5,7 @@ const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
+const ws = require("ws");
 
 module.exports.index = function(req, res) {
     res.render('index');
@@ -38,8 +39,8 @@ module.exports.mjMenu = function (req, res) {
     res.render('mj-menu');
 }
 
-module.exports.persos = function (req, res) {
-    CONFIG.upsert('gameState', 'creation');
+module.exports.persos = async function (req, res) {
+    await CONFIG.upsert('gameState', 'creation');
     res.render('perso');
 }
 
@@ -287,14 +288,42 @@ module.exports.indexLegacy = function (req, res) {
     res.render('index-legacy');
 }
 
+module.exports.start = async function (req, res) {
+
+    res.render('fiche-vaisseau');
+    await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
+    await destroyDeck();
+
+    await hydrateCardDB();
+    await deckGenerator();
+
+    let ship = new Ship();
+    await ship.create();
+
+    let statuses = new Statuses();
+    await statuses.hydrateDB();
+
+    let items = new Items();
+    await items.hydrateDB();
+
+    await CONFIG.upsert('gameState', 'gameLive')
+
+    let data = JSON.stringify({
+        action: 'game-ready'
+    });
+
+    const wsClient = new ws(WS_URL);
+    wsClient.on('open', () => {
+        wsClient.send(data);
+    });}
+
 module.exports.reset = async function (req, res) {
 
     await DB.tables.config.destroy({truncate: true, restartIdentity: true});
     await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
     await destroyDeck();
 
-    await new Config().hydrateDB();
-
+    await CONFIG.hydrateDB();
     await hydrateCardDB();
     await deckGenerator();
 

@@ -67,6 +67,9 @@ const makeAction = async function (raw_response) {
         case 'roll-stats':
             payload = actionRollStats(response);
             break;
+        case 'game-ready':
+            payload = response;
+            break;
         default:
             payload = {
                 error: true,
