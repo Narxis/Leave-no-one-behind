@@ -1,15 +1,20 @@
-const {Op} = require('sequelize');
+const {Op, where} = require('sequelize');
 const fs = require("fs");
+const {Player} = require("./player");
 
 class Items {
 
     id;
+    owners;
+    slug;
     name;
     desc;
     pool;
     race;
     quantity;
     accepted_datas = {
+        'owners': [],
+        'slug': '',
         'name': '',
         'desc': '',
         'pool': '',
@@ -25,6 +30,8 @@ class Items {
             this[dat] = (typeof data[dat] === 'undefined' ? this.accepted_datas[dat]: data[dat]);
 
         await DB.tables.items.create({
+            owners: this.owners.join(','),
+            slug: this.slug,
             name: this.name,
             desc: this.desc,
             pool: this.pool,
@@ -42,12 +49,15 @@ class Items {
         let item = await DB.tables.items.findOne({
             attributes: [
                 'id',
+                'owners',
+                'slug',
                 'name',
                 'desc',
                 'pool',
                 'race',
                 'quantity'
             ],
+            raw: true,
             where: {
                 id: this.id
             }
@@ -55,8 +65,11 @@ class Items {
 
         if (!item) return false;
 
-        for (let dat in item.dataValues) {
-            this[dat] = item.dataValues[dat]
+        for (let dat in item) {
+            if (dat === 'owners')
+                item[dat] = item[dat].split(',');
+
+            this[dat] = item[dat]
         }
 
         return this;
@@ -68,6 +81,57 @@ class Items {
 
     async remove(name, quantity=1) {
         await DB.tables.items.decrement({quantity: quantity}, { where: { name: name } });
+    }
+
+    async giveAllStarters () {
+        let allStarters = await DB.tables.items.findAll({raw:true, where : {pool: 'starter'}});
+        let players = await DB.tables.players.findAll({raw:true});
+
+        for (let player of players) {
+            for (let starterItem of allStarters) {
+                if (player.race.startsWith(starterItem.race)) {
+                    await this.giveItemToPlayer(starterItem.slug, player.discord_id)
+                }
+            }
+        }
+    }
+
+    // No notion of quantity on player item (starters)
+    async giveItemToPlayer(slug, discord_id) {
+        let item = await DB.tables.items.findOne({where: {slug:slug}, raw:true});
+        let new_owners = item.owners.split(',');
+        new_owners.push(discord_id);
+        new_owners = [...new Set(new_owners)];
+        new_owners = new_owners.join(',');
+
+        await DB.tables.items.update({owners:new_owners}, {where:{ slug:slug }})
+    }
+
+    async getAllStarters(possessed = true) {
+        let whereClause = {
+            where: {
+                pool: 'starter'
+            }
+        };
+
+        if (possessed) {
+            whereClause = {
+                where: {
+                    pool: 'starter',
+                    owners: {
+                        [Op.ne]: ''
+                    }
+                }
+            }
+        }
+        let result = await DB.tables.items.findAll(whereClause);
+        result = result.map(r => r.dataValues);
+        result = result.map(r => {
+            r.owners = r.owners.split(',');
+            return r;
+        })
+
+        return result
     }
 
     async getAllItems(possessed=true) {

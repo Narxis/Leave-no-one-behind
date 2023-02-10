@@ -310,6 +310,7 @@ module.exports.start = async function (req, res) {
 
     let items = new Items();
     await items.hydrateDB();
+    await items.giveAllStarters();
 
     await CONFIG.upsert('gameState', 'gameLive')
 
