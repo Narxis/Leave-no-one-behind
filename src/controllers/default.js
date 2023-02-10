@@ -66,14 +66,12 @@ module.exports.renderCardEvent = async function (req, res) {
 
     players = players.map(player => {
 
-        items = starters.filter(item => item.owners.includes(player.discord_id));
-        player['items'] = items;
+        let playerItems = starters.filter(item => item.owners.includes(player.discord_id));
+        player['items'] = playerItems;
 
         return player;
     })
-
-    console.log(players);
-
+    
     if (CONFIG.gameState !== 'gameLive')
         await CONFIG.upsert('gameState', 'gameLive');
 
@@ -210,7 +208,8 @@ module.exports.renderTestCardEvent = async function (req, res) {
         players: players,
         card: card,
         ship: ship,
-        statuses: statuses
+        statuses: statuses,
+        items: []
     }
 
     res.render('template-card', vars);

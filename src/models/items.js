@@ -75,12 +75,12 @@ class Items {
         return this;
     }
 
-    async add(name, quantity=1) {
-        await DB.tables.items.increment({quantity: quantity}, { where: { name: name } });
+    async add(slug, quantity=1) {
+        await DB.tables.items.increment({quantity: quantity}, { where: { slug: slug } });
     }
 
-    async remove(name, quantity=1) {
-        await DB.tables.items.decrement({quantity: quantity}, { where: { name: name } });
+    async remove(slug, quantity=1) {
+        await DB.tables.items.decrement({quantity: quantity}, { where: { slug: slug } });
     }
 
     async giveAllStarters () {

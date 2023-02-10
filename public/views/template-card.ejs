@@ -419,38 +419,20 @@
                     </div>
                   </form>
                   <ul class="todos">
-                    <li>
-                      <input type="checkbox" id="todo_1">
-                      <label for="todo_1">
-                        <span class="check"></span>
-                        Drone
-                      </label>
-                      <i class="far fa-trash-alt delete"></i>
-                    </li>
-                    <li>
-                      <input type="checkbox" id="todo_2">
-                      <label for="todo_2">
-                        <span class="check"></span>
-                        Drone
-                      </label>
-                      <i class="far fa-trash-alt delete"></i>
-                    </li>
-                    <li>
-                      <input type="checkbox" id="todo_3">
-                      <label for="todo_3">
-                        <span class="check"></span>
-                        Drone
-                      </label>
-                      <i class="far fa-trash-alt delete"></i>
-                    </li>
-                    <li>
-                      <input type="checkbox" id="todo_4">
-                      <label for="todo_4">
-                        <span class="check"></span>
-                        Drone
-                      </label>
-                      <i class="far fa-trash-alt delete"></i>
-                    </li>
+                    <% if(items){ %>
+                      <% items.forEach(function(item) { %>
+                        <% for(var i=0; i<item.quantity; i++) {%>
+                        <li class="item-<%= item.slug %>">
+                          <input type="checkbox" id="<%= item.slug %>-<%= i %>">
+                          <label for="todo_1">
+                            <span class="check"></span>
+                            <%= item.name %>
+                          </label>
+                          <i class="far fa-trash-alt delete"></i>
+                        </li>
+                        <% } %>
+                      <% }); %>
+                    <% } %>
                   </ul>
                 </div>
               </div>
