@@ -112,6 +112,97 @@ module.exports.renderCardEvent = async function (req, res) {
     }
 }
 
+module.exports.renderTestCardPlace = async function (req, res) {
+    let players = [
+        {
+            id: 1,
+            discord_id: '14487794',
+            name: 'test#6554',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '14475523584',
+            name: 'test#8444',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        },
+        {
+            id: 1,
+            discord_id: '144877584',
+            name: 'test#8354',
+            race: 'fnek',
+            combat: 68,
+            pilotage: 12,
+            engineering: 84,
+            survival: 54,
+            recon: 12,
+            moral: 12,
+        }
+    ];
+    let statuses = [{
+        id: 16,
+        name: 'Blackout',
+        desc: 'le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.',
+        slug: 'blackout',
+        duration: 5,
+    },
+        {
+            id: 18,
+            name: 'Entrainé',
+            desc: 'Une ou plusieurs statistiques des joueurs sont augmentées.',
+            slug: 'trained',
+            duration: 5
+        }];
+    let cardRaw = await DB.tables.cards.findOne({
+        attributes: [
+            'id'
+        ],
+        where: {
+            type: TYPE_PLACE
+        }
+    });
+
+    let card = await new Card(cardRaw.id).getData();
+    let ship = {
+        id: 0,
+        name: '',
+        cryopods: 1000,
+        scanner: 100,
+        proximity: 100,
+        motors: 100,
+        shield: 100,
+        oxygen: 100,
+        energy: 100,
+        gravity: 100,
+        landing: 100,
+        construction: 100,
+        scanner_up: 0,
+        oxygen_up: 0,
+        energy_up: 0,
+        gravity_up: 0
+    }
+    let vars = {
+        players: players,
+        card: card,
+        ship: ship,
+        statuses: statuses
+    }
+
+    res.render('template-card', vars);
+}
+
 // TEST TPL template-card
 module.exports.renderTestCardEvent = async function (req, res) {
 

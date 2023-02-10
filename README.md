@@ -89,10 +89,12 @@ document.addEventListener('set-race', function(e) {
 
 ### Cards
 ```http
-GET /api/getNextCard
+GET /api/nextCard/get
 # Obtient les infos de la prochaine carte (ne la marque pas comme jouée)
-GET /api/popNextCard
+GET /api/nexCard/pop
 # Obtient les infos de la prochaine carte (marque la carte comme jouée)
+GET /api/nextCard/get/:name
+# Obtient les infos de la carte avec le nom {:name} (ne la marque pas comme jouée)
 ```
 ```json
 {

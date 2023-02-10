@@ -173,7 +173,7 @@ const hydrateCardDB = async function (cleanInstall = true) {
 
     for (let i in baseCards) {
         let type;
-        let card = baseCards[i];
+        let cards = baseCards[i];
         switch (i) {
             case 'positive':
                 type = TYPE_POSITIVE;
@@ -191,10 +191,14 @@ const hydrateCardDB = async function (cleanInstall = true) {
                 type = TYPE_PLANET;
                 break;
         }
-        for (let j in card) {
+        for (let j in cards) {
             let data = {};
+            let infos = cards[j];
+
+            if (type === TYPE_PLACE && !infos.start)
+                type = TYPE_FOLLOWUP;
+
             data['type'] = type;
-            let infos = card[j];
 
             for (let k in infos) {
                 data[k] = infos[k];

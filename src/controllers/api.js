@@ -3,6 +3,7 @@ const {Ship} = require("./../models/ship");
 const {hydrateCardDB, getCards, cardPop} = require("./deck");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
+const {Card} = require("../models/card");
 
 // TODO replace shipId with current game ship ID
 const shipId = 1;
@@ -69,17 +70,29 @@ module.exports.getAllPlayers = async function (req, res) {
 
 module.exports.getNextCard = async function (req, res) {
 
-    //TODO replace with card pop when baseCard.json is completed
     let next_card = await cardPop(false);
-    // TESTING :
-    // let next_card = await getCards(ALL, 1);
-    // next_card = next_card[0];
 
     res.json(next_card);
 }
+
+module.exports.getCardByName = async function (req, res) {
+
+    let cardRaw = await DB.tables.cards.findOne({
+        attributes: [
+            'id'
+        ],
+        where: {
+            name: req.params.name
+        }
+    });
+
+    let card = await new Card(cardRaw.id).getData();
+
+    res.json(card);
+}
+
 module.exports.popNextCard = async function (req, res) {
 
-    //TODO replace with card pop when baseCard.json is completed
     let next_card = await cardPop();
 
     let statuses = await new Statuses();
