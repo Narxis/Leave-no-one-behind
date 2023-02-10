@@ -44,6 +44,10 @@ const startServer = async function() {
     Bot.start();
 }
 
+if (process.env.FORCE_COLOR !== 'true') {
+    console.log('Add FORCE_COLOR=true to env var for colors !');
+}
+
 startServer().then(e => {
     let os = require('os');
     let interfaces = os.networkInterfaces();

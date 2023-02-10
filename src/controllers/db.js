@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
-const DB_VERSION = 4; // increment when structure changes are added
+const DB_VERSION = 5; // increment when structure changes are added
 const DB_FOLDER = 'storage/databases/';
 
 class DB {
@@ -287,6 +287,16 @@ class DB {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true
+            },
+            owners: {
+                type: Sequelize.STRING,
+                defaultValue: null,
+                allowNull: true
+            },
+            slug: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
             },
             name: {
                 type: Sequelize.STRING,

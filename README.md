@@ -204,10 +204,25 @@ GET /api/items/owned'
 [
   {
     "name": "",
+    "slug": "",
     "desc": "",
     "race": "",
     "pool": "",
     "quantity": ""
+  }
+]
+```
+GET /api/items/owned/:discord_id'
+# Obtient un tableau contenant tous les items de départ actuellement en possession du joueur avec ce discord_id
+```json
+[
+  {
+    "name": "",
+    "slug": "",
+    "owners": [],
+    "desc": "",
+    "race": "",
+    "pool": ""
   }
 ]
 ```

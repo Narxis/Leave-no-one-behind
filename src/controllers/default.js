@@ -54,11 +54,25 @@ module.exports.mainMenu = function (req, res) {
 
 module.exports.renderCardEvent = async function (req, res) {
 
-    let players = await DB.tables.players.findAll();
+    let players = await DB.tables.players.findAll({raw:true});
     let ship = await new Ship().getData();
 
     let statuses = new Statuses();
     let activeStatuses = await statuses.getAllStatuses();
+
+    let itemsMan = new Items();
+    let items = await itemsMan.getAllItems();
+    let starters = await itemsMan.getAllStarters();
+
+    players = players.map(player => {
+
+        items = starters.filter(item => item.owners.includes(player.discord_id));
+        player['items'] = items;
+
+        return player;
+    })
+
+    console.log(players);
 
     if (CONFIG.gameState !== 'gameLive')
         await CONFIG.upsert('gameState', 'gameLive');
@@ -81,7 +95,8 @@ module.exports.renderCardEvent = async function (req, res) {
         players: players,
         card: current_card,
         ship: ship,
-        statuses: statusesAll
+        statuses: statusesAll,
+        items: items
     }
 
     switch (current_card.type) {
@@ -310,6 +325,7 @@ module.exports.start = async function (req, res) {
 
     let items = new Items();
     await items.hydrateDB();
+    await items.giveAllStarters();
 
     await CONFIG.upsert('gameState', 'gameLive')
 
