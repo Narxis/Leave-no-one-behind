@@ -212,8 +212,10 @@ GET /api/items/owned'
   }
 ]
 ```
+```http
 GET /api/items/owned/:discord_id'
 # Obtient un tableau contenant tous les items de départ actuellement en possession du joueur avec ce discord_id
+```
 ```json
 [
   {
