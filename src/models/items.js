@@ -99,7 +99,10 @@ class Items {
     // No notion of quantity on player item (starters)
     async giveItemToPlayer(slug, discord_id) {
         let item = await DB.tables.items.findOne({where: {slug:slug}, raw:true});
-        let new_owners = item.owners.split(',');
+
+        let new_owners = [];
+        if (item.owners !== '')
+           new_owners = item.owners.split(',');
         new_owners.push(discord_id);
         new_owners = [...new Set(new_owners)];
         new_owners = new_owners.join(',');
