@@ -80,12 +80,14 @@ async function join(e) {
 function setStats(e) {
     let stats = e.detail.data;
 
-    document.querySelector('#combat input').value = stats.combat;
-    document.querySelector('#pilotage input').value = stats.pilotage;
-    document.querySelector('#engineering input').value = stats.engineering;
-    document.querySelector('#recon input').value = stats.recon;
-    document.querySelector('#survival input').value = stats.survival;
-    document.querySelector('#moral input').value = stats.moral;
+    let id = '#p' + stats.discord_id;
+
+    document.querySelector(id + ' #combat input').value = stats.combat;
+    document.querySelector(id + ' #pilotage input').value = stats.pilotage;
+    document.querySelector(id + ' #engineering input').value = stats.engineering;
+    document.querySelector(id + ' #recon input').value = stats.recon;
+    document.querySelector(id + ' #survival input').value = stats.survival;
+    document.querySelector(id + ' #moral input').value = stats.moral;
 }
 
 async function loadPlayerSheets() {
