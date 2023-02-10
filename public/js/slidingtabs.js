@@ -7,13 +7,6 @@ var textprintednbr = 0;
 var cardnbrUntilPlanet = 5;
 //variables status
 var blackout;
-let duration_blackout = 3;
-
-let duration_anticipation = 5;
-
-// let statusNameList = ['Blackout', 'Entrainé', 'Affaiblit', 'Anticipation']//liste des status possible
-// let statusSvgList = [svg_blackout, svg_trained, svg_weak, svg_anticipation]
-// var activeStatusListLength = activeStatusList.length;
 var statushtml = document.querySelector(".status");
 //html bouton suivant
 var nextbuttonhtml = `<button class="next-button choice move-down" id="next1">Continuer votre chemin</button>`;
@@ -40,15 +33,6 @@ async function getActiveStatus () {
     });
     return JSON.parse(await rawResponse.text());
 }
-
-// async function updateStatusList (){
-//     var activeStatus = await getActiveStatus()
-//     activeStatusList = [];
-//     for (let i=0; i<activeStatus.length; i++){
-//         activeStatusList.push(activeStatus[i].slug)
-//     }
-//     blackout = activeStatusList.includes("blackout");
-// }
 
 function startCountDown() {
     // On récupère le texte dans le timer (en tant qu'entier)
@@ -147,22 +131,6 @@ function startCountDown() {
         }
     }, 1000);
 }
-
-// async function updatestatus() {
-//     // statusDurationList = [duration_blackout, cardnbrUntilPlanet, cardnbrUntilPlanet, duration_anticipation] //updates to new cardnbrUntilPlanet value
-//     let currentStatusName = document.querySelectorAll('.status-name');
-//     let currentStatus = document.querySelectorAll('.status-duration');
-//     for (let i = 0; i < currentStatus.length; i++) {
-//         let oldVal = parseInt(currentStatus.item(i).innerText)
-//         currentStatus.item(i).innerText = String(oldVal - 1)
-//         // console.log(currentStatusName.item(i).innerText, oldVal-1,'statusname','oldVal-1')
-//         wsLNOB.setStatus(currentStatusName.item(i).innerText, oldVal-1)
-//         if (oldVal == 1) {
-//             currentStatus.item(i).closest('.status-line').remove()//removes status if it's duration is 0
-//         }
-//     }
-//     await updateStatusList();
-// }
 
 async function initialiseChoiceTabs() {
     var choice = document.getElementById('choicetab');
@@ -462,21 +430,6 @@ const addStatus = (status) => {
 const addNewStatus = (slug, duration) => {
     wsLNOB.setStatus(slug, duration)
 }
-
-// function applystatus(status) {
-//     if (!activeStatusList.includes(''+status.slug)) {
-//         activeStatusListLength += 1;
-//         addstatus(status);
-//     }
-//     else {
-//         // let index = statusNameList.findIndex(e => e === statusname)
-//         // let lineindex = activeStatusList.findIndex(e => e === statusname)
-//         let selector = '#line_' + status.id;
-//         document.querySelector(selector).firstElementChild.nextElementSibling.nextElementSibling.innerHTML = String(status.duration)
-//         wsLNOB.setStatus(status.slug, status.duration)
-//     }
-//     updateStatusList()
-// };
 
 function quickUpdateModule(el, mod, left=false) {
     let currentVal;

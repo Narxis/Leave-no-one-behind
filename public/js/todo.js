@@ -1,14 +1,16 @@
+// Il s'agirait d'aller se faire foutre avec des fichiers qui s'appellent todo, j'arrivais pas à le trouver...
+
 const submitForm = document.querySelector(".add");
 const addButton = document.querySelector(".add-todo");
 const todoList = document.querySelector(".todos");
 const list = document.querySelectorAll(".todos li");
 
-let listLenght = list.lenght;
+let listLength = list.length;
 
-const generateTempalate = (todo) => {
+const generateTemplate = (todo) => {
   const html = `<li>
-                  <input type="checkbox" id="todo_${listLenght}">
-                  <label for="todo_${listLenght}">
+                  <input type="checkbox" id="todo_${listLength}">
+                  <label for="todo_${listLength}">
                     <span class="check"></span>
                     ${todo}
                   </label>
@@ -17,18 +19,19 @@ const generateTempalate = (todo) => {
   todoList.innerHTML += html;
 };
 
-function addTodos(e) {
+function addItem(e) {
   e.preventDefault();
   const todo = submitForm.add.value.trim();
   if (todo.length) {
-    listLenght = listLenght + 1;
-    generateTempalate(todo);
+    listLength += 1;
+    generateTemplate(todo);
     submitForm.reset();
   }
+  wsLNOB.addItem(todo)
 }
 
-submitForm.addEventListener("submit", addTodos);
-addButton.addEventListener("click", addTodos);
+submitForm.addEventListener("submit", addItem);
+addButton.addEventListener("click", addItem);
 
 function deleteTodos(e) {
   if (e.target.classList.contains("delete")) {
