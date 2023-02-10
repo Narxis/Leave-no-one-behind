@@ -7,6 +7,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescription('ping server'),
+    step: '',
     async execute(interaction) {
 
         const wsClient = new ws(WS_URL);

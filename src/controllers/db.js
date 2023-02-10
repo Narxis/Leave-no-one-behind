@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
-const DB_VERSION = 3; // increment when structure changes are added
+
+const DB_VERSION = 5; // increment when structure changes are added
 const DB_FOLDER = 'storage/databases/';
 
 class DB {
@@ -12,7 +13,7 @@ class DB {
 
         if (process.env.DB_URL === '') {
             let db_name = test ? 'test_db' : 'database' + DB_VERSION;
-            console.log('Using local DB')
+            log('Using local DB', "#666666")
             this.sequelize =  new Sequelize(db_name, '', '', {
                 host: 'localhost',
                 dialect: 'sqlite',
@@ -21,7 +22,7 @@ class DB {
             });
         }
         else {
-            console.log('Using remote DB')
+            log('Using remote DB')
             this.sequelize = new Sequelize(process.env.DB_URL)
         }
         await this.registerDatabases();
@@ -293,6 +294,16 @@ class DB {
                 primaryKey: true,
                 autoIncrement: true
             },
+            owners: {
+                type: Sequelize.STRING,
+                defaultValue: null,
+                allowNull: true
+            },
+            slug: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
             name: {
                 type: Sequelize.STRING,
                 defaultValue: '',
@@ -348,7 +359,22 @@ class DB {
             }
         })
 
+        let config = this.sequelize.define('config', {
+            key: {
+                type: Sequelize.STRING,
+                primaryKey: true,
+                defaultValue: '',
+                allowNull: false
+            },
+            val: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            }
+        });
+
         this.tables = {
+            config: config,
             cards: cards,
             card_modules: card_modules,
             players: players,
@@ -360,7 +386,7 @@ class DB {
 
         for (let table in this.tables) {
             await this.tables[table].sync();
-            console.log('synchro ' + table)
+            log('synchro ' + table, '#666666')
         }
     }
 

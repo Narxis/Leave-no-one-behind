@@ -55,7 +55,7 @@
 .life-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 350px;
     height: 100%;
@@ -63,27 +63,52 @@
     border-right: 1px solid rgb(180, 180, 180);
 }
 
+.life-change {
+    display: flex;
+    cursor: pointer;
+    width: 100%;
+    height: 50%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.life-selector {
+    display: flex;
+    width: 100%;
+    height: 40%;
+}
+
+.life-type1,
+.life-type2 {
+    display: flex;
+    padding: 15px;
+}
+
 .ennemy,
-.ally {
+.ally,
+.status-box {
     display: flex;
     align-items: center;
-    height: 50%;
-    width: 100%;
+    height: 240px;
+    width: 18.3%;
     flex-wrap: wrap;
     justify-content: space-around;
     align-content: center;
+    position: absolute;
+    top: -250px;
 }
 
-.ennemy {
-    border-bottom: 1px solid rgb(180, 180, 180);
-}
-
+.ennemy,
 .ally {
+    border-bottom: 1px solid rgb(180, 180, 180);
     border-top: 1px solid rgb(180, 180, 180);
 }
 
 #search-ally,
-#search-ennemy {
+#search-ennemy,
+#search-status {
     height: 2.5em;
     width: 90%;
     background-color: #ffffff21;
@@ -110,6 +135,29 @@
     color: #fff;
     margin-top: 1em;
     cursor: pointer;
+}
+
+.status-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 50%;
+}
+
+.status-search {
+    width: 90%;
+}
+
+.status-duration-text {
+    display: flex;
+    text-align: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .combat {
@@ -179,7 +227,7 @@
         width: 25%;
     }
 
-    #search-ally, 
+    #search-ally,
     #search-ennemy {
         height: 3.5em;
         width: 90%;
@@ -211,6 +259,41 @@
         height: 100%;
         border-top: 2px solid rgb(180, 180, 180);
     }
+
+    .life-change {
+        padding: 0.4em 0em;
+    }
+
+    .life-type1,
+    .life-type2 {
+        padding: 0.56em;
+        align-items: center;
+    }
+
+    .ennemy,
+    .ally,
+    .status-box {
+        display: flex;
+        width: 24.4%;
+        height: 17em;
+        position: absolute;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-content: center;
+        margin: 1em 0em;
+        padding: 0em 0em;
+        top: -16em;
+        border-top: none;
+    }
+
+    .status-box {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        position: absolute;
+        top: 50%;
+        height: 17em;
+    }
 }
 
 /* Smartphones (portrait) ----------- */
@@ -238,10 +321,6 @@
         border-radius: 2em;
         overflow: hidden scroll;
         justify-content: flex-start;
-    }
-
-    .life-container {
-        flex-direction: row;
     }
 
     .combat,
@@ -288,7 +367,7 @@
     .ally {
         padding-top: 2em;
         align-content: flex-start;
-        height: 80%;
+        /* height: 80%; */
         border-top: 1px solid #fff;
         border-bottom: 1px solid #fff;
         font-size: 1.5em;
@@ -304,4 +383,46 @@
         text-indent: 1.5em;
         width: 90%;
     }
+
+    .life-change {
+        padding: 0.4em 0em;
+        height: 17em;
+        border-top: 1px solid #fff;
+        width: 100%;
+        align-content: flex-start;
+    }
+
+    .life-type1,
+    .life-type2 {
+        padding: 0.56em;
+        align-items: center;
+    }
+
+    .ennemy,
+    .ally,
+    .status-box {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: space-around;
+        align-content: center;
+        margin: 1em 0em;
+        padding: 2.5em 0em;
+        border-top: none;
+        flex-wrap: wrap;
+        position: initial;
+    }
+
+    .status-box {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        height: 11em;
+        border-bottom: 1px solid #fff;
+        align-content: flex-start;
+    }
+}
+
+.hide {
+    display: none;
 }

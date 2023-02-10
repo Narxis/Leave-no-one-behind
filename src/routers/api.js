@@ -17,6 +17,7 @@ module.exports = function(router) {
 
     router.get(basePath + '/items', controller.getAllItems);
     router.get(basePath + '/items/owned', controller.getOwnedItems);
+    router.get(basePath + '/items/owned/:discordId', controller.getPlayerItems);
 
     router.get(basePath + '/ship', controller.getShip);
     // router.get(basePath + '/ship/upgrade/:module', controller.upgradeShipModule);

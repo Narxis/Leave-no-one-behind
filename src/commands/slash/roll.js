@@ -19,6 +19,7 @@ module.exports = {
                     { name: 'moral', value: 'moral' },
                     { name: 'module', value: 'module' },
                 )),
+    step: 'gameLive',
     async execute(interaction) {
 
 

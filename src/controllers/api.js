@@ -42,6 +42,15 @@ module.exports.getOwnedItems = async function(req, res) {
     res.json(items);
 }
 
+module.exports.getPlayerItems = async function(req, res) {
+    let itemsMan = new Items();
+    let items = await itemsMan.getAllStarters();
+
+    items = items.filter(item => item.owners.includes(req.params.discordId))
+
+    res.json(items);
+}
+
 module.exports.getPlayer = async function (req, res) {
     let player = new Player();
     player = await player.getData(req.params.discordId);

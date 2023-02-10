@@ -5,6 +5,7 @@ const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
+const ws = require("ws");
 
 module.exports.index = function(req, res) {
     res.render('index');
@@ -38,7 +39,8 @@ module.exports.mjMenu = function (req, res) {
     res.render('mj-menu');
 }
 
-module.exports.persos = function (req, res) {
+module.exports.persos = async function (req, res) {
+    await CONFIG.upsert('gameState', 'creation');
     res.render('perso');
 }
 
@@ -52,11 +54,26 @@ module.exports.mainMenu = function (req, res) {
 
 module.exports.renderCardEvent = async function (req, res) {
 
-    let players = await DB.tables.players.findAll();
+    let players = await DB.tables.players.findAll({raw:true});
     let ship = await new Ship().getData();
 
     let statuses = new Statuses();
     let activeStatuses = await statuses.getAllStatuses();
+
+    let itemsMan = new Items();
+    let items = await itemsMan.getAllItems();
+    let starters = await itemsMan.getAllStarters();
+
+    players = players.map(player => {
+
+        let playerItems = starters.filter(item => item.owners.includes(player.discord_id));
+        player['items'] = playerItems;
+
+        return player;
+    })
+    
+    if (CONFIG.gameState !== 'gameLive')
+        await CONFIG.upsert('gameState', 'gameLive');
 
     for (let i of activeStatuses) {
         await statuses.remove(i.slug);
@@ -67,14 +84,17 @@ module.exports.renderCardEvent = async function (req, res) {
     let current_card = await cardPop();
     // TESTING :
 
-    if (!current_card)
+    if (!current_card) {
+        await CONFIG.upsert('gameState', 'postGame');
         res.render('end-screen');
+    }
 
     let vars = {
         players: players,
         card: current_card,
         ship: ship,
-        statuses: statusesAll
+        statuses: statusesAll,
+        items: items
     }
 
     switch (current_card.type) {
@@ -279,7 +299,8 @@ module.exports.renderTestCardEvent = async function (req, res) {
         players: players,
         card: card,
         ship: ship,
-        statuses: statuses
+        statuses: statuses,
+        items: []
     }
 
     res.render('template-card', vars);
@@ -377,10 +398,43 @@ module.exports.indexLegacy = function (req, res) {
     res.render('index-legacy');
 }
 
-module.exports.reset = async function (req, res) {
+module.exports.start = async function (req, res) {
 
+    res.render('fiche-vaisseau');
     await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
     await destroyDeck();
+
+    await hydrateCardDB();
+    await deckGenerator();
+
+    let ship = new Ship();
+    await ship.create();
+
+    let statuses = new Statuses();
+    await statuses.hydrateDB();
+
+    let items = new Items();
+    await items.hydrateDB();
+    await items.giveAllStarters();
+
+    await CONFIG.upsert('gameState', 'gameLive')
+
+    let data = JSON.stringify({
+        action: 'game-ready'
+    });
+
+    const wsClient = new ws(WS_URL);
+    wsClient.on('open', () => {
+        wsClient.send(data);
+    });}
+
+module.exports.reset = async function (req, res) {
+
+    await DB.tables.config.destroy({truncate: true, restartIdentity: true});
+    await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
+    await destroyDeck();
+
+    await CONFIG.hydrateDB();
     await hydrateCardDB();
     await deckGenerator();
 

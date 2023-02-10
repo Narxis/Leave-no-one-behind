@@ -2,6 +2,28 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+async function getShip () {
+    const rawResponse = await fetch('/api/ship', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    });
+    return JSON.parse(await rawResponse.text());
+}
+async function scanPoints (){ //calcul points de detec
+    let ship = await getShip();
+    let scan = ship.scanner;
+    let points = Math.floor(scan/16) * 2;
+    let remain = scan%16;
+    let luck = Math.random()*16;
+    if (remain>luck){
+        points += 2
+    }
+    points = (Math.min(points,12));
+    return (points);
+}
 var texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
 var textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
 var textff = "blabla Animal blabla planette blabla plante bla bla ";
@@ -31,7 +53,6 @@ var valuegr = gr.getAttribute('data-value');
 var valueeau = eau.getAttribute('data-value');
 
 var costList = [costo2, costcl, costff, costre, costeau, costgr,];
-var points = 14;//total de detection
 var showbuttons = false;
 var dronenbr = 3
 var iswritting = 0;
@@ -40,7 +61,8 @@ var droneUse = false;
 function writePoints(place, number) {
     document.querySelector(place).innerText = String(number);
 };
-function initialisePlanet() {
+async function initialisePlanet() {
+    let points =     await scanPoints();
     writePoints('.detection-point', points);
     writePoints('.drone', dronenbr);
 }
