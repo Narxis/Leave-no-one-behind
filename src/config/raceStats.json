@@ -9,9 +9,9 @@
   },
   "omphor": {
     "combat": -2,
-    "pilotage": 1,
+    "pilotage": 2,
     "engineering": 1,
-    "survival": 1,
+    "survival": 0,
     "recon": 0,
     "moral": 0
   },
@@ -25,25 +25,25 @@
   },
   "ygrl": {
     "combat": 0,
-    "pilotage": 0,
+    "pilotage": -1,
     "engineering": -1,
     "survival": 1,
-    "recon": 1,
+    "recon": 2,
     "moral": 0
   },
   "shrymp": {
-    "combat": 0,
+    "combat": -1,
     "pilotage": 0,
-    "engineering": -1,
+    "engineering": 0,
     "survival": 2,
     "recon": 0,
     "moral": 0
   },
   "aku": {
-    "combat": -1,
+    "combat": 0,
     "pilotage": -1,
     "engineering": 2,
-    "survival": 0,
+    "survival": -1,
     "recon": 1,
     "moral": 0
   },
@@ -73,18 +73,18 @@
   },
   "nek_terre": {
     "combat": -1,
-    "pilotage": 0,
+    "pilotage": 1,
     "engineering": 0,
-    "survival": 0,
-    "recon": 2,
+    "survival": 1,
+    "recon": 0,
     "moral": 0
   },
   "nek_air": {
     "combat": 0,
-    "pilotage": 2,
-    "engineering": 0,
+    "pilotage": 0,
+    "engineering": 1,
     "survival": -1,
-    "recon": 0,
+    "recon": 1,
     "moral": 0
   }
 }
