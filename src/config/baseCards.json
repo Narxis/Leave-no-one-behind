@@ -83,19 +83,137 @@
   ],
   "negative": [
     {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau.\nCes débris vont percuter votre vaisseau au niveau au niveau du scanner.<span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
+      "desc": "<span class=\"blackout\"></span>",
+      "timer": false,
       "choices": [
         {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
+          "value": "",
+          "reveal": ""
         },
         {
-          "value": "Tenter une manoeuvre d'evitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'evitement </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+          "value": "",
+          "reveal": ""
         },
         {
           "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vos radars détectent des débris à une très grande vitesse en direction de votre vaisseau. Ils vont percuter votre vaisseau au niveau du [module]. <span class=\"blackout\">Un débris a percuté votre [module], vous auriez pu le détecter si vous aviez allumé vos modules de détection.</span>",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous essayez de minimiser les dégâts, mais le débris frappe votre vaisseau à une vitesse élevée et, malgré vos efforts, il est impossible de sauver intégralement le module."
+        },
+        {
+          "value": "Tenter une manoeuvre d'evitement\n(Pilote)",
+          "reveal": "Vous essayez d'éviter le débris, mais malheureusement, il percute une autre partie de votre vaisseau."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "L'hyper-espace devient instable, et vous êtes téléporté en dehors, en plein milieu d'un champ de bataille. Des tirs sont dirigés vers votre [module-h].<span class=\"blackout\">L'hyper-espace devient instable et vous êtes téléporté en dehors, des tirs sont dirigés vers votre [module-h].</span>",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Minimiser la casse\n(Ingénieur)",
+          "reveal": "Vous tentez de minimiser les dommages causés par le tir, malgré vos efforts, il est impossible de sauver l'intégralité du module."
+        },
+        {
+          "value": "Tenter une manoeuvre d'evitement\n(Pilote)",
+          "reveal": "Vous essayez d'éviter le tir, mais celui-ci percute une autre partie de votre vaisseau à la place."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "L'alarme retentit, le module d'oxygène s'éteint. Vous disposez d'assistances respiratoires individuelles qui vous permettent de rester conscient. Un intrus est détecté dans le vaisseau et se dirige vers le cockpit. Il s'agit d'un mercenaire, il exige la remise de 100 humains en échange de la réactivation de votre module d'oxygène et de son départ.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Combattre le mercenaire",
+          "reveal": "Vous engagez un combat contre le mercenaire. Après le combat, le mercenaire se téléporte hors du vaisseau. Il faut rallumer le module d'oxygène."
+        },
+        {
+          "value": "Négocier",
+          "reveal": "Le mercenaire accepte de négocier."
+        },
+        {
+          "value": "Céder les 100 humains",
+          "reveal": "Le mercenaire repart avec les cryopods contenant les 100 humains, vous devez maintenant réactiver le module d'oxygène."
+        }
+      ]
+    },
+    {
+      "desc": "Les radiations d'un pulsar surchargent vos systèmes, il y a un risque que vos modules soient endommagés en essayant de traiter une quantité aussi importante d'informations.<span class=\"blackout\">Vous apercevez au loin la lumière d'un pulsar, heureusement que vos modules de détection sont éteints, sinon ils auraient pu être endommagés.</span>",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Eteindre les modules de détection",
+          "reveal": "Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "Le traitement des données excédentaires génère des erreurs, causant des dommages à tous les modules."
+        },
+        {
+          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "L'explosion lointaine d'une supernova surcharge votre système de détection avec une quantité importante de données, ce qui peut entraîner des risques d'endommagement.<span class=\"blackout\">Une explosion lointaine vous aveugle pendant de longues secondes. Il semble qu'une supernova ait explosé non loin de vous. Heureusement, vos systèmes de détection étant éteints, ils ont pu être préservés des dommages.</span>",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Eteindre les modules de détection",
+          "reveal": "Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace."
+        },
+        {
+          "value": "",
+          "reveal": "Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs."
+        },
+        {
+          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vous traversez un amas stellaire, la grande quantité d'étoiles surcharge vos capteurs d'informations, ils risquent d'être endommagés.<span class=\"blackout\">Vous traversez un amas stellaire, la grande quantité d'étoiles aurait pu surcharger vos capteurs d'informations, mais heureusement ils sont éteints et ne courent aucun risque d'être endommagés.</span>",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Eteindre les modules de détection",
+          "reveal": "Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs."
+        },
+        {
+          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Des ondes électromagnétiques surchargent vos modules de détection, ils sont automatiquement éteints par le système.<span class=\"blackout\">L'affichage du micro-onde clignote, il semble que des ondes électromagnétiques puissantes ont traversé votre vaisseau.</span>",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Continuer votre voyage<span class=\"blackout\">Continuer votre voyage</span>",
           "reveal": ""
         }
       ]
