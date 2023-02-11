@@ -867,22 +867,8 @@ nav {
 #output-combat {
     left: -24px;
     width: 19px;
-    opacity: 0;
     top: 2px;
 }
-
-#output-pilotage {
-    opacity: 0;
-}
-
-#output-engineering {
-    opacity: 0;
-}
-
-#output-survival {
-    opacity: 0;
-}
-
-#output-recon {
+.hide-opacity{
     opacity: 0;
 }
