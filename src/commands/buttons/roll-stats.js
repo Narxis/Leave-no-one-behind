@@ -49,7 +49,7 @@ module.exports = {
         }
 
         if (currentRoll()) {
-            playerCache['stats'][currentRoll().stat][currentRoll().val] = Math.floor(Math.random() * 50);
+            playerCache['stats'][currentRoll().stat][currentRoll().val] = Math.floor(Math.random() * 50) + 1;
             CACHE.set(keyCache, playerCache, 10000);
         }
 

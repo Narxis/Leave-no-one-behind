@@ -2,16 +2,28 @@
 
 function doPlayerRoll(e) {
 
+    let data = e.detail.data;
+
+    if (data.module !== "") {
+        document.getElementById('roll-1-'+data.discord_id).checked = false;
+        document.getElementById('roll-2-'+data.discord_id).checked = true;
+    }
+    else {
+        document.getElementById('roll-2-'+data.discord_id).checked = false;
+        document.getElementById('roll-1-'+data.discord_id).checked = true;
+    }
+
     let i=20;
-    let rollDiv = document.getElementById('p'+e.detail.data.discord_id+'-roll');
+    let rollDiv = document.getElementById('p'+ data.discord_id+'-roll');
+
     rollDiv.classList.remove('success');
     rollDiv.classList.remove('fail');
     let randomDisp = setInterval(function() {
         rollDiv.innerText = Math.floor(Math.random()*99).toString();
         i--;
         if (i<0) {
-            rollDiv.innerText = e.detail.data.result;
-            rollDiv.classList.add((e.detail.data.success ? 'success' : 'fail'));
+            rollDiv.innerText = data.result;
+            rollDiv.classList.add((data.success ? 'success' : 'fail'));
             clearInterval(randomDisp);
         }
     },50);

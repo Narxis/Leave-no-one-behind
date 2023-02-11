@@ -126,17 +126,18 @@ class Player {
         return this;
     }
 
-    async roll(dice, stat, modules = false) {
+    async roll(dice, stat, module = '') {
         let ship = new Ship(1);
         ship = await ship.getData();
 
         let res;
-        let moyMod = ship.scanner + ship.proximity + ship.motors + ship.shield + ship.oxygen+ ship.energy + ship.gravity + ship.landing + ship.construction;
-        moyMod = moyMod/900;
-        if (modules)
-            res = dice * moyMod * this[stat]/100 + (this.moral-50)/2;
+        let moyMod = ship.scanner + ship.proximity + ship.motors + ship.oxygen + ship.energy + ship.gravity;
+        moyMod = moyMod/600;
+        if (module !== '')
+            res = dice * this[stat]/100 * Math.pow(moyMod,2) + (this.moral-50)/2;
         else
             res = dice * this[stat]/100 + (this.moral-50)/4;
+
         return Math.ceil(res);
     }
 }
