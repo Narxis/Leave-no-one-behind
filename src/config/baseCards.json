@@ -217,6 +217,108 @@
           "reveal": ""
         }
       ]
+    },
+    {
+      "desc": "Tout est calme pour l'instant. Le bruit des écrans et des machines remplit l'air, mais ne parvient pas à masquer le vide qui vous entoure.\nVous ressentez une baisse de moral.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Continuer le voyage",
+          "reveal": "Votre voyage continue, vous espérez étancher votre soif d'aventure."
+        }
+      ]
+    },
+    {
+      "desc": "Vous passez un peu trop près d'un trou noir et êtes obligé de pousser les moteurs au-delà du seuil de sécurité.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Tenter de minimiser les dégats\n(Ingénieur)",
+          "reveal": "Malgré vos efforts, pousser les moteurs au-delà de leur seuil de sécurité a tout de même endommagé leur intégrité."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "Les moteurs sont endommagés."
+        }
+      ]
+    },
+    {
+      "desc": "Vous rencontrez un barrage de la première douane galactique et on vous demande de vous ranger sur le bas-côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Negocier avec les douanniers\n(MJ)",
+          "reveal": "Vous essayez de négocier avec la douane, qui est surprenamment ouverte à ce genre de pratique."
+        },
+        {
+          "value": "Menacer de les attaquer en justice grâce a votre avo-cat-e\n(Nek-Air présente)",
+          "reveal": "La douane est terrifiée à l'idée de devoir aller au tribunal contre une Nek-air et vous laisse passer."
+        },
+        {
+          "value": "Donnez vos consommables à la douane",
+          "reveal": "Vous donnez vos consommables à la douane, qui vous laisse repartir."
+        }
+      ]
+    },
+    {
+      "desc": "Votre vaisseau est expulsé de l'hyperespace et vous atterrissez dans un nuage toxique. L'odeur qui s'en dégage est similaire à celle d'une foule de Fneks réunis dans un stade. Votre module de purification d'air est endommagé.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Tenter de réparer le module d'oxygène\n(Ingénieur)",
+          "reveal": "Vous essayez de réparer le module, malgré vos efforts, il est impossible de sauver l'intégralité du module.\nL'odeur est insuportable les fneks et les yorcs ne sont pas plus génés que ça, les autres perdent du moral."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "L'odeur est insuportable les fneks et les yorcs ne sont pas plus génés que ça, les autres perdent du moral."
+        }
+      ]
+    },
+    {
+      "desc": "De la vie a été détectée dans la salle des cryopods. Elle a été verrouillée de l'intérieur, vous entendez quelqu'un parler, il dit :\n\"Je suis membre de la PEACE, donnez-moi 2 microprocesseurs et 1 câble HDMI.\"",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Récupérer les micro-processeurs dans les scanners",
+          "reveal": "Vous récupérez des microprocesseurs dans les scanners, cela les abîme un peu.\nVous les donnez au pirate qui se plaint de ne pas avoir de câble HDMI, mais il se téléporte hors du vaisseau."
+        },
+        {
+          "value": "Désactiver l'injection d'oxygène dans la salle",
+          "reveal": "Après quelques minutes, il n'y a plus de signe de vie dans la salle des cryopods, mais le pirate a profité de ce temps pour éteindre des cryopods.\nVous réactivez l'oxygène dans la salle et vous débarrassez des corps."
+        }
+      ]
+    },
+    {
+      "desc": "Les secousses du vaisseau ont fait renverser des produits chimiques dans la réserve, dégageant une odeur de putrescence avancée. Les drones de nettoyage n'ont pas accès à la réserve, il faut donc qu'une personne s'en occupe.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Envoyer un membre de l'équipage",
+          "reveal": "L'odeur est si puissante que vous ne pouvez pas la décrire.\nElle vous donne la nausée, mais vous parvenez finalement à résoudre l'incident. <span class=\"mjreveal\">(Forte perte de morale pour le joueur choisit)</span>"
+        },
+        {
+          "value": "Activer le système de filtrage de l'air",
+          "reveal": "Vous activez le système de recyclage d'air du vaisseau, les vapeurs chimiques se dissipent peu à peu, mais l'odeur persiste dans la ventilation.\nVous prenez des mesures pour éliminer complètement cette odeur et assurer la sécurité à bord du vaisseau.<span class=\"mjreveal\">(Faible perte de morale pour tous les joueurs )</span>"
+        },
+        {
+          "value": "Envoyer un Fnek",
+          "reveal": "Votre coéquipier, dépourvu de sens de l'odorat, s'attèle à la tâche avec détermination, pour lui c'est comme éponger une flaque d'eau."
+        }
+      ]
+    },
+    {
+      "desc": "Vous croisez sur le bord de la voie cosmique une QI-zine d'Ygrl accompagnée d'une poignée de Shrymps. La chef de la tribu tient un pot de cornichons fermé dans ses mains, ni elle ni les autres membres de la tribu ne parviennent à l'ouvrir. Elle attire votre attention à l'aide de son mycélium cosmique et vous fait comprendre qu'elle a besoin de votre aide.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Ouvrir le pot de cornichon",
+          "reveal": "Vous réussisez finalement à ouvrir le pot de cornichon mais vous découvrez que la chef des Ygrls a essayé de vous tromper en vous faisant croire qu'elle avait besoin d'aide avec le pot de cornichons, alors qu'en réalité, elle envoyait ses sbires voler des vivres dans votre réserve pendant que vous étiez occupé.\nCela entraîne une légère perte de moral pour tout l'équipage. <span class=\"mjreveal\">(Faible perte de morale pour tous les joueurs )</span>"
+        },
+        {
+          "value": "Demander à l'Omphor de l'équipage d'ouvrir le pot \n(Omphor présent)",
+          "reveal": "D'un simple geste de la main, l'Omphor ouvre le pot de cornichons et le soulève au-dessus de sa tête pour célébrer sa victoire.\nVous rendez le pot aux Ygrls qui sont impressionnées par cette démonstration de force. Elles reprennent leur voyage immédiatement."
+        }
+      ]
     }
   ],
   "neutral": [
