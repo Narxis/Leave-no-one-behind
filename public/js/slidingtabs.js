@@ -561,16 +561,11 @@ function stopCountdown() {
 })();
 
 document.addEventListener('roll',async function(e){
-    console.log(e.detail)
-    console.log(e.detail.data.discord_id)
     let player =document.getElementById('player-tab'+e.detail.data.discord_id);
     let iconlist = player.querySelectorAll('.output-absolute');
-    console.log(iconlist)
     for (let i=0; i<iconlist.length; i++){
-        console.log(iconlist.item(i))
         iconlist.item(i).classList.add('hide-opacity')
     }
     await sleep(1000);
-    console.log(e.detail.data.stat,'output-'+e.detail.data.stat)
     player.querySelector('#output-'+e.detail.data.stat).classList.remove('hide-opacity')
 })
