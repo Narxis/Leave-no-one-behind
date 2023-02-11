@@ -48,6 +48,10 @@ module.exports.ficheVaisseau = function (req, res) {
     res.render('fiche-vaisseau');
 }
 
+module.exports.synopsis = function (req, res) {
+    res.render('synopsis');
+}
+
 module.exports.mainMenu = function (req, res) {
     res.render('index');
 }
