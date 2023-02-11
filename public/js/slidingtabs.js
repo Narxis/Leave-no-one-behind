@@ -310,6 +310,37 @@ async function write(fulltext, place, spanclass='base-text') {
     nextoption();
 }
 
+async function startwrite(fulltext, place, spanclass='base-text') {
+    let currenttext = '';
+    let start = -1 ;
+    let delay = 50
+    document.querySelector(place).innerHTML = `<span class =\"${spanclass}\"></span>`
+    if (fulltext.includes(''+spanclass)) {
+        start = fulltext.indexOf('>', fulltext.indexOf(''+spanclass));
+    }
+    // console.log(start)
+    for (let i = start+1; i <= fulltext.length; i++) {
+        document.querySelector(place).querySelector('.'+spanclass).innerText = currenttext;
+        if (fulltext.substring(i, i + 1) == "<") {
+            i = fulltext.length
+        }
+        if (fulltext.substring(i, i + 1) == "{") {
+            delay = 400
+            continue;
+        }
+        if (fulltext.substring(i, i + 1) == "}") {
+            delay = 50
+            await sleep(500)
+            currenttext = ''
+            continue;
+        }
+        currenttext += fulltext.substring(i, i + 1)
+        await sleep(delay)
+    }
+    textprintednbr += 1;
+    nextoption();
+}
+
 async function getNextCard (pop=false) {
     const rawResponse = await fetch('/api/nextCard/'+(pop ? 'pop' : 'get'), {
         method: 'GET',
@@ -548,13 +579,18 @@ function stopCountdown() {
     initialiseModTabs();
     initialisePlayerTab();
     await initialiseStatusList();
-    if (blackout){
-        // console.log(blackout,'blackout','if')
-        write(cardtextstr, '.card-text','blackout');
+    if (currentCardType == -1 ) { //type of startcard
+        startwrite(cardtextstr,'.card-text');
     }
     else{
-        // console.log(blackout,'blackout','else')
-        write(cardtextstr, '.card-text');
+        if (blackout){
+            // console.log(blackout,'blackout','if')
+            write(cardtextstr, '.card-text','blackout');
+        }
+        else{
+            // console.log(blackout,'blackout','else')
+            write(cardtextstr, '.card-text');
+        }
     }
     initialiseleLeftTabs();
     document.addEventListener('status', initialiseStatusList);
