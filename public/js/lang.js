@@ -1,4 +1,4 @@
-{
+var lang = {
     "fnek": {
         "desc": "Les Fnek sont des êtres humanoïdes intelligents et avancés technologiquement, mesurant en moyenne 1,80 m et parlant très vite. Ils n'ont pas de nez et ont une odeur corporelle forte à l'origine des expressions \"sentir de la fnek\" ou \"sentir le fnek\", il est cependant tabou de parler d'odeurs avec eux. Ils possèdent le plus grand réseau de distribution d'armes nucléaires de l'univers connu sous le nom de \"La Fnak\"."
     },
@@ -24,10 +24,10 @@
         "desc": "Les Nek-Eau sont une race pacifique et gentille. Elles apprécient la simplicité et sont amies avec les Sylvs. Elles sont souvent calmes et réfléchies, préférant éviter les conflits et chercher des solutions pacifiques aux problèmes."
     },
     "nek_feu": {
-        "desc": "Ils ont un fort instinct de survie et sont prêts à tout pour protéger leur tribu et leur territoire. Ils sont jaloux des sylvs en raison de leur relation pacifique avec les Nek-eau."
+        "desc": "Les Nek-Feux ont un fort instinct de survie et sont prêts à tout pour protéger leur tribu et leur territoire. Ils sont jaloux des sylvs en raison de leur relation pacifique avec les Nek-eau."
     },
     "nek_terre": {
-        "desc": "Ils passent beaucoup de temps à toquer aux portes de vaisseaux spatiaux et à distribuer des prospectus pour partager leur message avec le reste de l'univers. Ils croient en un Messie nommé le \"Saint Nek-Terre\" qui guidera leur peuple vers la lumière. Ils sont généralement pacifiques et bienveillants, mais peuvent être très têtus dans leur croyance en leur religion."
+        "desc": "Les Nek-Terres passent beaucoup de temps à toquer aux portes de vaisseaux spatiaux et à distribuer des prospectus pour partager leur message avec le reste de l'univers. Ils croient en un Messie nommé le \"Saint Nek-Terre\" qui guidera leur peuple vers la lumière. Ils sont généralement pacifiques et bienveillants, mais peuvent être très têtus dans leur croyance en leur religion."
     },
     "nek_air": {
         "desc": "Les Nek-Airs sont de genre féminin et sont particulièrement intelligentes et logiques. Elles sont également de bonnes avo-cat-es et apprécient l'humour des Nek-Terres, même si elles ne se rendent pas compte que ces derniers sont sérieux."
