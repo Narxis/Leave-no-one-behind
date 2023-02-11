@@ -304,7 +304,7 @@ async function write(fulltext, place, spanclass='base-text') {
             i = fulltext.length
         }
         currenttext += fulltext.substring(i, i + 1)
-        await sleep(30)
+        await sleep(21.7)
     }
     textprintednbr += 1;
     nextoption();
