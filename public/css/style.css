@@ -841,3 +841,48 @@ nav {
 .hide{
     display: none;
 }
+
+.output-roll-boite {
+    position: absolute;
+    width: 30px;
+    left: 14px;
+    overflow: hidden;
+}
+
+.output-absolute {
+    position: absolute;
+    left: -26px;
+    width: 23px;
+    top: 3px;
+}
+
+#output-combat,
+#output-pilotage,
+#output-engineering,
+#output-survival,
+#output-recon {
+    transition: .5s;
+}
+
+#output-combat {
+    left: -24px;
+    width: 19px;
+    opacity: 0;
+    top: 2px;
+}
+
+#output-pilotage {
+    opacity: 0;
+}
+
+#output-engineering {
+    opacity: 0;
+}
+
+#output-survival {
+    opacity: 0;
+}
+
+#output-recon {
+    opacity: 0;
+}
