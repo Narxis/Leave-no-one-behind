@@ -2,7 +2,16 @@ const {Card} = require('./../models/card')
 const fs = require("fs")
 const { Op, literal } = require("sequelize");
 
-const deckGenerator = async function (gameMode = 'Fair', nbPla = 5, nbTot = 6, nbNeg=2, nbPos=1, nbNeu=3){
+const deckGenerator = async function (){
+
+    let gameMode = CONFIG.gameModeFair ? 'Fair' : 'Chaos';
+    let nbPla = CONFIG.planetCount;
+    let nbTot = CONFIG.cardByStepsChaos;
+    let nbNeg = CONFIG.negativeByStep;
+    let nbPos = CONFIG.positiveByStep;
+    let nbNeu = CONFIG.neutralByStep;
+
+    console.log(CONFIG);
 
     let deck = [];
 

@@ -172,7 +172,7 @@ class Ship{
         for (let mod of damageableModules) {
             dat[mod] = Math.floor(this[mod] - ((100-this.landing)/4))
         }
-        dat.cryopods = Math.floor(this.cryopods - (10*(100-this.cryopods)/4))
+        dat.cryopods = Math.floor(this.cryopods - (10*(100-this.landing)/4))
 
         await this.update(dat);
     }

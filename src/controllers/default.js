@@ -416,12 +416,24 @@ module.exports.showScore = async function (req, res) {
     await ship.getData();
 
     let deck = await getDeck();
+
+    let cardPlayedIds = deck.filter(e => e.played > 0);
+    let c;
+    let cardPlayed = [];
+    while (c = cardPlayedIds.shift()) {
+        let crd = await new Card(c.card_id)?.getData();
+        cardPlayed.push(crd)
+    }
+
+    let cardPlanetPlayed = cardPlayed.filter(e => e.type === TYPE_PLANET).length;
+    let cardPosPlayed = cardPlayed.filter(e => e.type === TYPE_POSITIVE).length;
+    let cardNegPlayed = cardPlayed.filter(e => e.type === TYPE_NEGATIVE).length;
+    let cardNeuPlayed = cardPlayed.filter(e => e.type === TYPE_NEUTRAL || e.type === TYPE_PLACE).length;
+
     let lastPlanet = async () => {
-        let revDeck = deck.reverse();
-        revDeck.filter(e => e.played > 0)
-        let el;
-        while (el = revDeck.pop()) {
-            let card = await new Card(el.card_id).getData();
+
+        let card;
+        while (card = cardPlayed.pop()) {
             if (card.type === TYPE_PLANET) {
                 return card;
             }
@@ -445,9 +457,10 @@ module.exports.showScore = async function (req, res) {
             + 30*(planet.modules.fau.val+planet.modules.flo.val)
             + 65*(planet.modules.civ.val)
     ;
-    let scoreCards = 0;
 
-    let scoreTotal = 0;
+    let scoreCards = Math.min(6000*cardNegPlayed + 3500*cardNeuPlayed + Math.min(CONFIG.planetCount,10) * Math.min((cardPlanetPlayed-1),9), 500000) - 4500*cardPosPlayed;
+
+    let scoreTotal = ship.cryopods * scoreShip * scorePlanet / 500000 + scoreCards;
 
     let score = {
         scoreShip: scoreShip,

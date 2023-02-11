@@ -30,6 +30,7 @@ class Config {
             await this.upsert(i, baseConfFull[i]);
         }
         await this.get()
+        return this;
     }
 }
 
