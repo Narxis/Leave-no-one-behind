@@ -1,5 +1,5 @@
 var fs = require('fs');
-let {cardPop, deckGenerator,getCards, hydrateCardDB, destroyDeck} = require('./deck')
+let {cardPop, deckGenerator,getCards, hydrateCardDB, destroyDeck, getDeck} = require('./deck')
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
@@ -90,7 +90,7 @@ module.exports.renderCardEvent = async function (req, res) {
 
     if (!current_card) {
         await CONFIG.upsert('gameState', 'postGame');
-        res.render('end-screen');
+        res.redirect('/land');
     }
 
     let vars = {
@@ -359,6 +359,8 @@ module.exports.templatePlanet = async function (req, res) {
             grv: {cost: '3', val: '30'},
             wtr: {cost: '2', val: '30'},
             fau: {cost: '4', val: '60'},
+            flo: {cost: '4', val: '60'},
+            civ: {cost: '4', val: '60'},
             cli: {cost: '2', val: '30'},
             res: {cost: '1', val: '40'}
         },
@@ -402,13 +404,76 @@ module.exports.indexLegacy = function (req, res) {
     res.render('index-legacy');
 }
 
+module.exports.land = async function (req, res) {
+    let ship = await new Ship().getData();
+    await ship.land();
+
+    res.redirect('/score')
+}
+
+module.exports.showScore = async function (req, res) {
+    let ship = await new Ship().getData();
+    await ship.getData();
+
+    let deck = await getDeck();
+    let lastPlanet = async () => {
+        let revDeck = deck.reverse();
+        revDeck.filter(e => e.played > 0)
+        let el;
+        while (el = revDeck.pop()) {
+            let card = await new Card(el.card_id).getData();
+            if (card.type === TYPE_PLANET) {
+                return card;
+            }
+        }
+        return false;
+    }
+
+    let planet = await lastPlanet();
+
+    let scoreShip = 30*ship.scanner
+        + 30*ship.proximity
+        + (40*(ship.oxygen+ship.energy+ship.gravity))
+        + 80*ship.construction
+        + 120*(ship.dbscience+ship.dbhistory);
+
+    let scorePlanet = 85*planet.modules.oxy.val
+            + 60*planet.modules.grv.val
+            + 95*planet.modules.wtr.val
+            + 80*planet.modules.res.val
+            + 55*planet.modules.cli.val
+            + 30*(planet.modules.fau.val+planet.modules.flo.val)
+            + 65*(planet.modules.civ.val)
+    ;
+    let scoreCards = 0;
+
+    let scoreTotal = 0;
+
+    let score = {
+        scoreShip: scoreShip,
+        scorePlanet: scorePlanet,
+        scoreCards: scoreCards,
+        scoreTotal: scoreTotal
+    }
+
+    let js = {vars:`var score=JSON.parse('` + JSON.stringify(score) + `'); var ship=JSON.parse('` + JSON.stringify(ship) + `');`};
+
+    let vars = {
+        ship: ship,
+        score: score,
+        js: js
+    }
+    
+    res.render('end-screen', vars);
+}
+
 module.exports.start = async function (req, res) {
 
     res.render('fiche-vaisseau');
     await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
     await destroyDeck();
 
-    await hydrateCardDB();
+    await hydrateCardDB(true);
     await deckGenerator();
 
     let ship = new Ship();

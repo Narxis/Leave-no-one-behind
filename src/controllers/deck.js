@@ -143,6 +143,10 @@ const destroyDeck = async function (deck_id = 0){
     })
 }
 
+const getDeck = async function () {
+    return await DB.tables.deck.findAll({raw:true})
+}
+
 const shuffle = function (array) {
     let currentIndex = array.length,  randomIndex;
 
@@ -209,4 +213,4 @@ const hydrateCardDB = async function (cleanInstall = true) {
     }
 }
 
-module.exports = {deckGenerator, cardPop, getCards, destroyDeck, shuffle, hydrateCardDB}
+module.exports = {deckGenerator, cardPop, getCards, destroyDeck, getDeck, shuffle, hydrateCardDB}

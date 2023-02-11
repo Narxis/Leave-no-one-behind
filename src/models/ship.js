@@ -12,6 +12,8 @@ class Ship{
     energy;
     gravity;
     landing;
+    dbscience;
+    dbhistory;
     construction;
     scanner_up;
     oxygen_up;
@@ -28,6 +30,8 @@ class Ship{
         'energy': 100,
         'gravity': 100,
         'landing': 100,
+        'dbscience': 100,
+        'dbhistory': 100,
         'construction': 100,
         'scanner_up': 0,
         'oxygen_up': 0,
@@ -54,6 +58,8 @@ class Ship{
             energy: this.energy,
             gravity: this.gravity,
             landing: this.landing,
+            dbscience: this.dbscience,
+            dbhistory: this.dbhistory,
             construction: this.construction,
             scanner_up: this.scanner_up,
             oxygen_up: this.oxygen_up,
@@ -83,6 +89,8 @@ class Ship{
             energy: this.energy,
             gravity: this.gravity,
             landing: this.landing,
+            dbscience: this.dbscience,
+            dbhistory: this.dbhistory,
             construction: this.construction,
             scanner_up: this.scanner_up,
             oxygen_up: this.oxygen_up,
@@ -116,6 +124,8 @@ class Ship{
                 'energy',
                 'gravity',
                 'landing',
+                'dbscience',
+                'dbhistory',
                 'construction',
                 'scanner_up',
                 'oxygen_up',
@@ -147,6 +157,24 @@ class Ship{
 
         await this.update(data);
         return this;
+    }
+
+    async land() {
+        let damageableModules = [
+            'scanner',
+            'proximity',
+            'motors',
+            'oxygen',
+            'energy',
+            'gravity'
+        ]
+        let dat = {};
+        for (let mod of damageableModules) {
+            dat[mod] = Math.floor(this[mod] - ((100-this.landing)/4))
+        }
+        dat.cryopods = Math.floor(this.cryopods - (10*(100-this.cryopods)/4))
+
+        await this.update(dat);
     }
 
     async upgradeModule(module){
