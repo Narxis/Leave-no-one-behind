@@ -1,4 +1,20 @@
 {
+  "initial": [
+    {
+      "desc": "Mise à jour de l’autopilote en v7.27 rev B ... Vérification de l’état des cryopods ... 1000 humains détectés, démarrages des cryopods ... Calcul de l’itinéraire en cours ... Quantité carburant ~ 250mg ... 5 planètes trouvées sur l’itinéraire ... Initialisation de la phase de lancement ... Partir un jour sans retour ?",
+      "timer": "false",
+      "choices": [
+        {
+          "value": "Oui",
+          "reveal": "Erreur de l'autopilote..."
+        },
+        {
+          "value": "<s>Non</s>",
+          "reveal": "Erreur de l'autopilote..."
+        }
+      ]
+    }
+  ],
   "positive": [
     {
       "desc": "Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer le [module]. \n La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">Vous remarquez que l'état du [module] s'est amélioré. Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. Cela a résulté en une amélioration de l'état du module. Vous ne savez cependant pas ce qui a causé ce changement.</span>",
@@ -82,24 +98,6 @@
     }
   ],
   "negative": [
-    {
-      "desc": "<span class=\"blackout\"></span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "",
-          "reveal": ""
-        },
-        {
-          "value": "",
-          "reveal": ""
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
     {
       "desc": "Vos radars détectent des débris à une très grande vitesse en direction de votre vaisseau. Ils vont percuter votre vaisseau au niveau du [module]. <span class=\"blackout\">Un débris a percuté votre [module], vous auriez pu le détecter si vous aviez allumé vos modules de détection.</span>",
       "timer": false,
@@ -376,6 +374,24 @@
     }
   ],
   "neutral": [
+    {
+      "desc": "<span class=\"blackout\"></span>",
+      "timer": false,
+      "choices": [
+        {
+          "value": "",
+          "reveal": ""
+        },
+        {
+          "value": "",
+          "reveal": ""
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": ""
+        }
+      ]
+    },
     {
       "desc": "Vos capteurs détectent un vaisseau, il appartient à des Fneks.\nVoulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\"> blackout vaisseau texte</span>",
       "timer": false,
