@@ -319,6 +319,60 @@
           "reveal": "D'un simple geste de la main, l'Omphor ouvre le pot de cornichons et le soulève au-dessus de sa tête pour célébrer sa victoire.\nVous rendez le pot aux Ygrls qui sont impressionnées par cette démonstration de force. Elles reprennent leur voyage immédiatement."
         }
       ]
+    },
+    {
+      "desc": "Vous êtes touché par un projectile qui a percé la coque du vaisseau. Les systèmes de réparation ont rapidement colmaté la brèche, mais vous découvrez que ce projectile est une Spider-bomb, il faut la désamorcer rapidement.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Envoyer un membre de l'équipage",
+          "reveal": "Vous recevez une alerte indiquant qu'une spider-bomb a atterri dans la salle de cinéma à bord de votre vaisseau. Vous dépêchez un membre de l'équipe pour la désamorcer. Les portes sont verrouillées une fois qu'il se retrouve seul avec le dispositif, mais malheureusement, la bombe explose, libérant des araignées mycophiles qui se dirigent rapidement vers les conduits d'aération."
+        },
+        {
+          "value": "Envoyer un Sylv désamorcer la bombe",
+          "reveal": "Le Sylv découvre une étiquette sur la spider-bomb, il la lit et réalise qu'il s'agit du manuel de désamorçage. Les instructions sont claires et la bombe est rapidement désamorcée avec succès."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "Vous vérrouillez les portes coupes-feu de la salle de cinéma et attendez d'entendre un bruit sourd venant de celle-ci. \n Sur les caméras un épais nuage de fumée vous empêche de voir ce qu'il s'y passe. \n Malheureusement, vous perdez la moitié de votre collection de films de pétanque dans l'incident."
+        }
+      ]
+    },
+    {
+      "desc": "Vous recevez un message vidéo d'un groupe d'extrémistes appelé les \"Shrymps Hacker d'Informations Antifongiques Sécurisés\" qui vous annoncent qu'ils ont pris possession de 16% de vos bases de données scientifiques et historiques. Après un discours confus sur leur méthode d'action, ils vous menacent de supprimer ces données si vous ne leur donnez pas 2 de vos consommables.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Donner 2 consommables",
+          "reveal": "Les Shrymps ont accepté vos consommables, mais malheureusement, ils ont quand même supprimé 8% de votre base de données scientifiques, car elle contenait des informations sur les recettes de cuisine à base de champignons."
+        },
+        {
+          "value": "Demander à une Ygrl de les raisonner",
+          "reveal": "Vous demandez à l'Ygrl de votre équipage d'enregistrer une vidéo en réponse aux Shrymps.\n Après 15 minutes, vous recevez un autre message des Shrymps s'excusant de vous avoir menacé et vous expliquant qu'ils ont commis une erreur en prenant possession de ces données."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "Les Shrymps ont supprimé 16% de votre base de données scientifique et 16% de votre base de données historique en raison de votre absence de réponse. \n Ils vous ont envoyé un message: \"Cheh !\"."
+        }
+      ]
+    },
+    {
+      "desc": "Vous entrez dans une zone fortement radiée qui affecte le système de \"direction-horaire\" de votre vaisseau. L'autopilote essaie constamment de corriger les problèmes d'orientation, ce qui pourrait endommager les moteurs.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Renforcer les moteurs",
+          "reveal": "Malgré vos efforts pour prévenir les dégâts sur les moteurs, le système de navigation ne parvient pas à faire la différence entre l'heure actuelle et la direction à prendre. Vous vous dirigez maintenant vers 16h30 en direction de mercredi."
+        },
+        {
+          "value": "Recalibrer le système à l'aide d'une montre-boussole d'Aku",
+          "reveal": "Vous placez la boussole dans le micro-ondes du tableau de bord, ce qui a pour effet de réinitialiser les systèmes de navigation. Vous poursuivez votre chemin."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "Le système de direction-horaire du vaisseau doit redémarrer, vous perdez temporairement l'utilisation de vos instruments de navigation."
+        }
+      ]
     }
   ],
   "neutral": [
