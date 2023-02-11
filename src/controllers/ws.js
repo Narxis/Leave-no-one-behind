@@ -4,6 +4,7 @@ const {response} = require("express");
 const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const shipId = 1;
+const chalk = require("chalk")
 
 const init = function (){
 
@@ -12,6 +13,8 @@ const init = function (){
         ws.on('message', (message, isBinary) => {
 
             let data = isBinary ? message : message.toString();
+            let data_json = JSON.parse(data);
+            log('[WS] '+ chalk.hex('#aaaaaa')(data_json.action), '#ffcc00');
             makeAction(data).then(data => {broadcastData(data, ws)})
         });
 
@@ -61,8 +64,12 @@ const makeAction = async function (raw_response) {
         case 'set-name':
             payload = actionSetName(response);
             break;
+        case 'roll-stats-done':
         case 'roll-stats':
             payload = actionRollStats(response);
+            break;
+        case 'game-ready':
+            payload = response;
             break;
         default:
             payload = {
@@ -84,7 +91,7 @@ const actionRollStats = async function (response) {
     return {
         action: response.action,
         error: false,
-        data: response
+        data: response.data
     };
 }
 
@@ -253,6 +260,13 @@ const actionItem = async function (response) {
  */
 const actionRoll = async function (response) {
     let player = await new Player().getData(response.data.discord_id);
+    if (!player) {
+        return  {
+            action: response.action,
+            error: true,
+            error_msg: 'Player not in current game !'
+        }
+    }
     let dice_result = Math.floor(Math.random() * 100) + 1;
     let result = await player.roll(dice_result, response.data.stat, response.data.module);
     response.data['success'] = (result >= 50);
@@ -278,7 +292,7 @@ const broadcastData = function (data, ws, sendBackToSender = true) {
         });
     }
     catch (e) {
-        console.log(e)
+        log(e)
     }
 }
 

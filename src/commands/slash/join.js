@@ -6,6 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('join')
         .setDescription('join game'),
+    step: 'creation',
     async execute(interaction) {
 
         // SEND Data through WebSocket

@@ -7,13 +7,6 @@ var textprintednbr = 0;
 var cardnbrUntilPlanet = 5;
 //variables status
 var blackout;
-let duration_blackout = 3;
-
-let duration_anticipation = 5;
-
-// let statusNameList = ['Blackout', 'Entrainé', 'Affaiblit', 'Anticipation']//liste des status possible
-// let statusSvgList = [svg_blackout, svg_trained, svg_weak, svg_anticipation]
-// var activeStatusListLength = activeStatusList.length;
 var statushtml = document.querySelector(".status");
 //html bouton suivant
 var nextbuttonhtml = `<button class="next-button choice move-down" id="next1">Continuer votre chemin</button>`;
@@ -40,15 +33,6 @@ async function getActiveStatus () {
     });
     return JSON.parse(await rawResponse.text());
 }
-
-// async function updateStatusList (){
-//     var activeStatus = await getActiveStatus()
-//     activeStatusList = [];
-//     for (let i=0; i<activeStatus.length; i++){
-//         activeStatusList.push(activeStatus[i].slug)
-//     }
-//     blackout = activeStatusList.includes("blackout");
-// }
 
 function startCountDown() {
     // On récupère le texte dans le timer (en tant qu'entier)
@@ -148,22 +132,6 @@ function startCountDown() {
     }, 1000);
 }
 
-// async function updatestatus() {
-//     // statusDurationList = [duration_blackout, cardnbrUntilPlanet, cardnbrUntilPlanet, duration_anticipation] //updates to new cardnbrUntilPlanet value
-//     let currentStatusName = document.querySelectorAll('.status-name');
-//     let currentStatus = document.querySelectorAll('.status-duration');
-//     for (let i = 0; i < currentStatus.length; i++) {
-//         let oldVal = parseInt(currentStatus.item(i).innerText)
-//         currentStatus.item(i).innerText = String(oldVal - 1)
-//         // console.log(currentStatusName.item(i).innerText, oldVal-1,'statusname','oldVal-1')
-//         wsLNOB.setStatus(currentStatusName.item(i).innerText, oldVal-1)
-//         if (oldVal == 1) {
-//             currentStatus.item(i).closest('.status-line').remove()//removes status if it's duration is 0
-//         }
-//     }
-//     await updateStatusList();
-// }
-
 async function initialiseChoiceTabs() {
     var choice = document.getElementById('choicetab');
     var choiceTabs = choice.getElementsByClassName('choice');
@@ -207,25 +175,47 @@ async function initialisePlayerTab() {
 function eventchoices() {
     var choice = document.getElementById('choicetab');
     var choiceTabs = choice.getElementsByClassName('choice');
-    console.log(choiceTabs, choiceTabs.length)
     for (let i = 0; i < choiceTabs.length; i++) {
-        document.querySelector('#choice' + (i)).addEventListener('mouseup', async function () {
-            //currentCardType pour les lieux
-            document.querySelector('.card-text').classList.toggle('invisibility')
-            document.querySelector('.answer' + (i)).classList.toggle('visibility')
-            for (let k = 0; k < choiceTabs.length; k++) {
-                choiceTabs.item(k).disabled = 'true'
-                choiceTabs.item(k).classList.add('move-down');
-                choiceTabs.item(k).classList.remove('choice-hover')
-            }
-            await sleep(1200)
-            if (blackout){
-                write(answerlist[i], '.answer' + (i),'blackout');
-                console.log('line 193')
-            }
-            else
-                write(answerlist[i], '.answer' + (i),);
-        })
+        if (nextlist[i] !== ""){
+            document.querySelector('#choice' + (i)).addEventListener('mouseup', async function () {
+                for (let k = 0; k < choiceTabs.length; k++) {
+                    choiceTabs.item(k).disabled = 'true'
+                    choiceTabs.item(k).classList.add('move-down');
+                    choiceTabs.item(k).classList.remove('choice-hover')
+                }
+                document.querySelector('.card-text').classList.toggle('invisibility')
+                await sleep (1100);
+                document.querySelector('.card-text').innerHTML = "";
+                await sleep (100);
+                document.querySelector('.choices').innerHTML = ""
+                document.querySelector('.card-text').classList.toggle('invisibility')
+                console.log(nextlist[i])
+                let nextCard = await getCardByName(''+nextlist[i])
+                cardtextstr = nextCard.desc;
+                nextlist = nextCard.choices.map(v => v.next);
+                choicelist = nextCard.choices.map(v => v.value);
+                answerlist = nextCard.choices.map(v => v.reveal);
+                textprintednbr = 0;
+                write(cardtextstr, '.card-text');
+            })    
+        }
+        else {
+            document.querySelector('#choice' + (i)).addEventListener('mouseup', async function () {
+                document.querySelector('.card-text').classList.toggle('invisibility')
+                document.querySelector('.answer' + (i)).classList.toggle('visibility')
+                for (let k = 0; k < choiceTabs.length; k++) {
+                    choiceTabs.item(k).disabled = 'true'
+                    choiceTabs.item(k).classList.add('move-down');
+                    choiceTabs.item(k).classList.remove('choice-hover')
+                }
+                await sleep(1200)
+                if (blackout){
+                    write(answerlist[i], '.answer' + (i),'blackout');
+                }
+                else
+                    write(answerlist[i], '.answer' + (i),);
+            })
+        }
         document.querySelector('#choice' + (i)).addEventListener('mouseover', function () {
             this.classList.add('choice-hover')
         })
@@ -321,7 +311,19 @@ async function write(fulltext, place, spanclass='base-text') {
 }
 
 async function getNextCard (pop=false) {
-    const rawResponse = await fetch('/api/'+(pop ? 'pop' : 'get')+'NextCard', {
+    const rawResponse = await fetch('/api/nextCard/'+(pop ? 'pop' : 'get'), {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    });
+
+    return JSON.parse(await rawResponse.text());
+}
+
+async function getCardByName (name) {
+    const rawResponse = await fetch('/api/nextCard/get/' + name, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -405,8 +407,8 @@ async function initialiseNextButton() {
             document.querySelector('.answer2').classList.remove('invisibility')
             //set up new text
             cardtextstr = nextCard.desc;
+            nextlist = nextCard.choices.map(v => v.next);
             choicelist = nextCard.choices.map(v => v.value);
-            //Si il y a un span de class="blackout" alors on affiche uniquement ce choix là (si on a le blackout)
             answerlist = nextCard.choices.map(v => v.reveal);
             // answer0str = "Vous donnez la bouteille à la douane qui vous laisse passer. ";
             // answer1str = "La douane est térrifiée à l'idée de devoir gagner au tribunal contre une Nek'air et vous laissent passer. ";
@@ -462,21 +464,6 @@ const addStatus = (status) => {
 const addNewStatus = (slug, duration) => {
     wsLNOB.setStatus(slug, duration)
 }
-
-// function applystatus(status) {
-//     if (!activeStatusList.includes(''+status.slug)) {
-//         activeStatusListLength += 1;
-//         addstatus(status);
-//     }
-//     else {
-//         // let index = statusNameList.findIndex(e => e === statusname)
-//         // let lineindex = activeStatusList.findIndex(e => e === statusname)
-//         let selector = '#line_' + status.id;
-//         document.querySelector(selector).firstElementChild.nextElementSibling.nextElementSibling.innerHTML = String(status.duration)
-//         wsLNOB.setStatus(status.slug, status.duration)
-//     }
-//     updateStatusList()
-// };
 
 function quickUpdateModule(el, mod, left=false) {
     let currentVal;

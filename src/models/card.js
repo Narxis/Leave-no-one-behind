@@ -1,3 +1,5 @@
+const {literal} = require("sequelize");
+
 class Card {
     id;
     type;
@@ -5,6 +7,7 @@ class Card {
     name;
     desc;
     timer;
+    shuffle;
     modules = [];
     choices = [];
     accepted_datas = {
@@ -13,6 +16,7 @@ class Card {
         'name': '',
         'desc': '',
         'timer': 0,
+        'shuffle': 0,
         'modules': {},
         'choices': {}
     }
@@ -31,7 +35,8 @@ class Card {
             value: this.value,
             name: this.name,
             desc: this.desc,
-            timer: this.timer
+            timer: this.timer,
+            shuffle: this.shuffle
         }).then(async result => {
             this.id = result.id;
             for (let choice in this.choices)
@@ -79,7 +84,8 @@ class Card {
             value: this.value,
             name: this.name,
             desc: this.desc,
-            timer: this.timer
+            timer: this.timer,
+            shuffle: this.shuffle
         }, {
             where: {
                 id: this.id
@@ -135,7 +141,8 @@ class Card {
                 'value',
                 'name',
                 'desc',
-                'timer'
+                'timer',
+                'shuffle'
             ],
             where: {
                 id: this.id
@@ -153,11 +160,13 @@ class Card {
             attributes: [
                 'type',
                 'value',
-                'reveal'
+                'reveal',
+                'next'
             ],
             where: {
                 card_id: this.id
-            }
+            },
+            order: [(this.shuffle ? literal('random()') : ['id', 'ASC'])]
         });
 
         raw_modules = raw_modules.map(m => m.dataValues);
@@ -172,7 +181,8 @@ class Card {
             if (name === 'choice') {
                 choices.push({
                     value: mod.value,
-                    reveal: mod.reveal
+                    reveal: mod.reveal,
+                    next: mod.next
                 });
             }
             else {
