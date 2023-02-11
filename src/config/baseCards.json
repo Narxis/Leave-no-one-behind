@@ -1,12 +1,22 @@
 {
   "positive": [
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
+      "desc": "Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer le [module]. \n La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">Vous remarquez que l'état du [module] s'est amélioré. Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. Cela a résulté en une amélioration de l'état du module. Vous ne savez cependant pas ce qui a causé ce changement.</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer vos moteurs.<span class=\"blackout\"> blackout épave answer</span>"
+          "value": "Continuer le voyage <span class=\"blackout\">Continuer à voyager sans capteurs</span> ",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vous apercevez une notification sur l'écran de réception de vos messages.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Lire le message",
+          "reveal": "Une mise à jour de votre bibliothèque de films est disponible. Moral +10."
         },
         {
           "value": "Ne rien faire",
@@ -15,12 +25,12 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
+      "desc": "Vous apercevez sur le bord de l'hyperespace un [race]. <span class=\"blackout\">Votre vaisseau continue son trajet dans l'espace. Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.</span> ",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
+          "value": "Ouvrir le sas d'entrée <span class=\"blackout\">Continuer à voyager sans capteurs</span>",
+          "reveal": "Le [race] monte à bord et vous remercie."
         },
         {
           "value": "Ne rien faire",
@@ -29,12 +39,22 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
+      "desc": "Vous profitez d'un moment de calme pendant le voyage pour suivre un tutoriel de [stat], vous sentez vos capacités augmenter.",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
+          "value": "Continuer le voyage",
+          "reveal": ""
+        }
+      ]
+    },
+    {
+      "desc": "Vous recevez un message sur la petite boîte mail de l'OLI.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Lire le message",
+          "reveal": "Le message contient un système de défense contre les attaques informatiques, il n'est utilisable qu'une fois."
         },
         {
           "value": "Ne rien faire",
@@ -43,197 +63,19 @@
       ]
     },
     {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
+      "desc": "Un livreur Galaxyssimo™ sonne à votre sas d'entrée et proclame venir de la part de l'OLI.",
       "timer": false,
       "choices": [
         {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
+          "value": "Accepter le colis",
+          "reveal": "Le colis contient une SPIDER bomb et le manuel d'utilisation est illisible. Vous remarquez que l'auteur est Sylv."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
+          "value": "Questionner le livreur",
+          "reveal": "Le colis contient une SPIDER bomb, ce qui peut être utile en cas d'attaque. C'est une arme efficace qui ne cause pas beaucoup de dégâts collatéraux si elle est utilisée correctement."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Le vaisseau détecte un épave de vaisseau flottant dans l'espace. <span class=\"blackout\"> blackout épave texte</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Fouiller l'épave <span class=\"blackout\"> blackout épave choice</span>",
-          "reveal": "Vous trouvez à travers les débris des composants electroniques et des outils vous permettant de réparer votre détecteur de proximité.<span class=\"blackout\"> blackout épave answer</span>"
-        },
-        {
-          "value": "Ne rien faire",
+          "value": "Faire croire qu'il n'y a personne.",
           "reveal": ""
         }
       ]
@@ -249,439 +91,7 @@
           "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
         },
         {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
-          "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-        },
-        {
-          "value": "Ne rien faire",
-          "reveal": ""
-        }
-      ]
-    },
-    {
-      "desc": "Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection. <span class=\"blackout\"> blackout débris texte</span>",
-      "timer": true,
-      "choices": [
-        {
-          "value": "Minimiser la casse\n(Ingénieur) <span class=\"blackout\"> blackout minimiser la casse</span>",
-          "reveal": "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module "
-        },
-        {
-          "value": "Tenter une manoeuvre d'évitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'évitemen </span>",
+          "value": "Tenter une manoeuvre d'evitement\n(Pilote) <span class=\"blackout\"> blackout Tenter une manoeuvre d'evitement </span>",
           "reveal": "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
         },
         {
