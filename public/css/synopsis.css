@@ -1,0 +1,31 @@
+.card {
+    position: absolute;
+    background: var(--lgrad);
+    backdrop-filter: blur(1px);
+    border: 3px solid rgb(180 180 180);
+    border-radius: 15px;
+    width: 1185px;
+    height: auto;
+    font-size: 25px;
+    padding: 15px;
+    text-indent: 15px;
+}
+
+.next {
+    position: absolute;
+    top: 271px;
+    left: 580px;
+    display: flex;
+    height: 70px;
+    width: 200px;
+    border-radius: 20px;
+    border: 2px solid #fff;
+    background: var(--lgrad);
+    font-size: 1.5em;
+    align-items: center;
+    text-align: center;
+    backdrop-filter: blur(1px);
+    text-decoration: none;
+    color: #fff;
+    justify-content: center;
+}

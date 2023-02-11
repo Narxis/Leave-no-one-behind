@@ -14,6 +14,7 @@ module.exports = function(router) {
     router.get('/mj-menu', controller.mjMenu);
     router.get('/end-screen', controller.endScreen);
     router.get('/fiche-vaisseau', controller.ficheVaisseau)
+    router.get('/synopsis', controller.synopsis);
     router.get('/index', controller.index);
     router.get('/template-card-lieu', controller.renderTestCardPlace);
     router.get('/template-card', controller.renderTestCardEvent);

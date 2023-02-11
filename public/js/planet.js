@@ -2,7 +2,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function getShip () {
+async function getShip() {
     const rawResponse = await fetch('/api/ship', {
         method: 'GET',
         headers: {
@@ -12,17 +12,18 @@ async function getShip () {
     });
     return JSON.parse(await rawResponse.text());
 }
-async function scanPoints (){ //calcul points de detec
-    let ship = await getShip();
-    let scan = ship.scanner;
-    let points = Math.floor(scan/16) * 2;
-    let remain = scan%16;
-    let luck = Math.random()*16;
-    if (remain>luck){
-        points += 2
+var detectionPoints;
+function scanPoints() { //calcul points de detec
+    let scan = parseInt(document.getElementById('dial-scanner').getAttribute('data-value'))
+    console.log(scan)
+    detectionPoints = Math.floor(scan / 16) * 2;
+    let remain = scan % 16;
+    let luck = Math.random() * 16;
+    if (remain > luck) {
+        detectionPoints += 2
     }
-    points = (Math.min(points,12));
-    return (points);
+    detectionPoints = (Math.min(detectionPoints, 12));
+    console.log(detectionPoints)
 }
 var texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
 var textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
@@ -62,8 +63,8 @@ function writePoints(place, number) {
     document.querySelector(place).innerText = String(number);
 };
 async function initialisePlanet() {
-    let points =     await scanPoints();
-    writePoints('.detection-point', points);
+    scanPoints()
+    writePoints('.detection-point', detectionPoints);
     writePoints('.drone', dronenbr);
 }
 window.addEventListener('load', initialisePlanet, false);
@@ -71,7 +72,7 @@ window.addEventListener('load', initialisePlanet, false);
 function pointsLeft() {
     showbuttons = true
     for (let i = 0; i < costList.length; i++) {
-        if (points >= costList[i]) {
+        if (detectionPoints >= costList[i]) {
             showbuttons = false
         }
     }
@@ -117,10 +118,10 @@ async function write(fulltext, place) {
     let mountainstar = document.querySelectorAll('.re-background')
     let txt = document.querySelectorAll('.p-txt')
     document.querySelector('.o2-txt').addEventListener('mouseup', async function () {
-        if (points >= costo2 || droneUse) {
+        if (detectionPoints >= costo2 || droneUse) {
             document.querySelector('#o2-button').disabled = 'disabled'
             if (!droneUse) {
-                points = points - costo2;
+                detectionPoints = detectionPoints - costo2;
             }
             else {
                 document.querySelector('.cursor').classList.add('o2-cursor')
@@ -136,7 +137,7 @@ async function write(fulltext, place) {
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('o2-cursor')
             }
-            writePoints('.detection-point', points);
+            writePoints('.detection-point', detectionPoints);
             let index = costList.indexOf(costo2)
             costList.splice(index, 1);
             pointsLeft();
@@ -153,10 +154,10 @@ async function write(fulltext, place) {
         }
     })
     document.querySelector('.ff-txt').addEventListener('mouseup', async function () {
-        if (points >= costff || droneUse) {
+        if (detectionPoints >= costff || droneUse) {
             document.querySelector('#ff-button').disabled = 'disabled'
             if (!droneUse) {
-                points = points - costff;
+                detectionPoints = detectionPoints - costff;
             }
             else {
                 document.querySelector('.cursor').classList.add('ff-cursor')
@@ -172,7 +173,7 @@ async function write(fulltext, place) {
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('ff-cursor')
             }
-            writePoints('.detection-point', points);
+            writePoints('.detection-point', detectionPoints);
             let index = costList.indexOf(costff)
             costList.splice(index, 1);
             pointsLeft();
@@ -189,10 +190,10 @@ async function write(fulltext, place) {
         }
     })
     document.querySelector('.cl-txt').addEventListener('mouseup', async function () {
-        if (points >= costcl || droneUse) {
+        if (detectionPoints >= costcl || droneUse) {
             document.querySelector('#cl-button').disabled = 'disabled'
             if (!droneUse) {
-                points = points - costcl;
+                detectionPoints = detectionPoints - costcl;
             }
             else {
                 document.querySelector('.cursor').classList.add('cl-cursor')
@@ -208,7 +209,7 @@ async function write(fulltext, place) {
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('cl-cursor')
             }
-            writePoints('.detection-point', points);
+            writePoints('.detection-point', detectionPoints);
             let index = costList.indexOf(costcl)
             costList.splice(index, 1);
             pointsLeft();
@@ -228,10 +229,10 @@ async function write(fulltext, place) {
         }
     })
     document.querySelector('.eau-txt').addEventListener('mouseup', async function () {
-        if (points >= costeau || droneUse) {
+        if (detectionPoints >= costeau || droneUse) {
             document.querySelector('#eau-button').disabled = 'disabled'
             if (!droneUse) {
-                points = points - costeau;
+                detectionPoints = detectionPoints - costeau;
             }
             else {
                 document.querySelector('.cursor').classList.add('eau-cursor')
@@ -247,7 +248,7 @@ async function write(fulltext, place) {
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('eau-cursor')
             }
-            writePoints('.detection-point', points);
+            writePoints('.detection-point', detectionPoints);
             let index = costList.indexOf(costeau)
             costList.splice(index, 1);
             pointsLeft();
@@ -264,10 +265,10 @@ async function write(fulltext, place) {
         }
     })
     document.querySelector('.re-txt').addEventListener('mouseup', async function () {
-        if (points >= costre || droneUse) {
+        if (detectionPoints >= costre || droneUse) {
             document.querySelector('#re-button').disabled = 'disabled'
             if (!droneUse) {
-                points = points - costre;
+                detectionPoints = detectionPoints - costre;
             }
             else {
                 document.querySelector('.cursor').classList.add('re-cursor')
@@ -283,7 +284,7 @@ async function write(fulltext, place) {
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('re-cursor')
             }
-            writePoints('.detection-point', points);
+            writePoints('.detection-point', detectionPoints);
             let index = costList.indexOf(costre)
             costList.splice(index, 1);
             pointsLeft();
@@ -303,10 +304,10 @@ async function write(fulltext, place) {
         }
     })
     document.querySelector('.gr-txt').addEventListener('mouseup', async function () {
-        if (points >= costgr || droneUse) {
+        if (detectionPoints >= costgr || droneUse) {
             document.querySelector('#gr-button').disabled = 'disabled';
             if (!droneUse) {
-                points = points - costre;
+                detectionPoints = detectionPoints - costre;
             }
             else {
                 document.querySelector('.cursor').classList.add('gr-cursor')
@@ -322,7 +323,7 @@ async function write(fulltext, place) {
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('gr-cursor')
             }
-            writePoints('.detection-point', points);
+            writePoints('.detection-point', detectionPoints);
             let index = costList.indexOf(costgr)
             costList.splice(index, 1);
             pointsLeft();
