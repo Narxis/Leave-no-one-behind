@@ -304,7 +304,38 @@ async function write(fulltext, place, spanclass='base-text') {
             i = fulltext.length
         }
         currenttext += fulltext.substring(i, i + 1)
-        await sleep(30)
+        await sleep(21.7)
+    }
+    textprintednbr += 1;
+    nextoption();
+}
+
+async function startwrite(fulltext, place, spanclass='base-text') {
+    let currenttext = '';
+    let start = -1 ;
+    let delay = 50
+    document.querySelector(place).innerHTML = `<span class =\"${spanclass}\"></span>`
+    if (fulltext.includes(''+spanclass)) {
+        start = fulltext.indexOf('>', fulltext.indexOf(''+spanclass));
+    }
+    // console.log(start)
+    for (let i = start+1; i <= fulltext.length; i++) {
+        document.querySelector(place).querySelector('.'+spanclass).innerText = currenttext;
+        if (fulltext.substring(i, i + 1) == "<") {
+            i = fulltext.length
+        }
+        if (fulltext.substring(i, i + 1) == "{") {
+            delay = 400
+            continue;
+        }
+        if (fulltext.substring(i, i + 1) == "}") {
+            delay = 50
+            await sleep(500)
+            currenttext = ''
+            continue;
+        }
+        currenttext += fulltext.substring(i, i + 1)
+        await sleep(delay)
     }
     textprintednbr += 1;
     nextoption();
@@ -469,6 +500,8 @@ function quickUpdateModule(el, mod, left=false) {
     let currentVal;
     let input;
     let inputVal='';
+    let isCryopods = mod === 'cryopods';
+    let maxVal = isCryopods ? 1000 : 100;
     if (left) {
         currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText);
     }
@@ -484,15 +517,18 @@ function quickUpdateModule(el, mod, left=false) {
         modifier = -1;
     }
 
+    if (isCryopods)
+        modifier *= 5;
+
     if (inputVal !== ''){
         modifier *= inputVal;
     }
     else {
         if (this.event.shiftKey) {
-            modifier *= 10;
+            modifier *= isCryopods ? 20 : 10;
         }
         else if (this.event.ctrlKey) {
-            modifier *= 5;
+            modifier *= isCryopods ? 2 : 5;
         }
     }
 
@@ -500,7 +536,7 @@ function quickUpdateModule(el, mod, left=false) {
     if (input)
         input.value = '';
 
-    newValue = Math.min(Math.max(newValue, 0), 100);
+    newValue = Math.min(Math.max(newValue, 0), maxVal);
     if (currentVal === newValue) return;
 
     setModuleVal(mod, newValue, left);
@@ -510,8 +546,10 @@ function setModuleVal(mod, newValue, left) {
     if (typeof wsLNOB === 'undefined'){
         console.error('YOU MUST INCLUDE socketLNOB.js before this');
     }
+    let isCryopods = mod === 'cryopods';
+    let maxVal = isCryopods ? 1000 : 100;
 
-    newValue = Math.min(Math.max(newValue, 0), 100);
+    newValue = Math.min(Math.max(newValue, 0), maxVal);
 
     if (left) {
         let statVal = document.querySelector('#'+mod+'-value');
@@ -541,14 +579,29 @@ function stopCountdown() {
     initialiseModTabs();
     initialisePlayerTab();
     await initialiseStatusList();
-    if (blackout){
-        // console.log(blackout,'blackout','if')
-        write(cardtextstr, '.card-text','blackout');
+    if (currentCardType == -1 ) { //type of startcard
+        startwrite(cardtextstr,'.card-text');
     }
     else{
-        // console.log(blackout,'blackout','else')
-        write(cardtextstr, '.card-text');
+        if (blackout){
+            // console.log(blackout,'blackout','if')
+            write(cardtextstr, '.card-text','blackout');
+        }
+        else{
+            // console.log(blackout,'blackout','else')
+            write(cardtextstr, '.card-text');
+        }
     }
     initialiseleLeftTabs();
     document.addEventListener('status', initialiseStatusList);
 })();
+
+document.addEventListener('roll',async function(e){
+    let player =document.getElementById('player-tab'+e.detail.data.discord_id);
+    let iconlist = player.querySelectorAll('.output-absolute');
+    for (let i=0; i<iconlist.length; i++){
+        iconlist.item(i).classList.add('hide-opacity')
+    }
+    await sleep(1000);
+    player.querySelector('#output-'+e.detail.data.stat).classList.remove('hide-opacity')
+})

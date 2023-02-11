@@ -86,16 +86,13 @@
                 value="<%= player.moral > 0 ? player.moral : '' %>">
         </div>
     </div>
-    <div class="race-desc">Les Shrymps sont une race de fourmis cyborgs qui idolâtrent les Ygrl et construisent
-        leurs cités autour d'elles.
-        <br>
-        <br> Ils ont développé un alphabet Ygrl pour mieux comprendre leur divinité, bien que cet alphabet soit peu
-        efficace.
-        <br>
-        <br> Les Shrymps sont équipés d'implants cybernétiques qui leur permettent de mieux s'adapter à leur
-        environnement et de mieux exécuter leurs tâches.
-        <br>
-        <br> Ils sont très travailleurs et organisés, mais ils sont également très loyaux envers leur Ygrl divine et
-        feront tout pour la protéger.
+    <div class="race-desc">
     </div>
-    </div>
+</div>
+
+<script> (function (){
+    let desc = document.querySelector('#p' + <%= player.discord_id %> + ' .race-desc');
+    desc.innerHTML = lang[<%= player.race %>].desc
+})()
+</script>
+

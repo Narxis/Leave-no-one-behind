@@ -146,6 +146,7 @@
 .wrap:hover .bg-dot {
   opacity: 0.5;
 }
+
 /*---^^^------Card------^^^---*/
 /*---vvv------Card-text-animation------vvv---*/
 .visibility {
@@ -917,6 +918,7 @@ textarea {
     transform: translate(0px, 0px);
   }
 }
+
 /*---^^^---consommable-tab-Animation----^^^---*/
 /*---vvv---human-status----vvv---*/
 .human-status {
@@ -938,12 +940,13 @@ textarea {
 @keyframes hologramme {}
 
 .human {
-  width: 181px;
+  width: auto;
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   margin: 10px 0px;
+  padding: 0px 23px;
 }
 
 .human svg {
@@ -981,7 +984,7 @@ textarea {
 
 .human-title {
   width: 66px;
-  margin: 0px 3px 0px 30px;
+  margin: 0px 3px 0px 5px;
 }
 
 .human-alive {
@@ -989,7 +992,15 @@ textarea {
   height: 50px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+}
+
+.cryoplus,
+.cryomoins {
+  position: inherit;
+  margin: 7px;
+  height: 20px !important;
+  width: 20px !important;
 }
 
 .status-separateur {
@@ -1068,10 +1079,13 @@ textarea {
   border-radius: 40px;
   align-content: center;
   row-gap: 20px;
-  top: 0px;  /*ça marche pas sans alors on laisse*/
-  left: 0px; /*ça marche pas sans alors on laisse*/
+  top: 0px;
+  /*ça marche pas sans alors on laisse*/
+  left: 0px;
+  /*ça marche pas sans alors on laisse*/
 }
-.ennemy-container{
+
+.ennemy-container {
   width: 240px;
   height: 142px;
   display: flex;
@@ -1079,11 +1093,13 @@ textarea {
   align-items: center;
   justify-content: center;
 }
-.ennemy-name{
+
+.ennemy-name {
   font-size: 15px;
   margin-bottom: 5px;
 }
-.roll-button{
+
+.roll-button {
   width: 70px;
   height: 25px;
   background: none;
@@ -1092,14 +1108,17 @@ textarea {
   margin: 0px 10px 0px 10px;
   color: whitesmoke;
 }
-.ennemy-damage{
+
+.ennemy-damage {
   margin: 7px 0px !important;
 }
-.ennemy-separateur{
+
+.ennemy-separateur {
   width: 100%;
   height: 15px;
   box-shadow: inset 0px 12px 12px -12px rgb(0 0 0 / 50%);
 }
+
 .combat-none {
   display: none;
 }

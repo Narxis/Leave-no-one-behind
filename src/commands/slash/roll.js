@@ -11,26 +11,39 @@ module.exports = {
                 .setDescription('stat to roll')
                 .setRequired(true)
                 .addChoices(
-                    { name: 'combat', value: 'combat' },
-                    { name: 'pilotage', value: 'pilotage' },
-                    { name: 'engineering', value: 'engineering' },
-                    { name: 'survival', value: 'survival' },
-                    { name: 'recon', value: 'recon' },
-                    { name: 'moral', value: 'moral' },
-                    { name: 'module', value: 'module' },
-                )),
+                    { name: 'Combat', value: 'combat' },
+                    { name: 'Pilotage', value: 'pilotage' },
+                    { name: 'Ingénierie', value: 'engineering' },
+                    { name: 'Survie', value: 'survival' },
+                    { name: 'Reconaissance', value: 'recon' },
+                )
+        )
+        .addStringOption(option =>
+            option.setName('module')
+                .setDescription('roll on module')
+                .setRequired(false)
+                .addChoices(
+                    { name: 'Scanners de surface', value: 'scanner' },
+                    { name: 'Détecteurs de proximité', value: 'proximity' },
+                    { name: 'Moteurs', value: 'motors' },
+                    { name: 'Module d\'Oxygène', value: 'oxygen' },
+                    { name: 'Electricité', value: 'energy' },
+                    { name: 'Gravité Artificielle', value: 'gravity' },
+                )
+        ),
     step: 'gameLive',
     async execute(interaction) {
 
 
         let stat = interaction.options.getString('stat');
+        let module = interaction.options.getString('module') ?? '';
         // SEND Data through WebSocket
         let data = JSON.stringify({
             action: 'roll',
             data: {
                 discord_id: interaction.user.id,
                 stat: stat,
-                module: stat === 'module'
+                module: module
             }
         });
 
