@@ -393,117 +393,141 @@
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Fneks.\nVoulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\"> blackout vaisseau texte</span>",
+      "desc": "Vos capteurs détectent un vaisseau, il appartient à des [race].\nVoulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Fneks communiquent avec vous, ils vous apprécient et vous donne des outils pour réparer un module. \n(remonte le moral)"
+          "reveal": "Les [race] communiquent avec vous, ils vous apprécient et vous donne des outils pour réparer un module. \n(remonte le moral)"
         },
         {
-          "value": "Ne rien faire",
+          "value": "Les inviter à bord",
+          "reveal": "Les [race] montent à bord de votre vaisseau, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez qu'un [module] a été endommagé."
+        },
+        {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
           "reveal": ""
         }
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
+      "desc": "Vous remarquez une entité en plus sur la carte du vaisseau. Vous avez un passager clandestin ! \n Quelqu'un doit rester au cockpit, qui envoyez-vous à la rencontre du passager ?",
       "timer": false,
       "choices": [
         {
-          "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
+          "value": "Envoyer 1 équipier",
+          "reveal": "Le passager est un [race], il appartient au clan \"Destin\" et pense que cette rencontre était prédestinée. Il propose de vous aider en mettant à disposition ses compétences en [stats]."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": ""
+          "value": "Envoyer un robot de \"nettoyage\"",
+          "reveal": "Le robot de nettoyage s'exécute, il agit rapidement sans faire de bruit. En un rien de temps, le marqueur sur la carte du vaisseau disparaît."
         }
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
+      "desc": "Vous apercevez une notification sur l'écran de réception de vos messages.",
       "timer": false,
       "choices": [
         {
-          "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
+          "value": "Telecharger la transmission",
+          "reveal": "Bonjour être inférieur *scrrrch* ...grand monarque *scrrrch* ...danger sur votre route *scrrrch* ...car comme le disait si bien le préfet Dimalou *scrrrch* ...solution de l'univers ! Faites attention à vous *scrrrch* mercredi. <span class=\"mjreveal\">Donne status \"Anticipation\"</span> "
+        },
+        {
+          "value": "Marquer le message comme \"lu\"",
+          "reveal": "La notification disparaît."
         },
         {
           "value": "Ne rien faire",
-          "reveal": ""
+          "reveal": "Il faut penser à vider votre boite mail un jour..."
         }
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
+      "desc": "Vos capteurs détectent un vaisseau, il appratient à des Sylvs.\n Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
+          "reveal": "Les Sylvs vous parlent des recherches de \"Dimalou\". Vous ne comprenez pas un mot de ce qu'ils racontent, mais ils vous ont bien diverti"
         },
         {
-          "value": "Ne rien faire",
-          "reveal": ""
+          "value": "Les inviter à bord",
+          "reveal": "Les Sylvs n'ont pas compris vos intentions et sont offusqués de cette proposition. Ils vous insultent et repartent."
+        },
+        {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
+          "reveal": "Le vaisseau s'éloigne hors de portée de vos radars."
         }
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
+      "desc": "Vos capteurs détectent un vaisseau, il appratient à des Ygrls. \n Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
+          "reveal": "Les Ygrls essaient tant bien que mal de communiquer avec vous, mais la barrière linguistique empêche toute discussion intelligible. Elles vous envoient des plats typiques de leur culture pour montrer leur amitié avant de poursuivre leur périple. <span class=\"mjreveal\">Gain moral</span>"
         },
         {
-          "value": "Ne rien faire",
-          "reveal": ""
+          "value": "Les inviter à bord",
+          "reveal": "Des Ygrls apparaissent dans votre vaisseau et vous attaquent"
+        },
+        {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
+          "reveal": "Le vaisseau s'éloigne hors de portée de vos radars."
         }
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
+      "desc": "Vos capteurs détectent un vaisseau, il appratient à des shrymps.\n Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
+          "reveal": "Les shrymps vous parlent de leur Ygrl favorite pendant des heures, vous n'avez pas su mettre fin à la conversation, vous êtes dépité d'avoir perdu tout ce temps."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": ""
+          "value": "Les inviter à bord",
+          "reveal": "En essayant de monter à bord, les Shrymps se sont trompés dans les coordonnées de téléportation et se sont retrouvés dans votre système de ventilation. Comme celui-ci était obstrué, ils ont dû le nettoyer pour pouvoir circuler."
+        },
+        {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
+          "reveal": "Le vaisseau s'éloigne hors de portée de vos radars."
         }
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
+      "desc": "Vos capteurs détectent un vaisseau, il appratient à des Yorcs. \n Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
+          "reveal": "Les Yorcs proclament faire partie du Groupuscule Armé des Yorcs Salvateurs et entrent dans votre vaisseau pour vous attaquer."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": ""
+          "value": "Les inviter à bord",
+          "reveal": "Les Yorcs arrivent dans votre vaisseau avec du pop-corn des chips, des pizza et des films."
+        },
+        {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
+          "reveal": "Le vaisseau s'éloigne hors de portée de vos radars."
         }
       ]
     },
     {
-      "desc": "Vos capteurs détectent un vaisseau, il appartient à des Omphors.\nVoulez vous entrer en contact avec le vaisseau ?<span class=\"blackout\"> blackout vaisseau texte</span>",
+      "desc": "Les dégâts infligés à votre générateur électrique causent un court-circuit qui éteint le module de détection. <span class=\"alt-text\" data-condition=\"ship.energy == 100\">Alors que vous vous promeniez dans le vaisseau, vous avez remarqué des étincelles provenant de votre générateur. Il vaut mieux ne pas s'en approcher.</span><span class=\"blackout\">Votre générateur s'emballe et cause un court-circuit qui éteint votre module de détection. Il doit redémarrer ... encore</span>",
       "timer": false,
       "choices": [
         {
-          "value": "Entrer en contact",
-          "reveal": "Les Omphors communiquent avec vous, ils ne sont pas très amicaux mais ne vous attaquent pas. <span class=\"blackout\"> blackout vaisseau texte</span> (remonte le moral)"
+          "value": "Redemarrer le module de détection <span class=\"alt-text\" data-condition=\"ship.energy == 100\">Observer le générateur</span>",
+          "reveal": "Le module entame sa procédure de démarrage, il faut lui laisser le temps. <span class=\"alt-text\" data-condition=\"ship.energy == 100\">Votre générateur est en bonne condition, il vaut mieux ne pas rester dans les parages.</span>"
         },
         {
-          "value": "Ne rien faire",
-          "reveal": ""
+          "value": "Ne rien faire<span class=\"alt-text\" data-condition=\"ship.energy == 100\">Ignorer le générateur</span>",
+          "reveal": "Le module de détection redémarre, cela lui prendra un moment.<span class=\"alt-text\" data-condition=\"ship.energy == 100\">Heureusement, votre générateur est en bon état</span>"
         }
       ]
-    }
+    },
   ],
   "place": [
     {
