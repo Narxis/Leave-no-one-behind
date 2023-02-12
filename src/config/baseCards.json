@@ -443,6 +443,24 @@
       ]
     },
     {
+      "desc": "Vous apercevez une notification sur l'écran de réception de vos messages.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Telecharger la transmission.",
+          "reveal": "Bonjour membres de l'OLI, \n Je me présente, Fnek Scécrable représentant galactique de la Fnak \n Je viens vous prévenir que nous somme de votre côté avec à disposition une arme nucléaire à puissance et portée sans précédent. \n Si vous vous trouvez dans une situation dangereuse lancez ce programme qui nous indiquera la position de votre cible : \n \"MDMA.py\" \n \n (ps: il faut 21 jours avant de recharger le massive death missile of annihilation) <span class=\"mjreveal\">Donne status \"Anticipation\"</span>"
+        },
+        {
+          "value": "Marquer le message comme \"lu\"",
+          "reveal": "La notification disparaît."
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "Il faut penser à vider votre boite mail un jour..."
+        }
+      ]
+    },
+    {
       "desc": "Vos capteurs détectent un vaisseau, il appratient à des Sylvs.\n Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
@@ -527,7 +545,7 @@
           "reveal": "Le module de détection redémarre, cela lui prendra un moment.<span class=\"alt-text\" data-condition=\"ship.energy == 100\">Heureusement, votre générateur est en bon état</span>"
         }
       ]
-    },
+    }
   ],
   "place": [
     {
