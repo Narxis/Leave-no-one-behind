@@ -209,11 +209,16 @@ function eventchoices() {
                     choiceTabs.item(k).classList.remove('choice-hover')
                 }
                 await sleep(1200)
-                if (blackout){
-                    write(answerlist[i], '.answer' + (i),'blackout');
+                if (currentCardType == -1){
+                    startwrite(answerlist[i], '.answer' + (i),);
                 }
-                else
-                    write(answerlist[i], '.answer' + (i),);
+                else{
+                    if (blackout){
+                        write(answerlist[i], '.answer' + (i),'blackout');
+                    }
+                    else
+                        write(answerlist[i], '.answer' + (i),);
+                }
             })
         }
         document.querySelector('#choice' + (i)).addEventListener('mouseover', function () {

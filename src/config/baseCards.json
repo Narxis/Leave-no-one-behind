@@ -6,11 +6,11 @@
       "choices": [
         {
           "value": "Oui",
-          "reveal": "Erreur de l'autopilote..."
+          "reveal": "Erreur de l'autopilote ..."
         },
         {
           "value": "<s>Non</s>",
-          "reveal": "Erreur de l'autopilote..."
+          "reveal": "Erreur de l'autopilote ..."
         }
       ]
     }
