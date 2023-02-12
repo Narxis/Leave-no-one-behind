@@ -302,7 +302,15 @@ async function write(fulltext, place, spanclass='base-text') {
     if (fulltext.includes(''+spanclass)) {
         start = fulltext.indexOf('>', fulltext.indexOf(''+spanclass));
     }
-    // console.log(start)
+    else {
+        if (fulltext.includes('alt-text')){
+            let startCondition = fulltext.indexOf('"',fulltext.indexOf('data-condition='))
+            let endCondition = fulltext.indexOf('"',startCondition+1)
+            if (fulltext.substring(startCondition+1,endCondition)){
+                start = fulltext.indexOf('>', endCondition);
+            }
+        }
+    }
     for (let i = start+1; i <= fulltext.length; i++) {
         document.querySelector(place).querySelector('.'+spanclass).innerText = currenttext;
         if (fulltext.substring(i, i + 1) == "<") {
