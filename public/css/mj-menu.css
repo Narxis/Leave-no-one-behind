@@ -46,11 +46,7 @@
     background-color: #28004ca6;
     padding: 10px;
     text-indent: 15px;
-}
-
-.reveal-text::before {
-    content: "Prochain evenement: ";
-    filter: drop-shadow(1px 5px 2px black);
+    line-height: 13px;
 }
 
 .life-container {

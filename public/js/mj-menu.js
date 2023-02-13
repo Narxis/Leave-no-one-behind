@@ -103,7 +103,7 @@ function setMJCardValue(e) {
     })
     for (let choice of card.choices) {
         document.querySelector('#choice'+i+' .button-text').innerHTML = choice.value;
-        document.querySelector('#choice'+i+++' .reveal-text').innerHTML = choice.reveal;
+        document.querySelector('#choice'+i+++' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + choice.reveal;
     }
 }
 
