@@ -17,7 +17,7 @@
   ],
   "positive": [
     {
-      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer le [module]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">Vous remarquez que l'état du [module] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
+      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer le [module]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état du [module] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
       "timer": false,
       "choices": [
         {
@@ -157,16 +157,16 @@
       "timer": false,
       "choices": [
         {
+          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
+          "reveal": "\u00a0 Votre voyage continue paisiblement"
+        },
+        {
           "value": "Eteindre les modules de détection",
           "reveal": "\u00a0 Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\u00a0 Le traitement des données excédentaires génère des erreurs, causant des dommages à tous les modules."
-        },
-        {
-          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
-          "reveal": "\u00a0 Votre voyage continue paisiblement"
         }
       ]
     },
@@ -175,16 +175,16 @@
       "timer": false,
       "choices": [
         {
+          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
+          "reveal": "\u00a0 Votre voyage continue paisiblement"
+        },
+        {
           "value": "Eteindre les modules de détection",
           "reveal": "\u00a0 Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\u00a0 Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs."
-        },
-        {
-          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
-          "reveal": "\u00a0 Votre voyage continue paisiblement"
         }
       ]
     },
@@ -193,16 +193,16 @@
       "timer": false,
       "choices": [
         {
+          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
+          "reveal": "\u00a0 Votre voyage continue paisiblement"
+        },
+        {
           "value": "Eteindre les modules de détection",
           "reveal": "\u00a0 Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\u00a0 Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs."
-        },
-        {
-          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
-          "reveal": "\u00a0 Votre voyage continue paisiblement"
         }
       ]
     },
@@ -379,16 +379,16 @@
       "timer": false,
       "choices": [
         {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
+          "reveal": "\u00a0 Vous avez râté une occasion de vous faire des amis..."
+        },
+        {
           "value": "Entrer en contact",
           "reveal": "\u00a0 Les [race] communiquent avec vous, ils vous apprécient et vous donne des outils pour réparer un module de votre choix. <span class=\"mjreveal\">Remonte le moral</span>"
         },
         {
           "value": "Les inviter à bord",
           "reveal": "\u00a0 Les [race] montent à bord de votre vaisseau, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez qu'un [module] a été endommagé."
-        },
-        {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Vous avez râté une occasion de vous faire des amis..."
         }
       ]
     },
@@ -443,9 +443,13 @@
       ]
     },
     {
-      "desc": "\u00a0 Vos capteurs détectent un vaisseau, il appratient à des Sylvs.\n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
+      "desc": "\u00a0 Vos capteurs détectent un vaisseau, il appartient à des Sylvs.\n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
+        {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
+          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
+        },
         {
           "value": "Entrer en contact",
           "reveal": "\u00a0 Les Sylvs vous parlent des recherches de \"Dimalou\". Vous ne comprenez pas un mot de ce qu'ils racontent, mais ils vous ont bien diverti"
@@ -453,17 +457,17 @@
         {
           "value": "Les inviter à bord",
           "reveal": "\u00a0 Les Sylvs n'ont pas compris vos intentions et sont offusqués de cette proposition. \n \n \u00a0 Ils vous insultent et repartent."
-        },
-        {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
         }
       ]
     },
     {
-      "desc": "\u00a0 Vos capteurs détectent un vaisseau, il appratient à des Ygrls. \n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
+      "desc": "\u00a0 Vos capteurs détectent un vaisseau, il appartient à des Ygrls. \n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
+        {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
+          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
+        },
         {
           "value": "Entrer en contact",
           "reveal": "\u00a0 Les Ygrls essaient tant bien que mal de communiquer avec vous, mais la barrière linguistique empêche toute discussion intelligible. \n \u00a0 Elles vous envoient des plats typiques de leur culture pour montrer leur amitié avant de poursuivre leur périple. <span class=\"mjreveal\">Gain moral</span>"
@@ -471,35 +475,35 @@
         {
           "value": "Les inviter à bord",
           "reveal": "\u00a0 Des Ygrls apparaissent dans votre vaisseau et vous attaquent"
-        },
-        {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
         }
       ]
     },
     {
-      "desc": "\u00a0 Vos capteurs détectent un vaisseau, il appratient à des shrymps.\n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
+      "desc": "\u00a0 Vos capteurs détectent un vaisseau, il appartient à des shrymps.\n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
+        {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
+          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
+        },
         {
           "value": "Entrer en contact",
           "reveal": "\u00a0 Les shrymps vous parlent de leur Ygrl favorite pendant des heures, vous n'avez pas su mettre fin à la conversation, vous êtes dépité d'avoir perdu tout ce temps."
         },
         {
           "value": "Les inviter à bord",
-          "reveal": "\u00a0 En essayant de monter à bord, les Shrymps se sont trompés dans les coordonnées de téléportation et se sont retrouvés dans votre système de ventilation. \n \u00a0 Comme celui-ci était obstrué, ils ont dû le nettoyer pour pouvoir circuler."
-        },
-        {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
+          "reveal": "\u00a0 En essayant de monter à bord, les Shrymps se sont trompés dans les coordonnées de téléportation et se sont retrouvés dans votre système de ventilation. \n \u00a0 Comme celui-ci était obstrué, ils ont dû le nettoyer pour pouvoir circuler.<span class=\"alt-text\" data-condition=\"ship.oxygen == 100\">\u00a0 En essayant de monter à bord, les Shrymps se sont trompés dans les coordonnées de téléportation et se sont retrouvés dans votre système de ventilation. \n \u00a0 N'ayant aucune indication sur leur chemin ils ont du faire des trous dans les conduits pour vous retrouver.</span> "
         }
       ]
     },
     {
-      "desc": "\u00a0 Vos capteurs détectent un vaisseau, il appratient à des Yorcs. \n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
+      "desc": "\u00a0 Vos capteurs détectent un vaisseau, il appartient à des Yorcs. \n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
       "timer": false,
       "choices": [
+        {
+          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
+          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
+        },
         {
           "value": "Entrer en contact",
           "reveal": "\u00a0 Les Yorcs proclament faire partie du Groupuscule Armé des Yorcs Salvateurs et entrent dans votre vaisseau pour vous attaquer."
@@ -507,10 +511,6 @@
         {
           "value": "Les inviter à bord",
           "reveal": "\u00a0 Les Yorcs arrivent dans votre vaisseau avec du pop-corn des chips, des pizza et des films."
-        },
-        {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
         }
       ]
     },
