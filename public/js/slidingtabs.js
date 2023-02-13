@@ -44,7 +44,6 @@ function startCountDown() {
         timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
         switch (time_left) {
             case 30:
-                bigBoite.classList.remove('hide')
                 bigBoite.classList.add('start')
                 bigBoite.classList.add('grow')
                 bigBoite.classList.add('float')
@@ -543,9 +542,12 @@ async function stopCountdown() {
   bigBoite.classList.remove("start");
   bigBoite.classList.add("startnot");
   await sleep(3870);
-  bigBoite.classList.add("hide");
-  bigBoite.classList.remove("plop");
   bigBoite.classList.remove("startnot");
+  bigBoite.classList.remove("plop");
+  bigBoite.classList.remove('idle')
+  bigBoite.classList.remove('shot')
+  bigBoite.classList.remove('show-plugun')
+  bigBoite.classList.remove('hide-plugun')
 }
 
 //timer end -> cacher tous les choix sauf ne rien faire
