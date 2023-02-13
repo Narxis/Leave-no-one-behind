@@ -37,7 +37,8 @@
     background-color: transparent;
     display: flex;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-start;
+    margin: 0px 10px;
 }
 
 .reveal-text {
@@ -425,4 +426,14 @@ input::-webkit-inner-spin-button {
 
 .hide {
     display: none;
+}
+
+.blackout {
+    color: #76008d;
+    text-shadow: 0 0 1px #ff24ef;
+}
+
+.mjreveal {
+    color: rgb(31, 187, 187);
+    text-shadow: 0 0 1px white;
 }
