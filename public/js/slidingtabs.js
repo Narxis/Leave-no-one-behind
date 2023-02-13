@@ -43,50 +43,8 @@ function startCountDown() {
         timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
         timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
         switch (time_left) {
-        /* case 30:
-            bigBoite.classList.add('start')
-            bigBoite.classList.add('grow')
-            bigBoite.classList.add('float')
-            break;
-        case 28:
-            bigBoite.classList.add('idle')
-            bigBoite.classList.remove('start')
-            break;
-        case 10:
-            bigBoite.classList.add('flash')
-            break;
-        case 9:
-            await sleep(300)
-            bigBoite.classList.remove('flash')
-            break;
-        case 4:
-            await sleep(500)
-            bigBoite.classList.remove('grow')
-            bigBoite.classList.add('plop')
-            break;
-        case 3:
-            bigBoite.classList.add('shot')
-            break;
-        case 2:
-            await sleep(520)
-            bigBoite.classList.add('show-plugun')
-            bigBoite.classList.add('hide-plugun')
-            await sleep(250)
-            plugShip.classList.remove('shipflotte')
-            plugShip.classList.add('bonk')
-            await sleep(900)
-            plugShip.classList.remove('bonk')
-            plugShip.classList.add('comeback')
-            break;
-        case 0:
-            await sleep(1200)
-            plugShip.classList.remove('comeback')
-            plugShip.classList.add('shipflotte')
-            bigBoite.classList.remove('idle')
-            clearInterval(interval_cd);
-            return true;
-            break; */
             case 30:
+                bigBoite.classList.remove('hide')
                 bigBoite.classList.add('start')
                 bigBoite.classList.add('grow')
                 bigBoite.classList.add('float')
@@ -575,12 +533,19 @@ function setModuleVal(mod, newValue, left) {
     wsLNOB.setModule(mod, newValue);
 }
 
-function stopCountdown() {
-    clearInterval(interval_cd);
-    bigBoite.classList.remove('start')
-    bigBoite.classList.remove('grow')
-    bigBoite.classList.remove('float')
-    bigBoite.classList.remove('idle')
+async function stopCountdown() {
+  clearInterval(interval_cd);
+  bigBoite.classList.remove("grow");
+  bigBoite.classList.remove("flash");
+  bigBoite.classList.add("plop");
+  await sleep(500);
+  bigBoite.classList.remove("idle");
+  bigBoite.classList.remove("start");
+  bigBoite.classList.add("startnot");
+  await sleep(3870);
+  bigBoite.classList.add("hide");
+  bigBoite.classList.remove("plop");
+  bigBoite.classList.remove("startnot");
 }
 
 //timer end -> cacher tous les choix sauf ne rien faire
