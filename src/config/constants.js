@@ -2,6 +2,7 @@ const Chalk = require("chalk");
 const readline = require("readline")
 
 module.exports.register = function () {
+    global.TYPE_INITIAL = -1;
     global.TYPE_PLANET = 0;
     global.TYPE_NEUTRAL = 1;
     global.TYPE_POSITIVE = 2;
