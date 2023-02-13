@@ -17,37 +17,37 @@
                 <div class="line">
                     <div class="scoretext" id="text0">Humains en vie: </div>
                     <div class="scorevalue" id="score0">
-                        <span class="amount" id="amount0">0</span>
+                        <span class="amount" id="amount0" data-value="">0</span>
                     </div>
                 </div>
                 <div class="line">
                     <div class="scoretext" id="text1">Score vaisseau: </div>
                     <div class="scorevalue" id="score0">
-                        <span class="amount" id="amount1">0</span>
+                        <span class="amount" id="amount1" data-value="">0</span>
                     </div>
                 </div>
                 <div class="line">
                     <div class="scoretext" id="text2">Score planète: </div>
                     <div class="scorevalue" id="score0">
-                        <span class="amount" id="amount2">0</span>
+                        <span class="amount" id="amount2" data-value="">0</span>
                     </div>
                 </div>
                 <div class="line">
                     <div class="scoretext" id="text3">Bonus cartes: </div>
                     <div class="scorevalue" id="score0">
-                        <span class="amount" id="amount3">0</span>
+                        <span class="amount" id="amount3" data-value="">0</span>
                     </div>
                 </div>
                 <div class="line">
                     <div class="scoretext" id="text4">Autres </div>
                     <div class="scorevalue" id="score0">
-                        <span class="amount" id="amount4">0</span>
+                        <span class="amount" id="amount4" data-value="">0</span>
                     </div>
                 </div>
                 <div class="line">
                     <div class="scoretext" id="text5">Score total: </div>
                     <div class="scorevalue" id="score0">
-                        <span class="amount" id="amountfinal">0</span>
+                        <span class="amount" id="amountfinal" data-value="">0</span>
                     </div>
                 </div>
             </div>
@@ -214,7 +214,11 @@
     </div>
 </body>
 
-<script src="js/end-screen.js"></script>
+<script src="/js/socketLNOB.js"></script>
+<script>
+ <%- js.vars %>
+</script>
+<script src="/js/end-screen.js"></script>
 <script>
     var observer = new MutationObserver(function (mutations) {
         mutations.forEach(async function (mutation) {

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
 
-const DB_VERSION = 5; // increment when structure changes are added
+const DB_VERSION = 6; // increment when structure changes are added
 const DB_FOLDER = 'storage/databases/';
 
 class DB {
@@ -18,7 +18,7 @@ class DB {
                 host: 'localhost',
                 dialect: 'sqlite',
                 logging: false,
-                storage: DB_FOLDER + db_name + '.sqlite'
+                storage: DB_FOLDER + db_name + '.sqlite',
             });
         }
         else {
@@ -86,6 +86,10 @@ class DB {
                     'wtr_val',
                     'fau_cost',
                     'fau_val',
+                    'flo_cost',
+                    'flo_val',
+                    'civ_cost',
+                    'civ_val',
                     'cli_cost',
                     'cli_val',
                     'res_cost',
@@ -103,6 +107,10 @@ class DB {
                             'wtr_val',
                             'fau_cost',
                             'fau_val',
+                            'flo_cost',
+                            'flo_val',
+                            'civ_cost',
+                            'civ_val',
                             'cli_cost',
                             'cli_val',
                             'res_cost',
@@ -234,6 +242,16 @@ class DB {
                 allowNull: false
             },
             landing: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
+            },
+            dbscience: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
+            },
+            dbhistory: {
                 type: Sequelize.INTEGER,
                 defaultValue: 100,
                 allowNull: false

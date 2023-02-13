@@ -144,6 +144,7 @@ class Card {
                 'timer',
                 'shuffle'
             ],
+            raw: true,
             where: {
                 id: this.id
             }
@@ -152,8 +153,8 @@ class Card {
         if (!card)
             return
 
-        for (let dat in card.dataValues) {
-            this[dat] = card.dataValues[dat]
+        for (let dat in card) {
+            this[dat] = card[dat]
         }
 
         let raw_modules = await DB.tables.card_modules.findAll({

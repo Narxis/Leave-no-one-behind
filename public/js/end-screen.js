@@ -3,10 +3,10 @@ function sleep(ms) {
 }
 var scoreMultiplier = ["Humain", "Etat du vaisseau", "Etat de la planète"];
 var scoreAdder = ["Bonus carte", "Autres"]
-var bonusCarte = 303500;
-var shipState = 48875;
-var humans = 997;
-var planetState = 37875;
+var bonusCarte = score.scoreCards;
+var shipState = score.scoreShip;
+var humans = ship.cryopods;
+var planetState = score.scorePlanet;
 var other = 69;
 var valueScoreMultiplier = [humans, shipState, planetState, bonusCarte, other];
 var valueScoreAdder = [bonusCarte, other];
@@ -201,7 +201,7 @@ var textre = "blabla Fer blabla planette blabla diamant bla bla ";
 var texteau = "blabla Eau blabla planette blabla boire bla bla ";
 var textgr = "blabla Gravité blabla planette blabla pomme bla bla";
 var recapText = [texto2, textcl, textff, textre, texteau, textgr]
-var etatVaisseau = [100,100,100,100,100,100,100,100,100,100]
+var etatVaisseau = [ship.motors,ship.scanner,ship.proximity,ship.oxygen,ship.energy,ship.gravity,ship.landing,ship.construction,ship.dbscience,ship.dbhistory]
 
 async function scoreCalcul() {
     let id = document.getElementById('text');

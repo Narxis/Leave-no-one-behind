@@ -2,15 +2,23 @@ const {Card} = require('./../models/card')
 const fs = require("fs")
 const { Op, literal } = require("sequelize");
 
-const deckGenerator = async function (gameMode = 'Fair', nbPla = 5, nbTot = 6, nbNeg=2, nbPos=1, nbNeu=3){
+const deckGenerator = async function (){
 
-    let deck = [];
+    let gameMode = CONFIG.gameModeFair ? 'Fair' : 'Chaos';
+    let nbPla = CONFIG.planetCount;
+    let nbTot = CONFIG.cardByStepsChaos;
+    let nbNeg = CONFIG.negativeByStep;
+    let nbPos = CONFIG.positiveByStep;
+    let nbNeu = CONFIG.neutralByStep;
+
+    let deck = await getCards(TYPE_INITIAL);
 
     let neuCardList = await getCards(TYPE_NEUTRAL);
     let negCardList = await getCards(TYPE_NEGATIVE);
     let posCardList = await getCards(TYPE_POSITIVE);
 
     let cardList = [];
+
     if (gameMode === "Chaos")
         cardList = shuffle((neuCardList).concat((negCardList).concat(posCardList)));
 
@@ -143,6 +151,10 @@ const destroyDeck = async function (deck_id = 0){
     })
 }
 
+const getDeck = async function () {
+    return await DB.tables.deck.findAll({raw:true})
+}
+
 const shuffle = function (array) {
     let currentIndex = array.length,  randomIndex;
 
@@ -175,6 +187,9 @@ const hydrateCardDB = async function (cleanInstall = true) {
         let type;
         let cards = baseCards[i];
         switch (i) {
+            case 'initial':
+                type = TYPE_INITIAL;
+                break;
             case 'positive':
                 type = TYPE_POSITIVE;
                 break;
@@ -209,4 +224,4 @@ const hydrateCardDB = async function (cleanInstall = true) {
     }
 }
 
-module.exports = {deckGenerator, cardPop, getCards, destroyDeck, shuffle, hydrateCardDB}
+module.exports = {deckGenerator, cardPop, getCards, destroyDeck, getDeck, shuffle, hydrateCardDB}
