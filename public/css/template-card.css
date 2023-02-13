@@ -50,7 +50,7 @@
   display: flex;
   height: 370px;
   width: 642px;
-  font-size: 24px;
+  font-size: 22px;
   line-height: 30px;
   margin: 15px 4px;
   color: rgb(255, 255, 255);
@@ -60,20 +60,29 @@
 
 .card-text::before {
   content: '';
+  position: absolute;
+  display: flex;
+  height: 370px;
+  width: 642px;
+  font-size: 22px;
+  line-height: 30px;
+  margin: 15px 4px;
+  color: rgb(255, 255, 255);
+  text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
+  align-items: flex-start;
 }
 
 .answer {
   position: absolute;
   display: flex;
-  height: 300px;
-  width: 590px;
-  font-size: 28px;
-  align-items: baseline;
-  margin: 30px;
+  height: 370px;
+  width: 642px;
+  font-size: 22px;
+  line-height: 30px;
+  margin: 15px 4px;
   color: rgb(255, 255, 255);
   text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
-  overflow: hidden;
-  line-height: 30px;
+  align-items: flex-start;
 }
 
 .answer1,

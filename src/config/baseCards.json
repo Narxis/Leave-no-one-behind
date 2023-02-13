@@ -32,7 +32,7 @@
       "choices": [
         {
           "value": "Lire le message",
-          "reveal": "\u00a0 Une mise à jour de votre bibliothèque de films est disponible. <span class=\"mjreveal\">Remonte le moral</span>"
+          "reveal": "\u00a0 Une mise à jour de votre bibliothèque de films est disponible. \n \n \u00a0 Vous devriez y jeter un coup d'oeil. <span class=\"mjreveal\">Remonte le moral</span>"
         },
         {
           "value": "Ne rien faire",
@@ -402,7 +402,7 @@
         },
         {
           "value": "Envoyer un robot de \"nettoyage\"",
-          "reveal": "\u00a0 Le robot de nettoyage s'exécute, il agit rapidement sans faire de bruit. \n \u00a0 En un rien de temps, le marqueur sur la carte du vaisseau disparaît."
+          "reveal": "\u00a0 Le robot de nettoyage s'exécute, il agit rapidement sans faire de bruit. \n \n \u00a0 En un rien de temps, le marqueur sur la carte du vaisseau disparaît."
         }
       ]
     },
@@ -430,7 +430,7 @@
       "choices": [
         {
           "value": "Telecharger la transmission.",
-          "reveal": "\u00a0 Bonjour membres de l'OLI, \n \u00a0 Je me présente, Fnek Scécrable représentant galactique de la Fnak \n \u00a0 Je viens vous prévenir que nous somme de votre côté avec à disposition une arme nucléaire à puissance et portée sans précédent. \n \u00a0 Si vous vous trouvez dans une situation dangereuse lancez ce programme qui nous indiquera la position de votre cible : \n \u00a0 \"MDMA.py\" \n \n (ps: il faut 21 jours avant de recharger le massive death missile of annihilation) <span class=\"mjreveal\">Donne status \"Anticipation\"</span>"
+          "reveal": "\u00a0 Bonjour membres de l'OLI, \n \n \u00a0 Je me présente, Fnek Scécrable représentant galactique de la Fnak \n \u00a0 Je viens vous prévenir que nous somme de votre côté avec à disposition une arme nucléaire à puissance et portée sans précédent. \n \u00a0 Si vous vous trouvez dans une situation dangereuse lancez ce programme qui nous indiquera la position de votre cible : \n \u00a0 \"MDMA.py\" \n \n (ps: il faut 21 jours avant de recharger le massive death missile of annihilation) <span class=\"mjreveal\">Donne status \"Anticipation\"</span>"
         },
         {
           "value": "Marquer le message comme \"lu\"",
