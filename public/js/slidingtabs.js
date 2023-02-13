@@ -197,16 +197,18 @@ async function nextoption() {
         let spancontent;
         if (blackout){
             let blackoutTextverif = false;
+            let j = 0
             for (let i = 0; i < choicelist.length; i++) {
                 str = choicelist[i]
-                choiceshtml = `<button class="choice move-down" id="choice${i}"></button>`
+                choiceshtml = `<button class="choice move-down" id="choice${j}"></button>`
                 if (str.includes('class=\"blackout\"')){
                     blackoutTextverif = true
                     spanstart = str.indexOf('>', str.indexOf('class=\"blackout\"'));
                     spanend = str.indexOf('>', spanstart+1)
                     spancontent =  str.substring(spanstart+1, spanend)
                     document.querySelector('.choices').innerHTML += choiceshtml
-                    document.querySelector('#choice' + i).innerHTML = `<span class="blackout">${spancontent}</span>`
+                    document.querySelector('#choice' + j).innerHTML = `<span class="blackout">${spancontent}</span>`
+                    j++
                 }
             }
             if (!blackoutTextverif) {
