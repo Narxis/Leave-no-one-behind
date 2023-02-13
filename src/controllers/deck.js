@@ -1,6 +1,7 @@
 const {Card} = require('./../models/card')
 const fs = require("fs")
 const { Op, literal } = require("sequelize");
+const ws = require("ws");
 
 const deckGenerator = async function (){
 
@@ -134,11 +135,21 @@ const cardPop = async function (setPlayed = true){
                 where: {
                     id: result.id,
                 }
-            })
+            });
         }
 
-        let card = new Card(result.card_id);
-        return await card.getData();
+        let card = await new Card(result.card_id).getData();
+
+        let data = JSON.stringify({
+            action: 'card-played',
+            data: card
+        });
+        const wsClient = new ws(WS_URL);
+        wsClient.on('open', () => {
+            wsClient.send(data);
+        });
+
+        return card;
     }
     return false;
 }
