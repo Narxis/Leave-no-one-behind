@@ -48,14 +48,14 @@
 .card-text {
   position: absolute;
   display: flex;
-  height: 300px;
-  width: 590px;
-  font-size: 28px;
+  height: 370px;
+  width: 642px;
+  font-size: 24px;
   line-height: 30px;
-  align-items: baseline;
-  margin: 30px;
+  margin: 15px 4px;
   color: rgb(255, 255, 255);
-  text-shadow: rgba(238, 232, 232, 0.418) 3px 3px 3px;
+  text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
+  align-items: flex-start;
 }
 
 .card-text::before {

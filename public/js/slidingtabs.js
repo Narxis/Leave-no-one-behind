@@ -409,7 +409,7 @@ async function initialiseNextButton() {
             document.querySelector('.answer1').classList.remove('invisibility')
             document.querySelector('.answer2').classList.remove('invisibility')
             //new text
-            let textPlanetEncounter = "Votre vaisseau est entrée dans l'orbite d'une planète, allez dans la salle des scanners pour voir les informations sur cette planète ";
+            let textPlanetEncounter = "\u00a0Votre vaisseau est entrée dans l'orbite d'une planète. \n \n\u00a0Vous allez dans la salle des scanners pour voir les informations de cette planète.";
             await initialiseStatusList();
             write(textPlanetEncounter, '.card-text',);
         }
