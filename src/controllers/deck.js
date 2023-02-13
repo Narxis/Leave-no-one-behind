@@ -11,15 +11,14 @@ const deckGenerator = async function (){
     let nbPos = CONFIG.positiveByStep;
     let nbNeu = CONFIG.neutralByStep;
 
-    console.log(CONFIG);
-
-    let deck = [];
+    let deck = await getCards(TYPE_INITIAL);
 
     let neuCardList = await getCards(TYPE_NEUTRAL);
     let negCardList = await getCards(TYPE_NEGATIVE);
     let posCardList = await getCards(TYPE_POSITIVE);
 
     let cardList = [];
+
     if (gameMode === "Chaos")
         cardList = shuffle((neuCardList).concat((negCardList).concat(posCardList)));
 
@@ -188,6 +187,9 @@ const hydrateCardDB = async function (cleanInstall = true) {
         let type;
         let cards = baseCards[i];
         switch (i) {
+            case 'initial':
+                type = TYPE_INITIAL;
+                break;
             case 'positive':
                 type = TYPE_POSITIVE;
                 break;

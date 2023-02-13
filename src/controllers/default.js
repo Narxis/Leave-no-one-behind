@@ -105,6 +105,7 @@ module.exports.renderCardEvent = async function (req, res) {
         case TYPE_PLANET:
             res.render('template-planet', vars);
             break;
+        case TYPE_INITIAL:
         case TYPE_NEGATIVE:
         case TYPE_NEUTRAL:
         case TYPE_POSITIVE:

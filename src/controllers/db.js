@@ -18,7 +18,7 @@ class DB {
                 host: 'localhost',
                 dialect: 'sqlite',
                 logging: false,
-                storage: DB_FOLDER + db_name + '.sqlite'
+                storage: DB_FOLDER + db_name + '.sqlite',
             });
         }
         else {
