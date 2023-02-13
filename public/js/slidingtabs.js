@@ -36,58 +36,13 @@ async function getActiveStatus () {
 
 function startCountDown() {
     // On récupère le texte dans le timer (en tant qu'entier)
-    let time_left = parseInt(timerText.textContent);
+    let time_left = 30;
     // On lance une fonction toutes les secondes (1000ms)
     interval_cd = setInterval(async function () {
-        // aucune idée, une sorte de magie noire
-        time_left = time_left - 1;
         // On change le texte dans le timer (avec un 0 devant si on est en dessous de 10)
         timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
         timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
         switch (time_left) {
-        /* case 30:
-            bigBoite.classList.add('start')
-            bigBoite.classList.add('grow')
-            bigBoite.classList.add('float')
-            break;
-        case 28:
-            bigBoite.classList.add('idle')
-            bigBoite.classList.remove('start')
-            break;
-        case 10:
-            bigBoite.classList.add('flash')
-            break;
-        case 9:
-            await sleep(300)
-            bigBoite.classList.remove('flash')
-            break;
-        case 4:
-            await sleep(500)
-            bigBoite.classList.remove('grow')
-            bigBoite.classList.add('plop')
-            break;
-        case 3:
-            bigBoite.classList.add('shot')
-            break;
-        case 2:
-            await sleep(520)
-            bigBoite.classList.add('show-plugun')
-            bigBoite.classList.add('hide-plugun')
-            await sleep(250)
-            plugShip.classList.remove('shipflotte')
-            plugShip.classList.add('bonk')
-            await sleep(900)
-            plugShip.classList.remove('bonk')
-            plugShip.classList.add('comeback')
-            break;
-        case 0:
-            await sleep(1200)
-            plugShip.classList.remove('comeback')
-            plugShip.classList.add('shipflotte')
-            bigBoite.classList.remove('idle')
-            clearInterval(interval_cd);
-            return true;
-            break; */
             case 30:
                 bigBoite.classList.add('start')
                 bigBoite.classList.add('grow')
@@ -126,9 +81,10 @@ function startCountDown() {
                 bigBoite.classList.add('hide')
                 await sleep(300)
                 plugShip.classList.remove('comeback')
-                return true;
                 break;
         }
+        time_left--;
+
     }, 1000);
 }
 
@@ -208,6 +164,7 @@ function eventchoices() {
                     choiceTabs.item(k).classList.add('move-down');
                     choiceTabs.item(k).classList.remove('choice-hover')
                 }
+                stopCountdown();
                 await sleep(1200)
                 if (currentCardType == -1){
                     startwrite(answerlist[i], '.answer' + (i),);
@@ -276,7 +233,6 @@ async function nextoption() {
         }
         await sleep(500)
         initialiseChoiceTabs();
-        startCountDown();
         initialiseTimerTab();
         eventchoices();
     }
@@ -411,7 +367,7 @@ async function initialiseNextButton() {
             //new text
             let textPlanetEncounter = "\u00a0Votre vaisseau est entrée dans l'orbite d'une planète. \n \n\u00a0Vous allez dans la salle des scanners pour voir les informations de cette planète.";
             await initialiseStatusList();
-            write(textPlanetEncounter, '.card-text',);
+            await write(textPlanetEncounter, '.card-text',);
         }
         else {
             let nextCard = await getNextCard(true);
@@ -453,10 +409,14 @@ async function initialiseNextButton() {
             cardnbrUntilPlanet -= 1;
             await initialiseStatusList();
             if (blackout){
-                write(cardtextstr, '.card-text','blackout');
+                await write(cardtextstr, '.card-text','blackout');
             }
             else
-                write(cardtextstr, '.card-text');
+                await write(cardtextstr, '.card-text');
+
+            if (nextCard.timer === 1) {
+                startCountDown();
+            }
         }
     })
 }
@@ -572,8 +532,22 @@ function setModuleVal(mod, newValue, left) {
     wsLNOB.setModule(mod, newValue);
 }
 
-function stopCountdown() {
-  clearInterval(interval_cd)
+async function stopCountdown() {
+  clearInterval(interval_cd);
+  bigBoite.classList.remove("grow");
+  bigBoite.classList.remove("flash");
+  bigBoite.classList.add("plop");
+  await sleep(500);
+  bigBoite.classList.remove("idle");
+  bigBoite.classList.remove("start");
+  bigBoite.classList.add("startnot");
+  await sleep(3870);
+  bigBoite.classList.remove("startnot");
+  bigBoite.classList.remove("plop");
+  bigBoite.classList.remove('idle')
+  bigBoite.classList.remove('shot')
+  bigBoite.classList.remove('show-plugun')
+  bigBoite.classList.remove('hide-plugun')
 }
 
 //timer end -> cacher tous les choix sauf ne rien faire
@@ -590,11 +564,14 @@ function stopCountdown() {
     else{
         if (blackout){
             // console.log(blackout,'blackout','if')
-            write(cardtextstr, '.card-text','blackout');
+            await write(cardtextstr, '.card-text','blackout');
         }
         else{
             // console.log(blackout,'blackout','else')
-            write(cardtextstr, '.card-text');
+            await write(cardtextstr, '.card-text');
+        }
+        if (currentCardHasTimer === 1) {
+            startCountDown();
         }
     }
     initialiseleLeftTabs();

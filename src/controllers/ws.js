@@ -71,6 +71,9 @@ const makeAction = async function (raw_response) {
         case 'game-ready':
             payload = response;
             break;
+        case 'card-played':
+            payload = response;
+            break;
         default:
             payload = {
                 error: true,
