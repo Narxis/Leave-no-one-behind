@@ -7,23 +7,23 @@
 
 - Air non respirable. [0;0,2]
 
-L'atmosphère est respirable mais contient des gaz tel que du Méthane et de l'Ammoniac.
+L'atmosphère est dense ce qui la rend plus difficillement respirable.
 
 - Air Toxique. [0,2;0,3]
 
-L'atmosphère est 
+L'atmosphère est respirable mais contient des gaz tel que du Méthane et de l'Ammoniac.
 
 - Air corrosif. [0,3;0,4]
 
-L'atmosphère est respirable mais contient des gaz tel que l'Hélium et l'Hydrogène.
+L'atmosphère est respirable mais la présence d'oxygène est plus faible que sur Terre
 
 - Air respirable. [0,4;0,6]
 
-L'atmosphère est 
+L'atmosphère est respirable mais contient des gaz tel que l'Hélium et l'Hydrogène.
 
 - Air sain. [0,6;0,8]
 
-L'atmosphère est riche en dioxygène et dioxyde de carbone.
+L'atmosphère est riche en dioxygène et en dioxyde de carbone.
 
 - Air pur. [0,8;1]
 
@@ -56,6 +56,30 @@ La taille de cette planète est inférieur à celle de la Terre sa gravité est 
 La taille de cette planète est largement inférieur à celle de la Terre sa gravité est largement plus faible.
 
 ### Eau
+
+- Aucune. [0;0,2]
+
+L'eau est présente sous la surface en faible quantité, un autre liquide moins dense occupe la surface.
+
+- Trace.  [0,2;0,3]
+
+L'eau est présente sous forme de lacs gelés.
+
+- Rivières. [0,3;0,4]
+
+L'eau est présente sous forme de petits lacs et rivières.
+
+- Petits Lac.  [0,4;0,6]
+
+L'eau de la planète forme des fleuves et des lac d'eau douce.
+
+- Mers. [0,6;0,8]
+
+La planète présente des mers et des petits océans.
+
+- Océans. [0,8;1]
+
+Des fleuves d'eau douce se déversent dans de vastes océans s'étendant à l'horizon. Il y a une grande quantité d'eau présente.
 
 ### Ressources
 
