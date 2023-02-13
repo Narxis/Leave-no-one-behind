@@ -36,11 +36,9 @@ async function getActiveStatus () {
 
 function startCountDown() {
     // On récupère le texte dans le timer (en tant qu'entier)
-    let time_left = parseInt(timerText.textContent);
+    let time_left = 30;
     // On lance une fonction toutes les secondes (1000ms)
     interval_cd = setInterval(async function () {
-        // aucune idée, une sorte de magie noire
-        time_left = time_left - 1;
         // On change le texte dans le timer (avec un 0 devant si on est en dessous de 10)
         timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
         timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
@@ -126,9 +124,10 @@ function startCountDown() {
                 bigBoite.classList.add('hide')
                 await sleep(300)
                 plugShip.classList.remove('comeback')
-                return true;
                 break;
         }
+        time_left--;
+
     }, 1000);
 }
 
@@ -208,6 +207,7 @@ function eventchoices() {
                     choiceTabs.item(k).classList.add('move-down');
                     choiceTabs.item(k).classList.remove('choice-hover')
                 }
+                stopCountdown();
                 await sleep(1200)
                 if (currentCardType == -1){
                     startwrite(answerlist[i], '.answer' + (i),);
@@ -276,7 +276,6 @@ async function nextoption() {
         }
         await sleep(500)
         initialiseChoiceTabs();
-        startCountDown();
         initialiseTimerTab();
         eventchoices();
     }
@@ -411,7 +410,7 @@ async function initialiseNextButton() {
             //new text
             let textPlanetEncounter = "Votre vaisseau est entrée dans l'orbite d'une planète, allez dans la salle des scanners pour voir les informations sur cette planète ";
             await initialiseStatusList();
-            write(textPlanetEncounter, '.card-text',);
+            await write(textPlanetEncounter, '.card-text',);
         }
         else {
             let nextCard = await getNextCard(true);
@@ -453,10 +452,14 @@ async function initialiseNextButton() {
             cardnbrUntilPlanet -= 1;
             await initialiseStatusList();
             if (blackout){
-                write(cardtextstr, '.card-text','blackout');
+                await write(cardtextstr, '.card-text','blackout');
             }
             else
-                write(cardtextstr, '.card-text');
+                await write(cardtextstr, '.card-text');
+
+            if (nextCard.timer === 1) {
+                startCountDown();
+            }
         }
     })
 }
@@ -573,7 +576,11 @@ function setModuleVal(mod, newValue, left) {
 }
 
 function stopCountdown() {
-  clearInterval(interval_cd)
+    clearInterval(interval_cd);
+    bigBoite.classList.remove('start')
+    bigBoite.classList.remove('grow')
+    bigBoite.classList.remove('float')
+    bigBoite.classList.remove('idle')
 }
 
 //timer end -> cacher tous les choix sauf ne rien faire
@@ -590,11 +597,14 @@ function stopCountdown() {
     else{
         if (blackout){
             // console.log(blackout,'blackout','if')
-            write(cardtextstr, '.card-text','blackout');
+            await write(cardtextstr, '.card-text','blackout');
         }
         else{
             // console.log(blackout,'blackout','else')
-            write(cardtextstr, '.card-text');
+            await write(cardtextstr, '.card-text');
+        }
+        if (currentCardHasTimer === 1) {
+            startCountDown();
         }
     }
     initialiseleLeftTabs();

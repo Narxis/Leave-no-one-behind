@@ -18,7 +18,7 @@
   "positive": [
     {
       "desc": "Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer le [module]. \n La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">Vous remarquez que l'état du [module] s'est amélioré. Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. Cela a résulté en une amélioration de l'état du module. Vous ne savez cependant pas ce qui a causé ce changement.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Continuer le voyage <span class=\"blackout\">Continuer à voyager sans capteurs</span> ",
@@ -28,7 +28,7 @@
     },
     {
       "desc": "Vous apercevez une notification sur l'écran de réception de vos messages.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Lire le message",
@@ -42,7 +42,7 @@
     },
     {
       "desc": "Vous apercevez sur le bord de l'hyperespace un [race]. <span class=\"blackout\">Votre vaisseau continue son trajet dans l'espace. Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.</span> ",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Ouvrir le sas d'entrée <span class=\"blackout\">Continuer à voyager sans capteurs</span>",
@@ -56,7 +56,7 @@
     },
     {
       "desc": "Vous profitez d'un moment de calme pendant le voyage pour suivre un tutoriel de [stat], vous sentez vos capacités augmenter.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Continuer le voyage",
@@ -66,7 +66,7 @@
     },
     {
       "desc": "Vous recevez un message sur la petite boîte mail de l'OLI.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Lire le message",
@@ -80,7 +80,7 @@
     },
     {
       "desc": "Un livreur Galaxyssimo™ sonne à votre sas d'entrée et proclame venir de la part de l'OLI.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Accepter le colis",
@@ -100,7 +100,7 @@
   "negative": [
     {
       "desc": "Vos radars détectent des débris à une très grande vitesse en direction de votre vaisseau. Ils vont percuter votre vaisseau au niveau du [module]. <span class=\"blackout\">Un débris a percuté votre [module], vous auriez pu le détecter si vous aviez allumé vos modules de détection.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Minimiser la casse\n(Ingénieur)",
@@ -118,7 +118,7 @@
     },
     {
       "desc": "L'hyper-espace devient instable, et vous êtes téléporté en dehors, en plein milieu d'un champ de bataille. Des tirs sont dirigés vers votre [module-h].<span class=\"blackout\">L'hyper-espace devient instable et vous êtes téléporté en dehors, des tirs sont dirigés vers votre [module-h].</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Minimiser la casse\n(Ingénieur)",
@@ -136,7 +136,7 @@
     },
     {
       "desc": "L'alarme retentit, le module d'oxygène s'éteint. Vous disposez d'assistances respiratoires individuelles qui vous permettent de rester conscient. Un intrus est détecté dans le vaisseau et se dirige vers le cockpit. Il s'agit d'un mercenaire, il exige la remise de 100 humains en échange de la réactivation de votre module d'oxygène et de son départ.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Combattre le mercenaire",
@@ -154,7 +154,7 @@
     },
     {
       "desc": "Les radiations d'un pulsar surchargent vos systèmes, il y a un risque que vos modules soient endommagés en essayant de traiter une quantité aussi importante d'informations.<span class=\"blackout\">Vous apercevez au loin la lumière d'un pulsar, heureusement que vos modules de détection sont éteints, sinon ils auraient pu être endommagés.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Eteindre les modules de détection",
@@ -172,7 +172,7 @@
     },
     {
       "desc": "L'explosion lointaine d'une supernova surcharge votre système de détection avec une quantité importante de données, ce qui peut entraîner des risques d'endommagement.<span class=\"blackout\">Une explosion lointaine vous aveugle pendant de longues secondes. Il semble qu'une supernova ait explosé non loin de vous. Heureusement, vos systèmes de détection étant éteints, ils ont pu être préservés des dommages.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Eteindre les modules de détection",
@@ -190,7 +190,7 @@
     },
     {
       "desc": "Vous traversez un amas stellaire, la grande quantité d'étoiles surcharge vos capteurs d'informations, ils risquent d'être endommagés.<span class=\"blackout\">Vous traversez un amas stellaire, la grande quantité d'étoiles aurait pu surcharger vos capteurs d'informations, mais heureusement ils sont éteints et ne courent aucun risque d'être endommagés.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Eteindre les modules de détection",
@@ -208,7 +208,7 @@
     },
     {
       "desc": "Des ondes électromagnétiques surchargent vos modules de détection, ils sont automatiquement éteints par le système.<span class=\"blackout\">L'affichage du micro-onde clignote, il semble que des ondes électromagnétiques puissantes ont traversé votre vaisseau.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Continuer votre voyage<span class=\"blackout\">Continuer votre voyage</span>",
@@ -218,7 +218,7 @@
     },
     {
       "desc": "Tout est calme pour l'instant. Le bruit des écrans et des machines remplit l'air, mais ne parvient pas à masquer le vide qui vous entoure.\nVous ressentez une baisse de moral.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Continuer le voyage",
@@ -228,7 +228,7 @@
     },
     {
       "desc": "Vous passez un peu trop près d'un trou noir et êtes obligé de pousser les moteurs au-delà du seuil de sécurité.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Tenter de minimiser les dégats\n(Ingénieur)",
@@ -242,7 +242,7 @@
     },
     {
       "desc": "Vous rencontrez un barrage de la première douane galactique et on vous demande de vous ranger sur le bas-côté. La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Negocier avec les douanniers\n(MJ)",
@@ -260,7 +260,7 @@
     },
     {
       "desc": "Votre vaisseau est expulsé de l'hyperespace et vous atterrissez dans un nuage toxique. L'odeur qui s'en dégage est similaire à celle d'une foule de Fneks réunis dans un stade. Votre module de purification d'air est endommagé.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Tenter de réparer le module d'oxygène\n(Ingénieur)",
@@ -274,7 +274,7 @@
     },
     {
       "desc": "De la vie a été détectée dans la salle des cryopods. Elle a été verrouillée de l'intérieur, vous entendez quelqu'un parler, il dit :\n\"Je suis membre de la PEACE, donnez-moi 2 microprocesseurs et 1 câble HDMI.\"",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Récupérer les micro-processeurs dans les scanners",
@@ -288,7 +288,7 @@
     },
     {
       "desc": "Les secousses du vaisseau ont fait renverser des produits chimiques dans la réserve, dégageant une odeur de putrescence avancée. Les drones de nettoyage n'ont pas accès à la réserve, il faut donc qu'une personne s'en occupe.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Envoyer un membre de l'équipage",
@@ -306,7 +306,7 @@
     },
     {
       "desc": "Vous croisez sur le bord de la voie cosmique une QI-zine d'Ygrl accompagnée d'une poignée de Shrymps. La chef de la tribu tient un pot de cornichons fermé dans ses mains, ni elle ni les autres membres de la tribu ne parviennent à l'ouvrir. Elle attire votre attention à l'aide de son mycélium cosmique et vous fait comprendre qu'elle a besoin de votre aide.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Ouvrir le pot de cornichon",
@@ -320,7 +320,7 @@
     },
     {
       "desc": "Vous êtes touché par un projectile qui a percé la coque du vaisseau. Les systèmes de réparation ont rapidement colmaté la brèche, mais vous découvrez que ce projectile est une Spider-bomb, il faut la désamorcer rapidement.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Envoyer un membre de l'équipage",
@@ -338,7 +338,7 @@
     },
     {
       "desc": "Vous recevez un message vidéo d'un groupe d'extrémistes appelé les \"Shrymps Hacker d'Informations Antifongiques Sécurisés\" qui vous annoncent qu'ils ont pris possession de 16% de vos bases de données scientifiques et historiques. Après un discours confus sur leur méthode d'action, ils vous menacent de supprimer ces données si vous ne leur donnez pas 2 de vos consommables.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Donner 2 consommables",
@@ -356,7 +356,7 @@
     },
     {
       "desc": "Vous entrez dans une zone fortement radiée qui affecte le système de \"direction-horaire\" de votre vaisseau. L'autopilote essaie constamment de corriger les problèmes d'orientation, ce qui pourrait endommager les moteurs.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Renforcer les moteurs",
@@ -376,7 +376,7 @@
   "neutral": [
     {
       "desc": "<span class=\"blackout\"></span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "",
@@ -394,7 +394,7 @@
     },
     {
       "desc": "Vos capteurs détectent un vaisseau, il appartient à des [race].\nVoulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Entrer en contact",
@@ -412,7 +412,7 @@
     },
     {
       "desc": "Vous remarquez une entité en plus sur la carte du vaisseau. Vous avez un passager clandestin ! \n Quelqu'un doit rester au cockpit, qui envoyez-vous à la rencontre du passager ?",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Envoyer 1 équipier",
@@ -426,7 +426,7 @@
     },
     {
       "desc": "Vous apercevez une notification sur l'écran de réception de vos messages.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Telecharger la transmission",
@@ -444,7 +444,7 @@
     },
     {
       "desc": "Vous apercevez une notification sur l'écran de réception de vos messages.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Telecharger la transmission.",
@@ -462,7 +462,7 @@
     },
     {
       "desc": "Vos capteurs détectent un vaisseau, il appratient à des Sylvs.\n Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Entrer en contact",
@@ -480,7 +480,7 @@
     },
     {
       "desc": "Vos capteurs détectent un vaisseau, il appratient à des Ygrls. \n Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Entrer en contact",
@@ -498,7 +498,7 @@
     },
     {
       "desc": "Vos capteurs détectent un vaisseau, il appratient à des shrymps.\n Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Entrer en contact",
@@ -516,7 +516,7 @@
     },
     {
       "desc": "Vos capteurs détectent un vaisseau, il appratient à des Yorcs. \n Voulez vous entrer en contact avec le vaisseau ? <span class=\"blackout\">Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Entrer en contact",
@@ -534,7 +534,7 @@
     },
     {
       "desc": "Les dégâts infligés à votre générateur électrique causent un court-circuit qui éteint le module de détection. <span class=\"alt-text\" data-condition=\"ship.energy == 100\">Alors que vous vous promeniez dans le vaisseau, vous avez remarqué des étincelles provenant de votre générateur. Il vaut mieux ne pas s'en approcher.</span><span class=\"blackout\">Votre générateur s'emballe et cause un court-circuit qui éteint votre module de détection. Il doit redémarrer ... encore</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Redemarrer le module de détection <span class=\"alt-text\" data-condition=\"ship.energy == 100\">Observer le générateur</span>",
@@ -551,7 +551,7 @@
     {
       "start": true,
       "desc": "Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter ce chez d'oeuvre architectural et culturel.\nAlors que vous penetrez dans le hall d'entrée vous pouvez appercevoir un [race1] assis à une table au milieu de la pièce, un [race2] en train de lire un livre dans une allée secondaire, et une porte entre-ouverte au fond de l'allée principale.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Parler au [race1] assis à la table au milieu de la pièce",
@@ -570,7 +570,7 @@
     {
       "desc": "\"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\"\ndit le [race1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
       "name":"bibli1",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Aller vers le sous-sol",
@@ -585,7 +585,7 @@
     {
       "desc": "Vous vous frayez un chemin dans les sous-sols de la bibliothèque et les bruits étranges deviennent de plus en plus forts.\nSoudain, vous êtes face à face avec deux Yorcs armés de manches à balais, qui ont l'air décidés à vous attaquer. Vous vous préparez à vous défendre alors que vous vous demandez ce qui peut bien se passer ici.",
       "name":"bibli1-1",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Terminer le combat et fouiller la salle",
@@ -600,7 +600,7 @@
     {
       "desc": "Après avoir terrasser les Yorcs vous penetrez dans la salle et vous rendez compte que les Yorcs étaient en train synthétiser des Shrips dans un laboratoire clandestin, vous découvrez également des armes et des plans détaillés pour un projet d'invasion.\nVous comprenez alors que vous venez de déjouer un complot visant à attaquer la bibliothèque et peut-être même tout le système. Vous contactez immédiatement les autorités pour les informer de la situation et leur remettre les preuves trouvées.",
       "name":"bibli1-1-1",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Attendre les autorités",
@@ -615,7 +615,7 @@
     {
       "desc": "Vous retournez dans le hall principal mais plus personne ne s'y trouve.",
       "name":"bibli1-1-2",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Quitter la bibliothèque",
@@ -626,7 +626,7 @@
     {
       "desc": "Vous et votre équipe avez réussi à neutraliser le laboratoire illégal du Groupuscule Armé de Yorcs Salvateurs et à fournir des preuves de leur activité illégale.\nLa Première Unité Tactique Expérimentale arrive sur les lieux pour procéder à l'inspection et saisir les preuves.\nLe commandant de l'unité vous félicite pour votre mission réussie et s'éxclame : \"Bravo, vous voulez une médaille ?!\"",
       "name":"bibli1-1-1-1",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Oui...",
@@ -641,7 +641,7 @@
     {
       "desc": "Le commandant vous remet une médaille pour votre dévouement.",
       "name":"bibli1-1-1-1-1",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Remercier le commandant et retourner à votre vaisseau",
@@ -652,7 +652,7 @@
     {
       "desc": "Le commandant est surpris de votre réponse et complimente votre humilité.",
       "name":"bibli1-1-1-1-2",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Quitter la bibliothèque",
@@ -663,7 +663,7 @@
     {
       "desc": "Le [race2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\nIl vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque\nIl décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
       "name":"bibli2",
-      "timer": false,
+      "timer": true,
       "shuffle":true,
       "choices": [
         {
@@ -683,7 +683,7 @@
     {
       "desc": "\"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet1]",
       "name":"bibli2-1",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Prendre l'[objet1] et quitter la bibliothèque",
@@ -694,7 +694,7 @@
     {
       "desc": "\"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet2]",
       "name":"bibli2-2",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Prendre l'[objet2] et quitter la bibliothèque",
@@ -705,7 +705,7 @@
     {
       "desc": "\"Perdu c'était un [objet1] j'allais pas vous le donner de toute manière. \"\nLe [race2] se replonge dans son livre et vous ignore.",
       "name":"bibli2-3",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Quitter la bibliothèque",
@@ -716,7 +716,7 @@
     {
       "desc": "Vous appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\nLe livre est usé, vous pouvez difficllement lire [livre] écrit sur la couverture.",
       "name": "bibli3",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Prendre le livre",
@@ -731,7 +731,7 @@
     {
       "desc": "Vous ramassez le livre et le rangez sous votre manteau avant que quelqu'un ne vous apperçoive",
       "name": "bibli3-1",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Quitter la bibliothèque en vitesse",
@@ -742,7 +742,7 @@
     {
       "desc": "La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\nElle vous tend le [livre] en pensant que c'est le votre",
       "name": "bibli3-2",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Prendre le livre et retourner à votre vaisseau",
