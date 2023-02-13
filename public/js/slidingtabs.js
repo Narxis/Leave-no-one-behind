@@ -2,6 +2,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 //variables cartes
+var clickable = true
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr = 0;
 var cardnbrUntilPlanet = 5;
@@ -61,10 +62,21 @@ function startCountDown() {
                 break;
             case 0:
                 clearInterval(interval_cd);
+                clickable = false
+                console.log('essaye de cliquer pour voir')
                 await sleep(500)
+                var choice = document.getElementById('choicetab');
+                var choiceTabs = choice.getElementsByClassName('choice');
+                for (let k = 0; k < choiceTabs.length-1; k++) {
+                    choiceTabs.item(k).disabled = 'true'
+                    choiceTabs.item(k).classList.add('move-down');
+                    choiceTabs.item(k).classList.remove('choice-hover')
+                }
                 bigBoite.classList.remove('grow')
                 bigBoite.classList.add('plop')
-                await sleep(500)
+                await sleep(100)
+                clickable = true
+                await sleep(400)
                 bigBoite.classList.add('shot')
                 await sleep(1520)
                 bigBoite.classList.add('show-plugun')
@@ -134,47 +146,51 @@ function eventchoices() {
     for (let i = 0; i < choiceTabs.length; i++) {
         if (nextlist[i] !== ""){
             document.querySelector('#choice' + (i)).addEventListener('mouseup', async function () {
-                for (let k = 0; k < choiceTabs.length; k++) {
-                    choiceTabs.item(k).disabled = 'true'
-                    choiceTabs.item(k).classList.add('move-down');
-                    choiceTabs.item(k).classList.remove('choice-hover')
+                if (clickable){
+                    for (let k = 0; k < choiceTabs.length; k++) {
+                        choiceTabs.item(k).disabled = 'true'
+                        choiceTabs.item(k).classList.add('move-down');
+                        choiceTabs.item(k).classList.remove('choice-hover')
+                    }
+                    document.querySelector('.card-text').classList.toggle('invisibility')
+                    await sleep (1100);
+                    document.querySelector('.card-text').innerHTML = "";
+                    await sleep (100);
+                    document.querySelector('.choices').innerHTML = ""
+                    document.querySelector('.card-text').classList.toggle('invisibility')
+                    console.log(nextlist[i])
+                    let nextCard = await getCardByName(''+nextlist[i])
+                    cardtextstr = nextCard.desc;
+                    nextlist = nextCard.choices.map(v => v.next);
+                    choicelist = nextCard.choices.map(v => v.value);
+                    answerlist = nextCard.choices.map(v => v.reveal);
+                    textprintednbr = 0;
+                    write(cardtextstr, '.card-text');
                 }
-                document.querySelector('.card-text').classList.toggle('invisibility')
-                await sleep (1100);
-                document.querySelector('.card-text').innerHTML = "";
-                await sleep (100);
-                document.querySelector('.choices').innerHTML = ""
-                document.querySelector('.card-text').classList.toggle('invisibility')
-                console.log(nextlist[i])
-                let nextCard = await getCardByName(''+nextlist[i])
-                cardtextstr = nextCard.desc;
-                nextlist = nextCard.choices.map(v => v.next);
-                choicelist = nextCard.choices.map(v => v.value);
-                answerlist = nextCard.choices.map(v => v.reveal);
-                textprintednbr = 0;
-                write(cardtextstr, '.card-text');
             })    
         }
         else {
             document.querySelector('#choice' + (i)).addEventListener('mouseup', async function () {
-                document.querySelector('.card-text').classList.toggle('invisibility')
-                document.querySelector('.answer' + (i)).classList.toggle('visibility')
-                for (let k = 0; k < choiceTabs.length; k++) {
-                    choiceTabs.item(k).disabled = 'true'
-                    choiceTabs.item(k).classList.add('move-down');
-                    choiceTabs.item(k).classList.remove('choice-hover')
-                }
-                stopCountdown();
-                await sleep(1200)
-                if (currentCardType == -1){
-                    startwrite(answerlist[i], '.answer' + (i),);
-                }
-                else{
-                    if (blackout){
-                        write(answerlist[i], '.answer' + (i),'blackout');
+                if (clickable){
+                    document.querySelector('.card-text').classList.toggle('invisibility')
+                    document.querySelector('.answer' + (i)).classList.toggle('visibility')
+                    for (let k = 0; k < choiceTabs.length; k++) {
+                        choiceTabs.item(k).disabled = 'true'
+                        choiceTabs.item(k).classList.add('move-down');
+                        choiceTabs.item(k).classList.remove('choice-hover')
                     }
-                    else
-                        write(answerlist[i], '.answer' + (i),);
+                    stopCountdown();
+                    await sleep(1200)
+                    if (currentCardType == -1){
+                        startwrite(answerlist[i], '.answer' + (i),);
+                    }
+                    else{
+                        if (blackout){
+                            write(answerlist[i], '.answer' + (i),'blackout');
+                        }
+                        else
+                            write(answerlist[i], '.answer' + (i),);
+                    }
                 }
             })
         }
