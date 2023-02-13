@@ -17,7 +17,7 @@
   ],
   "positive": [
     {
-      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer le [module]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">Vous remarquez que l'état du [module] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
+      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer le [module]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état du [module] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
       "timer": false,
       "choices": [
         {
@@ -111,8 +111,8 @@
           "reveal": "\u00a0 Vous essayez d'éviter les débris, mais malheureusement, ils percutent une autre partie de votre vaisseau."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": "\u00a0 Ne rien faire dans ce genre de situation n'est VRAIMENT PAS la meilleur chose à faire... \n \n \u00a0 Les débris ont gravement endommagé votre [module]."
+          "value": "Ne rien faire<span class=\"blackout\">\u00a0 Ne rien faire</span>",
+          "reveal": "\u00a0 Ne rien faire dans ce genre de situation n'est VRAIMENT PAS la meilleur chose à faire... \n \n \u00a0 Les débris ont gravement endommagé votre [module].<span class=\"blackout\">\u00a0 Les débris ont gravement endommagé votre [module].</span>"
         }
       ]
     },
@@ -129,8 +129,8 @@
           "reveal": "\u00a0 Vous essayez d'éviter le tir, mais celui-ci percute une autre partie de votre vaisseau à la place."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": "\u00a0 Vous auriez au moins pu faire semblant d'essayer... \n \n \u00a0 Le tir à gravement endommagé votre [module+h]"
+          "value": "Ne rien faire<span class=\"blackout\">Ne rien faire</span>",
+          "reveal": "\u00a0 Vous auriez au moins pu faire semblant d'essayer... \n \n \u00a0 Le tir à gravement endommagé votre [module+h]<span class=\"blackout\">\u00a0 Le tir à gravement endommagé votre [module+h].</span>"
         }
       ]
     },
@@ -161,12 +161,8 @@
           "reveal": "\u00a0 Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": "\u00a0 Le traitement des données excédentaires génère des erreurs, causant des dommages à tous les modules."
-        },
-        {
-          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
-          "reveal": "\u00a0 Votre voyage continue paisiblement"
+          "value": "Ne rien faire<span class=\"blackout\">Continuer votre voyage</span>",
+          "reveal": "\u00a0 Le traitement des données excédentaires génère des erreurs, causant des dommages à tous les modules.<span class=\"blackout\">\u00a0 Votre voyage continue paisiblement.</span>```"
         }
       ]
     },
@@ -179,12 +175,8 @@
           "reveal": "\u00a0 Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": "\u00a0 Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs."
-        },
-        {
-          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
-          "reveal": "\u00a0 Votre voyage continue paisiblement"
+          "value": "Ne rien faire<span class=\"blackout\">Continuer votre voyage</span>",
+          "reveal": "\u00a0 Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs.<span class=\"blackout\">\u00a0 Votre voyage continue paisiblement.</span>"
         }
       ]
     },
@@ -197,12 +189,8 @@
           "reveal": "\u00a0 Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace."
         },
         {
-          "value": "Ne rien faire",
-          "reveal": "\u00a0 Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs."
-        },
-        {
-          "value": "<span class=\"blackout\">Continuer votre voyage</span>",
-          "reveal": "\u00a0 Votre voyage continue paisiblement"
+          "value": "Ne rien faire<span class=\"blackout\">Continuer votre voyage</span>",
+          "reveal": "\u00a0 Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs.<span class=\"blackout\">\u00a0 Votre voyage continue paisiblement.</span>"
         }
       ]
     },
@@ -212,7 +200,7 @@
       "choices": [
         {
           "value": "Continuer votre voyage<span class=\"blackout\">Continuer votre voyage</span>",
-          "reveal": "\u00a0 Vos capteurs doivent être redémarrés, vous poursuivez votre voyage à l'aveugle."
+          "reveal": "\u00a0 Vos capteurs doivent être redémarrés, vous poursuivez votre voyage à l'aveugle.<span class=\"blackout\">\u00a0 Vos capteurs doivent être redémarrés, vous poursuivez votre voyage à l'aveugle.</span>"
         }
       ]
     },
@@ -387,8 +375,8 @@
           "reveal": "\u00a0 Les [race] montent à bord de votre vaisseau, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez qu'un [module] a été endommagé."
         },
         {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Vous avez râté une occasion de vous faire des amis..."
+          "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
+          "reveal": "\u00a0 Vous avez râté une occasion de vous faire des amis...<span class=\"blackout\">Votre voyage continue</span>"
         }
       ]
     },
@@ -455,8 +443,8 @@
           "reveal": "\u00a0 Les Sylvs n'ont pas compris vos intentions et sont offusqués de cette proposition. \n \n \u00a0 Ils vous insultent et repartent."
         },
         {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
+          "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
+          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars.<span class=\"blackout\">\u00a0 Votre voyage continue.</span>"
         }
       ]
     },
@@ -473,8 +461,8 @@
           "reveal": "\u00a0 Des Ygrls apparaissent dans votre vaisseau et vous attaquent"
         },
         {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
+          "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
+          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars.<span class=\"blackout\">\u00a0 Votre voyage continue.</span>"
         }
       ]
     },
@@ -491,8 +479,8 @@
           "reveal": "\u00a0 En essayant de monter à bord, les Shrymps se sont trompés dans les coordonnées de téléportation et se sont retrouvés dans votre système de ventilation. \n \u00a0 Comme celui-ci était obstrué, ils ont dû le nettoyer pour pouvoir circuler."
         },
         {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
+          "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
+          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars.<span class=\"blackout\">\u00a0 Votre voyage continue.</span>"
         }
       ]
     },
@@ -509,8 +497,8 @@
           "reveal": "\u00a0 Les Yorcs arrivent dans votre vaisseau avec du pop-corn des chips, des pizza et des films."
         },
         {
-          "value": "Ne rien faire <span class=\"blackout\">Continuer de voyager à l'aveugle</span>",
-          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars."
+          "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
+          "reveal": "\u00a0 Le vaisseau s'éloigne hors de portée de vos radars.<span class=\"blackout\">\u00a0 Votre voyage continue.</span>"
         }
       ]
     },
