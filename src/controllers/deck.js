@@ -198,7 +198,6 @@ const hydrateCardDB = async function (cleanInstall = true) {
     let cardManager = new Card();
     let baseCardsRaw = fs.readFileSync(__dirname + '/../config/baseCards.json');
     let baseCards = JSON.parse(baseCardsRaw);
-    let bulkCards = [];
 
     for (let i in baseCards) {
         let type;
@@ -235,13 +234,9 @@ const hydrateCardDB = async function (cleanInstall = true) {
             for (let k in infos) {
                 data[k] = infos[k];
             }
-
-            bulkCards.push(data);
+            
+            await cardManager.create(data);
         }
-    }
-
-    if (bulkCards.length > 0) {
-        await DB.tables.cards.bulkCreate(bulkCards)
     }
 }
 
