@@ -515,6 +515,42 @@
           "reveal": "\u00a0 Le module de détection redémarre, cela lui prendra un moment.<span class=\"alt-text\" data-condition=\"ship.energy == 100\">\u00a0 Heureusement, votre générateur est en bon état</span>"
         }
       ]
+    },
+    {
+      "desc": "\u00a0 Votre vaisseau s'immobilise soudainement à cause d'un obstacle qui l'empêche de poursuivre sa route. \n \n \u00a0 Il s'agit d'un gros conteneur qui peut être chargé dans la soute du vaisseau.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Récupérer le cargo et l'ouvrir",
+          "reveal": "\u00a0 Vous ouvrez le conteneur et un système de défense se déclenche, des aranées mycophiles en sortent. Au fond du conteneur, vous apercevez un drone.<span class=\"mjreveal\">\u00a0 Donne un drone</span>"
+        },
+        {
+          "value": "Récupérer le cargo et appeler le propriétaire",
+          "reveal": "\u00a0 Le propriétaire ne répond pas. Selon les lois galactiques concernant les containers perdus dans l'espace cosmique, le contenu vous appartient désormais.<span class=\"mjreveal\">\u00a0 Donne un item de votre choix</span>"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "\u00a0 Vous esquivez le conteneur et redémarrez l'autopilote."
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Un vaisseau passe près de vous à grande vitesse, poursuivi par un autre vaisseau.",
+      "timer": true,
+      "choices": [
+        {
+          "value": "Aider le premier vaisseau",
+          "reveal": "\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. <span class=\"mjreveal\">\u00a0 3 modules ont été endommagés.</span>"
+        },
+        {
+          "value": "Aider le deuxième vaisseau",
+          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 3 modules ont été endommagés.</span>"
+        },
+        {
+          "value": "Ne rien faire",
+          "reveal": "\u00a0 Vous vous éloignez pour éviter les tirs."
+        }
+      ]
     }
   ],
   "place": [
