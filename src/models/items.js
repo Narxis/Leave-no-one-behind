@@ -170,14 +170,19 @@ class Items {
         }
         let baseItemsRaw = fs.readFileSync(__dirname + '/../config/items.json');
         let baseItems = JSON.parse(baseItemsRaw);
+        let bulkItems = [];
 
         for (let i in baseItems) {
             let itemPool = baseItems[i];
             for (let j in itemPool) {
                 let dat = itemPool[j];
                 dat['pool'] = i;
-                await this.create(dat);
+                bulkItems.push(dat);
             }
+        }
+
+        if (bulkItems.length > 0) {
+            await DB.tables.items.bulkCreate(bulkItems);
         }
     }
 }
