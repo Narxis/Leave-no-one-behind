@@ -76,7 +76,10 @@ class Items {
     }
 
     async add(slug, quantity=1) {
-        await DB.tables.items.increment({quantity: quantity}, { where: { slug: slug } });
+        let ret = await DB.tables.items.increment({quantity: quantity}, { where: { slug: slug } });
+        if (ret[0][1] === 0) {
+            await this.create({name: slug, slug: slug, quantity:quantity})
+        }
     }
 
     async remove(slug, quantity=1) {
