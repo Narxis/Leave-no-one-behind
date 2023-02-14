@@ -1,7 +1,7 @@
 const db = require ('./../src/controllers/db');
 const type = require("./../src/config/constants");
 const fs = require('fs')
-const {getCards, deckGenerator} = require("../src/controllers/deck");
+const {getCardsIds, deckGenerator} = require("../src/controllers/deck");
 const {Player} = require("../src/models/player");
 const assert = require("assert");
 
@@ -28,13 +28,13 @@ async function setup(){
 }
 
 async function test_cards_setup(){
-    let neuCardList = await getCards(TYPE_NEUTRAL);
-    let negCardList = await getCards(TYPE_NEGATIVE);
-    let posCardList = await getCards(TYPE_POSITIVE);
+    let neuCardList = await getCardsIds(TYPE_NEUTRAL);
+    let negCardList = await getCardsIds(TYPE_NEGATIVE);
+    let posCardList = await getCardsIds(TYPE_POSITIVE);
 
-    let firstPlaSlice = await getCards(TYPE_PLANET, ALL, [1,500]);
-    let secondPlaSlice = await getCards(TYPE_PLANET, ALL, [501,800]);
-    let thirdPlaSlice = await getCards(TYPE_PLANET, ALL, [801,1000]);
+    let firstPlaSlice = await getCardsIds(TYPE_PLANET, ALL, [1,500]);
+    let secondPlaSlice = await getCardsIds(TYPE_PLANET, ALL, [501,800]);
+    let thirdPlaSlice = await getCardsIds(TYPE_PLANET, ALL, [801,1000]);
 
     console.log('Testing for select in DB');
 

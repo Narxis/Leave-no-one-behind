@@ -12,29 +12,29 @@ const deckGenerator = async function (){
     let nbPos = CONFIG.positiveByStep;
     let nbNeu = CONFIG.neutralByStep;
 
-    let deck = await getCards(TYPE_INITIAL);
+    let deck = await getCardsIds(TYPE_INITIAL);
 
-    let neuCardList = await getCards(TYPE_NEUTRAL);
-    let negCardList = await getCards(TYPE_NEGATIVE);
-    let posCardList = await getCards(TYPE_POSITIVE);
+    let neuCardList = await getCardsIds(TYPE_NEUTRAL);
+    let negCardList = await getCardsIds(TYPE_NEGATIVE);
+    let posCardList = await getCardsIds(TYPE_POSITIVE);
 
     let cardList = [];
 
     if (gameMode === "Chaos")
         cardList = shuffle((neuCardList).concat((negCardList).concat(posCardList)));
 
-    let firstPlaSlice = await getCards(TYPE_PLANET, ALL, [1,500]);
-    let secondPlaSlice = await getCards(TYPE_PLANET, ALL, [501,800]);
-    let thirdPlaSlice = await getCards(TYPE_PLANET, ALL, [801,1000]);
+    let firstPlaSlice = await getCardsIds(TYPE_PLANET, ALL, [1,500]);
+    let secondPlaSlice = await getCardsIds(TYPE_PLANET, ALL, [501,800]);
+    let thirdPlaSlice = await getCardsIds(TYPE_PLANET, ALL, [801,1000]);
 
     for (let i = 0; i < nbPla; i++) {
         let tmp_system = [];
 
         if (posCardList.length < nbPos || neuCardList.length < nbNeu || negCardList.length < nbNeg)
         {
-            neuCardList = await getCards(TYPE_NEUTRAL);
-            negCardList = await getCards(TYPE_NEGATIVE);
-            posCardList = await getCards(TYPE_POSITIVE);
+            neuCardList = await getCardsIds(TYPE_NEUTRAL);
+            negCardList = await getCardsIds(TYPE_NEGATIVE);
+            posCardList = await getCardsIds(TYPE_POSITIVE);
             if (gameMode === "Chaos")
                 cardList = shuffle((neuCardList).concat((negCardList).concat(posCardList)));
         }
@@ -91,7 +91,7 @@ const deckGenerator = async function (){
 
 }
 
-const getCards = async function (type = TYPE_PLANET, quantity = ALL, valMinMax= [-1,0], order_rand = true) {
+const getCardsIds = async function (type = TYPE_PLANET, quantity = ALL, valMinMax= [-1,0], order_rand = true) {
 
     let cards = [];
     let whereClause = {};
@@ -105,31 +105,22 @@ const getCards = async function (type = TYPE_PLANET, quantity = ALL, valMinMax= 
         }
     }
 
-    let rows = await DB.tables.cards.findAll({
+    return await DB.tables.cards.findAll({
         attributes: [
             'id',
         ],
         where: whereClause,
         limit: quantity,
-        order: (order_rand ? literal('random()') : 'id')
+        order: (order_rand ? literal('random()') : 'id'),
+        raw: true
     })
-    rows = rows.map(r => r.dataValues);
+    // rows = rows.map(r => r.dataValues);
+    //
+    // for (let row of rows) {
+    //     let card = new Card(row.id);
+    //     cards.push(await card.getData())
+    // }
 
-    for (let row of rows) {
-        let card = new Card(row.id);
-        cards.push(await card.getData())
-    }
-
-    return cards;
-}
-
-const getAllCards = async function () {
-    let rowsCards = await DB.tables.cards.findAll({raw: true});
-    let rowsCardsModules = await DB.tables.card_modules.findAll({raw: true});
-
-    for (let card of rowsCards) {
-
-    }
 }
 
 const cardPop = async function (setPlayed = true){
@@ -254,4 +245,4 @@ const hydrateCardDB = async function (cleanInstall = true) {
     }
 }
 
-module.exports = {deckGenerator, cardPop, getCards, destroyDeck, getDeck, shuffle, hydrateCardDB}
+module.exports = {deckGenerator, cardPop, getCardsIds, destroyDeck, getDeck, shuffle, hydrateCardDB}
