@@ -48,6 +48,17 @@
     text-indent: 15px;
     line-height: 13px;
 }
+.desc-title {
+    text-indent: 2px;
+    padding: 0px 13px;
+}
+.desc-text{
+    border-top: 1px solid #ffffffbd;
+    background-color: #28004ca6;
+    padding: 10px;
+    text-indent: 15px;
+    line-height: 13px;
+}
 
 .life-container {
     display: flex;
