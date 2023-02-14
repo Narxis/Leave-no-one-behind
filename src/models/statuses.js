@@ -101,10 +101,14 @@ class Statuses {
         }
         let baseStatusRaw = fs.readFileSync(__dirname + '/../config/statuses.json');
         let baseStatuses = JSON.parse(baseStatusRaw);
+        let bulkStatuses = [];
 
-        for (let i in baseStatuses) {
-            await this.create(baseStatuses[i]);
+        for (let status of baseStatuses) {
+            bulkStatuses.push(status)
         }
+
+        if (bulkStatuses.length > 0)
+            await DB.tables.statuses.bulkCreate(bulkStatuses)
     }
 }
 
