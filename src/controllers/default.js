@@ -65,7 +65,7 @@ module.exports.renderCardEvent = async function (req, res) {
     let activeStatuses = await statuses.getAllStatuses();
 
     let itemsMan = new Items();
-    let items = await itemsMan.getAllItems();
+    let items = await itemsMan.getAllItems(false);
     let starters = await itemsMan.getAllStarters();
 
     players = players.map(player => {

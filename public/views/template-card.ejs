@@ -411,7 +411,15 @@
               <div class="todoList hidden close-mod-left">
                 <div class="content">
                   <form class="add">
-                    <input autocomplete="off" type="text" name="add" placeholder="Add item...">
+                    <input type="text" id="add-item" name="add" list="items" placeholder="Add item...">
+                    <datalist id="items">
+                      <% if(items){ %>
+                        <% items.forEach(function(item) { %>
+                          <option data-value="<%= item.slug %>"><%= item.name %></option>
+                        <% }); %>
+                      <% } %>
+                    </datalist>
+                    <input type="hidden" name="answer" id="add-item-hidden">
                     <div class="input-buttons">
                       <a href="#0" class="add-todo">
                         <i class="fas fa-plus add"></i>
@@ -428,7 +436,7 @@
                             <span class="check"></span>
                             <%= item.name %>
                           </label>
-                          <i class="far fa-trash-alt delete"></i>
+                          <i class="far fa-trash-alt delete" data-slug="<%= item.slug %>"></i>
                         </li>
                         <% } %>
                       <% }); %>
@@ -669,7 +677,7 @@
 <script src="/js/template-card.js"></script>
 <script src="/js/slidingtabs.js"></script>
 <script src="/js/timer.js"></script>
-<script src="/js/todo.js"></script>
+<script src="/js/items.js"></script>
 <script src="/js/players.js"></script>
 <script>
   var observer = new MutationObserver(function (mutations) {

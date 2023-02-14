@@ -139,13 +139,22 @@ class Items {
 
     async getAllItems(possessed=true) {
 
-        let whereClause = {};
+        let whereClause = {
+            where: {
+                pool: {
+                    [Op.ne]: 'starter'
+                }
+            }
+        };
 
         if (possessed) {
             whereClause = {
                 where: {
                     quantity: {
                         [Op.gt]: 0
+                    },
+                    pool: {
+                        [Op.ne]: 'starter'
                     }
                 }
             }
