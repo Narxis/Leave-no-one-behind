@@ -616,9 +616,9 @@ nav {
 
 /* -vvv---------Buttons-------vvv-*/
 .mod-b {
-    width: 30px;
-    height: 30px;
-    border-radius: 13px;
+    width: 25px;
+    height: 25px;
+    border-radius: 15px;
     box-shadow: 1.5px 1.5px 3px #c8d0e73d, -1px -1px 2.5px #ffffff46;
     justify-self: center;
     display: flex;
@@ -630,6 +630,7 @@ nav {
     border: none;
     color: #FFFFFF;
     padding-bottom: 3px;
+    margin: 6px 2.5px;
 }
 
 .mod-b:active {
