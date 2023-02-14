@@ -26,7 +26,7 @@ class Card {
         // must use this.getData() since Sequelize works with Promises
     }
 
-    async create(data = {}) {
+    async create(data = {}, prepareBulk = false ) {
         for (let dat in this.accepted_datas)
             this[dat] = (typeof data[dat] === 'undefined' ? this.accepted_datas[dat] : data[dat]);
 

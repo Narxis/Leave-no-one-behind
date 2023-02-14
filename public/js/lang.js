@@ -1,4 +1,153 @@
 var lang = {
+    "card_vars": {
+        "module": {
+            "cryopods": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "motors": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "scanner": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "proximity": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "energy": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "oxygen": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "gravity": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "landing": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "construction": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "dbscience": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            },
+            "dbhistory": {
+                "le" : "",
+                "votre" : "",
+                "du" : "",
+            }
+        },
+        "race": {
+            "fnek": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "omphor": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "sylv": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "ygrl": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "shrymp": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "aku": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "yorc": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "nek_eau": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "nek_feu": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "nek_terre": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            },
+            "nek_air": {
+                "le": "",
+                "des": "",
+                "un": "",
+                "du": "",
+                "au": "",
+                "aux": ""
+            }
+        }
+    },
     "fnek": {
         "desc": "Les Fnek sont des êtres humanoïdes intelligents et avancés technologiquement, mesurant en moyenne 1,80 m et parlant très vite. Ils n'ont pas de nez et ont une odeur corporelle forte à l'origine des expressions \"sentir de la fnek\" ou \"sentir le fnek\", il est cependant tabou de parler d'odeurs avec eux. Ils possèdent le plus grand réseau de distribution d'armes nucléaires de l'univers connu sous le nom de \"La Fnak\"."
     },
@@ -32,4 +181,24 @@ var lang = {
     "nek_air": {
         "desc": "Les Nek-Airs sont de genre féminin et sont particulièrement intelligentes et logiques. Elles sont également de bonnes avo-cat-es et apprécient l'humour des Nek-Terres, même si elles ne se rendent pas compte que ces derniers sont sérieux."
     }
+}
+
+const getParsedText = function (text) {
+    const varFound = [...text.matchAll(/\[\w+\]/g)].map(e => e[0]);
+    for (let variable of varFound)
+        text = text.replace(variable, getRandomVar(variable))
+
+    return text;
+}
+
+const getRandomVar = function (variable){
+    variable = variable.replace('[','').replace(']','')
+    let parsedVar = variable.split("_");
+    let article = parsedVar[0];
+    let type = parsedVar[1];
+
+    let obj_keys = Object.keys(lang.card_vars[type]);
+    let randomItem = obj_keys[Math.floor(Math.random() *obj_keys.length)];
+
+    return lang.card_vars[type][randomItem][article];
 }
