@@ -551,21 +551,23 @@ function setModuleVal(mod, newValue, left) {
 }
 
 async function stopCountdown() {
-  clearInterval(interval_cd);
-  bigBoite.classList.remove("grow");
-  bigBoite.classList.remove("flash");
-  bigBoite.classList.add("plop");
-  await sleep(500);
-  bigBoite.classList.remove("idle");
-  bigBoite.classList.remove("start");
-  bigBoite.classList.add("startnot");
-  await sleep(3870);
-  bigBoite.classList.remove("startnot");
-  bigBoite.classList.remove("plop");
-  bigBoite.classList.remove('idle')
-  bigBoite.classList.remove('shot')
-  bigBoite.classList.remove('show-plugun')
-  bigBoite.classList.remove('hide-plugun')
+  if (typeof interval_cd !== 'undefined') {
+      clearInterval(interval_cd);
+      bigBoite.classList.remove("grow");
+      bigBoite.classList.remove("flash");
+      bigBoite.classList.add("plop");
+      await sleep(500);
+      bigBoite.classList.remove("idle");
+      bigBoite.classList.remove("start");
+      bigBoite.classList.add("startnot");
+      await sleep(3870);
+      bigBoite.classList.remove("startnot");
+      bigBoite.classList.remove("plop");
+      bigBoite.classList.remove('idle')
+      bigBoite.classList.remove('shot')
+      bigBoite.classList.remove('show-plugun')
+      bigBoite.classList.remove('hide-plugun')
+  }
 }
 
 //timer end -> cacher tous les choix sauf ne rien faire
