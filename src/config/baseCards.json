@@ -100,7 +100,7 @@
   "negative": [
     {
       "desc": "\u00a0 Vos radars détectent des débris en mouvement à une vitesse élevée se dirigeant vers votre vaisseau. \n \n \u00a0 Ils vont percuter votre vaisseau au niveau du [module]. <span class=\"blackout\">\u00a0 Un débris a percuté votre [module], vous auriez pu le détecter si vous aviez allumé vos modules de détection.</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Minimiser la casse\n(Ingénieur)",
@@ -118,7 +118,7 @@
     },
     {
       "desc": "\u00a0 L'hyper-espace devient instable, et vous êtes téléporté en dehors, en plein milieu d'un champ de bataille. \n \n \u00a0 Des tirs sont dirigés vers votre [module-h].<span class=\"blackout\">\u00a0 L'hyper-espace devient instable et vous êtes téléporté en dehors, des tirs sont dirigés vers votre [module-h].</span>",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Minimiser la casse\n(Ingénieur)",
@@ -136,7 +136,7 @@
     },
     {
       "desc": "\u00a0 L'alarme retentit, le module d'oxygène s'éteint. \n \u00a0 Vous disposez d'assistances respiratoires individuelles qui vous permettent de rester conscient. \n \u00a0 Un intrus est détecté dans le vaisseau et se dirige vers le cockpit. \n \u00a0 Il s'agit d'un mercenaire, il exige la remise de 100 humains en échange de la réactivation de votre module d'oxygène et de son départ.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Combattre le mercenaire",
@@ -216,7 +216,7 @@
     },
     {
       "desc": "\u00a0 Vous passez un peu trop près d'un trou noir et êtes obligé de pousser les moteurs au-delà du seuil de sécurité.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Tenter de minimiser les dégats\n(Ingénieur)",
@@ -248,7 +248,7 @@
     },
     {
       "desc": "\u00a0 Votre vaisseau est expulsé de l'hyperespace et vous atterrissez dans un nuage toxique. \n \u00a0 L'odeur qui s'en dégage est similaire à celle d'une foule de Fneks réunis dans un stade. \n \n \u00a0 Votre module de purification d'air est endommagé.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Tenter de réparer le module d'oxygène\n(Ingénieur)",
@@ -262,7 +262,7 @@
     },
     {
       "desc": "\u00a0 De la vie a été détectée dans la salle des cryopods. Elle a été verrouillée de l'intérieur, vous entendez quelqu'un parler, il dit :\n \n \u00a0 \"Je suis membre de la PEACE, donnez-moi 2 microprocesseurs et 1 câble HDMI.\"",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Récupérer les micro-processeurs dans les scanners",
@@ -308,7 +308,7 @@
     },
     {
       "desc": "\u00a0 Vous êtes touché par un projectile qui a percé la coque du vaisseau. \n \u00a0 Les systèmes de réparation ont rapidement colmaté la brèche, mais vous découvrez que ce projectile est une Spider-bomb. \n \n \u00a0 Il faut la désamorcer rapidement.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Envoyer un membre de l'équipage",
@@ -326,7 +326,7 @@
     },
     {
       "desc": "\u00a0 Vous recevez un message vidéo d'un groupe d'extrémistes appelé les \"Shrymps Hacker d'Informations Antifongiques Sécurisés\" qui vous annoncent qu'ils ont pris possession de 16% de vos bases de données scientifiques et historiques. \n \u00a0 Après un discours confus sur leur méthode d'action, ils vous menacent de supprimer ces données si vous ne leur donnez pas 2 de vos consommables.",
-      "timer": false,
+      "timer": true,
       "choices": [
         {
           "value": "Donner 2 consommables",
