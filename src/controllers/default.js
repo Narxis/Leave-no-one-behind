@@ -1,5 +1,5 @@
 var fs = require('fs');
-let {cardPop, deckGenerator,getCards, hydrateCardDB, destroyDeck, getDeck} = require('./deck')
+let {cardPop, deckGenerator,getCardsIds, hydrateCardDB, destroyDeck, getDeck} = require('./deck')
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
@@ -14,12 +14,6 @@ module.exports.index = function(req, res) {
 module.exports.returnOk = function (req, res) {
     res.status(200);
     res.json({status: 200})
-}
-
-module.exports.randCard = function (req, res) {
-    getCards(1, 1).then(card => {
-        res.json(card[0]);
-    });
 }
 
 module.exports.deckGenerator = function (req, res) {

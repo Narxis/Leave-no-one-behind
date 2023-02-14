@@ -9,7 +9,6 @@ module.exports = function(router) {
     router.get('/land', controller.land);
     router.get('/score', controller.showScore)
 
-    router.get('/randCard', controller.randCard);
     router.get('/deck', controller.deckGenerator);
     router.get('/persos', controller.persos);
 

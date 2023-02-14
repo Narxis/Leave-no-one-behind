@@ -1,6 +1,6 @@
 const {Player} = require("./../models/player");
 const {Ship} = require("./../models/ship");
-const {hydrateCardDB, getCards, cardPop} = require("./deck");
+const {hydrateCardDB, getCardsIds, cardPop} = require("./deck");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const {Card} = require("../models/card");
