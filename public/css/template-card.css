@@ -23,6 +23,17 @@
   overflow: visible;
   left: 4px;
   top: 7px;
+  animation: dialhue-rotate 20s alternate infinite;
+}
+
+@keyframes dialhue-rotate {
+  0% {
+    filter: hue-rotate(0deg) saturate(2)
+  }
+
+  100% {
+    filter: hue-rotate(50deg) saturate(2)
+  }
 }
 
 .dial svg circle {
