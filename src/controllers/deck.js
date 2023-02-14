@@ -77,13 +77,18 @@ const deckGenerator = async function (){
             deck.push(thirdPlaSlice.pop());
     }
 
+
+    let bulkDeck = [];
     for (let card of deck){
-        await DB.tables.deck.create({
+        bulkDeck.push({
             deck_id: 0,
             card_id: card.id,
             played: 0
         })
     }
+
+    await DB.tables.deck.bulkCreate(bulkDeck);
+
 }
 
 const getCards = async function (type = TYPE_PLANET, quantity = ALL, valMinMax= [-1,0], order_rand = true) {
@@ -116,6 +121,15 @@ const getCards = async function (type = TYPE_PLANET, quantity = ALL, valMinMax= 
     }
 
     return cards;
+}
+
+const getAllCards = async function () {
+    let rowsCards = await DB.tables.cards.findAll({raw: true});
+    let rowsCardsModules = await DB.tables.card_modules.findAll({raw: true});
+
+    for (let card of rowsCards) {
+
+    }
 }
 
 const cardPop = async function (setPlayed = true){

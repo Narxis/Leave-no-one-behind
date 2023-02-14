@@ -17,7 +17,8 @@ class DB {
             this.sequelize =  new Sequelize(db_name, '', '', {
                 host: 'localhost',
                 dialect: 'sqlite',
-                logging: false,
+                logging: console.log,
+                // logging: false,
                 storage: DB_FOLDER + db_name + '.sqlite',
             });
         }
