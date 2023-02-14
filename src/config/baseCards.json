@@ -32,7 +32,7 @@
       "choices": [
         {
           "value": "Lire le message",
-          "reveal": "\u00a0 Une mise à jour de votre bibliothèque de films est disponible. \n \n \u00a0 Vous devriez y jeter un coup d'oeil. <span class=\"mjreveal\">Remonte le moral</span>"
+          "reveal": "\u00a0 Une mise à jour de votre bibliothèque de films est disponible. \n \n \u00a0 Vous devriez y jeter un coup d'oeil. <span class=\"mjreveal\">\u00a0 Remonte le moral</span>"
         },
         {
           "value": "Ne rien faire",
@@ -205,7 +205,7 @@
       ]
     },
     {
-      "desc": "\u00a0 Tout est calme pour l'instant. \n \n \u00a0 Le bruit des écrans et des machines remplit l'air, mais ne parvient pas à masquer le vide qui vous entoure. <span class=\"mjreveal\">Baisse de moral</span>",
+      "desc": "\u00a0 Tout est calme pour l'instant. \n \n \u00a0 Le bruit des écrans et des machines remplit l'air, mais ne parvient pas à masquer le vide qui vous entoure. <span class=\"mjreveal\">\u00a0 Baisse de moral</span>",
       "timer": false,
       "choices": [
         {
@@ -280,7 +280,7 @@
       "choices": [
         {
           "value": "Envoyer un membre de l'équipage",
-          "reveal": "\u00a0 L'odeur est si puissante que vous ne pouvez pas la décrire.\n \u00a0 Elle vous donne la nausée, mais vous parvenez finalement à résoudre l'incident. <span class=\"mjreveal\">(Forte perte de morale pour le joueur choisit)</span>"
+          "reveal": "\u00a0 L'odeur est si puissante que vous ne pouvez pas la décrire.\n \u00a0 Elle vous donne la nausée, mais vous parvenez finalement à résoudre l'incident. <span class=\"mjreveal\">\u00a0 (Forte perte de morale pour le joueur choisit)</span>"
         },
         {
           "value": "Activer le système de filtrage de l'air",
@@ -298,11 +298,11 @@
       "choices": [
         {
           "value": "Ouvrir le pot de cornichon",
-          "reveal": "\u00a0 Vous réussisez finalement à ouvrir le pot de cornichon mais vous découvrez que la chef des Ygrls a essayé de vous tromper en vous faisant croire qu'elle avait besoin d'aide avec le pot de cornichons, alors qu'en réalité, elle envoyait ses sbires voler des vivres dans votre réserve pendant que vous étiez occupé.<span class=\"mjreveal\">Faible perte de morale pour tous les joueurs</span>"
+          "reveal": "\u00a0 Vous réussisez finalement à ouvrir le pot de cornichon mais vous découvrez que la chef des Ygrls a essayé de vous tromper en vous faisant croire qu'elle avait besoin d'aide avec le pot de cornichons, alors qu'en réalité, elle envoyait ses sbires voler des vivres dans votre réserve pendant que vous étiez occupé.<span class=\"mjreveal\">\u00a0 Faible perte de morale pour tous les joueurs</span>"
         },
         {
           "value": "Demander à l'Omphor de l'équipage d'ouvrir le pot \n(Omphor présent)",
-          "reveal": "\u00a0 D'un simple geste de la main, l'Omphor ouvre le pot de cornichons et le soulève au-dessus de sa tête pour célébrer sa victoire.\n \u00a0 Vous rendez le pot aux Ygrls qui sont impressionnées par cette démonstration de force. Elles reprennent leur voyage immédiatement.<span class=\"mjreveal\">Remonte le moral</span> "
+          "reveal": "\u00a0 D'un simple geste de la main, l'Omphor ouvre le pot de cornichons et le soulève au-dessus de sa tête pour célébrer sa victoire.\n \u00a0 Vous rendez le pot aux Ygrls qui sont impressionnées par cette démonstration de force. Elles reprennent leur voyage immédiatement.<span class=\"mjreveal\">\u00a0 Remonte le moral</span> "
         }
       ]
     },
@@ -368,7 +368,7 @@
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "\u00a0 Les [race] communiquent avec vous, ils vous apprécient et vous donne des outils pour réparer un module de votre choix. <span class=\"mjreveal\">Remonte le moral</span>"
+          "reveal": "\u00a0 Les [race] communiquent avec vous, ils vous apprécient et vous donne des outils pour réparer un module de votre choix. <span class=\"mjreveal\">\u00a0 Remonte le moral</span>"
         },
         {
           "value": "Les inviter à bord",
@@ -376,7 +376,7 @@
         },
         {
           "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
-          "reveal": "\u00a0 Vous avez râté une occasion de vous faire des amis...<span class=\"blackout\">Votre voyage continue</span>"
+          "reveal": "\u00a0 Vous avez râté une occasion de vous faire des amis...<span class=\"blackout\">\u00a0 Votre voyage continue</span>"
         }
       ]
     },
@@ -400,7 +400,7 @@
       "choices": [
         {
           "value": "Telecharger la transmission",
-          "reveal": "\u00a0 Bonjour être inférieur *scrrrch* ...grand monarque *scrrrch* ...danger sur votre route *scrrrch* ...car comme le disait si bien le préfet Dimalou *scrrrch* ...solution de l'univers ! Faites attention à vous *scrrrch* mercredi. <span class=\"mjreveal\">Donne status \"Anticipation\"</span> "
+          "reveal": "\u00a0 Bonjour être inférieur *scrrrch* ...grand monarque *scrrrch* ...danger sur votre route *scrrrch* ...car comme le disait si bien le préfet Dimalou *scrrrch* ...solution de l'univers ! Faites attention à vous *scrrrch* mercredi. <span class=\"mjreveal\">\u00a0 Donne status \"Anticipation\"</span> "
         },
         {
           "value": "Marquer le message comme \"lu\"",
@@ -418,7 +418,7 @@
       "choices": [
         {
           "value": "Telecharger la transmission.",
-          "reveal": "\u00a0 Bonjour membres de l'OLI, \n \n \u00a0 Je me présente, Fnek Scécrable représentant galactique de la Fnak \n \u00a0 Je viens vous prévenir que nous somme de votre côté avec à disposition une arme nucléaire à puissance et portée sans précédent. \n \u00a0 Si vous vous trouvez dans une situation dangereuse lancez ce programme qui nous indiquera la position de votre cible : \n \u00a0 \"MDMA.py\" \n \n (ps: il faut 21 jours avant de recharger le massive death missile of annihilation) <span class=\"mjreveal\">Donne status \"Anticipation\"</span>"
+          "reveal": "\u00a0 Bonjour membres de l'OLI, \n \n \u00a0 Je me présente, Fnek Scécrable représentant galactique de la Fnak \n \u00a0 Je viens vous prévenir que nous somme de votre côté avec à disposition une arme nucléaire à puissance et portée sans précédent. \n \u00a0 Si vous vous trouvez dans une situation dangereuse lancez ce programme qui nous indiquera la position de votre cible : \n \u00a0 \"MDMA.py\" \n \n (ps: il faut 21 jours avant de recharger le massive death missile of annihilation) <span class=\"mjreveal\">\u00a0 Donne status \"Anticipation\"</span>"
         },
         {
           "value": "Marquer le message comme \"lu\"",
@@ -454,7 +454,7 @@
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "\u00a0 Les Ygrls essaient tant bien que mal de communiquer avec vous, mais la barrière linguistique empêche toute discussion intelligible. \n \u00a0 Elles vous envoient des plats typiques de leur culture pour montrer leur amitié avant de poursuivre leur périple. <span class=\"mjreveal\">Gain moral</span>"
+          "reveal": "\u00a0 Les Ygrls essaient tant bien que mal de communiquer avec vous, mais la barrière linguistique empêche toute discussion intelligible. \n \u00a0 Elles vous envoient des plats typiques de leur culture pour montrer leur amitié avant de poursuivre leur périple. <span class=\"mjreveal\">\u00a0 Gain moral</span>"
         },
         {
           "value": "Les inviter à bord",
