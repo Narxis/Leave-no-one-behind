@@ -1,5 +1,5 @@
 var fs = require('fs');
-let {cardPop, deckGenerator,getCards, hydrateCardDB, destroyDeck, getDeck} = require('./deck')
+let {cardPop, deckGenerator,getCardsIds, hydrateCardDB, destroyDeck, getDeck} = require('./deck')
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
@@ -14,12 +14,6 @@ module.exports.index = function(req, res) {
 module.exports.returnOk = function (req, res) {
     res.status(200);
     res.json({status: 200})
-}
-
-module.exports.randCard = function (req, res) {
-    getCards(1, 1).then(card => {
-        res.json(card[0]);
-    });
 }
 
 module.exports.deckGenerator = function (req, res) {
@@ -65,7 +59,7 @@ module.exports.renderCardEvent = async function (req, res) {
     let activeStatuses = await statuses.getAllStatuses();
 
     let itemsMan = new Items();
-    let items = await itemsMan.getAllItems();
+    let items = await itemsMan.getAllItems(false);
     let starters = await itemsMan.getAllStarters();
 
     players = players.map(player => {
@@ -105,6 +99,7 @@ module.exports.renderCardEvent = async function (req, res) {
         case TYPE_PLANET:
             res.render('template-planet', vars);
             break;
+        case TYPE_INITIAL:
         case TYPE_NEGATIVE:
         case TYPE_NEUTRAL:
         case TYPE_POSITIVE:

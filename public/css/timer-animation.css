@@ -100,6 +100,22 @@
   animation: gunstart4 2s ease-out forwards;
 }
 
+#bigboite.startnot #arm1 {
+  animation: gunstartnot1 2s ease-out forwards;
+}
+
+#bigboite.startnot #arm2 {
+  animation: gunstartnot2 2s ease-out forwards;
+}
+
+#bigboite.startnot #arm3 {
+  animation: gunstartnot3 2s ease-out forwards;
+}
+
+#bigboite.startnot #jaw-up {
+  animation: gunstartnot4 2s ease-out forwards;
+}
+
 @keyframes gunstart1 {
   0% {
     opacity: 0;
@@ -142,6 +158,52 @@
   }
 
   100% {
+    transform: rotate(356deg);
+  }
+}
+
+@keyframes gunstartnot1 {
+  100% {
+    opacity: 0;
+    transform: rotate(207deg);
+  }
+
+  99.99% {
+    opacity: 1;
+  }
+
+  0% {
+    opacity: 1;
+    transform: rotate(352deg);
+  }
+}
+
+@keyframes gunstartnot2 {
+  100% {
+    transform: rotate(304deg);
+  }
+
+  0% {
+    transform: rotate(20deg);
+  }
+}
+
+@keyframes gunstartnot3 {
+  100% {
+    transform: rotate(219deg);
+  }
+
+  0% {
+    transform: rotate(344deg);
+  }
+}
+
+@keyframes gunstartnot4 {
+  100% {
+    transform: rotate(309deg);
+  }
+
+  0% {
     transform: rotate(356deg);
   }
 }
