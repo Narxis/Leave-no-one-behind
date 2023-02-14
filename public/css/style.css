@@ -638,7 +638,10 @@ nav {
     color: rgba(255, 255, 255, 0.301);
 }
 
-
+.mod-left .mod-b {
+    height: 23px;
+    margin: 0px 6px;
+}
 
 /* -^^^-------Buttons-----^^^--*/
 /*---^^^---Player-tabs----^^^---*/
