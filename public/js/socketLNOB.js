@@ -65,24 +65,24 @@ class SocketLNOB {
     }
 
     // Add a conso in DB
-    addItem(name) {
+    addItem(slug) {
         let payload = {
             action: 'item',
             data: {
                 remove: false,
-                name: name
+                slug: slug
             }
         }
         this.send(payload);
     }
 
     // Delete a conso in DB
-    delItem(name) {
+    delItem(slug) {
         let payload = {
             action: 'item',
             data: {
                 remove: true,
-                name: name
+                slug: slug
             }
         }
         this.send(payload);

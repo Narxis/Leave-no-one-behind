@@ -240,14 +240,14 @@ const actionSetDetection = async function(response) {
  */
 const actionItem = async function (response) {
 
-    let name = response.data.name;
+    let slug = response.data.slug;
     let remove = response.data.remove;
     let items = new Items();
 
     if (remove)
-        await items.remove(name);
+        await items.remove(slug);
     else
-        await items.add(name);
+        await items.add(slug);
 
     return {
         action: response.action,
