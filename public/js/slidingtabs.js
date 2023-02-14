@@ -34,6 +34,16 @@ async function getActiveStatus () {
     });
     return JSON.parse(await rawResponse.text());
 }
+async function getShip () {
+    const rawResponse = await fetch('/api/ship', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    });
+    return JSON.parse(await rawResponse.text());
+}
 
 function startCountDown() {
     // On récupère le texte dans le timer (en tant qu'entier)
@@ -278,9 +288,13 @@ async function write(fulltext, place, spanclass='base-text') {
     }
     else {
         if (fulltext.includes('alt-text')){
+            let ship = await getShip();
+            console.log(ship,'ship')
             let startCondition = fulltext.indexOf('"',fulltext.indexOf('data-condition='))
             let endCondition = fulltext.indexOf('"',startCondition+1)
-            if (fulltext.substring(startCondition+1,endCondition)){
+            console.log(ship.energy)
+            console.log(fulltext.substring(startCondition+1,endCondition),'condition')
+            if (eval(fulltext.substring(startCondition+1,endCondition))){
                 start = fulltext.indexOf('>', endCondition);
             }
         }
