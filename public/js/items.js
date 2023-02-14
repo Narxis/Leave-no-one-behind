@@ -2,31 +2,31 @@
 
 const submitForm = document.querySelector(".add");
 const addButton = document.querySelector(".add-todo");
-const todoList = document.querySelector(".todos");
+const itemList = document.querySelector(".todos");
 const list = document.querySelectorAll(".todos li");
 const hiddenAnswer = document.querySelector('#add-item-hidden');
 let listLength = list.length;
 
-const generateTemplate = (todo, slug) => {
+const generateTemplate = (item, slug) => {
   const html = `<li>
                   <input type="checkbox" id="todo_${listLength}">
                   <label for="todo_${listLength}">
                     <span class="check"></span>
-                    ${todo}
+                    ${item}
                   </label>
                   <i class="far fa-trash-alt delete" data-slug="${slug}"></i>
                 </li>`;
-  todoList.innerHTML += html;
+  itemList.innerHTML += html;
 };
 
 function addItem(e) {
   e.preventDefault();
-  const todo = submitForm.add.value.trim();
+  const item = submitForm.add.value.trim();
   let slug = hiddenAnswer.value;
   hiddenAnswer.value = "";
-  if (todo.length) {
+  if (item.length) {
     listLength += 1;
-    generateTemplate(todo, slug);
+    generateTemplate(item, slug);
     submitForm.reset();
   }
   wsLNOB.addItem(slug)
@@ -44,7 +44,7 @@ function deleteTodos(e) {
   }
 }
 
-todoList.addEventListener("click", deleteTodos);
+itemList.addEventListener("click", deleteTodos);
 
 document.querySelector('input[list]').addEventListener('input', function(e) {
   var input = e.target,
