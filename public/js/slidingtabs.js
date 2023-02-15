@@ -2,6 +2,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 //variables cartes
+var clickable = true
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr = 0;
 var cardnbrUntilPlanet = 5;
@@ -33,61 +34,26 @@ async function getActiveStatus () {
     });
     return JSON.parse(await rawResponse.text());
 }
+async function getShip () {
+    const rawResponse = await fetch('/api/ship', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    });
+    return JSON.parse(await rawResponse.text());
+}
 
 function startCountDown() {
     // On récupère le texte dans le timer (en tant qu'entier)
-    let time_left = parseInt(timerText.textContent);
+    let time_left = 30;
     // On lance une fonction toutes les secondes (1000ms)
     interval_cd = setInterval(async function () {
-        // aucune idée, une sorte de magie noire
-        time_left = time_left - 1;
         // On change le texte dans le timer (avec un 0 devant si on est en dessous de 10)
         timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
         timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
         switch (time_left) {
-        /* case 30:
-            bigBoite.classList.add('start')
-            bigBoite.classList.add('grow')
-            bigBoite.classList.add('float')
-            break;
-        case 28:
-            bigBoite.classList.add('idle')
-            bigBoite.classList.remove('start')
-            break;
-        case 10:
-            bigBoite.classList.add('flash')
-            break;
-        case 9:
-            await sleep(300)
-            bigBoite.classList.remove('flash')
-            break;
-        case 4:
-            await sleep(500)
-            bigBoite.classList.remove('grow')
-            bigBoite.classList.add('plop')
-            break;
-        case 3:
-            bigBoite.classList.add('shot')
-            break;
-        case 2:
-            await sleep(520)
-            bigBoite.classList.add('show-plugun')
-            bigBoite.classList.add('hide-plugun')
-            await sleep(250)
-            plugShip.classList.remove('shipflotte')
-            plugShip.classList.add('bonk')
-            await sleep(900)
-            plugShip.classList.remove('bonk')
-            plugShip.classList.add('comeback')
-            break;
-        case 0:
-            await sleep(1200)
-            plugShip.classList.remove('comeback')
-            plugShip.classList.add('shipflotte')
-            bigBoite.classList.remove('idle')
-            clearInterval(interval_cd);
-            return true;
-            break; */
             case 30:
                 bigBoite.classList.add('start')
                 bigBoite.classList.add('grow')
@@ -106,10 +72,21 @@ function startCountDown() {
                 break;
             case 0:
                 clearInterval(interval_cd);
+                clickable = false
+                console.log('essaye de cliquer pour voir')
                 await sleep(500)
+                var choice = document.getElementById('choicetab');
+                var choiceTabs = choice.getElementsByClassName('choice');
+                for (let k = 0; k < choiceTabs.length-1; k++) {
+                    choiceTabs.item(k).disabled = 'true'
+                    choiceTabs.item(k).classList.add('move-down');
+                    choiceTabs.item(k).classList.remove('choice-hover')
+                }
                 bigBoite.classList.remove('grow')
                 bigBoite.classList.add('plop')
-                await sleep(500)
+                await sleep(100)
+                clickable = true
+                await sleep(400)
                 bigBoite.classList.add('shot')
                 await sleep(1520)
                 bigBoite.classList.add('show-plugun')
@@ -126,9 +103,10 @@ function startCountDown() {
                 bigBoite.classList.add('hide')
                 await sleep(300)
                 plugShip.classList.remove('comeback')
-                return true;
                 break;
         }
+        time_left--;
+
     }, 1000);
 }
 
@@ -178,46 +156,51 @@ function eventchoices() {
     for (let i = 0; i < choiceTabs.length; i++) {
         if (nextlist[i] !== ""){
             document.querySelector('#choice' + (i)).addEventListener('mouseup', async function () {
-                for (let k = 0; k < choiceTabs.length; k++) {
-                    choiceTabs.item(k).disabled = 'true'
-                    choiceTabs.item(k).classList.add('move-down');
-                    choiceTabs.item(k).classList.remove('choice-hover')
+                if (clickable){
+                    for (let k = 0; k < choiceTabs.length; k++) {
+                        choiceTabs.item(k).disabled = 'true'
+                        choiceTabs.item(k).classList.add('move-down');
+                        choiceTabs.item(k).classList.remove('choice-hover')
+                    }
+                    document.querySelector('.card-text').classList.toggle('invisibility')
+                    await sleep (1100);
+                    document.querySelector('.card-text').innerHTML = "";
+                    await sleep (100);
+                    document.querySelector('.choices').innerHTML = ""
+                    document.querySelector('.card-text').classList.toggle('invisibility')
+                    console.log(nextlist[i])
+                    let nextCard = await getCardByName(''+nextlist[i])
+                    cardtextstr = nextCard.desc;
+                    nextlist = nextCard.choices.map(v => v.next);
+                    choicelist = nextCard.choices.map(v => v.value);
+                    answerlist = nextCard.choices.map(v => v.reveal);
+                    textprintednbr = 0;
+                    write(cardtextstr, '.card-text');
                 }
-                document.querySelector('.card-text').classList.toggle('invisibility')
-                await sleep (1100);
-                document.querySelector('.card-text').innerHTML = "";
-                await sleep (100);
-                document.querySelector('.choices').innerHTML = ""
-                document.querySelector('.card-text').classList.toggle('invisibility')
-                console.log(nextlist[i])
-                let nextCard = await getCardByName(''+nextlist[i])
-                cardtextstr = nextCard.desc;
-                nextlist = nextCard.choices.map(v => v.next);
-                choicelist = nextCard.choices.map(v => v.value);
-                answerlist = nextCard.choices.map(v => v.reveal);
-                textprintednbr = 0;
-                write(cardtextstr, '.card-text');
             })    
         }
         else {
             document.querySelector('#choice' + (i)).addEventListener('mouseup', async function () {
-                document.querySelector('.card-text').classList.toggle('invisibility')
-                document.querySelector('.answer' + (i)).classList.toggle('visibility')
-                for (let k = 0; k < choiceTabs.length; k++) {
-                    choiceTabs.item(k).disabled = 'true'
-                    choiceTabs.item(k).classList.add('move-down');
-                    choiceTabs.item(k).classList.remove('choice-hover')
-                }
-                await sleep(1200)
-                if (currentCardType == -1){
-                    startwrite(answerlist[i], '.answer' + (i),);
-                }
-                else{
-                    if (blackout){
-                        write(answerlist[i], '.answer' + (i),'blackout');
+                if (clickable){
+                    document.querySelector('.card-text').classList.toggle('invisibility')
+                    document.querySelector('.answer' + (i)).classList.toggle('visibility')
+                    for (let k = 0; k < choiceTabs.length; k++) {
+                        choiceTabs.item(k).disabled = 'true'
+                        choiceTabs.item(k).classList.add('move-down');
+                        choiceTabs.item(k).classList.remove('choice-hover')
                     }
-                    else
-                        write(answerlist[i], '.answer' + (i),);
+                    stopCountdown();
+                    await sleep(1200)
+                    if (currentCardType == -1){
+                        startwrite(answerlist[i], '.answer' + (i),);
+                    }
+                    else{
+                        if (blackout){
+                            write(answerlist[i], '.answer' + (i),'blackout');
+                        }
+                        else
+                            write(answerlist[i], '.answer' + (i),);
+                    }
                 }
             })
         }
@@ -240,16 +223,18 @@ async function nextoption() {
         let spancontent;
         if (blackout){
             let blackoutTextverif = false;
+            let j = 0
             for (let i = 0; i < choicelist.length; i++) {
                 str = choicelist[i]
-                choiceshtml = `<button class="choice move-down" id="choice${i}"></button>`
+                choiceshtml = `<button class="choice move-down" id="choice${j}"></button>`
                 if (str.includes('class=\"blackout\"')){
                     blackoutTextverif = true
                     spanstart = str.indexOf('>', str.indexOf('class=\"blackout\"'));
                     spanend = str.indexOf('>', spanstart+1)
                     spancontent =  str.substring(spanstart+1, spanend)
                     document.querySelector('.choices').innerHTML += choiceshtml
-                    document.querySelector('#choice' + i).innerHTML = `<span class="blackout">${spancontent}</span>`
+                    document.querySelector('#choice' + j).innerHTML = `<span class="blackout">${spancontent}</span>`
+                    j++
                 }
             }
             if (!blackoutTextverif) {
@@ -276,7 +261,6 @@ async function nextoption() {
         }
         await sleep(500)
         initialiseChoiceTabs();
-        startCountDown();
         initialiseTimerTab();
         eventchoices();
     }
@@ -302,7 +286,19 @@ async function write(fulltext, place, spanclass='base-text') {
     if (fulltext.includes(''+spanclass)) {
         start = fulltext.indexOf('>', fulltext.indexOf(''+spanclass));
     }
-    // console.log(start)
+    else {
+        if (fulltext.includes('alt-text')){
+            let ship = await getShip();
+            console.log(ship,'ship')
+            let startCondition = fulltext.indexOf('"',fulltext.indexOf('data-condition='))
+            let endCondition = fulltext.indexOf('"',startCondition+1)
+            console.log(ship.energy)
+            console.log(fulltext.substring(startCondition+1,endCondition),'condition')
+            if (eval(fulltext.substring(startCondition+1,endCondition))){
+                start = fulltext.indexOf('>', endCondition);
+            }
+        }
+    }
     for (let i = start+1; i <= fulltext.length; i++) {
         document.querySelector(place).querySelector('.'+spanclass).innerText = currenttext;
         if (fulltext.substring(i, i + 1) == "<") {
@@ -409,9 +405,9 @@ async function initialiseNextButton() {
             document.querySelector('.answer1').classList.remove('invisibility')
             document.querySelector('.answer2').classList.remove('invisibility')
             //new text
-            let textPlanetEncounter = "Votre vaisseau est entrée dans l'orbite d'une planète, allez dans la salle des scanners pour voir les informations sur cette planète ";
+            let textPlanetEncounter = "\u00a0Votre vaisseau est entrée dans l'orbite d'une planète. \n \n\u00a0Vous allez dans la salle des scanners pour voir les informations de cette planète.";
             await initialiseStatusList();
-            write(textPlanetEncounter, '.card-text',);
+            await write(textPlanetEncounter, '.card-text',);
         }
         else {
             let nextCard = await getNextCard(true);
@@ -453,10 +449,14 @@ async function initialiseNextButton() {
             cardnbrUntilPlanet -= 1;
             await initialiseStatusList();
             if (blackout){
-                write(cardtextstr, '.card-text','blackout');
+                await write(cardtextstr, '.card-text','blackout');
             }
             else
-                write(cardtextstr, '.card-text');
+                await write(cardtextstr, '.card-text');
+
+            if (nextCard.timer === 1) {
+                startCountDown();
+            }
         }
     })
 }
@@ -572,8 +572,24 @@ function setModuleVal(mod, newValue, left) {
     wsLNOB.setModule(mod, newValue);
 }
 
-function stopCountdown() {
-  clearInterval(interval_cd)
+async function stopCountdown() {
+  if (typeof interval_cd !== 'undefined') {
+      clearInterval(interval_cd);
+      bigBoite.classList.remove("grow");
+      bigBoite.classList.remove("flash");
+      bigBoite.classList.add("plop");
+      await sleep(500);
+      bigBoite.classList.remove("idle");
+      bigBoite.classList.remove("start");
+      bigBoite.classList.add("startnot");
+      await sleep(3870);
+      bigBoite.classList.remove("startnot");
+      bigBoite.classList.remove("plop");
+      bigBoite.classList.remove('idle')
+      bigBoite.classList.remove('shot')
+      bigBoite.classList.remove('show-plugun')
+      bigBoite.classList.remove('hide-plugun')
+  }
 }
 
 //timer end -> cacher tous les choix sauf ne rien faire
@@ -590,11 +606,14 @@ function stopCountdown() {
     else{
         if (blackout){
             // console.log(blackout,'blackout','if')
-            write(cardtextstr, '.card-text','blackout');
+            await write(cardtextstr, '.card-text','blackout');
         }
         else{
             // console.log(blackout,'blackout','else')
-            write(cardtextstr, '.card-text');
+            await write(cardtextstr, '.card-text');
+        }
+        if (currentCardHasTimer === 1) {
+            startCountDown();
         }
     }
     initialiseleLeftTabs();

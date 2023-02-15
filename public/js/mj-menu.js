@@ -91,7 +91,26 @@ function initialiseStatus () {
         wsLNOB.setStatus(''+document.getElementById('search-status').value, document.getElementById('duration-status').value )
     })
 }
+
+function setMJCardValue(e) {
+    let card = e.detail.data;
+    let i=0;
+    document.querySelectorAll('.button-text').forEach(function (btn){
+        btn.innerHTML = '';
+    })
+    document.querySelectorAll('.reveal-text').forEach(function (btn){
+        btn.innerHTML = '';
+    })
+    document.querySelector('.desc-text').innerHTML = card.desc;
+    for (let choice of card.choices) {
+        document.querySelector('#choice'+i+' .button-text').innerHTML = choice.value;
+        document.querySelector('#choice'+i+++' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + choice.reveal;
+        console.log(i)
+    }
+}
+
 ( function(){
     initialiseRadio();
     initialiseStatus();
+    document.addEventListener('card-played', setMJCardValue);
 })();

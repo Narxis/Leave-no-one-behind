@@ -76,7 +76,10 @@ class Items {
     }
 
     async add(slug, quantity=1) {
-        await DB.tables.items.increment({quantity: quantity}, { where: { slug: slug } });
+        let ret = await DB.tables.items.increment({quantity: quantity}, { where: { slug: slug } });
+        if (ret[0][1] === 0) {
+            await this.create({name: slug, slug: slug, quantity:quantity})
+        }
     }
 
     async remove(slug, quantity=1) {
@@ -139,13 +142,22 @@ class Items {
 
     async getAllItems(possessed=true) {
 
-        let whereClause = {};
+        let whereClause = {
+            where: {
+                pool: {
+                    [Op.ne]: 'starter'
+                }
+            }
+        };
 
         if (possessed) {
             whereClause = {
                 where: {
                     quantity: {
                         [Op.gt]: 0
+                    },
+                    pool: {
+                        [Op.ne]: 'starter'
                     }
                 }
             }
@@ -161,14 +173,19 @@ class Items {
         }
         let baseItemsRaw = fs.readFileSync(__dirname + '/../config/items.json');
         let baseItems = JSON.parse(baseItemsRaw);
+        let bulkItems = [];
 
         for (let i in baseItems) {
             let itemPool = baseItems[i];
             for (let j in itemPool) {
                 let dat = itemPool[j];
                 dat['pool'] = i;
-                await this.create(dat);
+                bulkItems.push(dat);
             }
+        }
+
+        if (bulkItems.length > 0) {
+            await DB.tables.items.bulkCreate(bulkItems);
         }
     }
 }

@@ -83,6 +83,7 @@ Des fleuves d'eau douce se déversent dans de vastes océans s'étendant à l'ho
 
 ### Ressources
 
+
 - Aucune[0;0,2]
 
 La planète a une concentration en minerais faible.
@@ -176,3 +177,4 @@ Il y a un cycle jour/nuit similaire à celui de la Terre, ainsi qu'une présence
 - Climat très bien [0,75;1]
   
 La planète présente quatre saisons, des variations de températures faibles et un environnement propice à la vie.
+
