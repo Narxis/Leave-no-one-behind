@@ -25,12 +25,6 @@ function scanPoints() { //calcul points de detec
     detectionPoints = (Math.min(detectionPoints, 12));
     console.log(detectionPoints)
 }
-var texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
-var textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
-var textff = "blabla Animal blabla planette blabla plante bla bla ";
-var textre = "blabla Fer blabla planette blabla diamant bla bla ";
-var texteau = "blabla Eau blabla planette blabla boire bla bla ";
-var textgr = "blabla Gravité blabla planette blabla pomme bla bla";
 
 var o2 = document.getElementById('pointso2');
 var cl = document.getElementById('pointscl');
@@ -48,10 +42,28 @@ var costeau = eau.innerText;//coût en points de detection
 
 var valueo2 = o2.getAttribute('data-value');
 var valuecl = cl.getAttribute('data-value');
-var valueff = ff.getAttribute('data-value');
+var valuefaune = ff.getAttribute('data-fauvalue');
+var valueflore = ff.getAttribute('data-flovalue');
+var valueciv = ff.getAttribute('data-civvalue');
 var valuere = re.getAttribute('data-value');
 var valuegr = gr.getAttribute('data-value');
 var valueeau = eau.getAttribute('data-value');
+
+const oxyValTab = [0,0.2,0.4,0.6,0.8,1];
+const clValTab = [0,0.25,0.5,0.75,1];
+const fauneValTab = [0,0.25,0.5,0.75,1];
+const floreValTab = [0,0.25,0.5,0.75,1];
+const civValTab = [0,0.1,0.2,0.8,1];
+const reValTab = [0,0.2,0.4,0.6,0.8,1];
+const grValTab = [0,0.3,0.6,0.8,1];
+const eauValTab = [0,0.2,0.3,0.4,0.6,0.8,1];
+
+var texto2 = getPlanetText('oxy',valueo2,oxyValTab);
+var textcl = getPlanetText('cli',valuecl,clValTab);
+var textff = getPlanetText('fau',valuefaune,fauneValTab) +'\ '+ getPlanetText('flo',valueflore,floreValTab) +'\ '+ getPlanetText('civ',valueciv,civValTab);
+var textre = getPlanetText('res',valuere,reValTab);
+var texteau = getPlanetText('eau',valueeau,eauValTab);
+var textgr = getPlanetText('gra',valuegr,grValTab,true);
 
 var costList = [costo2, costcl, costff, costre, costeau, costgr,];
 var showbuttons = false;
