@@ -60,7 +60,7 @@ const eauValTab = [0,0.2,0.3,0.4,0.6,0.8,1];
 
 var texto2 = getPlanetText('oxy',valueo2,oxyValTab);
 var textcl = getPlanetText('cli',valuecl,clValTab);
-var textff = getPlanetText('fau',valuefaune,fauneValTab) +'\ '+ getPlanetText('flo',valueflore,floreValTab) + getPlanetText('civ',valueciv,civValTab);
+var textff = getPlanetText('fau',valuefaune,fauneValTab) +'\ '+ getPlanetText('flo',valueflore,floreValTab) +'\ '+ getPlanetText('civ',valueciv,civValTab);
 var textre = getPlanetText('res',valuere,reValTab);
 var texteau = getPlanetText('eau',valueeau,eauValTab);
 var textgr = getPlanetText('gra',valuegr,grValTab,true);
