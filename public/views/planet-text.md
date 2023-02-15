@@ -41,7 +41,7 @@ La taille de cette planète est supérieur à la celle de Terre, sa gravité est
 
 - Moyenne. [0,6;0,8]
 
-La taille de cette planète est légérement supérieur à celle de la Terre, sa gravité est plus importante.
+La taille de cette planète est légérement différente de celle de la Terre, sa gravité est proche de celle de la terre.
 
 - Normale. [0,8;1]
 
@@ -144,15 +144,15 @@ Les végétaux sont présent en grande variété sur la planète
 
 #### Civilisation
 
-- Futuriste hostile [0;0,2]
+- Futuriste hostile [0;0,1]
 
 mais cette planète est déjà colonisée par une civilisation xénophobe extrêmement développée.
 
-- Primitive hostile[0,4;0,5]
+- Primitive hostile[0,1;0,2]
 
 mais cette planète est habitée par un peuple primitif hostile.
 
-- Aucune 0,5
+- Aucune [0,2;0,8]
   
 .
 

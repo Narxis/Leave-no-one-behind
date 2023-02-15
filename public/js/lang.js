@@ -180,6 +180,69 @@ var lang = {
     },
     "nek-air": {
         "desc": "Les Nek-Airs sont de genre féminin et sont particulièrement intelligentes et logiques. Elles sont également de bonnes avo-cat-es et apprécient l'humour des Nek-Terres, même si elles ne se rendent pas compte que ces derniers sont sérieux."
+    },
+    "planet_text":{
+        "module":{
+            "oxy":{
+                "value0": "L'atmosphère est dense ce qui la rend plus difficillement respirable.",
+                "value1": "L'atmosphère est respirable mais contient des gaz tel que du Méthane et de l'Ammoniac.",
+                "value2": "L'atmosphère est respirable mais la présence d'oxygène est plus faible que sur Terre.",
+                "value3": "L'atmosphère est respirable mais contient des gaz tel que l'Hélium et l'Hydrogène.",
+                "value4": "L'atmosphère est riche en dioxygène et en dioxyde de carbone.",
+                "value5": "L'atmosphère est riche en dioxygène et en ozone."
+            },
+            "cli":{
+                "value0": "Une activité tectonique forte ainsi que la présence de pluies acides ont été détectées.",
+                "value1": "Il n'y a pas de cycle jour/nuit sur cette planète, avec une période de jour permanent et des tempêtes permanentes.",
+                "value2": "Il y a un cycle jour/nuit similaire à celui de la Terre, ainsi qu'une présence d'effets de marée sur cette planète.",
+                "value3": "La planète présente quatre saisons, des variations de températures faibles et un environnement propice à la vie."
+            },
+            "fau":{
+                "value0": "La faune de la planète est composée d'organismes unicellulaires.",
+                "value1": "Une faune hostile et carnivore est présente sur cette planète.",
+                "value2": "Il y a quelques herbivores sur la planète.",
+                "value3": "La planète abrite une grande diversité d'espèces animales en faveur de l'installation d'une nouvelle espèce."
+            },
+            "flo":{
+                "value0": "Aucune flore ne s'est développée sur cette planète",
+                "value1": "La flore qui s'est développée sur cette planète est toxique et vénéneuse",
+                "value2": "Des végétaux comestibles ont été détectés sur la surface de la planète",
+                "value3": "Les végétaux sont présent en grande variété sur la planète"
+            },
+            "civ":{
+                "value0": "mais elle est déjà colonisée par une civilisation xénophobe extrêmement développée.",
+                "value1": "mais elle est habitée par un peuple primitif hostile.",
+                "value2": ".",
+                "value3": "et une civilisation avancée est prête à partager leur planète avec les humains afin de préserver leur espèce.",
+            },
+            "res":{
+                "value0": "La planète a une concentration en minerais faible.",
+                "value1": "La planète présente une forte abondance de fer et de cuivre",
+                "value2": "Il a une forte concentration de minerais courants sur cette planète.",
+                "value3": "Il y a des minerais rares et courants présents sur cette planète.",
+                "value4": "Il y a une grande abondance de ressources diverses et variées, favorables au développement d'une civilisation."
+            },
+            "gra":{
+                "value0": {
+                    "pair": "La taille de cette planète est largement supérieur à celle de la Terre, sa gravité est plus importante.",
+                    "impair": "La taille de cette planète est largement inférieur à celle de la Terre sa gravité est largement plus faible."
+                },
+                "value1": {
+                    "pair": "La taille de cette planète est supérieur à la celle de Terre, sa gravité est plus importante.",
+                    "impair": "La taille de cette planète est inférieur à celle de la Terre sa gravité est plus faible."
+                },
+                "value2": "La taille de cette planète est légérement différente de celle de la Terre, sa gravité est proche de celle de la terre.",
+                "value3": "La taille de cette planète est semblable à celle de la Terre, sa gravité est similaire."
+            },
+            "eau":{
+                "value0": "L'eau est présente sous la surface en faible quantité, un autre liquide moins dense occupe la surface.",
+                "value1": "L'eau est présente sous forme de lacs gelés.",
+                "value2": "L'eau est présente sous forme de petits lacs et rivières.",
+                "value3": "L'eau de la planète forme des fleuves et des lac d'eau douce.",
+                "value4": "La planète présente des mers et des petits océans.",
+                "value5": "Des fleuves d'eau douce se déversent dans de vastes océans s'étendant à l'horizon. Il y a une grande quantité d'eau présente."
+            }
+        }
     }
 }
 
@@ -211,4 +274,19 @@ const getRandomVar = function (variable, number = 1, listEx = []){ //ca risque d
     }
 
     return result;
+}
+const getPlanetText = function (name,value,valueList,isgrav = false){
+    let i=0;
+    while (value>valueList[i+1]*100){
+        i++
+    }
+    if (isgrav && i<2){
+        if (value%2 == 0){
+            return lang.planet_text.module[name]['value'+i]['pair']
+        }
+        else 
+            return lang.planet_text.module[name]['value'+i]['impair']
+    }
+    else
+        return lang.planet_text.module[name]['value'+i]
 }
