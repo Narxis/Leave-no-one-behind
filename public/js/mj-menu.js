@@ -39,6 +39,7 @@ document.getElementById('add-friend').addEventListener('mouseup',function(){
     let mob = document.getElementById("search-ally").value
     //faire spawn le compagnon (surement rajouter un player tab temporairement)
 })
+/*
 document.getElementById('combat-start').addEventListener('mouseup',async function(){
     if (combat == 0){
         combat++
@@ -60,6 +61,7 @@ document.getElementById('combat-start').addEventListener('mouseup',async functio
         //si oui on l'indique au mj (consoletext.append('mob1 est hors combat \n'))
         //L'indiquer aussi aux joueurs (exemple changer la couleur du pseudo blanc -> rouge)
 })
+*/
 
 document.addEventListener('playerStat', async function(e){
     if (combat){
@@ -108,6 +110,34 @@ function setMJCardValue(e) {
         console.log(i)
     }
 }
+
+document.getElementById('mjroll-button').addEventListener('mouseup',function(){
+    let val = document.querySelector('input[name="mjroll"]:checked').value;
+    let test = document.getElementById('mjroll-module').checked;
+    let i=40; 
+    let rollDiv = document.getElementById('mjroll-roll'); 
+    let result;
+    let min;
+    let range;
+    if (test){
+        result = 13 + Math.floor(Math.random()*5)
+        min = 13
+        range = 5
+    }
+    else{
+        result = val*4 + Math.floor(Math.random()*4) + 1
+        min = val*4 +1
+        range = 4
+    }
+    let randomDisp = setInterval(function() { 
+        rollDiv.innerText = (min + Math.floor(Math.random()*range)).toString(); 
+        i--; 
+        if (i<0) { 
+            rollDiv.innerText = result; 
+            clearInterval(randomDisp); 
+        } 
+    },25);
+});
 
 ( function(){
     initialiseRadio();

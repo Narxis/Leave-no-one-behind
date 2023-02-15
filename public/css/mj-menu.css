@@ -48,11 +48,13 @@
     text-indent: 15px;
     line-height: 13px;
 }
+
 .desc-title {
     text-indent: 2px;
     padding: 0px 13px;
 }
-.desc-text{
+
+.desc-text {
     border-top: 1px solid #ffffffbd;
     background-color: #28004ca6;
     padding: 10px;
@@ -67,19 +69,35 @@
     align-items: center;
     width: 350px;
     height: 100%;
-    border-left: 1px solid rgb(180, 180, 180);
-    border-right: 1px solid rgb(180, 180, 180);
 }
 
 .life-change {
     display: flex;
-    cursor: pointer;
+    /*cursor: pointer;*/
     width: 100%;
     height: 50%;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     align-items: flex-start;
+}
+
+.combat .life-change {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 35%;
+}
+
+.mjroll-type {
+    margin: 0.5em 0em;
+    display: flex;
+    align-items: center;
+}
+
+#mjRoll-module {
+    transform: translate(0.1em, 0em);
 }
 
 .life-selector {
@@ -181,7 +199,7 @@ input::-webkit-inner-spin-button {
     display: flex;
     height: 4.1em;
     width: 90%;
-    margin: 2em 0;
+    margin: 1em 0;
     align-items: center;
     color: #cb2e2e;
     text-shadow: 2px 2px 2px black;
@@ -196,6 +214,39 @@ input::-webkit-inner-spin-button {
     border-top: 2px solid rgb(180, 180, 180);
     padding: 1em;
 }
+
+.combat .player-roll {
+    display: flex;
+    padding: 1em;
+    align-items: center;
+}
+
+.combat .player-stat-value {
+    cursor: pointer;
+    width: 50%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: -1px 1px 2px #ababab;
+    text-indent: 0em;
+    font-size: 2em;
+}
+.mjroll-label {
+    cursor: pointer;
+}
+
+.combat .output-roll {
+    margin: 0em 0.4em;
+    padding: 0.1em 0.2em 0.2em 0.2em;
+    width: 2em;
+    height: 1em;
+    font-size: 3em;
+    letter-spacing: 2px;
+    text-indent: 0em;
+} 
+
+
 
 .center {
     width: 100% !important;
@@ -261,15 +312,21 @@ input::-webkit-inner-spin-button {
 
     #console-container {
         overflow: hidden scroll;
-        padding: 1em;
+        padding: 0.5em;
+        margin: 0em 1em;
         text-indent: 2em;
-        width: 90%;
+        width: 95%;
         height: 100%;
         border-top: 2px solid rgb(180, 180, 180);
     }
 
     .life-change {
         padding: 0.4em 0em;
+    }
+
+    .combat .life-change {
+        flex-wrap: nowrap;
+        height: 50%;
     }
 
     .life-type1,
@@ -301,6 +358,33 @@ input::-webkit-inner-spin-button {
         position: absolute;
         top: 50%;
         height: 17em;
+    }
+
+    .combat .player-roll {
+        display: flex;
+        padding: 1em;
+        align-items: center;
+    }
+
+    .combat .player-stat-value {
+        width: 100%;
+        height: 65%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-shadow: -1px 1px 2px #ababab;
+        text-indent: 0em;
+        font-size: 2em;
+    }
+
+    .combat .output-roll {
+        margin: 0em 0.4em;
+        padding: 0.1em 0.2em 0.2em 0.2em;
+        width: 2em;
+        height: 1em;
+        font-size: 3em;
+        letter-spacing: 2px;
+        text-indent: 0em;
     }
 }
 
@@ -345,7 +429,7 @@ input::-webkit-inner-spin-button {
 
     .life-container,
     .combat {
-        height: auto;
+        height: 48%;
     }
 
     .choice {
@@ -387,8 +471,8 @@ input::-webkit-inner-spin-button {
     }
 
     #console-container {
-        padding: 2em;
-        text-indent: 1.5em;
+        padding: 1em 2em;
+        text-indent: 0.5em;
         width: 90%;
     }
 
@@ -398,6 +482,23 @@ input::-webkit-inner-spin-button {
         border-top: 1px solid #fff;
         width: 100%;
         align-content: flex-start;
+    }
+
+    .empty-for-flex {
+        width: 100%;
+    }
+
+    .combat .life-change {
+        font-size: 1.2em;
+        border-top: none;
+        flex-direction: row;
+        height: 7em;
+    }
+
+    .mjroll-type {
+        margin: 1em 0em;
+        width: 50%;
+        font-size: 0.86em;
     }
 
     .life-type1,
@@ -428,6 +529,33 @@ input::-webkit-inner-spin-button {
         height: 11em;
         border-bottom: 1px solid #fff;
         align-content: flex-start;
+    }
+
+    .combat .player-roll {
+        display: flex;
+        padding: 1em;
+        align-items: center;
+    }
+
+    .combat .player-stat-value {
+        width: 100%;
+        height: 65%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-shadow: -1px 1px 2px #ababab;
+        text-indent: 0em;
+        font-size: 2em;
+    }
+
+    .combat .output-roll {
+        margin: 0em 0.4em;
+        padding: 0.1em 0.2em 0.2em 0.2em;
+        width: 2em;
+        height: 1em;
+        font-size: 3em;
+        letter-spacing: 2px;
+        text-indent: 0em;
     }
 }
 

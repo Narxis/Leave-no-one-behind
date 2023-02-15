@@ -20,8 +20,8 @@
                     </div>
                     <% for(var i=0; i<3; i++) {%>
                     <div class="choice" id="choice<%= i %>">
-                        <div class="button-text">Ici serront présentés les choix.</div>
-                        <div class="reveal-text">Ici serra présenté le texte révélé après avoir cliqué sur le choix.</div>
+                        <div class="button-text">Ici serront présentés les choix. <span class="blackout">Les choix pendant un blackout.</span></div>
+                        <div class="reveal-text">Ici serra présenté le texte révélé après avoir cliqué sur le choix.<span class="blackout">&nbsp;Les outcome pendant un blackout,</span><span class="mjreveal"> et les informations complémentaires.</span></div>
                     </div>
                     <% } %>
                 </div>
@@ -29,11 +29,11 @@
                     <div class="life-change">
                         <div class="life-type1">
                             <input class="life-input" type="radio" name="life" id="life-1" value="0" checked>
-                            <label class="life-label" for="roll-1">Adversaires</label>
+                            <label class="life-label" for="life-1">Adversaires</label>
                         </div>
                         <div class="life-type2">
                             <input class="life-input" type="radio" name="life" id="life-2" value="1">
-                            <label class="life-label" for="roll-2">Compagnons</label>
+                            <label class="life-label" for="life-2">Compagnons</label>
                         </div>
                         <div class="life-selector">
                             <div class="ennemy">
@@ -51,7 +51,7 @@
                                     <option value="monstre4"></option>
                                 </datalist>
                                 <button class="add-life" id="add-monstre">+</button>
-                                <button class="add-life" id="monstre-list">X</button>
+                                <button class="add-life" id="monstre-list">x</button>
                             </div>
                             <div class="ally hide">
                                 <input type="text" id="search-ally" list="compagnon" placeholder="Compagnon">
@@ -68,7 +68,7 @@
                                     <option value="friend4"></option>
                                 </datalist>
                                 <button class="add-life" id="add-friend">+</button>
-                                <button class="add-life" id="friend-list">X</button>
+                                <button class="add-life" id="friend-list">x</button>
                             </div>
                         </div>
                     </div>
@@ -87,15 +87,30 @@
                 <div class="combat">
                     <!--Un espace pour chaque joueurs pour un boutton join-->
                     <button class="add-life fight" id="combat-start"> Commencer le combat</button>
-                    <div id="console-container"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi sunt
-                        quae dolorem dignissimos, beatae nesciunt sint tenetur eaque assumenda. Officia, cumque!
-                        Provident neque doloribus cumque ipsa eius consectetur aut libero?Lorem ipsum dolor sit amet
-                        consectetur adipisicing elit. Animi sunt quae dolorem dignissimos, beatae nesciunt sint tenetur
-                        eaque assumenda. Officia, cumque! Provident neque doloribus cumque ipsa eius consectetur aut
-                        libero?Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi sunt quae dolorem
-                        dignissimos, beatae nesciunt sint tenetur eaque assumenda. Officia, cumque! Provident neque
-                        doloribus cumque ipsa eius consectetur aut libero?
-
+                    <div id="console-container">
+                        <div class="life-change">Choix du type de roll : <br>
+                            <div class="empty-for-flex"></div>
+                            <div class="mjroll-type">
+                                <input class="mjroll-input" type="radio" name="mjroll" id="mjroll1" value="0" checked>
+                                <label class="mjroll-label" for="mjroll1">Faible: 1-4</label>
+                            </div>
+                            <div class="mjroll-type">
+                                <input class="mjroll-input" type="radio" name="mjroll" id="mjroll2" value="1">
+                                <label class="mjroll-label" for="mjroll2">Moyen: 5-8</label>
+                            </div>
+                            <div class="mjroll-type">
+                                <input class="mjroll-input" type="radio" name="mjroll" id="mjroll3" value="2">
+                                <label class="mjroll-label" for="mjroll3">Fort: 9-12</label>
+                            </div>
+                            <div class="mjroll-type">
+                                <input class="mjroll-input" type="checkbox" name="mjroll-module" id="mjroll-module">
+                                <label class="mjroll-label" for="mjroll-module">Module (Moral par défaut)</label>
+                            </div>
+                        </div>
+                        <div class="player-roll">
+                            <div class="player-stat-value" id="mjroll-button">Roll</div>
+                            <div class="output-roll" id="mjroll-roll">00</div>
+                        </div>
                     </div>
                 </div>
             </div>
