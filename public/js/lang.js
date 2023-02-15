@@ -18,7 +18,7 @@ var lang = {
             },
             "proximity": {
                 "le" : "le module de détection",
-                "votre" : "votre module de détection",
+                "votre" : "vos modules de détection",
                 "du" : "du module de détection",
             },
             "energy": {
