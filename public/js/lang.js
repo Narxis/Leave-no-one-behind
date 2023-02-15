@@ -2,149 +2,149 @@ var lang = {
     "card_vars": {
         "module": {
             "cryopods": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "Les cryopods",
+                "votre" : "vos cryopods",
+                "du" : "des cryopodes",
             },
             "motors": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "les moteurs",
+                "votre" : "vos moteurs",
+                "du" : "des moteurs",
             },
             "scanner": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "les scanners",
+                "votre" : "vos scanners",
+                "du" : "des scanners",
             },
             "proximity": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "le module de détection",
+                "votre" : "votre module de détection",
+                "du" : "du module de détection",
             },
             "energy": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "la centrale éléctrique",
+                "votre" : "votre centrale électrique",
+                "du" : "de la centrale éléctrique",
             },
             "oxygen": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "le module d'oxygène",
+                "votre" : "votre module d'oxygène",
+                "du" : "du module d'oxygène",
             },
             "gravity": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "le générateur de gravité artificielle",
+                "votre" : "votre générateur de gravité artificielle",
+                "du" : "du générateur de gravité artificielle",
             },
             "landing": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "le module d'atterrissage",
+                "votre" : "votre module d'atterrisage",
+                "du" : "du module d'atterrissage",
             },
             "construction": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "le module de construction",
+                "votre" : "votre module de construction",
+                "du" : "du module de construction",
             },
             "dbscience": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "la base de donnée scientifique",
+                "votre" : "votre base de donnée scientifique",
+                "du" : "de la base de donnée",
             },
             "dbhistory": {
-                "le" : "",
-                "votre" : "",
-                "du" : "",
+                "le" : "la base de donnée historique",
+                "votre" : "votre base de donnée historique",
+                "du" : "de la base de donnée historique",
             }
         },
         "race": {
             "fnek": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+                "le": "le fnek",
+                "des": "des fneks",
+                "un": "un fnek",
+                "du": "du fnek",
+                "au": "au fnek",
+                "aux": "aux fneks"
             },
             "omphor": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+                "le": "l'omphor",
+                "des": "des omphors",
+                "un": "un omphor",
+                "du": "de l'omphor",
+                "au": "à l'omphor",
+                "aux": "aux omphors"
             },
             "sylv": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+                "le": "le sylv",
+                "des": "des sylvs",
+                "un": "un sylv",
+                "du": "du sylv",
+                "au": "au sylv",
+                "aux": "aux sylvs"
             },
             "ygrl": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+                "le": "L'ygrl",
+                "des": "des ygrls",
+                "un": "une ygrl",
+                "du": "de l'Ygrl",
+                "au": "à l'ygrl",
+                "aux": "aux ygrls"
             },
             "shrymp": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+                "le": "le shrimp",
+                "des": "des shrimps",
+                "un": "un shrimp",
+                "du": "du shrimp",
+                "au": "au shrimp",
+                "aux": "aux shrimps"
             },
             "aku": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+                "le": "l'aku",
+                "des": "des aku",
+                "un": "un aku",
+                "du": "de l'aku",
+                "au": "à l'aku",
+                "aux": "aux akus"
             },
             "yorc": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+                "le": "le yorc",
+                "des": "des yorcs",
+                "un": "un yorc",
+                "du": "du yorc",
+                "au": "au yorc",
+                "aux": "aux yorcs"
             },
-            "nek_eau": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+            "nek-eau": {
+                "le": "la nek-eau",
+                "des": "des nek-eaux",
+                "un": "une nek-eau",
+                "du": "de la nek-eau",
+                "au": "à la nek-eau",
+                "aux": "aux nek-eaux"
             },
-            "nek_feu": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+            "nek-feu": {
+                "le": "le nek-feu",
+                "des": "des nek-feux",
+                "un": "un nek-feu",
+                "du": "du nek-feu",
+                "au": "au nek-feu",
+                "aux": "aux nek-feux"
             },
-            "nek_terre": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+            "nek-terre": {
+                "le": "le nek-terre",
+                "des": "des nek-terres",
+                "un": "un nek-terre",
+                "du": "du nek-terre",
+                "au": "au nek-terre",
+                "aux": "aux nek-terres"
             },
-            "nek_air": {
-                "le": "",
-                "des": "",
-                "un": "",
-                "du": "",
-                "au": "",
-                "aux": ""
+            "nek-air": {
+                "le": "la nek-air",
+                "des": "des nek-airs",
+                "un": "une nek-air",
+                "du": "de la nek-air",
+                "au": "à la nek-air",
+                "aux": "aux nek-airs"
             }
         }
     },
@@ -169,16 +169,16 @@ var lang = {
     "yorc": {
         "desc": "Les Yorcs sont une race d'êtres humanoïdes à l'apparence de canidés. Ils sont généralement de petite taille et ont des oreilles pointues. Leur peau est couverte de poils et leur couleur peut varier en fonction de leur exposition aux ultra-violets. Ils sont généralement de bons utilisateurs d'armes, mais sont faibles à \"mains nues\". Ils ont un odorat très développé mais bizarrement ils aiment bien l'odeur de fnek."
     },
-    "nek_eau": {
+    "nek-eau": {
         "desc": "Les Nek-Eau sont une race pacifique et gentille. Elles apprécient la simplicité et sont amies avec les Sylvs. Elles sont souvent calmes et réfléchies, préférant éviter les conflits et chercher des solutions pacifiques aux problèmes."
     },
-    "nek_feu": {
+    "nek-feu": {
         "desc": "Les Nek-Feux ont un fort instinct de survie et sont prêts à tout pour protéger leur tribu et leur territoire. Ils sont jaloux des sylvs en raison de leur relation pacifique avec les Nek-eau."
     },
-    "nek_terre": {
+    "nek-terre": {
         "desc": "Les Nek-Terres passent beaucoup de temps à toquer aux portes de vaisseaux spatiaux et à distribuer des prospectus pour partager leur message avec le reste de l'univers. Ils croient en un Messie nommé le \"Saint Nek-Terre\" qui guidera leur peuple vers la lumière. Ils sont généralement pacifiques et bienveillants, mais peuvent être très têtus dans leur croyance en leur religion."
     },
-    "nek_air": {
+    "nek-air": {
         "desc": "Les Nek-Airs sont de genre féminin et sont particulièrement intelligentes et logiques. Elles sont également de bonnes avo-cat-es et apprécient l'humour des Nek-Terres, même si elles ne se rendent pas compte que ces derniers sont sérieux."
     }
 }
@@ -191,14 +191,24 @@ const getParsedText = function (text) {
     return text;
 }
 
-const getRandomVar = function (variable){
+const getRandomVar = function (variable, number = 1, listEx = []){ //ca risque de casse si on demande trop de race/module différents d'un coup
     variable = variable.replace('[','').replace(']','')
     let parsedVar = variable.split("_");
     let article = parsedVar[0];
     let type = parsedVar[1];
-
+    let result = []
     let obj_keys = Object.keys(lang.card_vars[type]);
-    let randomItem = obj_keys[Math.floor(Math.random() *obj_keys.length)];
+    for( let i=0;i<listEx;i++){
+        let exclus= listEx[i]
+        obj_keys = obj_keys.filter(e => e != exclus)
+    }
+    for (let i=0;i<number;i++){
 
-    return lang.card_vars[type][randomItem][article];
+        let randomItem = obj_keys[Math.floor(Math.random() *obj_keys.length)];
+
+        obj_keys = obj_keys.filter(e => e != randomItem)
+        result.push(lang.card_vars[type][randomItem][article])
+    }
+
+    return result;
 }
