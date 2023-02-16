@@ -469,7 +469,8 @@ module.exports.showScore = async function (req, res) {
     let vars = {
         ship: ship,
         score: score,
-        js: js
+        js: js,
+        planet: planet
     }
     
     res.render('end-screen', vars);

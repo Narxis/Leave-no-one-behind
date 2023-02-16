@@ -190,22 +190,22 @@
             </div>
             <div class="planet-recap">
                 <div class="planet-recap-line" id="planet-line-1">
-                    <div class="planet-reading" data-value="70" id="reading-1"></div>
+                    <div class="planet-reading" data-value="<%= planet.modules.oxy.val %>" id="reading-1"></div>
                 </div>
                 <div class="planet-recap-line" id="planet-line-2">
-                    <div class="planet-reading" data-value="20" id="reading-2"></div>
+                    <div class="planet-reading" data-value="<%= planet.modules.cli.val %>" id="reading-2"></div>
                 </div>
                 <div class="planet-recap-line" id="planet-line-3">
-                    <div class="planet-reading" data-fauvalue="30" data-flovalue="69" data-civvalue="50" id="reading-3"></div>
+                    <div class="planet-reading" data-fauvalue="<%= planet.modules.fau.val %>" data-flovalue="<%= planet.modules.flo.val %>" data-civvalue="<%= planet.modules.civ.val %>" id="reading-3"></div>
                 </div>
                 <div class="planet-recap-line" id="planet-line-4">
-                    <div class="planet-reading" data-value="42" id="reading-4"></div>
+                    <div class="planet-reading" data-value="<%= planet.modules.res.val %>" id="reading-4"></div>
                 </div>
                 <div class="planet-recap-line" id="planet-line-5">
-                    <div class="planet-reading" data-value="70" id="reading-5"></div>
+                    <div class="planet-reading" data-value="<%= planet.modules.wtr.val %>" id="reading-5"></div>
                 </div>
                 <div class="planet-recap-line" id="planet-line-6">
-                    <div class="planet-reading" data-value="12" id="reading-6"></div>
+                    <div class="planet-reading" data-value="<%= planet.modules.grv.val %>" id="reading-6"></div>
                 </div>
             </div>
             <div class="consolescore"></div>
