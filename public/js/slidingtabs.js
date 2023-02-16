@@ -408,6 +408,8 @@ async function initialiseNextButton() {
             document.querySelector('.answer1').innerHTML = ""
             document.querySelector('.answer2').innerHTML = ""
             document.querySelector('.choices').innerHTML = ""
+            textValueList = [];
+            textValueIdList = [];
             //ready to show new text
             document.querySelector('.card-text').classList.remove('invisibility')
             document.querySelector('.answer0').classList.remove('invisibility')
@@ -440,6 +442,8 @@ async function initialiseNextButton() {
             document.querySelector('.answer1').innerHTML = ""
             document.querySelector('.answer2').innerHTML = ""
             document.querySelector('.choices').innerHTML = ""
+            textValueList = [];
+            textValueIdList = [];
 
             //ready to show new text
             document.querySelector('.card-text').classList.remove('invisibility')

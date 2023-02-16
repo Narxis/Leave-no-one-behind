@@ -19,42 +19,183 @@ var lang = {
             "proximity": {
                 "le" : "le module de détection",
                 "votre" : "vos modules de détection",
-                "du" : "du module de détection",
+                "du" : "de vos module de détection",
             },
             "energy": {
                 "le" : "la centrale éléctrique",
-                "votre" : "votre centrale électrique",
-                "du" : "de la centrale éléctrique",
+                "votre" : "vos générateurs électrique",
+                "du" : "de vos générateurs éléctrique",
             },
             "oxygen": {
                 "le" : "le module d'oxygène",
-                "votre" : "votre module d'oxygène",
-                "du" : "du module d'oxygène",
+                "votre" : "vos modules d'oxygène",
+                "du" : "de vos module d'oxygène",
             },
             "gravity": {
                 "le" : "le générateur de gravité artificielle",
-                "votre" : "votre générateur de gravité artificielle",
-                "du" : "du générateur de gravité artificielle",
+                "votre" : "vos générateurs de gravité artificielle",
+                "du" : "des générateurs de gravité artificielle",
             },
             "landing": {
                 "le" : "le module d'atterrissage",
-                "votre" : "votre module d'atterrisage",
-                "du" : "du module d'atterrissage",
+                "votre" : "vos trains d'atterrisage",
+                "du" : "des trains d'atterrissage",
             },
             "construction": {
                 "le" : "le module de construction",
-                "votre" : "votre module de construction",
-                "du" : "du module de construction",
+                "votre" : "vos imprimantes de construction",
+                "du" : "des imprimantes de construction",
             },
             "dbscience": {
                 "le" : "la base de donnée scientifique",
-                "votre" : "votre base de donnée scientifique",
-                "du" : "de la base de donnée",
+                "votre" : "vos données scientifiques",
+                "du" : "des données scientifiques",
             },
             "dbhistory": {
                 "le" : "la base de donnée historique",
-                "votre" : "votre base de donnée historique",
-                "du" : "de la base de donnée historique",
+                "votre" : "vos données historiques",
+                "du" : "des données historiques",
+            }
+        },
+        "module_bdd":{
+            "cryopods": {
+                "le" : "Les cryopods",
+                "votre" : "vos cryopods",
+                "du" : "des cryopodes",
+            },
+            "motors": {
+                "le" : "les moteurs",
+                "votre" : "vos moteurs",
+                "du" : "des moteurs",
+            },
+            "scanner": {
+                "le" : "les scanners",
+                "votre" : "vos scanners",
+                "du" : "des scanners",
+            },
+            "proximity": {
+                "le" : "le module de détection",
+                "votre" : "vos modules de détection",
+                "du" : "de vos module de détection",
+            },
+            "energy": {
+                "le" : "la centrale éléctrique",
+                "votre" : "vos générateurs électrique",
+                "du" : "de vos générateurs éléctrique",
+            },
+            "oxygen": {
+                "le" : "le module d'oxygène",
+                "votre" : "vos modules d'oxygène",
+                "du" : "de vos module d'oxygène",
+            },
+            "gravity": {
+                "le" : "le générateur de gravité artificielle",
+                "votre" : "vos générateurs de gravité artificielle",
+                "du" : "des générateurs de gravité artificielle",
+            },
+            "landing": {
+                "le" : "le module d'atterrissage",
+                "votre" : "vos trains d'atterrisage",
+                "du" : "des trains d'atterrissage",
+            },
+            "construction": {
+                "le" : "le module de construction",
+                "votre" : "vos imprimantes de construction",
+                "du" : "des imprimantes de construction",
+            }
+        },
+        "module_h_bdd":{
+            "motors": {
+                "le" : "les moteurs",
+                "votre" : "vos moteurs",
+                "du" : "des moteurs",
+            },
+            "scanner": {
+                "le" : "les scanners",
+                "votre" : "vos scanners",
+                "du" : "des scanners",
+            },
+            "proximity": {
+                "le" : "le module de détection",
+                "votre" : "vos modules de détection",
+                "du" : "de vos module de détection",
+            },
+            "energy": {
+                "le" : "la centrale éléctrique",
+                "votre" : "vos générateurs électrique",
+                "du" : "de vos générateurs éléctrique",
+            },
+            "oxygen": {
+                "le" : "le module d'oxygène",
+                "votre" : "vos modules d'oxygène",
+                "du" : "de vos module d'oxygène",
+            },
+            "gravity": {
+                "le" : "le générateur de gravité artificielle",
+                "votre" : "vos générateurs de gravité artificielle",
+                "du" : "des générateurs de gravité artificielle",
+            },
+            "landing": {
+                "le" : "le module d'atterrissage",
+                "votre" : "vos trains d'atterrisage",
+                "du" : "des trains d'atterrissage",
+            },
+            "construction": {
+                "le" : "le module de construction",
+                "votre" : "vos imprimantes de construction",
+                "du" : "des imprimantes de construction",
+            }
+        },
+        "module-h":{
+            "motors": {
+                "le" : "les moteurs",
+                "votre" : "vos moteurs",
+                "du" : "des moteurs",
+            },
+            "scanner": {
+                "le" : "les scanners",
+                "votre" : "vos scanners",
+                "du" : "des scanners",
+            },
+            "proximity": {
+                "le" : "le module de détection",
+                "votre" : "vos modules de détection",
+                "du" : "de vos module de détection",
+            },
+            "energy": {
+                "le" : "la centrale éléctrique",
+                "votre" : "vos générateurs électrique",
+                "du" : "de vos générateurs éléctrique",
+            },
+            "oxygen": {
+                "le" : "le module d'oxygène",
+                "votre" : "vos modules d'oxygène",
+                "du" : "de vos module d'oxygène",
+            },
+            "gravity": {
+                "le" : "le générateur de gravité artificielle",
+                "votre" : "vos générateurs de gravité artificielle",
+                "du" : "des générateurs de gravité artificielle",
+            },
+            "landing": {
+                "le" : "le module d'atterrissage",
+                "votre" : "vos trains d'atterrisage",
+                "du" : "des trains d'atterrissage",
+            },
+            "construction": {
+                "le" : "le module de construction",
+                "votre" : "vos imprimantes de construction",
+                "du" : "des imprimantes de construction",
+            },
+            "dbscience": {
+                "le" : "la base de donnée scientifique",
+                "votre" : "vos données scientifiques",
+                "du" : "des données scientifiques",
+            },
+            "dbhistory": {
+                "le" : "la base de donnée historique",
+                "votre" : "vos données historiques",
+                "du" : "des données historiques",
             }
         },
         "race": {
@@ -249,19 +390,10 @@ var lang = {
 const getParsedText = function (text, varIdList, varList, listEx = [], exclude = false, number = 1) {
     const varFound = [...text.matchAll(/\[\w+\]/g)].map(e => e[0]);
     for (let variable of varFound){
-        //console.log(variable,'variable',varIdList,'varIdList');
-        if (varIdList.includes(variable)){
-            //console.log('if',varIdList,variable)
-            text = text.replace(variable, varList[varIdList.indexOf(variable)])
-        }
-        else{
-            //console.log('else')
-            let newvar = getRandomVar(variable, number, listEx, exclude);
+            //console.log(variable,'variable',varIdList,'varIdList');
+            let newvar = getRandomVar(variable, varIdList, varList, number, listEx, exclude);
             console.log(newvar,'newvar')
             text = text.replace(variable, newvar)
-            varIdList.push(variable)
-            varList.push(newvar)
-        }
     }
 
 
@@ -269,21 +401,29 @@ const getParsedText = function (text, varIdList, varList, listEx = [], exclude =
     return text;
 }
 
-const getRandomVar = function (variable, number = 1, listEx = [], exclude){ //ca risque de casse si on demande trop de race/module différents d'un coup
+const getRandomVar = function (variable, varIdList, varList, number = 1, listEx = [], exclude){ //ca risque de casse si on demande trop de race/module différents d'un coup
     variable = variable.replace('[','').replace(']','')
     let parsedVar = variable.split("_");
     let article = parsedVar[0];
     let type = parsedVar[1];
+    let varId = parsedVar[2];
     let result = [];
+    let resultText= '';
     let obj_keys = Object.keys(lang.card_vars[type]);
     for( let i=0;i<listEx;i++){
         let exclus= listEx[i]
         obj_keys = obj_keys.filter(e => e != exclus)
     }
     for (let i=0;i<number;i++){
-
-        let randomItem = obj_keys[Math.floor(Math.random() *obj_keys.length)];
-        let resultText = lang.card_vars[type][randomItem][article]
+        if (varIdList.includes(type +'_'+ varId)){
+            resultText = varList[varIdList.indexOf(type +'_'+ varId)[article]]
+        }
+        else {
+            let randomItem = obj_keys[Math.floor(Math.random() *obj_keys.length)];
+            resultText = lang.card_vars[type][randomItem][article]
+            varIdList.push(type +'_'+ varId);
+            varList.push(lang.card_vars[type[randomItem]]);
+        }
         if (parsedVar.length == 4){//signifie que l'on veut une majuscule en début
             resultText = resultText.substring(0,1).toUpperCase() + resultText.substring(1)
         }
