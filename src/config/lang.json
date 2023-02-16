@@ -124,56 +124,6 @@
         "no" : "module de construction"
       }
     },
-    "module-h-bdd":{
-      "motors": {
-        "le" : "les moteurs",
-        "votre" : "vos moteurs",
-        "du" : "des moteurs",
-        "no" : "moteur"
-      },
-      "scanner": {
-        "le" : "les scanners",
-        "votre" : "vos scanners",
-        "du" : "des scanners",
-        "no" : "scanner"
-      },
-      "proximity": {
-        "le" : "le module de détection",
-        "votre" : "vos modules de détection",
-        "du" : "de vos module de détection",
-        "no" : "détécteur de proximité"
-      },
-      "energy": {
-        "le" : "la centrale éléctrique",
-        "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique",
-        "no" : "générateur éléctrique"
-      },
-      "oxygen": {
-        "le" : "le module d'oxygène",
-        "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène",
-        "no" : "module d'oxygène"
-      },
-      "gravity": {
-        "le" : "le générateur de gravité artificielle",
-        "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle",
-        "no" : "générateur de gravité"
-      },
-      "landing": {
-        "le" : "le module d'atterrissage",
-        "votre" : "vos trains d'atterrisage",
-        "du" : "des trains d'atterrissage",
-        "no" : "train d'atterrissage"
-      },
-      "construction": {
-        "le" : "le module de construction",
-        "votre" : "vos imprimantes de construction",
-        "du" : "des imprimantes de construction",
-        "no" : "module de construction"
-      }
-    },
     "module-h":{
       "motors": {
         "le" : "les moteurs",
