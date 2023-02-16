@@ -599,6 +599,8 @@ async function stopCountdown() {
     initialiseChoiceTabs();
     initialiseModTabs();
     initialisePlayerTab();
+    await initialiseleLeftTabs();
+    initialiseKeyListener();
     await initialiseStatusList();
     if (currentCardType == -1 ) { //type of startcard
         startwrite(cardtextstr,'.card-text');
@@ -616,8 +618,6 @@ async function stopCountdown() {
             startCountDown();
         }
     }
-    await initialiseleLeftTabs();
-    initialiseKeyListener();
     document.addEventListener('status', initialiseStatusList);
 })();
 
@@ -661,7 +661,8 @@ async function initialiseKeyListener() {
         });
         break;
       case "ArrowLeft":
-        (async function () {
+        (async function leftKeyPress() {
+            await initialiseleLeftTabs();
           document.querySelector(".wrapper-menu").classList.toggle("open-but");
           document.querySelector(".consommable-tab").closest(".consommable-tab").style.animation = null;
           document.querySelector(".consommable-tab").closest(".consommable-tab").classList.toggle("open-left");
@@ -670,7 +671,7 @@ async function initialiseKeyListener() {
           document.querySelector(".left-button").nextElementSibling.nextElementSibling.firstElementChild.classList.toggle("close-mod-left");
           document.querySelector(".left-button").nextElementSibling.firstElementChild.classList.toggle("open-mod-left");
           document.querySelector(".left-button").nextElementSibling.nextElementSibling.firstElementChild.classList.toggle("open-mod-left");
-          await sleep(5000);
+          await sleep(2000);
         })();
         break;
       case "ArrowUp":
@@ -682,6 +683,9 @@ async function initialiseKeyListener() {
         document.querySelectorAll(".expander-item").forEach(function (e) {
             e.lastElementChild.classList.toggle("itemshow");
         })
+        break;
+      case "escape":
+        document.getElementById("menuToggle").click()
     };
   });
 }
