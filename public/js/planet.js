@@ -67,7 +67,7 @@ var textgr = getPlanetText('gra',valuegr,grValTab,true);
 
 var costList = [costo2, costcl, costff, costre, costeau, costgr,];
 var showbuttons = false;
-var dronenbr = 3
+var dronenbr = document.querySelector('#planet-line-2 .drone').innerText || 0;
 var iswritting = 0;
 var droneUse = false;
 

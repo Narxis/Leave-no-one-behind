@@ -436,7 +436,13 @@
         <div class="separateur-horizontal"></div>
         <div class="ship-summary-line" id="planet-line-2">
           <div class="drone">
-            3
+            <% if(items){ %>
+              <% items.forEach(function(item) { %>
+                <% if(item.slug === "drone"){ %>
+                  <%= item.quantity %>
+                <% } %>
+              <% }); %>
+            <% } %>
           </div>
           <button class="use-drone"></button>
         </div>
