@@ -11,9 +11,11 @@ const deckGenerator = async function (){
     let nbNeg = CONFIG.negativeByStep;
     let nbPos = CONFIG.positiveByStep;
     let nbNeu = CONFIG.neutralByStep;
+    let nbPlace = CONFIG.placeByStep;
 
     let deck = await getCardsIds(TYPE_INITIAL);
 
+    let plaCardList = await getCardsIds(TYPE_PLACE);
     let neuCardList = await getCardsIds(TYPE_NEUTRAL);
     let negCardList = await getCardsIds(TYPE_NEGATIVE);
     let posCardList = await getCardsIds(TYPE_POSITIVE);
@@ -30,17 +32,17 @@ const deckGenerator = async function (){
     for (let i = 0; i < nbPla; i++) {
         let tmp_system = [];
 
-        if (posCardList.length < nbPos || neuCardList.length < nbNeu || negCardList.length < nbNeg)
+        if (posCardList.length < nbPos || neuCardList.length < nbNeu || negCardList.length < nbNeg || plaCardList.length < nbPlace)
         {
-            neuCardList = await getCardsIds(TYPE_NEUTRAL);
-            negCardList = await getCardsIds(TYPE_NEGATIVE);
-            posCardList = await getCardsIds(TYPE_POSITIVE);
             if (gameMode === "Chaos")
-                cardList = shuffle((neuCardList).concat((negCardList).concat(posCardList)));
+                cardList = shuffle(plaCardList.concat((neuCardList).concat((negCardList).concat(posCardList))));
         }
 
         if (gameMode === "Fair")
         {
+            for (let j = 0; j < nbPlace; j++)
+                tmp_system.push(plaCardList.pop());
+
             for (let j = 0; j < nbPos; j++)
                 tmp_system.push(posCardList.pop());
 

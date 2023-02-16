@@ -10,9 +10,6 @@ var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 
 module.exports.index = function(req, res) {
 
-    let card = new Card()
-    card.replaceVars('[le_race_0],[le_race_0],[le_race_1],[le_race_1],[le_race_2],[le_race_2],[le_module_0],[le_module_0],[le_module_1],[le_module_1],[le_module_2]')
-
     res.render('index', {lang: langJS});
 };
 
