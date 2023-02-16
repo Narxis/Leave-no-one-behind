@@ -287,6 +287,33 @@ var lang = {
                 "au": "à la Nek-air",
                 "aux": "aux Nek-airs"
             }
+        },
+        "stats": {
+            "combat": {
+                "la": "la force",
+                "votre": "vos capacités physique",
+                "de": "de force",
+            },
+            "pilotage": {
+                "la": "le pilotage",
+                "votre": "vos compétences de pilotage",
+                "de": "de pilotage",
+            },
+            "ingénierie": {
+                "la": "l'ingénierie",
+                "votre": "vos connaisances en ingénierie",
+                "de": "d'ingénierie",
+            },
+            "survie": {
+                "la": "la survie",
+                "votre": "vos capacités défensives",
+                "de": "de survie",
+            },
+            "reconnaissance": {
+                "la": "la reconnaissance",
+                "votre": "vos capacités de reconnaissance",
+                "de": "de reconnaissance",
+            }
         }
     },
     "fnek": {
