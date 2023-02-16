@@ -66,7 +66,7 @@ class Items {
         if (!item) return false;
 
         for (let dat in item) {
-            if (dat === 'owners')
+            if (dat === 'owners' && item[dat])
                 item[dat] = item[dat].split(',');
 
             this[dat] = item[dat]
@@ -104,7 +104,7 @@ class Items {
         let item = await DB.tables.items.findOne({where: {slug:slug}, raw:true});
 
         let new_owners = [];
-        if (item.owners !== '')
+        if (item.owners && item.owners !== '')
            new_owners = item.owners.split(',');
         new_owners.push(discord_id);
         new_owners = [...new Set(new_owners)];
@@ -133,7 +133,9 @@ class Items {
         let result = await DB.tables.items.findAll(whereClause);
         result = result.map(r => r.dataValues);
         result = result.map(r => {
-            r.owners = r.owners.split(',');
+            if (r.owners) {
+                r.owners = r.owners.split(',');
+            }
             return r;
         })
 
