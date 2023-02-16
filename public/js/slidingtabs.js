@@ -636,19 +636,19 @@ async function initialiseKeyListener() {
   document.addEventListener("keydown", (e) => {
     if (event.defaultPrevented) {
       return;
-    }
+    };
     switch (event.key) {
       case "a":
         document.querySelectorAll(".tab").forEach(function (e) {
           e.classList.add("revealtooltip");
         });
         break;
-    }
+    };
   });
   document.addEventListener("keyup", (e) => {
     if (event.defaultPrevented) {
       return;
-    }
+    };
     switch (event.key) {
       case "a":
         document.querySelectorAll(".tab").forEach(function (e) {
@@ -663,40 +663,16 @@ async function initialiseKeyListener() {
       case "ArrowLeft":
         (async function () {
           document.querySelector(".wrapper-menu").classList.toggle("open-but");
-          document
-            .querySelector(".consommable-tab")
-            .closest(".consommable-tab").style.animation = null;
-          document
-            .querySelector(".consommable-tab")
-            .closest(".consommable-tab")
-            .classList.toggle("open-left");
-          document
-            .querySelector(".consommable-tab")
-            .closest(".consommable-tab")
-            .classList.toggle("close-left");
-          document
-            .querySelector(".left-button")
-            .nextElementSibling.firstElementChild.classList.toggle(
-              "close-mod-left"
-            );
-          document
-            .querySelector(".left-button")
-            .nextElementSibling.nextElementSibling.firstElementChild.classList.toggle(
-              "close-mod-left"
-            );
-          document
-            .querySelector(".left-button")
-            .nextElementSibling.firstElementChild.classList.toggle(
-              "open-mod-left"
-            );
-          document
-            .querySelector(".left-button")
-            .nextElementSibling.nextElementSibling.firstElementChild.classList.toggle(
-              "open-mod-left"
-            );
+          document.querySelector(".consommable-tab").closest(".consommable-tab").style.animation = null;
+          document.querySelector(".consommable-tab").closest(".consommable-tab").classList.toggle("open-left");
+          document.querySelector(".consommable-tab").closest(".consommable-tab").classList.toggle("close-left");
+          document.querySelector(".left-button").nextElementSibling.firstElementChild.classList.toggle("close-mod-left");
+          document.querySelector(".left-button").nextElementSibling.nextElementSibling.firstElementChild.classList.toggle("close-mod-left");
+          document.querySelector(".left-button").nextElementSibling.firstElementChild.classList.toggle("open-mod-left");
+          document.querySelector(".left-button").nextElementSibling.nextElementSibling.firstElementChild.classList.toggle("open-mod-left");
           await sleep(5000);
         })();
         break;
-    }
+    };
   });
 }
