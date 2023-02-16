@@ -673,6 +673,15 @@ async function initialiseKeyListener() {
           await sleep(5000);
         })();
         break;
+      case "ArrowUp":
+        document.querySelectorAll(".player-tab").forEach(function (e) {
+            e.classList.toggle("move-up");
+        });
+        break;
+      case "ArrowDown":
+        document.querySelectorAll(".expander-item").forEach(function (e) {
+            e.lastElementChild.classList.toggle("itemshow");
+        })
     };
   });
 }
