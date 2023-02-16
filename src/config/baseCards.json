@@ -564,11 +564,11 @@
       "choices": [
         {
           "value": "Aider le premier vaisseau",
-          "reveal": "\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. <span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur 3 modules, donne des \"outils de réparations\" et un \"drone\".</span>"
+          "reveal": "\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. <span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne des \"outils de réparations\" et un \"drone\".</span>"
         },
         {
           "value": "Aider le deuxième vaisseau",
-          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur 3 modules, donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
+          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
         },
         {
           "value": "Ne rien faire",

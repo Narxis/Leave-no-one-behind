@@ -616,7 +616,8 @@ async function stopCountdown() {
             startCountDown();
         }
     }
-    initialiseleLeftTabs();
+    await initialiseleLeftTabs();
+    initialiseKeyListener();
     document.addEventListener('status', initialiseStatusList);
 })();
 
@@ -629,3 +630,73 @@ document.addEventListener('roll',async function(e){
     await sleep(1000);
     player.querySelector('#output-'+e.detail.data.stat).classList.remove('hide-opacity')
 })
+
+
+async function initialiseKeyListener() {
+  document.addEventListener("keydown", (e) => {
+    if (event.defaultPrevented) {
+      return;
+    }
+    switch (event.key) {
+      case "a":
+        document.querySelectorAll(".tab").forEach(function (e) {
+          e.classList.add("revealtooltip");
+        });
+        break;
+    }
+  });
+  document.addEventListener("keyup", (e) => {
+    if (event.defaultPrevented) {
+      return;
+    }
+    switch (event.key) {
+      case "a":
+        document.querySelectorAll(".tab").forEach(function (e) {
+          e.classList.remove("revealtooltip");
+        });
+        break;
+      case "ArrowRight":
+        document.querySelectorAll(".tab").forEach(function (e) {
+          e.classList.toggle("open");
+        });
+        break;
+      case "ArrowLeft":
+        (async function () {
+          document.querySelector(".wrapper-menu").classList.toggle("open-but");
+          document
+            .querySelector(".consommable-tab")
+            .closest(".consommable-tab").style.animation = null;
+          document
+            .querySelector(".consommable-tab")
+            .closest(".consommable-tab")
+            .classList.toggle("open-left");
+          document
+            .querySelector(".consommable-tab")
+            .closest(".consommable-tab")
+            .classList.toggle("close-left");
+          document
+            .querySelector(".left-button")
+            .nextElementSibling.firstElementChild.classList.toggle(
+              "close-mod-left"
+            );
+          document
+            .querySelector(".left-button")
+            .nextElementSibling.nextElementSibling.firstElementChild.classList.toggle(
+              "close-mod-left"
+            );
+          document
+            .querySelector(".left-button")
+            .nextElementSibling.firstElementChild.classList.toggle(
+              "open-mod-left"
+            );
+          document
+            .querySelector(".left-button")
+            .nextElementSibling.nextElementSibling.firstElementChild.classList.toggle(
+              "open-mod-left"
+            );
+          await sleep(5000);
+        })();
+        break;
+    }
+  });
+}

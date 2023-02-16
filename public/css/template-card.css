@@ -364,8 +364,14 @@
   line-height: 0;
 }
 
-[data-tooltip]:hover:before,
-[data-tooltip]:hover:after {
+.tab:hover [data-tooltip]:before,
+.tab:hover [data-tooltip]:after {
+  visibility: visible;
+  opacity: 1;
+}
+
+.revealtooltip [data-tooltip]:before,
+.revealtooltip [data-tooltip]:after {
   visibility: visible;
   opacity: 1;
 }
