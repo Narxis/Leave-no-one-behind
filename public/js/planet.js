@@ -74,6 +74,23 @@ var droneUse = false;
 function writePoints(place, number) {
     document.querySelector(place).innerText = String(number);
 };
+
+function getPlanetText(name,value,valueList,isgrav = false){
+    let i=0;
+    while (value>valueList[i+1]*100){
+        i++
+    }
+    if (isgrav && i<2){
+        if (value%2 == 0){
+            return lang.planet_text.module[name]['value'+i]['pair']
+        }
+        else
+            return lang.planet_text.module[name]['value'+i]['impair']
+    }
+    else
+        return lang.planet_text.module[name]['value'+i]
+}
+
 async function initialisePlanet() {
     scanPoints()
     writePoints('.detection-point', detectionPoints);

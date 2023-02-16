@@ -6,9 +6,11 @@ const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const ws = require("ws");
+var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 
 module.exports.index = function(req, res) {
-    res.render('index');
+
+    res.render('index', {lang: langJS});
 };
 
 module.exports.returnOk = function (req, res) {
@@ -18,7 +20,7 @@ module.exports.returnOk = function (req, res) {
 
 module.exports.deckGenerator = function (req, res) {
     deckGenerator().then(
-        res.render('index-legacy')
+        res.render('index-legacy', langJS)
     );
 
 }
@@ -26,28 +28,28 @@ module.exports.deckGenerator = function (req, res) {
 module.exports.renderSingleSheet = async function (req, res) {
 
     let player = await new Player().getData(req.body.discord_id);
-    res.render('partials/fiche-perso', {player: player});
+    res.render('partials/fiche-perso', {player: player, langJS});
 }
 
 module.exports.mjMenu = function (req, res) {
-    res.render('mj-menu');
+    res.render('mj-menu', {lang: langJS});
 }
 
 module.exports.persos = async function (req, res) {
     await CONFIG.upsert('gameState', 'creation');
-    res.render('perso');
+    res.render('perso', {lang: langJS});
 }
 
 module.exports.ficheVaisseau = function (req, res) {
-    res.render('fiche-vaisseau');
+    res.render('fiche-vaisseau', {lang: langJS});
 }
 
 module.exports.synopsis = function (req, res) {
-    res.render('synopsis');
+    res.render('synopsis', {lang: langJS});
 }
 
 module.exports.mainMenu = function (req, res) {
-    res.render('index');
+    res.render('index', {lang: langJS});
 }
 
 module.exports.renderCardEvent = async function (req, res) {
@@ -92,7 +94,8 @@ module.exports.renderCardEvent = async function (req, res) {
         card: current_card,
         ship: ship,
         statuses: statusesAll,
-        items: items
+        items: items,
+        lang: langJS
     }
 
     switch (current_card.type) {
@@ -196,7 +199,8 @@ module.exports.renderTestCardPlace = async function (req, res) {
         players: players,
         card: card,
         ship: ship,
-        statuses: statuses
+        statuses: statuses,
+        lang: langJS
     }
 
     res.render('template-card', vars);
@@ -299,7 +303,8 @@ module.exports.renderTestCardEvent = async function (req, res) {
         card: card,
         ship: ship,
         statuses: statuses,
-        items: []
+        items: [],
+        lang: langJS
     }
 
     res.render('template-card', vars);
@@ -381,22 +386,23 @@ module.exports.templatePlanet = async function (req, res) {
     let vars = {
         players: players,
         card: card,
-        ship: ship
+        ship: ship,
+        lang: langJS
     }
 
     res.render('template-planet', vars);
 }
 
 module.exports.endScreen = function (req, res) {
-    res.render('end-screen');
+    res.render('end-screen', {lang: langJS});
 }
 
 module.exports.leaderboard = function (req, res) {
-    res.render('leaderboard');
+    res.render('leaderboard', {lang: langJS});
 }
 
 module.exports.indexLegacy = function (req, res) {
-    res.render('index-legacy');
+    res.render('index-legacy', {lang: langJS});
 }
 
 module.exports.land = async function (req, res) {
@@ -469,7 +475,8 @@ module.exports.showScore = async function (req, res) {
     let vars = {
         ship: ship,
         score: score,
-        js: js
+        js: js,
+        lang: langJS
     }
     
     res.render('end-screen', vars);
@@ -477,7 +484,7 @@ module.exports.showScore = async function (req, res) {
 
 module.exports.start = async function (req, res) {
 
-    res.render('fiche-vaisseau');
+    res.render('fiche-vaisseau', {lang: langJS});
     await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
     await destroyDeck();
 
@@ -524,5 +531,5 @@ module.exports.reset = async function (req, res) {
     let items = new Items();
     await items.hydrateDB();
 
-    res.redirect('/');
+    res.redirect('/', {lang: langJS});
 }

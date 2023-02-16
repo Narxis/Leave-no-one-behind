@@ -1,10 +1,4 @@
-La première carte d'un lieu n'a pas de name.
-Pour les choix des cartes lieux, si il y a un followup, utiliser "next" avec le "name" de la carte suivante
-Si c'est le dernier choix, utiliser reveal
-Le name de la carte permet de la lier avec un choix.
-
-J'ai mis les 2 première cartes pos/neg/neu ainsi que 2 planètes random pour l'exemple
-Pour les lieux, j'ai fait la bibliothèque avec le follow up du choix 3 uniqument à titre d'exemple.
+# baseCards.json & lang.json
 
 ## Cheat-sheet
 
@@ -14,18 +8,20 @@ Pour les lieux, j'ai fait la bibliothèque avec le follow up du choix 3 uniqumen
 * Non-breaking space
 ``\u00a0``
 
+___
+
 ## Templates
 
 ### Card-Template
 
 ```json
     {
-      "desc": "\u00a0 <span class=\"blackout\"></span>",
+      "desc": "\u00a0 <span class=\"blackout\">\u00a0 </span>",
       "timer": false,
       "choices": [
         {
           "value": "",
-          "reveal": ""
+          "reveal": "\u00a0 <span class=\"mjreveal\">\u00a0 </span>"
         },
         {
           "value": "",
@@ -33,18 +29,74 @@ Pour les lieux, j'ai fait la bibliothèque avec le follow up du choix 3 uniqumen
         },
         {
           "value": "Ne rien faire",
-          "reveal": ""
+          "reveal": "\u00a0 <span class=\"mjreveal\">\u00a0 Perte de moral.</span>"
         }
       ]
     }
 ```
 
-### Span
+___
+
+## Span
 
 Différents span présent dans le baseCards.json :
 
+### Blackout
+
 * ```<span class=\"blackout\">\u00a0 </span>```
+
+### MJ-Reveal
 
 * ```<span class=\"mjreveal\">\u00a0 </span>```
 
+### Data-condition
+
 * ```<span class=\"alt-text\" data-condition=\"ship.energy == 100\"></span>```
+
+  ship.motors, ship.scanner, ship.proximity, ship.oxygen, ship.energy, ship.gravity, ship.landing, ship.construction, ship.dbscience, ship.dbhistory
+
+___
+
+## Variables
+
+### Modules
+
+#### 0 = id
+
+#### _art = "le", "votre", "du", "no"_
+
+* ```[art_module_0]``` **(tout les modules)**
+
+  cryopods, motors, scanner, proximity, energy, oxygen, gravity, landing, construction, dbscience, dbhistory
+
+* ```[art_module-bdd_0]``` **(tout les modules sans les bdd)**
+
+  cryopods, motors, scanner, proximity, energy, oxygen, gravity, landing, construction
+
+* ```[art_module-h_0]``` **(tout les modules sans cryo)**
+
+  motors, scanner, proximity, energy, oxygen, gravity, landing, construction, dbscience, dbhistory
+
+* ```[art_module-h-bdd_0]``` **(modules principaux et secondaires)**
+
+  motors, scanner, proximity, energy, oxygen, gravity, landing, construction
+
+* ```[art_module-main_0]``` **(uniquement les modules principaux)**
+
+  motors, scanner, proximity, energy, oxygen, gravity
+
+### Race
+
+#### _art = "le", "des", "un", "du", "au", "aux", "no"_
+
+* ```[art_race_0]``` **(toute les races)**
+
+  fnek, omphor, sylv, ygrl, shrymp, aku, york, nek_eau, nek_feu, nek_terre, nek_air.
+
+### Stats
+
+#### _art = "la", "votre", "de", "ses"_
+  
+* ```[art_stats_0]``` **(toute les stats)**
+
+  combat, pilotage, ingenierie, survie, reconnaissance.
