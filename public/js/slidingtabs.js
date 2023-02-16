@@ -684,8 +684,8 @@ async function initialiseKeyListener() {
             e.lastElementChild.classList.toggle("itemshow");
         })
         break;
-      case "escape":
-        document.getElementById("menuToggle").click()
+      case "Escape":
+        document.getElementById("navBtn").click();
     };
   });
 }

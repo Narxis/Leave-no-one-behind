@@ -165,6 +165,7 @@ nav {
     color: #fff;
     transition: color 0.3s ease;
     cursor: pointer;
+    fill: #fff;
 }
 
 #menuToggle a:hover {
