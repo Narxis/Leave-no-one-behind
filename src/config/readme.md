@@ -43,8 +43,8 @@ Pour les lieux, j'ai fait la bibliothèque avec le follow up du choix 3 uniqumen
 
 Différents span présent dans le baseCards.json :
 
-* ```<span class=\"blackout\"></span>```
+* ```<span class=\"blackout\">\u00a0 </span>```
 
-* ```<span class=\"mjreveal\">Remonte le moral</span>```
+* ```<span class=\"mjreveal\">\u00a0 </span>```
 
 * ```<span class=\"alt-text\" data-condition=\"ship.energy == 100\"></span>```
