@@ -150,9 +150,9 @@ class Card {
 
         variable = variable.replace('[','').replace(']','')
         let parsedVar = variable.split("_");
-        let article = parsedVar[0] ?? null;
-        let type = parsedVar[1] ?? null;
-        let id = parsedVar[2] ?? null;
+        let article = parsedVar[0] || null;
+        let type = parsedVar[1] || null;
+        let id = parsedVar[2] || null;
         let randomItem;
 
         let UcFirst = article.charAt(0) === article.charAt(0).toUpperCase();
