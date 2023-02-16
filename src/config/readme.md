@@ -39,6 +39,17 @@ Pour les lieux, j'ai fait la bibliothèque avec le follow up du choix 3 uniqumen
     }
 ```
 
+### Item-Template
+
+```json
+    {
+      "name": "",
+      "slug": "",
+      "desc": "",
+      "race": ""
+    },
+```
+
 ### Span
 
 Différents span présent dans le baseCards.json :
