@@ -6,6 +6,8 @@ var clickable = true
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr = 0;
 var cardnbrUntilPlanet = 5;
+var textValueList = [];
+var textValueIdList = [];
 //variables status
 var blackout;
 var statushtml = document.querySelector(".status");
@@ -279,9 +281,14 @@ async function nextoption() {
     }
 }
 
+function textValues (fulltext, valueListId, valueList, listEx = [] ,exclude =false, number = 1){
+    return (getParsedText(fulltext, valueListId, valueList, listEx, exclude, number))
+}
+
 async function write(fulltext, place, spanclass='base-text') {
     let currenttext = '';
     let start = -1 ;
+    let end = fulltext.length
     document.querySelector(place).innerHTML = `<span class =\"${spanclass}\"></span>`
     if (fulltext.includes(''+spanclass)) {
         start = fulltext.indexOf('>', fulltext.indexOf(''+spanclass));
@@ -299,11 +306,13 @@ async function write(fulltext, place, spanclass='base-text') {
             }
         }
     }
-    for (let i = start+1; i <= fulltext.length; i++) {
+    if (fulltext.includes('<',start+1)){
+        end = fulltext.indexOf('<',start+1)
+    }
+    fulltext = fulltext.substring(start+1,end);
+    fulltext = textValues(fulltext, textValueIdList, textValueList);
+    for (let i = 0; i <= fulltext.length; i++) {
         document.querySelector(place).querySelector('.'+spanclass).innerText = currenttext;
-        if (fulltext.substring(i, i + 1) == "<") {
-            i = fulltext.length
-        }
         currenttext += fulltext.substring(i, i + 1)
         await sleep(21.7)
     }

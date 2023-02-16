@@ -59,92 +59,92 @@ var lang = {
         },
         "race": {
             "fnek": {
-                "le": "le fnek",
-                "des": "des fneks",
-                "un": "un fnek",
-                "du": "du fnek",
-                "au": "au fnek",
-                "aux": "aux fneks"
+                "le": "le Fnek",
+                "des": "des Fneks",
+                "un": "un Fnek",
+                "du": "du Fnek",
+                "au": "au Fnek",
+                "aux": "aux Fneks"
             },
             "omphor": {
-                "le": "l'omphor",
-                "des": "des omphors",
-                "un": "un omphor",
-                "du": "de l'omphor",
-                "au": "à l'omphor",
-                "aux": "aux omphors"
+                "le": "l'Omphor",
+                "des": "des Omphors",
+                "un": "un Omphor",
+                "du": "de l'Omphor",
+                "au": "à l'Omphor",
+                "aux": "aux Omphors"
             },
             "sylv": {
-                "le": "le sylv",
-                "des": "des sylvs",
-                "un": "un sylv",
-                "du": "du sylv",
-                "au": "au sylv",
-                "aux": "aux sylvs"
+                "le": "le Sylv",
+                "des": "des Sylvs",
+                "un": "un Sylv",
+                "du": "du Sylv",
+                "au": "au Sylv",
+                "aux": "aux Sylvs"
             },
             "ygrl": {
-                "le": "L'ygrl",
-                "des": "des ygrls",
-                "un": "une ygrl",
+                "le": "l'Ygrl",
+                "des": "des Ygrls",
+                "un": "une Ygrl",
                 "du": "de l'Ygrl",
-                "au": "à l'ygrl",
-                "aux": "aux ygrls"
+                "au": "à l'Ygrl",
+                "aux": "aux Ygrls"
             },
             "shrymp": {
-                "le": "le shrimp",
-                "des": "des shrimps",
-                "un": "un shrimp",
-                "du": "du shrimp",
-                "au": "au shrimp",
-                "aux": "aux shrimps"
+                "le": "le Shrymp",
+                "des": "des Shrymps",
+                "un": "un Shrymp",
+                "du": "du Shrymp",
+                "au": "au Shrymp",
+                "aux": "aux Shrymps"
             },
             "aku": {
-                "le": "l'aku",
-                "des": "des aku",
-                "un": "un aku",
-                "du": "de l'aku",
-                "au": "à l'aku",
-                "aux": "aux akus"
+                "le": "l'Aku",
+                "des": "des Aku",
+                "un": "un Aku",
+                "du": "de l'Aku",
+                "au": "à l'Aku",
+                "aux": "aux Akus"
             },
             "yorc": {
-                "le": "le yorc",
-                "des": "des yorcs",
-                "un": "un yorc",
-                "du": "du yorc",
-                "au": "au yorc",
-                "aux": "aux yorcs"
+                "le": "le Yorc",
+                "des": "des Yorcs",
+                "un": "un Yorc",
+                "du": "du Yorc",
+                "au": "au Yorc",
+                "aux": "aux Yorcs"
             },
-            "nek-eau": {
-                "le": "la nek-eau",
-                "des": "des nek-eaux",
-                "un": "une nek-eau",
-                "du": "de la nek-eau",
-                "au": "à la nek-eau",
-                "aux": "aux nek-eaux"
+            "nek_eau": {
+                "le": "la Nek-eau",
+                "des": "des Nek-eaux",
+                "un": "une Nek-eau",
+                "du": "de la Nek-eau",
+                "au": "à la Nek-eau",
+                "aux": "aux Nek-eaux"
             },
-            "nek-feu": {
-                "le": "le nek-feu",
-                "des": "des nek-feux",
-                "un": "un nek-feu",
-                "du": "du nek-feu",
-                "au": "au nek-feu",
-                "aux": "aux nek-feux"
+            "nek_feu": {
+                "le": "le Nek-feu",
+                "des": "des Nek-feux",
+                "un": "un Nek-feu",
+                "du": "du Nek-feu",
+                "au": "au Nek-feu",
+                "aux": "aux Nek-feux"
             },
-            "nek-terre": {
-                "le": "le nek-terre",
-                "des": "des nek-terres",
-                "un": "un nek-terre",
-                "du": "du nek-terre",
-                "au": "au nek-terre",
-                "aux": "aux nek-terres"
+            "nek_terre": {
+                "le": "le Nek-terre",
+                "des": "des Nek-terres",
+                "un": "un Nek-terre",
+                "du": "du Nek-terre",
+                "au": "au Nek-terre",
+                "aux": "aux Nek-terres"
             },
-            "nek-air": {
-                "le": "la nek-air",
-                "des": "des nek-airs",
-                "un": "une nek-air",
-                "du": "de la nek-air",
-                "au": "à la nek-air",
-                "aux": "aux nek-airs"
+            "nek_air": {
+                "le": "la Nek-air",
+                "des": "des Nek-airs",
+                "un": "une Nek-air",
+                "du": "de la Nek-air",
+                "au": "à la Nek-air",
+                "aux": "aux Nek-airs"
             }
         }
     },
@@ -169,16 +169,16 @@ var lang = {
     "yorc": {
         "desc": "Les Yorcs sont une race d'êtres humanoïdes à l'apparence de canidés. Ils sont généralement de petite taille et ont des oreilles pointues. Leur peau est couverte de poils et leur couleur peut varier en fonction de leur exposition aux ultra-violets. Ils sont généralement de bons utilisateurs d'armes, mais sont faibles à \"mains nues\". Ils ont un odorat très développé mais bizarrement ils aiment bien l'odeur de fnek."
     },
-    "nek-eau": {
+    "nek_eau": {
         "desc": "Les Nek-Eau sont une race pacifique et gentille. Elles apprécient la simplicité et sont amies avec les Sylvs. Elles sont souvent calmes et réfléchies, préférant éviter les conflits et chercher des solutions pacifiques aux problèmes."
     },
-    "nek-feu": {
-        "desc": "Les Nek-Feux ont un fort instinct de survie et sont prêts à tout pour protéger leur tribu et leur territoire. Ils sont jaloux des sylvs en raison de leur relation pacifique avec les Nek-eau."
+    "nek_feu": {
+        "desc": "Les Nek-Feux ont un fort instinct de survie et sont prêts à tout pour protéger leur tribu et leur territoire. Ils sont jaloux des Sylvs en raison de leur relation pacifique avec les Nek-eau."
     },
-    "nek-terre": {
+    "nek_terre": {
         "desc": "Les Nek-Terres passent beaucoup de temps à toquer aux portes de vaisseaux spatiaux et à distribuer des prospectus pour partager leur message avec le reste de l'univers. Ils croient en un Messie nommé le \"Saint Nek-Terre\" qui guidera leur peuple vers la lumière. Ils sont généralement pacifiques et bienveillants, mais peuvent être très têtus dans leur croyance en leur religion."
     },
-    "nek-air": {
+    "nek_air": {
         "desc": "Les Nek-Airs sont de genre féminin et sont particulièrement intelligentes et logiques. Elles sont également de bonnes avo-cat-es et apprécient l'humour des Nek-Terres, même si elles ne se rendent pas compte que ces derniers sont sérieux."
     },
     "planet_text":{
@@ -246,20 +246,35 @@ var lang = {
     }
 }
 
-const getParsedText = function (text) {
+const getParsedText = function (text, varIdList, varList, listEx = [], exclude = false, number = 1) {
     const varFound = [...text.matchAll(/\[\w+\]/g)].map(e => e[0]);
-    for (let variable of varFound)
-        text = text.replace(variable, getRandomVar(variable))
+    for (let variable of varFound){
+        //console.log(variable,'variable',varIdList,'varIdList');
+        if (varIdList.includes(variable)){
+            //console.log('if',varIdList,variable)
+            text = text.replace(variable, varList[varIdList.indexOf(variable)])
+        }
+        else{
+            //console.log('else')
+            let newvar = getRandomVar(variable, number, listEx, exclude);
+            console.log(newvar,'newvar')
+            text = text.replace(variable, newvar)
+            varIdList.push(variable)
+            varList.push(newvar)
+        }
+    }
+
+
 
     return text;
 }
 
-const getRandomVar = function (variable, number = 1, listEx = []){ //ca risque de casse si on demande trop de race/module différents d'un coup
+const getRandomVar = function (variable, number = 1, listEx = [], exclude){ //ca risque de casse si on demande trop de race/module différents d'un coup
     variable = variable.replace('[','').replace(']','')
     let parsedVar = variable.split("_");
     let article = parsedVar[0];
     let type = parsedVar[1];
-    let result = []
+    let result = [];
     let obj_keys = Object.keys(lang.card_vars[type]);
     for( let i=0;i<listEx;i++){
         let exclus= listEx[i]
@@ -268,9 +283,15 @@ const getRandomVar = function (variable, number = 1, listEx = []){ //ca risque d
     for (let i=0;i<number;i++){
 
         let randomItem = obj_keys[Math.floor(Math.random() *obj_keys.length)];
-
-        obj_keys = obj_keys.filter(e => e != randomItem)
-        result.push(lang.card_vars[type][randomItem][article])
+        let resultText = lang.card_vars[type][randomItem][article]
+        if (parsedVar.length == 4){//signifie que l'on veut une majuscule en début
+            resultText = resultText.substring(0,1).toUpperCase() + resultText.substring(1)
+        }
+        result.push(resultText)
+        if (exclude){
+            listEx.push(randomItem)
+            obj_keys = obj_keys.filter(e => e != randomItem)
+        }
     }
 
     return result;
