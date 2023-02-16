@@ -146,7 +146,7 @@
         "du" : "des imprimantes de construction"
       }
     },
-    "module-h":{
+    "module_h":{
       "motors": {
         "le" : "les moteurs",
         "votre" : "vos moteurs",
