@@ -14,8 +14,9 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     border-right: 1px solid rgb(180, 180, 180);
+    overflow: hidden scroll;
 }
 
 .choice {
@@ -33,12 +34,14 @@
 }
 
 .button-text {
-    height: 1.5em;
+    height: auto;
     background-color: transparent;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    margin: 0px 10px;
+    margin: 5px 10px;
+    text-align: left;
+    font-size: 1.1em;
 }
 
 .reveal-text {
@@ -46,12 +49,14 @@
     background-color: #28004ca6;
     padding: 10px;
     text-indent: 15px;
-    line-height: 13px;
+    line-height: 15px;
+    font-size: 1em;
 }
 
 .desc-title {
     text-indent: 2px;
     padding: 0px 13px;
+    font-size: 1.1em;
 }
 
 .desc-text {
@@ -60,6 +65,7 @@
     padding: 10px;
     text-indent: 15px;
     line-height: 13px;
+    font-size: 1em;
 }
 
 .life-container {
@@ -232,6 +238,7 @@ input::-webkit-inner-spin-button {
     text-indent: 0em;
     font-size: 2em;
 }
+
 .mjroll-label {
     cursor: pointer;
 }
@@ -244,7 +251,7 @@ input::-webkit-inner-spin-button {
     font-size: 3em;
     letter-spacing: 2px;
     text-indent: 0em;
-} 
+}
 
 
 
@@ -407,12 +414,13 @@ input::-webkit-inner-spin-button {
     }
 
     .flex-container {
-        flex-direction: column;
         height: 98vh;
         width: 98vw;
         border-radius: 2em;
         overflow: hidden scroll;
         justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
     }
 
     .combat,
@@ -423,8 +431,8 @@ input::-webkit-inner-spin-button {
     }
 
     .choice-reveal {
-        height: auto;
         justify-content: flex-start;
+        overflow: visible;
     }
 
     .life-container,
@@ -439,6 +447,7 @@ input::-webkit-inner-spin-button {
     .reveal-text,
     .button-text {
         text-indent: 1em;
+        font-size: 1em;
     }
 
     #add-friend,
@@ -565,10 +574,13 @@ input::-webkit-inner-spin-button {
 
 .blackout {
     color: #76008d;
+    text-indent: 1.5em;
     text-shadow: 0 0 1px #ff24ef;
 }
 
 .mjreveal {
     color: rgb(31, 187, 187);
     text-shadow: 0 0 1px white;
+    text-align: right;
+    text-indent: 1.5em;
 }
