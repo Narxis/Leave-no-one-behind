@@ -2,200 +2,238 @@
   "card_vars": {
     "module": {
       "cryopods": {
-        "le" : "Les cryopods",
+        "le" : "les cryopods",
         "votre" : "vos cryopods",
-        "du" : "des cryopodes"
+        "du" : "des cryopods",
+        "no" : "cryopod"
       },
       "motors": {
         "le" : "les moteurs",
         "votre" : "vos moteurs",
-        "du" : "des moteurs"
+        "du" : "des moteurs",
+        "no" : "moteur"
       },
       "scanner": {
         "le" : "les scanners",
         "votre" : "vos scanners",
-        "du" : "des scanners"
+        "du" : "des scanners",
+        "no" : "scanner"
       },
       "proximity": {
         "le" : "le module de détection",
         "votre" : "vos modules de détection",
-        "du" : "de vos module de détection"
+        "du" : "de vos module de détection",
+        "no" : "détécteur de proximité"
       },
       "energy": {
         "le" : "la centrale éléctrique",
         "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique"
+        "du" : "de vos générateurs éléctrique",
+        "no" : "générateur éléctrique"
       },
       "oxygen": {
         "le" : "le module d'oxygène",
         "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène"
+        "du" : "de vos module d'oxygène",
+        "no" : "module d'oxygène"
       },
       "gravity": {
         "le" : "le générateur de gravité artificielle",
         "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle"
+        "du" : "des générateurs de gravité artificielle",
+        "no" : "générateur de gravité"
       },
       "landing": {
         "le" : "le module d'atterrissage",
         "votre" : "vos trains d'atterrisage",
-        "du" : "des trains d'atterrissage"
+        "du" : "des trains d'atterrissage",
+        "no" : "train d'atterrissage"
       },
       "construction": {
         "le" : "le module de construction",
         "votre" : "vos imprimantes de construction",
-        "du" : "des imprimantes de construction"
+        "du" : "des imprimantes de construction",
+        "no" : "module de construction"
       },
       "dbscience": {
         "le" : "la base de donnée scientifique",
         "votre" : "vos données scientifiques",
-        "du" : "des données scientifiques"
+        "du" : "des données scientifiques",
+        "no" : "donnée scientifique"
       },
       "dbhistory": {
         "le" : "la base de donnée historique",
         "votre" : "vos données historiques",
-        "du" : "des données historiques"
+        "du" : "des données historiques",
+        "no" : "donnée historique"
       }
     },
     "module_bdd":{
       "cryopods": {
-        "le" : "Les cryopods",
+        "le" : "les cryopods",
         "votre" : "vos cryopods",
-        "du" : "des cryopodes"
+        "du" : "des cryopods",
+        "no" : "cryopod"
       },
       "motors": {
         "le" : "les moteurs",
         "votre" : "vos moteurs",
-        "du" : "des moteurs"
+        "du" : "des moteurs",
+        "no" : "moteur"
       },
       "scanner": {
         "le" : "les scanners",
         "votre" : "vos scanners",
-        "du" : "des scanners"
+        "du" : "des scanners",
+        "no" : "scanner"
       },
       "proximity": {
         "le" : "le module de détection",
         "votre" : "vos modules de détection",
-        "du" : "de vos module de détection"
+        "du" : "de vos module de détection",
+        "no" : "détécteur de proximité"
       },
       "energy": {
         "le" : "la centrale éléctrique",
         "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique"
+        "du" : "de vos générateurs éléctrique",
+        "no" : "générateur éléctrique"
       },
       "oxygen": {
         "le" : "le module d'oxygène",
         "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène"
+        "du" : "de vos module d'oxygène",
+        "no" : "module d'oxygène"
       },
       "gravity": {
         "le" : "le générateur de gravité artificielle",
         "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle"
+        "du" : "des générateurs de gravité artificielle",
+        "no" : "générateur de gravité"
       },
       "landing": {
         "le" : "le module d'atterrissage",
         "votre" : "vos trains d'atterrisage",
-        "du" : "des trains d'atterrissage"
+        "du" : "des trains d'atterrissage",
+        "no" : "train d'atterrissage"
       },
       "construction": {
         "le" : "le module de construction",
         "votre" : "vos imprimantes de construction",
-        "du" : "des imprimantes de construction"
+        "du" : "des imprimantes de construction",
+        "no" : "module de construction"
       }
     },
     "module_h_bdd":{
       "motors": {
         "le" : "les moteurs",
         "votre" : "vos moteurs",
-        "du" : "des moteurs"
+        "du" : "des moteurs",
+        "no" : "moteur"
       },
       "scanner": {
         "le" : "les scanners",
         "votre" : "vos scanners",
-        "du" : "des scanners"
+        "du" : "des scanners",
+        "no" : "scanner"
       },
       "proximity": {
         "le" : "le module de détection",
         "votre" : "vos modules de détection",
-        "du" : "de vos module de détection"
+        "du" : "de vos module de détection",
+        "no" : "détécteur de proximité"
       },
       "energy": {
         "le" : "la centrale éléctrique",
         "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique"
+        "du" : "de vos générateurs éléctrique",
+        "no" : "générateur éléctrique"
       },
       "oxygen": {
         "le" : "le module d'oxygène",
         "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène"
+        "du" : "de vos module d'oxygène",
+        "no" : "module d'oxygène"
       },
       "gravity": {
         "le" : "le générateur de gravité artificielle",
         "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle"
+        "du" : "des générateurs de gravité artificielle",
+        "no" : "générateur de gravité"
       },
       "landing": {
         "le" : "le module d'atterrissage",
         "votre" : "vos trains d'atterrisage",
-        "du" : "des trains d'atterrissage"
+        "du" : "des trains d'atterrissage",
+        "no" : "train d'atterrissage"
       },
       "construction": {
         "le" : "le module de construction",
         "votre" : "vos imprimantes de construction",
-        "du" : "des imprimantes de construction"
+        "du" : "des imprimantes de construction",
+        "no" : "module de construction"
       }
     },
     "module_h":{
       "motors": {
         "le" : "les moteurs",
         "votre" : "vos moteurs",
-        "du" : "des moteurs"
+        "du" : "des moteurs",
+        "no" : "moteur"
       },
       "scanner": {
         "le" : "les scanners",
         "votre" : "vos scanners",
-        "du" : "des scanners"
+        "du" : "des scanners",
+        "no" : "scanner"
       },
       "proximity": {
         "le" : "le module de détection",
         "votre" : "vos modules de détection",
-        "du" : "de vos module de détection"
+        "du" : "de vos module de détection",
+        "no" : "détécteur de proximité"
       },
       "energy": {
         "le" : "la centrale éléctrique",
         "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique"
+        "du" : "de vos générateurs éléctrique",
+        "no" : "générateur éléctrique"
       },
       "oxygen": {
         "le" : "le module d'oxygène",
         "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène"
+        "du" : "de vos module d'oxygène",
+        "no" : "module d'oxygène"
       },
       "gravity": {
         "le" : "le générateur de gravité artificielle",
         "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle"
+        "du" : "des générateurs de gravité artificielle",
+        "no" : "générateur de gravité"
       },
       "landing": {
         "le" : "le module d'atterrissage",
         "votre" : "vos trains d'atterrisage",
-        "du" : "des trains d'atterrissage"
+        "du" : "des trains d'atterrissage",
+        "no" : "train d'atterrissage"
       },
       "construction": {
         "le" : "le module de construction",
         "votre" : "vos imprimantes de construction",
-        "du" : "des imprimantes de construction"
+        "du" : "des imprimantes de construction",
+        "no" : "module de construction"
       },
       "dbscience": {
         "le" : "la base de donnée scientifique",
         "votre" : "vos données scientifiques",
-        "du" : "des données scientifiques"
+        "du" : "des données scientifiques",
+        "no" : "donnée scientifique"
       },
       "dbhistory": {
         "le" : "la base de donnée historique",
         "votre" : "vos données historiques",
-        "du" : "des données historiques"
+        "du" : "des données historiques",
+        "no" : "donnée historique"
       }
     },
     "race": {
@@ -205,7 +243,8 @@
         "un": "un Fnek",
         "du": "du Fnek",
         "au": "au Fnek",
-        "aux": "aux Fneks"
+        "aux": "aux Fneks",
+        "no" : "Fnek"
       },
       "omphor": {
         "le": "l'Omphor",
@@ -213,7 +252,8 @@
         "un": "un Omphor",
         "du": "de l'Omphor",
         "au": "à l'Omphor",
-        "aux": "aux Omphors"
+        "aux": "aux Omphors",
+        "no" : "Omphor"
       },
       "sylv": {
         "le": "le Sylv",
@@ -221,7 +261,8 @@
         "un": "un Sylv",
         "du": "du Sylv",
         "au": "au Sylv",
-        "aux": "aux Sylvs"
+        "aux": "aux Sylvs",
+        "no" : "Sylv"
       },
       "ygrl": {
         "le": "l'Ygrl",
@@ -229,7 +270,8 @@
         "un": "une Ygrl",
         "du": "de l'Ygrl",
         "au": "à l'Ygrl",
-        "aux": "aux Ygrls"
+        "aux": "aux Ygrls",
+        "no" : "Ygrl"
       },
       "shrymp": {
         "le": "le Shrymp",
@@ -237,7 +279,8 @@
         "un": "un Shrymp",
         "du": "du Shrymp",
         "au": "au Shrymp",
-        "aux": "aux Shrymps"
+        "aux": "aux Shrymps",
+        "no" : "Shrymp"
       },
       "aku": {
         "le": "l'Aku",
@@ -245,7 +288,8 @@
         "un": "un Aku",
         "du": "de l'Aku",
         "au": "à l'Aku",
-        "aux": "aux Akus"
+        "aux": "aux Akus",
+        "no" : "Aku"
       },
       "yorc": {
         "le": "le Yorc",
@@ -253,7 +297,8 @@
         "un": "un Yorc",
         "du": "du Yorc",
         "au": "au Yorc",
-        "aux": "aux Yorcs"
+        "aux": "aux Yorcs",
+        "no" : "Yorc"
       },
       "nek_eau": {
         "le": "la Nek-eau",
@@ -261,7 +306,8 @@
         "un": "une Nek-eau",
         "du": "de la Nek-eau",
         "au": "à la Nek-eau",
-        "aux": "aux Nek-eaux"
+        "aux": "aux Nek-eaux",
+        "no" : "Nek-eau"
       },
       "nek_feu": {
         "le": "le Nek-feu",
@@ -269,7 +315,8 @@
         "un": "un Nek-feu",
         "du": "du Nek-feu",
         "au": "au Nek-feu",
-        "aux": "aux Nek-feux"
+        "aux": "aux Nek-feux",
+        "no" : "Nek-feu"
       },
       "nek_terre": {
         "le": "le Nek-terre",
@@ -277,7 +324,8 @@
         "un": "un Nek-terre",
         "du": "du Nek-terre",
         "au": "au Nek-terre",
-        "aux": "aux Nek-terres"
+        "aux": "aux Nek-terres",
+        "no" : "Nek-terre"
       },
       "nek_air": {
         "le": "la Nek-air",
@@ -285,7 +333,8 @@
         "un": "une Nek-air",
         "du": "de la Nek-air",
         "au": "à la Nek-air",
-        "aux": "aux Nek-airs"
+        "aux": "aux Nek-airs",
+        "no" : "Nek-air"
       }
     },
     "stats": {
