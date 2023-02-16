@@ -5,6 +5,84 @@
       "slug": "fronde-fnek",
       "desc": "Malgrès leur avancées technologique les Fneks préfèrent utiliser une fronde pour se battre. Généralement ces frondes sont fournies avec des boules puante qui libèrent un puissant concentré d'odeur de Fnek.",
       "race": "fnek"
+    },
+    {
+      "name": "Shrips",
+      "slug": "shrips",
+      "desc": "les Shrips sont des chips goût crevette qui ont la forme de shrymps, elles peuvent remonter le moral des Omphors",
+      "race": "omphor"
+    },
+    {
+      "name": "Armure en Kev-lard",
+      "slug": "armure-omphor",
+      "desc": "L'armure en Kev-lard rend son utilisateur plus résistant mais limite ses déplacement",
+      "race": "omphor"
+    },
+    {
+      "name": "Pelotte de laine",
+      "slug": "pelotte",
+      "desc": "Offir une pelotte de laine à un Nek lui remonte le moral.",
+      "race": "sylv"
+    },
+    {
+      "name": "Tazer cosmique",
+      "slug": "tazer-cosmique",
+      "desc": "Un tazer utilisant l'énergie cosmique",
+      "race": "sylv"
+    },
+    {
+      "name": "Fouet Ygrl",
+      "slug": "fouet-ygrl",
+      "desc": "Un fouet",
+      "race": "ygrl"
+    },
+    {
+      "name": "Shrymp Kit",
+      "slug": "shrymp-kit",
+      "desc": "Le shrymp utility campement kit contient de nombreux ustensil",
+      "race": "shrymp"
+    },
+    {
+      "name": "L'aku tosswice",
+      "slug": "aku-tosswice",
+      "desc": "Une sorte de boite à outil contenant beaucoup d'objet",
+      "race": "aku"
+    },
+    {
+      "name": "Massue Yorc",
+      "slug": "massue-yorc",
+      "desc": "une massue seulement utilisable par un Yorc au coeur pur",
+      "race": "yorc"
+    },
+    {
+      "name": "filet paralysant",
+      "slug": "filet-paralysant",
+      "desc": "filet pouvant neutraliser temporairement une cible à distance",
+      "race": "nek_eau"
+    },
+    {
+      "name": "projectile à combustion",
+      "slug": "projectile-nek-feu",
+      "desc": "dagues de lancée utilisant la chaleur des nek-feux pour accélérer vers sa cible",
+      "race": "nek_feu"
+    },
+    {
+      "name": "Nek'ronomicon",
+      "slug": "nek-ronomicon",
+      "desc": "Un receuil religieux avec un double fond pour stocker des objets",
+      "race": "nek_terre"
+    },
+    {
+      "name": "Nek-k47",
+      "slug": "nek-k47",
+      "desc": "Un revolver nektologique pouvant être stocké dans un double fond",
+      "race": "nek_terre"
+    },
+    {
+      "name": "Em-0 Droid",
+      "slug": "em-o-droid",
+      "desc": "un drone pouvant prendre des videos en 64k 1440fps",
+      "race": "nek_air"
     }
   ],
   "electronique": [
