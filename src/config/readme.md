@@ -39,6 +39,45 @@ Pour les lieux, j'ai fait la bibliothèque avec le follow up du choix 3 uniqumen
     }
 ```
 
+```json
+    {
+      "value": ,
+      "modules": {
+        "oxy": {
+          "cost": ,
+          "value": 
+        },
+        "grv": {
+          "cost": ,
+          "value": 
+        },
+        "wtr": {
+          "cost": ,
+          "value": 
+        },
+        "fau": {
+          "cost": ,
+          "value": 
+        },
+        "flo": {
+          "cost": ,
+          "value": 
+        },
+        "civ": {
+          "cost": ,
+          "value": 
+        },
+        "cli": {
+          "cost": ,
+          "value": 
+        },
+        "res": {
+          "cost": ,
+          "value": 
+        }
+      }
+    }
+```
 ### Span
 
 Différents span présent dans le baseCards.json :

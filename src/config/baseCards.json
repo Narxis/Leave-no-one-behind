@@ -783,6 +783,117 @@
   ],
   "planet": [
     {
+      "value": 137,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value":10 
+        },
+        "grv": {
+          "cost":2 ,
+          "value":28
+        },
+        "wtr": {
+          "cost":3 ,
+          "value":21
+        },
+        "fau": {
+          "cost":4 ,
+          "value":21 
+        },
+        "flo": {
+          "cost":4 ,
+          "value":20
+        },
+        "civ": {
+          "cost":4 ,
+          "value":9
+        },
+        "cli": {
+          "cost":1 ,
+          "value":4
+        },
+        "res": {
+          "cost":2 ,
+          "value":4
+        }
+      }
+    },
+    {
+      "value": 223,
+      "modules": {
+        "oxy": {
+          "cost":4 ,
+          "value":16 
+        },
+        "grv": {
+          "cost":2 ,
+          "value":15 
+        },
+        "wtr": {
+          "cost":3 ,
+          "value":12 
+        },
+        "fau": {
+          "cost":2 ,
+          "value":48 
+        },
+        "flo": {
+          "cost":2 ,
+          "value":2 
+        },
+        "civ": {
+          "cost":2 ,
+          "value":43 
+        },
+        "cli": {
+          "cost":1 ,
+          "value":31 
+        },
+        "res": {
+          "cost":3 ,
+          "value":22 
+        }
+      }
+    },
+    {
+      "value":249 ,
+      "modules": {
+        "oxy": {
+          "cost": 3,
+          "value":2 
+        },
+        "grv": {
+          "cost":3 ,
+          "value": 61
+        },
+        "wtr": {
+          "cost": 2,
+          "value": 15
+        },
+        "fau": {
+          "cost":2 ,
+          "value": 3
+        },
+        "flo": {
+          "cost":2 ,
+          "value": 48
+        },
+        "civ": {
+          "cost":2 ,
+          "value": 3
+        },
+        "cli": {
+          "cost":3 ,
+          "value": 24
+        },
+        "res": {
+          "cost":2 ,
+          "value": 52
+        }
+      }
+    },
+    {
       "value": 100,
       "modules": {
         "oxy": {
