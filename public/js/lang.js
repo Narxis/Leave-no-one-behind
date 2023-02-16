@@ -292,27 +292,32 @@ var lang = {
             "combat": {
                 "la": "la force",
                 "votre": "vos capacités physique",
-                "de": "de force",
+                "de": "de combat",
+                "ses": "ses compétences physique"
             },
             "pilotage": {
                 "la": "le pilotage",
                 "votre": "vos compétences de pilotage",
                 "de": "de pilotage",
+                "ses": "ses compétences de pilotage"
             },
             "ingénierie": {
                 "la": "l'ingénierie",
                 "votre": "vos connaisances en ingénierie",
                 "de": "d'ingénierie",
+                "ses": "ses connaissances en ingénierie"
             },
             "survie": {
                 "la": "la survie",
-                "votre": "vos capacités défensives",
+                "votre": "vos capacités défensive",
                 "de": "de survie",
+                "ses": "ses capacités défensive"
             },
             "reconnaissance": {
                 "la": "la reconnaissance",
                 "votre": "vos capacités de reconnaissance",
                 "de": "de reconnaissance",
+                "ses": "ses capacités de reconnaissance"
             }
         }
     },
