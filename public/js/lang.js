@@ -150,7 +150,7 @@ var lang = {
         "stats": {
             "combat": {
                 "la": "la force",
-                "votre": "votre force",
+                "votre": "vos capacités physique",
                 "de": "de force",
             },
             "pilotage": {
@@ -165,12 +165,12 @@ var lang = {
             },
             "survie": {
                 "la": "la survie",
-                "votre": "votre habileté à survivre",
+                "votre": "vos capacités défensives",
                 "de": "de survie",
             },
             "reconnaissance": {
                 "la": "la reconnaissance",
-                "votre": "votre capacité de reconnaissance",
+                "votre": "vos capacités de reconnaissance",
                 "de": "de reconnaissance",
             }
         }
