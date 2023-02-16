@@ -8,7 +8,7 @@ var shipState = score.scoreShip;
 var humans = ship.cryopods;
 var planetState = score.scorePlanet;
 var other = 69;
-var valueScoreMultiplier = [humans, shipState, planetState, bonusCarte, other];
+var valueScoreMultiplier = [humans, shipState, planetState];
 var valueScoreAdder = [bonusCarte, other];
 var currentscore = "1";
 var scoring = false;
@@ -182,17 +182,18 @@ const  cardTextArr = ['CardText1', 'CardText2', 'CardText3'];
 const nerfTextArr = ['scaleDown1', 'scaleDown2', 'scaleDown3',]
 const otherTextArr = ['other1', 'other2', 'other3']
 
-function pickRandom (Arr) {
-    const randomElement = Arr[Math.floor(Math.random() * Arr.length)];
+function pickRandom (type) {
+    const randomElement = lang.end_screen[type]['text' + (1+Math.floor(Math.random() * 3))];
+    console.log(lang.end_screen,lang.end_screen[type],randomElement)
     return randomElement
 }
-var humanText = pickRandom(humanTextArr);
-var shipText = pickRandom(shipTextArr);
-var planetText = pickRandom(planetTextArr);
-var cardText = pickRandom(cardTextArr);
-var nerfText = pickRandom(nerfTextArr);
-var otherText = pickRandom(otherTextArr);
-var textArr = [humanText, shipText, planetText, nerfText, cardText, other];
+var humanText = pickRandom('human');
+var shipText = pickRandom('ship');
+var planetText = pickRandom('planet');
+var cardText = pickRandom('card');
+var nerfText = 'Echelonnage des valeurs';
+var otherText = lang.end_screen['other']['text1']
+var textArr = [humanText, shipText, planetText, nerfText, cardText, otherText];
 //Recap var :
 var o2 = document.getElementById('reading-1');
 var cl = document.getElementById('reading-2');
@@ -316,7 +317,7 @@ async function scoreCalcul() {
     while (iswritting != 0) {
         await sleep(100)
     }
-    write ("Your total score is :", id ,"", true)
+    write ("Votre score final est :", id ,"", true)
     while (iswritting != 0) {
         await sleep(100)
     }

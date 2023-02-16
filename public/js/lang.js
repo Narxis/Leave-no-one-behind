@@ -416,6 +416,31 @@ var lang = {
                 "value5": "Des fleuves d'eau douce se déversent dans de vastes océans s'étendant à l'horizon. Il y a une grande quantité d'eau présente."
             }
         }
+    },
+    "end_screen":{
+        "human":{
+            "text1":"Recensement des réscapés",
+            "text2":"Constat du nombre de survivant",
+            "text3":"Nombre d'humain sauvé"
+        },
+        "ship":{
+            "text1":"Contrôle technique du vaisseau",
+            "text2":"Vérification de l'état du vaisseau",
+            "text3":"Calcul des dégats subits"
+        },
+        "planet":{
+            "text1":"Compatibilité de la planète",
+            "text2":"Calcul des chances de développement",
+            "text3":"Etat de la planète"
+        },
+        "card":{
+            "text1":"Bonus voyage intéressant",
+            "text2":"Bonus péripétie",
+            "text3":"Bonus aventurier"
+        },
+        "other":{
+            "text1":"Bonus réputation galactique",
+        }
     }
 }
 
