@@ -580,15 +580,15 @@
   "place": [
     {
       "start": true,
-      "desc": "\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter ce chez d'oeuvre architectural et culturel.\nAlors que vous penetrez dans le hall d'entrée vous pouvez appercevoir un [race1] assis à une table au milieu de la pièce, un [race2] en train de lire un livre dans une allée secondaire, et une porte entre-ouverte au fond de l'allée principale.",
+      "desc": "\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter ce chez d'oeuvre architectural et culturel.\nAlors que vous penetrez dans le hall d'entrée vous pouvez appercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entre-ouverte au fond de l'allée principale.",
       "timer": false,
       "choices": [
         {
-          "value": "Parler au [race1] assis à la table au milieu de la pièce",
+          "value": "Parler [au_race_1] assis à la table au milieu de la pièce",
           "next": "bibli1"
         },
         {
-          "value": "Parler au [race2] dans l'allée \"Trépas & Trésor\"",
+          "value": "Parler [au_race_2] dans l'allée \"Trépas & Trésor\"",
           "next": "bibli2"
         },
         {
@@ -598,7 +598,7 @@
       ]
     },
     {
-      "desc": "\u00a0 \"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\"\ndit le [race1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
+      "desc": "\u00a0 \"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\"\ndit [le_race_1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
       "name":"bibli1",
       "timer": false,
       "choices": [
@@ -622,7 +622,7 @@
           "next": "bibli1-1-1"
         },
         {
-          "value": "Terminer le combat et retourner voir le [race1]",
+          "value": "Terminer le combat et retourner voir [le_race_1]",
           "next": "bibli1-1-2"
         }
       ]
@@ -691,49 +691,49 @@
       ]
     },
     {
-      "desc": "\u00a0 Le [race2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\nIl vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque\nIl décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
+      "desc": "\u00a0 [Le_race_2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\nIl vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque\nIl décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
       "name":"bibli2",
       "timer": false,
       "shuffle":true,
       "choices": [
         {
-          "value": "[objet1]",
+          "value": "[objet_1]",
           "next": "bibli2-1"
         },
         {
-          "value": "[objet2]",
+          "value": "[objet_2]",
           "next": "bibli2-2"
         },
         {
-          "value": "[objet3]",
+          "value": "[objet_3]",
           "next": "bibli2-3"
         }
       ]
     },
     {
-      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet1]",
+      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet le [objet_1]",
       "name":"bibli2-1",
       "timer": false,
       "choices": [
         {
-          "value": "Prendre l'[objet1] et quitter la bibliothèque",
-          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet1]"
+          "value": "Prendre l'[objet_1] et quitter la bibliothèque",
+          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet_1]"
         }
       ]
     },
     {
-      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet2]",
+      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet le [objet_2]",
       "name":"bibli2-2",
       "timer": false,
       "choices": [
         {
-          "value": "Prendre l'[objet2] et quitter la bibliothèque",
-          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet2]"
+          "value": "Prendre l'[objet_2] et quitter la bibliothèque",
+          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet_2]"
         }
       ]
     },
     {
-      "desc": "\u00a0 \"Perdu c'était un [objet1] j'allais pas vous le donner de toute manière. \"\nLe [race2] se replonge dans son livre et vous ignore.",
+      "desc": "\u00a0 \"Perdu c'était un [objet_1] j'allais pas vous le donner de toute manière. \"\n[Le_race_2] se replonge dans son livre et vous ignore.",
       "name":"bibli2-3",
       "timer": false,
       "choices": [

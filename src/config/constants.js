@@ -12,6 +12,8 @@ module.exports.register = function () {
 
     global.ALL = null;
 
+    global.LANG = require("../config/lang.json");
+
     global.WS_URL = 'ws://localhost:' + (process.env.PORT || 8080)
 
     global.log = function (content, hex = '#ffffff', clean = false) {

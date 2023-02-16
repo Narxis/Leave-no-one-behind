@@ -195,7 +195,6 @@ const hydrateCardDB = async function (cleanInstall = true) {
         DB.tables.cards.destroy({truncate: true});
         DB.tables.card_modules.destroy({truncate: true});
     }
-    let cardManager = new Card();
     let baseCardsRaw = fs.readFileSync(__dirname + '/../config/baseCards.json');
     let baseCards = JSON.parse(baseCardsRaw);
 
@@ -234,7 +233,7 @@ const hydrateCardDB = async function (cleanInstall = true) {
             for (let k in infos) {
                 data[k] = infos[k];
             }
-            
+            let cardManager = new Card();
             await cardManager.create(data);
         }
     }

@@ -10,6 +10,8 @@ class Card {
     shuffle;
     modules = [];
     choices = [];
+    langVars = {};
+    cardVars = {};
     accepted_datas = {
         'type': 0,
         'value': -1,
@@ -23,7 +25,11 @@ class Card {
 
     constructor(id = 0) {
         this.id = id;
-        // must use this.getData() since Sequelize works with Promises
+        this.langVars = structuredClone(LANG).card_vars;
+        let keys = Object.keys(this.langVars);
+        for (let key of keys) {
+            this.cardVars[key] = {}
+        }
     }
 
     async create(data = {}, prepareBulk = false ) {
@@ -34,7 +40,7 @@ class Card {
             type: this.type,
             value: this.value,
             name: this.name,
-            desc: this.desc,
+            desc: this.replaceVars(this.desc),
             timer: this.timer,
             shuffle: this.shuffle
         }).then(async result => {
@@ -44,8 +50,8 @@ class Card {
                 await DB.tables.card_modules.create({
                     card_id: this.id,
                     type: 'choice',
-                    value: this.choices[choice].value,
-                    reveal: this.choices[choice].reveal,
+                    value: this.replaceVars(this.choices[choice].value),
+                    reveal: this.replaceVars(this.choices[choice].reveal),
                     next: this.choices[choice].next,
                     cost: -1,
                 });
@@ -127,6 +133,54 @@ class Card {
                 }
             });
         }
+    }
+
+    replaceVars(text) {
+        if (text) {
+            const varFound = [...text.matchAll(/\[\w+\]/g)].map(e => e[0]);
+            for (let variable of varFound){
+                let newvar = this.getRandomVar(variable);
+                text = text.replace(variable, newvar)
+            }
+        }
+        return text;
+    }
+
+    getRandomVar(variable){
+
+        variable = variable.replace('[','').replace(']','')
+        let parsedVar = variable.split("_");
+        let article = parsedVar[0] ?? null;
+        let type = parsedVar[1] ?? null;
+        let id = parsedVar[2] ?? null;
+        let randomItem;
+
+        let UcFirst = article.charAt(0) === article.charAt(0).toUpperCase();
+        if (UcFirst) {
+            article = article.toLowerCase();
+        }
+
+        if (!this.cardVars[type]) {
+            log("Error with texte variable ["+variable+"]", "#f00");
+            return variable;
+        }
+
+        if (this.cardVars[type][id] && this.cardVars[type][id] !== null){
+            randomItem = this.cardVars[type][id];
+        }
+        else {
+            let obj_keys = Object.keys(this.langVars[type]);
+            randomItem = obj_keys[Math.floor(Math.random() *obj_keys.length)];
+            this.cardVars[type][id] = randomItem;
+            delete this.langVars[type][randomItem];
+        }
+
+        let returnVar = LANG.card_vars[type][randomItem][article];
+
+        if (UcFirst) {
+            returnVar = returnVar.charAt(0).toUpperCase() + returnVar.slice(1);
+        }
+        return returnVar;
     }
 
     async delete() {
