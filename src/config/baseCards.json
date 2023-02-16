@@ -17,7 +17,7 @@
   ],
   "positive": [
     {
-      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer [le_module_0]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état [du_module_0] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
+      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer [le_module-h-bdd_0]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état [du_module-h-bdd_0] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
       "timer": false,
       "choices": [
         {
@@ -366,7 +366,7 @@
       "choices": [
         {
           "value": "Ouvrir le sas d'entrée <span class=\"blackout\">\u00a0 Continuer à voyager sans capteurs</span>",
-          "reveal": "\u00a0 [le_race_0] monte à bord et vous agresse.<span class=\"mjreveal\">\u00a0 Engage un combat.</span>"
+          "reveal": "\u00a0 [Le_race_0] monte à bord et vous agresse.<span class=\"mjreveal\">\u00a0 Engage un combat.</span>"
         },
         {
           "value": "Ne rien faire",
@@ -396,7 +396,7 @@
         },
         {
           "value": "Les inviter à bord",
-          "reveal": "\u00a0 L'équipage du vaisseau monte à bord, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez que [votre_module_0] ont été endommagés.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur le module.</span>"
+          "reveal": "\u00a0 L'équipage du vaisseau monte à bord, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez que [votre_module-h-bdd_0] ont été endommagés.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-h-bdd_0].</span>"
         },
         {
           "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
