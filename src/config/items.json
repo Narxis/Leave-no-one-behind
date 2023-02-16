@@ -12,6 +12,11 @@
       "name": "Projecteur de bouclier personnel",
       "slug": "personal-shield",
       "desc": "Le projecteur de bouclier personnel est une dispositif utilisant l'énergie cosmique permettant d'absorber un coup ou un projectile ciblant l'utilisateur. Le projecteur de bouclier personnel doit être rechargé en énergie cosmique avant de pouvoir être réutilisé."
+    },
+    {
+      "name": "Drone",
+      "slug": "drone",
+      "desc": "Un drone pour  réveller les stats planètes."
     }
   ],
   "tribal": [
