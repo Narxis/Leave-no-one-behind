@@ -1,8 +1,13 @@
 async function initialiseKeyListener() {
     document.addEventListener("keydown", (event) => {
-        event.preventDefault()
         if (document.activeElement.tagName === 'INPUT') return;
         switch (event.key) {
+            case "F1":
+                event.preventDefault();
+                break;
+            case "F5":
+                event.preventDefault();
+                break;
             case "²":
                 document.querySelectorAll(".tab").forEach(function (e) {
                     e.classList.add("revealtooltip");
@@ -26,12 +31,24 @@ async function initialiseKeyListener() {
             case "-":
                 document.querySelector(".tab-grav").classList.add("revealtooltip");
                 break;
+            case "Tab":
+                event.preventDefault();
+                break;
+            
         };
     });
     document.addEventListener("keyup", (event) => {
-        event.preventDefault()
         if (document.activeElement.tagName === 'INPUT') return;
         switch (event.key) {
+            case "Escape":
+                document.getElementById("navBtn").click();
+                break;
+            case "F1":
+                event.preventDefault();
+                break;
+            case "F5":
+                event.preventDefault();
+                break;
             case "²":
                 document.querySelectorAll(".tab").forEach(function (e) {
                     e.classList.remove("revealtooltip");
@@ -56,6 +73,7 @@ async function initialiseKeyListener() {
                 document.querySelector(".tab-grav").classList.remove("revealtooltip");
                 break;
             case "Tab":
+                event.preventDefault()
                 document.querySelectorAll(".tab").forEach(function (e) {
                     e.classList.toggle("open");
                     e.classList.toggle("revealtooltip");
@@ -103,8 +121,6 @@ async function initialiseKeyListener() {
                     e.lastElementChild.classList.toggle("itemshow");
                 })
                 break;
-            case "Escape":
-                document.getElementById("navBtn").click();
         };
     });
 }
