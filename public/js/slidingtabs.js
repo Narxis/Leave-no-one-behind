@@ -600,7 +600,6 @@ async function stopCountdown() {
     initialiseModTabs();
     initialisePlayerTab();
     await initialiseleLeftTabs();
-    initialiseKeyListener();
     await initialiseStatusList();
     if (currentCardType == -1 ) { //type of startcard
         startwrite(cardtextstr,'.card-text');
