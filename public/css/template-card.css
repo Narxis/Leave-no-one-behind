@@ -365,11 +365,7 @@
 }
 
 .tab:hover [data-tooltip]:before,
-.tab:hover [data-tooltip]:after {
-  visibility: visible;
-  opacity: 1;
-}
-
+.tab:hover [data-tooltip]:after,
 .revealtooltip [data-tooltip]:before,
 .revealtooltip [data-tooltip]:after {
   visibility: visible;
