@@ -355,7 +355,6 @@ nav {
     transition: .3s;
     flex-direction: column;
     min-height: 91px;
-    overflow: hidden;
 }
 
 .itemlist::after {
