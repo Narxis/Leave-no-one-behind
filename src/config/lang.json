@@ -2,276 +2,276 @@
   "card_vars": {
     "module": {
       "cryopods": {
-        "le" : "les cryopods",
-        "votre" : "vos cryopods",
-        "du" : "des cryopods",
-        "no" : "cryopod"
+        "le": "les cryopods",
+        "votre": "vos cryopods",
+        "du": "des cryopods",
+        "no": "cryopod"
       },
       "motors": {
-        "le" : "les moteurs",
-        "votre" : "vos moteurs",
-        "du" : "des moteurs",
-        "no" : "moteur"
+        "le": "les moteurs",
+        "votre": "vos moteurs",
+        "du": "des moteurs",
+        "no": "moteur"
       },
       "scanner": {
-        "le" : "les scanners",
-        "votre" : "vos scanners",
-        "du" : "des scanners",
-        "no" : "scanner"
+        "le": "les scanners",
+        "votre": "vos scanners",
+        "du": "des scanners",
+        "no": "scanner"
       },
       "proximity": {
-        "le" : "le module de détection",
-        "votre" : "vos modules de détection",
-        "du" : "de vos module de détection",
-        "no" : "détécteur de proximité"
+        "le": "le module de détection",
+        "votre": "vos modules de détection",
+        "du": "de vos module de détection",
+        "no": "détécteur de proximité"
       },
       "energy": {
-        "le" : "la centrale éléctrique",
-        "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique",
-        "no" : "générateur éléctrique"
+        "le": "la centrale éléctrique",
+        "votre": "vos générateurs électrique",
+        "du": "de vos générateurs éléctrique",
+        "no": "générateur éléctrique"
       },
       "oxygen": {
-        "le" : "le module d'oxygène",
-        "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène",
-        "no" : "module d'oxygène"
+        "le": "le module d'oxygène",
+        "votre": "vos modules d'oxygène",
+        "du": "de vos module d'oxygène",
+        "no": "module d'oxygène"
       },
       "gravity": {
-        "le" : "le générateur de gravité artificielle",
-        "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle",
-        "no" : "générateur de gravité"
+        "le": "le générateur de gravité artificielle",
+        "votre": "vos générateurs de gravité artificielle",
+        "du": "des générateurs de gravité artificielle",
+        "no": "générateur de gravité"
       },
       "landing": {
-        "le" : "le module d'atterrissage",
-        "votre" : "vos trains d'atterrisage",
-        "du" : "des trains d'atterrissage",
-        "no" : "train d'atterrissage"
+        "le": "le module d'atterrissage",
+        "votre": "vos trains d'atterrisage",
+        "du": "des trains d'atterrissage",
+        "no": "train d'atterrissage"
       },
       "construction": {
-        "le" : "le module de construction",
-        "votre" : "vos imprimantes de construction",
-        "du" : "des imprimantes de construction",
-        "no" : "module de construction"
+        "le": "le module de construction",
+        "votre": "vos imprimantes de construction",
+        "du": "des imprimantes de construction",
+        "no": "module de construction"
       },
       "dbscience": {
-        "le" : "la base de donnée scientifique",
-        "votre" : "vos données scientifiques",
-        "du" : "des données scientifiques",
-        "no" : "donnée scientifique"
+        "le": "la base de donnée scientifique",
+        "votre": "vos données scientifiques",
+        "du": "des données scientifiques",
+        "no": "donnée scientifique"
       },
       "dbhistory": {
-        "le" : "la base de donnée historique",
-        "votre" : "vos données historiques",
-        "du" : "des données historiques",
-        "no" : "donnée historique"
+        "le": "la base de donnée historique",
+        "votre": "vos données historiques",
+        "du": "des données historiques",
+        "no": "donnée historique"
       }
     },
-    "module-bdd":{
+    "module-bdd": {
       "cryopods": {
-        "le" : "les cryopods",
-        "votre" : "vos cryopods",
-        "du" : "des cryopods",
-        "no" : "cryopod"
+        "le": "les cryopods",
+        "votre": "vos cryopods",
+        "du": "des cryopods",
+        "no": "cryopod"
       },
       "motors": {
-        "le" : "les moteurs",
-        "votre" : "vos moteurs",
-        "du" : "des moteurs",
-        "no" : "moteur"
+        "le": "les moteurs",
+        "votre": "vos moteurs",
+        "du": "des moteurs",
+        "no": "moteur"
       },
       "scanner": {
-        "le" : "les scanners",
-        "votre" : "vos scanners",
-        "du" : "des scanners",
-        "no" : "scanner"
+        "le": "les scanners",
+        "votre": "vos scanners",
+        "du": "des scanners",
+        "no": "scanner"
       },
       "proximity": {
-        "le" : "le module de détection",
-        "votre" : "vos modules de détection",
-        "du" : "de vos module de détection",
-        "no" : "détécteur de proximité"
+        "le": "le module de détection",
+        "votre": "vos modules de détection",
+        "du": "de vos module de détection",
+        "no": "détécteur de proximité"
       },
       "energy": {
-        "le" : "la centrale éléctrique",
-        "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique",
-        "no" : "générateur éléctrique"
+        "le": "la centrale éléctrique",
+        "votre": "vos générateurs électrique",
+        "du": "de vos générateurs éléctrique",
+        "no": "générateur éléctrique"
       },
       "oxygen": {
-        "le" : "le module d'oxygène",
-        "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène",
-        "no" : "module d'oxygène"
+        "le": "le module d'oxygène",
+        "votre": "vos modules d'oxygène",
+        "du": "de vos module d'oxygène",
+        "no": "module d'oxygène"
       },
       "gravity": {
-        "le" : "le générateur de gravité artificielle",
-        "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle",
-        "no" : "générateur de gravité"
+        "le": "le générateur de gravité artificielle",
+        "votre": "vos générateurs de gravité artificielle",
+        "du": "des générateurs de gravité artificielle",
+        "no": "générateur de gravité"
       },
       "landing": {
-        "le" : "le module d'atterrissage",
-        "votre" : "vos trains d'atterrisage",
-        "du" : "des trains d'atterrissage",
-        "no" : "train d'atterrissage"
+        "le": "le module d'atterrissage",
+        "votre": "vos trains d'atterrisage",
+        "du": "des trains d'atterrissage",
+        "no": "train d'atterrissage"
       },
       "construction": {
-        "le" : "le module de construction",
-        "votre" : "vos imprimantes de construction",
-        "du" : "des imprimantes de construction",
-        "no" : "module de construction"
+        "le": "le module de construction",
+        "votre": "vos imprimantes de construction",
+        "du": "des imprimantes de construction",
+        "no": "module de construction"
       }
     },
-    "module-h":{
+    "module-h": {
       "motors": {
-        "le" : "les moteurs",
-        "votre" : "vos moteurs",
-        "du" : "des moteurs",
-        "no" : "moteur"
+        "le": "les moteurs",
+        "votre": "vos moteurs",
+        "du": "des moteurs",
+        "no": "moteur"
       },
       "scanner": {
-        "le" : "les scanners",
-        "votre" : "vos scanners",
-        "du" : "des scanners",
-        "no" : "scanner"
+        "le": "les scanners",
+        "votre": "vos scanners",
+        "du": "des scanners",
+        "no": "scanner"
       },
       "proximity": {
-        "le" : "le module de détection",
-        "votre" : "vos modules de détection",
-        "du" : "de vos module de détection",
-        "no" : "détécteur de proximité"
+        "le": "le module de détection",
+        "votre": "vos modules de détection",
+        "du": "de vos module de détection",
+        "no": "détécteur de proximité"
       },
       "energy": {
-        "le" : "la centrale éléctrique",
-        "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique",
-        "no" : "générateur éléctrique"
+        "le": "la centrale éléctrique",
+        "votre": "vos générateurs électrique",
+        "du": "de vos générateurs éléctrique",
+        "no": "générateur éléctrique"
       },
       "oxygen": {
-        "le" : "le module d'oxygène",
-        "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène",
-        "no" : "module d'oxygène"
+        "le": "le module d'oxygène",
+        "votre": "vos modules d'oxygène",
+        "du": "de vos module d'oxygène",
+        "no": "module d'oxygène"
       },
       "gravity": {
-        "le" : "le générateur de gravité artificielle",
-        "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle",
-        "no" : "générateur de gravité"
+        "le": "le générateur de gravité artificielle",
+        "votre": "vos générateurs de gravité artificielle",
+        "du": "des générateurs de gravité artificielle",
+        "no": "générateur de gravité"
       },
       "landing": {
-        "le" : "le module d'atterrissage",
-        "votre" : "vos trains d'atterrisage",
-        "du" : "des trains d'atterrissage",
-        "no" : "train d'atterrissage"
+        "le": "le module d'atterrissage",
+        "votre": "vos trains d'atterrisage",
+        "du": "des trains d'atterrissage",
+        "no": "train d'atterrissage"
       },
       "construction": {
-        "le" : "le module de construction",
-        "votre" : "vos imprimantes de construction",
-        "du" : "des imprimantes de construction",
-        "no" : "module de construction"
+        "le": "le module de construction",
+        "votre": "vos imprimantes de construction",
+        "du": "des imprimantes de construction",
+        "no": "module de construction"
       },
       "dbscience": {
-        "le" : "la base de donnée scientifique",
-        "votre" : "vos données scientifiques",
-        "du" : "des données scientifiques",
-        "no" : "donnée scientifique"
+        "le": "la base de donnée scientifique",
+        "votre": "vos données scientifiques",
+        "du": "des données scientifiques",
+        "no": "donnée scientifique"
       },
       "dbhistory": {
-        "le" : "la base de donnée historique",
-        "votre" : "vos données historiques",
-        "du" : "des données historiques",
-        "no" : "donnée historique"
+        "le": "la base de donnée historique",
+        "votre": "vos données historiques",
+        "du": "des données historiques",
+        "no": "donnée historique"
       }
     },
-    "module-h-bdd":{
+    "module-h-bdd": {
       "motors": {
-        "le" : "les moteurs",
-        "votre" : "vos moteurs",
-        "du" : "des moteurs",
-        "no" : "moteur"
+        "le": "les moteurs",
+        "votre": "vos moteurs",
+        "du": "des moteurs",
+        "no": "moteur"
       },
       "scanner": {
-        "le" : "les scanners",
-        "votre" : "vos scanners",
-        "du" : "des scanners",
-        "no" : "scanner"
+        "le": "les scanners",
+        "votre": "vos scanners",
+        "du": "des scanners",
+        "no": "scanner"
       },
       "proximity": {
-        "le" : "le module de détection",
-        "votre" : "vos modules de détection",
-        "du" : "de vos module de détection",
-        "no" : "détécteur de proximité"
+        "le": "le module de détection",
+        "votre": "vos modules de détection",
+        "du": "de vos module de détection",
+        "no": "détécteur de proximité"
       },
       "energy": {
-        "le" : "la centrale éléctrique",
-        "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique",
-        "no" : "générateur éléctrique"
+        "le": "la centrale éléctrique",
+        "votre": "vos générateurs électrique",
+        "du": "de vos générateurs éléctrique",
+        "no": "générateur éléctrique"
       },
       "oxygen": {
-        "le" : "le module d'oxygène",
-        "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène",
-        "no" : "module d'oxygène"
+        "le": "le module d'oxygène",
+        "votre": "vos modules d'oxygène",
+        "du": "de vos module d'oxygène",
+        "no": "module d'oxygène"
       },
       "gravity": {
-        "le" : "le générateur de gravité artificielle",
-        "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle",
-        "no" : "générateur de gravité"
+        "le": "le générateur de gravité artificielle",
+        "votre": "vos générateurs de gravité artificielle",
+        "du": "des générateurs de gravité artificielle",
+        "no": "générateur de gravité"
       },
       "landing": {
-        "le" : "le module d'atterrissage",
-        "votre" : "vos trains d'atterrisage",
-        "du" : "des trains d'atterrissage",
-        "no" : "train d'atterrissage"
+        "le": "le module d'atterrissage",
+        "votre": "vos trains d'atterrisage",
+        "du": "des trains d'atterrissage",
+        "no": "train d'atterrissage"
       },
       "construction": {
-        "le" : "le module de construction",
-        "votre" : "vos imprimantes de construction",
-        "du" : "des imprimantes de construction",
-        "no" : "module de construction"
+        "le": "le module de construction",
+        "votre": "vos imprimantes de construction",
+        "du": "des imprimantes de construction",
+        "no": "module de construction"
       }
     },
-    "module-main":{
+    "module-main": {
       "motors": {
-        "le" : "les moteurs",
-        "votre" : "vos moteurs",
-        "du" : "des moteurs",
-        "no" : "moteur"
+        "le": "les moteurs",
+        "votre": "vos moteurs",
+        "du": "des moteurs",
+        "no": "moteur"
       },
       "scanner": {
-        "le" : "les scanners",
-        "votre" : "vos scanners",
-        "du" : "des scanners",
-        "no" : "scanner"
+        "le": "les scanners",
+        "votre": "vos scanners",
+        "du": "des scanners",
+        "no": "scanner"
       },
       "proximity": {
-        "le" : "le module de détection",
-        "votre" : "vos modules de détection",
-        "du" : "de vos module de détection",
-        "no" : "détécteur de proximité"
+        "le": "le module de détection",
+        "votre": "vos modules de détection",
+        "du": "de vos module de détection",
+        "no": "détécteur de proximité"
       },
       "energy": {
-        "le" : "la centrale éléctrique",
-        "votre" : "vos générateurs électrique",
-        "du" : "de vos générateurs éléctrique",
-        "no" : "générateur éléctrique"
+        "le": "la centrale éléctrique",
+        "votre": "vos générateurs électrique",
+        "du": "de vos générateurs éléctrique",
+        "no": "générateur éléctrique"
       },
       "oxygen": {
-        "le" : "le module d'oxygène",
-        "votre" : "vos modules d'oxygène",
-        "du" : "de vos module d'oxygène",
-        "no" : "module d'oxygène"
+        "le": "le module d'oxygène",
+        "votre": "vos modules d'oxygène",
+        "du": "de vos module d'oxygène",
+        "no": "module d'oxygène"
       },
       "gravity": {
-        "le" : "le générateur de gravité artificielle",
-        "votre" : "vos générateurs de gravité artificielle",
-        "du" : "des générateurs de gravité artificielle",
-        "no" : "générateur de gravité"
+        "le": "le générateur de gravité artificielle",
+        "votre": "vos générateurs de gravité artificielle",
+        "du": "des générateurs de gravité artificielle",
+        "no": "générateur de gravité"
       }
     },
     "race": {
@@ -282,7 +282,7 @@
         "du": "du Fnek",
         "au": "au Fnek",
         "aux": "aux Fneks",
-        "no" : "Fnek"
+        "no": "Fnek"
       },
       "omphor": {
         "le": "l'Omphor",
@@ -291,7 +291,7 @@
         "du": "de l'Omphor",
         "au": "à l'Omphor",
         "aux": "aux Omphors",
-        "no" : "Omphor"
+        "no": "Omphor"
       },
       "sylv": {
         "le": "le Sylv",
@@ -300,7 +300,7 @@
         "du": "du Sylv",
         "au": "au Sylv",
         "aux": "aux Sylvs",
-        "no" : "Sylv"
+        "no": "Sylv"
       },
       "ygrl": {
         "le": "l'Ygrl",
@@ -309,7 +309,7 @@
         "du": "de l'Ygrl",
         "au": "à l'Ygrl",
         "aux": "aux Ygrls",
-        "no" : "Ygrl"
+        "no": "Ygrl"
       },
       "shrymp": {
         "le": "le Shrymp",
@@ -318,7 +318,7 @@
         "du": "du Shrymp",
         "au": "au Shrymp",
         "aux": "aux Shrymps",
-        "no" : "Shrymp"
+        "no": "Shrymp"
       },
       "aku": {
         "le": "l'Aku",
@@ -327,7 +327,7 @@
         "du": "de l'Aku",
         "au": "à l'Aku",
         "aux": "aux Akus",
-        "no" : "Aku"
+        "no": "Aku"
       },
       "yorc": {
         "le": "le Yorc",
@@ -336,7 +336,7 @@
         "du": "du Yorc",
         "au": "au Yorc",
         "aux": "aux Yorcs",
-        "no" : "Yorc"
+        "no": "Yorc"
       },
       "nek_eau": {
         "le": "la Nek-eau",
@@ -345,7 +345,7 @@
         "du": "de la Nek-eau",
         "au": "à la Nek-eau",
         "aux": "aux Nek-eaux",
-        "no" : "Nek-eau"
+        "no": "Nek-eau"
       },
       "nek_feu": {
         "le": "le Nek-feu",
@@ -354,7 +354,7 @@
         "du": "du Nek-feu",
         "au": "au Nek-feu",
         "aux": "aux Nek-feux",
-        "no" : "Nek-feu"
+        "no": "Nek-feu"
       },
       "nek_terre": {
         "le": "le Nek-terre",
@@ -363,7 +363,7 @@
         "du": "du Nek-terre",
         "au": "au Nek-terre",
         "aux": "aux Nek-terres",
-        "no" : "Nek-terre"
+        "no": "Nek-terre"
       },
       "nek_air": {
         "le": "la Nek-air",
@@ -372,7 +372,7 @@
         "du": "de la Nek-air",
         "au": "à la Nek-air",
         "aux": "aux Nek-airs",
-        "no" : "Nek-air"
+        "no": "Nek-air"
       }
     },
     "stats": {
@@ -407,99 +407,100 @@
         "ses": "ses capacités de reconnaissance"
       }
     },
-  "fnek": {
-    "desc": "Les Fnek sont des êtres humanoïdes intelligents et avancés technologiquement, mesurant en moyenne 1,80 m et parlant très vite. Ils n'ont pas de nez et ont une odeur corporelle forte à l'origine des expressions &quot;sentir de la fnek&quot; ou &quot;sentir le fnek&quot;, il est cependant tabou de parler d'odeurs avec eux. Ils possèdent le plus grand réseau de distribution d'armes nucléaires de l'univers connu sous le nom de &quot;La Fnak&quot;."
-  },
-  "omphor": {
-    "desc": "Les Omphors sont de petits êtres obèses qui sont persuadés d'avoir raison dans toutes les situations. Ils sont dépourvus de toute compétence physique, mais pensent pouvoir vaincre n'importe qui grâce à leur intelligence et leur capacité à argumenter en ligne. Ils ont tendance à citer des sources fausses pour soutenir leur point de vue et pensent qu'ils ont le potentiel de gouverner l'univers entier. Leur seul point faible sont les araignées. Ils ne peuvent pas s'empecher de faire des blagues du type &quot;Non-Bril&quot; ou &quot;Quoi-Feur&quot;."
-  },
-  "sylv": {
-    "desc": "Les Sylvs sont des êtres à l'apparence végétale, généralement de grande taille et à la peau recouverte d'écorce. Ils ont de longues feuilles comme cheveux et une pilosité dense et feuillue. Cette apparence les rends très appréciés par les Nek-eaux. Ils sont connus pour leur intelligence exceptionnelle et leur sagesse, mais ils sont également reconnus pour leur lenteur dans leurs actions et leur écriture illisible."
-  },
-  "ygrl": {
-    "desc": "Les Ygrls sont une espèce de champignons humanoïdes, elles sont liées entre elles par un mycélium cosmique et parlent un dialecte composé de sons gutturaux. Elles ont peur des araignées mycophiles. Les Ygrls se reproduisent par le procédé de &quot;mycose&quot; en libérant des spores qui peuvent germer et donner naissance à de nouvelles Ygrls."
-  },
-  "shrymp": {
-    "desc": "Les Shrymps sont une race de fourmis cyborgs qui idolâtrent les Ygrl et construisent leurs cités autour d'elles. Ils ont développé un alphabet Ygrl pour mieux comprendre leur divinité, bien que cet alphabet soit peu efficace. Les Shrymps sont équipés d'implants cybernétiques qui leur permettent de mieux s'adapter à leur environnement et de mieux exécuter leurs tâches. Ils sont très travailleurs et organisés, mais ils sont également très loyaux envers leur Ygrl divine et feront tout pour la protéger."
-  },
-  "aku": {
-    "desc": "Les Aku sont une race de créatures humanoïdes ressemblant à des lézards. Ils sont connus pour leur nature pacifique et leur amour de la philosophie. Ils sont également réputés pour être de mauvais pilotes et de mauvais passagers. Ils n'ont pas de prénom et se font appeler par leur premier métier suivit de &quot;Aku&quot;. Dans leur tribu, le chef est appelé le &quot;Namatata&quot; et les enfants sont appelés les &quot;Iku&quot;."
-  },
-  "yorc": {
-    "desc": "Les Yorcs sont une race d'êtres humanoïdes à l'apparence de canidés. Ils sont généralement de petite taille et ont des oreilles pointues. Leur peau est couverte de poils et leur couleur peut varier en fonction de leur exposition aux ultra-violets. Ils sont généralement de bons utilisateurs d'armes, mais sont faibles à &quot;mains nues&quot;. Ils ont un odorat très développé mais bizarrement ils aiment bien l'odeur de fnek."
-  },
-  "nek_eau": {
-    "desc": "Les Nek-Eau sont une race pacifique et gentille. Elles apprécient la simplicité et sont amies avec les Sylvs. Elles sont souvent calmes et réfléchies, préférant éviter les conflits et chercher des solutions pacifiques aux problèmes."
-  },
-  "nek_feu": {
-    "desc": "Les Nek-Feux ont un fort instinct de survie et sont prêts à tout pour protéger leur tribu et leur territoire. Ils sont jaloux des Sylvs en raison de leur relation pacifique avec les Nek-eau."
-  },
-  "nek_terre": {
-    "desc": "Les Nek-Terres passent beaucoup de temps à toquer aux portes de vaisseaux spatiaux et à distribuer des prospectus pour partager leur message avec le reste de l'univers. Ils croient en un Messie nommé le &quot;Saint Nek-Terre&quot; qui guidera leur peuple vers la lumière. Ils sont généralement pacifiques et bienveillants, mais peuvent être très têtus dans leur croyance en leur religion."
-  },
-  "nek_air": {
-    "desc": "Les Nek-Airs sont de genre féminin et sont particulièrement intelligentes et logiques. Elles sont également de bonnes avo-cat-es et apprécient l'humour des Nek-Terres, même si elles ne se rendent pas compte que ces derniers sont sérieux."
-  },
-  "planet_text":{
-    "module":{
-      "oxy":{
-        "value0": "L'atmosphère est dense ce qui la rend plus difficillement respirable.",
-        "value1": "L'atmosphère est respirable mais contient des gaz tel que du Méthane et de l'Ammoniac.",
-        "value2": "L'atmosphère est respirable mais la présence d'oxygène est plus faible que sur Terre.",
-        "value3": "L'atmosphère est respirable mais contient des gaz tel que l'Hélium et l'Hydrogène.",
-        "value4": "L'atmosphère est riche en dioxygène et en dioxyde de carbone.",
-        "value5": "L'atmosphère est riche en dioxygène et en ozone."
-      },
-      "cli":{
-        "value0": "Une activité tectonique forte ainsi que la présence de pluies acides ont été détectées.",
-        "value1": "Il n'y a pas de cycle jour/nuit sur cette planète, avec une période de jour permanent et des tempêtes permanentes.",
-        "value2": "Il y a un cycle jour/nuit similaire à celui de la Terre, ainsi qu'une présence d'effets de marée sur cette planète.",
-        "value3": "La planète présente quatre saisons, des variations de températures faibles et un environnement propice à la vie."
-      },
-      "fau":{
-        "value0": "La faune de la planète est composée d'organismes unicellulaires.",
-        "value1": "Une faune hostile et carnivore est présente sur cette planète.",
-        "value2": "Il y a quelques herbivores sur la planète.",
-        "value3": "La planète abrite une grande diversité d'espèces animales en faveur de l'installation d'une nouvelle espèce."
-      },
-      "flo":{
-        "value0": "Aucune flore ne s'est développée sur cette planète",
-        "value1": "La flore qui s'est développée sur cette planète est toxique et vénéneuse",
-        "value2": "Des végétaux comestibles ont été détectés sur la surface de la planète",
-        "value3": "Les végétaux sont présent en grande variété sur la planète"
-      },
-      "civ":{
-        "value0": "mais elle est déjà colonisée par une civilisation xénophobe extrêmement développée.",
-        "value1": "mais elle est habitée par un peuple primitif hostile.",
-        "value2": ".",
-        "value3": "et une civilisation avancée est prête à partager leur planète avec les humains afin de préserver leur espèce."
-      },
-      "res":{
-        "value0": "La planète a une concentration en minerais faible.",
-        "value1": "La planète présente une forte abondance de fer et de cuivre",
-        "value2": "Il a une forte concentration de minerais courants sur cette planète.",
-        "value3": "Il y a des minerais rares et courants présents sur cette planète.",
-        "value4": "Il y a une grande abondance de ressources diverses et variées, favorables au développement d'une civilisation."
-      },
-      "gra":{
-        "value0": {
-          "pair": "La taille de cette planète est largement supérieur à celle de la Terre, sa gravité est plus importante.",
-          "impair": "La taille de cette planète est largement inférieur à celle de la Terre sa gravité est largement plus faible."
+    "fnek": {
+      "desc": "Les Fnek sont des êtres humanoïdes intelligents et avancés technologiquement, mesurant en moyenne 1,80 m et parlant très vite. Ils n'ont pas de nez et ont une odeur corporelle forte à l'origine des expressions &quot;sentir de la fnek&quot; ou &quot;sentir le fnek&quot;, il est cependant tabou de parler d'odeurs avec eux. Ils possèdent le plus grand réseau de distribution d'armes nucléaires de l'univers connu sous le nom de &quot;La Fnak&quot;."
+    },
+    "omphor": {
+      "desc": "Les Omphors sont de petits êtres obèses qui sont persuadés d'avoir raison dans toutes les situations. Ils sont dépourvus de toute compétence physique, mais pensent pouvoir vaincre n'importe qui grâce à leur intelligence et leur capacité à argumenter en ligne. Ils ont tendance à citer des sources fausses pour soutenir leur point de vue et pensent qu'ils ont le potentiel de gouverner l'univers entier. Leur seul point faible sont les araignées. Ils ne peuvent pas s'empecher de faire des blagues du type &quot;Non-Bril&quot; ou &quot;Quoi-Feur&quot;."
+    },
+    "sylv": {
+      "desc": "Les Sylvs sont des êtres à l'apparence végétale, généralement de grande taille et à la peau recouverte d'écorce. Ils ont de longues feuilles comme cheveux et une pilosité dense et feuillue. Cette apparence les rends très appréciés par les Nek-eaux. Ils sont connus pour leur intelligence exceptionnelle et leur sagesse, mais ils sont également reconnus pour leur lenteur dans leurs actions et leur écriture illisible."
+    },
+    "ygrl": {
+      "desc": "Les Ygrls sont une espèce de champignons humanoïdes, elles sont liées entre elles par un mycélium cosmique et parlent un dialecte composé de sons gutturaux. Elles ont peur des araignées mycophiles. Les Ygrls se reproduisent par le procédé de &quot;mycose&quot; en libérant des spores qui peuvent germer et donner naissance à de nouvelles Ygrls."
+    },
+    "shrymp": {
+      "desc": "Les Shrymps sont une race de fourmis cyborgs qui idolâtrent les Ygrl et construisent leurs cités autour d'elles. Ils ont développé un alphabet Ygrl pour mieux comprendre leur divinité, bien que cet alphabet soit peu efficace. Les Shrymps sont équipés d'implants cybernétiques qui leur permettent de mieux s'adapter à leur environnement et de mieux exécuter leurs tâches. Ils sont très travailleurs et organisés, mais ils sont également très loyaux envers leur Ygrl divine et feront tout pour la protéger."
+    },
+    "aku": {
+      "desc": "Les Aku sont une race de créatures humanoïdes ressemblant à des lézards. Ils sont connus pour leur nature pacifique et leur amour de la philosophie. Ils sont également réputés pour être de mauvais pilotes et de mauvais passagers. Ils n'ont pas de prénom et se font appeler par leur premier métier suivit de &quot;Aku&quot;. Dans leur tribu, le chef est appelé le &quot;Namatata&quot; et les enfants sont appelés les &quot;Iku&quot;."
+    },
+    "yorc": {
+      "desc": "Les Yorcs sont une race d'êtres humanoïdes à l'apparence de canidés. Ils sont généralement de petite taille et ont des oreilles pointues. Leur peau est couverte de poils et leur couleur peut varier en fonction de leur exposition aux ultra-violets. Ils sont généralement de bons utilisateurs d'armes, mais sont faibles à &quot;mains nues&quot;. Ils ont un odorat très développé mais bizarrement ils aiment bien l'odeur de fnek."
+    },
+    "nek_eau": {
+      "desc": "Les Nek-Eau sont une race pacifique et gentille. Elles apprécient la simplicité et sont amies avec les Sylvs. Elles sont souvent calmes et réfléchies, préférant éviter les conflits et chercher des solutions pacifiques aux problèmes."
+    },
+    "nek_feu": {
+      "desc": "Les Nek-Feux ont un fort instinct de survie et sont prêts à tout pour protéger leur tribu et leur territoire. Ils sont jaloux des Sylvs en raison de leur relation pacifique avec les Nek-eau."
+    },
+    "nek_terre": {
+      "desc": "Les Nek-Terres passent beaucoup de temps à toquer aux portes de vaisseaux spatiaux et à distribuer des prospectus pour partager leur message avec le reste de l'univers. Ils croient en un Messie nommé le &quot;Saint Nek-Terre&quot; qui guidera leur peuple vers la lumière. Ils sont généralement pacifiques et bienveillants, mais peuvent être très têtus dans leur croyance en leur religion."
+    },
+    "nek_air": {
+      "desc": "Les Nek-Airs sont de genre féminin et sont particulièrement intelligentes et logiques. Elles sont également de bonnes avo-cat-es et apprécient l'humour des Nek-Terres, même si elles ne se rendent pas compte que ces derniers sont sérieux."
+    },
+    "planet_text": {
+      "module": {
+        "oxy": {
+          "value0": "L'atmosphère est dense ce qui la rend plus difficillement respirable.",
+          "value1": "L'atmosphère est respirable mais contient des gaz tel que du Méthane et de l'Ammoniac.",
+          "value2": "L'atmosphère est respirable mais la présence d'oxygène est plus faible que sur Terre.",
+          "value3": "L'atmosphère est respirable mais contient des gaz tel que l'Hélium et l'Hydrogène.",
+          "value4": "L'atmosphère est riche en dioxygène et en dioxyde de carbone.",
+          "value5": "L'atmosphère est riche en dioxygène et en ozone."
         },
-        "value1": {
-          "pair": "La taille de cette planète est supérieur à la celle de Terre, sa gravité est plus importante.",
-          "impair": "La taille de cette planète est inférieur à celle de la Terre sa gravité est plus faible."
+        "cli": {
+          "value0": "Une activité tectonique forte ainsi que la présence de pluies acides ont été détectées.",
+          "value1": "Il n'y a pas de cycle jour/nuit sur cette planète, avec une période de jour permanent et des tempêtes permanentes.",
+          "value2": "Il y a un cycle jour/nuit similaire à celui de la Terre, ainsi qu'une présence d'effets de marée sur cette planète.",
+          "value3": "La planète présente quatre saisons, des variations de températures faibles et un environnement propice à la vie."
         },
-        "value2": "La taille de cette planète est légérement différente de celle de la Terre, sa gravité est proche de celle de la terre.",
-        "value3": "La taille de cette planète est semblable à celle de la Terre, sa gravité est similaire."
-      },
-      "eau":{
-        "value0": "L'eau est présente sous la surface en faible quantité, un autre liquide moins dense occupe la surface.",
-        "value1": "L'eau est présente sous forme de lacs gelés.",
-        "value2": "L'eau est présente sous forme de petits lacs et rivières.",
-        "value3": "L'eau de la planète forme des fleuves et des lac d'eau douce.",
-        "value4": "La planète présente des mers et des petits océans.",
-        "value5": "Des fleuves d'eau douce se déversent dans de vastes océans s'étendant à l'horizon. Il y a une grande quantité d'eau présente."
+        "fau": {
+          "value0": "La faune de la planète est composée d'organismes unicellulaires.",
+          "value1": "Une faune hostile et carnivore est présente sur cette planète.",
+          "value2": "Il y a quelques herbivores sur la planète.",
+          "value3": "La planète abrite une grande diversité d'espèces animales en faveur de l'installation d'une nouvelle espèce."
+        },
+        "flo": {
+          "value0": "Aucune flore ne s'est développée sur cette planète",
+          "value1": "La flore qui s'est développée sur cette planète est toxique et vénéneuse",
+          "value2": "Des végétaux comestibles ont été détectés sur la surface de la planète",
+          "value3": "Les végétaux sont présent en grande variété sur la planète"
+        },
+        "civ": {
+          "value0": "mais elle est déjà colonisée par une civilisation xénophobe extrêmement développée.",
+          "value1": "mais elle est habitée par un peuple primitif hostile.",
+          "value2": ".",
+          "value3": "et une civilisation avancée est prête à partager leur planète avec les humains afin de préserver leur espèce."
+        },
+        "res": {
+          "value0": "La planète a une concentration en minerais faible.",
+          "value1": "La planète présente une forte abondance de fer et de cuivre",
+          "value2": "Il a une forte concentration de minerais courants sur cette planète.",
+          "value3": "Il y a des minerais rares et courants présents sur cette planète.",
+          "value4": "Il y a une grande abondance de ressources diverses et variées, favorables au développement d'une civilisation."
+        },
+        "gra": {
+          "value0": {
+            "pair": "La taille de cette planète est largement supérieur à celle de la Terre, sa gravité est plus importante.",
+            "impair": "La taille de cette planète est largement inférieur à celle de la Terre sa gravité est largement plus faible."
+          },
+          "value1": {
+            "pair": "La taille de cette planète est supérieur à la celle de Terre, sa gravité est plus importante.",
+            "impair": "La taille de cette planète est inférieur à celle de la Terre sa gravité est plus faible."
+          },
+          "value2": "La taille de cette planète est légérement différente de celle de la Terre, sa gravité est proche de celle de la terre.",
+          "value3": "La taille de cette planète est semblable à celle de la Terre, sa gravité est similaire."
+        },
+        "eau": {
+          "value0": "L'eau est présente sous la surface en faible quantité, un autre liquide moins dense occupe la surface.",
+          "value1": "L'eau est présente sous forme de lacs gelés.",
+          "value2": "L'eau est présente sous forme de petits lacs et rivières.",
+          "value3": "L'eau de la planète forme des fleuves et des lac d'eau douce.",
+          "value4": "La planète présente des mers et des petits océans.",
+          "value5": "Des fleuves d'eau douce se déversent dans de vastes océans s'étendant à l'horizon. Il y a une grande quantité d'eau présente."
+        }
       }
     }
   }
