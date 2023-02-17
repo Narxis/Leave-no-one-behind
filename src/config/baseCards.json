@@ -1,7 +1,7 @@
 {
   "initial": [
     {
-      "desc": "Mise à jour de l’autopilote en v7.27 rev B {....} Vérification de l’état des cryopods {....} 1000 humains détectés, démarrages des cryopods {....} Calcul de l’itinéraire en cours {....} Quantité carburant ~ 250mg {....} 5 planètes trouvées sur l’itinéraire {....} Initialisation de la phase de lancement {....} Partir un jour sans retour ?",
+      "desc": "Mise à jour de l’autopilote en v7.27 \u005brev B\u005D {....} Vérification de l’état des cryopods {....} 1000 humains détectés, démarrages des cryopods {....} Calcul de l’itinéraire en cours {....} Quantité carburant ~ 250mg {....} 5 planètes trouvées sur l’itinéraire {....} Initialisation de la phase de lancement {....} Partir un jour sans retour ?",
       "timer": "false",
       "choices": [
         {
@@ -17,7 +17,7 @@
   ],
   "positive": [
     {
-      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer [le_module_0]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état [du_module_0] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
+      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer [le_module-h-bdd_0]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état [du_module-h-bdd_0] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
       "timer": false,
       "choices": [
         {
@@ -366,7 +366,7 @@
       "choices": [
         {
           "value": "Ouvrir le sas d'entrée <span class=\"blackout\">\u00a0 Continuer à voyager sans capteurs</span>",
-          "reveal": "\u00a0 [le_race_0] monte à bord et vous agresse.<span class=\"mjreveal\">\u00a0 Engage un combat.</span>"
+          "reveal": "\u00a0 [Le_race_0] monte à bord et vous agresse.<span class=\"mjreveal\">\u00a0 Engage un combat.</span>"
         },
         {
           "value": "Ne rien faire",
@@ -396,7 +396,7 @@
         },
         {
           "value": "Les inviter à bord",
-          "reveal": "\u00a0 L'équipage du vaisseau monte à bord, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez que [votre_module_0] ont été endommagés.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur le module.</span>"
+          "reveal": "\u00a0 L'équipage du vaisseau monte à bord, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez que [votre_module-h-bdd_0] ont été endommagés.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-h-bdd_0].</span>"
         },
         {
           "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
@@ -564,11 +564,11 @@
       "choices": [
         {
           "value": "Aider le premier vaisseau",
-          "reveal": "\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. <span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur 3 modules, donne des \"outils de réparations\" et un \"drone\".</span>"
+          "reveal": "\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. <span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne des \"outils de réparations\" et un \"drone\".</span>"
         },
         {
           "value": "Aider le deuxième vaisseau",
-          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur 3 modules, donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
+          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
         },
         {
           "value": "Ne rien faire",

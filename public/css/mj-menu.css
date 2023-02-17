@@ -143,7 +143,7 @@
 #search-status {
     height: 2.5em;
     width: 90%;
-    background-color: #ffffff21;
+    background-color: #82108c47;
     border: 2px solid rgb(180, 180, 180);
     border-radius: 10px;
     font-family: 'Jura', sans-serif;
@@ -158,7 +158,7 @@
 .add-life {
     height: 2.5em;
     width: 2.5em;
-    background-color: #ffffff21;
+    background-color: #82108c47;
     border: 2px solid rgb(180, 180, 180);
     border-radius: 10px;
     font-family: 'Jura', sans-serif;
@@ -234,9 +234,11 @@ input::-webkit-inner-spin-button {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-shadow: -1px 1px 2px #ababab;
+    text-shadow: -1px 1px 2px #abababb3;
     text-indent: 0em;
     font-size: 2em;
+    background-color: #82108c47;
+    border: 2px solid rgb(180, 180, 180);
 }
 
 .mjroll-label {
@@ -251,6 +253,8 @@ input::-webkit-inner-spin-button {
     font-size: 3em;
     letter-spacing: 2px;
     text-indent: 0em;
+    background-color: #82108c47;
+    border: 2px solid rgb(180, 180, 180);
 }
 
 
@@ -297,15 +301,7 @@ input::-webkit-inner-spin-button {
     #search-ennemy {
         height: 3.5em;
         width: 90%;
-        background-color: #ffffff21;
-        border: 2px solid rgb(180, 180, 180);
-        border-radius: 10px;
-        font-family: 'Jura', sans-serif;
         font-size: 1.5em;
-        outline: none;
-        color: #fff;
-        padding: 0.5em;
-        margin: 0 1em;
     }
 
     .choice {
@@ -574,8 +570,9 @@ input::-webkit-inner-spin-button {
 
 .blackout {
     color: #76008d;
-    text-indent: 1.5em;
     text-shadow: 0 0 1px #ff24ef;
+    text-align: end;
+    text-indent: 1.5em;
 }
 
 .mjreveal {

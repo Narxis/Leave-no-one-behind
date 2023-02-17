@@ -531,5 +531,5 @@ module.exports.reset = async function (req, res) {
     let items = new Items();
     await items.hydrateDB();
 
-    res.redirect('/', {lang: langJS});
+    res.redirect('/');
 }
