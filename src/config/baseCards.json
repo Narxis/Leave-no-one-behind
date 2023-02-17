@@ -1,7 +1,7 @@
 {
   "initial": [
     {
-      "desc": "Mise à jour de l’autopilote en v7.27 rev B {....} Vérification de l’état des cryopods {....} 1000 humains détectés, démarrages des cryopods {....} Calcul de l’itinéraire en cours {....} Quantité carburant ~ 250mg {....} 5 planètes trouvées sur l’itinéraire {....} Initialisation de la phase de lancement {....} Partir un jour sans retour ?",
+      "desc": "Mise à jour de l’autopilote en v7.27 \u005brev B\u005D {....} Vérification de l’état des cryopods {....} 1000 humains détectés, démarrages des cryopods {....} Calcul de l’itinéraire en cours {....} Quantité carburant ~ 250mg {....} 5 planètes trouvées sur l’itinéraire {....} Initialisation de la phase de lancement {....} Partir un jour sans retour ?",
       "timer": "false",
       "choices": [
         {

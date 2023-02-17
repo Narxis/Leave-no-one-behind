@@ -341,7 +341,7 @@ nav {
 .itemlist {
     opacity: 0;
     position: absolute;
-    top: 95px;
+    bottom: -170px;
     left: -170px;
     width: 218px;
     border-radius: 10px;
@@ -350,15 +350,16 @@ nav {
     align-items: flex-start;
     justify-content: flex-start;
     background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
-    align-content: flex-start;
-    flex-wrap: wrap;
-    height: 91px;
+    flex-wrap: nowrap;
+    height: auto;
     transition: .3s;
+    flex-direction: column;
+    min-height: 91px;
 }
 
 .itemlist::after {
     position: absolute;
-    top: 102%;
+    top: 100.8%;
     left: 80.9%;
     margin-left: -5px;
     width: 0;
@@ -374,6 +375,10 @@ nav {
 .itemshow {
     opacity: 1;
     transform: translateY(-200px);
+}
+
+.itemlist p{
+    margin: 8px 10px;
 }
 
 .move-up {

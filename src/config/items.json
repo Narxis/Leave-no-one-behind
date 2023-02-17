@@ -9,11 +9,11 @@
     {
       "name": "Shrips",
       "slug": "shrips",
-      "desc": "les Shrips sont des chips goût crevette qui ont la forme de shrymps, elles peuvent remonter le moral des Omphors",
+      "desc": "Les Shrips sont des chips goût crevette qui ont la forme de shrymps, elles peuvent remonter le moral des Omphors",
       "race": "omphor"
     },
     {
-      "name": "Armure en Kev-lard",
+      "name": "Armure en \"Kev-lard\"",
       "slug": "armure-omphor",
       "desc": "L'armure en Kev-lard rend son utilisateur plus résistant mais limite ses déplacement",
       "race": "omphor"
@@ -39,7 +39,7 @@
     {
       "name": "Shrymp Kit",
       "slug": "shrymp-kit",
-      "desc": "Le shrymp utility campement kit contient de nombreux ustensil",
+      "desc": "Le shrymp utility campement kit contient de nombreux ustensiles",
       "race": "shrymp"
     },
     {
@@ -55,7 +55,7 @@
       "race": "shrymp"
     },
     {
-      "name": "nourriture déshydraté",
+      "name": "Nourriture déshydraté",
       "slug": "nourriture-deshydrate",
       "desc": "De la nourriture déshydraté",
       "race": "shrymp"
@@ -87,11 +87,11 @@
     {
       "name": "Outils",
       "slug": "outil-aku",
-      "desc": "outils de maintenance variés",
+      "desc": "Outils de maintenance variés",
       "race": "aku"
     },
     {
-      "name": "Boule puante fnek",
+      "name": "Boule puante Fnek",
       "slug": "boule-fnek",
       "desc": "Une boule puante pour fronde fnek",
       "race": "aku"
@@ -99,7 +99,7 @@
     {
       "name": "Paquet de shrimps",
       "slug": "paquet-shrimps",
-      "desc": "les Shrips sont des chips goût crevette qui ont la forme de shrymps, elles peuvent remonter le moral des Omphors",
+      "desc": "Les Shrips sont des chips goût crevette qui ont la forme de Shrymps, elles peuvent remonter le moral des Omphors",
       "race": "aku"
     },
     {
@@ -121,7 +121,7 @@
       "race": "aku"
     },
     {
-      "name": "balle ne Nek-k47",
+      "name": "Balle de Nek-k47",
       "slug": "balle-nek-k47",
       "desc": "Un balle de Nek-k47",
       "race": "aku"
@@ -129,19 +129,19 @@
     {
       "name": "Massue Yorc",
       "slug": "massue-yorc",
-      "desc": "une massue seulement utilisable par un Yorc au coeur pur",
+      "desc": "Une massue seulement utilisable par un Yorc au coeur pur",
       "race": "yorc"
     },
     {
-      "name": "filet paralysant",
+      "name": "Filet paralysant",
       "slug": "filet-paralysant",
-      "desc": "filet pouvant neutraliser temporairement une cible à distance",
+      "desc": "Filet pouvant neutraliser temporairement une cible à distance",
       "race": "nek_eau"
     },
     {
-      "name": "projectile à combustion",
+      "name": "Projectile à combustion",
       "slug": "projectile-nek-feu",
-      "desc": "dagues de lancée utilisant la chaleur des nek-feux pour accélérer vers sa cible",
+      "desc": "Dagues de lancée utilisant la chaleur des nek-feux pour accélérer vers sa cible",
       "race": "nek_feu"
     },
     {
@@ -159,7 +159,7 @@
     {
       "name": "Em-0 Droid",
       "slug": "em-o-droid",
-      "desc": "un drone pouvant prendre des videos en 64k 1440fps",
+      "desc": "Un drone pouvant prendre des videos en 64k 1440fps",
       "race": "nek_air"
     }
   ],
