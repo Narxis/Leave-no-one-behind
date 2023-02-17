@@ -350,11 +350,12 @@ nav {
     align-items: flex-start;
     justify-content: flex-start;
     background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
-    flex-wrap: nowrap;
     height: auto;
     transition: .3s;
-    flex-direction: column;
-    min-height: 91px;
+    min-height: 52px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
 }
 
 .itemlist::after {
@@ -377,8 +378,32 @@ nav {
     transform: translateY(-200px);
 }
 
+.itemlist-line {
+    display: contents;
+    width: 100%;
+}
+
 .itemlist p{
-    margin: 8px 10px;
+    width: 80%;
+    margin: 5px 0px 5px 10px;
+    text-align: start;
+}
+
+.item-trash {
+    width: 9%;
+    padding: 7px 0px 6px 13px;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.itemlist-line:hover .item-trash{
+    opacity: 1;
+    transition: .3s;
+}
+
+.itemlist-line:hover p{
+    text-decoration: underline;
+    text-decoration-color: #fff;
 }
 
 .move-up {
