@@ -35,6 +35,46 @@ ___
     }
 ```
 
+```json
+    {
+      "value": ,
+      "modules": {
+        "oxy": {
+          "cost": ,
+          "value": 
+        },
+        "grv": {
+          "cost": ,
+          "value": 
+        },
+        "wtr": {
+          "cost": ,
+          "value": 
+        },
+        "fau": {
+          "cost": ,
+          "value": 
+        },
+        "flo": {
+          "cost": ,
+          "value": 
+        },
+        "civ": {
+          "cost": ,
+          "value": 
+        },
+        "cli": {
+          "cost": ,
+          "value": 
+        },
+        "res": {
+          "cost": ,
+          "value": 
+        }
+      }
+    }
+```
+
 ### Item-Template
 
 ```json
