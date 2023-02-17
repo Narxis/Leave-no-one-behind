@@ -599,6 +599,8 @@ async function stopCountdown() {
     initialiseChoiceTabs();
     initialiseModTabs();
     initialisePlayerTab();
+    await initialiseleLeftTabs();
+    initialiseKeyListener();
     await initialiseStatusList();
     if (currentCardType == -1 ) { //type of startcard
         startwrite(cardtextstr,'.card-text');
@@ -616,7 +618,6 @@ async function stopCountdown() {
             startCountDown();
         }
     }
-    initialiseleLeftTabs();
     document.addEventListener('status', initialiseStatusList);
 })();
 
