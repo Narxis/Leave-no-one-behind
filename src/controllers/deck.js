@@ -11,9 +11,11 @@ const deckGenerator = async function (){
     let nbNeg = CONFIG.negativeByStep;
     let nbPos = CONFIG.positiveByStep;
     let nbNeu = CONFIG.neutralByStep;
+    let nbPlace = CONFIG.placeByStep;
 
     let deck = await getCardsIds(TYPE_INITIAL);
 
+    let plaCardList = await getCardsIds(TYPE_PLACE);
     let neuCardList = await getCardsIds(TYPE_NEUTRAL);
     let negCardList = await getCardsIds(TYPE_NEGATIVE);
     let posCardList = await getCardsIds(TYPE_POSITIVE);
@@ -30,17 +32,17 @@ const deckGenerator = async function (){
     for (let i = 0; i < nbPla; i++) {
         let tmp_system = [];
 
-        if (posCardList.length < nbPos || neuCardList.length < nbNeu || negCardList.length < nbNeg)
+        if (posCardList.length < nbPos || neuCardList.length < nbNeu || negCardList.length < nbNeg || plaCardList.length < nbPlace)
         {
-            neuCardList = await getCardsIds(TYPE_NEUTRAL);
-            negCardList = await getCardsIds(TYPE_NEGATIVE);
-            posCardList = await getCardsIds(TYPE_POSITIVE);
             if (gameMode === "Chaos")
-                cardList = shuffle((neuCardList).concat((negCardList).concat(posCardList)));
+                cardList = shuffle(plaCardList.concat((neuCardList).concat((negCardList).concat(posCardList))));
         }
 
         if (gameMode === "Fair")
         {
+            for (let j = 0; j < nbPlace; j++)
+                tmp_system.push(plaCardList.pop());
+
             for (let j = 0; j < nbPos; j++)
                 tmp_system.push(posCardList.pop());
 
@@ -195,7 +197,6 @@ const hydrateCardDB = async function (cleanInstall = true) {
         DB.tables.cards.destroy({truncate: true});
         DB.tables.card_modules.destroy({truncate: true});
     }
-    let cardManager = new Card();
     let baseCardsRaw = fs.readFileSync(__dirname + '/../config/baseCards.json');
     let baseCards = JSON.parse(baseCardsRaw);
 
@@ -234,7 +235,7 @@ const hydrateCardDB = async function (cleanInstall = true) {
             for (let k in infos) {
                 data[k] = infos[k];
             }
-            
+            let cardManager = new Card();
             await cardManager.create(data);
         }
     }

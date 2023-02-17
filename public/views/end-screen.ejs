@@ -212,56 +212,56 @@
         </div>
         <a href="/leaderboard" class="next">Suivant</a>
     </div>
-</body>
 
-<script src="/js/socketLNOB.js"></script>
-<script>
- <%- js.vars %>
-</script>
-<script src="/js/end-screen.js"></script>
-<script>
-    var observer = new MutationObserver(function (mutations) {
-        mutations.forEach(async function (mutation) {
-            if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {
-                let val = parseInt(mutation.target.getAttribute('data-value'));
-                let oldVal = parseInt(mutation.oldValue);
-                let elem = document.getElementById(mutation.target.id);
-                let circle = elem.getElementsByTagName('circle')[0];
-                let text = elem.getElementsByTagName('text')[0];
-                let tm = 30;
-                if (val > oldVal) {
-                    do {
-                        oldVal++;
-                        circle.style.strokeDashoffset = (100 - oldVal).toString();
-                        text.textContent = oldVal + '%';
-                        await new Promise(r => setTimeout(r, tm));
-                    } while (val > oldVal)
-                } else {
-                    do {
-                        oldVal--;
-                        circle.style.strokeDashoffset = (100 - oldVal).toString();
-                        text.textContent = oldVal + '%';
-                        await new Promise(r => setTimeout(r, tm));
-                    } while (val < oldVal)
+    <script>
+        <%- js.vars %>
+    </script>
+    <script src="/js/end-screen.js"></script>
+    <script>
+        var observer = new MutationObserver(function (mutations) {
+            mutations.forEach(async function (mutation) {
+                if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {
+                    let val = parseInt(mutation.target.getAttribute('data-value'));
+                    let oldVal = parseInt(mutation.oldValue);
+                    let elem = document.getElementById(mutation.target.id);
+                    let circle = elem.getElementsByTagName('circle')[0];
+                    let text = elem.getElementsByTagName('text')[0];
+                    let tm = 30;
+                    if (val > oldVal) {
+                        do {
+                            oldVal++;
+                            circle.style.strokeDashoffset = (100 - oldVal).toString();
+                            text.textContent = oldVal + '%';
+                            await new Promise(r => setTimeout(r, tm));
+                        } while (val > oldVal)
+                    } else {
+                        do {
+                            oldVal--;
+                            circle.style.strokeDashoffset = (100 - oldVal).toString();
+                            text.textContent = oldVal + '%';
+                            await new Promise(r => setTimeout(r, tm));
+                        } while (val < oldVal)
+                    }
                 }
-            }
+            });
         });
-    });
 
-    let dials = document.getElementsByClassName("dial");
-    for (let i = 0; i < dials.length; i++) {
-        let dial = dials.item(i);
-        let val = dial.getAttribute('data-value');
-        let circle = dial.getElementsByTagName('circle');
-        if (circle[0]) {
-            let text = dial.getElementsByTagName('text')
-            circle[0].style.strokeDashoffset = (100 - parseInt(val)).toString()
-            text[0].textContent = val + '%';
+        let dials = document.getElementsByClassName("dial");
+        for (let i = 0; i < dials.length; i++) {
+            let dial = dials.item(i);
+            let val = dial.getAttribute('data-value');
+            let circle = dial.getElementsByTagName('circle');
+            if (circle[0]) {
+                let text = dial.getElementsByTagName('text')
+                circle[0].style.strokeDashoffset = (100 - parseInt(val)).toString()
+                text[0].textContent = val + '%';
+            }
+            observer.observe(dial, {
+                attributes: true,
+                attributeFilter: ["data-value"],
+                attributeOldValue: true,
+            });
         }
-        observer.observe(dial, {
-            attributes: true,
-            attributeFilter: ["data-value"],
-            attributeOldValue: true,
-        });
-    }
-</script>
+    </script>
+    <%- include("partials/bottom-scripts") %>
+</body>

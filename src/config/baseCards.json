@@ -17,7 +17,7 @@
   ],
   "positive": [
     {
-      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer [le_module_0]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état [du_module_0] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
+      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer [le_module-h-bdd_0]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état [du_module-h-bdd_0] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
       "timer": false,
       "choices": [
         {
@@ -366,7 +366,7 @@
       "choices": [
         {
           "value": "Ouvrir le sas d'entrée <span class=\"blackout\">\u00a0 Continuer à voyager sans capteurs</span>",
-          "reveal": "\u00a0 [le_race_0] monte à bord et vous agresse.<span class=\"mjreveal\">\u00a0 Engage un combat.</span>"
+          "reveal": "\u00a0 [Le_race_0] monte à bord et vous agresse.<span class=\"mjreveal\">\u00a0 Engage un combat.</span>"
         },
         {
           "value": "Ne rien faire",
@@ -396,7 +396,7 @@
         },
         {
           "value": "Les inviter à bord",
-          "reveal": "\u00a0 L'équipage du vaisseau monte à bord, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez que [votre_module_0] ont été endommagés.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur le module.</span>"
+          "reveal": "\u00a0 L'équipage du vaisseau monte à bord, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez que [votre_module-h-bdd_0] ont été endommagés.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-h-bdd_0].</span>"
         },
         {
           "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
@@ -564,11 +564,11 @@
       "choices": [
         {
           "value": "Aider le premier vaisseau",
-          "reveal": "\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. <span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur 3 modules, donne des \"outils de réparations\" et un \"drone\".</span>"
+          "reveal": "\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. <span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne des \"outils de réparations\" et un \"drone\".</span>"
         },
         {
           "value": "Aider le deuxième vaisseau",
-          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur 3 modules, donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
+          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
         },
         {
           "value": "Ne rien faire",
@@ -580,15 +580,15 @@
   "place": [
     {
       "start": true,
-      "desc": "\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter ce chez d'oeuvre architectural et culturel.\nAlors que vous penetrez dans le hall d'entrée vous pouvez appercevoir un [race1] assis à une table au milieu de la pièce, un [race2] en train de lire un livre dans une allée secondaire, et une porte entre-ouverte au fond de l'allée principale.",
+      "desc": "\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter ce chez d'oeuvre architectural et culturel.\nAlors que vous penetrez dans le hall d'entrée vous pouvez appercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entre-ouverte au fond de l'allée principale.",
       "timer": false,
       "choices": [
         {
-          "value": "Parler au [race1] assis à la table au milieu de la pièce",
+          "value": "Parler [au_race_1] assis à la table au milieu de la pièce",
           "next": "bibli1"
         },
         {
-          "value": "Parler au [race2] dans l'allée \"Trépas & Trésor\"",
+          "value": "Parler [au_race_2] dans l'allée \"Trépas & Trésor\"",
           "next": "bibli2"
         },
         {
@@ -598,7 +598,7 @@
       ]
     },
     {
-      "desc": "\u00a0 \"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\"\ndit le [race1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
+      "desc": "\u00a0 \"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\"\ndit [le_race_1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
       "name":"bibli1",
       "timer": false,
       "choices": [
@@ -622,7 +622,7 @@
           "next": "bibli1-1-1"
         },
         {
-          "value": "Terminer le combat et retourner voir le [race1]",
+          "value": "Terminer le combat et retourner voir [le_race_1]",
           "next": "bibli1-1-2"
         }
       ]
@@ -691,49 +691,49 @@
       ]
     },
     {
-      "desc": "\u00a0 Le [race2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\nIl vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque\nIl décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
+      "desc": "\u00a0 [Le_race_2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\nIl vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque\nIl décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
       "name":"bibli2",
       "timer": false,
       "shuffle":true,
       "choices": [
         {
-          "value": "[objet1]",
+          "value": "[objet_1]",
           "next": "bibli2-1"
         },
         {
-          "value": "[objet2]",
+          "value": "[objet_2]",
           "next": "bibli2-2"
         },
         {
-          "value": "[objet3]",
+          "value": "[objet_3]",
           "next": "bibli2-3"
         }
       ]
     },
     {
-      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet1]",
+      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet le [objet_1]",
       "name":"bibli2-1",
       "timer": false,
       "choices": [
         {
-          "value": "Prendre l'[objet1] et quitter la bibliothèque",
-          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet1]"
+          "value": "Prendre l'[objet_1] et quitter la bibliothèque",
+          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet_1]"
         }
       ]
     },
     {
-      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet2]",
+      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet le [objet_2]",
       "name":"bibli2-2",
       "timer": false,
       "choices": [
         {
-          "value": "Prendre l'[objet2] et quitter la bibliothèque",
-          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet2]"
+          "value": "Prendre l'[objet_2] et quitter la bibliothèque",
+          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet_2]"
         }
       ]
     },
     {
-      "desc": "\u00a0 \"Perdu c'était un [objet1] j'allais pas vous le donner de toute manière. \"\nLe [race2] se replonge dans son livre et vous ignore.",
+      "desc": "\u00a0 \"Perdu c'était un [objet_1] j'allais pas vous le donner de toute manière. \"\n[Le_race_2] se replonge dans son livre et vous ignore.",
       "name":"bibli2-3",
       "timer": false,
       "choices": [
