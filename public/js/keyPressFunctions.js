@@ -1,8 +1,7 @@
 async function initialiseKeyListener() {
     document.addEventListener("keydown", (event) => {
-        
+        event.preventDefault()
         if (document.activeElement.tagName === 'INPUT') return;
-
         switch (event.key) {
             case "²":
                 document.querySelectorAll(".tab").forEach(function (e) {
@@ -30,9 +29,8 @@ async function initialiseKeyListener() {
         };
     });
     document.addEventListener("keyup", (event) => {
-
+        event.preventDefault()
         if (document.activeElement.tagName === 'INPUT') return;
-
         switch (event.key) {
             case "²":
                 document.querySelectorAll(".tab").forEach(function (e) {
