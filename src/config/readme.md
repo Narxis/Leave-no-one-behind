@@ -35,9 +35,18 @@ ___
     }
 ```
 
-___
+### Item-Template
 
-## Span
+```json
+    {
+      "name": "",
+      "slug": "",
+      "desc": "",
+      "race": ""
+    },
+```
+
+### Span
 
 Différents span présent dans le baseCards.json :
 
