@@ -633,7 +633,7 @@ document.addEventListener('roll',async function(e){
 
 
 async function initialiseKeyListener() {
-  document.addEventListener("keydown", (e) => {
+  document.addEventListener("keydown", (event) => {
     if (event.defaultPrevented) {
       return;
     };
@@ -645,7 +645,7 @@ async function initialiseKeyListener() {
         break;
     };
   });
-  document.addEventListener("keyup", (e) => {
+  document.addEventListener("keyup", (event) => {
     if (event.defaultPrevented) {
       return;
     };
