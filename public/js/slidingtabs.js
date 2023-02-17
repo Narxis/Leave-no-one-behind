@@ -634,9 +634,6 @@ document.addEventListener('roll',async function(e){
 
 async function initialiseKeyListener() {
   document.addEventListener("keydown", (event) => {
-    if (event.defaultPrevented) {
-      return;
-    };
     switch (event.key) {
       case "a":
         document.querySelectorAll(".tab").forEach(function (e) {
@@ -646,9 +643,6 @@ async function initialiseKeyListener() {
     };
   });
   document.addEventListener("keyup", (event) => {
-    if (event.defaultPrevented) {
-      return;
-    };
     switch (event.key) {
       case "a":
         document.querySelectorAll(".tab").forEach(function (e) {
