@@ -56,44 +56,22 @@
   width: 760px;
 }
 
-.card-text {
-  position: absolute;
-  display: flex;
-  height: 370px;
-  width: 642px;
-  font-size: 22px;
-  line-height: 30px;
-  margin: 15px 4px;
-  color: rgb(255, 255, 255);
-  text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
-  align-items: flex-start;
-}
-
+.answer,
+.card-text,
 .card-text::before {
-  content: '';
   position: absolute;
+  top: 30px;
+  left: 40px;
   display: flex;
-  height: 370px;
-  width: 642px;
-  font-size: 22px;
-  line-height: 30px;
-  margin: 15px 4px;
+  height: 410px;
+  width: 658px;
+  font-size: 20px;
+  line-height: 25px;
+  margin: 0px 0px;
   color: rgb(255, 255, 255);
   text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
-  align-items: flex-start;
-}
-
-.answer {
-  position: absolute;
-  display: flex;
-  height: 370px;
-  width: 642px;
-  font-size: 22px;
-  line-height: 30px;
-  margin: 15px 4px;
-  color: rgb(255, 255, 255);
-  text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
-  align-items: flex-start;
+  padding: 7px;
+  vertical-align: baseline;
 }
 
 .answer1,
@@ -364,8 +342,10 @@
   line-height: 0;
 }
 
-[data-tooltip]:hover:before,
-[data-tooltip]:hover:after {
+.tab:hover [data-tooltip]:before,
+.tab:hover [data-tooltip]:after,
+.revealtooltip [data-tooltip]:before,
+.revealtooltip [data-tooltip]:after {
   visibility: visible;
   opacity: 1;
 }

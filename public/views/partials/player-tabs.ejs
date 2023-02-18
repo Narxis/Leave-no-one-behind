@@ -5,7 +5,10 @@
         <div class="itemlist" id="item<%= player.discord_id %>">
         <% if(player.items){ %>
             <% player.items.forEach(function(item) { %>
-                <p><%= item.name %></p>
+                <div class="itemlist-line">
+                    <p><%= item.name %></p>
+                    <i class="far fa-trash-alt item-trash"></i>
+                </div>
             <% }); %>
         <% } %>
         </div>

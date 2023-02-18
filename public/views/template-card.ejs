@@ -642,25 +642,24 @@
   <a href="template-planet.html">
     <div class="next-button" id="next2"></div>
   </a>
-</body>
-<script>
-  var cardtextstr = `<%- card.desc %>`;
-  var currentCardType = parseInt(`<%- card.type %>`) ;
-  var currentCardHasTimer = parseInt(`<%- card.timer %>`) ;
-  var nextlist = []
-  var choicelist = [];
-  var statusNameList = [];
-  var statusDurationList = [];
-  var answerlist = [];
-  var activeStatusList = [];
-  var statusSvgList = {};
+  <script>
+    var cardtextstr = `<%- card.desc %>`;
+    var currentCardType = parseInt(`<%- card.type %>`) ;
+    var currentCardHasTimer = parseInt(`<%- card.timer %>`) ;
+    var nextlist = []
+    var choicelist = [];
+    var statusNameList = [];
+    var statusDurationList = [];
+    var answerlist = [];
+    var activeStatusList = [];
+    var statusSvgList = {};
 
-  <% card.choices.forEach(function(choice) {%>
+    <% card.choices.forEach(function(choice) {%>
     nextlist.push(`<%- choice.next %>`);
     choicelist.push(`<%- choice.value %>`);
     answerlist.push(`<%- choice.reveal %>`);
     <% }); %>
-  <% statuses.forEach(function(status) {%>
+    <% statuses.forEach(function(status) {%>
     statusNameList.push(`<%- status.slug %>`);
     statusDurationList[`<%- status.slug %>`] = `<%- status.duration %>`;
     statusSvgList[`<%- status.slug %>`] = `<%- include('svg/'+(status.slug)) %>`;
@@ -668,98 +667,100 @@
       activeStatusList.push(`<%- status.slug %>`);
     }
 
-  <% }); %>
-  console.log(nextlist)
-</script>
+    <% }); %>
+    console.log(nextlist)
+  </script>
 
-<script src="/js/socketLNOB.js"></script>
-<script src="/js/template-card.js"></script>
-<script src="/js/slidingtabs.js"></script>
-<script src="/js/timer.js"></script>
-<script src="/js/items.js"></script>
-<script src="/js/players.js"></script>
-<script>
-  var observer = new MutationObserver(function (mutations) {
-    mutations.forEach(async function (mutation) {
-      if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {
-        let val = parseInt(mutation.target.getAttribute('data-value'));
-        let oldVal = parseInt(mutation.oldValue);
-        let elem = document.getElementById(mutation.target.id);
-        let circle = elem.getElementsByTagName('circle')[0];
-        let text = elem.getElementsByTagName('text')[0];
-        let tm = 30;
-        if (val > oldVal) {
-          do {
-            oldVal++;
-            circle.style.strokeDashoffset = (100 - oldVal).toString();
-            text.textContent = oldVal + '%';
-            await new Promise(r => setTimeout(r, tm));
-          } while (val > oldVal)
+
+  <script src="/js/template-card.js"></script>
+  <script src="/js/slidingtabs.js"></script>
+  <script src="/js/timer.js"></script>
+  <script src="/js/items.js"></script>
+  <script src="/js/players.js"></script>
+  <script>
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(async function (mutation) {
+        if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {
+          let val = parseInt(mutation.target.getAttribute('data-value'));
+          let oldVal = parseInt(mutation.oldValue);
+          let elem = document.getElementById(mutation.target.id);
+          let circle = elem.getElementsByTagName('circle')[0];
+          let text = elem.getElementsByTagName('text')[0];
+          let tm = 30;
+          if (val > oldVal) {
+            do {
+              oldVal++;
+              circle.style.strokeDashoffset = (100 - oldVal).toString();
+              text.textContent = oldVal + '%';
+              await new Promise(r => setTimeout(r, tm));
+            } while (val > oldVal)
+          }
+          else {
+            do {
+              oldVal--;
+              circle.style.strokeDashoffset = (100 - oldVal).toString();
+              text.textContent = oldVal + '%';
+              await new Promise(r => setTimeout(r, tm));
+            } while (val < oldVal)
+          }
         }
-        else {
-          do {
-            oldVal--;
-            circle.style.strokeDashoffset = (100 - oldVal).toString();
-            text.textContent = oldVal + '%';
-            await new Promise(r => setTimeout(r, tm));
-          } while (val < oldVal)
-        }
+      });
+    });
+
+    let dials = document.getElementsByClassName("dial");
+    for (let i = 0; i < dials.length; i++) {
+      let dial = dials.item(i);
+      let val = dial.getAttribute('data-value');
+      let circle = dial.getElementsByTagName('circle');
+      if (circle[0]) {
+        let text = dial.getElementsByTagName('text')
+        circle[0].style.strokeDashoffset = (100 - parseInt(val)).toString()
+        text[0].textContent = val + '%';
       }
-    });
-  });
-
-  let dials = document.getElementsByClassName("dial");
-  for (let i = 0; i < dials.length; i++) {
-    let dial = dials.item(i);
-    let val = dial.getAttribute('data-value');
-    let circle = dial.getElementsByTagName('circle');
-    if (circle[0]) {
-      let text = dial.getElementsByTagName('text')
-      circle[0].style.strokeDashoffset = (100 - parseInt(val)).toString()
-      text[0].textContent = val + '%';
+      observer.observe(dial, {
+        attributes: true,
+        attributeFilter: ["data-value"],
+        attributeOldValue: true,
+      });
     }
-    observer.observe(dial, {
-      attributes: true,
-      attributeFilter: ["data-value"],
-      attributeOldValue: true,
-    });
-  }
 
-  let tabs = document.querySelectorAll('.mod-button');
-  for (let i = 0; i < tabs.length; i++) {
-    tabs.item(i).addEventListener('mouseover', function () {
-      this.closest('.tab').classList.add('mod-hover')
-    })
-    tabs.item(i).addEventListener('mouseleave', function () {
-      this.closest('.tab').classList.remove('mod-hover')
-    })
-    tabs.item(i).addEventListener('mouseup', async function () {
-      this.closest('.tab').classList.remove('mod-hover')
-      this.closest('.tab').classList.toggle('open');
-      tabs.item(i).disabled = true;
-      await sleep(1000);
-      tabs.item(i).disabled = false;
-    })
-  }
-(function (){
-  document.querySelector('.left-button').addEventListener('mouseup', async function () {
-      this.closest('.consommable-tab').style.animation = null
-      this.closest('.consommable-tab').classList.toggle('open-left')
-      this.closest('.consommable-tab').classList.toggle('close-left')
-      //this.querySelector('svg').classList.toggle('rotate90')
-      //this.querySelector('svg').classList.toggle('rotate270')
-      this.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')
-      this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')
-      this.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
-      this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
-      await sleep(5000)
-    })
-})()
+    let tabs = document.querySelectorAll('.mod-button');
+    for (let i = 0; i < tabs.length; i++) {
+      tabs.item(i).addEventListener('mouseover', function () {
+        this.closest('.tab').classList.add('mod-hover')
+      })
+      tabs.item(i).addEventListener('mouseleave', function () {
+        this.closest('.tab').classList.remove('mod-hover')
+      })
+      tabs.item(i).addEventListener('mouseup', async function () {
+        this.closest('.tab').classList.remove('mod-hover')
+        this.closest('.tab').classList.toggle('open');
+        tabs.item(i).disabled = true;
+        await sleep(1000);
+        tabs.item(i).disabled = false;
+      })
+    }
+    (function (){
+      document.querySelector('.left-button').addEventListener('mouseup', async function () {
+        this.closest('.consommable-tab').style.animation = null
+        this.closest('.consommable-tab').classList.toggle('open-left')
+        this.closest('.consommable-tab').classList.toggle('close-left')
+        //this.querySelector('svg').classList.toggle('rotate90')
+        //this.querySelector('svg').classList.toggle('rotate270')
+        this.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')
+        this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('close-mod-left')
+        this.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
+        this.nextElementSibling.nextElementSibling.firstElementChild.classList.toggle('open-mod-left')
+        await sleep(5000)
+      })
+    })()
 
-  var wrapperMenu = document.querySelector('.wrapper-menu');
+    var wrapperMenu = document.querySelector('.wrapper-menu');
 
-  wrapperMenu.addEventListener('click', function () {
-    wrapperMenu.classList.toggle('open-but');
-  })
+    wrapperMenu.addEventListener('click', function () {
+      wrapperMenu.classList.toggle('open-but');
+    })
 
-</script>
+  </script>
+  <%- include("partials/bottom-scripts") %>
+</body>

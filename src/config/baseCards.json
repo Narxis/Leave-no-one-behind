@@ -1,7 +1,7 @@
 {
   "initial": [
     {
-      "desc": "Mise à jour de l’autopilote en v7.27 rev B {....} Vérification de l’état des cryopods {....} 1000 humains détectés, démarrages des cryopods {....} Calcul de l’itinéraire en cours {....} Quantité carburant ~ 250mg {....} 5 planètes trouvées sur l’itinéraire {....} Initialisation de la phase de lancement {....} Partir un jour sans retour ?",
+      "desc": "Mise à jour de l’autopilote en v7.27 \u005brev B\u005D {....} Vérification de l’état des cryopods {....} 1000 humains détectés, démarrages des cryopods {....} Calcul de l’itinéraire en cours {....} Quantité carburant ~ 250mg {....} 5 planètes trouvées sur l’itinéraire {....} Initialisation de la phase de lancement {....} Partir un jour sans retour ?",
       "timer": "false",
       "choices": [
         {
@@ -17,7 +17,7 @@
   ],
   "positive": [
     {
-      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer [le_module_0]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état [du_module_0] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
+      "desc": "\u00a0 Le vaisseau traverse une zone de fortes radiations solaires, les panneaux solaires s'activent, ce qui vous offre un surplus d'énergie vous permettant de réparer [le_module-h-bdd_0]. \n \u00a0 La lumière et la chaleur émanant des étoiles proches apaisent votre esprit. <span class=\"blackout\">\u00a0 Vous remarquez que l'état [du_module-h-bdd_0] s'est amélioré. \n \u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n \u00a0 Cela a résulté en une amélioration de l'état du module. \n \u00a0 Vous ne savez cependant pas ce qui a causé ce changement.</span>",
       "timer": false,
       "choices": [
         {
@@ -366,7 +366,7 @@
       "choices": [
         {
           "value": "Ouvrir le sas d'entrée <span class=\"blackout\">\u00a0 Continuer à voyager sans capteurs</span>",
-          "reveal": "\u00a0 [le_race_0] monte à bord et vous agresse.<span class=\"mjreveal\">\u00a0 Engage un combat.</span>"
+          "reveal": "\u00a0 [Le_race_0] monte à bord et vous agresse.<span class=\"mjreveal\">\u00a0 Engage un combat.</span>"
         },
         {
           "value": "Ne rien faire",
@@ -396,7 +396,7 @@
         },
         {
           "value": "Les inviter à bord",
-          "reveal": "\u00a0 L'équipage du vaisseau monte à bord, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez que [votre_module_0] ont été endommagés.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur le module.</span>"
+          "reveal": "\u00a0 L'équipage du vaisseau monte à bord, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez que [votre_module-h-bdd_0] ont été endommagés.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-h-bdd_0].</span>"
         },
         {
           "value": "Ne rien faire <span class=\"blackout\">Attendre</span>",
@@ -564,11 +564,11 @@
       "choices": [
         {
           "value": "Aider le premier vaisseau",
-          "reveal": "\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. <span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur 3 modules, donne des \"outils de réparations\" et un \"drone\".</span>"
+          "reveal": "\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. <span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne des \"outils de réparations\" et un \"drone\".</span>"
         },
         {
           "value": "Aider le deuxième vaisseau",
-          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur 3 modules, donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
+          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
         },
         {
           "value": "Ne rien faire",
@@ -580,15 +580,15 @@
   "place": [
     {
       "start": true,
-      "desc": "\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter ce chez d'oeuvre architectural et culturel.\nAlors que vous penetrez dans le hall d'entrée vous pouvez appercevoir un [race1] assis à une table au milieu de la pièce, un [race2] en train de lire un livre dans une allée secondaire, et une porte entre-ouverte au fond de l'allée principale.",
+      "desc": "\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\n \n \u00a0Alors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entrouverte au fond de l'allée principale.",
       "timer": false,
       "choices": [
         {
-          "value": "Parler au [race1] assis à la table au milieu de la pièce",
+          "value": "Parler [au_race_1] assis à la table au milieu de la pièce",
           "next": "bibli1"
         },
         {
-          "value": "Parler au [race2] dans l'allée \"Trépas & Trésor\"",
+          "value": "Parler [au_race_2] dans l'allée \"Trépas & Trésor\"",
           "next": "bibli2"
         },
         {
@@ -598,7 +598,7 @@
       ]
     },
     {
-      "desc": "\u00a0 \"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\"\ndit le [race1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
+      "desc": "\u00a0 \"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\" dit [le_race_1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
       "name":"bibli1",
       "timer": false,
       "choices": [
@@ -613,7 +613,7 @@
       ]
     },
     {
-      "desc": "\u00a0 Vous vous frayez un chemin dans les sous-sols de la bibliothèque et les bruits étranges deviennent de plus en plus forts.\nSoudain, vous êtes face à face avec deux Yorcs armés de manches à balais, qui ont l'air décidés à vous attaquer. Vous vous préparez à vous défendre alors que vous vous demandez ce qui peut bien se passer ici.",
+      "desc": "\u00a0 Vous vous frayez un chemin dans les sous-sols de la bibliothèque et les bruits étranges deviennent de plus en plus forts.\n \n \u00a0 Soudain, vous êtes face à face avec deux Yorcs armés de manches à balais, qui ont l'air décidés à vous attaquer. \n \n \u00a0Vous vous préparez à vous défendre alors que vous vous demandez ce qui peut bien se passer ici.",
       "name":"bibli1-1",
       "timer": false,
       "choices": [
@@ -622,13 +622,13 @@
           "next": "bibli1-1-1"
         },
         {
-          "value": "Terminer le combat et retourner voir le [race1]",
+          "value": "Terminer le combat et retourner voir [le_race_1]",
           "next": "bibli1-1-2"
         }
       ]
     },
     {
-      "desc": "\u00a0 Après avoir terrasser les Yorcs vous penetrez dans la salle et vous rendez compte que les Yorcs étaient en train synthétiser des Shrips dans un laboratoire clandestin, vous découvrez également des armes et des plans détaillés pour un projet d'invasion.\nVous comprenez alors que vous venez de déjouer un complot visant à attaquer la bibliothèque et peut-être même tout le système. Vous contactez immédiatement les autorités pour les informer de la situation et leur remettre les preuves trouvées.",
+      "desc": "\u00a0 Après avoir terrasser les Yorcs vous penetrez dans la salle et vous rendez compte que les Yorcs étaient en train synthétiser des Shrips dans un laboratoire clandestin, vous découvrez également des armes et des plans détaillés pour un projet d'invasion.\n \n \u00a0 Vous comprenez alors que vous venez de déjouer un complot visant à attaquer la bibliothèque et peut-être même tout le système.\n \u00a0 Vous contactez immédiatement les autorités pour les informer de la situation et leur remettre les preuves trouvées.",
       "name":"bibli1-1-1",
       "timer": false,
       "choices": [
@@ -637,7 +637,7 @@
           "next": "bibli1-1-1-1"
         },
         {
-          "value": "Quittez la bibliothèque",
+          "value": "Quitter la bibliothèque",
           "reveal": "\u00a0 Vous quittez la bibliothèque et retournez dans votre vaisseau."
         }
       ]
@@ -654,16 +654,16 @@
       ]
     },
     {
-      "desc": "\u00a0 Vous et votre équipe avez réussi à neutraliser le laboratoire illégal du Groupuscule Armé de Yorcs Salvateurs et à fournir des preuves de leur activité illégale.\nLa Première Unité Tactique Expérimentale arrive sur les lieux pour procéder à l'inspection et saisir les preuves.\nLe commandant de l'unité vous félicite pour votre mission réussie et s'éxclame : \"Bravo, vous voulez une médaille ?!\"",
+      "desc": "\u00a0 Vous et votre équipe avez réussi à neutraliser le laboratoire illégal du Groupuscule Armé de Yorcs Salvateurs et à fournir des preuves de leur activité illégale.\n \n \u00a0 La Première Unité Tactique Expérimentale arrive sur les lieux pour procéder à l'inspection et saisir les preuves.\n \u00a0 Le commandant de l'unité vous félicite pour votre mission réussie et s'éxclame : \"Bravo, vous voulez une médaille ?!\"",
       "name":"bibli1-1-1-1",
       "timer": false,
       "choices": [
         {
-          "value": "Oui...",
+          "value": "Bah oui",
           "next": "bibli1-1-1-1-1"
         },
         {
-          "value": "Euh non?",
+          "value": "Euh non ?",
           "next": "bibli1-1-1-1-2"
         }
       ]
@@ -691,49 +691,49 @@
       ]
     },
     {
-      "desc": "\u00a0 Le [race2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\nIl vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque\nIl décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
+      "desc": "\u00a0 [Le_race_2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\n \n \u00a0 Il vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque.\n \u00a0 Il décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
       "name":"bibli2",
       "timer": false,
       "shuffle":true,
       "choices": [
         {
-          "value": "[objet1]",
+          "value": "[objet_1]",
           "next": "bibli2-1"
         },
         {
-          "value": "[objet2]",
+          "value": "[objet_2]",
           "next": "bibli2-2"
         },
         {
-          "value": "[objet3]",
+          "value": "[objet_3]",
           "next": "bibli2-3"
         }
       ]
     },
     {
-      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet1]",
+      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet le [objet_1]",
       "name":"bibli2-1",
       "timer": false,
       "choices": [
         {
-          "value": "Prendre l'[objet1] et quitter la bibliothèque",
-          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet1]"
+          "value": "Prendre l'[objet_1] et quitter la bibliothèque",
+          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet_1]"
         }
       ]
     },
     {
-      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame le [race2] et vous remet le [objet2]",
+      "desc": "\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet le [objet_2]",
       "name":"bibli2-2",
       "timer": false,
       "choices": [
         {
-          "value": "Prendre l'[objet2] et quitter la bibliothèque",
-          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet2]"
+          "value": "Prendre l'[objet_2] et quitter la bibliothèque",
+          "reveal": "\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet_2]"
         }
       ]
     },
     {
-      "desc": "\u00a0 \"Perdu c'était un [objet1] j'allais pas vous le donner de toute manière. \"\nLe [race2] se replonge dans son livre et vous ignore.",
+      "desc": "\u00a0 \"Perdu c'était un [objet_1] j'allais pas vous le donner de toute manière.\" \n \n \u00a0[Le_race_2] se replonge dans son livre et vous ignore.",
       "name":"bibli2-3",
       "timer": false,
       "choices": [
@@ -779,339 +779,1571 @@
           "reveal": "\u00a0 Vous partez avant que le propriétaire du livre ne se manifeste"
         }
       ]
+    },
+    {
+      "start": true,
+      "desc": "\u00a0 Vous arrivez devant un Pub de l'espace, l'enseigne indique qu'il s'agit du pub nommé : \"[no_pub_1]\"\nVous êtes accueilli par un hôte Aku qui vous propose de vous asseoir à une table. Cependant, l'odeur de Fnek nauséabonde qui émane de l'intérieur vous rend mal à l'aise.\n Le barman [no_race_1] vous dévisage en nettoyant ses verres.\nUn bruit sourd retentit, au fond de la pièce deux [nos_race_2] bourrés ont fait tomber une boulle de billiard.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "S'assoir à la table indiqué par l'Aku.",
+          "next": "pub3"
+        },
+        {
+          "value": "Parler au barman.",
+          "next": "pub1"
+        },
+        {
+          "value": "Aller voir [les_race_2] au billard.",
+          "next": "pub2"
+        }
+      ]
+    },    
+    {
+      "desc": "\u00a0 Le barman vous observe approcher, il pose ses verres et une fois que vous êtes assez proche il s'exclame :\n\"Salutation voyageurs, je peux voir dans vos yeux que vous recherchez de l'aventure !\"",
+      "name":"pub1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Oui.",
+          "next": "pub1-1"
+        },
+        {
+          "value": "Non.",
+          "next": "pub1-2"
+        },
+        {
+          "value": "On veut juste boire",
+          "next": "pub1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"J'ai une quête pour vous, seriez-vous en mesure de m'aider à rendre mon humble échoppe plus accueillante ? Ne vous inquiétez pas, il ne s'agit pas de redécorer l'intérieur...\"\n\"C'était de l'humour, hein ! Les autres [nos_race_1] trouvent ça drôle.\"\n\"En réalité, j'ai besoin qu'on me débarrasse d'un rat qui boit toutes mes boissons et mange toutes les Prygrls dans ma réserve. Pourriez-vous m'en débarrasser, vaillants aventuriers ?\"",
+      "name":"pub1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Accepter la quête",
+          "next": "pub1-1-1"
+        },
+        {
+          "value": "Finalement on va commander",
+          "next": "pub1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Une fois dans la réserve, vous commencez à chercher des signes du passage du rat, mais vous trouvez uniquement des tonneaux vides et des toiles d'araignées.\nVous trouvez un tonneau un peu plus lourd, vous l'ouvrez et trouvez à l'intérieur [un_race_3] qui vous bondit dessus en hurlant.\nSes cris ont attiré l'attention de plusieurs araignées mycophiles qui se joignent au combat.",
+      "name":"pub1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Terminer le combat et ramener [le_race_3] au barman",
+          "next": "pub1-1-1-1"
+        },
+        {
+          "value": "Terminer le combat et fouiller la salle",
+          "next": "pub1-1-1-2"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Le barman vous remercie pour votre aide, il vous offre une bouteille de [no_bouteille_1] <span class=\"mjreveal\">\u00a0 Donner la bouteille de [no_bouteille_1] aux joueurs </span>",
+      "name":"pub1-1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Le barman arrive dans la réserve et vous surprend en train de fouiller, mais il décide de faire comme s'il n'avait rien vu pour vous remercier. Avant qu'il n'arrive, vous avez trouvé [un_objet_1].<span class=\"mjreveal\">\u00a0 Donner [un_objet_1] aux joueurs </span>",
+      "name":"pub1-1-1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Le barman soupire et vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\nIl n'en reste que 3...",
+      "name":"pub1-3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "[no_boisson_1]",
+          "next": "pub-boisson"
+        },
+        {
+          "value": "[no_boisson_2]",
+          "next": "pub-boisson"
+        },
+        {
+          "value": "[no_boisson_3]",
+          "next": "pub-boisson"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0Vous buvez votre verre les boissons sont automatiquement payée par l'OLI.\n vous repartez rapidement.<span class=\"mjreveal\">\u00a0 remonte le moral de tous les joueurs faiblement </span>",
+      "name":"pub-boisson",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0\"Désolé je n'ai plus assez de boisson pour autant d'alcoolique... vous aller devoir partir\"",
+      "name":"pub1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Partir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        },
+        {
+          "value": "Frapper le Barman",
+          "next": "pub1-2-2"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Après avoir assommé le barman, vous vous rendez compte du silence qui s'est installé dans le pub. Tout le monde vous regarde. Le silence est finalement rompu par un bip sonore, puis un autre, et enfin :\n\n\"Première Unité Tactique Expérimentale, avez-vous été témoins d'un acte répréhensible selon la loi ?\"<span class=\"mjreveal\">\u00a0 ajoute le status recherché indéfiniment</span>",
+      "name":"pub1-2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Quitter le lieu en vitesse.",
+          "reveal": "\u00a0 Vous démarrez les moteurs et partez aussi vite que possible."
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous vous approchez du billard, ramassez la boule au sol mais alors que vous vous apprêtiez à la rendre [aux_race_2], l'un d'eux saisit sa queue et vous frappe avec tout en hurlant : \"Ne touchez pas à mes boules !\"",
+      "name":"pub2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Se défendre en lui lançant la boule dessus",
+          "next": "pub2-1"
+        },
+        {
+          "value": "Lacher la boule et partir",
+          "next": "pub2-2"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  Vous essayez d'expliquer [aux_race_2] que vous vouliez simplement leur rendre la boule, mais l'alcool leur est monté à la tête, il est impossible de les raisonner.\nVous allez devoir leur faire comprendre par la force.",
+      "name":"pub2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Terminer le combat. <span class=\"mjreveal\">\u00a0 Finir le combat avant de cliquer</span>",
+          "next": "pub2-1-1"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  Une fois [les_race_2] au sol, vous entendez le barman crier : \"C'est pas bientôt fini ce raffut ? Si vous avez cassé mon billard, ne pensez pas que vous vous en sortirez indemne.\"Vous avez encore le temps de quitter les lieux, vous partez en récupérant la boule de billard.<span class=\"mjreveal\">\u00a0 Donner aux joueurs une boule de Chris Tale</span>",
+      "name":"pub2-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  Vous laissez la boule au sol et retourner dans votre vaisseau.",
+      "name":"pub2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 L'hôte Aku vient vous voir l'air inquiet, il tente tant bien que mal de cacher ses émotions avec un sourire et vous demande ce que vous voulez boire.",
+      "name":"pub3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Commander à boire",
+          "next": "pub3-1"
+        },
+        {
+          "value": "Lui demander ce qu'il ne vas pas",
+          "next": "pub3-2"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 L'Aku vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\nIl n'en reste que 3...",
+      "name":"pub3-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "[no_boisson_1]",
+          "next": "pub-boisson"
+        },
+        {
+          "value": "[no_boisson_2]",
+          "next": "pub-boisson"
+        },
+        {
+          "value": "[no_boisson_3]",
+          "next": "pub-boisson"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Vous voyez les trois [nos_race_4] assis à la table derrière moi, ils sont là depuis 3 jours et ont déjà fait fuir plusieurs autres clients. Si j'essaie de les faire partir, j'ai peur qu'ils me blessent.\"",
+      "name":"pub3-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Proposer de les faire partir vous même",
+          "next": "pub3-2-1"
+        },
+        {
+          "value": "Commander à boire",
+          "next": "pub3-1"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous vous approchez de la table, les trois [nos_race_4] se levent et se préparent au combat.<span class=\"mjreveal\">\u00a0 l'un d'eux est un boss si possible </span>",
+      "name":"pub3-2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Terminer le combat<span class=\"mjreveal\">\u00a0 finir le combat avant de cliquer</span>",
+          "next": "pub3-2-1-1"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Une fois les trois [nos_race_4] mis hors combat, le barman les prend et les jette en dehors de son pub. Vous récupérez l'une de leurs armes et retournez dans votre vaisseau. <span class=\"mjreveal\">\u00a0 donner une arme aux joueurs </span>",
+      "name":"pub3-2-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Partir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et partez."
+        }
+      ]
+    },
+    {
+      "start": true,
+      "desc": "\u00a0 Vous apercevez au loin une vieille station-service qui semble être abandonnée.\n \n \u00a0 À la radio, vous entendez un message en boucle disant : \"Bienvenue voyageurs, venez faire vos emplettes à la Station de Lavage Automatique et de Vente et Echange pendant que votre vaisseau se fait faire une nouvelle jeunesse.\"",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Visiter la boutique",
+          "next": "station1"
+        },
+        {
+          "value": "Visiter le lavage automatique",
+          "next": "station2"
+        },
+        {
+          "value": "Faire une pause à la station",
+          "next": "station3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous garez le PLUGS à l'arrière de la station et entrez dans la boutique. \n \n \u00a0 Après un bref tour sur vous-même, vous vous rendez compte que la station-service utilise des unités monétaires étranges comme moyen d'échange. \n \n \u00a0 Un automate vous accueille : \"Bienvenue visiteurs, êtes-vous intéressés par notre large choix d'outils de réparations ou de dispositifs de défense personnelle ?\"",
+      "name":"station1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Outils de réparation",
+          "next": "station1-1"
+        },
+        {
+          "value": "Autre",
+          "next": "station1-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Option n°1 séléctionnée... Très bon choix visiteurs, nous proposons des outils de réparations pour [no_module-h-bdd_0] et pour [no_module-h-bdd_1].\"" ,
+      "name":"station1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Échanger 100 cryopods contre des \"outils de réparation pour [no_module-h-bdd_0]\"",
+          "next": "station1-1-1"
+        },
+        {
+          "value": "Échanger 100 cryopods contre des \"outils de réparation pour [no_module-h-bdd_1]\"",
+          "next": "station1-1-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction, \u005bArticle_1\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction,  \u005bArticle_2\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous quittez la Station les mains vide et reprennez votre voyage.",
+      "name":"station1-1-3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Option n°2 séléctionnée... Très bon choix visiteurs, nous possédons actuellement en stock un \"Projecteur de bouclier personnel\" et un \"Super sonic stars\".\"",
+      "name":"station1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Échanger 150 cryopods contre un \"Projecteur de bouclier personnel\"",
+          "next": "station1-2-1"
+        },
+        {
+          "value": "Échanger 150 cryopods contre un \"Super sonic stars\"",
+          "next": "station1-2-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction, \u005bArticle_3\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction, \u005bArticle_5\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous manoeuvrez le PLUGS dans la baie de lavage. \n \n \u00a0 Un automate vous accueille : \"Bienvenue visiteurs, nous proposons plusieurs forfait d'entretien, la formule \"Minimum\" et la formule \"Premium\", laquel saura le mieux vous satisfaire ?\" ",
+      "name":"station2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Choisir la formule \"Minimum\" pour 50 cryopods",
+          "next": "station2-1"
+        },
+        {
+          "value": "Choisir la formule \"Premium\" pour 150 cryopods",
+          "next": "station2-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction,  \u005bFormule_Minimum\u005D , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient votre vaisseau de fond en comble. \n \n  \u00a0 Vous ressentez une certaine satisfaction en voyant votre vaisseau ainsi propre. <span class=\"mjreveal\">\u00a0 Gain de moral moyen.</span>" ,
+      "name":"station2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et poursuivez votre voyage."
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Confirmation de la transaction, \u005bFormule_Premium\u005D , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n \u00a0 Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n \u00a0 Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-air s'assurent que tout est conforme aux normes intergalactiques. \n \n \u00a0 Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. <span class=\"mjreveal\">\u00a0 Fort gain de moral et fortes réparations de vaisseau.</span>",
+      "name":"station2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et poursuivez votre voyage."
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous garez le PLUGS à l'arrière du bâtiment. \n \n \u00a0 Alors que vous vous apprêtez à pénétrer dans l'enceinte de la station, deux [nos_race_1] tentent de vous racketter.",
+      "name":"station3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Se défendre",
+          "next": "station3-1"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Entendant le bruit provoqué par l'affrontement, deux agents de sécurité sortent armés. Vos agresseurs profitent du moment d'inattention pour fuir, vous devriez faire de même.",
+      "name":"station3-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fuir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et partez aussi vite que possible."
+        }
+      ]
     }
   ],
   "planet": [
     {
-      "value": 100,
+      "value": 137,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":10 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":28
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":21
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":21 
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":20
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":9
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":4
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":4
         }
       }
     },
     {
-      "value": 200,
+      "value": 223,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":16 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":15 
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":12 
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":48 
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":2 
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":43 
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":31 
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":22 
         }
       }
     },
     {
-      "value": 300,
+      "value":249 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value":2 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value": 61
         },
         "wtr": {
           "cost": 2,
-          "value": 3
+          "value": 15
         },
         "fau": {
-          "cost": 2,
+          "cost":2 ,
           "value": 3
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 48
         },
         "civ": {
-          "cost": 2,
+          "cost":2 ,
           "value": 3
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value": 24
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 52
         }
       }
     },
     {
-      "value": 400,
+      "value":308 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":32 
+        },
+        "grv": {
+          "cost":3 ,
+          "value":14 
+        },
+        "wtr": {
+          "cost":1 ,
+          "value":15 
+        },
+        "fau": {
+          "cost":1 ,
+          "value":38 
+        },
+        "flo": {
+          "cost":1,
+          "value":62 
+        },
+        "civ": {
+          "cost":1 ,
+          "value": 15
+        },
+        "cli": {
+          "cost":4 ,
+          "value":65 
+        },
+        "res": {
+          "cost":1 ,
+          "value":36 
+        }
+      }
+    },
+        {
+      "value":309 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value":40 
+        },
+        "grv": {
+          "cost":1 ,
+          "value":16 
+        },
+        "wtr": {
+          "cost":3 ,
+          "value":37 
+        },
+        "fau": {
+          "cost":1 ,
+          "value":4 
+        },
+        "flo": {
+          "cost":1 ,
+          "value": 22
+        },
+        "civ": {
+          "cost":1 ,
+          "value": 41
+        },
+        "cli": {
+          "cost":3 ,
+          "value": 58
+        },
+        "res": {
+          "cost":2 ,
+          "value":12
+        }
+      }
+    },
+        {
+      "value":327 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value":45 
+        },
+        "grv": {
+          "cost":4 ,
+          "value":7 
+        },
+        "wtr": {
+          "cost":3 ,
+          "value":7 
+        },
+        "fau": {
+          "cost":1 ,
+          "value":60 
+        },
+        "flo": {
+          "cost":1 ,
+          "value":64 
+        },
+        "civ": {
+          "cost":1 ,
+          "value":25 
+        },
+        "cli": {
+          "cost":1 ,
+          "value":79 
+        },
+        "res": {
+          "cost":2 ,
+          "value":22 
+        }
+      }
+    },
+        {
+      "value": 349,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value":25 
+        },
+        "grv": {
+          "cost":2 ,
+          "value": 26
+        },
+        "wtr": {
+          "cost":4 ,
+          "value":40 
+        },
+        "fau": {
+          "cost":2 ,
+          "value": 55
+        },
+        "flo": {
+          "cost":2 ,
+          "value": 53
+        },
+        "civ": {
+          "cost":2 ,
+          "value": 16
+        },
+        "cli": {
+          "cost":2 ,
+          "value": 2
+        },
+        "res": {
+          "cost":1 ,
+          "value": 70
+        }
+      }
+    },    {
+      "value":355 ,
+      "modules": {
+        "oxy": {
+          "cost":4 ,
+          "value": 10
+        },
+        "grv": {
+          "cost":2 ,
+          "value":61 
+        },
+        "wtr": {
+          "cost":1 ,
+          "value":1 
+        },
+        "fau": {
+          "cost":1 ,
+          "value": 21
+        },
+        "flo": {
+          "cost":1 ,
+          "value":30
+        },
+        "civ": {
+          "cost":1 ,
+          "value":62
+        },
+        "cli": {
+          "cost":1 ,
+          "value":23
+        },
+        "res": {
+          "cost":1 ,
+          "value":79 
+        }
+      }
+    },    
+    {
+      "value":386 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value": 70
+        },
+        "grv": {
+          "cost":2 ,
+          "value": 87
+        },
+        "wtr": {
+          "cost":1 ,
+          "value": 41
+        },
+        "fau": {
+          "cost":4 ,
+          "value": 1
+        },
+        "flo": {
+          "cost":4 ,
+          "value": 53
+        },
+        "civ": {
+          "cost":4 ,
+          "value": 1
+        },
+        "cli": {
+          "cost":2 ,
+          "value": 19
+        },
+        "res": {
+          "cost":1 ,
+          "value": 19
+        }
+      }
+    },    {
+      "value":433 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value": 36
+        },
+        "grv": {
+          "cost":4 ,
+          "value": 82
+        },
+        "wtr": {
+          "cost": 3,
+          "value": 4
+        },
+        "fau": {
+          "cost":1 ,
+          "value":2 
+        },
+        "flo": {
+          "cost":1 ,
+          "value": 11
+        },
+        "civ": {
+          "cost":1 ,
+          "value": 78
+        },
+        "cli": {
+          "cost":4 ,
+          "value": 83
+        },
+        "res": {
+          "cost":3 ,
+          "value":41 
+        }
+      }
+    },    
+    {
+      "value":477 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value":23 
         },
         "grv": {
           "cost": 2,
-          "value": 3
+          "value":91 
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 38
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 52
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 69
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 90
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 35
+        },
+        "res": {
+          "cost": 4,
+          "value": 18
+        }
+      }
+    },
+        {
+      "value":511 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value": 75
+        },
+        "grv": {
+          "cost":1 ,
+          "value":30 
+        },
+        "wtr": {
+          "cost":2 ,
+          "value": 30
+        },
+        "fau": {
+          "cost":1 ,
+          "value":97 
+        },
+        "flo": {
+          "cost":1 ,
+          "value": 39
+        },
+        "civ": {
+          "cost":1 ,
+          "value":6 
+        },
+        "cli": {
+          "cost":2 ,
+          "value": 83
+        },
+        "res": {
+          "cost":4 ,
+          "value": 69
+        }
+      }
+    },
+        {
+      "value":546 ,
+      "modules": {
+        "oxy": {
+          "cost": 1,
+          "value":54 
+        },
+        "grv": {
+          "cost": 3,
+          "value": 74
+        },
+        "wtr": {
+          "cost": 3,
+          "value":29 
+        },
+        "fau": {
+          "cost": 3,
+          "value": 19
+        },
+        "flo": {
+          "cost": 3,
+          "value": 61
+        },
+        "civ": {
+          "cost": 3,
+          "value": 65
+        },
+        "cli": {
+          "cost": 1,
+          "value": 59
         },
         "res": {
           "cost": 2,
-          "value": 3
+          "value": 71
+        }
+      }
+    },
+        {
+      "value": 541,
+      "modules": {
+        "oxy": {
+          "cost": 1,
+          "value":31 
+        },
+        "grv": {
+          "cost": 4,
+          "value":62 
+        },
+        "wtr": {
+          "cost": 1,
+          "value":49 
+        },
+        "fau": {
+          "cost": 2,
+          "value":89 
+        },
+        "flo": {
+          "cost": 2,
+          "value":61 
+        },
+        "civ": {
+          "cost": 2,
+          "value":66 
+        },
+        "cli": {
+          "cost": 1,
+          "value":17 
+        },
+        "res": {
+          "cost": 3,
+          "value":79 
+        }
+      }
+    },
+        {
+      "value":816 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value":73 
+        },
+        "grv": {
+          "cost":1 ,
+          "value": 84
+        },
+        "wtr": {
+          "cost":2 ,
+          "value":93 
+        },
+        "fau": {
+          "cost":2 ,
+          "value":80 
+        },
+        "flo": {
+          "cost":2 ,
+          "value":82 
+        },
+        "civ": {
+          "cost":2 ,
+          "value":73 
+        },
+        "cli": {
+          "cost":1 ,
+          "value":96 
+        },
+        "res": {
+          "cost": 1,
+          "value":73 
+        }
+      }
+    },
+        {
+      "value":776 ,
+      "modules": {
+        "oxy": {
+          "cost":1 ,
+          "value": 92
+        },
+        "grv": {
+          "cost":4 ,
+          "value": 91
+        },
+        "wtr": {
+          "cost":3 ,
+          "value": 72
+        },
+        "fau": {
+          "cost": 3,
+          "value": 100
+        },
+        "flo": {
+          "cost": 3,
+          "value": 69
+        },
+        "civ": {
+          "cost": 3,
+          "value": 62
+        },
+        "cli": {
+          "cost": 1,
+          "value": 47
+        },
+        "res": {
+          "cost": 2,
+          "value": 88
+        }
+      }
+    },
+        {
+      "value":742 ,
+      "modules": {
+        "oxy": {
+          "cost": 1,
+          "value": 51
+        },
+        "grv": {
+          "cost": 2,
+          "value": 89
+        },
+        "wtr": {
+          "cost": 3,
+          "value": 80
+        },
+        "fau": {
+          "cost": 1,
+          "value": 56
+        },
+        "flo": {
+          "cost": 1,
+          "value": 87
+        },
+        "civ": {
+          "cost": 1,
+          "value": 54
+        },
+        "cli": {
+          "cost": 2,
+          "value": 97
+        },
+        "res": {
+          "cost": 2,
+          "value": 84
+        }
+      }
+    },    {
+      "value":735 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value": 86
+        },
+        "grv": {
+          "cost":4 ,
+          "value": 97
+        },
+        "wtr": {
+          "cost":1 ,
+          "value": 49
+        },
+        "fau": {
+          "cost":3 ,
+          "value": 91
+        },
+        "flo": {
+          "cost":3 ,
+          "value": 78
+        },
+        "civ": {
+          "cost":3 ,
+          "value": 68
+        },
+        "cli": {
+          "cost":2 ,
+          "value": 36
+        },
+        "res": {
+          "cost":1 ,
+          "value": 94
+        }
+      }
+    },    {
+      "value":733 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value":45 
+        },
+        "grv": {
+          "cost":1 ,
+          "value":80 
+        },
+        "wtr": {
+          "cost":3 ,
+          "value": 89
+        },
+        "fau": {
+          "cost":4 ,
+          "value": 63
+        },
+        "flo": {
+          "cost":4 ,
+          "value": 37
+        },
+        "civ": {
+          "cost":4 ,
+          "value": 69
+        },
+        "cli": {
+          "cost":3 ,
+          "value": 98
+        },
+        "res": {
+          "cost":1 ,
+          "value": 84
+        }
+      }
+    },
+        {
+      "value":723 ,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value":66 
+        },
+        "grv": {
+          "cost": 1,
+          "value":99 
+        },
+        "wtr": {
+          "cost": 3,
+          "value":82 
+        },
+        "fau": {
+          "cost": 3,
+          "value":85 
+        },
+        "flo": {
+          "cost": 3,
+          "value":18 
+        },
+        "civ": {
+          "cost": 3,
+          "value":81 
+        },
+        "cli": {
+          "cost": 3,
+          "value":96 
+        },
+        "res": {
+          "cost": 2,
+          "value":40 
+        }
+      }
+    },
+        {
+      "value":659 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value": 65
+        },
+        "grv": {
+          "cost":3 ,
+          "value": 94
+        },
+        "wtr": {
+          "cost":1 ,
+          "value": 22
+        },
+        "fau": {
+          "cost":1 ,
+          "value": 42
+        },
+        "flo": {
+          "cost":1 ,
+          "value": 71
+        },
+        "civ": {
+          "cost":1 ,
+          "value": 100
+        },
+        "cli": {
+          "cost":1 ,
+          "value": 42
+        },
+        "res": {
+          "cost":1 ,
+          "value": 94
+        }
+      }
+    },
+        {
+      "value": 647,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 91
+        },
+        "grv": {
+          "cost":3 ,
+          "value": 72
+        },
+        "wtr": {
+          "cost":1 ,
+          "value": 85
+        },
+        "fau": {
+          "cost":1 ,
+          "value": 34
+        },
+        "flo": {
+          "cost": 1,
+          "value": 10
+        },
+        "civ": {
+          "cost": 1,
+          "value": 34
+        },
+        "cli": {
+          "cost": 1,
+          "value": 23
+        },
+        "res": {
+          "cost": 1,
+          "value": 93
+        }
+      }
+    },
+        {
+      "value":666 ,
+      "modules": {
+        "oxy": {
+          "cost":1 ,
+          "value": 94
+        },
+        "grv": {
+          "cost":3 ,
+          "value": 74
+        },
+        "wtr": {
+          "cost":4 ,
+          "value": 30
+        },
+        "fau": {
+          "cost":3 ,
+          "value": 86
+        },
+        "flo": {
+          "cost":3 ,
+          "value": 84
+        },
+        "civ": {
+          "cost":3 ,
+          "value": 99
+        },
+        "cli": {
+          "cost":1 ,
+          "value": 37
+        },
+        "res": {
+          "cost": 1,
+          "value": 56
+        }
+      }
+    },
+        {
+      "value":608 ,
+      "modules": {
+        "oxy": {
+          "cost":1 ,
+          "value": 82
+        },
+        "grv": {
+          "cost": 2,
+          "value":63
+        },
+        "wtr": {
+          "cost": 2,
+          "value":88
+        },
+        "fau": {
+          "cost": 2,
+          "value":79
+        },
+        "flo": {
+          "cost": 2,
+          "value":29
+        },
+        "civ": {
+          "cost": 2,
+          "value":17
+        },
+        "cli": {
+          "cost": 2,
+          "value": 16
+        },
+        "res": {
+          "cost": 4,
+          "value": 76
+        }
+      }
+    },
+        {
+      "value":602 ,
+      "modules": {
+        "oxy": {
+          "cost": 3,
+          "value":70 
+        },
+        "grv": {
+          "cost": 1,
+          "value":98 
+        },
+        "wtr": {
+          "cost": 3,
+          "value":31 
+        },
+        "fau": {
+          "cost": 4,
+          "value":12 
+        },
+        "flo": {
+          "cost": 4,
+          "value":88 
+        },
+        "civ": {
+          "cost": 4,
+          "value":15 
+        },
+        "cli": {
+          "cost": 1,
+          "value":77 
+        },
+        "res": {
+          "cost": 4,
+          "value":89 
+        }
+      }
+    },
+        {
+      "value":575 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value":56 
+        },
+        "grv": {
+          "cost":1 ,
+          "value":62 
+        },
+        "wtr": {
+          "cost":4 ,
+          "value":56 
+        },
+        "fau": {
+          "cost":2 ,
+          "value":20 
+        },
+        "flo": {
+          "cost":2 ,
+          "value":72 
+        },
+        "civ": {
+          "cost":2 ,
+          "value":55 
+        },
+        "cli": {
+          "cost":4 ,
+          "value":42 
+        },
+        "res": {
+          "cost":2 ,
+          "value":79 
         }
       }
     },
     {
-      "value": 500,
+      "value":560 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 35
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 87
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 70
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 68
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 8
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 46
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 13
         },
         "res": {
           "cost": 2,
-          "value": 3
+          "value": 90
         }
       }
     },
     {
-      "value": 600,
+      "value":555 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":12 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":52 
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":70 
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":18 
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":92 
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":82 
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":86 
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":45 
         }
       }
     },
     {
-      "value": 700,
+      "value":560 ,
       "modules": {
         "oxy": {
           "cost": 2,
-          "value": 3
+          "value": 14
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 91
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost": 4,
+          "value": 34
         },
         "fau": {
           "cost": 2,
-          "value": 3
+          "value": 71
         },
         "flo": {
           "cost": 2,
-          "value": 3
+          "value": 95
         },
         "civ": {
           "cost": 2,
-          "value": 3
+          "value": 50
         },
         "cli": {
           "cost": 2,
-          "value": 3
+          "value": 36
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 99
         }
       }
-    },
+    },    
     {
-      "value": 800,
+      "value":547 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":99 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":50 
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":31 
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":32 
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":55 
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":95 
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":22 
         },
         "res": {
-          "cost": 2,
-          "value": 3
-        }
-      }
-    },
-    {
-      "value": 900,
-      "modules": {
-        "oxy": {
-          "cost": 2,
-          "value": 3
-        },
-        "grv": {
-          "cost": 2,
-          "value": 3
-        },
-        "wtr": {
-          "cost": 2,
-          "value": 3
-        },
-        "fau": {
-          "cost": 2,
-          "value": 3
-        },
-        "flo": {
-          "cost": 2,
-          "value": 3
-        },
-        "civ": {
-          "cost": 2,
-          "value": 3
-        },
-        "cli": {
-          "cost": 2,
-          "value": 3
-        },
-        "res": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":38 
         }
       }
     }

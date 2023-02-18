@@ -67,13 +67,30 @@ var textgr = getPlanetText('gra',valuegr,grValTab,true);
 
 var costList = [costo2, costcl, costff, costre, costeau, costgr,];
 var showbuttons = false;
-var dronenbr = 3
+var dronenbr = document.querySelector('#planet-line-2 .drone').innerText || 0;
 var iswritting = 0;
 var droneUse = false;
 
 function writePoints(place, number) {
     document.querySelector(place).innerText = String(number);
 };
+
+function getPlanetText(name,value,valueList,isgrav = false){
+    let i=0;
+    while (value>valueList[i+1]*100){
+        i++
+    }
+    if (isgrav && i<2){
+        if (value%2 == 0){
+            return lang.card_vars.planet_text.module[name]['value'+i]['pair']
+        }
+        else
+            return lang.card_vars.planet_text.module[name]['value'+i]['impair']
+    }
+    else
+        return lang.card_vars.planet_text.module[name]['value'+i]
+}
+
 async function initialisePlanet() {
     scanPoints()
     writePoints('.detection-point', detectionPoints);
@@ -146,6 +163,7 @@ async function write(fulltext, place) {
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
+                wsLNOB.delItem('drone');
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('o2-cursor')
             }
@@ -182,6 +200,7 @@ async function write(fulltext, place) {
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
+                wsLNOB.delItem('drone');
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('ff-cursor')
             }
@@ -218,6 +237,7 @@ async function write(fulltext, place) {
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
+                wsLNOB.delItem('drone');
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('cl-cursor')
             }
@@ -257,6 +277,7 @@ async function write(fulltext, place) {
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
+                wsLNOB.delItem('drone');
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('eau-cursor')
             }
@@ -293,6 +314,7 @@ async function write(fulltext, place) {
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
+                wsLNOB.delItem('drone');
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('re-cursor')
             }
@@ -332,6 +354,7 @@ async function write(fulltext, place) {
                 document.querySelector('.cursor').classList.toggle('visible')
                 document.querySelector('.drone-svg').classList.remove('cursor-on-txt')
                 dronenbr--;
+                wsLNOB.delItem('drone');
                 writePoints('.drone', dronenbr);
                 document.querySelector('.cursor').classList.remove('gr-cursor')
             }

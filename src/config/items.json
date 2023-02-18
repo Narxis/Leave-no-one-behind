@@ -5,6 +5,162 @@
       "slug": "fronde-fnek",
       "desc": "Malgrès leur avancées technologique les Fneks préfèrent utiliser une fronde pour se battre. Généralement ces frondes sont fournies avec des boules puante qui libèrent un puissant concentré d'odeur de Fnek.",
       "race": "fnek"
+    },
+    {
+      "name": "Shrips",
+      "slug": "shrips",
+      "desc": "Les Shrips sont des chips goût crevette qui ont la forme de shrymps, elles peuvent remonter le moral des Omphors",
+      "race": "omphor"
+    },
+    {
+      "name": "Armure en \"Kev-lard\"",
+      "slug": "armure-omphor",
+      "desc": "L'armure en Kev-lard rend son utilisateur plus résistant mais limite ses déplacement",
+      "race": "omphor"
+    },
+    {
+      "name": "Pelotte de laine",
+      "slug": "pelotte",
+      "desc": "Offir une pelotte de laine à un Nek lui remonte le moral.",
+      "race": "sylv"
+    },
+    {
+      "name": "Tazer cosmique",
+      "slug": "tazer-cosmique",
+      "desc": "Un tazer utilisant l'énergie cosmique",
+      "race": "sylv"
+    },
+    {
+      "name": "Fouet Ygrl",
+      "slug": "fouet-ygrl",
+      "desc": "Un fouet",
+      "race": "ygrl"
+    },
+    {
+      "name": "Shrymp utility Kit",
+      "slug": "shrymp-kit",
+      "desc": "Le shrymp utility campement kit contient de nombreux ustensiles",
+      "race": "shrymp"
+    },
+    {
+      "name": "Corde",
+      "slug": "corde",
+      "desc": "Une corde dans le Shrymp Kit",
+      "race": "shrymp"
+    },
+    {
+      "name": "Lampe torche",
+      "slug": "lampe-torche",
+      "desc": "Une lampe torche dans le Shrymp Kit",
+      "race": "shrymp"
+    },
+    {
+      "name": "Nourriture déshydraté",
+      "slug": "nourriture-deshydrate",
+      "desc": "De la nourriture déshydraté",
+      "race": "shrymp"
+    },
+    {
+      "name": "Dictionnaire Ygrlien",
+      "slug": "dictionnaire-ygrl",
+      "desc": "Un dictionnaire du langage Ygrl (inutile)",
+      "race": "shrymp"
+    },
+    {
+      "name": "Mèche Ygrl",
+      "slug": "meche-ygrl",
+      "desc": "Une mèche de cheveux d'Ygrl",
+      "race": "shrymp"
+    },
+    {
+      "name": "Lance Shrymp",
+      "slug": "lance-shrymp",
+      "desc": "Une lance qui fait approximativement la taille d'un cure-dent.",
+      "race": "shrymp"
+    },
+    {
+      "name": "L'aku tosswice",
+      "slug": "aku-tosswice",
+      "desc": "Une sorte de boite à outil contenant beaucoup d'objet",
+      "race": "aku"
+    },
+    {
+      "name": "Outils",
+      "slug": "outil-aku",
+      "desc": "Outils de maintenance variés",
+      "race": "aku"
+    },
+    {
+      "name": "Boule puante Fnek",
+      "slug": "boule-fnek",
+      "desc": "Une boule puante pour fronde fnek",
+      "race": "aku"
+    },
+    {
+      "name": "Paquet de shrimps",
+      "slug": "paquet-shrimps",
+      "desc": "Les Shrips sont des chips goût crevette qui ont la forme de Shrymps, elles peuvent remonter le moral des Omphors",
+      "race": "aku"
+    },
+    {
+      "name": "Cure-dent",
+      "slug": "cure-dent",
+      "desc": "Un cure-dent",
+      "race": "aku"
+    },
+    {
+      "name": "Montre-Boussole",
+      "slug": "montre-boussole",
+      "desc": "Une montre-boussole (qui montre soit l'heure soit la direction, en fonction de l'heure actuelle)",
+      "race": "aku"
+    },
+    {
+      "name": "Passeport",
+      "slug": "passeport",
+      "desc": "Un passeport",
+      "race": "aku"
+    },
+    {
+      "name": "Balle de Nek-k47",
+      "slug": "balle-nek-k47",
+      "desc": "Un balle de Nek-k47",
+      "race": "aku"
+    },
+    {
+      "name": "Massue Yorc",
+      "slug": "massue-yorc",
+      "desc": "Une massue seulement utilisable par un Yorc au coeur pur",
+      "race": "yorc"
+    },
+    {
+      "name": "Filet paralysant",
+      "slug": "filet-paralysant",
+      "desc": "Filet pouvant neutraliser temporairement une cible à distance",
+      "race": "nek_eau"
+    },
+    {
+      "name": "Projectile à combustion",
+      "slug": "projectile-nek-feu",
+      "desc": "Dagues de lancée utilisant la chaleur des nek-feux pour accélérer vers sa cible",
+      "race": "nek_feu"
+    },
+    {
+      "name": "Nek'ronomicon",
+      "slug": "nek-ronomicon",
+      "desc": "Un receuil religieux avec un double fond pour stocker des objets",
+      "race": "nek_terre"
+    },
+    {
+      "name": "Nek-k47",
+      "slug": "nek-k47",
+      "desc": "Un revolver nektologique pouvant être stocké dans un double fond",
+      "race": "nek_terre"
+    },
+    {
+      "name": "Em-0 Droid",
+      "slug": "em-o-droid",
+      "desc": "Un drone pouvant prendre des videos en 64k 1440fps",
+      "race": "nek_air"
     }
   ],
   "electronique": [

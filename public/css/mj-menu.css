@@ -14,8 +14,9 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     border-right: 1px solid rgb(180, 180, 180);
+    overflow: hidden scroll;
 }
 
 .choice {
@@ -33,12 +34,14 @@
 }
 
 .button-text {
-    height: 1.5em;
+    height: auto;
     background-color: transparent;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    margin: 0px 10px;
+    margin: 5px 10px;
+    text-align: left;
+    font-size: 1.1em;
 }
 
 .reveal-text {
@@ -46,12 +49,14 @@
     background-color: #28004ca6;
     padding: 10px;
     text-indent: 15px;
-    line-height: 13px;
+    line-height: 15px;
+    font-size: 1em;
 }
 
 .desc-title {
     text-indent: 2px;
     padding: 0px 13px;
+    font-size: 1.1em;
 }
 
 .desc-text {
@@ -60,6 +65,7 @@
     padding: 10px;
     text-indent: 15px;
     line-height: 13px;
+    font-size: 1em;
 }
 
 .life-container {
@@ -137,7 +143,7 @@
 #search-status {
     height: 2.5em;
     width: 90%;
-    background-color: #ffffff21;
+    background-color: #82108c47;
     border: 2px solid rgb(180, 180, 180);
     border-radius: 10px;
     font-family: 'Jura', sans-serif;
@@ -152,7 +158,7 @@
 .add-life {
     height: 2.5em;
     width: 2.5em;
-    background-color: #ffffff21;
+    background-color: #82108c47;
     border: 2px solid rgb(180, 180, 180);
     border-radius: 10px;
     font-family: 'Jura', sans-serif;
@@ -228,10 +234,13 @@ input::-webkit-inner-spin-button {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-shadow: -1px 1px 2px #ababab;
+    text-shadow: -1px 1px 2px #abababb3;
     text-indent: 0em;
     font-size: 2em;
+    background-color: #82108c47;
+    border: 2px solid rgb(180, 180, 180);
 }
+
 .mjroll-label {
     cursor: pointer;
 }
@@ -244,7 +253,9 @@ input::-webkit-inner-spin-button {
     font-size: 3em;
     letter-spacing: 2px;
     text-indent: 0em;
-} 
+    background-color: #82108c47;
+    border: 2px solid rgb(180, 180, 180);
+}
 
 
 
@@ -290,15 +301,7 @@ input::-webkit-inner-spin-button {
     #search-ennemy {
         height: 3.5em;
         width: 90%;
-        background-color: #ffffff21;
-        border: 2px solid rgb(180, 180, 180);
-        border-radius: 10px;
-        font-family: 'Jura', sans-serif;
         font-size: 1.5em;
-        outline: none;
-        color: #fff;
-        padding: 0.5em;
-        margin: 0 1em;
     }
 
     .choice {
@@ -407,12 +410,13 @@ input::-webkit-inner-spin-button {
     }
 
     .flex-container {
-        flex-direction: column;
         height: 98vh;
         width: 98vw;
         border-radius: 2em;
         overflow: hidden scroll;
         justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
     }
 
     .combat,
@@ -423,8 +427,8 @@ input::-webkit-inner-spin-button {
     }
 
     .choice-reveal {
-        height: auto;
         justify-content: flex-start;
+        overflow: visible;
     }
 
     .life-container,
@@ -439,6 +443,7 @@ input::-webkit-inner-spin-button {
     .reveal-text,
     .button-text {
         text-indent: 1em;
+        font-size: 1em;
     }
 
     #add-friend,
@@ -566,9 +571,13 @@ input::-webkit-inner-spin-button {
 .blackout {
     color: #76008d;
     text-shadow: 0 0 1px #ff24ef;
+    text-align: end;
+    text-indent: 1.5em;
 }
 
 .mjreveal {
     color: rgb(31, 187, 187);
     text-shadow: 0 0 1px white;
+    text-align: right;
+    text-indent: 1.5em;
 }

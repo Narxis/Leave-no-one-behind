@@ -183,8 +183,8 @@ const nerfTextArr = ['scaleDown1', 'scaleDown2', 'scaleDown3',]
 const otherTextArr = ['other1', 'other2', 'other3']
 
 function pickRandom (type) {
-    const randomElement = lang.end_screen[type]['text' + (1+Math.floor(Math.random() * 3))];
-    console.log(lang.end_screen,lang.end_screen[type],randomElement)
+    const randomElement = lang.card_vars.end_screen[type]['text' + (1+Math.floor(Math.random() * 3))];
+    //console.log(lang.end_screen,lang.end_screen[type],randomElement)
     return randomElement
 }
 var humanText = pickRandom('human');
@@ -192,7 +192,7 @@ var shipText = pickRandom('ship');
 var planetText = pickRandom('planet');
 var cardText = pickRandom('card');
 var nerfText = 'Echelonnage des valeurs';
-var otherText = lang.end_screen['other']['text1']
+var otherText = lang.card_vars.end_screen['other']['text1']
 var textArr = [humanText, shipText, planetText, nerfText, cardText, otherText];
 //Recap var :
 var o2 = document.getElementById('reading-1');
@@ -217,6 +217,23 @@ const civValTab = [0,0.1,0.2,0.8,1];
 const reValTab = [0,0.2,0.4,0.6,0.8,1];
 const grValTab = [0,0.3,0.6,0.8,1];
 const eauValTab = [0,0.2,0.3,0.4,0.6,0.8,1];
+
+
+const getPlanetText = function (name,value,valueList,isgrav = false){
+    let i=0;
+    while (value>valueList[i+1]*100){
+        i++
+    }
+    if (isgrav && i<2){
+        if (value%2 == 0){
+            return lang.card_vars.planet_text.module[name]['value'+i]['pair']
+        }
+        else 
+            return lang.card_vars.planet_text.module[name]['value'+i]['impair']
+    }
+    else
+        return lang.card_vars.planet_text.module[name]['value'+i]
+}
 var texto2 = getPlanetText('oxy',valueo2,oxyValTab);
 var textcl = getPlanetText('cli',valuecl,clValTab);
 var textff = getPlanetText('fau',valuefaune,fauneValTab) +'\ '+ getPlanetText('flo',valueflore,floreValTab) +'\ '+ getPlanetText('civ',valueciv,civValTab);

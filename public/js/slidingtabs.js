@@ -6,14 +6,12 @@ var clickable = true
 var texttimeout = "Temps écoulé. lol";
 var textprintednbr = 0;
 var cardnbrUntilPlanet = 5;
-var textValueList = [];
-var textValueIdList = [];
 //variables status
 var blackout;
 var statushtml = document.querySelector(".status");
 //html bouton suivant
 var nextbuttonhtml = `<button class="next-button choice move-down" id="next1">Continuer votre chemin</button>`;
-// timer 
+// timer
 var interval_cd;
 var timerText = document.querySelector('#timer-text');
 var timerText2 = document.querySelector('#timer-text2');
@@ -150,6 +148,11 @@ async function initialisePlayerTab() {
         playerTab.item(i).classList.remove('load-in');
         await sleep(100)
     }
+    document.querySelectorAll('.item-trash').forEach(function(trash){
+        trash.addEventListener('mouseup', function(){
+            this.parentElement.remove();
+        });
+    });
 }
 
 function eventchoices() {
@@ -179,7 +182,7 @@ function eventchoices() {
                     textprintednbr = 0;
                     write(cardtextstr, '.card-text');
                 }
-            })    
+            })
         }
         else {
             document.querySelector('#choice' + (i)).addEventListener('mouseup', async function () {
@@ -281,14 +284,9 @@ async function nextoption() {
     }
 }
 
-function textValues (fulltext, valueListId, valueList, listEx = [] ,exclude =false, number = 1){
-    return (getParsedText(fulltext, valueListId, valueList, listEx, exclude, number))
-}
-
 async function write(fulltext, place, spanclass='base-text') {
     let currenttext = '';
     let start = -1 ;
-    let end = fulltext.length
     document.querySelector(place).innerHTML = `<span class =\"${spanclass}\"></span>`
     if (fulltext.includes(''+spanclass)) {
         start = fulltext.indexOf('>', fulltext.indexOf(''+spanclass));
@@ -306,13 +304,11 @@ async function write(fulltext, place, spanclass='base-text') {
             }
         }
     }
-    if (fulltext.includes('<',start+1)){
-        end = fulltext.indexOf('<',start+1)
-    }
-    fulltext = fulltext.substring(start+1,end);
-    fulltext = textValues(fulltext, textValueIdList, textValueList);
-    for (let i = 0; i <= fulltext.length; i++) {
+    for (let i = start+1; i <= fulltext.length; i++) {
         document.querySelector(place).querySelector('.'+spanclass).innerText = currenttext;
+        if (fulltext.substring(i, i + 1) == "<") {
+            i = fulltext.length
+        }
         currenttext += fulltext.substring(i, i + 1)
         await sleep(21.7)
     }
@@ -408,8 +404,6 @@ async function initialiseNextButton() {
             document.querySelector('.answer1').innerHTML = ""
             document.querySelector('.answer2').innerHTML = ""
             document.querySelector('.choices').innerHTML = ""
-            textValueList = [];
-            textValueIdList = [];
             //ready to show new text
             document.querySelector('.card-text').classList.remove('invisibility')
             document.querySelector('.answer0').classList.remove('invisibility')
@@ -442,8 +436,6 @@ async function initialiseNextButton() {
             document.querySelector('.answer1').innerHTML = ""
             document.querySelector('.answer2').innerHTML = ""
             document.querySelector('.choices').innerHTML = ""
-            textValueList = [];
-            textValueIdList = [];
 
             //ready to show new text
             document.querySelector('.card-text').classList.remove('invisibility')
@@ -612,6 +604,7 @@ async function stopCountdown() {
     initialiseChoiceTabs();
     initialiseModTabs();
     initialisePlayerTab();
+    await initialiseleLeftTabs();
     await initialiseStatusList();
     if (currentCardType == -1 ) { //type of startcard
         startwrite(cardtextstr,'.card-text');
@@ -629,7 +622,6 @@ async function stopCountdown() {
             startCountDown();
         }
     }
-    initialiseleLeftTabs();
     document.addEventListener('status', initialiseStatusList);
 })();
 
