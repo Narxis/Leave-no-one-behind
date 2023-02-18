@@ -277,6 +277,7 @@
     "race": {
       "fnek": {
         "le": "le Fnek",
+        "les": "les Fneks",
         "des": "des Fneks",
         "un": "un Fnek",
         "du": "du Fnek",
@@ -287,6 +288,7 @@
       },
       "omphor": {
         "le": "l'Omphor",
+        "les": "les Omphors",
         "des": "des Omphors",
         "un": "un Omphor",
         "du": "de l'Omphor",
@@ -297,6 +299,7 @@
       },
       "sylv": {
         "le": "le Sylv",
+        "les": "les Sylvs",
         "des": "des Sylvs",
         "un": "un Sylv",
         "du": "du Sylv",
@@ -307,6 +310,7 @@
       },
       "ygrl": {
         "le": "l'Ygrl",
+        "les": "les Ygrls",
         "des": "des Ygrls",
         "un": "une Ygrl",
         "du": "de l'Ygrl",
@@ -317,6 +321,7 @@
       },
       "shrymp": {
         "le": "le Shrymp",
+        "les": "les Shrymps",
         "des": "des Shrymps",
         "un": "un Shrymp",
         "du": "du Shrymp",
@@ -327,6 +332,7 @@
       },
       "aku": {
         "le": "l'Aku",
+        "les": "les Aku",
         "des": "des Aku",
         "un": "un Aku",
         "du": "de l'Aku",
@@ -337,6 +343,7 @@
       },
       "yorc": {
         "le": "le Yorc",
+        "les": "les Yorcs",
         "des": "des Yorcs",
         "un": "un Yorc",
         "du": "du Yorc",
@@ -347,6 +354,7 @@
       },
       "nek_eau": {
         "le": "la Nek-eau",
+        "les": "les Nek-eaux",
         "des": "des Nek-eaux",
         "un": "une Nek-eau",
         "du": "de la Nek-eau",
@@ -357,6 +365,7 @@
       },
       "nek_feu": {
         "le": "le Nek-feu",
+        "les": "les Nek-feux",
         "des": "des Nek-feux",
         "un": "un Nek-feu",
         "du": "du Nek-feu",
@@ -367,6 +376,7 @@
       },
       "nek_terre": {
         "le": "le Nek-terre",
+        "les": "les Nek-terres",
         "des": "des Nek-terres",
         "un": "un Nek-terre",
         "du": "du Nek-terre",
@@ -377,6 +387,7 @@
       },
       "nek_air": {
         "le": "la Nek-air",
+        "les": "les Nek-airs",
         "des": "des Nek-airs",
         "un": "une Nek-air",
         "du": "de la Nek-air",

@@ -799,7 +799,7 @@
         }
       ]
     },    {
-      "desc": "\u00a0 Le barman vous observe approcher, il pose ses verres et une fois que vous êtes assez proche il s'exclame : \"Salutation voyageurs, je peux voir dans vos yeux que vous recherchez de l'aventure !\"",
+      "desc": "\u00a0 Le barman vous observe approcher, il pose ses verres et une fois que vous êtes assez proche il s'exclame :\n\"Salutation voyageurs, je peux voir dans vos yeux que vous recherchez de l'aventure !\"",
       "name":"pub1",
       "timer": false,
       "choices": [
@@ -910,7 +910,7 @@
         },
         {
           "value": "Frapper le Barman",
-          "next": "pub-1-2-2"
+          "next": "pub1-2-2"
         }
       ]
     },
@@ -1037,7 +1037,6 @@
       "desc": "\u00a0 Une fois les trois [nos_race_4] mis hors combat, le barman les prend et les jette en dehors de son pub. Vous récupérez l'une de leurs armes et retournez dans votre vaisseau. <span class=\"mjreveal\">\u00a0 donner une arme aux joueurs </span>",
       "name":"pub3-2-1-1",
       "timer": false,
-      "shuffle":true,
       "choices": [
         {
           "value": "Partir",
