@@ -10,6 +10,7 @@ const os = require("os");
 const chalk = require("chalk");
 const {Config} = require("./src/models/config")
 const {config} = require("dotenv");
+const qrcode = require('qrcode-terminal');
 
 const startServer = async function() {
 
@@ -71,7 +72,9 @@ startServer().then(e => {
         "\n", "#ffcc00");
     if (process.env.FORCE_COLOR !== 'true')
         log('Ajouter FORCE_COLOR=true aux variables d\'environnement pour les couleurs sur gitbash \n');
-    log(`Server launched on port ${PORT}\n`);
     log(`http://localhost:${PORT}/` + chalk.hex('#aaaaaa')(' (local)'),'#0645AD')
     log(`http://${ip}:${PORT}/` + chalk.hex('#aaaaaa')(' (Wifi Network)'),'#0645AD')
+    qrcode.generate(`http://${ip}:${PORT}/`, {small:true}, function (qrcode) {
+        console.log(qrcode);
+    });
 });
