@@ -1242,335 +1242,1108 @@
   ],
   "planet": [
     {
-      "value": 100,
+      "value": 137,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":10 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":28
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":21
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":21 
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":20
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":9
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":4
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":4
         }
       }
     },
     {
-      "value": 200,
+      "value": 223,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":16 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":15 
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":12 
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":48 
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":2 
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":43 
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":31 
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":22 
         }
       }
     },
     {
-      "value": 300,
+      "value":249 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value":2 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value": 61
         },
         "wtr": {
           "cost": 2,
-          "value": 3
+          "value": 15
         },
         "fau": {
-          "cost": 2,
+          "cost":2 ,
           "value": 3
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 48
         },
         "civ": {
-          "cost": 2,
+          "cost":2 ,
           "value": 3
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value": 24
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 52
         }
       }
     },
     {
-      "value": 400,
+      "value":308 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":32 
+        },
+        "grv": {
+          "cost":3 ,
+          "value":14 
+        },
+        "wtr": {
+          "cost":1 ,
+          "value":15 
+        },
+        "fau": {
+          "cost":1 ,
+          "value":38 
+        },
+        "flo": {
+          "cost":1,
+          "value":62 
+        },
+        "civ": {
+          "cost":1 ,
+          "value": 15
+        },
+        "cli": {
+          "cost":4 ,
+          "value":65 
+        },
+        "res": {
+          "cost":1 ,
+          "value":36 
+        }
+      }
+    },
+        {
+      "value":309 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value":40 
+        },
+        "grv": {
+          "cost":1 ,
+          "value":16 
+        },
+        "wtr": {
+          "cost":3 ,
+          "value":37 
+        },
+        "fau": {
+          "cost":1 ,
+          "value":4 
+        },
+        "flo": {
+          "cost":1 ,
+          "value": 22
+        },
+        "civ": {
+          "cost":1 ,
+          "value": 41
+        },
+        "cli": {
+          "cost":3 ,
+          "value": 58
+        },
+        "res": {
+          "cost":2 ,
+          "value":12
+        }
+      }
+    },
+        {
+      "value":327 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value":45 
+        },
+        "grv": {
+          "cost":4 ,
+          "value":7 
+        },
+        "wtr": {
+          "cost":3 ,
+          "value":7 
+        },
+        "fau": {
+          "cost":1 ,
+          "value":60 
+        },
+        "flo": {
+          "cost":1 ,
+          "value":64 
+        },
+        "civ": {
+          "cost":1 ,
+          "value":25 
+        },
+        "cli": {
+          "cost":1 ,
+          "value":79 
+        },
+        "res": {
+          "cost":2 ,
+          "value":22 
+        }
+      }
+    },
+        {
+      "value": 349,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value":25 
+        },
+        "grv": {
+          "cost":2 ,
+          "value": 26
+        },
+        "wtr": {
+          "cost":4 ,
+          "value":40 
+        },
+        "fau": {
+          "cost":2 ,
+          "value": 55
+        },
+        "flo": {
+          "cost":2 ,
+          "value": 53
+        },
+        "civ": {
+          "cost":2 ,
+          "value": 16
+        },
+        "cli": {
+          "cost":2 ,
+          "value": 2
+        },
+        "res": {
+          "cost":1 ,
+          "value": 70
+        }
+      }
+    },    {
+      "value":355 ,
+      "modules": {
+        "oxy": {
+          "cost":4 ,
+          "value": 10
+        },
+        "grv": {
+          "cost":2 ,
+          "value":61 
+        },
+        "wtr": {
+          "cost":1 ,
+          "value":1 
+        },
+        "fau": {
+          "cost":1 ,
+          "value": 21
+        },
+        "flo": {
+          "cost":1 ,
+          "value":30
+        },
+        "civ": {
+          "cost":1 ,
+          "value":62
+        },
+        "cli": {
+          "cost":1 ,
+          "value":23
+        },
+        "res": {
+          "cost":1 ,
+          "value":79 
+        }
+      }
+    },    
+    {
+      "value":386 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value": 70
+        },
+        "grv": {
+          "cost":2 ,
+          "value": 87
+        },
+        "wtr": {
+          "cost":1 ,
+          "value": 41
+        },
+        "fau": {
+          "cost":4 ,
+          "value": 1
+        },
+        "flo": {
+          "cost":4 ,
+          "value": 53
+        },
+        "civ": {
+          "cost":4 ,
+          "value": 1
+        },
+        "cli": {
+          "cost":2 ,
+          "value": 19
+        },
+        "res": {
+          "cost":1 ,
+          "value": 19
+        }
+      }
+    },    {
+      "value":433 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value": 36
+        },
+        "grv": {
+          "cost":4 ,
+          "value": 82
+        },
+        "wtr": {
+          "cost": 3,
+          "value": 4
+        },
+        "fau": {
+          "cost":1 ,
+          "value":2 
+        },
+        "flo": {
+          "cost":1 ,
+          "value": 11
+        },
+        "civ": {
+          "cost":1 ,
+          "value": 78
+        },
+        "cli": {
+          "cost":4 ,
+          "value": 83
+        },
+        "res": {
+          "cost":3 ,
+          "value":41 
+        }
+      }
+    },    
+    {
+      "value":477 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value":23 
         },
         "grv": {
           "cost": 2,
-          "value": 3
+          "value":91 
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 38
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 52
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 69
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value": 90
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 35
+        },
+        "res": {
+          "cost": 4,
+          "value": 18
+        }
+      }
+    },
+        {
+      "value":511 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value": 75
+        },
+        "grv": {
+          "cost":1 ,
+          "value":30 
+        },
+        "wtr": {
+          "cost":2 ,
+          "value": 30
+        },
+        "fau": {
+          "cost":1 ,
+          "value":97 
+        },
+        "flo": {
+          "cost":1 ,
+          "value": 39
+        },
+        "civ": {
+          "cost":1 ,
+          "value":6 
+        },
+        "cli": {
+          "cost":2 ,
+          "value": 83
+        },
+        "res": {
+          "cost":4 ,
+          "value": 69
+        }
+      }
+    },
+        {
+      "value":546 ,
+      "modules": {
+        "oxy": {
+          "cost": 1,
+          "value":54 
+        },
+        "grv": {
+          "cost": 3,
+          "value": 74
+        },
+        "wtr": {
+          "cost": 3,
+          "value":29 
+        },
+        "fau": {
+          "cost": 3,
+          "value": 19
+        },
+        "flo": {
+          "cost": 3,
+          "value": 61
+        },
+        "civ": {
+          "cost": 3,
+          "value": 65
+        },
+        "cli": {
+          "cost": 1,
+          "value": 59
         },
         "res": {
           "cost": 2,
-          "value": 3
+          "value": 71
+        }
+      }
+    },
+        {
+      "value": 541,
+      "modules": {
+        "oxy": {
+          "cost": 1,
+          "value":31 
+        },
+        "grv": {
+          "cost": 4,
+          "value":62 
+        },
+        "wtr": {
+          "cost": 1,
+          "value":49 
+        },
+        "fau": {
+          "cost": 2,
+          "value":89 
+        },
+        "flo": {
+          "cost": 2,
+          "value":61 
+        },
+        "civ": {
+          "cost": 2,
+          "value":66 
+        },
+        "cli": {
+          "cost": 1,
+          "value":17 
+        },
+        "res": {
+          "cost": 3,
+          "value":79 
+        }
+      }
+    },
+        {
+      "value":816 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value":73 
+        },
+        "grv": {
+          "cost":1 ,
+          "value": 84
+        },
+        "wtr": {
+          "cost":2 ,
+          "value":93 
+        },
+        "fau": {
+          "cost":2 ,
+          "value":80 
+        },
+        "flo": {
+          "cost":2 ,
+          "value":82 
+        },
+        "civ": {
+          "cost":2 ,
+          "value":73 
+        },
+        "cli": {
+          "cost":1 ,
+          "value":96 
+        },
+        "res": {
+          "cost": 1,
+          "value":73 
+        }
+      }
+    },
+        {
+      "value":776 ,
+      "modules": {
+        "oxy": {
+          "cost":1 ,
+          "value": 92
+        },
+        "grv": {
+          "cost":4 ,
+          "value": 91
+        },
+        "wtr": {
+          "cost":3 ,
+          "value": 72
+        },
+        "fau": {
+          "cost": 3,
+          "value": 100
+        },
+        "flo": {
+          "cost": 3,
+          "value": 69
+        },
+        "civ": {
+          "cost": 3,
+          "value": 62
+        },
+        "cli": {
+          "cost": 1,
+          "value": 47
+        },
+        "res": {
+          "cost": 2,
+          "value": 88
+        }
+      }
+    },
+        {
+      "value":742 ,
+      "modules": {
+        "oxy": {
+          "cost": 1,
+          "value": 51
+        },
+        "grv": {
+          "cost": 2,
+          "value": 89
+        },
+        "wtr": {
+          "cost": 3,
+          "value": 80
+        },
+        "fau": {
+          "cost": 1,
+          "value": 56
+        },
+        "flo": {
+          "cost": 1,
+          "value": 87
+        },
+        "civ": {
+          "cost": 1,
+          "value": 54
+        },
+        "cli": {
+          "cost": 2,
+          "value": 97
+        },
+        "res": {
+          "cost": 2,
+          "value": 84
+        }
+      }
+    },    {
+      "value":735 ,
+      "modules": {
+        "oxy": {
+          "cost":3 ,
+          "value": 86
+        },
+        "grv": {
+          "cost":4 ,
+          "value": 97
+        },
+        "wtr": {
+          "cost":1 ,
+          "value": 49
+        },
+        "fau": {
+          "cost":3 ,
+          "value": 91
+        },
+        "flo": {
+          "cost":3 ,
+          "value": 78
+        },
+        "civ": {
+          "cost":3 ,
+          "value": 68
+        },
+        "cli": {
+          "cost":2 ,
+          "value": 36
+        },
+        "res": {
+          "cost":1 ,
+          "value": 94
+        }
+      }
+    },    {
+      "value":733 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value":45 
+        },
+        "grv": {
+          "cost":1 ,
+          "value":80 
+        },
+        "wtr": {
+          "cost":3 ,
+          "value": 89
+        },
+        "fau": {
+          "cost":4 ,
+          "value": 63
+        },
+        "flo": {
+          "cost":4 ,
+          "value": 37
+        },
+        "civ": {
+          "cost":4 ,
+          "value": 69
+        },
+        "cli": {
+          "cost":3 ,
+          "value": 98
+        },
+        "res": {
+          "cost":1 ,
+          "value": 84
+        }
+      }
+    },
+        {
+      "value":723 ,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value":66 
+        },
+        "grv": {
+          "cost": 1,
+          "value":99 
+        },
+        "wtr": {
+          "cost": 3,
+          "value":82 
+        },
+        "fau": {
+          "cost": 3,
+          "value":85 
+        },
+        "flo": {
+          "cost": 3,
+          "value":18 
+        },
+        "civ": {
+          "cost": 3,
+          "value":81 
+        },
+        "cli": {
+          "cost": 3,
+          "value":96 
+        },
+        "res": {
+          "cost": 2,
+          "value":40 
+        }
+      }
+    },
+        {
+      "value":659 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value": 65
+        },
+        "grv": {
+          "cost":3 ,
+          "value": 94
+        },
+        "wtr": {
+          "cost":1 ,
+          "value": 22
+        },
+        "fau": {
+          "cost":1 ,
+          "value": 42
+        },
+        "flo": {
+          "cost":1 ,
+          "value": 71
+        },
+        "civ": {
+          "cost":1 ,
+          "value": 100
+        },
+        "cli": {
+          "cost":1 ,
+          "value": 42
+        },
+        "res": {
+          "cost":1 ,
+          "value": 94
+        }
+      }
+    },
+        {
+      "value": 647,
+      "modules": {
+        "oxy": {
+          "cost": 2,
+          "value": 91
+        },
+        "grv": {
+          "cost":3 ,
+          "value": 72
+        },
+        "wtr": {
+          "cost":1 ,
+          "value": 85
+        },
+        "fau": {
+          "cost":1 ,
+          "value": 34
+        },
+        "flo": {
+          "cost": 1,
+          "value": 10
+        },
+        "civ": {
+          "cost": 1,
+          "value": 34
+        },
+        "cli": {
+          "cost": 1,
+          "value": 23
+        },
+        "res": {
+          "cost": 1,
+          "value": 93
+        }
+      }
+    },
+        {
+      "value":666 ,
+      "modules": {
+        "oxy": {
+          "cost":1 ,
+          "value": 94
+        },
+        "grv": {
+          "cost":3 ,
+          "value": 74
+        },
+        "wtr": {
+          "cost":4 ,
+          "value": 30
+        },
+        "fau": {
+          "cost":3 ,
+          "value": 86
+        },
+        "flo": {
+          "cost":3 ,
+          "value": 84
+        },
+        "civ": {
+          "cost":3 ,
+          "value": 99
+        },
+        "cli": {
+          "cost":1 ,
+          "value": 37
+        },
+        "res": {
+          "cost": 1,
+          "value": 56
+        }
+      }
+    },
+        {
+      "value":608 ,
+      "modules": {
+        "oxy": {
+          "cost":1 ,
+          "value": 82
+        },
+        "grv": {
+          "cost": 2,
+          "value":63
+        },
+        "wtr": {
+          "cost": 2,
+          "value":88
+        },
+        "fau": {
+          "cost": 2,
+          "value":79
+        },
+        "flo": {
+          "cost": 2,
+          "value":29
+        },
+        "civ": {
+          "cost": 2,
+          "value":17
+        },
+        "cli": {
+          "cost": 2,
+          "value": 16
+        },
+        "res": {
+          "cost": 4,
+          "value": 76
+        }
+      }
+    },
+        {
+      "value":602 ,
+      "modules": {
+        "oxy": {
+          "cost": 3,
+          "value":70 
+        },
+        "grv": {
+          "cost": 1,
+          "value":98 
+        },
+        "wtr": {
+          "cost": 3,
+          "value":31 
+        },
+        "fau": {
+          "cost": 4,
+          "value":12 
+        },
+        "flo": {
+          "cost": 4,
+          "value":88 
+        },
+        "civ": {
+          "cost": 4,
+          "value":15 
+        },
+        "cli": {
+          "cost": 1,
+          "value":77 
+        },
+        "res": {
+          "cost": 4,
+          "value":89 
+        }
+      }
+    },
+        {
+      "value":575 ,
+      "modules": {
+        "oxy": {
+          "cost":2 ,
+          "value":56 
+        },
+        "grv": {
+          "cost":1 ,
+          "value":62 
+        },
+        "wtr": {
+          "cost":4 ,
+          "value":56 
+        },
+        "fau": {
+          "cost":2 ,
+          "value":20 
+        },
+        "flo": {
+          "cost":2 ,
+          "value":72 
+        },
+        "civ": {
+          "cost":2 ,
+          "value":55 
+        },
+        "cli": {
+          "cost":4 ,
+          "value":42 
+        },
+        "res": {
+          "cost":2 ,
+          "value":79 
         }
       }
     },
     {
-      "value": 500,
+      "value":560 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 35
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 87
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 70
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 68
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 8
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 46
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 13
         },
         "res": {
           "cost": 2,
-          "value": 3
+          "value": 90
         }
       }
     },
     {
-      "value": 600,
+      "value":555 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":12 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":52 
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":70 
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":18 
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":92 
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":82 
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":86 
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":45 
         }
       }
     },
     {
-      "value": 700,
+      "value":560 ,
       "modules": {
         "oxy": {
           "cost": 2,
-          "value": 3
+          "value": 14
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost": 3,
+          "value": 91
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost": 4,
+          "value": 34
         },
         "fau": {
           "cost": 2,
-          "value": 3
+          "value": 71
         },
         "flo": {
           "cost": 2,
-          "value": 3
+          "value": 95
         },
         "civ": {
           "cost": 2,
-          "value": 3
+          "value": 50
         },
         "cli": {
           "cost": 2,
-          "value": 3
+          "value": 36
         },
         "res": {
-          "cost": 2,
-          "value": 3
+          "cost": 1,
+          "value": 99
         }
       }
-    },
+    },    
     {
-      "value": 800,
+      "value":547 ,
       "modules": {
         "oxy": {
-          "cost": 2,
-          "value": 3
+          "cost":4 ,
+          "value":99 
         },
         "grv": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":50 
         },
         "wtr": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":31 
         },
         "fau": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":32 
         },
         "flo": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":55 
         },
         "civ": {
-          "cost": 2,
-          "value": 3
+          "cost":2 ,
+          "value":95 
         },
         "cli": {
-          "cost": 2,
-          "value": 3
+          "cost":3 ,
+          "value":22 
         },
         "res": {
-          "cost": 2,
-          "value": 3
-        }
-      }
-    },
-    {
-      "value": 900,
-      "modules": {
-        "oxy": {
-          "cost": 2,
-          "value": 3
-        },
-        "grv": {
-          "cost": 2,
-          "value": 3
-        },
-        "wtr": {
-          "cost": 2,
-          "value": 3
-        },
-        "fau": {
-          "cost": 2,
-          "value": 3
-        },
-        "flo": {
-          "cost": 2,
-          "value": 3
-        },
-        "civ": {
-          "cost": 2,
-          "value": 3
-        },
-        "cli": {
-          "cost": 2,
-          "value": 3
-        },
-        "res": {
-          "cost": 2,
-          "value": 3
+          "cost":1 ,
+          "value":38 
         }
       }
     }
