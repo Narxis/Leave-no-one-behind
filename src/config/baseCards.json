@@ -265,8 +265,12 @@
       "timer": true,
       "choices": [
         {
-          "value": "Récupérer les micro-processeurs dans les scanners",
-          "reveal": "\u00a0 Vous récupérez des microprocesseurs dans les scanners, cela les endommage un peu.\nVous les donnez au pirate qui se plaint de ne pas avoir de câble HDMI, mais il se téléporte hors du vaisseau.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur les Scanner.</span>"
+          "value": "Négocier avec le pirate <span class=\"mjreveal\">Négocier avec le MJ</span>",
+          "reveal": "\u00a0 Le pirate accepte de négocier. <span class=\"mjreveal\">\u00a0 Négocier avec le MJ</span>"
+        },
+        {
+          "value": "Récupérer les micro-processeurs dans [le_module-h-bdd_1]",
+          "reveal": "\u00a0 Vous récupérez des microprocesseurs dans [le_module-h-bdd_1], cela endommage un peu le module.\n \n \u00a0 Vous les donnez au pirate qui se plaint de ne pas avoir de câble HDMI, mais il se téléporte hors du vaisseau.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-h-bdd_1].</span>"
         },
         {
           "value": "Désactiver l'injection d'oxygène dans la salle",
@@ -329,6 +333,10 @@
       "timer": true,
       "choices": [
         {
+          "value": "Négocier avec les Shrymps <span class=\"mjreveal\">Négocier avec le MJ</span>",
+          "reveal": "\u00a0 Les hackers acceptent de négocier. <span class=\"mjreveal\">\u00a0 Forcer une mauvaise négociation avec le MJ</span>"
+        },
+        {
           "value": "Donner 2 consommables",
           "reveal": "\u00a0 Les Shrymps ont accepté vos consommables, mais malheureusement, ils ont quand même supprimé 8% de votre base de données scientifiques, car elle contenait des informations sur les recettes de cuisine à base de champignons.<span class=\"mjreveal\">\u00a0 Retire 2 consommables.</span>"
         },
@@ -375,12 +383,12 @@
       ]
     },
     {
-      "desc": "\u00a0 L'alarme retentit, 3 intrus se sont teleporté à bord.\n \n \u00a0 Un fnek, un sylv et une nek-eau vous agresse. ",
+      "desc": "\u00a0 L'alarme retentit, 3 intrus se sont teleporté à bord.\n \n \u00a0 [Un_race_1], [un_race_2] et [un_race_3] vous agresse. ",
       "timer": false,
       "choices": [
         {
-          "value": "Engager le combat",
-          "reveal": "*combat*"
+          "value": "Terminer le combat",
+          "reveal": "\u00a0 Une fois le combat terminé, les robots de \"nettoyage\" débarrassent les locaux de ce qu'il reste de vos agresseurs, un des automate vous rapporte une boule de Chris Tale."
         }
       ]
     }
@@ -573,6 +581,20 @@
         {
           "value": "Ne rien faire",
           "reveal": "\u00a0 Vous vous éloignez pour éviter les tirs. <span class=\"mjreveal\">\u00a0 Perte de moral.</span>"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous apercevez un gyrophare dans votre rétroviseur et entendez une communication sur votre radio vous demandant de vous ranger sur le bas-côté. \n \n \u00a0 Un agent de la Première Unité Tactique Expérimentale sort de son vaisseau et vous explique que votre véhicule se déplaçait à une vitesse non réglementaire et est sur le point de vous mettre une contravention.",
+      "timer": "false",
+      "choices": [
+        {
+          "value": "\u00a0 L'agent vous écoute.<span class=\"mjreveal\">\u00a0 Négociation avec le MJ.</span>",
+          "reveal": "Négocier avec l'agent<span class=\"mjreveal\">\u00a0 Négociation avec le MJ</span>"
+        },
+        {
+          "value": "Payer l'amende",
+          "reveal": "\u00a0 Après avoir reçu la confirmation de la transaction l'agent vous laisse partir.<span class=\"mjreveal\">\u00a0 Décidez du montant de l'amande en fonction des consommables et de l'état des modules des joueurs.(ex: 2 microprocesseurs que les joueurs pourront récuprer d'un module)</span>"
         }
       ]
     }
