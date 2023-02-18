@@ -1023,7 +1023,7 @@
       ]
     },
     {
-      "desc": "\u00a0 Vous vous approchez de la table et les trois [nos_race_4], ils se levent et se préparent au combat.<span class=\"mjreveal\">\u00a0 l'un d'eux est un boss si possible </span>",
+      "desc": "\u00a0 Vous vous approchez de la table, les trois [nos_race_4] se levent et se préparent au combat.<span class=\"mjreveal\">\u00a0 l'un d'eux est un boss si possible </span>",
       "name":"pub3-2-1",
       "timer": false,
       "choices": [
