@@ -1,7 +1,7 @@
 {
   "initial": [
     {
-      "desc": "Mise à jour de l’autopilote en v7.27 rev B {....} Vérification de l’état des cryopods {....} 1000 humains détectés, démarrages des cryopods {....} Calcul de l’itinéraire en cours {....} Quantité carburant ~ 250mg {....} 5 planètes trouvées sur l’itinéraire {....} Initialisation de la phase de lancement {....} Partir un jour sans retour ?",
+      "desc": "Mise à jour de l’autopilote en v7.27 \u005brev B\u005D {....} Vérification de l’état des cryopods {....} 1000 humains détectés, démarrages des cryopods {....} Calcul de l’itinéraire en cours {....} Quantité carburant ~ 250mg {....} 5 planètes trouvées sur l’itinéraire {....} Initialisation de la phase de lancement {....} Partir un jour sans retour ?",
       "timer": "false",
       "choices": [
         {
@@ -598,7 +598,7 @@
       ]
     },
     {
-      "desc": "\u00a0 \"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\"\ndit [le_race_1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
+      "desc": "\u00a0 \"Je n'arrive pas à me concentrer sur mon livre de Fnekanique Quantique. Je ne sais pas ce qui se passe, mais j'ai l'impression d'entendre des bruits venant du sous-sol\" dit [le_race_1] en pointant vers la porte menant à la chaudière de la bibliothèque.",
       "name":"bibli1",
       "timer": false,
       "choices": [
@@ -613,7 +613,7 @@
       ]
     },
     {
-      "desc": "\u00a0 Vous vous frayez un chemin dans les sous-sols de la bibliothèque et les bruits étranges deviennent de plus en plus forts.\nSoudain, vous êtes face à face avec deux Yorcs armés de manches à balais, qui ont l'air décidés à vous attaquer. Vous vous préparez à vous défendre alors que vous vous demandez ce qui peut bien se passer ici.",
+      "desc": "\u00a0 Vous vous frayez un chemin dans les sous-sols de la bibliothèque et les bruits étranges deviennent de plus en plus forts.\n \n \u00a0 Soudain, vous êtes face à face avec deux Yorcs armés de manches à balais, qui ont l'air décidés à vous attaquer. \n \n \u00a0Vous vous préparez à vous défendre alors que vous vous demandez ce qui peut bien se passer ici.",
       "name":"bibli1-1",
       "timer": false,
       "choices": [
@@ -628,7 +628,7 @@
       ]
     },
     {
-      "desc": "\u00a0 Après avoir terrasser les Yorcs vous penetrez dans la salle et vous rendez compte que les Yorcs étaient en train synthétiser des Shrips dans un laboratoire clandestin, vous découvrez également des armes et des plans détaillés pour un projet d'invasion.\nVous comprenez alors que vous venez de déjouer un complot visant à attaquer la bibliothèque et peut-être même tout le système. Vous contactez immédiatement les autorités pour les informer de la situation et leur remettre les preuves trouvées.",
+      "desc": "\u00a0 Après avoir terrasser les Yorcs vous penetrez dans la salle et vous rendez compte que les Yorcs étaient en train synthétiser des Shrips dans un laboratoire clandestin, vous découvrez également des armes et des plans détaillés pour un projet d'invasion.\n \n \u00a0 Vous comprenez alors que vous venez de déjouer un complot visant à attaquer la bibliothèque et peut-être même tout le système.\n \u00a0 Vous contactez immédiatement les autorités pour les informer de la situation et leur remettre les preuves trouvées.",
       "name":"bibli1-1-1",
       "timer": false,
       "choices": [
@@ -637,7 +637,7 @@
           "next": "bibli1-1-1-1"
         },
         {
-          "value": "Quittez la bibliothèque",
+          "value": "Quitter la bibliothèque",
           "reveal": "\u00a0 Vous quittez la bibliothèque et retournez dans votre vaisseau."
         }
       ]
@@ -654,16 +654,16 @@
       ]
     },
     {
-      "desc": "\u00a0 Vous et votre équipe avez réussi à neutraliser le laboratoire illégal du Groupuscule Armé de Yorcs Salvateurs et à fournir des preuves de leur activité illégale.\nLa Première Unité Tactique Expérimentale arrive sur les lieux pour procéder à l'inspection et saisir les preuves.\nLe commandant de l'unité vous félicite pour votre mission réussie et s'éxclame : \"Bravo, vous voulez une médaille ?!\"",
+      "desc": "\u00a0 Vous et votre équipe avez réussi à neutraliser le laboratoire illégal du Groupuscule Armé de Yorcs Salvateurs et à fournir des preuves de leur activité illégale.\n \n \u00a0 La Première Unité Tactique Expérimentale arrive sur les lieux pour procéder à l'inspection et saisir les preuves.\n \u00a0 Le commandant de l'unité vous félicite pour votre mission réussie et s'éxclame : \"Bravo, vous voulez une médaille ?!\"",
       "name":"bibli1-1-1-1",
       "timer": false,
       "choices": [
         {
-          "value": "Oui...",
+          "value": "Bah oui",
           "next": "bibli1-1-1-1-1"
         },
         {
-          "value": "Euh non?",
+          "value": "Euh non ?",
           "next": "bibli1-1-1-1-2"
         }
       ]
@@ -691,7 +691,7 @@
       ]
     },
     {
-      "desc": "\u00a0 [Le_race_2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\nIl vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque\nIl décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
+      "desc": "\u00a0 [Le_race_2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\n \n \u00a0 Il vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque.\n \u00a0 Il décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
       "name":"bibli2",
       "timer": false,
       "shuffle":true,
@@ -733,7 +733,7 @@
       ]
     },
     {
-      "desc": "\u00a0 \"Perdu c'était un [objet_1] j'allais pas vous le donner de toute manière. \"\n[Le_race_2] se replonge dans son livre et vous ignore.",
+      "desc": "\u00a0 \"Perdu c'était un [objet_1] j'allais pas vous le donner de toute manière.\" \n \n \u00a0[Le_race_2] se replonge dans son livre et vous ignore.",
       "name":"bibli2-3",
       "timer": false,
       "choices": [

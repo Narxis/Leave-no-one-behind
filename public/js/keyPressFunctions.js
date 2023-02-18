@@ -1,30 +1,101 @@
 async function initialiseKeyListener() {
     document.addEventListener("keydown", (event) => {
-        if (event.defaultPrevented) {
-            return;
-        };
+        if (document.activeElement.tagName === 'INPUT') return;
         switch (event.key) {
-            case "a":
+            case "F1":
+                event.preventDefault();
+                break;
+            case "F5":
+                event.preventDefault();
+                break;
+            case "²":
                 document.querySelectorAll(".tab").forEach(function (e) {
                     e.classList.add("revealtooltip");
                 });
                 break;
+            case "&":
+                document.querySelector(".tab-moteurs").classList.add("revealtooltip");
+                break;
+            case "é":
+                document.querySelector(".tab-scan").classList.add("revealtooltip");
+                break;
+            case '"':
+                document.querySelector(".tab-detect").classList.add("revealtooltip");
+                break;
+            case "'":
+                document.querySelector(".tab-o2").classList.add("revealtooltip");
+                break;
+            case "(":
+                document.querySelector(".tab-elec").classList.add("revealtooltip");
+                break;
+            case "-":
+                document.querySelector(".tab-grav").classList.add("revealtooltip");
+                break;
+            case "Tab":
+                event.preventDefault();
+                break;
+            
         };
     });
     document.addEventListener("keyup", (event) => {
-        if (event.defaultPrevented) {
-            return;
-        };
+        if (document.activeElement.tagName === 'INPUT') return;
         switch (event.key) {
-            case "a":
+            case "Escape":
+                document.getElementById("navBtn").click();
+                break;
+            case "F1":
+                event.preventDefault();
+                break;
+            case "F5":
+                event.preventDefault();
+                break;
+            case "²":
                 document.querySelectorAll(".tab").forEach(function (e) {
                     e.classList.remove("revealtooltip");
                 });
                 break;
-            case "ArrowRight":
+            case "&":
+                document.querySelector(".tab-moteurs").classList.remove("revealtooltip");
+                break;
+            case "é":
+                document.querySelector(".tab-scan").classList.remove("revealtooltip");
+                break;
+            case '"':
+                document.querySelector(".tab-detect").classList.remove("revealtooltip");
+                break;
+            case "'":
+                document.querySelector(".tab-o2").classList.remove("revealtooltip");
+                break;
+            case "(":
+                document.querySelector(".tab-elec").classList.remove("revealtooltip");
+                break;
+            case "-":
+                document.querySelector(".tab-grav").classList.remove("revealtooltip");
+                break;
+            case "Tab":
+                event.preventDefault()
                 document.querySelectorAll(".tab").forEach(function (e) {
                     e.classList.toggle("open");
+                    e.classList.toggle("revealtooltip");
                 });
+                break;
+            case "a":
+                document.querySelector(".tab-moteurs").classList.toggle("open");
+                break;
+            case "z":
+                document.querySelector(".tab-scan").classList.toggle("open");
+                break;
+            case "e":
+                document.querySelector(".tab-detect").classList.toggle("open");
+                break;
+            case "r":
+                document.querySelector(".tab-o2").classList.toggle("open");
+                break;
+            case "t":
+                document.querySelector(".tab-elec").classList.toggle("open");
+                break;
+            case "y":
+                document.querySelector(".tab-grav").classList.toggle("open");
                 break;
             case "ArrowLeft":
                 (async function leftKeyPress() {
@@ -50,8 +121,10 @@ async function initialiseKeyListener() {
                     e.lastElementChild.classList.toggle("itemshow");
                 })
                 break;
-            case "Escape":
-                document.getElementById("navBtn").click();
         };
     });
 }
+
+(function () {
+    initialiseKeyListener();
+})();

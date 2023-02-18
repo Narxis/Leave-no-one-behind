@@ -8,7 +8,7 @@ var shipState = score.scoreShip;
 var humans = ship.cryopods;
 var planetState = score.scorePlanet;
 var other = 69;
-var valueScoreMultiplier = [humans, shipState, planetState, bonusCarte, other];
+var valueScoreMultiplier = [humans, shipState, planetState];
 var valueScoreAdder = [bonusCarte, other];
 var currentscore = "1";
 var scoring = false;
@@ -182,24 +182,62 @@ const  cardTextArr = ['CardText1', 'CardText2', 'CardText3'];
 const nerfTextArr = ['scaleDown1', 'scaleDown2', 'scaleDown3',]
 const otherTextArr = ['other1', 'other2', 'other3']
 
-function pickRandom (Arr) {
-    const randomElement = Arr[Math.floor(Math.random() * Arr.length)];
+function pickRandom (type) {
+    const randomElement = lang.card_vars.end_screen[type]['text' + (1+Math.floor(Math.random() * 3))];
+    //console.log(lang.end_screen,lang.end_screen[type],randomElement)
     return randomElement
 }
-var humanText = pickRandom(humanTextArr);
-var shipText = pickRandom(shipTextArr);
-var planetText = pickRandom(planetTextArr);
-var cardText = pickRandom(cardTextArr);
-var nerfText = pickRandom(nerfTextArr);
-var otherText = pickRandom(otherTextArr);
-var textArr = [humanText, shipText, planetText, nerfText, cardText, other];
+var humanText = pickRandom('human');
+var shipText = pickRandom('ship');
+var planetText = pickRandom('planet');
+var cardText = pickRandom('card');
+var nerfText = 'Echelonnage des valeurs';
+var otherText = lang.card_vars.end_screen['other']['text1']
+var textArr = [humanText, shipText, planetText, nerfText, cardText, otherText];
 //Recap var :
-var texto2 = "blabla Oxygène blabla planette blabla pollution bla bla ";
-var textcl = "blabla Climat blabla planette blabla ouragan bla bla ";
-var textff = "blabla Animal blabla planette blabla plante bla bla ";
-var textre = "blabla Fer blabla planette blabla diamant bla bla ";
-var texteau = "blabla Eau blabla planette blabla boire bla bla ";
-var textgr = "blabla Gravité blabla planette blabla pomme bla bla";
+var o2 = document.getElementById('reading-1');
+var cl = document.getElementById('reading-2');
+var ff = document.getElementById('reading-3');
+var re = document.getElementById('reading-4');
+var gr = document.getElementById('reading-6');
+var eau = document.getElementById('reading-5');
+var valueo2 = o2.getAttribute('data-value');
+var valuecl = cl.getAttribute('data-value');
+var valuefaune = ff.getAttribute('data-fauvalue');
+var valueflore = ff.getAttribute('data-flovalue');
+var valueciv = ff.getAttribute('data-civvalue');
+var valuere = re.getAttribute('data-value');
+var valuegr = gr.getAttribute('data-value');
+var valueeau = eau.getAttribute('data-value');
+const oxyValTab = [0,0.2,0.4,0.6,0.8,1];
+const clValTab = [0,0.25,0.5,0.75,1];
+const fauneValTab = [0,0.25,0.5,0.75,1];
+const floreValTab = [0,0.25,0.5,0.75,1];
+const civValTab = [0,0.1,0.2,0.8,1];
+const reValTab = [0,0.2,0.4,0.6,0.8,1];
+const grValTab = [0,0.3,0.6,0.8,1];
+const eauValTab = [0,0.2,0.3,0.4,0.6,0.8,1];
+const getPlanetText = function (name,value,valueList,isgrav = false){
+    let i=0;
+    while (value>valueList[i+1]*100){
+        i++
+    }
+    if (isgrav && i<2){
+        if (value%2 == 0){
+            return lang.card_vars.planet_text.module[name]['value'+i]['pair']
+        }
+        else 
+            return lang.card_vars.planet_text.module[name]['value'+i]['impair']
+    }
+    else
+        return lang.card_vars.planet_text.module[name]['value'+i]
+}
+var texto2 = getPlanetText('oxy',valueo2,oxyValTab);
+var textcl = getPlanetText('cli',valuecl,clValTab);
+var textff = getPlanetText('fau',valuefaune,fauneValTab) +'\ '+ getPlanetText('flo',valueflore,floreValTab) +'\ '+ getPlanetText('civ',valueciv,civValTab);
+var textre = getPlanetText('res',valuere,reValTab);
+var texteau = getPlanetText('eau',valueeau,eauValTab);
+var textgr = getPlanetText('gra',valuegr,grValTab,true);
 var recapText = [texto2, textcl, textff, textre, texteau, textgr]
 var etatVaisseau = [ship.motors,ship.scanner,ship.proximity,ship.oxygen,ship.energy,ship.gravity,ship.landing,ship.construction,ship.dbscience,ship.dbhistory]
 
@@ -294,7 +332,7 @@ async function scoreCalcul() {
     while (iswritting != 0) {
         await sleep(100)
     }
-    write ("Your total score is :", id ,"", true)
+    write ("Votre score final est :", id ,"", true)
     while (iswritting != 0) {
         await sleep(100)
     }

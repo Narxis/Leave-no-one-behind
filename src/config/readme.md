@@ -35,9 +35,58 @@ ___
     }
 ```
 
-___
+```json
+    {
+      "value": ,
+      "modules": {
+        "oxy": {
+          "cost": ,
+          "value": 
+        },
+        "grv": {
+          "cost": ,
+          "value": 
+        },
+        "wtr": {
+          "cost": ,
+          "value": 
+        },
+        "fau": {
+          "cost": ,
+          "value": 
+        },
+        "flo": {
+          "cost": ,
+          "value": 
+        },
+        "civ": {
+          "cost": ,
+          "value": 
+        },
+        "cli": {
+          "cost": ,
+          "value": 
+        },
+        "res": {
+          "cost": ,
+          "value": 
+        }
+      }
+    }
+```
 
-## Span
+### Item-Template
+
+```json
+    {
+      "name": "",
+      "slug": "",
+      "desc": "",
+      "race": ""
+    },
+```
+
+### Span
 
 Différents span présent dans le baseCards.json :
 
