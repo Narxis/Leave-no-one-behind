@@ -227,10 +227,7 @@ const hydrateCardDB = async function (cleanInstall = true) {
             let data = {};
             let infos = cards[j];
 
-            if (type === TYPE_PLACE && !infos.start)
-                type = TYPE_FOLLOWUP;
-
-            data['type'] = type;
+            data['type'] = (type === TYPE_PLACE ? (!infos.start ? TYPE_FOLLOWUP : TYPE_PLACE) : type);
 
             for (let k in infos) {
                 data[k] = infos[k];
