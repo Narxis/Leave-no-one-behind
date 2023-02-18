@@ -535,20 +535,6 @@
       ]
     },
     {
-      "desc": "\u00a0 Les dégâts infligés à votre générateur électrique causent un court-circuit qui éteint le module de détection. <span class=\"alt-text\" data-condition=\"ship.energy == 100\">\u00a0 Alors que vous vous promeniez dans le vaisseau, vous avez remarqué des étincelles provenant de votre générateur. \n \n \u00a0 Il vaut mieux ne pas s'en approcher.</span><span class=\"blackout\">\u00a0 Votre générateur s'emballe et cause un court-circuit qui éteint votre module de détection. \n \n \u00a0 Il doit redémarrer ... encore</span>",
-      "timer": false,
-      "choices": [
-        {
-          "value": "Redemarrer le module de détection <span class=\"alt-text\" data-condition=\"ship.energy == 100\">Observer le générateur</span>",
-          "reveal": "\u00a0 Le module entame sa procédure de démarrage, il faut lui laisser le temps. <span class=\"alt-text\" data-condition=\"ship.energy == 100\">\u00a0 Votre générateur est en bonne condition, il vaut mieux ne pas rester dans les parages.</span><span class=\"mjreveal\">\u00a0 Donne le status \"blackout\".</span>"
-        },
-        {
-          "value": "Ne rien faire<span class=\"alt-text\" data-condition=\"ship.energy == 100\">Ignorer le générateur</span>",
-          "reveal": "\u00a0 Le module de détection redémarre, cela lui prendra un moment.<span class=\"alt-text\" data-condition=\"ship.energy == 100\">\u00a0 Heureusement, votre générateur est en bon état</span><span class=\"mjreveal\">\u00a0 Donne le status \"blackout\", et perte de moral.</span>"
-        }
-      ]
-    },
-    {
       "desc": "\u00a0 Votre vaisseau s'immobilise soudainement à cause d'un obstacle qui l'empêche de poursuivre sa route. \n \n \u00a0 Il s'agit d'un gros conteneur qui peut être chargé dans la soute du vaisseau.",
       "timer": false,
       "choices": [

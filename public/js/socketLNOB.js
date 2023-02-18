@@ -77,10 +77,11 @@ class SocketLNOB {
     }
 
     // Delete a conso in DB
-    delItem(slug) {
+    delItem(slug, discord_id='') {
         let payload = {
             action: 'item',
             data: {
+                discord_id: discord_id,
                 remove: true,
                 slug: slug
             }

@@ -5,9 +5,9 @@ async function initialiseKeyListener() {
             case "F1":
                 event.preventDefault();
                 break;
-            case "F5":
-                event.preventDefault();
-                break;
+//            case "F5":
+//                event.preventDefault();
+//                break;
             case "²":
                 document.querySelectorAll(".tab").forEach(function (e) {
                     e.classList.add("revealtooltip");
