@@ -82,13 +82,13 @@ function getPlanetText(name,value,valueList,isgrav = false){
     }
     if (isgrav && i<2){
         if (value%2 == 0){
-            return lang.planet_text.module[name]['value'+i]['pair']
+            return lang.card_vars.planet_text.module[name]['value'+i]['pair']
         }
         else
-            return lang.planet_text.module[name]['value'+i]['impair']
+            return lang.card_vars.planet_text.module[name]['value'+i]['impair']
     }
     else
-        return lang.planet_text.module[name]['value'+i]
+        return lang.card_vars.planet_text.module[name]['value'+i]
 }
 
 async function initialisePlanet() {
