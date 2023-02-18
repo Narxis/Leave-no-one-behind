@@ -8,8 +8,10 @@ const {Items} = require("../models/items");
 const ws = require("ws");
 var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 
-module.exports.index = function(req, res) {
-
+module.exports.index = async function(req, res) {
+    let card = new Card();
+    let text = card.replaceVars('\u00a0 \"Option n°1 séléctionnée... Très bon choix visiteurs, nous proposons des outils de réparations pour [no_module-h-bdd_0] et pour [no_module-h-bdd_1].\"');
+    console.log(text);
     res.render('index', {lang: langJS});
 };
 

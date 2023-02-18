@@ -137,7 +137,7 @@ class Card {
 
     replaceVars(text) {
         if (text) {
-            const varFound = [...text.matchAll(/\[\w+\]/g)].map(e => e[0]);
+            const varFound = [...text.matchAll(/\[[^\]]+\]/g)].map(e => e[0]);
             for (let variable of varFound){
                 let newvar = this.getRandomVar(variable);
                 text = text.replace(variable, newvar)
