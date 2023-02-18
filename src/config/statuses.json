@@ -18,5 +18,10 @@
     "name": "Affaiblit",
     "desc": "Une ou plusieurs statistiques des joueurs sont diminuée",
     "slug": "weak"
+  },
+  {
+    "name": "Recherché",
+    "desc": "Vous êtes recherchés pas les autorités",
+    "slug": "wanted"
   }
 ]

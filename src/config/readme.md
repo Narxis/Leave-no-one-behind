@@ -74,6 +74,50 @@ ___
       }
     }
 ```
+```json
+    {
+      "start": true,
+      "desc": "",
+      "timer": false,
+      "choices": [
+        {
+          "value": "",
+          "next": "carte1"
+        },
+        {
+          "value": "",
+          "next": "carte2"
+        },
+        {
+          "value": "",
+          "next": "carte3"
+        }
+      ]
+    }
+```
+
+```json
+    {
+      "desc": "",
+      "name":"bibli2",
+      "timer": false,
+      "shuffle":true,
+      "choices": [
+        {
+          "value": "",
+          "next": ""
+        },
+        {
+          "value": "",
+          "next": ""
+        },
+        {
+          "value": "",
+          "next": ""
+        }
+      ]
+    }
+```
 
 ### Item-Template
 

@@ -580,7 +580,7 @@
   "place": [
     {
       "start": true,
-      "desc": "\u00a0 Vos capteurs détectent une magnifique bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\nAlors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entrouverte au fond de l'allée principale.",
+      "desc": "\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\n \n \u00a0Alors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entrouverte au fond de l'allée principale.",
       "timer": false,
       "choices": [
         {
@@ -777,6 +777,465 @@
         {
           "value": "Prendre le livre et retourner à votre vaisseau",
           "reveal": "\u00a0 Vous partez avant que le propriétaire du livre ne se manifeste"
+        }
+      ]
+    },
+    {
+      "start": true,
+      "desc": "\u00a0 Vous arrivez devant un Pub de l'espace, l'enseigne indique qu'il s'agit du pub nommé : \"[no_pub_1]\"\nVous êtes accueilli par un hôte Aku qui vous propose de vous asseoir à une table. Cependant, l'odeur de Fnek nauséabonde qui émane de l'intérieur vous rend mal à l'aise.\n Le barman [no_race_1] vous dévisage en nettoyant ses verres.\nUn bruit sourd retentit, au fond de la pièce deux [nos_race_2] bourrés ont fait tomber une boulle de billiard.",
+      "timer": false,
+      "choices": [
+        {
+          "value": "S'assoir à la table indiqué par l'Aku.",
+          "next": "pub3"
+        },
+        {
+          "value": "Parler au barman.",
+          "next": "pub1"
+        },
+        {
+          "value": "Aller voir [les_race_2] au billard.",
+          "next": "pub2"
+        }
+      ]
+    },    
+    {
+      "desc": "\u00a0 Le barman vous observe approcher, il pose ses verres et une fois que vous êtes assez proche il s'exclame :\n\"Salutation voyageurs, je peux voir dans vos yeux que vous recherchez de l'aventure !\"",
+      "name":"pub1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Oui.",
+          "next": "pub1-1"
+        },
+        {
+          "value": "Non.",
+          "next": "pub1-2"
+        },
+        {
+          "value": "On veut juste boire",
+          "next": "pub1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"J'ai une quête pour vous, seriez-vous en mesure de m'aider à rendre mon humble échoppe plus accueillante ? Ne vous inquiétez pas, il ne s'agit pas de redécorer l'intérieur...\"\n\"C'était de l'humour, hein ! Les autres [nos_race_1] trouvent ça drôle.\"\n\"En réalité, j'ai besoin qu'on me débarrasse d'un rat qui boit toutes mes boissons et mange toutes les Prygrls dans ma réserve. Pourriez-vous m'en débarrasser, vaillants aventuriers ?\"",
+      "name":"pub1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Accepter la quête",
+          "next": "pub1-1-1"
+        },
+        {
+          "value": "Finalement on va commander",
+          "next": "pub1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Une fois dans la réserve, vous commencez à chercher des signes du passage du rat, mais vous trouvez uniquement des tonneaux vides et des toiles d'araignées.\nVous trouvez un tonneau un peu plus lourd, vous l'ouvrez et trouvez à l'intérieur [un_race_3] qui vous bondit dessus en hurlant.\nSes cris ont attiré l'attention de plusieurs araignées mycophiles qui se joignent au combat.",
+      "name":"pub1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Terminer le combat et ramener [le_race_3] au barman",
+          "next": "pub1-1-1-1"
+        },
+        {
+          "value": "Terminer le combat et fouiller la salle",
+          "next": "pub1-1-1-2"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Le barman vous remercie pour votre aide, il vous offre une bouteille de [no_bouteille_1] <span class=\"mjreveal\">\u00a0 Donner la bouteille de [no_bouteille_1] aux joueurs </span>",
+      "name":"pub1-1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Le barman arrive dans la réserve et vous surprend en train de fouiller, mais il décide de faire comme s'il n'avait rien vu pour vous remercier. Avant qu'il n'arrive, vous avez trouvé [un_objet_1].<span class=\"mjreveal\">\u00a0 Donner [un_objet_1] aux joueurs </span>",
+      "name":"pub1-1-1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Le barman soupire et vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\nIl n'en reste que 3...",
+      "name":"pub1-3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "[no_boisson_1]",
+          "next": "pub-boisson"
+        },
+        {
+          "value": "[no_boisson_2]",
+          "next": "pub-boisson"
+        },
+        {
+          "value": "[no_boisson_3]",
+          "next": "pub-boisson"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0Vous buvez votre verre les boissons sont automatiquement payée par l'OLI.\n vous repartez rapidement.<span class=\"mjreveal\">\u00a0 remonte le moral de tous les joueurs faiblement </span>",
+      "name":"pub-boisson",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0\"Désolé je n'ai plus assez de boisson pour autant d'alcoolique... vous aller devoir partir\"",
+      "name":"pub1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Partir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        },
+        {
+          "value": "Frapper le Barman",
+          "next": "pub1-2-2"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Après avoir assommé le barman, vous vous rendez compte du silence qui s'est installé dans le pub. Tout le monde vous regarde. Le silence est finalement rompu par un bip sonore, puis un autre, et enfin :\n\n\"Première Unité Tactique Expérimentale, avez-vous été témoins d'un acte répréhensible selon la loi ?\"<span class=\"mjreveal\">\u00a0 ajoute le status recherché indéfiniment</span>",
+      "name":"pub1-2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Quitter le lieu en vitesse.",
+          "reveal": "\u00a0 Vous démarrez les moteurs et partez aussi vite que possible."
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous vous approchez du billard, ramassez la boule au sol mais alors que vous vous apprêtiez à la rendre [aux_race_2], l'un d'eux saisit sa queue et vous frappe avec tout en hurlant : \"Ne touchez pas à mes boules !\"",
+      "name":"pub2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Se défendre en lui lançant la boule dessus",
+          "next": "pub2-1"
+        },
+        {
+          "value": "Lacher la boule et partir",
+          "next": "pub2-2"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  Vous essayez d'expliquer [aux_race_2] que vous vouliez simplement leur rendre la boule, mais l'alcool leur est monté à la tête, il est impossible de les raisonner.\nVous allez devoir leur faire comprendre par la force.",
+      "name":"pub2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Terminer le combat. <span class=\"mjreveal\">\u00a0 Finir le combat avant de cliquer</span>",
+          "next": "pub2-1-1"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  Une fois [les_race_2] au sol, vous entendez le barman crier : \"C'est pas bientôt fini ce raffut ? Si vous avez cassé mon billard, ne pensez pas que vous vous en sortirez indemne.\"Vous avez encore le temps de quitter les lieux, vous partez en récupérant la boule de billard.<span class=\"mjreveal\">\u00a0 Donner aux joueurs une boule de Chris Tale</span>",
+      "name":"pub2-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  Vous laissez la boule au sol et retourner dans votre vaisseau.",
+      "name":"pub2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Retouner au vaisseau",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 L'hôte Aku vient vous voir l'air inquiet, il tente tant bien que mal de cacher ses émotions avec un sourire et vous demande ce que vous voulez boire.",
+      "name":"pub3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Commander à boire",
+          "next": "pub3-1"
+        },
+        {
+          "value": "Lui demander ce qu'il ne vas pas",
+          "next": "pub3-2"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 L'Aku vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\nIl n'en reste que 3...",
+      "name":"pub3-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "[no_boisson_1]",
+          "next": "pub-boisson"
+        },
+        {
+          "value": "[no_boisson_2]",
+          "next": "pub-boisson"
+        },
+        {
+          "value": "[no_boisson_3]",
+          "next": "pub-boisson"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Vous voyez les trois [nos_race_4] assis à la table derrière moi, ils sont là depuis 3 jours et ont déjà fait fuir plusieurs autres clients. Si j'essaie de les faire partir, j'ai peur qu'ils me blessent.\"",
+      "name":"pub3-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Proposer de les faire partir vous même",
+          "next": "pub3-2-1"
+        },
+        {
+          "value": "Commander à boire",
+          "next": "pub3-1"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous vous approchez de la table, les trois [nos_race_4] se levent et se préparent au combat.<span class=\"mjreveal\">\u00a0 l'un d'eux est un boss si possible </span>",
+      "name":"pub3-2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Terminer le combat<span class=\"mjreveal\">\u00a0 finir le combat avant de cliquer</span>",
+          "next": "pub3-2-1-1"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Une fois les trois [nos_race_4] mis hors combat, le barman les prend et les jette en dehors de son pub. Vous récupérez l'une de leurs armes et retournez dans votre vaisseau. <span class=\"mjreveal\">\u00a0 donner une arme aux joueurs </span>",
+      "name":"pub3-2-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Partir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et partez."
+        }
+      ]
+    },
+    {
+      "start": true,
+      "desc": "\u00a0 Vous apercevez au loin une vieille station-service qui semble être abandonnée.\n \n \u00a0 À la radio, vous entendez un message en boucle disant : \"Bienvenue voyageurs, venez faire vos emplettes à la Station de Lavage Automatique et de Vente et Echange pendant que votre vaisseau se fait faire une nouvelle jeunesse.\"",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Visiter la boutique",
+          "next": "station1"
+        },
+        {
+          "value": "Visiter le lavage automatique",
+          "next": "station2"
+        },
+        {
+          "value": "Faire une pause à la station",
+          "next": "station3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous garez le PLUGS à l'arrière de la station et entrez dans la boutique. \n \n \u00a0 Après un bref tour sur vous-même, vous vous rendez compte que la station-service utilise des unités monétaires étranges comme moyen d'échange. \n \n \u00a0 Un automate vous accueille : \"Bienvenue visiteurs, êtes-vous intéressés par notre large choix d'outils de réparations ou de dispositifs de défense personnelle ?\"",
+      "name":"station1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Outils de réparation",
+          "next": "station1-1"
+        },
+        {
+          "value": "Autre",
+          "next": "station1-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Option n°1 séléctionnée... Très bon choix visiteurs, nous proposons des outils de réparations pour [no_module-h-bdd_0] et pour [no_module-h-bdd_1].\"" ,
+      "name":"station1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Échanger 100 cryopods contre des \"outils de réparation pour [no_module-h-bdd_0]\"",
+          "next": "station1-1-1"
+        },
+        {
+          "value": "Échanger 100 cryopods contre des \"outils de réparation pour [no_module-h-bdd_1]\"",
+          "next": "station1-1-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction, \u005bArticle_1\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction,  \u005bArticle_2\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous quittez la Station les mains vide et reprennez votre voyage.",
+      "name":"station1-1-3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Option n°2 séléctionnée... Très bon choix visiteurs, nous possédons actuellement en stock un \"Projecteur de bouclier personnel\" et un \"Super sonic stars\".\"",
+      "name":"station1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Échanger 150 cryopods contre un \"Projecteur de bouclier personnel\"",
+          "next": "station1-2-1"
+        },
+        {
+          "value": "Échanger 150 cryopods contre un \"Super sonic stars\"",
+          "next": "station1-2-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction, \u005bArticle_3\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction, \u005bArticle_5\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous manoeuvrez le PLUGS dans la baie de lavage. \n \n \u00a0 Un automate vous accueille : \"Bienvenue visiteurs, nous proposons plusieurs forfait d'entretien, la formule \"Minimum\" et la formule \"Premium\", laquel saura le mieux vous satisfaire ?\" ",
+      "name":"station2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Choisir la formule \"Minimum\" pour 50 cryopods",
+          "next": "station2-1"
+        },
+        {
+          "value": "Choisir la formule \"Premium\" pour 150 cryopods",
+          "next": "station2-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction,  \u005bFormule_Minimum\u005D , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient votre vaisseau de fond en comble. \n \n  \u00a0 Vous ressentez une certaine satisfaction en voyant votre vaisseau ainsi propre. <span class=\"mjreveal\">\u00a0 Gain de moral moyen.</span>" ,
+      "name":"station2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et poursuivez votre voyage."
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Confirmation de la transaction, \u005bFormule_Premium\u005D , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n \u00a0 Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n \u00a0 Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-air s'assurent que tout est conforme aux normes intergalactiques. \n \n \u00a0 Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. <span class=\"mjreveal\">\u00a0 Fort gain de moral et fortes réparations de vaisseau.</span>",
+      "name":"station2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et poursuivez votre voyage."
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous garez le PLUGS à l'arrière du bâtiment. \n \n \u00a0 Alors que vous vous apprêtez à pénétrer dans l'enceinte de la station, deux [nos_race_1] tentent de vous racketter.",
+      "name":"station3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Se défendre",
+          "next": "station3-1"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Entendant le bruit provoqué par l'affrontement, deux agents de sécurité sortent armés. Vos agresseurs profitent du moment d'inattention pour fuir, vous devriez faire de même.",
+      "name":"station3-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fuir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et partez aussi vite que possible."
         }
       ]
     }
