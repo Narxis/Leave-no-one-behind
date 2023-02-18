@@ -148,11 +148,11 @@ async function initialisePlayerTab() {
         playerTab.item(i).classList.remove('load-in');
         await sleep(100)
     }
-    document.querySelectorAll('.item-trash').forEach(function(trash){
-        trash.addEventListener('mouseup', function(){
-            this.parentElement.remove();
-        });
-    });
+}
+
+function removeStarterItem(id, slug) {
+    document.querySelector('#player-tab'+id+' .itemlist-line.'+slug).remove();
+    wsLNOB.delItem(slug, id);
 }
 
 function eventchoices() {
