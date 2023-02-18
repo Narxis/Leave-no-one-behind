@@ -199,6 +199,7 @@ const hydrateCardDB = async function (cleanInstall = true) {
     }
     let baseCardsRaw = fs.readFileSync(__dirname + '/../config/baseCards.json');
     let baseCards = JSON.parse(baseCardsRaw);
+    let cardManager = new Card();
 
     for (let i in baseCards) {
         let type;
@@ -227,12 +228,17 @@ const hydrateCardDB = async function (cleanInstall = true) {
             let data = {};
             let infos = cards[j];
 
-            data['type'] = (type === TYPE_PLACE ? (!infos.start ? TYPE_FOLLOWUP : TYPE_PLACE) : type);
+            let isFollowUp = (type === TYPE_PLACE && !infos.start);
+
+            data['type'] = isFollowUp ? TYPE_FOLLOWUP : type;
 
             for (let k in infos) {
                 data[k] = infos[k];
             }
-            let cardManager = new Card();
+
+            if (!isFollowUp) {
+                cardManager = new Card();
+            }
             await cardManager.create(data);
         }
     }
