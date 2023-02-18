@@ -2,8 +2,8 @@
   "gameModeFair": "1",
   "planetCount": "3",
   "cardByStepsChaos": "6",
-  "negativeByStep": "0",
-  "positiveByStep": "0",
-  "neutralByStep": "1",
+  "negativeByStep": "3",
+  "positiveByStep": "2",
+  "neutralByStep": "3",
   "placeByStep": "1"
 }
