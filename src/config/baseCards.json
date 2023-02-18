@@ -580,7 +580,7 @@
   "place": [
     {
       "start": true,
-      "desc": "\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter ce chez d'oeuvre architectural et culturel.\n \n \u00a0 Alors que vous penetrez dans le hall d'entrée vous pouvez appercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entre-ouverte au fond de l'allée principale.",
+      "desc": "\u00a0 Vos capteurs détectent une magnifique bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\nAlors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entrouverte au fond de l'allée principale.",
       "timer": false,
       "choices": [
         {
