@@ -476,6 +476,7 @@ module.exports.showScore = async function (req, res) {
         ship: ship,
         score: score,
         js: js,
+        planet: planet,
         lang: langJS
     }
     

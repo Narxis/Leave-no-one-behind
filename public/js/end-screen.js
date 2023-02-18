@@ -217,6 +217,8 @@ const civValTab = [0,0.1,0.2,0.8,1];
 const reValTab = [0,0.2,0.4,0.6,0.8,1];
 const grValTab = [0,0.3,0.6,0.8,1];
 const eauValTab = [0,0.2,0.3,0.4,0.6,0.8,1];
+
+
 const getPlanetText = function (name,value,valueList,isgrav = false){
     let i=0;
     while (value>valueList[i+1]*100){
