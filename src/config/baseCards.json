@@ -790,7 +790,7 @@
     },
     {
       "start": true,
-      "desc": "\u00a0 Vous arrivez devant un Pub de l'espace, l'enseigne indique qu'il s'agit du pub nommé : \"[no_pub_1]\"\n \n \u00a0 Vous êtes accueilli par un hôte Aku qui vous propose de vous asseoir à une table. Cependant, l'odeur de Fnek nauséabonde qui émane de l'intérieur vous rend mal à l'aise.\n \u00a0 Le barman [no_race_1] vous dévisage en nettoyant ses verres.\n \u00a0 Un bruit sourd retentit, au fond de la pièce deux [nos_race_2] bourrés ont fait tomber une boulle de billiard.",
+      "desc": "\u00a0 Vous arrivez devant un Pub de l'espace, l'enseigne indique qu'il s'agit du pub nommé : \"[no_pub_1]\"\n \n \u00a0 Vous êtes accueilli par un hôte Aku qui vous propose de vous asseoir à une table. Cependant, l'odeur de Fnek nauséabonde qui émane de l'intérieur vous rend mal à l'aise.\n \u00a0 Le barman [no_race_1] vous dévisage en nettoyant ses verres.\n \u00a0 Un bruit sourd retentit, au fond de la pièce deux [nos_race_2] bourrés ont fait tomber une boule de billard.",
       "timer": false,
       "choices": [
         {
