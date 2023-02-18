@@ -113,6 +113,18 @@ class Items {
         await DB.tables.items.update({owners:new_owners}, {where:{ slug:slug }})
     }
 
+    async removeItemFromPlayer(slug, discord_id) {
+        let item = await DB.tables.items.findOne({where: {slug:slug}, raw:true});
+
+        let new_owners = [];
+        if (item.owners && item.owners !== '')
+            new_owners = item.owners.split(',');
+        new_owners = new_owners.filter(v => v!==discord_id);
+        new_owners = new_owners.join(',');
+
+        await DB.tables.items.update({owners:new_owners}, {where:{ slug:slug }})
+    }
+
     async getAllStarters(possessed = true) {
         let whereClause = {
             where: {

@@ -241,13 +241,21 @@ const actionSetDetection = async function(response) {
 const actionItem = async function (response) {
 
     let slug = response.data.slug;
+    let discord_id = response.data.discord_id;
     let remove = response.data.remove;
     let items = new Items();
 
-    if (remove)
-        await items.remove(slug);
-    else
+    if (remove) {
+        if (discord_id !== '') {
+            await items.removeItemFromPlayer(slug, discord_id);
+        }
+        else {
+            await items.remove(slug);
+        }
+    }
+    else {
         await items.add(slug);
+    }
 
     return {
         action: response.action,
