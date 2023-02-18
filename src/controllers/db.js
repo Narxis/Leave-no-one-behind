@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
 
-const DB_VERSION = 7; // increment when structure changes are added
+const DB_VERSION = 8; // increment when structure changes are added
 const DB_FOLDER = 'storage/databases/';
 
 class DB {
@@ -315,8 +315,8 @@ class DB {
             },
             owners: {
                 type: Sequelize.STRING,
-                defaultValue: null,
-                allowNull: true
+                defaultValue: '',
+                allowNull: false
             },
             slug: {
                 type: Sequelize.STRING,
