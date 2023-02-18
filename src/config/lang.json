@@ -282,7 +282,8 @@
         "du": "du Fnek",
         "au": "au Fnek",
         "aux": "aux Fneks",
-        "no": "Fnek"
+        "no": "Fnek",
+        "nos": "Fneks"
       },
       "omphor": {
         "le": "l'Omphor",
@@ -291,7 +292,8 @@
         "du": "de l'Omphor",
         "au": "à l'Omphor",
         "aux": "aux Omphors",
-        "no": "Omphor"
+        "no": "Omphor",
+        "nos": "Omphors"
       },
       "sylv": {
         "le": "le Sylv",
@@ -300,7 +302,8 @@
         "du": "du Sylv",
         "au": "au Sylv",
         "aux": "aux Sylvs",
-        "no": "Sylv"
+        "no": "Sylv",
+        "nos": "Sylvs"
       },
       "ygrl": {
         "le": "l'Ygrl",
@@ -309,7 +312,8 @@
         "du": "de l'Ygrl",
         "au": "à l'Ygrl",
         "aux": "aux Ygrls",
-        "no": "Ygrl"
+        "no": "Ygrl",
+        "nos": "Ygrls"
       },
       "shrymp": {
         "le": "le Shrymp",
@@ -318,7 +322,8 @@
         "du": "du Shrymp",
         "au": "au Shrymp",
         "aux": "aux Shrymps",
-        "no": "Shrymp"
+        "no": "Shrymp",
+        "nos": "Shrymps"
       },
       "aku": {
         "le": "l'Aku",
@@ -327,7 +332,8 @@
         "du": "de l'Aku",
         "au": "à l'Aku",
         "aux": "aux Akus",
-        "no": "Aku"
+        "no": "Aku",
+        "nos": "Akus"
       },
       "yorc": {
         "le": "le Yorc",
@@ -336,7 +342,8 @@
         "du": "du Yorc",
         "au": "au Yorc",
         "aux": "aux Yorcs",
-        "no": "Yorc"
+        "no": "Yorc",
+        "nos": "Yorcs"
       },
       "nek_eau": {
         "le": "la Nek-eau",
@@ -345,7 +352,8 @@
         "du": "de la Nek-eau",
         "au": "à la Nek-eau",
         "aux": "aux Nek-eaux",
-        "no": "Nek-eau"
+        "no": "Nek-eau",
+        "nos": "Nek-eaux"
       },
       "nek_feu": {
         "le": "le Nek-feu",
@@ -354,7 +362,8 @@
         "du": "du Nek-feu",
         "au": "au Nek-feu",
         "aux": "aux Nek-feux",
-        "no": "Nek-feu"
+        "no": "Nek-feu",
+        "nos": "Nek-feux"
       },
       "nek_terre": {
         "le": "le Nek-terre",
@@ -363,7 +372,8 @@
         "du": "du Nek-terre",
         "au": "au Nek-terre",
         "aux": "aux Nek-terres",
-        "no": "Nek-terre"
+        "no": "Nek-terre",
+        "nos": "Nek-terres"
       },
       "nek_air": {
         "le": "la Nek-air",
@@ -372,7 +382,8 @@
         "du": "de la Nek-air",
         "au": "à la Nek-air",
         "aux": "aux Nek-airs",
-        "no": "Nek-air"
+        "no": "Nek-air",
+        "nos": "Nek-airs"
       }
     },
     "stats": {
@@ -526,6 +537,17 @@
       },
       "other":{
           "text1":"Bonus réputation galactique"
+      }
+    },
+    "pub":{
+      "name1":{
+        "no":"Au Nek-Tard"
+      },
+      "name2":{
+        "no":"Le Paradis Fongique Shrymp"
+      },
+      "name3":{
+        "no":"L'Obscure Wasabi Omphor"
       }
     }
   }
