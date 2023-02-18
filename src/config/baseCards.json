@@ -580,7 +580,7 @@
   "place": [
     {
       "start": true,
-      "desc": "\u00a0 Vos capteurs détectent une magnifique bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\nAlors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entrouverte au fond de l'allée principale.",
+      "desc": "\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\n \n \u00a0Alors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entrouverte au fond de l'allée principale.",
       "timer": false,
       "choices": [
         {
@@ -798,7 +798,8 @@
           "next": "pub3"
         }
       ]
-    },    {
+    },    
+    {
       "desc": "\u00a0 Le barman vous observe approcher, il pose ses verres et une fois que vous êtes assez proche il s'exclame :\n\"Salutation voyageurs, je peux voir dans vos yeux que vous recherchez de l'aventure !\"",
       "name":"pub1",
       "timer": false,
@@ -1041,6 +1042,200 @@
         {
           "value": "Partir",
           "reveal": "\u00a0 Vous démarrez les moteurs et partez."
+        }
+      ]
+    },
+    {
+      "start": true,
+      "desc": "\u00a0 Vous apercevez au loin une vieille station-service qui semble être abandonnée.\n \n \u00a0 À la radio, vous entendez un message en boucle disant : \"Bienvenue voyageurs, venez faire vos emplettes à la Station de Lavage Automatique et de Vente et Echange pendant que votre vaisseau se fait faire une nouvelle jeunesse.\"",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Visiter la boutique",
+          "next": "station1"
+        },
+        {
+          "value": "Visiter le lavage automatique",
+          "next": "station2"
+        },
+        {
+          "value": "Faire une pause à la station",
+          "next": "station3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous garez le PLUGS à l'arrière de la station et entrez dans la boutique. \n \n \u00a0 Après un bref tour sur vous-même, vous vous rendez compte que la station-service utilise des unités monétaires étranges comme moyen d'échange. \n \n \u00a0 Un automate vous accueille : \"Bienvenue visiteurs, êtes-vous intéressés par notre large choix d'outils de réparations ou de dispositifs de défense personnelle ?\"",
+      "name":"station1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Outils de réparation",
+          "next": "station1-1"
+        },
+        {
+          "value": "Autre",
+          "next": "station1-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Option n°1 séléctionnée... Très bon choix visiteurs, nous proposons des outils de réparations pour [no_module-h-bdd_0] et pour [no_module-h-bdd_1].\"" ,
+      "name":"station1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Échanger 100 cryopods contre des \"outils de réparation pour [no_module-h-bdd_0]\"",
+          "next": "station1-1-1"
+        },
+        {
+          "value": "Échanger 100 cryopods contre des \"outils de réparation pour [no_module-h-bdd_1]\"",
+          "next": "station1-1-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction, \u005bArticle_1\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-1-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction,  \u005bArticle_2\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous quittez la Station les mains vide et reprennez votre voyage.",
+      "name":"station1-1-3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Option n°2 séléctionnée... Très bon choix visiteurs, nous possédons actuellement en stock un \"Projecteur de bouclier personnel\" et un \"Super sonic stars\".\"",
+      "name":"station1-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Échanger 150 cryopods contre un \"Projecteur de bouclier personnel\"",
+          "next": "station1-2-1"
+        },
+        {
+          "value": "Échanger 150 cryopods contre un \"Super sonic stars\"",
+          "next": ""
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction, \u005bArticle_3\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction, \u005bArticle_5\u005D à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "name":"station1-2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous retournez au vaisseau et reprennez votre voyage"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous manoeuvrez le PLUGS dans la baie de lavage. \n \n \u00a0 Un automate vous accueille : \"Bienvenue visiteurs, nous proposons plusieurs forfait d'entretien, la formule \"Minimum\" et la formule \"Premium\", laquel saura le mieux vous satisfaire ?\" ",
+      "name":"station2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Choisir la formule \"Minimum\" pour 50 cryopods",
+          "next": "station2-1"
+        },
+        {
+          "value": "Choisir la formule \"Premium\" pour 150 cryopods",
+          "next": "station2-2"
+        },
+        {
+          "value": "Partir",
+          "next": "station1-1-3"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0  \"Confirmation de la transaction,  \u005bFormule_Minimum\u005D , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient votre vaisseau de fond en comble. \n \n  \u00a0 Vous ressentez une certaine satisfaction en voyant votre vaisseau ainsi propre. <span class=\"mjreveal\">\u00a0 Gain de moral moyen.</span>" ,
+      "name":"station2-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et poursuivez votre voyage."
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 \"Confirmation de la transaction, \u005bFormule_Premium\u005D , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n \u00a0 Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n \u00a0 Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-air s'assurent que tout est conforme aux normes intergalactiques. \n \n \u00a0 Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. <span class=\"mjreveal\">\u00a0 Fort gain de moral et fortes réparations de vaisseau.</span>",
+      "name":"station2-2",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Repartir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et poursuivez votre voyage."
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Vous garez le PLUGS à l'arrière du bâtiment. \n \n \u00a0 Alors que vous vous apprêtez à pénétrer dans l'enceinte de la station, deux [nos_race_1] tentent de vous racketter.",
+      "name":"station3",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Se défendre",
+          "next": "station3-1"
+        }
+      ]
+    },
+    {
+      "desc": "\u00a0 Entendant le bruit provoqué par l'affrontement, deux agents de sécurité sortent armés. Vos agresseurs profitent du moment d'inattention pour fuir, vous devriez faire de même.",
+      "name":"station3-1",
+      "timer": false,
+      "choices": [
+        {
+          "value": "Fuir",
+          "reveal": "\u00a0 Vous démarrez les moteurs et partez aussi vite que possible."
         }
       ]
     }
