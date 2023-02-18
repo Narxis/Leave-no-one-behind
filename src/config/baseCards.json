@@ -554,7 +554,7 @@
       "choices": [
         {
           "value": "Récupérer le cargo et l'ouvrir",
-          "reveal": "\u00a0 Vous ouvrez le conteneur et un système de défense se déclenche, des aranées mycophiles en sortent. Au fond du conteneur, vous apercevez un drone.<span class=\"mjreveal\">\u00a0 Perte de moral et donne un drone</span>"
+          "reveal": "\u00a0 Vous ouvrez le conteneur et un système de défense se déclenche, des araignées mycophiles en sortent. Au fond du conteneur, vous apercevez un drone.<span class=\"mjreveal\">\u00a0 Perte de moral et donne un drone</span>"
         },
         {
           "value": "Récupérer le cargo et appeler le propriétaire",
@@ -576,7 +576,7 @@
         },
         {
           "value": "Aider le deuxième vaisseau",
-          "reveal": "\u00a0 Vous intercepter la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
+          "reveal": "\u00a0 Vous interceptez la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.<span class=\"mjreveal\">\u00a0 Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne une \"SPIDER bomb\" et des \"outils de réparation\".</span>"
         },
         {
           "value": "Ne rien faire",
@@ -589,8 +589,8 @@
       "timer": "false",
       "choices": [
         {
-          "value": "\u00a0 L'agent vous écoute.<span class=\"mjreveal\">\u00a0 Négociation avec le MJ.</span>",
-          "reveal": "Négocier avec l'agent<span class=\"mjreveal\">\u00a0 Négociation avec le MJ</span>"
+          "value": "Négocier avec l'agent<span class=\"mjreveal\">\u00a0 Négociation avec le MJ</span>",
+          "reveal": "\u00a0 L'agent vous écoute.<span class=\"mjreveal\">\u00a0 Négociation avec le MJ.</span>"
         },
         {
           "value": "Payer l'amende",
@@ -766,7 +766,7 @@
       ]
     },
     {
-      "desc": "\u00a0 Vous appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\nLe livre est usé, vous pouvez difficllement lire [livre] écrit sur la couverture.",
+      "desc": "\u00a0 Vous appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\n Le livre est usé, vous pouvez difficillement lire [livre] écrit sur la couverture.",
       "name": "bibli3",
       "timer": false,
       "choices": [
@@ -804,7 +804,7 @@
     },
     {
       "start": true,
-      "desc": "\u00a0 Vous arrivez devant un Pub de l'espace, l'enseigne indique qu'il s'agit du pub nommé : \"[no_pub_1]\"\nVous êtes accueilli par un hôte Aku qui vous propose de vous asseoir à une table. Cependant, l'odeur de Fnek nauséabonde qui émane de l'intérieur vous rend mal à l'aise.\n Le barman [no_race_1] vous dévisage en nettoyant ses verres.\nUn bruit sourd retentit, au fond de la pièce deux [nos_race_2] bourrés ont fait tomber une boulle de billiard.",
+      "desc": "\u00a0 Vous arrivez devant un Pub de l'espace, l'enseigne indique qu'il s'agit du pub nommé : \"[no_pub_1]\"\n \n \u00a0 Vous êtes accueilli par un hôte Aku qui vous propose de vous asseoir à une table. Cependant, l'odeur de Fnek nauséabonde qui émane de l'intérieur vous rend mal à l'aise.\n \u00a0 Le barman [no_race_1] vous dévisage en nettoyant ses verres.\n \u00a0 Un bruit sourd retentit, au fond de la pièce deux [nos_race_2] bourrés ont fait tomber une boulle de billiard.",
       "timer": false,
       "choices": [
         {
@@ -822,7 +822,7 @@
       ]
     },    
     {
-      "desc": "\u00a0 Le barman vous observe approcher, il pose ses verres et une fois que vous êtes assez proche il s'exclame :\n\"Salutation voyageurs, je peux voir dans vos yeux que vous recherchez de l'aventure !\"",
+      "desc": "\u00a0 Le barman vous observe approcher, il pose ses verres et une fois que vous êtes assez proche il s'exclame :\n \u00a0 \"Salutation voyageurs, je peux voir dans vos yeux que vous recherchez de l'aventure !\"",
       "name":"pub1",
       "timer": false,
       "choices": [
@@ -841,7 +841,7 @@
       ]
     },
     {
-      "desc": "\u00a0 \"J'ai une quête pour vous, seriez-vous en mesure de m'aider à rendre mon humble échoppe plus accueillante ? Ne vous inquiétez pas, il ne s'agit pas de redécorer l'intérieur...\"\n\"C'était de l'humour, hein ! Les autres [nos_race_1] trouvent ça drôle.\"\n\"En réalité, j'ai besoin qu'on me débarrasse d'un rat qui boit toutes mes boissons et mange toutes les Prygrls dans ma réserve. Pourriez-vous m'en débarrasser, vaillants aventuriers ?\"",
+      "desc": "\u00a0 \"J'ai une quête pour vous, seriez-vous en mesure de m'aider à rendre mon humble échoppe plus accueillante ? Ne vous inquiétez pas, il ne s'agit pas de redécorer l'intérieur...\"\n \u00a0 \"C'était de l'humour, hein ! Les autres [nos_race_1] trouvent ça drôle.\"\n \u00a0 \"En réalité, j'ai besoin qu'on me débarrasse d'un rat qui boit toutes mes boissons et mange toutes les Prygrls dans ma réserve. Pourriez-vous m'en débarrasser, vaillants aventuriers ?\"",
       "name":"pub1-1",
       "timer": false,
       "choices": [
@@ -856,7 +856,7 @@
       ]
     },
     {
-      "desc": "\u00a0 Une fois dans la réserve, vous commencez à chercher des signes du passage du rat, mais vous trouvez uniquement des tonneaux vides et des toiles d'araignées.\nVous trouvez un tonneau un peu plus lourd, vous l'ouvrez et trouvez à l'intérieur [un_race_3] qui vous bondit dessus en hurlant.\nSes cris ont attiré l'attention de plusieurs araignées mycophiles qui se joignent au combat.",
+      "desc": "\u00a0 Une fois dans la réserve, vous commencez à chercher des signes du passage du rat, mais vous trouvez uniquement des tonneaux vides et des toiles d'araignées.\n\n\u00a0 Vous trouvez un tonneau un peu plus lourd, vous l'ouvrez et trouvez à l'intérieur [un_race_3] qui vous bondit dessus en hurlant.\n \u00a0 Ses cris ont attiré l'attention de plusieurs araignées mycophiles qui se joignent au combat.",
       "name":"pub1-1-1",
       "timer": false,
       "choices": [
@@ -893,7 +893,7 @@
       ]
     },
     {
-      "desc": "\u00a0 Le barman soupire et vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\nIl n'en reste que 3...",
+      "desc": "\u00a0 Le barman soupire et vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\n\n \u00a0 Il n'en reste que 3...",
       "name":"pub1-3",
       "timer": false,
       "choices": [
