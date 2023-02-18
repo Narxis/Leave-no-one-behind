@@ -795,7 +795,7 @@
         },
         {
           "value": "Aller voir [les_race_2] au billard.",
-          "next": "pub3"
+          "next": "pub2"
         }
       ]
     },    
