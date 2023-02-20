@@ -64,7 +64,33 @@ module.exports = {
             cardsDataSet.push(...cardSet);
         }
 
+        let outputs = [];
 
+        for (let i=0; i < cardsDataSet.length; i++) {
+            for (let j=0; j<cardsDataSet[i].outputs.length; j++) {
+
+                let output = cardsDataSet[i].outputs[j].connections[0];
+                output['id'] = cardsDataSet[i].id;
+                output['index'] = j;
+                outputs.push(output);
+            }
+        }
+
+        //todo not working
+        cardsDataSet = cardsDataSet.map(function (set) {
+            let output = outputs.find(item => item.node === set.id );
+            if (output) {
+                set.inputs.input_1 = {
+                    "connections": [
+                        {
+                            "node": output.id,
+                            "input": "output_" + output.index
+                        }
+                    ]
+                }
+            }
+            return set;
+        })
 
         let placeDataSet = {};
         placeDataSet[cardStarter.name] = {data: {}}
