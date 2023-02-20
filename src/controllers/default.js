@@ -15,7 +15,7 @@ module.exports.index = function(req, res) {
 
 module.exports.returnOk = async function (req, res) {
 
-    let cardRaw = await DB.tables.cards.findOne({attributes: ['id'],where: {type: TYPE_PLACE}, offset:2});
+    let cardRaw = await DB.tables.cards.findOne({attributes: ['id'],where: {type: TYPE_PLACE}});
     let card = await new Card(cardRaw.id).getData();
     let module = await drawflow.buildPlaceDataSet(card)
 
