@@ -136,6 +136,44 @@ module.exports.getShip = async function (req, res) {
     res.json(ship);
 }
 
+module.exports.getAllCards = async function (req, res) {
+
+    let type = req.params.type;
+    let whereClause;
+
+
+    switch (type) {
+        case 'planet':
+            whereClause = {type: TYPE_PLANET};
+            break;
+        case 'positive':
+            whereClause = {type: TYPE_POSITIVE};
+            break;
+        case 'negative':
+            whereClause = {type: TYPE_NEGATIVE};
+            break;
+        case 'neutral':
+            whereClause = {type: TYPE_NEUTRAL};
+            break;
+        case 'initial':
+            whereClause = {type: TYPE_INITIAL};
+            break;
+        case 'place':
+            break;
+    }
+
+    let cardsRaw = await DB.tables.cards.findAll({where:whereClause, raw:true});
+    let cards = [];
+
+    for (let item of cardsRaw){
+        let  card = await new Card(item.id).getData();
+        card = cleanObject(card, 'langVars','cardVars','accepted_datas');
+        cards.push(card);
+    }
+
+    res.json(cards);
+}
+
 // module.exports.upgradeShipModule = async function (req, res) {
 //     let ship = new Ship(shipId);
 //     let mod = req.params.module;
@@ -164,6 +202,14 @@ module.exports.getShip = async function (req, res) {
 //         res.json(ship);
 //     }
 // }
+
+const cleanObject = function (object, ...unusedKeys){
+    for (let key in object) {
+        if (unusedKeys.includes(key) === true)
+            delete object[key];
+    }
+    return object;
+}
 
 const showError = function (res, msg) {
     res.status(404);

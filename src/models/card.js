@@ -8,8 +8,8 @@ class Card {
     desc;
     timer;
     shuffle;
-    modules = [];
-    choices = [];
+    modules = {};
+    choices = {};
     langVars = {};
     cardVars = {};
     accepted_datas = {

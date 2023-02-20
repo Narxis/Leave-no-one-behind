@@ -8,6 +8,9 @@ module.exports = function(router) {
     router.get(basePath + '/nextCard/pop', controller.popNextCard);
     router.get(basePath + '/nextCard/get/:name', controller.getCardByName);
 
+    router.get(basePath + '/getAllCards', controller.getAllCards);
+    router.get(basePath + '/getAllCards/:type', controller.getAllCards);
+
     router.get(basePath + '/players', controller.getAllPlayers);
     router.get(basePath + '/player/:discordId', controller.getPlayer);
     // router.get(basePath + '/player/:playerId/:stat/:val', controller.updatePlayer); // :val can be SIGNED
