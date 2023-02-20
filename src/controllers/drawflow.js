@@ -64,13 +64,15 @@ module.exports = {
             cardsDataSet.push(...cardSet);
         }
 
+
+
         let placeDataSet = {};
         placeDataSet[cardStarter.name] = {data: {}}
 
         for (let i=0; i < cardsDataSet.length; i++) {
-            placeDataSet[cardStarter.name].data[i] = cardsDataSet[i];
+            placeDataSet[cardStarter.name].data[cardsDataSet[i].id] = cardsDataSet[i];
         }
-        //console.log(JSON.stringify(placeDataSet,null,2)); // expected output
+        console.log(JSON.stringify(placeDataSet,null,2)); // expected output
     },
     buildCardModule (dat) {
 
@@ -157,7 +159,7 @@ module.exports = {
 
             },
             "class":'reveal',
-            "html": this.fillHTMLModule('reveal', dat),
+            "html": this.fillHTMLModule('reveal', dat, index),
             "typenode":false,
             "inputs":{
                 "input_1":{
@@ -169,7 +171,7 @@ module.exports = {
             "pos_y":639 // TODO get a row for display
         }
     },
-    fillHTMLModule(moduleName, dat) {
+    fillHTMLModule(moduleName, dat, index=0) {
 
         let module = '';
 
@@ -193,7 +195,7 @@ module.exports = {
                     <div class="title-box"><i class="fas fa-sign-out-alt"></i> Choice</div>
                     <div class="box">
                         <p>choice</p>
-                        <input type="text" df-choice value="${dat.value}">
+                        <input type="text" df-choice value="${dat.choices[index].value}">
                     </div>
                 </div>
                         `;
@@ -205,7 +207,7 @@ module.exports = {
                     <div class="title-box"><i class="fas fa-sign-in-alt"></i> Reveal</div>
                     <div class="box">
                         <p>reveal</p>
-                        <textarea df-reveal>${dat.reveal}</textarea>
+                        <textarea df-reveal>${dat.choices[index].reveal}</textarea>
                     </div>
                 </div>
                         `;
