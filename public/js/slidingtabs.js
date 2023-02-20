@@ -410,7 +410,7 @@ async function initialiseNextButton() {
             document.querySelector('.answer1').classList.remove('invisibility')
             document.querySelector('.answer2').classList.remove('invisibility')
             //new text
-            let textPlanetEncounter = "\u00a0Votre vaisseau est entrée dans l'orbite d'une planète. \n \n\u00a0Vous allez dans la salle des scanners pour voir les informations de cette planète.";
+            let textPlanetEncounter = "\n \u00a0 Votre vaisseau s'approche d'une planète. \n \n \u00a0 Pendant la mise en orbite, vous êtes libre de vous déplacer à bord et de profiter des installations telles que la salle de cinéma, la cuisine, la salle d'entraînement, la bibliothèque, etc... \n \n\u00a0 Dirigez-vous vers la salle des scanners pour obtenir davantage d'informations sur cette planète.";
             await initialiseStatusList();
             await write(textPlanetEncounter, '.card-text',);
         }
