@@ -341,7 +341,7 @@ async function write(fulltext, place) {
         if (detectionPoints >= costgr || droneUse) {
             document.querySelector('#gr-button').disabled = 'disabled';
             if (!droneUse) {
-                detectionPoints = detectionPoints - costre;
+                detectionPoints = detectionPoints - costgr;
             }
             else {
                 document.querySelector('.cursor').classList.add('gr-cursor')
