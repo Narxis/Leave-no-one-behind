@@ -590,6 +590,7 @@
       "start": true,
       "desc": "\n\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\n \n \u00a0Alors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et [un_race_3] marche dans l'allée.",
       "timer": false,
+      "name": "bibli",
       "choices": [
         {
           "value": "Parler [au_race_1] assis à la table au milieu de la pièce",
@@ -802,6 +803,7 @@
     },
     {
       "start": true,
+      "name": "pub",
       "desc": "\n\u00a0 Vous arrivez devant un Pub de l'espace, l'enseigne indique qu'il s'agit du pub nommé : \"[no_pub_1]\"\n \n \u00a0 Vous êtes accueilli par un hôte Aku qui vous propose de vous asseoir à une table. Cependant, l'odeur de Fnek nauséabonde qui émane de l'intérieur vous rend mal à l'aise.\n \n \u00a0 Le barman [no_race_1] vous dévisage en nettoyant ses verres.\n \n \u00a0 Un bruit sourd retentit, au fond de la pièce deux [nos_race_2] bourrés ont fait tomber une boule de billard.",
       "timer": false,
       "choices": [
@@ -1067,6 +1069,7 @@
     },
     {
       "start": true,
+      "name": "station",
       "desc": "\n\u00a0 Vous apercevez au loin une vieille station-service qui semble être abandonnée.\n \n \u00a0 À la radio, vous entendez un message en boucle disant : \"Bienvenue voyageurs, venez faire vos emplettes à la Station de Lavage Automatique et de Vente et Echange pendant que votre vaisseau se fait faire une nouvelle jeunesse.\"",
       "timer": false,
       "choices": [

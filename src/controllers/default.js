@@ -5,19 +5,27 @@ const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
+const drawflow = require("../controllers/drawflow");
 const ws = require("ws");
 var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 
-module.exports.index = async function(req, res) {
-    let card = new Card();
-    let text = card.replaceVars('\u00a0 \"Option n°1 séléctionnée... Très bon choix visiteurs, nous proposons des outils de réparations pour [no_module-h-bdd_0] et pour [no_module-h-bdd_1].\"');
-    console.log(text);
+module.exports.index = function(req, res) {
     res.render('index', {lang: langJS});
 };
 
-module.exports.returnOk = function (req, res) {
+module.exports.returnOk = async function (req, res) {
+
+    let cardRaw = await DB.tables.cards.findOne({attributes: ['id'],where: {type: TYPE_PLACE}, offset:2});
+    let card = await new Card(cardRaw.id).getData();
+    let module = await drawflow.getFullPlaceCard(card)
+
+    for (let it of module) {
+        console.log(it.name);
+    }
+
     res.status(200);
-    res.json({status: 200})
+    res.json(module)
+    // res.json({status: 200})
 }
 
 module.exports.deckGenerator = function (req, res) {

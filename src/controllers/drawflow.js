@@ -1,0 +1,190 @@
+const fs = require('fs');
+const {Card} = require("../models/card");
+
+module.exports = {
+    saveData () {},
+    getData () {},
+    hasData () {},
+    async getFullPlaceCard(card) {
+
+        let arr = await this.searchAll(card);
+        let names = [];
+        for (let i in arr) {
+            if (names.includes(arr[i].name) === false)
+                names.push(arr[i].name);
+            else {
+                delete arr[i];
+            }
+        }
+        arr = arr.filter(v => v);
+        return arr;
+    },
+    async onlyUnique(value, index, array) {
+        return self.indexOf(value) === index;
+    },
+    async searchAll(card) {
+        var i, result = [];
+
+        for (i in card.choices) {
+            if (card.choices[i].reveal !== '') {
+                if (result.includes(card) === false) {
+                    result.push(card);
+                }
+            } else if (card.choices[i].next !== '') {
+                let nextCard = await DB.tables.cards.findOne({attributes: ['id'], where: { name:card.choices[i].next }});
+                nextCard= await new Card(nextCard.id).getData();
+                result = result.concat(await this.searchAll(nextCard));
+                if (result.includes(card) === false) {
+                    result.push(card);
+                }
+            }
+        }
+
+        return result;
+    },
+    buildCardDataSet () {},
+    buildGlobalDataSet () {},
+    buildCardModule (dat) {
+
+        let outputs = {};
+        // Output of cards can only be a choice
+        // Output are obvious, inputs will be done on second pass
+        for (let i=1; i<=3; i++) {
+            outputs['output_'+i] = [];
+            if (dat.choices[i-1]) {
+                outputs['output_' + i].push({
+                    "node": "choice_"+i+"_"+dat.name,
+                    "output":"input_1"
+                })
+            }
+        }
+
+        return {
+            "id":dat.name,
+            "name":'card',
+            "data":{
+
+            },
+            "class":'card',
+            "html": this.fillHTMLModule('card', dat),
+            "typenode":false,
+            "inputs":{
+                "input_1":{
+                    "connections":[]
+                }
+            },
+            "outputs": outputs,
+            "pos_x":742.25, // TODO get a column for display
+            "pos_y":639 // TODO get a row for display
+        }
+    },
+    buildChoiceModule (dat) {
+        let outputs = {};
+        // Output of choice can either be a card or a reveal
+        // Output are obvious, inputs will be done on second pass
+        outputs['output_1'] = [];
+        if (dat.choices[0]) {
+            // NEXT IS REVEAL
+            if (dat.choices[0].reveal !== '') {
+                outputs['output_1'].push({
+                    "node": "reveal_1_"+dat.name,
+                    "output":"input_1"
+                })
+            }
+            // NEXT IS CARD
+            else if (dat.choices[0].next !== '') {
+                outputs['output_1'].push({
+                    "node": dat.name,
+                    "output":"input_1"
+                })
+            }
+        }
+
+        return {
+            "id":dat.name,
+            "name":'choice',
+            "data":{
+
+            },
+            "class":'choice',
+            "html": this.fillHTMLModule('choice', dat),
+            "typenode":false,
+            "inputs":{
+                "input_1":{
+                    "connections":[]
+                }
+            },
+            "outputs": outputs,
+            "pos_x":742.25, // TODO get a column for display
+            "pos_y":639 // TODO get a row for display
+        }
+    },
+    buildRevealModule (dat) {
+        let outputs = {};
+
+        return {
+            "id":dat.name,
+            "name":'reveal',
+            "data":{
+
+            },
+            "class":'reveal',
+            "html": this.fillHTMLModule('reveal', dat),
+            "typenode":false,
+            "inputs":{
+                "input_1":{
+                    "connections":[]
+                }
+            },
+            "outputs": outputs,
+            "pos_x":742.25, // TODO get a column for display
+            "pos_y":639 // TODO get a row for display
+        }
+    },
+    fillHTMLModule(moduleName, dat) {
+
+        let module = '';
+
+        switch (moduleName) {
+            case 'card':
+                module = `
+        <div>
+            <div class="title-box"><i class="fas fa-money-check"></i> Card</div>
+            <div class="box">
+                <p>Name</p>
+                <input type="text" df-name value="${dat.name}">
+                <p>Desc</p>
+                <textarea df-desc>${dat.desc}</textarea>
+            </div>
+        </div>
+                `;
+                break;
+            case 'choice':
+                module = `
+                <div>
+                    <div class="title-box"><i class="fas fa-sign-out-alt"></i> Choice</div>
+                    <div class="box">
+                        <p>choice</p>
+                        <input type="text" df-choice value="${dat.value}">
+                    </div>
+                </div>
+                        `;
+                break;
+
+            case 'reveal':
+                module = `
+                <div>
+                    <div class="title-box"><i class="fas fa-sign-in-alt"></i> Reveal</div>
+                    <div class="box">
+                        <p>reveal</p>
+                        <textarea df-reveal>${dat.reveal}</textarea>
+                    </div>
+                </div>
+                        `;
+                break;
+
+            default:
+        }
+        return JSON.stringify(module);
+    }
+};
