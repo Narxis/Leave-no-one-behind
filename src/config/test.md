@@ -24,4 +24,3 @@
 
 * plus de carte qui augmentent les stats
 
-* modifier le texte d'arrivée sur planète pour laisser quartier libre aux joueurs
