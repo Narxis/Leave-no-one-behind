@@ -55,7 +55,7 @@
       ]
     },
     {
-      "desc": "\u00a0 Vous profitez d'un moment de calme pendant le voyage pour suivre un tutoriel de [de_stats_0]. \n \n \u00a0 Vous sentez vos capacités augmenter.<span class=\"mjreveal\">\u00a0 Donne le status \"trained\"</span>",
+      "desc": "\u00a0 Vous profitez d'un moment de calme pendant le voyage pour suivre un tutoriel de [de_stats_0]. \n \n \u00a0 Vous sentez vos capacités augmenter.<span class=\"mjreveal\">\u00a0 Rajouter 10 points à tous les joueurs dans leur statistique [de_stats_0]</span>",
       "timer": false,
       "choices": [
         {

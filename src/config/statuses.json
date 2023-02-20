@@ -10,11 +10,6 @@
     "slug": "anticipation"
   },
   {
-    "name": "Entrainé",
-    "desc": "Une ou plusieurs statistiques des joueurs sont augmentées.",
-    "slug": "trained"
-  },
-  {
     "name": "Affaiblit",
     "desc": "Une ou plusieurs statistiques des joueurs sont diminuée",
     "slug": "weak"
