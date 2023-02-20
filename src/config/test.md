@@ -14,8 +14,6 @@
 
 * carte encounter random problème de var
 
-* mise en page des cartes lieux
-
 * lles points de detections retirés ne corerespondent pas au cost affiché
 
 ## Idée pour improve
