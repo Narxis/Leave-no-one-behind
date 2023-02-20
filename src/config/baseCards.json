@@ -588,7 +588,7 @@
   "place": [
     {
       "start": true,
-      "desc": "\n\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\n \n \u00a0Alors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et une porte entrouverte au fond de l'allée principale.",
+      "desc": "\n\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\n \n \u00a0Alors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et [un_race_3] marche dans l'allée.",
       "timer": false,
       "choices": [
         {
@@ -600,7 +600,19 @@
           "next": "bibli2"
         },
         {
-          "value": "Pousser la porte du fond",
+          "value": "Parler [au_race_3]",
+          "next": "bibli3-intro"
+        }
+      ]
+    },
+    {
+      "desc": "Vous tentez de communiquer avec [le_race_3] qui vous ignore et sort de la bibliothèque. Vous constatez qu'une porte est ouverte, c'est probablement par là que cette personne est venue.",
+      "name":"bibli3-intro",
+      "timer": false,
+      "shuffle":true,
+      "choices": [
+        {
+          "value": "Entrez dans la pièce",
           "next": "bibli3"
         }
       ]
@@ -752,7 +764,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Vous appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\n \n \u00a0 Le livre est usé, vous pouvez difficillement lire [livre] écrit sur la couverture.",
+      "desc": "\n\u00a0 Vous entrez dans la pièce et appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\n \n \u00a0 Le livre est usé, vous pouvez difficillement lire [livre] écrit sur la couverture.",
       "name": "bibli3",
       "timer": false,
       "choices": [
