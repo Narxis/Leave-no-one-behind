@@ -309,18 +309,29 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station1-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station1-1-1",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [],
-            "output_3": []
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station1-1-1",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": []
+            },
+            "output_3": {
+              "connections": []
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -334,16 +345,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-1-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "reveal_0_station1-1-1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "reveal_0_station1-1-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -357,7 +375,12 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station1-1-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {},
@@ -369,32 +392,43 @@
           "name": "card",
           "data": {},
           "class": "card",
-          "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1-1\">\n                <p>Desc</p>\n                <textarea df-desc>\n  \"Option n°1 séléctionnée... Très bon choix visiteurs, nous proposons des outils de réparations pour scanner et pour module d'oxygène.\"</textarea>\n            </div>\n        </div>\n                ",
+          "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1-1\">\n                <p>Desc</p>\n                <textarea df-desc>\n  \"Option n°1 séléctionnée... Très bon choix visiteurs, nous proposons des outils de réparations pour détécteur de proximité et pour module de construction.\"</textarea>\n            </div>\n        </div>\n                ",
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station1-1",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [
-              {
-                "node": "choice_1_station1-1",
-                "output": "input_1"
-              }
-            ],
-            "output_3": [
-              {
-                "node": "choice_2_station1-1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station1-1",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": [
+                {
+                  "node": "choice_1_station1-1",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_3": {
+              "connections": [
+                {
+                  "node": "choice_2_station1-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -404,20 +438,27 @@
           "name": "choice",
           "data": {},
           "class": "choice",
-          "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"Échanger 100 cryopods contre des \"outils de réparation pour module d'oxygène\"\">\n                    </div>\n                </div>\n                        ",
+          "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"Échanger 100 cryopods contre des \"outils de réparation pour train d'atterrissage\"\">\n                    </div>\n                </div>\n                        ",
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station1-1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-1-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -427,20 +468,27 @@
           "name": "choice",
           "data": {},
           "class": "choice",
-          "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"Échanger 100 cryopods contre des \"outils de réparation pour module d'oxygène\"\">\n                    </div>\n                </div>\n                        ",
+          "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"Échanger 100 cryopods contre des \"outils de réparation pour train d'atterrissage\"\">\n                    </div>\n                </div>\n                        ",
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-1",
+                  "input": "output_2"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station1-1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-1-2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -450,20 +498,27 @@
           "name": "choice",
           "data": {},
           "class": "choice",
-          "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"Échanger 100 cryopods contre des \"outils de réparation pour module d'oxygène\"\">\n                    </div>\n                </div>\n                        ",
+          "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"Échanger 100 cryopods contre des \"outils de réparation pour train d'atterrissage\"\">\n                    </div>\n                </div>\n                        ",
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-1",
+                  "input": "output_3"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station1-1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-1-3",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -477,18 +532,29 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_1_station1-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station1-1-2",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [],
-            "output_3": []
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station1-1-2",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": []
+            },
+            "output_3": {
+              "connections": []
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -502,16 +568,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-1-2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "reveal_0_station1-1-2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "reveal_0_station1-1-2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -525,7 +598,12 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station1-1-2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {},
@@ -541,18 +619,29 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_2_station1-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station1-1-3",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [],
-            "output_3": []
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station1-1-3",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": []
+            },
+            "output_3": {
+              "connections": []
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -566,16 +655,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-1-3",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "reveal_0_station1-1-3",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "reveal_0_station1-1-3",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -589,7 +685,12 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station1-1-3",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {},
@@ -605,28 +706,39 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station1",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [
-              {
-                "node": "choice_1_station1",
-                "output": "input_1"
-              }
-            ],
-            "output_3": [
-              {
-                "node": "choice_2_station1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station1",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": [
+                {
+                  "node": "choice_1_station1",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_3": {
+              "connections": [
+                {
+                  "node": "choice_2_station1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -640,16 +752,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -663,16 +782,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1",
+                  "input": "output_2"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -686,16 +812,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1",
+                  "input": "output_3"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-1-3",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -709,18 +842,29 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station1-2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station1-2-1",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [],
-            "output_3": []
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station1-2-1",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": []
+            },
+            "output_3": {
+              "connections": []
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -734,16 +878,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-2-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "reveal_0_station1-2-1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "reveal_0_station1-2-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -757,7 +908,12 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station1-2-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {},
@@ -773,28 +929,39 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_1_station1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station1-2",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [
-              {
-                "node": "choice_1_station1-2",
-                "output": "input_1"
-              }
-            ],
-            "output_3": [
-              {
-                "node": "choice_2_station1-2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station1-2",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": [
+                {
+                  "node": "choice_1_station1-2",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_3": {
+              "connections": [
+                {
+                  "node": "choice_2_station1-2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -808,16 +975,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station1-2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-2-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -831,16 +1005,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-2",
+                  "input": "output_2"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station1-2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-2-2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -854,16 +1035,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-2",
+                  "input": "output_3"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station1-2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-1-3",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -877,18 +1065,29 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_1_station1-2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station1-2-2",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [],
-            "output_3": []
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station1-2-2",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": []
+            },
+            "output_3": {
+              "connections": []
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -902,16 +1101,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station1-2-2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "reveal_0_station1-2-2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "reveal_0_station1-2-2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -925,7 +1131,12 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station1-2-2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {},
@@ -945,24 +1156,30 @@
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [
-              {
-                "node": "choice_1_station",
-                "output": "input_1"
-              }
-            ],
-            "output_3": [
-              {
-                "node": "choice_2_station",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": [
+                {
+                  "node": "choice_1_station",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_3": {
+              "connections": [
+                {
+                  "node": "choice_2_station",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -976,16 +1193,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -999,16 +1223,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station",
+                  "input": "output_2"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1022,16 +1253,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station",
+                  "input": "output_3"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station3",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1045,18 +1283,29 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station2-1",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [],
-            "output_3": []
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station2-1",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": []
+            },
+            "output_3": {
+              "connections": []
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1070,16 +1319,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station2-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "reveal_0_station2-1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "reveal_0_station2-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1093,7 +1349,12 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station2-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {},
@@ -1109,28 +1370,39 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_1_station",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station2",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [
-              {
-                "node": "choice_1_station2",
-                "output": "input_1"
-              }
-            ],
-            "output_3": [
-              {
-                "node": "choice_2_station2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station2",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": [
+                {
+                  "node": "choice_1_station2",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_3": {
+              "connections": [
+                {
+                  "node": "choice_2_station2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1144,16 +1416,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station2-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1167,16 +1446,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station2",
+                  "input": "output_2"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station2-2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1190,16 +1476,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station2",
+                  "input": "output_3"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station1-1-3",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1213,18 +1506,29 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_1_station2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station2-2",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [],
-            "output_3": []
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station2-2",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": []
+            },
+            "output_3": {
+              "connections": []
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1238,16 +1542,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station2-2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "reveal_0_station2-2",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "reveal_0_station2-2",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1261,7 +1572,12 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station2-2",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {},
@@ -1277,18 +1593,29 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station3",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station3-1",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [],
-            "output_3": []
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station3-1",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": []
+            },
+            "output_3": {
+              "connections": []
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1302,16 +1629,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station3-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "reveal_0_station3-1",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "reveal_0_station3-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1325,7 +1659,12 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_0_station3-1",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {},
@@ -1337,22 +1676,33 @@
           "name": "card",
           "data": {},
           "class": "card",
-          "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station3\">\n                <p>Desc</p>\n                <textarea df-desc>\n  Vous garez le PLUGS à l'arrière du bâtiment. \n \n   Alors que vous vous apprêtez à pénétrer dans l'enceinte de la station, deux Omphors tentent de vous racketter.</textarea>\n            </div>\n        </div>\n                ",
+          "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station3\">\n                <p>Desc</p>\n                <textarea df-desc>\n  Vous garez le PLUGS à l'arrière du bâtiment. \n \n   Alors que vous vous apprêtez à pénétrer dans l'enceinte de la station, deux Nek-eaux tentent de vous racketter.</textarea>\n            </div>\n        </div>\n                ",
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "choice_2_station",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "choice_0_station3",
-                "output": "input_1"
-              }
-            ],
-            "output_2": [],
-            "output_3": []
+            "output_1": {
+              "connections": [
+                {
+                  "node": "choice_0_station3",
+                  "output": "input_1"
+                }
+              ]
+            },
+            "output_2": {
+              "connections": []
+            },
+            "output_3": {
+              "connections": []
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639
@@ -1366,16 +1716,23 @@
           "typenode": false,
           "inputs": {
             "input_1": {
-              "connections": []
+              "connections": [
+                {
+                  "node": "station3",
+                  "input": "output_1"
+                }
+              ]
             }
           },
           "outputs": {
-            "output_1": [
-              {
-                "node": "station3",
-                "output": "input_1"
-              }
-            ]
+            "output_1": {
+              "connections": [
+                {
+                  "node": "station3-1",
+                  "output": "input_1"
+                }
+              ]
+            }
           },
           "pos_x": 742.25,
           "pos_y": 639

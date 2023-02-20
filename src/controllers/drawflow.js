@@ -67,16 +67,16 @@ module.exports = {
         let outputs = [];
 
         for (let i=0; i < cardsDataSet.length; i++) {
-            for (let j=0; j<cardsDataSet[i].outputs.length; j++) {
-
-                let output = cardsDataSet[i].outputs[j].connections[0];
-                output['id'] = cardsDataSet[i].id;
-                output['index'] = j;
-                outputs.push(output);
+            for (let key in cardsDataSet[i].outputs) {
+                for (let j=0; j < cardsDataSet[i].outputs[key].connections.length; j++){
+                    let output = structuredClone(cardsDataSet[i].outputs[key].connections[j]);
+                    output['id'] = cardsDataSet[i].id;
+                    output['index'] = key.replace('output_', '');
+                    outputs.push(output);
+                }
             }
         }
 
-        //todo not working
         cardsDataSet = cardsDataSet.map(function (set) {
             let output = outputs.find(item => item.node === set.id );
             if (output) {
@@ -106,9 +106,9 @@ module.exports = {
         // Output of cards can only be a choice
         // Output are obvious, inputs will be done on second pass
         for (let i=1; i<=3; i++) {
-            outputs['output_'+i] = [];
+            outputs['output_'+i] = {connections: []};
             if (dat.choices[i-1]) {
-                outputs['output_' + i].push({
+                outputs['output_' + i].connections.push({
                     "node": "choice_"+(i-1)+"_"+dat.name,
                     "output":"input_1"
                 })
@@ -138,19 +138,19 @@ module.exports = {
         let outputs = {};
         // Output of choice can either be a card or a reveal
         // Output are obvious, inputs will be done on second pass
-        outputs['output_1'] = [];
+        outputs['output_1'] = {connections: []};
         if (dat.choices[index]) {
             // NEXT IS REVEAL
             if (dat.choices[index].reveal !== '') {
-                outputs['output_1'].push({
+                outputs['output_1'].connections.push({
                     "node": "reveal_"+index+"_"+dat.name,
                     "output":"input_1"
                 })
             }
             // NEXT IS CARD
             else if (dat.choices[index].next !== '') {
-                outputs['output_1'].push({
-                    "node": dat.name,
+                outputs['output_1'].connections.push({
+                    "node": dat.choices[index].next,
                     "output":"input_1"
                 })
             }
