@@ -38,6 +38,7 @@
         <div class="menu">
             <ul>
                 <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">Home</li>
+                <li onclick="editor.changeModule('station'); changeModule(event);" class="selected">station</li>
             </ul>
         </div>
         <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
@@ -63,7 +64,1392 @@
     const editor = new Drawflow(id);
     editor.reroute = true;
 
-    var dataToImport = {"drawflow":{"Home":{"data":{"47":{"id":1,"name":"card","data":{},"class":"card","html":"\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name>\n                <p>Desc</p>\n                <textarea df-desc></textarea>\n            </div>\n        </div>\n                ","typenode":false,"inputs":{"input_1":{"connections":[]}},"outputs":{"output_1":{"connections":[{"node":"2","output":"input_1"}]},"output_2":{"connections":[{"node":"3","output":"input_1"}]},"output_3":{"connections":[{"node":"4","output":"input_1"}]}},"pos_x":124,"pos_y":213},"2":{"id":2,"name":"choice","data":{},"class":"choice","html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ","typenode":false,"inputs":{"input_1":{"connections":[{"node":"1","input":"output_1"}]}},"outputs":{"output_1":{"connections":[]}},"pos_x":390,"pos_y":126},"3":{"id":3,"name":"choice","data":{},"class":"choice","html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ","typenode":false,"inputs":{"input_1":{"connections":[{"node":"1","input":"output_2"}]}},"outputs":{"output_1":{"connections":[]}},"pos_x":389,"pos_y":280},"4":{"id":4,"name":"choice","data":{},"class":"choice","html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ","typenode":false,"inputs":{"input_1":{"connections":[{"node":"1","input":"output_3"}]}},"outputs":{"output_1":{"connections":[{"node":"5","output":"input_1"}]}},"pos_x":386,"pos_y":442},"5":{"id":5,"name":"card","data":{},"class":"card","html":"\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name>\n                <p>Desc</p>\n                <textarea df-desc></textarea>\n            </div>\n        </div>\n                ","typenode":false,"inputs":{"input_1":{"connections":[{"node":"4","input":"output_1"}]}},"outputs":{"output_1":{"connections":[{"node":"6","output":"input_1"}]},"output_2":{"connections":[{"node":"7","output":"input_1"}]},"output_3":{"connections":[]}},"pos_x":742.25,"pos_y":639},"6":{"id":6,"name":"choice","data":{},"class":"choice","html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ","typenode":false,"inputs":{"input_1":{"connections":[{"node":"5","input":"output_1"}]}},"outputs":{"output_1":{"connections":[{"node":"8","output":"input_1"}]}},"pos_x":1021,"pos_y":612.5},"7":{"id":7,"name":"choice","data":{},"class":"choice","html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ","typenode":false,"inputs":{"input_1":{"connections":[{"node":"5","input":"output_2"}]}},"outputs":{"output_1":{"connections":[{"node":"9","output":"input_1"}]}},"pos_x":1021,"pos_y":782.25},"8":{"id":8,"name":"reveal","data":{},"class":"reveal","html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal></textarea>\n                    </div>\n                </div>\n                        ","typenode":false,"inputs":{"input_1":{"connections":[{"node":"6","input":"output_1"}]}},"outputs":{},"pos_x":1291,"pos_y":534},"9":{"id":9,"name":"reveal","data":{},"class":"reveal","html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal></textarea>\n                    </div>\n                </div>\n                        ","typenode":false,"inputs":{"input_1":{"connections":[{"node":"7","input":"output_1"}]}},"outputs":{},"pos_x":1287,"pos_y":784}}}}};
+    var dataToImport ={
+        "drawflow":{
+            "Home":{
+                "data":{
+                    "1":{
+                        "id":1,
+                        "name":"card",
+                        "data":{
+
+                        },
+                        "class":"card",
+                        "html":"\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name>\n                <p>Desc</p>\n                <textarea df-desc></textarea>\n            </div>\n        </div>\n                ",
+                        "typenode":false,
+                        "inputs":{
+                            "input_1":{
+                                "connections":[
+
+                                ]
+                            }
+                        },
+                        "outputs":{
+                            "output_1":{
+                                "connections":[
+                                    {
+                                        "node":"2",
+                                        "output":"input_1"
+                                    }
+                                ]
+                            },
+                            "output_2":{
+                                "connections":[
+                                    {
+                                        "node":"3",
+                                        "output":"input_1"
+                                    }
+                                ]
+                            },
+                            "output_3":{
+                                "connections":[
+                                    {
+                                        "node":"4",
+                                        "output":"input_1"
+                                    }
+                                ]
+                            }
+                        },
+                        "pos_x":124,
+                        "pos_y":213
+                    },
+                    "2":{
+                        "id":2,
+                        "name":"choice",
+                        "data":{
+
+                        },
+                        "class":"choice",
+                        "html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ",
+                        "typenode":false,
+                        "inputs":{
+                            "input_1":{
+                                "connections":[
+                                    {
+                                        "node":"1",
+                                        "input":"output_1"
+                                    }
+                                ]
+                            }
+                        },
+                        "outputs":{
+                            "output_1":{
+                                "connections":[
+
+                                ]
+                            }
+                        },
+                        "pos_x":390,
+                        "pos_y":126
+                    },
+                    "3":{
+                        "id":3,
+                        "name":"choice",
+                        "data":{
+
+                        },
+                        "class":"choice",
+                        "html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ",
+                        "typenode":false,
+                        "inputs":{
+                            "input_1":{
+                                "connections":[
+                                    {
+                                        "node":"1",
+                                        "input":"output_2"
+                                    }
+                                ]
+                            }
+                        },
+                        "outputs":{
+                            "output_1":{
+                                "connections":[
+
+                                ]
+                            }
+                        },
+                        "pos_x":389,
+                        "pos_y":280
+                    },
+                    "4":{
+                        "id":4,
+                        "name":"choice",
+                        "data":{
+
+                        },
+                        "class":"choice",
+                        "html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ",
+                        "typenode":false,
+                        "inputs":{
+                            "input_1":{
+                                "connections":[
+                                    {
+                                        "node":"1",
+                                        "input":"output_3"
+                                    }
+                                ]
+                            }
+                        },
+                        "outputs":{
+                            "output_1":{
+                                "connections":[
+                                    {
+                                        "node":"5",
+                                        "output":"input_1"
+                                    }
+                                ]
+                            }
+                        },
+                        "pos_x":386,
+                        "pos_y":442
+                    },
+                    "5":{
+                        "id":5,
+                        "name":"card",
+                        "data":{
+
+                        },
+                        "class":"card",
+                        "html":"\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name>\n                <p>Desc</p>\n                <textarea df-desc></textarea>\n            </div>\n        </div>\n                ",
+                        "typenode":false,
+                        "inputs":{
+                            "input_1":{
+                                "connections":[
+                                    {
+                                        "node":"4",
+                                        "input":"output_1"
+                                    }
+                                ]
+                            }
+                        },
+                        "outputs":{
+                            "output_1":{
+                                "connections":[
+                                    {
+                                        "node":"6",
+                                        "output":"input_1"
+                                    }
+                                ]
+                            },
+                            "output_2":{
+                                "connections":[
+                                    {
+                                        "node":"7",
+                                        "output":"input_1"
+                                    }
+                                ]
+                            },
+                            "output_3":{
+                                "connections":[
+
+                                ]
+                            }
+                        },
+                        "pos_x":742.25,
+                        "pos_y":639
+                    },
+                    "6":{
+                        "id":6,
+                        "name":"choice",
+                        "data":{
+
+                        },
+                        "class":"choice",
+                        "html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ",
+                        "typenode":false,
+                        "inputs":{
+                            "input_1":{
+                                "connections":[
+                                    {
+                                        "node":"5",
+                                        "input":"output_1"
+                                    }
+                                ]
+                            }
+                        },
+                        "outputs":{
+                            "output_1":{
+                                "connections":[
+                                    {
+                                        "node":"8",
+                                        "output":"input_1"
+                                    }
+                                ]
+                            }
+                        },
+                        "pos_x":1021,
+                        "pos_y":612.5
+                    },
+                    "7":{
+                        "id":7,
+                        "name":"choice",
+                        "data":{
+
+                        },
+                        "class":"choice",
+                        "html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice>\n                    </div>\n                </div>\n                        ",
+                        "typenode":false,
+                        "inputs":{
+                            "input_1":{
+                                "connections":[
+                                    {
+                                        "node":"5",
+                                        "input":"output_2"
+                                    }
+                                ]
+                            }
+                        },
+                        "outputs":{
+                            "output_1":{
+                                "connections":[
+                                    {
+                                        "node":"9",
+                                        "output":"input_1"
+                                    }
+                                ]
+                            }
+                        },
+                        "pos_x":1021,
+                        "pos_y":782.25
+                    },
+                    "8":{
+                        "id":8,
+                        "name":"reveal",
+                        "data":{
+
+                        },
+                        "class":"reveal",
+                        "html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal></textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode":false,
+                        "inputs":{
+                            "input_1":{
+                                "connections":[
+                                    {
+                                        "node":"6",
+                                        "input":"output_1"
+                                    }
+                                ]
+                            }
+                        },
+                        "outputs":{
+
+                        },
+                        "pos_x":1291,
+                        "pos_y":534
+                    },
+                    "9":{
+                        "id":9,
+                        "name":"reveal",
+                        "data":{
+
+                        },
+                        "class":"reveal",
+                        "html":"\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal></textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode":false,
+                        "inputs":{
+                            "input_1":{
+                                "connections":[
+                                    {
+                                        "node":"7",
+                                        "input":"output_1"
+                                    }
+                                ]
+                            }
+                        },
+                        "outputs":{
+
+                        },
+                        "pos_x":1287,
+                        "pos_y":784
+                    }
+                }
+            },
+            "station": {
+                "data": {
+                    "0": {
+                        "id": "station1-1-1",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1-1-1\">\n                <p>Desc</p>\n                <textarea df-desc>   \"Confirmation de la transaction, \"Article_1\" à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station1-1-1",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [],
+                            "output_3": []
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "1": {
+                        "id": "choice_0_station1-1-1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "reveal_0_station1-1-1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "2": {
+                        "id": "reveal_0_station1-1-1",
+                        "name": "reveal",
+                        "data": {},
+                        "class": "reveal",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal>undefined</textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {},
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "3": {
+                        "id": "station1-1",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1-1\">\n                <p>Desc</p>\n                <textarea df-desc>\n  \"Option n°1 séléctionnée... Très bon choix visiteurs, nous proposons des outils de réparations pour scanner et pour module d'oxygène.\"</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station1-1",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [
+                                {
+                                    "node": "choice_1_station1-1",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_3": [
+                                {
+                                    "node": "choice_2_station1-1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "4": {
+                        "id": "choice_0_station1-1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station1-1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "5": {
+                        "id": "choice_1_station1-1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station1-1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "6": {
+                        "id": "choice_2_station1-1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station1-1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "7": {
+                        "id": "station1-1-2",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1-1-2\">\n                <p>Desc</p>\n                <textarea df-desc>\n   \"Confirmation de la transaction,  \"Article_2\" à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station1-1-2",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [],
+                            "output_3": []
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "8": {
+                        "id": "choice_0_station1-1-2",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "reveal_0_station1-1-2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "9": {
+                        "id": "reveal_0_station1-1-2",
+                        "name": "reveal",
+                        "data": {},
+                        "class": "reveal",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal>undefined</textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {},
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "10": {
+                        "id": "station1-1-3",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1-1-3\">\n                <p>Desc</p>\n                <textarea df-desc>\n  Vous quittez la Station les mains vide et reprennez votre voyage.</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station1-1-3",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [],
+                            "output_3": []
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "11": {
+                        "id": "choice_0_station1-1-3",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "reveal_0_station1-1-3",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "12": {
+                        "id": "reveal_0_station1-1-3",
+                        "name": "reveal",
+                        "data": {},
+                        "class": "reveal",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal>undefined</textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {},
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "13": {
+                        "id": "station1",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1\">\n                <p>Desc</p>\n                <textarea df-desc>\n  Vous garez le PLUGS à l'arrière de la station et entrez dans la boutique. \n \n   Après un bref tour sur vous-même, vous vous rendez compte que la station-service utilise des unités monétaires étranges comme moyen d'échange. \n \n   Un automate vous accueille : \"Bienvenue visiteurs, êtes-vous intéressés par notre large choix d'outils de réparations ou de dispositifs de défense personnelle ?\"</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station1",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [
+                                {
+                                    "node": "choice_1_station1",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_3": [
+                                {
+                                    "node": "choice_2_station1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "14": {
+                        "id": "choice_0_station1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "15": {
+                        "id": "choice_1_station1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "16": {
+                        "id": "choice_2_station1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "17": {
+                        "id": "station1-2-1",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1-2-1\">\n                <p>Desc</p>\n                <textarea df-desc>\n   \"Confirmation de la transaction, \"Article_3\" à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station1-2-1",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [],
+                            "output_3": []
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "18": {
+                        "id": "choice_0_station1-2-1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "reveal_0_station1-2-1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "19": {
+                        "id": "reveal_0_station1-2-1",
+                        "name": "reveal",
+                        "data": {},
+                        "class": "reveal",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal>undefined</textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {},
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "20": {
+                        "id": "station1-2",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1-2\">\n                <p>Desc</p>\n                <textarea df-desc>\n  \"Option n°2 séléctionnée... Très bon choix visiteurs, nous possédons actuellement en stock un \"Projecteur de bouclier personnel\" et un \"Super sonic stars\".\"</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station1-2",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [
+                                {
+                                    "node": "choice_1_station1-2",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_3": [
+                                {
+                                    "node": "choice_2_station1-2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "21": {
+                        "id": "choice_0_station1-2",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station1-2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "22": {
+                        "id": "choice_1_station1-2",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station1-2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "23": {
+                        "id": "choice_2_station1-2",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station1-2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "24": {
+                        "id": "station1-2-2",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station1-2-2\">\n                <p>Desc</p>\n                <textarea df-desc>\n   \"Confirmation de la transaction, \"Article_5\" à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station1-2-2",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [],
+                            "output_3": []
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "25": {
+                        "id": "choice_0_station1-2-2",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "reveal_0_station1-2-2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "26": {
+                        "id": "reveal_0_station1-2-2",
+                        "name": "reveal",
+                        "data": {},
+                        "class": "reveal",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal>undefined</textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {},
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "27": {
+                        "id": "station",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station\">\n                <p>Desc</p>\n                <textarea df-desc>\n  Vous apercevez au loin une vieille station-service qui semble être abandonnée.\n \n   À la radio, vous entendez un message en boucle disant : \"Bienvenue voyageurs, venez faire vos emplettes à la Station de Lavage Automatique et de Vente et Echange pendant que votre vaisseau se fait faire une nouvelle jeunesse.\"</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [
+                                {
+                                    "node": "choice_1_station",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_3": [
+                                {
+                                    "node": "choice_2_station",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "28": {
+                        "id": "choice_0_station",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "29": {
+                        "id": "choice_1_station",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "30": {
+                        "id": "choice_2_station",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "31": {
+                        "id": "station2-1",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station2-1\">\n                <p>Desc</p>\n                <textarea df-desc>\n   \"Confirmation de la transaction,  \"Formule_Minimum\" , merci d'avoir utilisé la Plateforme d'échange.\" \n \n   Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient votre vaisseau de fond en comble. \n \n    Vous ressentez une certaine satisfaction en voyant votre vaisseau ainsi propre. <span class=\"mjreveal\">  Gain de moral moyen.</span></textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station2-1",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [],
+                            "output_3": []
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "32": {
+                        "id": "choice_0_station2-1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "reveal_0_station2-1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "33": {
+                        "id": "reveal_0_station2-1",
+                        "name": "reveal",
+                        "data": {},
+                        "class": "reveal",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal>undefined</textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {},
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "34": {
+                        "id": "station2",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station2\">\n                <p>Desc</p>\n                <textarea df-desc>\n  Vous manoeuvrez le PLUGS dans la baie de lavage. \n \n   Un automate vous accueille : \"Bienvenue visiteurs, nous proposons plusieurs forfait d'entretien, la formule \"Minimum\" et la formule \"Premium\", laquel saura le mieux vous satisfaire ?\" </textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station2",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [
+                                {
+                                    "node": "choice_1_station2",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_3": [
+                                {
+                                    "node": "choice_2_station2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "35": {
+                        "id": "choice_0_station2",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "36": {
+                        "id": "choice_1_station2",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "37": {
+                        "id": "choice_2_station2",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "38": {
+                        "id": "station2-2",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station2-2\">\n                <p>Desc</p>\n                <textarea df-desc>  \"Confirmation de la transaction, \"Formule_Premium\" , merci d'avoir utilisé la Plateforme d'échange.\" \n \n   Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n   Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n   Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-air s'assurent que tout est conforme aux normes intergalactiques. \n \n   Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. <span class=\"mjreveal\">  Fort gain de moral et fortes réparations de vaisseau.</span></textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station2-2",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [],
+                            "output_3": []
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "39": {
+                        "id": "choice_0_station2-2",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "reveal_0_station2-2",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "40": {
+                        "id": "reveal_0_station2-2",
+                        "name": "reveal",
+                        "data": {},
+                        "class": "reveal",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal>undefined</textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {},
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "41": {
+                        "id": "station3-1",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station3-1\">\n                <p>Desc</p>\n                <textarea df-desc>\n  Entendant le bruit provoqué par l'affrontement, deux agents de sécurité sortent armés. Vos agresseurs profitent du moment d'inattention pour fuir, vous devriez faire de même.</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station3-1",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [],
+                            "output_3": []
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "42": {
+                        "id": "choice_0_station3-1",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "reveal_0_station3-1",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "43": {
+                        "id": "reveal_0_station3-1",
+                        "name": "reveal",
+                        "data": {},
+                        "class": "reveal",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-in-alt\"></i> Reveal</div>\n                    <div class=\"box\">\n                        <p>reveal</p>\n                        <textarea df-reveal>undefined</textarea>\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {},
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "44": {
+                        "id": "station3",
+                        "name": "card",
+                        "data": {},
+                        "class": "card",
+                        "html": "\n        <div>\n            <div class=\"title-box\"><i class=\"fas fa-money-check\"></i> Card</div>\n            <div class=\"box\">\n                <p>Name</p>\n                <input type=\"text\" df-name value=\"station3\">\n                <p>Desc</p>\n                <textarea df-desc>\n  Vous garez le PLUGS à l'arrière du bâtiment. \n \n   Alors que vous vous apprêtez à pénétrer dans l'enceinte de la station, deux Omphors tentent de vous racketter.</textarea>\n            </div>\n        </div>\n                ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "choice_0_station3",
+                                    "output": "input_1"
+                                }
+                            ],
+                            "output_2": [],
+                            "output_3": []
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    },
+                    "45": {
+                        "id": "choice_0_station3",
+                        "name": "choice",
+                        "data": {},
+                        "class": "choice",
+                        "html": "\n                <div>\n                    <div class=\"title-box\"><i class=\"fas fa-sign-out-alt\"></i> Choice</div>\n                    <div class=\"box\">\n                        <p>choice</p>\n                        <input type=\"text\" df-choice value=\"-1\">\n                    </div>\n                </div>\n                        ",
+                        "typenode": false,
+                        "inputs": {
+                            "input_1": {
+                                "connections": []
+                            }
+                        },
+                        "outputs": {
+                            "output_1": [
+                                {
+                                    "node": "station3",
+                                    "output": "input_1"
+                                }
+                            ]
+                        },
+                        "pos_x": 742.25,
+                        "pos_y": 639
+                    }
+                }
+            }
+        }
+    };
     editor.start();
     editor.import(dataToImport);
 

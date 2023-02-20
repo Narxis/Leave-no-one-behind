@@ -17,11 +17,7 @@ module.exports.returnOk = async function (req, res) {
 
     let cardRaw = await DB.tables.cards.findOne({attributes: ['id'],where: {type: TYPE_PLACE}, offset:2});
     let card = await new Card(cardRaw.id).getData();
-    let module = await drawflow.getFullPlaceCard(card)
-
-    for (let it of module) {
-        console.log(it.name);
-    }
+    let module = await drawflow.buildPlaceDataSet(card)
 
     res.status(200);
     res.json(module)

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const {Card} = require("../models/card");
+const {error} = require("qrcode-terminal");
 
 module.exports = {
     saveData () {},
@@ -18,9 +19,6 @@ module.exports = {
         }
         arr = arr.filter(v => v);
         return arr;
-    },
-    async onlyUnique(value, index, array) {
-        return self.indexOf(value) === index;
     },
     async searchAll(card) {
         var i, result = [];
@@ -42,8 +40,38 @@ module.exports = {
 
         return result;
     },
-    buildCardDataSet () {},
-    buildGlobalDataSet () {},
+    buildCardDataSet (card) {
+
+        let cardSet = [];
+        cardSet.push(this.buildCardModule(card));
+        let i = 0;
+        for (let choice of card.choices) {
+            cardSet.push(this.buildChoiceModule(card, i));
+            if (choice.reveal !== '')
+                cardSet.push(this.buildRevealModule(card, i));
+            i++;
+        }
+
+        return cardSet;
+    },
+    async buildPlaceDataSet (cardStarter) {
+
+        if (cardStarter.type !== TYPE_PLACE) throw new Error();
+        let cardsDataSet = [];
+        let placeCards = await this.getFullPlaceCard(cardStarter);
+        for (let card of placeCards) {
+            let cardSet = this.buildCardDataSet(card); // contains card + choice/reveal
+            cardsDataSet.push(...cardSet);
+        }
+
+        let placeDataSet = {};
+        placeDataSet[cardStarter.name] = {data: {}}
+
+        for (let i=0; i < cardsDataSet.length; i++) {
+            placeDataSet[cardStarter.name].data[i] = cardsDataSet[i];
+        }
+        //console.log(JSON.stringify(placeDataSet,null,2)); // expected output
+    },
     buildCardModule (dat) {
 
         let outputs = {};
@@ -53,7 +81,7 @@ module.exports = {
             outputs['output_'+i] = [];
             if (dat.choices[i-1]) {
                 outputs['output_' + i].push({
-                    "node": "choice_"+i+"_"+dat.name,
+                    "node": "choice_"+(i-1)+"_"+dat.name,
                     "output":"input_1"
                 })
             }
@@ -78,21 +106,21 @@ module.exports = {
             "pos_y":639 // TODO get a row for display
         }
     },
-    buildChoiceModule (dat) {
+    buildChoiceModule (dat, index) {
         let outputs = {};
         // Output of choice can either be a card or a reveal
         // Output are obvious, inputs will be done on second pass
         outputs['output_1'] = [];
-        if (dat.choices[0]) {
+        if (dat.choices[index]) {
             // NEXT IS REVEAL
-            if (dat.choices[0].reveal !== '') {
+            if (dat.choices[index].reveal !== '') {
                 outputs['output_1'].push({
-                    "node": "reveal_1_"+dat.name,
+                    "node": "reveal_"+index+"_"+dat.name,
                     "output":"input_1"
                 })
             }
             // NEXT IS CARD
-            else if (dat.choices[0].next !== '') {
+            else if (dat.choices[index].next !== '') {
                 outputs['output_1'].push({
                     "node": dat.name,
                     "output":"input_1"
@@ -101,7 +129,7 @@ module.exports = {
         }
 
         return {
-            "id":dat.name,
+            "id":"choice_"+(index)+"_"+dat.name,
             "name":'choice',
             "data":{
 
@@ -119,11 +147,11 @@ module.exports = {
             "pos_y":639 // TODO get a row for display
         }
     },
-    buildRevealModule (dat) {
+    buildRevealModule (dat, index) {
         let outputs = {};
 
         return {
-            "id":dat.name,
+            "id": "reveal_"+index+"_"+dat.name,
             "name":'reveal',
             "data":{
 
@@ -185,6 +213,6 @@ module.exports = {
 
             default:
         }
-        return JSON.stringify(module);
+        return module;
     }
 };
