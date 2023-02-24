@@ -18,7 +18,7 @@
     border: 5px solid #fff;
     left: -625px;
     top: -354px;
-    background: var(--lgrad);
+    background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 90%) 100%);
     filter: invert(1);
 }
 
