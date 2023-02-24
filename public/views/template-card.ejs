@@ -4,13 +4,15 @@
         "/css/template-card.css",
         "/css/timer-animation.css",
         "/css/style.css",
-        "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        "https://use.fontawesome.com/releases/v5.7.2/css/all.css",
+        "/css/plan-du-vaisseau.css"
     ]
 }) %>
 
 <body class="wrap--1">
+  <%- include ("partials/plan-du-vaisseau") %>
   <%- include("partials/nav") %>
-  <div class="center">
+  <div class="center" style="z-index: -1;" >
     <div class="card">
       <div class="wrap">
         <div id="bigboite" class="robot-arm">
