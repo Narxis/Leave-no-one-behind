@@ -4,7 +4,14 @@ async function initialiseKeyListener() {
         switch (event.key) {
             case "F1":
                 event.preventDefault();
+                document.querySelector(".plan-container").classList.toggle("mapshow")
                 break;
+// J'ai mis un toggle showroom sur tout les modules pour tester, à dégager si on veut rajouter quelque chose ici
+            case "F2":
+                event.preventDefault();
+                document.querySelectorAll(".zone-active").forEach(function (e) {
+                    e.classList.toggle("showroom");
+                })
 //            case "F5":
 //                event.preventDefault();
 //                break;
