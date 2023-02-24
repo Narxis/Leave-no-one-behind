@@ -72,7 +72,7 @@ function setRace(e) {
     let img = document.querySelector('#p' + e.detail.data.uid + ' .race-img');
     img.src = '/img/races/' + e.detail.data.race + '.png';
     let desc = document.querySelector('#p' + e.detail.data.uid + ' .race-desc');
-    desc.innerHTML = lang[e.detail.data.race].desc
+    desc.innerHTML = lang.card_vars[e.detail.data.race].desc
 }
 
 async function join(e) {
