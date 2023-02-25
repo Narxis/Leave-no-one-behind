@@ -53,6 +53,7 @@
     position: absolute;
     top: 50%;
     left: 966px;
+    z-index: 1;
 }
 
 .showroom {
