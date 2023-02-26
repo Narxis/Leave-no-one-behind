@@ -17,7 +17,7 @@ async function initialiseKeyListener() {
 //                break;
             case "²":
                 document.querySelectorAll(".tab").forEach(function (e) {
-                    e.classList.add("revealtooltip");
+                    e.classList.toggle("revealtooltip");
                 });
                 break;
             case "&":
@@ -56,11 +56,11 @@ async function initialiseKeyListener() {
             case "F5":
                 event.preventDefault();
                 break;
-            case "²":
+/*            case "²":
                 document.querySelectorAll(".tab").forEach(function (e) {
                     e.classList.remove("revealtooltip");
                 });
-                break;
+                break;*/
             case "&":
                 document.querySelector(".tab-moteurs").classList.remove("revealtooltip");
                 break;
