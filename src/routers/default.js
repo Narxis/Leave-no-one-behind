@@ -4,6 +4,8 @@ module.exports = function(router) {
     router.get('/', controller.index);
     router.get('/200', controller.returnOk);
 
+    router.get('/buildCard', controller.buildCardPage)
+
     router.get('/reset', controller.reset);
     router.get('/start', controller.start);
     router.get('/land', controller.land);

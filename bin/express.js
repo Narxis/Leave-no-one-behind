@@ -7,8 +7,8 @@ module.exports = function() {
     app.set('views', './public/views');
     app.set('view engine', 'ejs');
 
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+    app.use(express.urlencoded({ extended: true, limit: '52428800' }));
+    app.use(express.json({limit: '52428800'}));
 
     app.use(express.static('public'));
 

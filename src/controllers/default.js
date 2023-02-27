@@ -31,6 +31,12 @@ module.exports.deckGenerator = function (req, res) {
 
 }
 
+module.exports.buildCardPage = function (req, res) {
+
+    var text = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
+    res.render('drawflow', {vars: {dat: text}});
+}
+
 module.exports.renderSingleSheet = async function (req, res) {
 
     let player = await new Player().getData(req.body.discord_id);

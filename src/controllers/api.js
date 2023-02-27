@@ -4,6 +4,8 @@ const {hydrateCardDB, getCardsIds, cardPop} = require("./deck");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const {Card} = require("../models/card");
+const drawflow = require("../controllers/drawflow");
+const fs = require('fs');
 
 // TODO replace shipId with current game ship ID
 const shipId = 1;
@@ -13,6 +15,14 @@ module.exports.index = async function(req, res) {
     res.status(200);
     res.json({});
 };
+
+module.exports.savePlaces = async function(req, res) {
+
+    fs.writeFileSync(__dirname + '/../../storage/cache/placesDat.json', JSON.stringify(req.body));
+    res.json({
+        success: true
+    })
+}
 
 module.exports.getAllStatuses = async function(req, res) {
     let statuses = new Statuses();

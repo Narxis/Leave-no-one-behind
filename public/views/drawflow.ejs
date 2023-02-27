@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Drawflow | Simple Flow program libray</title>
+    <meta name="description" content="Simple library for flow programming. Drawflow allows you to create data flows easily and quickly.">
+</head>
+<body>
+<script src="/js/drawflow/drawflow.min.js"></script>
+<script src="/js/drawflow/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/css/drawflow/drawflow.min.css">
+<link rel="stylesheet" type="text/css" href="/css/drawflow/drawflow.css" />
+<link rel="stylesheet" href="/css/drawflow/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<script src="/js/drawflow/sweetalert2@9"></script>
+<script src="/js/drawflow/micromodal.min.js"></script>
+
+
+<header>
+    <h2>LNOB</h2>
+    <div class="github-link"><a href="https://github.com/jerosoler/Drawflow" target="_blank"><i class="fab fa-github fa-3x"></i></a></div>
+</header>
+<div class="wrapper">
+    <div class="col">
+        <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="card">
+            <i class="fas fa-money-check"></i><span> Card</span>
+        </div>
+        <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="choice">
+            <i class="fas fa-sign-out-alt"></i><span> Choice</span>
+        </div>
+        <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="reveal">
+            <i class="fas fa-sign-in-alt"></i><span> Reveal</span>
+        </div>
+    </div>
+    <div class="col-right">
+        <div class="menu">
+            <ul>
+                <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">Home</li>
+                <li onclick="editor.changeModule('bibli'); changeModule(event);" class="selected">bibli</li>
+                <li onclick="editor.changeModule('pub'); changeModule(event);" class="selected">pub</li>
+                <li onclick="editor.changeModule('station'); changeModule(event);" class="selected">station</li>
+            </ul>
+        </div>
+        <form action="/" id="drawflow-form" style="height: 100vh">
+            <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
+
+
+                <div class="btn-export" onclick="parseEditorData();/*downloadObjectAsJson(editor.export())*/">Export2</div>
+                <div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>
+                <div class="btn-lock">
+                    <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
+                    <i id="unlock" class="fas fa-lock-open" onclick="editor.editor_mode='edit'; changeMode('unlock');" style="display:none;"></i>
+                </div>
+                <div class="bar-zoom">
+                    <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
+                    <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
+                    <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var id = document.getElementById("drawflow");
+    const editor = new Drawflow(id);
+    editor.reroute = true;
+
+    var dataToImport = <%- vars.dat %>;
+    editor.start();
+    editor.import(dataToImport);
+
+
+    // Events!
+    editor.on('nodeCreated', function(id) {
+        // console.log("Node created " + id);
+    })
+
+    editor.on('nodeRemoved', function(id) {
+        // console.log("Node removed " + id);
+    })
+
+    editor.on('nodeSelected', function(id) {
+        // console.log("Node selected " + id);
+    })
+
+    editor.on('moduleCreated', function(name) {
+        // console.log("Module Created " + name);
+    })
+
+    editor.on('moduleChanged', function(name) {
+        // console.log("Module Changed " + name);
+    })
+
+    editor.on('connectionCreated', function(connection) {
+        // console.log('Connection created');
+        // console.log(connection);
+    })
+
+    editor.on('connectionRemoved', function(connection) {
+        // console.log('Connection removed');
+        // console.log(connection);
+    })
+
+    editor.on('mouseMove', function(position) {
+        // console.log('Position mouse x:' + position.x + ' y:'+ position.y);
+    })
+
+    editor.on('nodeMoved', function(id) {
+        // console.log("Node moved " + id);
+    })
+
+    editor.on('zoom', function(zoom) {
+        // console.log('Zoom level ' + zoom);
+    })
+
+    editor.on('translate', function(position) {
+        // console.log('Translate x:' + position.x + ' y:'+ position.y);
+    })
+
+    editor.on('addReroute', function(id) {
+        // console.log("Reroute added " + id);
+    })
+
+    editor.on('removeReroute', function(id) {
+        // console.log("Reroute removed " + id);
+    })
+
+    /* DRAG EVENT */
+
+    /* Mouse and Touch Actions */
+
+    var elements = document.getElementsByClassName('drag-drawflow');
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].addEventListener('touchend', drop, false);
+        elements[i].addEventListener('touchmove', positionMobile, false);
+        elements[i].addEventListener('touchstart', drag, false );
+    }
+
+    var mobile_item_selec = '';
+    var mobile_last_move = null;
+    function positionMobile(ev) {
+        mobile_last_move = ev;
+    }
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        if (ev.type === "touchstart") {
+            mobile_item_selec = ev.target.closest(".drag-drawflow").getAttribute('data-node');
+        } else {
+            ev.dataTransfer.setData("node", ev.target.getAttribute('data-node'));
+        }
+    }
+
+    function drop(ev) {
+        if (ev.type === "touchend") {
+            var parentdrawflow = document.elementFromPoint( mobile_last_move.touches[0].clientX, mobile_last_move.touches[0].clientY).closest("#drawflow");
+            if(parentdrawflow != null) {
+                addNodeToDrawFlow(mobile_item_selec, mobile_last_move.touches[0].clientX, mobile_last_move.touches[0].clientY);
+            }
+            mobile_item_selec = '';
+        } else {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("node");
+            addNodeToDrawFlow(data, ev.clientX, ev.clientY);
+        }
+
+    }
+
+    function addNodeToDrawFlow(name, pos_x, pos_y) {
+        if(editor.editor_mode === 'fixed') {
+            return false;
+        }
+        pos_x = pos_x * ( editor.precanvas.clientWidth / (editor.precanvas.clientWidth * editor.zoom)) - (editor.precanvas.getBoundingClientRect().x * ( editor.precanvas.clientWidth / (editor.precanvas.clientWidth * editor.zoom)));
+        pos_y = pos_y * ( editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)) - (editor.precanvas.getBoundingClientRect().y * ( editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)));
+
+
+        switch (name) {
+            case 'card':
+                var card = `
+        <div>
+            <div class="title-box"><i class="fas fa-money-check"></i> Card</div>
+            <div class="box">
+                <p>Name</p>
+                <input type="text" df-name>
+                <p>Desc</p>
+                <textarea df-desc></textarea>
+                <p>Timer</p>
+                <input type="checkbox" df-timer>
+                <p>Shuffle</p>
+                <input type="checkbox" df-shuffle>
+            </div>
+        </div>
+                `;
+                editor.addNode('card', 1,  3, pos_x, pos_y, 'card', {}, card );
+                break;
+            case 'choice':
+                var choice = `
+                <div>
+                    <div class="title-box"><i class="fas fa-sign-out-alt"></i> Choice</div>
+                    <div class="box">
+                        <p>choice</p>
+                        <input type="text" df-choice>
+                    </div>
+                </div>
+                        `;
+                editor.addNode('choice', 1,  1, pos_x, pos_y, 'choice', {}, choice );
+                break;
+
+            case 'reveal':
+                var reveal = `
+                <div>
+                    <div class="title-box"><i class="fas fa-sign-in-alt"></i> Reveal</div>
+                    <div class="box">
+                        <p>reveal</p>
+                        <textarea df-reveal></textarea>
+                    </div>
+                </div>
+                        `;
+                editor.addNode('reveal', 1,  0, pos_x, pos_y, 'reveal', {}, reveal );
+                break;
+
+            default:
+        }
+    }
+
+    var transform = '';
+    function showpopup(e) {
+        e.target.closest(".drawflow-node").style.zIndex = "9999";
+        e.target.children[0].style.display = "block";
+        //document.getElementById("modalfix").style.display = "block";
+
+        //e.target.children[0].style.transform = 'translate('+translate.x+'px, '+translate.y+'px)';
+        transform = editor.precanvas.style.transform;
+        editor.precanvas.style.transform = '';
+        editor.precanvas.style.left = editor.canvas_x +'px';
+        editor.precanvas.style.top = editor.canvas_y +'px';
+        console.log(transform);
+
+        //e.target.children[0].style.top  =  -editor.canvas_y - editor.container.offsetTop +'px';
+        //e.target.children[0].style.left  =  -editor.canvas_x  - editor.container.offsetLeft +'px';
+        editor.editor_mode = "fixed";
+
+    }
+
+    function closemodal(e) {
+        e.target.closest(".drawflow-node").style.zIndex = "2";
+        e.target.parentElement.parentElement.style.display  ="none";
+        //document.getElementById("modalfix").style.display = "none";
+        editor.precanvas.style.transform = transform;
+        editor.precanvas.style.left = '0px';
+        editor.precanvas.style.top = '0px';
+        editor.editor_mode = "edit";
+    }
+
+    function changeModule(event) {
+        var all = document.querySelectorAll(".menu ul li");
+        for (var i = 0; i < all.length; i++) {
+            all[i].classList.remove('selected');
+        }
+        event.target.classList.add('selected');
+    }
+
+    function changeMode(option) {
+
+        //console.log(lock.id);
+        if(option == 'lock') {
+            lock.style.display = 'none';
+            unlock.style.display = 'block';
+        } else {
+            lock.style.display = 'block';
+            unlock.style.display = 'none';
+        }
+
+    }
+
+    function parseEditorData() {
+        let exportFull = editor.export();
+        let exp = exportFull.drawflow;
+        const parser = new DOMParser();
+        let exportBuild = [];
+
+        for (let place in exp) {
+
+            if (place === 'Home') continue;
+            let placeDat = exp[place].data;
+            let asArray = Object.values(placeDat);
+
+            let cards = asArray.filter(v => v.name === 'card');
+            let choices = asArray.filter(v => v.name === 'choice');
+            let reveals = asArray.filter(v => v.name === 'reveal');
+
+            let buildChoices = {};
+            for (let choice of choices) {
+
+                const choiceDoc = parser.parseFromString(choice.html, 'text/html');
+
+                let prevId = choice.inputs.input_1.connections[0].node;
+                let prevNode = choice.inputs.input_1.connections[0].input.split('_')[1] - 1;
+
+                let reveal = reveals.find(el => el.inputs.input_1.connections[0].node === choice.id);
+
+                if (!buildChoices[prevId]) {
+                    buildChoices[prevId] = []
+                }
+                buildChoices[prevId][prevNode] = {
+                    'value': choiceDoc.querySelector('input[df-choice]').value
+                }
+
+                if (reveal) {
+                    const revealDoc = parser.parseFromString(reveal.html, 'text/html');
+                    buildChoices[prevId][prevNode]['reveal'] = revealDoc.querySelector('textarea[df-reveal]').value;
+                }
+                else {
+                    buildChoices[prevId][prevNode]['next'] = choice.outputs.output_1.connections[0].node;
+                }
+            }
+
+            let startItem = cards.find(el => el.inputs.input_1.connections.length === 0);
+
+            for (let card of cards) {
+                let cardExport = {}
+                if (card === startItem)
+                    cardExport['start'] = true;
+
+                const htmlDoc = parser.parseFromString(card.html, 'text/html');
+
+                cardExport['desc'] = htmlDoc.querySelector('textarea[df-desc]').value;
+                cardExport['timer'] = card.data.timer === 'on';
+                cardExport['shuffle'] = card.data.shuffle === 'on';
+                cardExport['name'] = htmlDoc.querySelector('input[df-name]').value;
+                cardExport['choices'] = buildChoices[card.id];
+
+                exportBuild.push(cardExport);
+            }
+        }
+        downloadObjectAsJson(exportBuild, 'placeCards');
+        let resp = saveDataSet(exportFull);
+        console.log(resp);
+    }
+
+    async function saveDataSet(exp) {
+        var dataStr = JSON.stringify(exp);
+        const rawResponse = await fetch('/api/savePlaces', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: dataStr
+        });
+
+        return JSON.parse(await rawResponse.text());
+    }
+
+    function downloadObjectAsJson(exportObj, exportName){
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj,null,2));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", exportName + ".json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+</script>
+</body>
+</html>
