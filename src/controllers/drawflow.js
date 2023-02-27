@@ -98,7 +98,7 @@ module.exports = {
         for (let i=0; i < cardsDataSet.length; i++) {
             placeDataSet[cardStarter.name].data[cardsDataSet[i].id] = cardsDataSet[i];
         }
-        console.log(JSON.stringify(placeDataSet,null,2)); // expected output
+        // console.log(JSON.stringify(placeDataSet,null,2)); // expected output
     },
     buildCardModule (dat) {
 
@@ -114,6 +114,12 @@ module.exports = {
                 })
             }
         }
+
+        let data = {};
+        if (dat.timer === 1)
+            data['timer'] = 'on';
+        if (dat.shuffle === 1)
+            data['shuffle'] = 'on';
 
         return {
             "id":dat.name,
@@ -211,6 +217,10 @@ module.exports = {
                 <input type="text" df-name value="${dat.name}">
                 <p>Desc</p>
                 <textarea df-desc>${dat.desc}</textarea>
+                <p>Timer</p>
+                <input type="checkbox" df-timer>
+                <p>Shuffle</p>
+                <input type="checkbox" df-shuffle>
             </div>
         </div>
                 `;

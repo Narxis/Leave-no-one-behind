@@ -43,21 +43,23 @@
                 <li onclick="editor.changeModule('station'); changeModule(event);" class="selected">station</li>
             </ul>
         </div>
-        <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <form action="/" id="drawflow-form" style="height: 100vh">
+            <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
 
 
-            <div class="btn-export" onclick="downloadObjectAsJson(editor.export())">Export2</div>
-            <div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>
-            <div class="btn-lock">
-                <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
-                <i id="unlock" class="fas fa-lock-open" onclick="editor.editor_mode='edit'; changeMode('unlock');" style="display:none;"></i>
+                <div class="btn-export" onclick="parseEditorData();/*downloadObjectAsJson(editor.export())*/">Export2</div>
+                <div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>
+                <div class="btn-lock">
+                    <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
+                    <i id="unlock" class="fas fa-lock-open" onclick="editor.editor_mode='edit'; changeMode('unlock');" style="display:none;"></i>
+                </div>
+                <div class="bar-zoom">
+                    <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
+                    <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
+                    <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
+                </div>
             </div>
-            <div class="bar-zoom">
-                <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
-                <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
-                <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -188,6 +190,10 @@
                 <input type="text" df-name>
                 <p>Desc</p>
                 <textarea df-desc></textarea>
+                <p>Timer</p>
+                <input type="checkbox" df-timer>
+                <p>Shuffle</p>
+                <input type="checkbox" df-shuffle>
             </div>
         </div>
                 `;
@@ -273,8 +279,70 @@
 
     }
 
+    function parseEditorData() {
+        let exp = editor.export().drawflow;
+        const parser = new DOMParser();
+        let exportBuild = [];
+
+        for (let place in exp) {
+
+            if (place === 'Home') continue;
+            let placeDat = exp[place].data;
+            let asArray = Object.values(placeDat);
+
+            let cards = asArray.filter(v => v.name === 'card');
+            let choices = asArray.filter(v => v.name === 'choice');
+            let reveals = asArray.filter(v => v.name === 'reveal');
+
+            let buildChoices = {};
+            for (let choice of choices) {
+
+                const choiceDoc = parser.parseFromString(choice.html, 'text/html');
+
+                let prevId = choice.inputs.input_1.connections[0].node;
+                let prevNode = choice.inputs.input_1.connections[0].input.split('_')[1] - 1;
+
+                let reveal = reveals.find(el => el.inputs.input_1.connections[0].node === choice.id);
+
+                if (!buildChoices[prevId]) {
+                    buildChoices[prevId] = []
+                }
+                buildChoices[prevId][prevNode] = {
+                    'value': choiceDoc.querySelector('input[df-choice]').value
+                }
+
+                if (reveal) {
+                    const revealDoc = parser.parseFromString(reveal.html, 'text/html');
+                    buildChoices[prevId][prevNode]['reveal'] = revealDoc.querySelector('textarea[df-reveal]').value;
+                }
+                else {
+                    buildChoices[prevId][prevNode]['next'] = choice.outputs.output_1.connections[0].node;
+                }
+            }
+
+            let startItem = cards.find(el => el.inputs.input_1.connections.length === 0);
+
+            for (let card of cards) {
+                let cardExport = {}
+                if (card === startItem)
+                    cardExport['start'] = true;
+
+                const htmlDoc = parser.parseFromString(card.html, 'text/html');
+
+                cardExport['desc'] = htmlDoc.querySelector('textarea[df-desc]').value;
+                cardExport['timer'] = card.data.timer === 'on';
+                cardExport['shuffle'] = card.data.shuffle === 'on';
+                cardExport['name'] = htmlDoc.querySelector('input[df-name]').value;
+                cardExport['choices'] = buildChoices[card.id];
+
+                exportBuild.push(cardExport);
+            }
+        }
+        downloadObjectAsJson(exportBuild, 'placeCards');
+    }
+
     function downloadObjectAsJson(exportObj, exportName){
-        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj,null,2));
         var downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href",     dataStr);
         downloadAnchorNode.setAttribute("download", exportName + ".json");
