@@ -12,6 +12,7 @@ module.exports = {
                 .setRequired(true)
                 .addChoices(
                     { name: 'Combat', value: 'combat' },
+                    { name: 'Force', value: 'combat' },
                     { name: 'Pilotage', value: 'pilotage' },
                     { name: 'Dextérité', value: 'pilotage' },
                     { name: 'Ingénierie', value: 'engineering' },
