@@ -126,10 +126,13 @@ module.exports = {
             "id":dat.name,
             "name":'card',
             "data":{
-
+                "name": dat.name,
+                "desc": dat.desc,
+                "shuffle": dat.shuffle ? "on" : "off",
+                "timer": dat.shuffle ? "on" : "off"
             },
             "class":'card',
-            "html": this.fillHTMLModule('card', dat),
+            "html": this.fillHTMLModule('card'),
             "typenode":false,
             "inputs":{
                 "input_1":{
@@ -167,10 +170,10 @@ module.exports = {
             "id":"choice_"+(index)+"_"+dat.name,
             "name":'choice',
             "data":{
-
+                "choice": dat.choices[index].value
             },
             "class":'choice',
-            "html": this.fillHTMLModule('choice', dat),
+            "html": this.fillHTMLModule('choice'),
             "typenode":false,
             "inputs":{
                 "input_1":{
@@ -189,10 +192,10 @@ module.exports = {
             "id": "reveal_"+index+"_"+dat.name,
             "name":'reveal',
             "data":{
-
+                "reveal": dat.choices[index].reveal
             },
             "class":'reveal',
-            "html": this.fillHTMLModule('reveal', dat, index),
+            "html": this.fillHTMLModule('reveal'),
             "typenode":false,
             "inputs":{
                 "input_1":{
@@ -215,9 +218,9 @@ module.exports = {
             <div class="title-box"><i class="fas fa-money-check"></i> Card</div>
             <div class="box">
                 <p>Name</p>
-                <input type="text" df-name value="${dat.name}">
+                <input type="text" df-name>
                 <p>Desc</p>
-                <textarea df-desc>${dat.desc}</textarea>
+                <textarea df-desc></textarea>
                 <p>Timer</p>
                 <input type="checkbox" df-timer>
                 <p>Shuffle</p>
@@ -232,7 +235,7 @@ module.exports = {
                     <div class="title-box"><i class="fas fa-sign-out-alt"></i> Choice</div>
                     <div class="box">
                         <p>choice</p>
-                        <input type="text" df-choice value="${dat.choices[index].value}">
+                        <textarea df-choice></textarea>
                     </div>
                 </div>
                         `;
@@ -244,7 +247,7 @@ module.exports = {
                     <div class="title-box"><i class="fas fa-sign-in-alt"></i> Reveal</div>
                     <div class="box">
                         <p>reveal</p>
-                        <textarea df-reveal>${dat.choices[index].reveal}</textarea>
+                        <textarea df-reveal></textarea>
                     </div>
                 </div>
                         `;

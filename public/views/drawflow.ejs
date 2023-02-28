@@ -44,8 +44,8 @@
             <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
 
 
-                <div class="btn-save" onclick="parseEditorData();">Save</div>
-                <div class="btn-export" onclick="downloadObjectAsJson(editor.export())">Export</div>
+                <div class="btn-save" onclick="saveDataSet(editor.export());">Save</div>
+                <div class="btn-export" onclick="parseEditorData()">Export</div>
                 <div class="btn-clear" onclick="removeSelected()">Delete</div>
                 <div class="btn-lock">
                     <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
@@ -206,7 +206,7 @@
                     <div class="title-box"><i class="fas fa-sign-out-alt"></i> Choice</div>
                     <div class="box">
                         <p>choice</p>
-                        <input type="text" df-choice>
+                        <textarea df-choice></textarea>
                     </div>
                 </div>
                         `;
@@ -288,6 +288,10 @@
 
         for (let place in exp) {
 
+            if (Object.keys(exp[place].data).length === 0) {
+                delete exp[place];
+                continue;
+            }
             if (place === 'Home') continue;
             let placeDat = exp[place].data;
             let asArray = Object.values(placeDat);
@@ -295,6 +299,10 @@
             let cards = asArray.filter(v => v.name === 'card');
             let choices = asArray.filter(v => v.name === 'choice');
             let reveals = asArray.filter(v => v.name === 'reveal');
+
+            console.log(cards);
+            console.log(choices);
+            console.log(reveals);
 
             let buildChoices = {};
             for (let choice of choices) {
@@ -304,21 +312,22 @@
                 let prevId = choice.inputs.input_1.connections[0].node;
                 let prevNode = choice.inputs.input_1.connections[0].input.split('_')[1] - 1;
 
-                let reveal = reveals.find(el => el.inputs.input_1.connections[0].node === choice.id);
+                let reveal = reveals.find(el => el.inputs.input_1.connections[0].node === choice.id.toString());
 
                 if (!buildChoices[prevId]) {
                     buildChoices[prevId] = []
                 }
                 buildChoices[prevId][prevNode] = {
-                    'value': choiceDoc.querySelector('input[df-choice]').value
+                    'value': choiceDoc.querySelector('textarea[df-choice]').value || choice.data.choice
                 }
 
                 if (reveal) {
                     const revealDoc = parser.parseFromString(reveal.html, 'text/html');
-                    buildChoices[prevId][prevNode]['reveal'] = revealDoc.querySelector('textarea[df-reveal]').value;
+                    buildChoices[prevId][prevNode]['reveal'] = reveal.data.reveal || revealDoc.querySelector('textarea[df-reveal]').value;
                 }
                 else {
-                    buildChoices[prevId][prevNode]['next'] = choice.outputs.output_1.connections[0].node;
+                    let next = cards.find(el => el.id.toString() === choice.outputs.output_1.connections[0].node);
+                    buildChoices[prevId][prevNode]['next'] = next.data.name || next.id;
                 }
             }
 
@@ -331,17 +340,16 @@
 
                 const htmlDoc = parser.parseFromString(card.html, 'text/html');
 
-                cardExport['desc'] = htmlDoc.querySelector('textarea[df-desc]').value;
+                cardExport['desc'] = card.data.desc || htmlDoc.querySelector('textarea[df-desc]').value;
                 cardExport['timer'] = card.data.timer === 'on';
                 cardExport['shuffle'] = card.data.shuffle === 'on';
-                cardExport['name'] = htmlDoc.querySelector('input[df-name]').value;
+                cardExport['name'] = card.data.name || htmlDoc.querySelector('input[df-name]').value;
                 cardExport['choices'] = buildChoices[card.id];
 
                 exportBuild.push(cardExport);
             }
         }
-        // downloadObjectAsJson(exportBuild, 'placeCards');
-        let resp = saveDataSet(exportFull);
+        downloadObjectAsJson(exportBuild, 'placeCards');
     }
 
     function removeSelected() {
