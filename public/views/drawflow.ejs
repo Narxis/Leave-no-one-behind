@@ -37,9 +37,7 @@
     <div class="col-right">
         <div class="menu">
             <ul>
-                <li onclick="editor.changeModule('bibli'); changeModule(event);" class="">bibli</li>
-                <li onclick="editor.changeModule('pub'); changeModule(event);" class="">pub</li>
-                <li onclick="editor.changeModule('station'); changeModule(event);" class="">station</li>
+                <li><input id="add-module-btn" type="text"><button onclick="addPlaceTemplate()">ADD</button></li>
             </ul>
         </div>
         <form action="/" id="drawflow-form" style="height: 100vh">
@@ -48,7 +46,7 @@
 
                 <div class="btn-save" onclick="parseEditorData();">Save</div>
                 <div class="btn-export" onclick="downloadObjectAsJson(editor.export())">Export</div>
-                <div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>
+                <div class="btn-clear" onclick="removeSelected()">Delete</div>
                 <div class="btn-lock">
                     <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
                     <i id="unlock" class="fas fa-lock-open" onclick="editor.editor_mode='edit'; changeMode('unlock');" style="display:none;"></i>
@@ -69,9 +67,12 @@
     editor.reroute = true;
 
     var dataToImport = <%- vars.dat %>;
+
+    for (let name in dataToImport.drawflow)
+        addPlaceTemplate(name);
+
     editor.start();
     editor.import(dataToImport);
-
 
     // Events!
     editor.on('nodeCreated', function(id) {
@@ -341,6 +342,42 @@
         }
         // downloadObjectAsJson(exportBuild, 'placeCards');
         let resp = saveDataSet(exportFull);
+    }
+
+    function removeSelected() {
+
+        let text = "La carte lieu va être supprimée, confirmer ?";
+        if (confirm(text) !== true)
+            return;
+
+        let el = document.querySelector('.selected');
+        try {
+            editor.removeModule(el.innerText);
+        }
+        catch (e) {
+            console.log(e);
+        }
+        document.querySelector('.selected').remove();
+
+        selectFirstModule();
+    }
+
+    function selectFirstModule() {
+        let first = document.querySelectorAll('.menu ul li')[1];
+        first.classList.add('selected');
+        editor.changeModule(first.innerText);
+    }
+
+    function addPlaceTemplate(name = null) {
+
+        if (!name) {
+            let name = document.getElementById('add-module-btn').value;
+            editor.addModule(name);
+        }
+        let newHtmlLi = document.createElement("li");
+        newHtmlLi.innerText = name;
+        newHtmlLi.setAttribute('onclick', "editor.changeModule('"+name+"'); changeModule(event);");
+        document.querySelector('.menu ul').append(newHtmlLi);
     }
 
     async function saveDataSet(exp) {
