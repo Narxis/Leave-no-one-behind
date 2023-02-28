@@ -379,3 +379,13 @@ header a {
         width: 80%;
     }
 }
+
+.card {
+    background-color: #d9d1ff !important;
+}
+.choice {
+    background-color: #c3e2ff !important;
+}
+.reveal {
+    background-color: #d8ffc8 !important;
+}
