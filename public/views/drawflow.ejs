@@ -37,7 +37,7 @@
     <div class="col-right">
         <div class="menu">
             <ul>
-                <li><input id="add-module-btn" type="text"><button onclick="addPlaceTemplate()">ADD</button></li>
+                <li><input id="add-module-btn" type="text" placeholder="nouveau lieu"><button onclick="addPlaceTemplate()">ADD</button></li>
             </ul>
         </div>
         <form action="/" id="drawflow-form" style="height: 100vh">
@@ -350,6 +350,7 @@
         if (confirm(text) !== true)
             return;
 
+        editor.clearModuleSelected();
         let el = document.querySelector('.selected');
         try {
             editor.removeModule(el.innerText);
@@ -371,7 +372,7 @@
     function addPlaceTemplate(name = null) {
 
         if (!name) {
-            let name = document.getElementById('add-module-btn').value;
+            name = document.getElementById('add-module-btn').value;
             editor.addModule(name);
         }
         let newHtmlLi = document.createElement("li");
@@ -381,7 +382,12 @@
     }
 
     async function saveDataSet(exp) {
-        var dataStr = JSON.stringify(exp);
+
+        for (let place in exp.drawflow) {
+            if (Object.keys(exp.drawflow[place].data).length === 0)
+                delete exp.drawflow[place];
+        }
+        let dataStr = JSON.stringify(exp);
         const rawResponse = await fetch('/api/savePlaces', {
             method: 'POST',
             headers: {
