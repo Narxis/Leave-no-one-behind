@@ -15,12 +15,21 @@ module.exports.index = function(req, res) {
 
 module.exports.returnOk = async function (req, res) {
 
-    let cardRaw = await DB.tables.cards.findOne({attributes: ['id'],where: {type: TYPE_PLACE}});
-    let card = await new Card(cardRaw.id).getData();
-    let module = await drawflow.buildPlaceDataSet(card)
+    let cardsRaw = await DB.tables.cards.findAll({attributes: ['id'], raw:true, where: {type: TYPE_PLACE}});
 
-    res.status(200);
-    res.json(module)
+    let objectDataSet = {"drawflow": {}};
+
+    for (let cardRaw of cardsRaw) {
+        let card = await new Card(cardRaw.id).getData();
+        let module = await drawflow.buildPlaceDataSet(card);
+
+        for (let index in module) {
+            objectDataSet['drawflow'][index] = module[index];
+        }
+    }
+    res.json(objectDataSet)
+
+    // res.status(200);
     // res.json({status: 200})
 }
 

@@ -98,7 +98,8 @@ module.exports = {
         for (let i=0; i < cardsDataSet.length; i++) {
             placeDataSet[cardStarter.name].data[cardsDataSet[i].id] = cardsDataSet[i];
         }
-        // console.log(JSON.stringify(placeDataSet,null,2)); // expected output
+        return placeDataSet;
+        // return (JSON.stringify(placeDataSet,null,2));
     },
     buildCardModule (dat) {
 

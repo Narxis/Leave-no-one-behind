@@ -37,17 +37,17 @@
     <div class="col-right">
         <div class="menu">
             <ul>
-                <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">Home</li>
-                <li onclick="editor.changeModule('bibli'); changeModule(event);" class="selected">bibli</li>
-                <li onclick="editor.changeModule('pub'); changeModule(event);" class="selected">pub</li>
-                <li onclick="editor.changeModule('station'); changeModule(event);" class="selected">station</li>
+                <li onclick="editor.changeModule('bibli'); changeModule(event);" class="">bibli</li>
+                <li onclick="editor.changeModule('pub'); changeModule(event);" class="">pub</li>
+                <li onclick="editor.changeModule('station'); changeModule(event);" class="">station</li>
             </ul>
         </div>
         <form action="/" id="drawflow-form" style="height: 100vh">
             <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
 
 
-                <div class="btn-export" onclick="parseEditorData();/*downloadObjectAsJson(editor.export())*/">Export2</div>
+                <div class="btn-save" onclick="parseEditorData();">Save</div>
+                <div class="btn-export" onclick="downloadObjectAsJson(editor.export())">Export</div>
                 <div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>
                 <div class="btn-lock">
                     <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
@@ -339,9 +339,8 @@
                 exportBuild.push(cardExport);
             }
         }
-        downloadObjectAsJson(exportBuild, 'placeCards');
+        // downloadObjectAsJson(exportBuild, 'placeCards');
         let resp = saveDataSet(exportFull);
-        console.log(resp);
     }
 
     async function saveDataSet(exp) {
