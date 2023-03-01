@@ -8,6 +8,7 @@ const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
 const ws = require("ws");
 var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
+const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 module.exports.index = function(req, res) {
     res.render('index', {lang: langJS});
@@ -40,10 +41,30 @@ module.exports.deckGenerator = function (req, res) {
 
 }
 
-module.exports.buildCardPage = function (req, res) {
+module.exports.buildCardPage = async function (req, res) {
 
-    var text = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
-    res.render('drawflow', {vars: {dat: text}});
+    const client = new PasteClient(process.env.PASTEBIN_K);
+    const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
+
+    const pastes = await client.getPastesByUser({
+        userKey: token,
+        limit: 10,
+    });
+
+    let data;
+    for (let paste of pastes) {
+        if (paste.paste_title === PLACESDAT_FILEMAME) {
+            data = await client.getRawPasteByKey({
+                pasteKey: paste.paste_key,
+                userKey: token,
+            });
+        }
+    }
+
+    if (!data)
+        data = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
+
+    res.render('drawflow', {vars: {dat: data}});
 }
 
 module.exports.renderSingleSheet = async function (req, res) {
