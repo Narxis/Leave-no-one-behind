@@ -97,6 +97,7 @@
 
     editor.on('connectionCreated', function(connection) {
         // console.log('Connection created');
+        console.log(connection);
         // console.log(connection);
     })
 
@@ -365,19 +366,19 @@
         let el = document.querySelector('.selected');
         try {
             editor.removeModule(el.innerText);
-            let dataStr = JSON.stringify({name: el.innerText});
-            fetch('/api/deletePlace', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: dataStr
-            });
         }
         catch (e) {
             console.log(e);
         }
+        let dataStr = JSON.stringify({name: el.innerText});
+        fetch('/api/deletePlace', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: dataStr
+        });
         document.querySelector('.selected').remove();
 
         selectFirstModule();
@@ -391,11 +392,14 @@
 
     function addPlaceTemplate(name = null) {
 
+        let newHtmlLi = document.createElement("li");
         if (!name) {
             name = document.getElementById('add-module-btn').value;
             editor.addModule(name);
         }
-        let newHtmlLi = document.createElement("li");
+        else if (name === "bibli") {
+            newHtmlLi.classList.add("selected");
+        }
         newHtmlLi.innerText = name;
         newHtmlLi.setAttribute('onclick', "editor.changeModule('"+name+"'); changeModule(event);");
         document.querySelector('.menu ul').append(newHtmlLi);
@@ -413,7 +417,7 @@
         let data = {};
         data[el] = exp.drawflow[el];
         let dataStr = JSON.stringify(data);
-        console.log(dataStr);
+
         const rawResponse = await fetch('/api/savePlaces', {
             method: 'POST',
             headers: {

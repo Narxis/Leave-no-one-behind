@@ -59,7 +59,12 @@ module.exports = {
     async deletePlace(req, res) {
         let name = req.body.name;
 
-        fs.unlinkSync(name+"_"+PLACESDAT_FILEMAME);
+        try {
+            fs.unlinkSync(name+"_"+PLACESDAT_FILEMAME);
+        }
+        catch {
+            //
+        }
 
         const client = new PasteClient(process.env.PASTEBIN_K);
         const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
