@@ -353,6 +353,8 @@
                 exportBuild.push(cardExport);
             }
         }
+
+        exportBuild.sort((a,b) => a.length - b.length || a.name.localeCompare(b.name));
         downloadObjectAsJson(exportBuild, 'placeCards');
     }
 
