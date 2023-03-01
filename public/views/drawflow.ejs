@@ -280,13 +280,19 @@
 
     }
 
-    function parseEditorData() {
+    function parseEditorData(all=false) {
         let exportFull = editor.export();
         let exp = exportFull.drawflow;
         const parser = new DOMParser();
         let exportBuild = [];
 
         for (let place in exp) {
+
+            if (!all) {
+                let selected = document.querySelector('.selected').innerText;
+                if (place !== selected)
+                    continue;
+            }
 
             if (Object.keys(exp[place].data).length === 0) {
                 delete exp[place];
