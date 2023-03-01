@@ -5,6 +5,7 @@ module.exports = function(router) {
     router.get(basePath + '/', controller.index);
 
     router.post(basePath + '/savePlaces', controller.savePlaces)
+    router.post(basePath + '/deletePlace', controller.deletePlace)
 
     router.get(basePath + '/nextCard/get', controller.getNextCard);
     router.get(basePath + '/nextCard/pop', controller.popNextCard);

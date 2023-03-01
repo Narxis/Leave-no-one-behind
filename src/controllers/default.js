@@ -51,18 +51,22 @@ module.exports.buildCardPage = async function (req, res) {
         limit: 10,
     });
 
-    let data;
+    let data = {};
     for (let paste of pastes) {
-        if (paste.paste_title === PLACESDAT_FILEMAME) {
-            data = await client.getRawPasteByKey({
+        if (paste.paste_title.endsWith(PLACESDAT_FILEMAME)) {
+            let rawData = await client.getRawPasteByKey({
                 pasteKey: paste.paste_key,
                 userKey: token,
             });
+            for (let index in rawData) {
+                data['drawflow'][index] = rawData[index];
+            }
+            break;
         }
     }
 
-    if (!data)
-        data = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
+    // if (!data)
+    //     data = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
 
     res.render('drawflow', {vars: {dat: data}});
 }

@@ -293,10 +293,11 @@
                 if (place !== selected)
                     continue;
             }
-
-            if (Object.keys(exp[place].data).length === 0) {
-                delete exp[place];
-                continue;
+            else {
+                if (Object.keys(exp[place].data).length === 0) {
+                    delete exp[place];
+                    continue;
+                }
             }
             if (place === 'Home') continue;
             let placeDat = exp[place].data;
@@ -305,10 +306,6 @@
             let cards = asArray.filter(v => v.name === 'card');
             let choices = asArray.filter(v => v.name === 'choice');
             let reveals = asArray.filter(v => v.name === 'reveal');
-
-            console.log(cards);
-            console.log(choices);
-            console.log(reveals);
 
             let buildChoices = {};
             for (let choice of choices) {
@@ -368,6 +365,15 @@
         let el = document.querySelector('.selected');
         try {
             editor.removeModule(el.innerText);
+            let dataStr = JSON.stringify({name: el.innerText});
+            fetch('/api/deletePlace', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: dataStr
+            });
         }
         catch (e) {
             console.log(e);
@@ -395,13 +401,15 @@
         document.querySelector('.menu ul').append(newHtmlLi);
     }
 
+    // SAVE SINGLE ELEMENT
     async function saveDataSet(exp) {
 
-        for (let place in exp.drawflow) {
-            if (Object.keys(exp.drawflow[place].data).length === 0)
-                delete exp.drawflow[place];
-        }
-        let dataStr = JSON.stringify(exp);
+        let el = document.querySelector('.selected').innerText;
+        // for (let place in exp.drawflow) {
+        //     if (Object.keys(exp.drawflow[place].data).length === 0)
+        //         delete exp.drawflow[place];
+        // }
+        let dataStr = JSON.stringify(exp.drawflow[el]);
         const rawResponse = await fetch('/api/savePlaces', {
             method: 'POST',
             headers: {

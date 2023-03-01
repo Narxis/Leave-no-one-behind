@@ -19,9 +19,11 @@ module.exports.index = async function(req, res) {
 
 module.exports.savePlaces = async function(req, res) {
 
+    let name = Object.keys(req.body)[0];
+
     let body = JSON.stringify(req.body);
     // SAVE A COPY IN CACHE (failsafe)
-    fs.writeFileSync(__dirname + '/../../storage/cache/placesDat.json', body);
+    fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
 
     // SAVE ON PASTEBIN
     const client = new PasteClient(process.env.PASTEBIN_K);
@@ -29,11 +31,11 @@ module.exports.savePlaces = async function(req, res) {
 
     const pastes = await client.getPastesByUser({
         userKey: token,
-        limit: 10,
+        limit: 100,
     });
 
     for (let paste of pastes) {
-        if (paste.paste_title === PLACESDAT_FILEMAME) {
+        if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
             await client.deletePasteByKey({
                 userKey: token,
                 pasteKey: paste.paste_key,
@@ -45,7 +47,7 @@ module.exports.savePlaces = async function(req, res) {
         code: body,
         expireDate: ExpireDate.Never,
         format: "json",
-        name: PLACESDAT_FILEMAME,
+        name: name+"_"+PLACESDAT_FILEMAME,
         publicity: Publicity.Private,
         apiUserKey: token
     });
@@ -53,6 +55,32 @@ module.exports.savePlaces = async function(req, res) {
     res.json({
         success: true
     })
+}
+
+module.exports.deletePlace = async function(req, res) {
+    let name = req.body.name;
+
+    fs.unlinkSync(name+"_"+PLACESDAT_FILEMAME);
+
+    const client = new PasteClient(process.env.PASTEBIN_K);
+    const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
+
+    const pastes = await client.getPastesByUser({
+        userKey: token,
+        limit: 100,
+    });
+
+    for (let paste of pastes) {
+        if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
+            await client.deletePasteByKey({
+                userKey: token,
+                pasteKey: paste.paste_key,
+            });
+            break;
+        }
+    }
+
+    res.json({});
 }
 
 module.exports.getAllStatuses = async function(req, res) {
