@@ -19,41 +19,48 @@ module.exports = {
 
     async savePlaces(req, res) {
 
-        let name = Object.keys(req.body)[0];
-        let body = JSON.stringify(req.body);
-        // SAVE A COPY IN CACHE (failsafe)
-        fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
+        try {
+            let name = Object.keys(req.body)[0];
+            let body = JSON.stringify(req.body);
+            // SAVE A COPY IN CACHE (failsafe)
+            fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
 
-        // SAVE ON PASTEBIN
-        const client = new PasteClient(process.env.PASTEBIN_K);
-        const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
+            // SAVE ON PASTEBIN
+            const client = new PasteClient(process.env.PASTEBIN_K);
+            const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
 
-        const pastes = await client.getPastesByUser({
-            userKey: token,
-            limit: 100,
-        });
+            const pastes = await client.getPastesByUser({
+                userKey: token,
+                limit: 100,
+            });
 
-        for (let paste of pastes) {
-            if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
-                await client.deletePasteByKey({
-                    userKey: token,
-                    pasteKey: paste.paste_key,
-                });
+            for (let paste of pastes) {
+                if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
+                    await client.deletePasteByKey({
+                        userKey: token,
+                        pasteKey: paste.paste_key,
+                    });
+                }
             }
+
+            await client.createPaste({
+                code: body,
+                expireDate: ExpireDate.Never,
+                format: "json",
+                name: name+"_"+PLACESDAT_FILEMAME,
+                publicity: Publicity.Private,
+                apiUserKey: token
+            });
+            res.json({
+                success: true
+            })
         }
-
-        await client.createPaste({
-            code: body,
-            expireDate: ExpireDate.Never,
-            format: "json",
-            name: name+"_"+PLACESDAT_FILEMAME,
-            publicity: Publicity.Private,
-            apiUserKey: token
-        });
-
-        res.json({
-            success: true
-        })
+        catch (e) {
+            res.json({
+                success: false,
+                error: e.toString()
+            })
+        }
     },
 
     async deletePlace(req, res) {
