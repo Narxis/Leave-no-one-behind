@@ -6,6 +6,7 @@ const {Items} = require("../models/items");
 const {Card} = require("../models/card");
 const drawflow = require("../controllers/drawflow");
 const fs = require('fs');
+const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 // TODO replace shipId with current game ship ID
 const shipId = 1;
@@ -18,7 +19,37 @@ module.exports.index = async function(req, res) {
 
 module.exports.savePlaces = async function(req, res) {
 
-    fs.writeFileSync(__dirname + '/../../storage/cache/placesDat.json', JSON.stringify(req.body));
+    let body = JSON.stringify(req.body);
+    // SAVE A COPY IN CACHE (failsafe)
+    fs.writeFileSync(__dirname + '/../../storage/cache/placesDat.json', body);
+
+    // SAVE ON PASTEBIN
+    const client = new PasteClient(process.env.PASTEBIN_K);
+    const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
+
+    const pastes = await client.getPastesByUser({
+        userKey: token,
+        limit: 10,
+    });
+
+    for (let paste of pastes) {
+        if (paste.paste_title === PLACESDAT_FILEMAME) {
+            await client.deletePasteByKey({
+                userKey: token,
+                pasteKey: paste.paste_key,
+            });
+        }
+    }
+
+    await client.createPaste({
+        code: body,
+        expireDate: ExpireDate.Never,
+        format: "json",
+        name: PLACESDAT_FILEMAME,
+        publicity: Publicity.Private,
+        apiUserKey: token
+    });
+
     res.json({
         success: true
     })
