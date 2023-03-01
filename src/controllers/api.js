@@ -11,278 +11,222 @@ const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 // TODO replace shipId with current game ship ID
 const shipId = 1;
 
-module.exports.index = async function(req, res) {
+module.exports = {
+    async index(req, res) {
+        res.status(200);
+        res.json({});
+    },
 
-    res.status(200);
-    res.json({});
-};
+    async savePlaces(req, res) {
 
-module.exports.savePlaces = async function(req, res) {
+        let name = Object.keys(req.body)[0];
+        let body = JSON.stringify(req.body);
+        // SAVE A COPY IN CACHE (failsafe)
+        fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
 
-    let name = Object.keys(req.body)[0];
+        // SAVE ON PASTEBIN
+        const client = new PasteClient(process.env.PASTEBIN_K);
+        const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
 
-    let body = JSON.stringify(req.body);
-    // SAVE A COPY IN CACHE (failsafe)
-    fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
+        const pastes = await client.getPastesByUser({
+            userKey: token,
+            limit: 100,
+        });
 
-    // SAVE ON PASTEBIN
-    const client = new PasteClient(process.env.PASTEBIN_K);
-    const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
-
-    const pastes = await client.getPastesByUser({
-        userKey: token,
-        limit: 100,
-    });
-
-    for (let paste of pastes) {
-        if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
-            await client.deletePasteByKey({
-                userKey: token,
-                pasteKey: paste.paste_key,
-            });
+        for (let paste of pastes) {
+            if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
+                await client.deletePasteByKey({
+                    userKey: token,
+                    pasteKey: paste.paste_key,
+                });
+            }
         }
-    }
 
-    await client.createPaste({
-        code: body,
-        expireDate: ExpireDate.Never,
-        format: "json",
-        name: name+"_"+PLACESDAT_FILEMAME,
-        publicity: Publicity.Private,
-        apiUserKey: token
-    });
+        await client.createPaste({
+            code: body,
+            expireDate: ExpireDate.Never,
+            format: "json",
+            name: name+"_"+PLACESDAT_FILEMAME,
+            publicity: Publicity.Private,
+            apiUserKey: token
+        });
 
-    res.json({
-        success: true
-    })
-}
+        res.json({
+            success: true
+        })
+    },
 
-module.exports.deletePlace = async function(req, res) {
-    let name = req.body.name;
+    async deletePlace(req, res) {
+        let name = req.body.name;
 
-    fs.unlinkSync(name+"_"+PLACESDAT_FILEMAME);
+        fs.unlinkSync(name+"_"+PLACESDAT_FILEMAME);
 
-    const client = new PasteClient(process.env.PASTEBIN_K);
-    const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
+        const client = new PasteClient(process.env.PASTEBIN_K);
+        const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
 
-    const pastes = await client.getPastesByUser({
-        userKey: token,
-        limit: 100,
-    });
+        const pastes = await client.getPastesByUser({
+            userKey: token,
+            limit: 100,
+        });
 
-    for (let paste of pastes) {
-        if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
-            await client.deletePasteByKey({
-                userKey: token,
-                pasteKey: paste.paste_key,
-            });
-            break;
+        for (let paste of pastes) {
+            if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
+                await client.deletePasteByKey({
+                    userKey: token,
+                    pasteKey: paste.paste_key,
+                });
+                break;
+            }
         }
-    }
 
-    res.json({});
-}
+        res.json({});
+},
 
-module.exports.getAllStatuses = async function(req, res) {
-    let statuses = new Statuses();
-    statuses = await statuses.getAllStatuses(false);
+    async getAllStatuses(req, res) {
+        let statuses = new Statuses();
+        statuses = await statuses.getAllStatuses(false);
 
-    res.json(statuses);
-}
+        res.json(statuses);
+    },
 
-module.exports.getActiveStatuses = async function(req, res) {
-    let statuses = new Statuses();
-    statuses = await statuses.getAllStatuses();
+    async getActiveStatuses (req, res) {
+        let statuses = new Statuses();
+        statuses = await statuses.getAllStatuses();
 
-    res.json(statuses);
-}
+        res.json(statuses);
+    },
 
-module.exports.getAllItems = async function(req, res) {
-    let items = new Items();
-    items = await items.getAllItems(false);
+    async getAllItems(req, res) {
+        let items = new Items();
+        items = await items.getAllItems(false);
 
-    res.json(items);
-}
+        res.json(items);
+    },
 
-module.exports.getOwnedItems = async function(req, res) {
-    let items = new Items();
-    items = await items.getAllItems();
+    async getOwnedItems(req, res) {
+        let items = new Items();
+        items = await items.getAllItems();
 
-    res.json(items);
-}
+        res.json(items);
+    },
 
-module.exports.getPlayerItems = async function(req, res) {
-    let itemsMan = new Items();
-    let items = await itemsMan.getAllStarters();
+    async getPlayerItems (req, res) {
+        let itemsMan = new Items();
+        let items = await itemsMan.getAllStarters();
 
-    items = items.filter(item => item.owners.includes(req.params.discordId))
+        items = items.filter(item => item.owners.includes(req.params.discordId))
 
-    res.json(items);
-}
+        res.json(items);
+    },
 
-module.exports.getPlayer = async function (req, res) {
-    let player = new Player();
-    player = await player.getData(req.params.discordId);
-    if (!player)
-        showError(res, 'No player for this ID')
-    else {
-        delete player['accepted_datas'];
-        res.json(player)
-    }
-}
-
-module.exports.getAllPlayers = async function (req, res) {
-
-    let players = await DB.tables.players.findAll();
-    res.json(players);
-}
-
-module.exports.getNextCard = async function (req, res) {
-
-    let next_card = await cardPop(false);
-
-    res.json(next_card);
-}
-
-module.exports.getCardByName = async function (req, res) {
-
-    let cardRaw = await DB.tables.cards.findOne({
-        attributes: [
-            'id'
-        ],
-        where: {
-            name: req.params.name
+    async getPlayer(req, res) {
+        let player = new Player();
+        player = await player.getData(req.params.discordId);
+        if (!player)
+            this.showError(res, 'No player for this ID')
+        else {
+            delete player['accepted_datas'];
+            res.json(player)
         }
-    });
+    },
 
-    let card = await new Card(cardRaw.id).getData();
+    async getAllPlayers(req, res) {
+        let players = await DB.tables.players.findAll();
+        res.json(players);
+    },
 
-    res.json(card);
-}
+    async getNextCard(req, res) {
 
-module.exports.popNextCard = async function (req, res) {
+        let next_card = await cardPop(false);
+        res.json(next_card);
+    },
 
-    let next_card = await cardPop();
+    async getCardByName(req, res) {
 
-    let statuses = await new Statuses();
-    let activeStatuses = await statuses.getAllStatuses();
+        let cardRaw = await DB.tables.cards.findOne({
+            attributes: [
+                'id'
+            ],
+            where: {
+                name: req.params.name
+            }
+        });
 
-    for (let i of activeStatuses) {
-        await statuses.remove(i.slug);
+        let card = await new Card(cardRaw.id).getData();
+
+        res.json(card);
+    },
+
+    async popNextCard(req, res) {
+
+        let next_card = await cardPop();
+
+        let statuses = await new Statuses();
+        let activeStatuses = await statuses.getAllStatuses();
+
+        for (let i of activeStatuses) {
+            await statuses.remove(i.slug);
+        }
+
+        res.json(next_card);
+    },
+
+    async getShip(req, res) {
+        let ship = new Ship(shipId);
+        if (! await ship.getData())
+            await ship.create();
+        delete ship['accepted_datas'];
+        res.json(ship);
+    },
+
+    async getAllCards(req, res) {
+        let type = req.params.type;
+        let whereClause;
+
+        switch (type) {
+            case 'planet':
+                whereClause = {type: TYPE_PLANET};
+                break;
+            case 'positive':
+                whereClause = {type: TYPE_POSITIVE};
+                break;
+            case 'negative':
+                whereClause = {type: TYPE_NEGATIVE};
+                break;
+            case 'neutral':
+                whereClause = {type: TYPE_NEUTRAL};
+                break;
+            case 'initial':
+                whereClause = {type: TYPE_INITIAL};
+                break;
+            case 'place':
+                break;
+        }
+
+        let cardsRaw = await DB.tables.cards.findAll({where:whereClause, raw:true});
+        let cards = [];
+
+        for (let item of cardsRaw){
+            let  card = await new Card(item.id).getData();
+            card = this.cleanObject(card, 'langVars','cardVars','accepted_datas');
+            cards.push(card);
+        }
+
+        res.json(cards);
+    },
+
+    cleanObject(object, ...unusedKeys){
+        for (let key in object) {
+            if (unusedKeys.includes(key) === true)
+                delete object[key];
+        }
+        return object;
+    },
+
+    showError(res, msg) {
+        res.status(404);
+        res.json({
+            error_msg: msg
+        })
     }
-
-    res.json(next_card);
-}
-
-// module.exports.updatePlayer = async function (req, res) {
-//     let player = new Player(req.params.playerId);
-//     let stat = req.params.stat;
-//     let val = parseInt(req.params.val);
-//     player = await player.getData();
-//     if (!player)
-//         showError(res, 'No player for this ID')
-//     else {
-//         if (typeof player.accepted_datas[stat] !== 'number') {
-//             showError(res, 'Wrong stat, expecting one of [combat|pilotage|engineering|survival|recon|moral]')
-//         }
-//         else {
-//             let data = {};
-//             data[stat] = player[stat] + val;
-//             let updatedPlayer = await player.update(data)
-//             updatedPlayer['updated_stat'] = stat;
-//             updatedPlayer['updated_val'] = val;
-//             delete updatedPlayer['accepted_datas'];
-//             res.json(updatedPlayer);
-//         }
-//     }
-// }
-
-module.exports.getShip = async function (req, res) {
-    let ship = new Ship(shipId);
-    if (! await ship.getData())
-        await ship.create();
-    delete ship['accepted_datas'];
-    res.json(ship);
-}
-
-module.exports.getAllCards = async function (req, res) {
-
-    let type = req.params.type;
-    let whereClause;
-
-
-    switch (type) {
-        case 'planet':
-            whereClause = {type: TYPE_PLANET};
-            break;
-        case 'positive':
-            whereClause = {type: TYPE_POSITIVE};
-            break;
-        case 'negative':
-            whereClause = {type: TYPE_NEGATIVE};
-            break;
-        case 'neutral':
-            whereClause = {type: TYPE_NEUTRAL};
-            break;
-        case 'initial':
-            whereClause = {type: TYPE_INITIAL};
-            break;
-        case 'place':
-            break;
-    }
-
-    let cardsRaw = await DB.tables.cards.findAll({where:whereClause, raw:true});
-    let cards = [];
-
-    for (let item of cardsRaw){
-        let  card = await new Card(item.id).getData();
-        card = cleanObject(card, 'langVars','cardVars','accepted_datas');
-        cards.push(card);
-    }
-
-    res.json(cards);
-}
-
-// module.exports.upgradeShipModule = async function (req, res) {
-//     let ship = new Ship(shipId);
-//     let mod = req.params.module;
-//     await ship.getData();
-//     if (typeof ship.accepted_datas[mod + '_up'] !== 'number')
-//         showError(res, 'Not an upgradable module, expectiong on of [scanner|oxygen|energy|gravity]')
-//     else if (ship[mod + '_up'] !== 0)
-//         showError(res, 'This module is already upgraded')
-//     else {
-//         await ship.upgradeModule(mod);
-//         delete ship['accepted_datas'];
-//         res.json(ship);
-//     }
-// }
-
-// module.exports.updateShipModule = async function (req, res) {
-//     let ship = new Ship(shipId);
-//     let mod = req.params.module;
-//     await ship.getData();
-//     if (ship.accepted_datas[mod] !== 100) {
-//         showError(res, 'Not a module, expectiong on of [cryopods|scanner|proximity|motors|shield|oxygen|energy|gravity|landing|construction]')
-//     }
-//     else {
-//         await ship.updateIntegrity(mod, req.params.val);
-//         delete ship['accepted_datas'];
-//         res.json(ship);
-//     }
-// }
-
-const cleanObject = function (object, ...unusedKeys){
-    for (let key in object) {
-        if (unusedKeys.includes(key) === true)
-            delete object[key];
-    }
-    return object;
-}
-
-const showError = function (res, msg) {
-    res.status(404);
-    res.json({
-        error_msg: msg
-    })
 }

@@ -409,7 +409,11 @@
         //     if (Object.keys(exp.drawflow[place].data).length === 0)
         //         delete exp.drawflow[place];
         // }
-        let dataStr = JSON.stringify(exp.drawflow[el]);
+
+        let data = {};
+        data[el] = exp.drawflow[el];
+        let dataStr = JSON.stringify(data);
+        console.log(dataStr);
         const rawResponse = await fetch('/api/savePlaces', {
             method: 'POST',
             headers: {
