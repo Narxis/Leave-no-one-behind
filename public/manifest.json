@@ -8,44 +8,44 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/img/48.png",
+      "src": "/img/lnob-icon.ico",
       "sizes": "48x48",
-      "type": "image/png",
+      "type": "image/icon",
       "density": "1.0",
       "purpose": "any maskable"
     },
     {
-      "src": "/img/72.png",
+      "src": "/img/lnob-icon.ico",
       "sizes": "72x72",
       "type": "image/png",
       "density": "1.5",
       "purpose": "any maskable"
     },
     {
-      "src": "/img/96.png",
+      "src": "/img/lnob-icon.ico",
       "sizes": "96x96",
-      "type": "image/png",
+      "type": "image/icon",
       "density": "2.0",
       "purpose": "any maskable"
     },
     {
-      "src": "/img/144.png",
+      "src": "/img/lnob-icon.ico",
       "sizes": "144x144",
-      "type": "image/png",
+      "type": "image/icon",
       "density": "3.0",
       "purpose": "any maskable"
     },
     {
-      "src": "/img/192.png",
+      "src": "/img/lnob-icon.ico",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/icon",
       "density": "4.0",
       "purpose": "any maskable"
     },
     {
-      "src": "/img/512.png",
+      "src": "/img/lnob-icon.ico",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/icon",
       "density": "4.0",
       "purpose": "any maskable"
     }

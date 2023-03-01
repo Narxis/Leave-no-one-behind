@@ -1,0 +1,85 @@
+.bluredbg {
+    position: absolute;
+    top: -520px;
+    left: -980px;
+    height: 100vh;
+    width: 100vw;
+}
+
+.blured {
+    filter: blur(3px);
+}
+
+.plan-card {
+    position: absolute;
+    width: 62vw;
+    height: 710px;
+    border-radius: 15px;
+    border: 5px solid #fff;
+    left: -625px;
+    top: -354px;
+    background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 90%) 100%);
+    filter: invert(1);
+}
+
+.plan-empty {
+    position: absolute;
+    width: 1200px;
+    height: 675px;
+    left: -600px;
+    top: -337px;
+}
+
+.plan-room {
+    position: absolute;
+    top: -288px;
+    left: -560px;
+    width: 1074px;
+    height: 573px;
+    transition: .5s;
+    filter: invert(1);
+    fill: #fff;
+}
+
+.plan-room path {
+    opacity: 0;
+}
+
+.plan-container {
+    opacity: 0;
+    transform: translateY(-800px);
+    transition: .5s;
+    filter: invert(1);
+    position: absolute;
+    top: 50%;
+    left: 966px;
+    z-index: 1;
+}
+
+.showroom {
+    opacity: 1 !important;
+    animation: danger .7s ease-in-out infinite;
+}
+
+@keyframes danger {
+    0% {
+        filter: opacity(0);
+        fill: red
+    }
+
+    50% {
+        filter: opacity(1);
+        fill: red;
+
+    }
+
+    100% {
+        filter: opacity(0);
+        fill: red;
+    }
+}
+
+.mapshow {
+    opacity: 1;
+    transform: translateY(-14px);
+}

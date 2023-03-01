@@ -12,28 +12,30 @@ ___
 
 ## Templates
 
-### Card-Template
+### Card Template
 
 ```json
     {
-      "desc": "\u00a0 <span class=\"blackout\">\u00a0 </span>",
+      "desc": "\n \u00a0 ",
       "timer": false,
       "choices": [
         {
           "value": "",
-          "reveal": "\u00a0 <span class=\"mjreveal\">\u00a0 </span>"
+          "reveal": "\n \u00a0 "
         },
         {
           "value": "",
-          "reveal": ""
+          "reveal": "\n \u00a0 "
         },
         {
           "value": "Ne rien faire",
-          "reveal": "\u00a0 <span class=\"mjreveal\">\u00a0 Perte de moral.</span>"
+          "reveal": "\n \u00a0 <span class=\"mjreveal\">\u00a0 Perte de moral.</span>"
         }
       ]
     }
 ```
+
+### Planet Template
 
 ```json
     {
@@ -74,6 +76,11 @@ ___
       }
     }
 ```
+
+### Place Template
+
+#### First place card
+
 ```json
     {
       "start": true,
@@ -95,6 +102,8 @@ ___
       ]
     }
 ```
+
+#### Place choice template
 
 ```json
     {
