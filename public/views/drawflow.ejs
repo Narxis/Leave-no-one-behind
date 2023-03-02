@@ -286,6 +286,7 @@
         let exp = exportFull.drawflow;
         const parser = new DOMParser();
         let exportBuild = [];
+        let exportName = "placeCards";
 
         for (let place in exp) {
 
@@ -293,6 +294,7 @@
                 let selected = document.querySelector('.selected').innerText;
                 if (place !== selected)
                     continue;
+                exportName = place + "_" + exportName;
             }
             else {
                 if (Object.keys(exp[place].data).length === 0) {
@@ -372,7 +374,7 @@
         }
 
         exportBuild.sort((a,b) => a.length - b.length || a.name.localeCompare(b.name));
-        downloadObjectAsJson(exportBuild, 'placeCards');
+        downloadObjectAsJson(exportBuild, exportName);
     }
 
     function removeSelected() {
