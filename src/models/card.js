@@ -8,8 +8,8 @@ class Card {
     desc;
     timer;
     shuffle;
-    modules = [];
-    choices = [];
+    modules = {};
+    choices = {};
     langVars = {};
     cardVars = {};
     accepted_datas = {
@@ -25,11 +25,6 @@ class Card {
 
     constructor(id = 0) {
         this.id = id;
-        this.langVars = structuredClone(LANG).card_vars;
-        let keys = Object.keys(this.langVars);
-        for (let key of keys) {
-            this.cardVars[key] = {}
-        }
     }
 
     async create(data = {}, prepareBulk = false ) {
@@ -136,6 +131,11 @@ class Card {
     }
 
     replaceVars(text) {
+        this.langVars = structuredClone(LANG).card_vars;
+        let keys = Object.keys(this.langVars);
+        for (let key of keys) {
+            this.cardVars[key] = {}
+        }
         if (text) {
             const varFound = [...text.matchAll(/\[[^\]]+\]/g)].map(e => e[0]);
             for (let variable of varFound){

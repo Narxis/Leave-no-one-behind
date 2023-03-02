@@ -5,315 +5,367 @@ const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
+const drawflow = require("../controllers/drawflow");
 const ws = require("ws");
 var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
+// const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
-module.exports.index = async function(req, res) {
-    let card = new Card();
-    let text = card.replaceVars('\u00a0 \"Option n°1 séléctionnée... Très bon choix visiteurs, nous proposons des outils de réparations pour [no_module-h-bdd_0] et pour [no_module-h-bdd_1].\"');
-    console.log(text);
-    res.render('index', {lang: langJS});
-};
-
-module.exports.returnOk = function (req, res) {
-    res.status(200);
-    res.json({status: 200})
-}
-
-module.exports.deckGenerator = function (req, res) {
-    deckGenerator().then(
-        res.render('index-legacy', langJS)
-    );
-
-}
-
-module.exports.renderSingleSheet = async function (req, res) {
-
-    let player = await new Player().getData(req.body.discord_id);
-    res.render('partials/fiche-perso', {player: player, langJS});
-}
-
-module.exports.mjMenu = function (req, res) {
-    res.render('mj-menu', {lang: langJS});
-}
-
-module.exports.persos = async function (req, res) {
-    await CONFIG.upsert('gameState', 'creation');
-    res.render('perso', {lang: langJS});
-}
-
-module.exports.ficheVaisseau = function (req, res) {
-    res.render('fiche-vaisseau', {lang: langJS});
-}
-
-module.exports.synopsis = function (req, res) {
-    res.render('synopsis', {lang: langJS});
-}
-
-module.exports.mainMenu = function (req, res) {
-    res.render('index', {lang: langJS});
-}
-
-module.exports.renderCardEvent = async function (req, res) {
-
-    let players = await DB.tables.players.findAll({raw:true});
-    let ship = await new Ship().getData();
-
-    let statuses = new Statuses();
-    let activeStatuses = await statuses.getAllStatuses();
-
-    let itemsMan = new Items();
-    let items = await itemsMan.getAllItems(false);
-    let starters = await itemsMan.getAllStarters();
-
-    players = players.map(player => {
-
-        let playerItems = starters.filter(item => item.owners.includes(player.discord_id));
-        player['items'] = playerItems;
-
-        return player;
-    })
-    
-    if (CONFIG.gameState !== 'gameLive')
-        await CONFIG.upsert('gameState', 'gameLive');
-
-    for (let i of activeStatuses) {
-        await statuses.remove(i.slug);
-    }
-
-    let statusesAll = await statuses.getAllStatuses(false);
-
-    let current_card = await cardPop();
-    // TESTING :
-
-    if (!current_card) {
-        await CONFIG.upsert('gameState', 'postGame');
-        res.redirect('/land');
-    }
-
-    let vars = {
-        players: players,
-        card: current_card,
-        ship: ship,
-        statuses: statusesAll,
-        items: items,
-        lang: langJS
-    }
-
-    switch (current_card.type) {
-        case TYPE_PLANET:
-            res.render('template-planet', vars);
-            break;
-        case TYPE_INITIAL:
-        case TYPE_NEGATIVE:
-        case TYPE_NEUTRAL:
-        case TYPE_POSITIVE:
-            res.render('template-card', vars);
-            break;
-        case TYPE_PLACE:
-            res.render('template-card', vars);
-            break;
-    }
-}
-
-module.exports.renderTestCardPlace = async function (req, res) {
-    let players = [
-        {
-            id: 1,
-            discord_id: '14487794',
-            name: 'test#6554',
-            race: 'fnek',
-            combat: 68,
-            pilotage: 12,
-            engineering: 84,
-            survival: 54,
-            recon: 12,
-            moral: 12,
-        },
-        {
-            id: 1,
-            discord_id: '14475523584',
-            name: 'test#8444',
-            race: 'fnek',
-            combat: 68,
-            pilotage: 12,
-            engineering: 84,
-            survival: 54,
-            recon: 12,
-            moral: 12,
-        },
-        {
-            id: 1,
-            discord_id: '144877584',
-            name: 'test#8354',
-            race: 'fnek',
-            combat: 68,
-            pilotage: 12,
-            engineering: 84,
-            survival: 54,
-            recon: 12,
-            moral: 12,
-        }
-    ];
-    let statuses = [{
-        id: 16,
-        name: 'Blackout',
-        desc: 'le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.',
-        slug: 'blackout',
-        duration: 5,
+module.exports = {
+    index(req, res) {
+        res.render('index', {lang: langJS});
     },
-        {
-            id: 18,
-            name: 'Entrainé',
-            desc: 'Une ou plusieurs statistiques des joueurs sont augmentées.',
-            slug: 'trained',
-            duration: 5
-        }];
-    let cardRaw = await DB.tables.cards.findOne({
-        attributes: [
-            'id'
-        ],
-        where: {
-            type: TYPE_PLACE
-        }
-    });
 
-    let card = await new Card(cardRaw.id).getData();
-    let ship = {
-        id: 0,
-        name: '',
-        cryopods: 1000,
-        scanner: 100,
-        proximity: 100,
-        motors: 100,
-        shield: 100,
-        oxygen: 100,
-        energy: 100,
-        gravity: 100,
-        landing: 100,
-        construction: 100,
-        scanner_up: 0,
-        oxygen_up: 0,
-        energy_up: 0,
-        gravity_up: 0
-    }
-    let vars = {
-        players: players,
-        card: card,
-        ship: ship,
-        statuses: statuses,
-        lang: langJS
-    }
+    async returnOk(req, res) {
 
-    res.render('template-card', vars);
-}
+        let cardsRaw = await DB.tables.cards.findAll({attributes: ['id'], raw:true, where: {type: TYPE_PLACE}});
 
-// TEST TPL template-card
-module.exports.renderTestCardEvent = async function (req, res) {
+        let objectDataSet = {"drawflow": {}};
 
-    let players = [
-        {
-            id: 1,
-            discord_id: '14487794',
-            name: 'test#6554',
-            race: 'fnek',
-            combat: 68,
-            pilotage: 12,
-            engineering: 84,
-            survival: 54,
-            recon: 12,
-            moral: 12,
-        },
-        {
-            id: 1,
-            discord_id: '14475523584',
-            name: 'test#8444',
-            race: 'fnek',
-            combat: 68,
-            pilotage: 12,
-            engineering: 84,
-            survival: 54,
-            recon: 12,
-            moral: 12,
-        },
-        {
-            id: 1,
-            discord_id: '144877584',
-            name: 'test#8354',
-            race: 'fnek',
-            combat: 68,
-            pilotage: 12,
-            engineering: 84,
-            survival: 54,
-            recon: 12,
-            moral: 12,
-        }
-    ];
-    let card = {
-        desc: 'Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.',
-        timer: 1,
-        choices: [
-            {
-                value: "Minimiser la casse\n(Ingénieur)",
-                reveal: "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module"
-            },
-            {
-                value: "Tenter une manoeuvre d'évitement\n(Pilote)",
-                reveal: "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
-            },
-            {
-                value: "Ne rien faire",
-                reveal: ""
+        for (let cardRaw of cardsRaw) {
+            let card = await new Card(cardRaw.id).getData();
+            let module = await drawflow.buildPlaceDataSet(card);
+
+            for (let index in module) {
+                objectDataSet['drawflow'][index] = module[index];
             }
-        ]
-    }
-    let statuses = [{
-        id: 16,
-        name: 'Blackout',
-        desc: 'le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.',
-        slug: 'blackout',
-        duration: 5,
+        }
+        res.json(objectDataSet)
+
+        // res.status(200);
+        // res.json({status: 200})
     },
-    {
-        id: 18,
-        name: 'Entrainé',
-        desc: 'Une ou plusieurs statistiques des joueurs sont augmentées.',
-        slug: 'trained',
-        duration: 5
-    }];
 
-    let ship = {
-        id: 0,
-        name: '',
-        cryopods: 1000,
-        scanner: 100,
-        proximity: 100,
-        motors: 100,
-        shield: 100,
-        oxygen: 100,
-        energy: 100,
-        gravity: 100,
-        landing: 100,
-        construction: 100,
-        scanner_up: 0,
-        oxygen_up: 0,
-        energy_up: 0,
-        gravity_up: 0
-    }
-    let vars = {
-        players: players,
-        card: card,
-        ship: ship,
-        statuses: statuses,
-        items: [],
-        lang: langJS
-    }
+    async deckGenerator(req, res) {
+        deckGenerator().then(
+            res.render('index-legacy', langJS)
+        );
 
-    res.render('template-card', vars);
-}
+    },
 
-// TEST TPL PLANET
-module.exports.templatePlanet = async function (req, res) {
+    async buildCardPage(req, res) {
+
+        // const client = new PasteClient(process.env.PASTEBIN_K);
+        // const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
+        //
+        // const pastes = await client.getPastesByUser({
+        //     userKey: token,
+        //     limit: 10,
+        // });
+        //
+        let data = {'drawflow': {}};
+        // for (let paste of pastes) {
+        //     if (paste.paste_title.endsWith(PLACESDAT_FILEMAME)) {
+        //         let rawData = await client.getRawPasteByKey({
+        //             pasteKey: paste.paste_key,
+        //             userKey: token,
+        //         });
+        //
+        //         let parsedRawData = JSON.parse(rawData);
+        //         for (let index in parsedRawData) {
+        //             data['drawflow'][index] = parsedRawData[index];
+        //         }
+        //     }
+        // }
+
+        // if (!data) {
+            // data = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
+        fs.readdirSync(__dirname + '/../../storage/cache/').forEach(file => {
+            let json = JSON.parse(fs.readFileSync(__dirname + '/../../storage/cache/'+file,'utf8'));
+            let index = Object.keys(json)[0];
+            data.drawflow[index] = json[index];
+        });
+        // }
+        // else
+        data = JSON.stringify(data);
+
+        res.render('drawflow', {vars: {dat: data}});
+    },
+
+    async renderSingleSheet (req, res) {
+
+        let player = await new Player().getData(req.body.discord_id);
+        res.render('partials/fiche-perso', {player: player, langJS});
+    },
+
+    mjMenu(req, res) {
+        res.render('mj-menu', {lang: langJS});
+    },
+
+    async persos(req, res) {
+        await CONFIG.upsert('gameState', 'creation');
+        res.render('perso', {lang: langJS});
+    },
+
+    ficheVaisseau(req, res) {
+        res.render('fiche-vaisseau', {lang: langJS});
+    },
+
+    synopsis(req, res) {
+        res.render('synopsis', {lang: langJS});
+    },
+
+    mainMenu(req, res) {
+        res.render('index', {lang: langJS});
+    },
+
+    async renderCardEvent(req, res) {
+
+        let players = await DB.tables.players.findAll({raw:true});
+        let ship = await new Ship().getData();
+
+        let statuses = new Statuses();
+        let activeStatuses = await statuses.getAllStatuses();
+
+        let itemsMan = new Items();
+        let items = await itemsMan.getAllItems(false);
+        let starters = await itemsMan.getAllStarters();
+
+        players = players.map(player => {
+
+            let playerItems = starters.filter(item => item.owners.includes(player.discord_id));
+            player['items'] = playerItems;
+
+            return player;
+        })
+
+        if (CONFIG.gameState !== 'gameLive')
+            await CONFIG.upsert('gameState', 'gameLive');
+
+        for (let i of activeStatuses) {
+            await statuses.remove(i.slug);
+        }
+
+        let statusesAll = await statuses.getAllStatuses(false);
+
+        let current_card = await cardPop();
+        // TESTING :
+
+        if (!current_card) {
+            await CONFIG.upsert('gameState', 'postGame');
+            res.redirect('/land');
+        }
+
+        let vars = {
+            players: players,
+            card: current_card,
+            ship: ship,
+            statuses: statusesAll,
+            items: items,
+            lang: langJS
+        }
+
+        switch (current_card.type) {
+            case TYPE_PLANET:
+                res.render('template-planet', vars);
+                break;
+            case TYPE_INITIAL:
+            case TYPE_NEGATIVE:
+            case TYPE_NEUTRAL:
+            case TYPE_POSITIVE:
+                res.render('template-card', vars);
+                break;
+            case TYPE_PLACE:
+                res.render('template-card', vars);
+                break;
+        }
+    },
+
+    async renderTestCardPlace(req, res) {
+        let players = [
+            {
+                id: 1,
+                discord_id: '14487794',
+                name: 'test#6554',
+                race: 'fnek',
+                combat: 68,
+                pilotage: 12,
+                engineering: 84,
+                survival: 54,
+                recon: 12,
+                moral: 12,
+            },
+            {
+                id: 1,
+                discord_id: '14475523584',
+                name: 'test#8444',
+                race: 'fnek',
+                combat: 68,
+                pilotage: 12,
+                engineering: 84,
+                survival: 54,
+                recon: 12,
+                moral: 12,
+            },
+            {
+                id: 1,
+                discord_id: '144877584',
+                name: 'test#8354',
+                race: 'fnek',
+                combat: 68,
+                pilotage: 12,
+                engineering: 84,
+                survival: 54,
+                recon: 12,
+                moral: 12,
+            }
+        ];
+        let statuses = [{
+            id: 16,
+            name: 'Blackout',
+            desc: 'le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.',
+            slug: 'blackout',
+            duration: 5,
+        },
+            {
+                id: 18,
+                name: 'Entrainé',
+                desc: 'Une ou plusieurs statistiques des joueurs sont augmentées.',
+                slug: 'trained',
+                duration: 5
+            }];
+        let cardRaw = await DB.tables.cards.findOne({
+            attributes: [
+                'id'
+            ],
+            where: {
+                type: TYPE_PLACE
+            }
+        });
+
+        let card = await new Card(cardRaw.id).getData();
+        let ship = {
+            id: 0,
+            name: '',
+            cryopods: 1000,
+            scanner: 100,
+            proximity: 100,
+            motors: 100,
+            shield: 100,
+            oxygen: 100,
+            energy: 100,
+            gravity: 100,
+            landing: 100,
+            construction: 100,
+            scanner_up: 0,
+            oxygen_up: 0,
+            energy_up: 0,
+            gravity_up: 0
+        }
+        let vars = {
+            players: players,
+            card: card,
+            ship: ship,
+            statuses: statuses,
+            lang: langJS
+        }
+
+        res.render('template-card', vars);
+    },
+
+    async renderTestCardEvent(req, res) {
+
+        let players = [
+            {
+                id: 1,
+                discord_id: '14487794',
+                name: 'test#6554',
+                race: 'fnek',
+                combat: 68,
+                pilotage: 12,
+                engineering: 84,
+                survival: 54,
+                recon: 12,
+                moral: 12,
+            },
+            {
+                id: 1,
+                discord_id: '14475523584',
+                name: 'test#8444',
+                race: 'fnek',
+                combat: 68,
+                pilotage: 12,
+                engineering: 84,
+                survival: 54,
+                recon: 12,
+                moral: 12,
+            },
+            {
+                id: 1,
+                discord_id: '144877584',
+                name: 'test#8354',
+                race: 'fnek',
+                combat: 68,
+                pilotage: 12,
+                engineering: 84,
+                survival: 54,
+                recon: 12,
+                moral: 12,
+            }
+        ];
+        let card = {
+            desc: 'Vos radars détectent des débris à très haute vitesse en direction de votre vaisseau. Ces débris vont percuter votre vaisseau au niveau au niveau du module de détection.',
+            timer: 1,
+            choices: [
+                {
+                    value: "Minimiser la casse\n(Ingénieur)",
+                    reveal: "Vous tentez de minimiser la casse, le débris percute votre vaisseau à toute vitesse, malgrès vos effort il est impossible de sauver l'intégralité du module"
+                },
+                {
+                    value: "Tenter une manoeuvre d'évitement\n(Pilote)",
+                    reveal: "Vous essayer d'esquiver le débris mais celui-ci percute une autre partie du vaisseau à la place."
+                },
+                {
+                    value: "Ne rien faire",
+                    reveal: ""
+                }
+            ]
+        }
+        let statuses = [{
+            id: 16,
+            name: 'Blackout',
+            desc: 'le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.',
+            slug: 'blackout',
+            duration: 5,
+        },
+            {
+                id: 18,
+                name: 'Entrainé',
+                desc: 'Une ou plusieurs statistiques des joueurs sont augmentées.',
+                slug: 'trained',
+                duration: 5
+            }];
+
+        let ship = {
+            id: 0,
+            name: '',
+            cryopods: 1000,
+            scanner: 100,
+            proximity: 100,
+            motors: 100,
+            shield: 100,
+            oxygen: 100,
+            energy: 100,
+            gravity: 100,
+            landing: 100,
+            construction: 100,
+            scanner_up: 0,
+            oxygen_up: 0,
+            energy_up: 0,
+            gravity_up: 0
+        }
+        let vars = {
+            players: players,
+            card: card,
+            ship: ship,
+            statuses: statuses,
+            items: [],
+            lang: langJS
+        }
+
+        res.render('template-card', vars);
+    },
+
+    async templatePlanet(req, res) {
 
     let players = [
         {
@@ -393,28 +445,28 @@ module.exports.templatePlanet = async function (req, res) {
     }
 
     res.render('template-planet', vars);
-}
+},
 
-module.exports.endScreen = function (req, res) {
-    res.render('end-screen', {lang: langJS});
-}
+    endScreen(req, res) {
+        res.render('end-screen', {lang: langJS});
+    },
 
-module.exports.leaderboard = function (req, res) {
-    res.render('leaderboard', {lang: langJS});
-}
+    leaderboard(req, res) {
+        res.render('leaderboard', {lang: langJS});
+    },
 
-module.exports.indexLegacy = function (req, res) {
-    res.render('index-legacy', {lang: langJS});
-}
+    indexLegacy(req, res) {
+        res.render('index-legacy', {lang: langJS});
+    },
 
-module.exports.land = async function (req, res) {
-    let ship = await new Ship().getData();
-    await ship.land();
+    async land(req, res) {
+        let ship = await new Ship().getData();
+        await ship.land();
 
-    res.redirect('/score')
-}
+        res.redirect('/score')
+    },
 
-module.exports.showScore = async function (req, res) {
+    async showScore(req, res) {
     let ship = await new Ship().getData();
     await ship.getData();
 
@@ -453,12 +505,12 @@ module.exports.showScore = async function (req, res) {
         + 120*(ship.dbscience+ship.dbhistory);
 
     let scorePlanet = 85*planet.modules.oxy.val
-            + 60*planet.modules.grv.val
-            + 95*planet.modules.wtr.val
-            + 80*planet.modules.res.val
-            + 55*planet.modules.cli.val
-            + 30*(planet.modules.fau.val+planet.modules.flo.val)
-            + 65*(planet.modules.civ.val)
+        + 60*planet.modules.grv.val
+        + 95*planet.modules.wtr.val
+        + 80*planet.modules.res.val
+        + 55*planet.modules.cli.val
+        + 30*(planet.modules.fau.val+planet.modules.flo.val)
+        + 65*(planet.modules.civ.val)
     ;
 
     let scoreCards = Math.min(6000*cardNegPlayed + 3500*cardNeuPlayed + Math.min(CONFIG.planetCount,10) * Math.min((cardPlanetPlayed-1),9), 500000) - 4500*cardPosPlayed;
@@ -481,11 +533,11 @@ module.exports.showScore = async function (req, res) {
         planet: planet,
         lang: langJS
     }
-    
-    res.render('end-screen', vars);
-}
 
-module.exports.start = async function (req, res) {
+    res.render('end-screen', vars);
+},
+
+    async start(req, res) {
 
     res.render('fiche-vaisseau', {lang: langJS});
     await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
@@ -513,26 +565,27 @@ module.exports.start = async function (req, res) {
     const wsClient = new ws(WS_URL);
     wsClient.on('open', () => {
         wsClient.send(data);
-    });}
+    });},
 
-module.exports.reset = async function (req, res) {
+    async reset(req, res) {
 
-    await DB.tables.config.destroy({truncate: true, restartIdentity: true});
-    await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
-    await destroyDeck();
+        await DB.tables.config.destroy({truncate: true, restartIdentity: true});
+        await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
+        await destroyDeck();
 
-    await CONFIG.hydrateDB();
-    await hydrateCardDB();
-    await deckGenerator();
+        await CONFIG.hydrateDB();
+        await hydrateCardDB();
+        await deckGenerator();
 
-    let ship = new Ship();
-    await ship.create();
+        let ship = new Ship();
+        await ship.create();
 
-    let statuses = new Statuses();
-    await statuses.hydrateDB();
+        let statuses = new Statuses();
+        await statuses.hydrateDB();
 
-    let items = new Items();
-    await items.hydrateDB();
+        let items = new Items();
+        await items.hydrateDB();
 
-    res.redirect('/');
+        res.redirect('/');
+    }
 }

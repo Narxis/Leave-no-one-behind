@@ -818,7 +818,7 @@
           "next": "pub2"
         }
       ]
-    },    
+    },
     {
       "desc": "\n\u00a0 Le barman vous observe approcher, il pose ses verres et une fois que vous êtes assez proche il s'exclame :\n \u00a0 \"Salutation voyageurs, je peux voir dans vos yeux que vous recherchez de l'aventure !\"",
       "name":"pub1",
@@ -1266,7 +1266,7 @@
       "modules": {
         "oxy": {
           "cost":2 ,
-          "value":10 
+          "value":10
         },
         "grv": {
           "cost":2 ,
@@ -1278,7 +1278,7 @@
         },
         "fau": {
           "cost":4 ,
-          "value":21 
+          "value":21
         },
         "flo": {
           "cost":4 ,
@@ -1303,35 +1303,35 @@
       "modules": {
         "oxy": {
           "cost":4 ,
-          "value":16 
+          "value":16
         },
         "grv": {
           "cost":2 ,
-          "value":15 
+          "value":15
         },
         "wtr": {
           "cost":3 ,
-          "value":12 
+          "value":12
         },
         "fau": {
           "cost":2 ,
-          "value":48 
+          "value":48
         },
         "flo": {
           "cost":2 ,
-          "value":2 
+          "value":2
         },
         "civ": {
           "cost":2 ,
-          "value":43 
+          "value":43
         },
         "cli": {
           "cost":1 ,
-          "value":31 
+          "value":31
         },
         "res": {
           "cost":3 ,
-          "value":22 
+          "value":22
         }
       }
     },
@@ -1340,7 +1340,7 @@
       "modules": {
         "oxy": {
           "cost": 3,
-          "value":2 
+          "value":2
         },
         "grv": {
           "cost":3 ,
@@ -1377,23 +1377,23 @@
       "modules": {
         "oxy": {
           "cost":1 ,
-          "value":32 
+          "value":32
         },
         "grv": {
           "cost":3 ,
-          "value":14 
+          "value":14
         },
         "wtr": {
           "cost":1 ,
-          "value":15 
+          "value":15
         },
         "fau": {
           "cost":1 ,
-          "value":38 
+          "value":38
         },
         "flo": {
           "cost":1,
-          "value":62 
+          "value":62
         },
         "civ": {
           "cost":1 ,
@@ -1401,32 +1401,32 @@
         },
         "cli": {
           "cost":4 ,
-          "value":65 
+          "value":65
         },
         "res": {
           "cost":1 ,
-          "value":36 
+          "value":36
         }
       }
     },
-        {
+    {
       "value":309 ,
       "modules": {
         "oxy": {
           "cost":3 ,
-          "value":40 
+          "value":40
         },
         "grv": {
           "cost":1 ,
-          "value":16 
+          "value":16
         },
         "wtr": {
           "cost":3 ,
-          "value":37 
+          "value":37
         },
         "fau": {
           "cost":1 ,
-          "value":4 
+          "value":4
         },
         "flo": {
           "cost":1 ,
@@ -1446,49 +1446,49 @@
         }
       }
     },
-        {
+    {
       "value":327 ,
       "modules": {
         "oxy": {
           "cost":3 ,
-          "value":45 
+          "value":45
         },
         "grv": {
           "cost":4 ,
-          "value":7 
+          "value":7
         },
         "wtr": {
           "cost":3 ,
-          "value":7 
+          "value":7
         },
         "fau": {
           "cost":1 ,
-          "value":60 
+          "value":60
         },
         "flo": {
           "cost":1 ,
-          "value":64 
+          "value":64
         },
         "civ": {
           "cost":1 ,
-          "value":25 
+          "value":25
         },
         "cli": {
           "cost":1 ,
-          "value":79 
+          "value":79
         },
         "res": {
           "cost":2 ,
-          "value":22 
+          "value":22
         }
       }
     },
-        {
+    {
       "value": 349,
       "modules": {
         "oxy": {
           "cost":2 ,
-          "value":25 
+          "value":25
         },
         "grv": {
           "cost":2 ,
@@ -1496,7 +1496,7 @@
         },
         "wtr": {
           "cost":4 ,
-          "value":40 
+          "value":40
         },
         "fau": {
           "cost":2 ,
@@ -1528,11 +1528,11 @@
         },
         "grv": {
           "cost":2 ,
-          "value":61 
+          "value":61
         },
         "wtr": {
           "cost":1 ,
-          "value":1 
+          "value":1
         },
         "fau": {
           "cost":1 ,
@@ -1552,10 +1552,10 @@
         },
         "res": {
           "cost":1 ,
-          "value":79 
+          "value":79
         }
       }
-    },    
+    },
     {
       "value":386 ,
       "modules": {
@@ -1609,7 +1609,7 @@
         },
         "fau": {
           "cost":1 ,
-          "value":2 
+          "value":2
         },
         "flo": {
           "cost":1 ,
@@ -1625,20 +1625,20 @@
         },
         "res": {
           "cost":3 ,
-          "value":41 
+          "value":41
         }
       }
-    },    
+    },
     {
       "value":477 ,
       "modules": {
         "oxy": {
           "cost":3 ,
-          "value":23 
+          "value":23
         },
         "grv": {
           "cost": 2,
-          "value":91 
+          "value":91
         },
         "wtr": {
           "cost":2 ,
@@ -1666,7 +1666,7 @@
         }
       }
     },
-        {
+    {
       "value":511 ,
       "modules": {
         "oxy": {
@@ -1675,7 +1675,7 @@
         },
         "grv": {
           "cost":1 ,
-          "value":30 
+          "value":30
         },
         "wtr": {
           "cost":2 ,
@@ -1683,7 +1683,7 @@
         },
         "fau": {
           "cost":1 ,
-          "value":97 
+          "value":97
         },
         "flo": {
           "cost":1 ,
@@ -1691,7 +1691,7 @@
         },
         "civ": {
           "cost":1 ,
-          "value":6 
+          "value":6
         },
         "cli": {
           "cost":2 ,
@@ -1703,12 +1703,12 @@
         }
       }
     },
-        {
+    {
       "value":546 ,
       "modules": {
         "oxy": {
           "cost": 1,
-          "value":54 
+          "value":54
         },
         "grv": {
           "cost": 3,
@@ -1716,7 +1716,7 @@
         },
         "wtr": {
           "cost": 3,
-          "value":29 
+          "value":29
         },
         "fau": {
           "cost": 3,
@@ -1740,49 +1740,49 @@
         }
       }
     },
-        {
+    {
       "value": 541,
       "modules": {
         "oxy": {
           "cost": 1,
-          "value":31 
+          "value":31
         },
         "grv": {
           "cost": 4,
-          "value":62 
+          "value":62
         },
         "wtr": {
           "cost": 1,
-          "value":49 
+          "value":49
         },
         "fau": {
           "cost": 2,
-          "value":89 
+          "value":89
         },
         "flo": {
           "cost": 2,
-          "value":61 
+          "value":61
         },
         "civ": {
           "cost": 2,
-          "value":66 
+          "value":66
         },
         "cli": {
           "cost": 1,
-          "value":17 
+          "value":17
         },
         "res": {
           "cost": 3,
-          "value":79 
+          "value":79
         }
       }
     },
-        {
+    {
       "value":816 ,
       "modules": {
         "oxy": {
           "cost":3 ,
-          "value":73 
+          "value":73
         },
         "grv": {
           "cost":1 ,
@@ -1790,31 +1790,31 @@
         },
         "wtr": {
           "cost":2 ,
-          "value":93 
+          "value":93
         },
         "fau": {
           "cost":2 ,
-          "value":80 
+          "value":80
         },
         "flo": {
           "cost":2 ,
-          "value":82 
+          "value":82
         },
         "civ": {
           "cost":2 ,
-          "value":73 
+          "value":73
         },
         "cli": {
           "cost":1 ,
-          "value":96 
+          "value":96
         },
         "res": {
           "cost": 1,
-          "value":73 
+          "value":73
         }
       }
     },
-        {
+    {
       "value":776 ,
       "modules": {
         "oxy": {
@@ -1851,7 +1851,7 @@
         }
       }
     },
-        {
+    {
       "value":742 ,
       "modules": {
         "oxy": {
@@ -1928,11 +1928,11 @@
       "modules": {
         "oxy": {
           "cost":2 ,
-          "value":45 
+          "value":45
         },
         "grv": {
           "cost":1 ,
-          "value":80 
+          "value":80
         },
         "wtr": {
           "cost":3 ,
@@ -1960,44 +1960,44 @@
         }
       }
     },
-        {
+    {
       "value":723 ,
       "modules": {
         "oxy": {
           "cost": 2,
-          "value":66 
+          "value":66
         },
         "grv": {
           "cost": 1,
-          "value":99 
+          "value":99
         },
         "wtr": {
           "cost": 3,
-          "value":82 
+          "value":82
         },
         "fau": {
           "cost": 3,
-          "value":85 
+          "value":85
         },
         "flo": {
           "cost": 3,
-          "value":18 
+          "value":18
         },
         "civ": {
           "cost": 3,
-          "value":81 
+          "value":81
         },
         "cli": {
           "cost": 3,
-          "value":96 
+          "value":96
         },
         "res": {
           "cost": 2,
-          "value":40 
+          "value":40
         }
       }
     },
-        {
+    {
       "value":659 ,
       "modules": {
         "oxy": {
@@ -2034,7 +2034,7 @@
         }
       }
     },
-        {
+    {
       "value": 647,
       "modules": {
         "oxy": {
@@ -2071,7 +2071,7 @@
         }
       }
     },
-        {
+    {
       "value":666 ,
       "modules": {
         "oxy": {
@@ -2108,7 +2108,7 @@
         }
       }
     },
-        {
+    {
       "value":608 ,
       "modules": {
         "oxy": {
@@ -2145,77 +2145,77 @@
         }
       }
     },
-        {
+    {
       "value":602 ,
       "modules": {
         "oxy": {
           "cost": 3,
-          "value":70 
+          "value":70
         },
         "grv": {
           "cost": 1,
-          "value":98 
+          "value":98
         },
         "wtr": {
           "cost": 3,
-          "value":31 
+          "value":31
         },
         "fau": {
           "cost": 4,
-          "value":12 
+          "value":12
         },
         "flo": {
           "cost": 4,
-          "value":88 
+          "value":88
         },
         "civ": {
           "cost": 4,
-          "value":15 
+          "value":15
         },
         "cli": {
           "cost": 1,
-          "value":77 
+          "value":77
         },
         "res": {
           "cost": 4,
-          "value":89 
+          "value":89
         }
       }
     },
-        {
+    {
       "value":575 ,
       "modules": {
         "oxy": {
           "cost":2 ,
-          "value":56 
+          "value":56
         },
         "grv": {
           "cost":1 ,
-          "value":62 
+          "value":62
         },
         "wtr": {
           "cost":4 ,
-          "value":56 
+          "value":56
         },
         "fau": {
           "cost":2 ,
-          "value":20 
+          "value":20
         },
         "flo": {
           "cost":2 ,
-          "value":72 
+          "value":72
         },
         "civ": {
           "cost":2 ,
-          "value":55 
+          "value":55
         },
         "cli": {
           "cost":4 ,
-          "value":42 
+          "value":42
         },
         "res": {
           "cost":2 ,
-          "value":79 
+          "value":79
         }
       }
     },
@@ -2261,35 +2261,35 @@
       "modules": {
         "oxy": {
           "cost":3 ,
-          "value":12 
+          "value":12
         },
         "grv": {
           "cost":1 ,
-          "value":52 
+          "value":52
         },
         "wtr": {
           "cost":3 ,
-          "value":70 
+          "value":70
         },
         "fau": {
           "cost":1 ,
-          "value":18 
+          "value":18
         },
         "flo": {
           "cost":1 ,
-          "value":92 
+          "value":92
         },
         "civ": {
           "cost":1 ,
-          "value":82 
+          "value":82
         },
         "cli": {
           "cost":3 ,
-          "value":86 
+          "value":86
         },
         "res": {
           "cost":3 ,
-          "value":45 
+          "value":45
         }
       }
     },
@@ -2329,41 +2329,41 @@
           "value": 99
         }
       }
-    },    
+    },
     {
       "value":547 ,
       "modules": {
         "oxy": {
           "cost":4 ,
-          "value":99 
+          "value":99
         },
         "grv": {
           "cost":1 ,
-          "value":50 
+          "value":50
         },
         "wtr": {
           "cost":1 ,
-          "value":31 
+          "value":31
         },
         "fau": {
           "cost":2 ,
-          "value":32 
+          "value":32
         },
         "flo": {
           "cost":2 ,
-          "value":55 
+          "value":55
         },
         "civ": {
           "cost":2 ,
-          "value":95 
+          "value":95
         },
         "cli": {
           "cost":3 ,
-          "value":22 
+          "value":22
         },
         "res": {
           "cost":1 ,
-          "value":38 
+          "value":38
         }
       }
     }
