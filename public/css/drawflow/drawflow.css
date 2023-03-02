@@ -389,3 +389,9 @@ header a {
 .reveal {
     background-color: #d8ffc8 !important;
 }
+
+.choice .output,
+.reveal .input,
+.card .input {
+    border-radius: 0!important;
+}
