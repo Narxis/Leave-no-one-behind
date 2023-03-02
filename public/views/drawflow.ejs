@@ -316,7 +316,16 @@
                 let prevId = choice.inputs.input_1.connections[0].node;
                 let prevNode = choice.inputs.input_1.connections[0].input.split('_')[1] - 1;
 
-                let reveal = reveals.find(el => el.inputs.input_1.connections[0].node === choice.id.toString());
+                // let reveal = reveals.find(el => el.inputs.input_1.connections[0].node === choice.id.toString());
+                let reveal = reveals.find(el => {
+                    let len = el.inputs.input_1.connections.length;
+
+                    for (let i=0; i<len; i++) {
+                        if (el.inputs.input_1.connections[i].node === choice.id.toString())
+                            return true;
+                    }
+                    return false;
+                });
 
                 if (!buildChoices[prevId]) {
                     buildChoices[prevId] = []
@@ -344,10 +353,17 @@
 
                 const htmlDoc = parser.parseFromString(card.html, 'text/html');
 
+                let name = card.data.name || htmlDoc.querySelector('input[df-name]').value;
+
+                let nameExists = exportBuild.find(el => el.name === name);
+                if (nameExists) {
+                    alert(name + " is used more than once !\nCancelling Export");
+                }
+
                 cardExport['desc'] = card.data.desc || htmlDoc.querySelector('textarea[df-desc]').value;
                 cardExport['timer'] = card.data.timer === 'on';
                 cardExport['shuffle'] = card.data.shuffle === 'on';
-                cardExport['name'] = card.data.name || htmlDoc.querySelector('input[df-name]').value;
+                cardExport['name'] = name;
                 cardExport['choices'] = buildChoices[card.id];
 
                 exportBuild.push(cardExport);
