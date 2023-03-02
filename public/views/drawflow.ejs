@@ -358,6 +358,7 @@
                 let nameExists = exportBuild.find(el => el.name === name);
                 if (nameExists) {
                     alert(name + " is used more than once !\nCancelling Export");
+                    return;
                 }
 
                 cardExport['desc'] = card.data.desc || htmlDoc.querySelector('textarea[df-desc]').value;
