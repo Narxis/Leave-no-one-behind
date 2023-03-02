@@ -6,7 +6,7 @@ const {Items} = require("../models/items");
 const {Card} = require("../models/card");
 const drawflow = require("../controllers/drawflow");
 const fs = require('fs');
-const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
+// const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 // TODO replace shipId with current game ship ID
 const shipId = 1;
@@ -26,31 +26,31 @@ module.exports = {
             fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
 
             // SAVE ON PASTEBIN
-            const client = new PasteClient(process.env.PASTEBIN_K);
-            const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
-
-            const pastes = await client.getPastesByUser({
-                userKey: token,
-                limit: 100,
-            });
-
-            for (let paste of pastes) {
-                if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
-                    await client.deletePasteByKey({
-                        userKey: token,
-                        pasteKey: paste.paste_key,
-                    });
-                }
-            }
-
-            await client.createPaste({
-                code: body,
-                expireDate: ExpireDate.Never,
-                format: "json",
-                name: name+"_"+PLACESDAT_FILEMAME,
-                publicity: Publicity.Private,
-                apiUserKey: token
-            });
+            // const client = new PasteClient(process.env.PASTEBIN_K);
+            // const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
+            //
+            // const pastes = await client.getPastesByUser({
+            //     userKey: token,
+            //     limit: 100,
+            // });
+            //
+            // for (let paste of pastes) {
+            //     if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
+            //         await client.deletePasteByKey({
+            //             userKey: token,
+            //             pasteKey: paste.paste_key,
+            //         });
+            //     }
+            // }
+            //
+            // await client.createPaste({
+            //     code: body,
+            //     expireDate: ExpireDate.Never,
+            //     format: "json",
+            //     name: name+"_"+PLACESDAT_FILEMAME,
+            //     publicity: Publicity.Private,
+            //     apiUserKey: token
+            // });
             res.json({
                 success: true
             })
@@ -67,29 +67,29 @@ module.exports = {
         let name = req.body.name;
 
         try {
-            fs.unlinkSync(name+"_"+PLACESDAT_FILEMAME);
+            fs.unlinkSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME);
         }
         catch {
             //
         }
 
-        const client = new PasteClient(process.env.PASTEBIN_K);
-        const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
-
-        const pastes = await client.getPastesByUser({
-            userKey: token,
-            limit: 100,
-        });
-
-        for (let paste of pastes) {
-            if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
-                await client.deletePasteByKey({
-                    userKey: token,
-                    pasteKey: paste.paste_key,
-                });
-                break;
-            }
-        }
+        // const client = new PasteClient(process.env.PASTEBIN_K);
+        // const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
+        //
+        // const pastes = await client.getPastesByUser({
+        //     userKey: token,
+        //     limit: 100,
+        // });
+        //
+        // for (let paste of pastes) {
+        //     if (paste.paste_title === name+'_'+PLACESDAT_FILEMAME) {
+        //         await client.deletePasteByKey({
+        //             userKey: token,
+        //             pasteKey: paste.paste_key,
+        //         });
+        //         break;
+        //     }
+        // }
 
         res.json({});
 },
