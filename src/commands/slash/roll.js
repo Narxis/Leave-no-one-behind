@@ -12,10 +12,15 @@ module.exports = {
                 .setRequired(true)
                 .addChoices(
                     { name: 'Combat', value: 'combat' },
+                    { name: 'Force', value: 'combat' },
                     { name: 'Pilotage', value: 'pilotage' },
+                    { name: 'Dextérité', value: 'pilotage' },
                     { name: 'Ingénierie', value: 'engineering' },
+                    { name: 'Intelligence', value: 'engineering' },
                     { name: 'Survie', value: 'survival' },
+                    { name: 'Constitution', value: 'survival' },
                     { name: 'Reconaissance', value: 'recon' },
+                    { name: 'Charisme', value: 'recon' },
                 )
         )
         .addStringOption(option =>
