@@ -135,7 +135,7 @@ module.exports = {
         let player = new Player();
         player = await player.getData(req.params.discordId);
         if (!player)
-            this.showError(res, 'No player for this ID')
+            showError(res, 'No player for this ID')
         else {
             delete player['accepted_datas'];
             res.json(player)
@@ -220,25 +220,25 @@ module.exports = {
 
         for (let item of cardsRaw){
             let  card = await new Card(item.id).getData();
-            card = this.cleanObject(card, 'langVars','cardVars','accepted_datas');
+            card = cleanObject(card, 'langVars','cardVars','accepted_datas');
             cards.push(card);
         }
 
         res.json(cards);
-    },
-
-    cleanObject(object, ...unusedKeys){
-        for (let key in object) {
-            if (unusedKeys.includes(key) === true)
-                delete object[key];
-        }
-        return object;
-    },
-
-    showError(res, msg) {
-        res.status(404);
-        res.json({
-            error_msg: msg
-        })
     }
+}
+
+const cleanObject = function (object, ...unusedKeys){
+    for (let key in object) {
+        if (unusedKeys.includes(key) === true)
+            delete object[key];
+    }
+    return object;
+}
+
+const showError = function (res, msg) {
+    res.status(404);
+    res.json({
+        error_msg: msg
+    })
 }

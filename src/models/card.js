@@ -1,4 +1,5 @@
 const {literal} = require("sequelize");
+const {Statuses} = require("./statuses");
 
 class Card {
     id;
@@ -8,6 +9,7 @@ class Card {
     desc;
     timer;
     shuffle;
+    alts;
     modules = {};
     choices = {};
     langVars = {};
@@ -19,6 +21,7 @@ class Card {
         'desc': '',
         'timer': 0,
         'shuffle': 0,
+        'alts': {},
         'modules': {},
         'choices': {}
     }
@@ -40,6 +43,30 @@ class Card {
             shuffle: this.shuffle
         }).then(async result => {
             this.id = result.id;
+            let alt_bulk = [];
+            for (let alt_status in this.alts)
+            {
+                let alt_desc_dat = {
+                    card_id: this.id,
+                    type: alt_status,
+                    elem: 'desc',
+                    value: this.replaceVars(this.alts[alt_status].desc),
+                    reveal: ''
+                };
+                alt_bulk.push(alt_desc_dat);
+
+                for (let alt_choice of this.alts[alt_status].choices){
+                    let alt_choice_dat = {
+                        card_id: this.id,
+                        type: alt_status,
+                        elem: 'choice',
+                        value: this.replaceVars(alt_choice.value),
+                        reveal: this.replaceVars(alt_choice.reveal)
+                    }
+                    alt_bulk.push(alt_choice_dat);
+                }
+            }
+            await DB.tables.cards_alt.bulkCreate(alt_bulk);
             for (let choice in this.choices)
             {
                 await DB.tables.card_modules.create({
@@ -67,67 +94,6 @@ class Card {
         });
 
         return await this.getData()
-    }
-
-    /**
-     * @deprecated choices might not work anymore
-     * @param data
-     * @returns {Promise<void>}
-     */
-    async update(data = {}) {
-        await this.getData();
-
-        for (let dat in this.accepted_datas)
-            this[dat] = (typeof data[dat] === 'undefined' ? this[dat] : data[dat]);
-
-        await DB.tables.cards.update({
-            type: this.type,
-            value: this.value,
-            name: this.name,
-            desc: this.desc,
-            timer: this.timer,
-            shuffle: this.shuffle
-        }, {
-            where: {
-                id: this.id
-            }
-        });
-
-        for (let choice of this.choices)
-        {
-            await DB.tables.card_modules.update({
-                card_id: this.id,
-                type: 'choice',
-                value: choice.value,
-                reveal: choice.reveal,
-                cost: -1,
-            }, {
-                where: {
-                    id: this.id
-                }
-            });
-        }
-        for (let mod in this.modules)
-        {
-            await DB.tables.card_modules.update({
-                card_id: this.id,
-                type: mod.toString() + '_cost',
-                value: this.modules[mod].cost,
-            }, {
-                where: {
-                    id: this.id
-                }
-            });
-            await DB.tables.card_modules.update({
-                card_id: this.id,
-                type: mod.toString() + '_val',
-                value: this.modules[mod].value,
-            }, {
-                where: {
-                    id: this.id
-                }
-            });
-        }
     }
 
     replaceVars(text) {
@@ -189,6 +155,27 @@ class Card {
     }
 
     async getData() {
+
+        let activeStatus;
+
+        let statuses = new Statuses();
+        statuses = await statuses.getAllStatuses();
+        let prioStatuses = [
+            'blackout',
+            'anticipation',
+            'wanted',
+            'weak'
+        ];
+        let indexPrio = 9999;
+
+        for (let status of statuses) {
+            let indexFound = prioStatuses.indexOf(status.slug);
+            if (indexFound < indexPrio && indexFound > -1) {
+                activeStatus = status.slug;
+                indexPrio = indexFound;
+            }
+        }
+
         let card = await DB.tables.cards.findOne({
             attributes: [
                 'type',
@@ -209,6 +196,22 @@ class Card {
 
         for (let dat in card) {
             this[dat] = card[dat]
+        }
+
+        if (activeStatus) {
+            let alt_desc = await DB.tables.cards_alt.findOne({
+                attributes: [
+                    'value',
+                ],
+                raw:true,
+                where: {
+                    card_id:this.id,
+                    type:activeStatus,
+                    elem:'desc'
+                }
+            });
+            if (alt_desc)
+                this.desc = alt_desc.value;
         }
 
         let raw_modules = await DB.tables.card_modules.findAll({
@@ -245,7 +248,30 @@ class Card {
                     this.modules[name] = {};
                 this.modules[name][type] = mod.value
             }
-            this.choices = choices;
+        }
+
+        this.choices = choices;
+
+        let alt_choices = [];
+        if (activeStatus) {
+            let foundChoices = await DB.tables.cards_alt.findAll({
+                attributes: [
+                    'value',
+                    'reveal'
+                ],
+                raw:true,
+                where: {
+                    card_id:this.id,
+                    type:activeStatus,
+                    elem:'choice'
+                }
+            });
+
+            for (let foundChoice of foundChoices) {
+                alt_choices.push(foundChoice);
+            }
+            if (alt_choices.length > 0)
+                this.choices = alt_choices;
         }
 
         return this;

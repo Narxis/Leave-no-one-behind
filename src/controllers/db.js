@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
 
-const DB_VERSION = 8; // increment when structure changes are added
+const DB_VERSION = 9; // increment when structure changes are added
 const DB_FOLDER = 'storage/databases/';
 
 class DB {
@@ -136,7 +136,34 @@ class DB {
                 defaultValue: '',
                 allowNull: false
             }
-        })
+        });
+
+        let cards_alt = this.sequelize.define('cards_alt', {
+            card_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
+            type: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                defaultValue: 'blackout'
+            },
+            elem: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                defaultValue: 'desc'
+            },
+            value: {
+                type: Sequelize.TEXT,
+                allowNull: false,
+                defaultValue: ''
+            },
+            reveal: {
+                type: Sequelize.TEXT,
+                allowNull: false,
+                defaultValue: ''
+            }
+        });
 
         let players = this.sequelize.define('players', {
             id: {
@@ -396,6 +423,7 @@ class DB {
             config: config,
             cards: cards,
             card_modules: card_modules,
+            cards_alt: cards_alt,
             players: players,
             ship: ship,
             deck: deck,

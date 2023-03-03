@@ -302,6 +302,7 @@ const hydrateCardDB = async function (cleanInstall = true) {
     if (cleanInstall) {
         DB.tables.cards.destroy({truncate: true});
         DB.tables.card_modules.destroy({truncate: true});
+        DB.tables.cards_alt.destroy({truncate: true});
     }
     let baseCardsRaw = fs.readFileSync(__dirname + '/../config/baseCards.json');
     let baseCards = JSON.parse(baseCardsRaw);
