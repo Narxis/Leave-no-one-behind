@@ -169,6 +169,112 @@ const destroyDeck = async function (deck_id = 0){
     })
 }
 
+const generatePlanets = async function() {
+
+    let nbPla = CONFIG.planetCount;
+    let slice = Math.ceil(nbPla/3);
+    let slicesVal = [{
+        'min': 1,
+        'max': 500
+    },{
+        'min': 501,
+        'max': 800
+    },{
+        'min': 801,
+        'max': 1000
+    }];
+
+    for (let i=0; i<3; i++) {
+        for (let j=0; j<slice;j++) {
+            await generatePlanet(slicesVal[i].min, slicesVal[i].max)
+        }
+    }
+}
+
+const generatePlanet = async function (min,max) {
+
+    const totalCostMin = 10;
+    const totalCostMax = 15;
+    const planetStatsModifiers = [
+        {
+            stat: 'oxy',
+            mod: 85,
+            cost: true,
+        },
+        {
+            stat: 'grv',
+            mod: 60,
+            cost: true,
+        },
+        {
+            stat: 'wtr',
+            mod: 95,
+            cost: true,
+        },
+        {
+            stat: 'res',
+            mod: 80,
+            cost: true,
+        },
+        {
+            stat: 'fau',
+            mod: 30,
+            cost: true,
+        },
+        {
+            stat: 'flo',
+            mod: 30,
+            cost: false,
+        },
+        {
+            stat: 'civ',
+            mod: 65,
+            cost: false,
+        },
+        {
+            stat: 'cli',
+            mod: 55,
+            cost: true,
+        }
+    ];
+
+    let totalCost = 0;
+    let score = 0;
+    let modules = {};
+    do {
+        score = 0;
+        modules = {};
+        for (let el of planetStatsModifiers) {
+            let roll = Math.floor(Math.random() * (100 - 1 + 1) + 1);
+            score = score + (roll * el.mod);
+            modules[el.stat] = {value: roll}
+        }
+        score = Math.round(score / 50);
+    } while (score > max || score < min);
+
+    do {
+        totalCost = 0;
+        for (let el of planetStatsModifiers) {
+            if (el.cost) {
+                let roll = Math.floor(Math.random() * (4 - 1 + 1) + 1);
+                totalCost = totalCost + roll;
+                modules[el.stat].cost = roll
+            }
+            else {
+                modules[el.stat].cost = 0;
+            }
+        }
+    } while (totalCost > totalCostMax || totalCost < totalCostMin);
+
+    let data = {
+        type: TYPE_PLANET,
+        value: score,
+        modules: modules
+    }
+
+    await new Card().create(data);
+}
+
 const getDeck = async function () {
     return await DB.tables.deck.findAll({raw:true})
 }
@@ -242,6 +348,8 @@ const hydrateCardDB = async function (cleanInstall = true) {
             await cardManager.create(data);
         }
     }
+
+    await generatePlanets();
 }
 
-module.exports = {deckGenerator, cardPop, getCardsIds, destroyDeck, getDeck, shuffle, hydrateCardDB}
+module.exports = {deckGenerator, cardPop, getCardsIds, destroyDeck, getDeck, shuffle, hydrateCardDB, generatePlanet, generatePlanets}

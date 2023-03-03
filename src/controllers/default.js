@@ -1,5 +1,5 @@
 var fs = require('fs');
-let {cardPop, deckGenerator,getCardsIds, hydrateCardDB, destroyDeck, getDeck} = require('./deck')
+let {generatePlanets, cardPop, deckGenerator,getCardsIds, hydrateCardDB, destroyDeck, getDeck} = require('./deck')
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
@@ -17,22 +17,24 @@ module.exports = {
 
     async returnOk(req, res) {
 
-        let cardsRaw = await DB.tables.cards.findAll({attributes: ['id'], raw:true, where: {type: TYPE_PLACE}});
+        await generatePlanets(1,500);
 
-        let objectDataSet = {"drawflow": {}};
+        // let cardsRaw = await DB.tables.cards.findAll({attributes: ['id'], raw:true, where: {type: TYPE_PLACE}});
+        //
+        // let objectDataSet = {"drawflow": {}};
+        //
+        // for (let cardRaw of cardsRaw) {
+        //     let card = await new Card(cardRaw.id).getData();
+        //     let module = await drawflow.buildPlaceDataSet(card);
+        //
+        //     for (let index in module) {
+        //         objectDataSet['drawflow'][index] = module[index];
+        //     }
+        // }
+        // res.json(objectDataSet)
 
-        for (let cardRaw of cardsRaw) {
-            let card = await new Card(cardRaw.id).getData();
-            let module = await drawflow.buildPlaceDataSet(card);
-
-            for (let index in module) {
-                objectDataSet['drawflow'][index] = module[index];
-            }
-        }
-        res.json(objectDataSet)
-
-        // res.status(200);
-        // res.json({status: 200})
+        res.status(200);
+        res.json({status: 200})
     },
 
     async deckGenerator(req, res) {
