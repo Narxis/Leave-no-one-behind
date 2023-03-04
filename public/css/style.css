@@ -928,3 +928,11 @@ nav {
 .hide-opacity {
     opacity: 0;
 }
+
+/*---vvv---Combat-GUI----vvv---*/
+.combat {
+    background: var(--lgrad);
+    border: 4pc solid #fff ;
+    border-radius: 10px;
+}
+/*---^^^---Combat-GUI----^^^---*/
