@@ -14,7 +14,15 @@
   <div class="center" id="combat-center">
     <div class="combat-wrap" id="combat-log"></div>
   </div>
-  <div class="leftcenter" id="combat-left"></div>
+  <div class="leftcenter" id="combat-left">
+    <div class="combat-player-container">
+      <% if(players){ %>
+        <% players.forEach(function(player) { %>
+          <%- include("partials/combat-player", {player:player}) %>
+        <% }); %>
+      <% } %>
+    </div>
+  </div>
   <div class="rightcenter" id="combat-right"></div>
   <%- include("partials/nav") %>
   <div class="center">
