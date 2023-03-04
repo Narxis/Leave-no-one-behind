@@ -12,13 +12,13 @@
 <body class="wrap--1">
   <%- include ("partials/plan-du-vaisseau") %>
   <div class="center" id="combat-center">
-    <div class="combat"></div>
+    <div class="combat-wrap" id="combat-log"></div>
   </div>
   <div class="leftcenter" id="combat-left"></div>
   <div class="rightcenter" id="combat-right"></div>
   <%- include("partials/nav") %>
   <div class="center">
-    <div class="card">
+    <div class="card deblur">
       <div class="wrap">
         <div id="bigboite" class="robot-arm">
           <div id="floatboite" class="float">
@@ -621,7 +621,7 @@
     </div>
   </div>
   <div class="rightcenter">
-    <div class="human-status">
+    <div class="human-status deblur">
       <div class="human">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path
@@ -637,7 +637,7 @@
     </div>
   </div>
   <div class="bottomcenter">
-    <div class="player-tabs" id="playertabs_container">
+    <div class="player-tabs deblur" id="playertabs_container">
       <% if(players){ %>
         <% players.forEach(function(player) { %>
           <%- include("partials/player-tabs", {player:player}) %>

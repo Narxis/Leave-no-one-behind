@@ -930,9 +930,41 @@ nav {
 }
 
 /*---vvv---Combat-GUI----vvv---*/
-.combat {
-    background: var(--lgrad);
-    border: 4pc solid #fff ;
-    border-radius: 10px;
+.combat-wrap {
+    position: absolute;
+    width: 62vw;
+    height: 710px;
+    background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
+    border: 5px solid #fff;
+    border-radius: 15px;
+    /* opacity: 0; */
+    transform: translateY(-800px);
+    transition: .5s;
+    top: 408px;
+    /* left: 966px; */
+}
+
+#combat-center {
+    z-index: 9;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-800px);
+    width: 0px;
+    height: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: .5s;
+}
+
+.blur {
+    transition: .5s;
+    filter: blur(7px);
+}
+.deblur {
+    transition: .5s;
+    filter: blur(0px);
 }
 /*---^^^---Combat-GUI----^^^---*/

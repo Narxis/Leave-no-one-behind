@@ -16,8 +16,8 @@
     height: 710px;
     border-radius: 15px;
     border: 5px solid #fff;
-    left: -625px;
-    top: -354px;
+    left: -606px;
+    top: -378px;
     background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 90%) 100%);
     filter: invert(1);
 }
@@ -26,8 +26,8 @@
     position: absolute;
     width: 1200px;
     height: 675px;
-    left: -600px;
-    top: -337px;
+    left: -584px;
+    top: -356px;
 }
 
 .plan-room {
@@ -51,9 +51,9 @@
     transition: .5s;
     filter: invert(1);
     position: absolute;
-    top: 50%;
+    top: 48.6%;
     left: 966px;
-    z-index: 1;
+    z-index: 10;
 }
 
 .showroom {
@@ -78,8 +78,7 @@
         fill: red;
     }
 }
-
 .mapshow {
-    opacity: 1;
-    transform: translateY(-14px);
+    opacity: 1 !important;
+    transform: translateY(0px)!important;
 }
