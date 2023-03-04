@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap'); @import url('https://fonts.googleapis.com/css?family=Open+Sans:800'); @font-face {
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
+
+@font-face {
     font-family: '7segments';
     src: url('/fonts/7segments.ttf') format('truetype');
 }
@@ -492,7 +495,8 @@ nav {
     margin: 0px 0px 0px 4px;
 }
 
-.roll-type1, .roll-type2 {
+.roll-type1,
+.roll-type2 {
     top: 0px;
     left: 0px;
     width: 42px;
@@ -680,7 +684,8 @@ nav {
     margin: 0px 6px;
 }
 
-.player-stat-up, .player-stat-down {
+.player-stat-up,
+.player-stat-down {
     margin: 0px 10px;
 }
 
@@ -692,7 +697,9 @@ nav {
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
-    /* Styles */ .hidden-mobile {
+
+    /* Styles */
+    .hidden-mobile {
         display: none;
     }
 
@@ -837,7 +844,9 @@ nav {
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-device-height : 1920px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
-    /* Styles */ .hidden-mobile {
+
+    /* Styles */
+    .hidden-mobile {
         display: none;
     }
 
@@ -892,7 +901,11 @@ nav {
     top: 3px;
 }
 
-#output-combat, #output-pilotage, #output-engineering, #output-survival, #output-recon {
+#output-combat,
+#output-pilotage,
+#output-engineering,
+#output-survival,
+#output-recon {
     transition: .5s;
 }
 
@@ -907,6 +920,7 @@ nav {
 }
 
 /*---vvv---Combat-GUI----vvv---*/
+
 .combat-wrap {
     position: absolute;
     width: 62vw;
@@ -952,9 +966,11 @@ nav {
     justify-content: center;
     flex-direction: column;
 }
-.player-name{
+
+.player-name {
     margin: 0px 0px 0px 10px;
 }
+
 .player {
     background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
     border: 5px solid #fff;
@@ -980,7 +996,7 @@ nav {
 }
 
 #stat-icon svg {
-    fill: #fff ;
+    fill: #fff;
 }
 
 .combat-roll {
@@ -1054,5 +1070,105 @@ nav {
     justify-content: center;
     align-items: center;
 }
+
+.combat-player-container .roll-type {
+    margin-top: 6px;
+    /* margin-right: 20px; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-content: center;
+    height: 55px;
+    margin-left: 1px;
+}
+
+.combat-player-container .roll-type1,
+.roll-type2 {
+    top: 0px;
+    left: 0px;
+    width: 42px;
+    height: 17px;
+    display: flex;
+    justify-content: flex-start;
+    margin-right: 12px;
+}
+
+.combat-player-container .combat-wrap {
+    position: absolute;
+    width: 48vw;
+    height: 500px;
+    background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
+    border: 5px solid #fff;
+    border-radius: 15px;
+    /* opacity: 0; */
+    transform: translateY(-800px);
+    transition: .5s;
+    top: 535px;
+    /* left: 966px; */
+}
+
+.combat-player-container .player-name {
+    margin: 0px 0px 0px 10px;
+}
+
+.combat-player-container .player {
+    background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
+    border: 5px solid #fff;
+    border-radius: 15px;
+    width: 380px;
+    height: 130px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 4px;
+}
+
+.combat-player-container .combat-roll {
+    margin: 15px 0px 0px 30px;
+    width: 155px;
+    height: 129px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.combat-player-container .output-icon {
+    width: 30px;
+    height: 30px;
+    margin: 7px 0px 0px 0px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Jura', sans-serif;
+    text-align: center;
+    color: #fff;
+    text-shadow: rgb(238 232 232 / 42%) 1px 1px 4px;
+    box-shadow: 1.5px 1.5px 3px #ffffff26, -1px -1px 2.5px #ffffff26;
+    background-color: rgba(0, 0, 0, 0.26);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.combat-player-container .output-roll-value {
+    height: 50px;
+    width: 63px;
+    top: 0px;
+    left: 0px;
+    border: none;
+    border-radius: 10px;
+    margin: 10px 10px 10px 10px;
+    font-family: 'Jura', sans-serif;
+    font-size: 30px;
+    letter-spacing: 2px;
+    text-shadow: rgb(238 232 232 / 42%) 2px 2px 4px;
+    color: #fff;
+    box-shadow: 1.5px 1.5px 3px #c8d0e71f, -1px -1px 2.5px #ffffff29;
+    background-color: rgba(0, 0, 0, 0.26);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 /*---^^^---Combat-GUI----^^^---*/
