@@ -16,6 +16,10 @@ async function initialiseKeyListener() {
                 document.getElementById("playertabs_container").classList.toggle("deblur");
                 document.querySelector(".card").classList.toggle("deblur");
                 document.querySelector(".human-status").classList.toggle("deblur");
+                document.querySelectorAll(".player").forEach(function (e) {
+                    e.classList.toggle("player-show");
+                    e.classList.toggle("player-hide")
+                });
                 break;
 //            case "F5":
 //                event.preventDefault();

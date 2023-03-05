@@ -923,16 +923,15 @@ nav {
 
 .combat-wrap {
     position: absolute;
-    width: 62vw;
-    height: 710px;
+    width: 48vw;
+    height: 574px;
     background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
     border: 5px solid #fff;
     border-radius: 15px;
     /* opacity: 0; */
     transform: translateY(-800px);
     transition: .5s;
-    top: 408px;
-    /* left: 966px; */
+    top: 500px;
 }
 
 #combat-center {
@@ -965,6 +964,9 @@ nav {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    z-index: 9;
+    position: absolute;
+    left: -585px;
 }
 
 .player-name {
@@ -1113,7 +1115,7 @@ nav {
 
 .combat-player-container .player {
     background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
-    border: 5px solid #fff;
+    border: 3px solid #fff;
     border-radius: 15px;
     width: 380px;
     height: 130px;
@@ -1121,6 +1123,7 @@ nav {
     flex-wrap: wrap;
     flex-direction: column;
     margin: 4px;
+    transition: .5s;
 }
 
 .combat-player-container .combat-roll {
@@ -1170,5 +1173,14 @@ nav {
     align-items: center;
 }
 
+.player-show {
+    opacity: 1 !important;
+    transform: translateX(600px)!important;
+}
+
+.player-hide {
+    opacity: 0 !important;
+    transform: translateX(0px)!important;
+}
 
 /*---^^^---Combat-GUI----^^^---*/
