@@ -96,6 +96,8 @@ function startCountDown() {
                 bigBoite.classList.add('hide')
                 await sleep(300)
                 plugShip.classList.remove('comeback')
+                currentCard.choices = currentCard.choices.slice(-1)
+                await showChoices();
                 break;
         }
         time_left--;
