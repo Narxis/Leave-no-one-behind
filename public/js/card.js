@@ -1,5 +1,5 @@
 var currentCard = {};
-var isWritting = false;
+var interval_cd;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -52,11 +52,15 @@ async function getCardByName (name) {
 }
 
 function startCountDown() {
-    // On récupère le texte dans le timer (en tant qu'entier)
+
     let time_left = 30;
-    // On lance une fonction toutes les secondes (1000ms)
+
     interval_cd = setInterval(async function () {
-        // On change le texte dans le timer (avec un 0 devant si on est en dessous de 10)
+        let timerText = document.querySelector('#timer-text');
+        let timerText2 = document.querySelector('#timer-text2');
+        let bigBoite = document.querySelector('#bigboite');
+        let plugShip = document.querySelector('#plugship');
+
         timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
         timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
         switch (time_left) {
@@ -117,6 +121,8 @@ function startCountDown() {
 }
 
 async function stopCountdown() {
+
+    let bigBoite = document.querySelector('#bigboite');
     if (typeof interval_cd !== 'undefined') {
         clearInterval(interval_cd);
         bigBoite.classList.remove("grow");
@@ -314,6 +320,8 @@ async function initCard(forceName = null) {
     else
         currentCard = await getNextCard(true);
     await writeCardDesc();
+    if (currentCard.timer === 1)
+        startCountDown();
     await showChoices();
 }
 
@@ -328,8 +336,9 @@ async function showChoices() {
         choiceBtn.id = 'choice' + i;
         choiceBtn.innerText = choice.value;
         choiceBtn.addEventListener('mouseup', async function() {
-           await hideChoices();
-           if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL
+            stopCountdown();
+            await hideChoices();
+            if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL
 
                await writeCardDesc(choice.reveal);
                let nextCard = await getNextCard();
@@ -338,11 +347,11 @@ async function showChoices() {
                        continue: nextCard.value > 0 ? 2 : 1
                    }];
                await showChoices();
-           }
-           else if (choice.continue && choice.continue === 1) { // NEXT IS CARD
+            }
+            else if (choice.continue && choice.continue === 1) { // NEXT IS CARD
                await initCard();
-           }
-           else if (choice.continue && choice.continue === 2) { // NEXT IS PLANET ETAPE 1
+            }
+            else if (choice.continue && choice.continue === 2) { // NEXT IS PLANET ETAPE 1
                let textPlanetEncounter = "\n \u00a0 Votre vaisseau s'approche d'une planète. \n \n \u00a0 Pendant la mise en orbite, vous êtes libre de vous déplacer à bord et de profiter des installations telles que la salle de cinéma, la cuisine, la salle d'entraînement, la bibliothèque, etc... \n \n\u00a0 Dirigez-vous vers la salle des scanners pour obtenir davantage d'informations sur cette planète.";
                await writeCardDesc(textPlanetEncounter);
                currentCard.choices = [{
@@ -350,13 +359,13 @@ async function showChoices() {
                    continue: 3
                }];
                await showChoices();
-           }
-           else if (choice.continue && choice.continue === 3) { // NEXT IS PLANET ETAPE 2
+            }
+            else if (choice.continue && choice.continue === 3) { // NEXT IS PLANET ETAPE 2
                window.location.href = '/next';
-           }
-           else if (choice.next && choice.next !== '') { // NEXT IS FOLLOWUP
+            }
+            else if (choice.next && choice.next !== '') { // NEXT IS FOLLOWUP
                await initCard(choice.next);
-           }
+            }
         });
         choiceTab.append(choiceBtn);
         await sleep(150);
