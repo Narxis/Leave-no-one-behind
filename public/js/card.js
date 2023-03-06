@@ -60,6 +60,7 @@ function startCountDown() {
         let timerText2 = document.querySelector('#timer-text2');
         let bigBoite = document.querySelector('#bigboite');
         let plugShip = document.querySelector('#plugship');
+        let choicetab = document.getElementById('choicetab');
 
         timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
         timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
@@ -82,20 +83,13 @@ function startCountDown() {
                 break;
             case 0:
                 clearInterval(interval_cd);
-                clickable = false
-                console.log('essaye de cliquer pour voir')
+                choicetab.style.pointerEvents = 'none';
                 await sleep(500)
-                var choice = document.getElementById('choicetab');
-                var choiceTabs = choice.getElementsByClassName('choice');
-                for (let k = 0; k < choiceTabs.length-1; k++) {
-                    choiceTabs.item(k).disabled = 'true'
-                    choiceTabs.item(k).classList.add('move-down');
-                    choiceTabs.item(k).classList.remove('choice-hover')
-                }
+                await hideChoices();
                 bigBoite.classList.remove('grow')
                 bigBoite.classList.add('plop')
                 await sleep(100)
-                clickable = true
+                choicetab.style.pointerEvents = 'init';
                 await sleep(400)
                 bigBoite.classList.add('shot')
                 await sleep(1520)
