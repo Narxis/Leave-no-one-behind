@@ -16,17 +16,6 @@ async function getActiveStatus () {
     return JSON.parse(await rawResponse.text());
 }
 
-async function getShip () {
-    const rawResponse = await fetch('/api/ship', {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-    });
-    return JSON.parse(await rawResponse.text());
-}
-
 async function getNextCard (pop=false) {
     const rawResponse = await fetch('/api/nextCard/'+(pop ? 'pop' : 'get'), {
         method: 'GET',
@@ -136,15 +125,6 @@ async function stopCountdown() {
     }
 }
 
-async function initialiseChoiceTabs() {
-    var choice = document.getElementById('choicetab');
-    var choiceTabs = choice.getElementsByClassName('choice');
-
-    for (let i = 0; i < choiceTabs.length; i++) {
-        choiceTabs.item(i).classList.remove('move-down');
-        await sleep(150);
-    }
-}
 async function initialiseModTabs() {
     var mod = document.getElementById('modtab');
     var modTabs = mod.getElementsByClassName('tab');
@@ -272,16 +252,6 @@ const addStatus = (status) => {
     // wsLNOB.setStatus(status.slug, status.duration)
 }
 
-document.addEventListener('roll',async function(e){
-    let player =document.getElementById('player-tab'+e.detail.data.discord_id);
-    let iconlist = player.querySelectorAll('.output-absolute');
-    for (let i=0; i<iconlist.length; i++){
-        iconlist.item(i).classList.add('hide-opacity')
-    }
-    await sleep(1000);
-    player.querySelector('#output-'+e.detail.data.stat).classList.remove('hide-opacity')
-});
-
 async function hideChoices() {
     let choicesActive = document.querySelectorAll('#choicetab .choice');
 
@@ -374,4 +344,13 @@ async function writeCardDesc(text = null) {
     initialisePlayerExpander()
     initialiseStatusList();
     document.addEventListener('status', initialiseStatusList);
+    document.addEventListener('roll',async function(e){
+        let player =document.getElementById('player-tab'+e.detail.data.discord_id);
+        let iconlist = player.querySelectorAll('.output-absolute');
+        for (let i=0; i<iconlist.length; i++){
+            iconlist.item(i).classList.add('hide-opacity')
+        }
+        await sleep(1000);
+        player.querySelector('#output-'+e.detail.data.stat).classList.remove('hide-opacity')
+    });
 })();
