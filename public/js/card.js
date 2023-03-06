@@ -330,6 +330,7 @@ async function showChoices() {
         choiceBtn.addEventListener('mouseup', async function() {
            await hideChoices();
            if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL
+
                await writeCardDesc(choice.reveal);
                let nextCard = await getNextCard();
                currentCard.choices = [{
@@ -341,7 +342,16 @@ async function showChoices() {
            else if (choice.continue && choice.continue === 1) { // NEXT IS CARD
                await initCard();
            }
-           else if (choice.continue && choice.continue === 2) { // NEXT IS PLANET
+           else if (choice.continue && choice.continue === 2) { // NEXT IS PLANET ETAPE 1
+               let textPlanetEncounter = "\n \u00a0 Votre vaisseau s'approche d'une planète. \n \n \u00a0 Pendant la mise en orbite, vous êtes libre de vous déplacer à bord et de profiter des installations telles que la salle de cinéma, la cuisine, la salle d'entraînement, la bibliothèque, etc... \n \n\u00a0 Dirigez-vous vers la salle des scanners pour obtenir davantage d'informations sur cette planète.";
+               await writeCardDesc(textPlanetEncounter);
+               currentCard.choices = [{
+                   value: 'Aller dans la salle des scanners',
+                   continue: 3
+               }];
+               await showChoices();
+           }
+           else if (choice.continue && choice.continue === 3) { // NEXT IS PLANET ETAPE 2
                window.location.href = '/next';
            }
            else if (choice.next && choice.next !== '') { // NEXT IS FOLLOWUP
@@ -365,16 +375,13 @@ async function writeCardDesc(text = null) {
     }
 }
 
-(async function(){
-
-    // console.log(currentCard);
-    // await initialiseChoiceTabs();
-    await initCard();
-    await initialiseModTabs();
-    await initialisePlayerTab();
-    await initialiseleLeftTabs();
+(function(){
+    initCard();
+    initialiseModTabs();
+    initialisePlayerTab();
+    initialiseleLeftTabs();
     initialiseItemExpand()
     initialisePlayerExpander()
-    await initialiseStatusList();
+    initialiseStatusList();
     document.addEventListener('status', initialiseStatusList);
 })();

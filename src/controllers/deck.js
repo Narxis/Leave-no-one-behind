@@ -151,10 +151,12 @@ const cardPop = async function (setPlayed = true){
             action: 'card-played',
             data: card
         });
-        const wsClient = new ws(WS_URL);
-        wsClient.on('open', () => {
-            wsClient.send(data);
-        });
+        if (setPlayed) {
+            const wsClient = new ws(WS_URL);
+            wsClient.on('open', () => {
+                wsClient.send(data);
+            });
+        }
 
         return card;
     }

@@ -645,22 +645,11 @@
     <div class="next-button" id="next2"></div>
   </a>
   <script>
-    var cardtextstr = `<%- card.desc %>`;
-    var currentCardType = parseInt(`<%- card.type %>`) ;
-    var currentCardHasTimer = parseInt(`<%- card.timer %>`) ;
-    var nextlist = []
-    var choicelist = [];
     var statusNameList = [];
     var statusDurationList = [];
-    var answerlist = [];
     var activeStatusList = [];
     var statusSvgList = {};
 
-    <% card.choices.forEach(function(choice) {%>
-    nextlist.push(`<%- choice.next %>`);
-    choicelist.push(`<%- choice.value %>`);
-    answerlist.push(`<%- choice.reveal %>`);
-    <% }); %>
     <% statuses.forEach(function(status) {%>
     statusNameList.push(`<%- status.slug %>`);
     statusDurationList[`<%- status.slug %>`] = `<%- status.duration %>`;
@@ -668,9 +657,7 @@
     if (<%- status.duration %> > 0) {
       activeStatusList.push(`<%- status.slug %>`);
     }
-
     <% }); %>
-    console.log(nextlist)
   </script>
 
 
