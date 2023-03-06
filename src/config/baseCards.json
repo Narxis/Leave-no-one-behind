@@ -6,7 +6,8 @@
       "choices": [
         {
           "value": "Oui",
-          "reveal": "\n\u00a0Erreur de l'autopilote ..."
+          "reveal": "\n\u00a0Erreur de l'autopilote ...",
+          "mjreveal": "blablabMJ"
         },
         {
           "value": "<s>Non</s>",
@@ -19,7 +20,8 @@
           "choices": [
             {
               "value": "jivoirien",
-              "reveal": "\n\u00a0Normal cé blacoute ..."
+              "reveal": "\n\u00a0Normal cé blacoute ...",
+              "mjreveal": "blablabMJ"
             }
           ]
         },

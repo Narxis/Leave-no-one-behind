@@ -34,6 +34,7 @@ async function getActiveStatus () {
     });
     return JSON.parse(await rawResponse.text());
 }
+
 async function getShip () {
     const rawResponse = await fetch('/api/ship', {
         method: 'GET',
@@ -518,7 +519,7 @@ function quickUpdateModule(el, mod, left=false) {
     else {
         currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value'));
         input = document.getElementsByName('i-'+ mod)[0];
-        inputVal = input.value; 
+        inputVal = input.value;
     }
     let modifier = 1;
     let newValue;
@@ -568,7 +569,7 @@ function setModuleVal(mod, newValue, left) {
     else {
         let statVal = document.querySelector('#modtab #dial-'+mod);
         statVal.setAttribute('data-value', newValue);
-    
+
         let tooltip = statVal.querySelector('.mod-button');
         let newTooltip = tooltip.getAttribute('data-tooltip').replace(/\d+%$/, newValue + '%');
         tooltip.setAttribute('data-tooltip', newTooltip)

@@ -61,7 +61,8 @@ class Card {
                         type: alt_status,
                         elem: 'choice',
                         value: this.replaceVars(alt_choice.value),
-                        reveal: this.replaceVars(alt_choice.reveal)
+                        reveal: this.replaceVars(alt_choice.reveal),
+                        mjreveal: this.replaceVars(alt_choice.mjreveal)
                     }
                     alt_bulk.push(alt_choice_dat);
                 }
@@ -74,6 +75,7 @@ class Card {
                     type: 'choice',
                     value: this.replaceVars(this.choices[choice].value),
                     reveal: this.replaceVars(this.choices[choice].reveal),
+                    mjreveal: this.replaceVars(this.choices[choice].mjreveal),
                     next: this.choices[choice].next,
                     cost: -1,
                 });

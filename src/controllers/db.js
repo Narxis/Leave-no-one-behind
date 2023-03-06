@@ -135,6 +135,11 @@ class DB {
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
+            },
+            mjreveal: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
             }
         });
 
@@ -159,6 +164,11 @@ class DB {
                 defaultValue: ''
             },
             reveal: {
+                type: Sequelize.TEXT,
+                allowNull: false,
+                defaultValue: ''
+            },
+            mjreveal: {
                 type: Sequelize.TEXT,
                 allowNull: false,
                 defaultValue: ''
