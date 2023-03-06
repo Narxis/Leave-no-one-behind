@@ -132,10 +132,10 @@ module.exports = {
 
         if (CONFIG.gameState !== 'gameLive')
             await CONFIG.upsert('gameState', 'gameLive');
-
-        for (let i of activeStatuses) {
-            await statuses.remove(i.slug);
-        }
+        //
+        // for (let i of activeStatuses) {
+        //     await statuses.remove(i.slug);
+        // }
 
         let statusesAll = await statuses.getAllStatuses(false);
 

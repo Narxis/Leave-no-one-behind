@@ -160,16 +160,6 @@ async function initialiseModTabs() {
         modTabs.item(i).classList.remove('move-right');
     }
 }
-async function initialiseTimerTab() {
-    var timerTab = document.getElementsByClassName('timertab');
-
-    for (let i = 0; i < timerTab.length; i++) {
-        await sleep(100);
-        timerTab.item(i).classList.remove('rotate-90');
-        await sleep(31000)
-        timerTab.item(i).classList.add('rotate-90');
-    }
-}
 async function initialisePlayerTab() {
     var playerTab = document.querySelectorAll('.player-tab');
     for (let i = 0; i < playerTab.length; i++) {
@@ -202,10 +192,6 @@ async function initialiseStatusList (){
 function removeStarterItem(id, slug) {
     document.querySelector('#player-tab'+id+' .itemlist-line.'+slug).remove();
     wsLNOB.delItem(slug, id);
-}
-
-const addNewStatus = (slug, duration) => {
-    wsLNOB.setStatus(slug, duration)
 }
 
 function quickUpdateModule(el, mod, left=false) {
@@ -319,6 +305,7 @@ async function initCard(forceName = null) {
         currentCard = await getCardByName(forceName);
     else
         currentCard = await getNextCard(true);
+    await initialiseStatusList();
     await writeCardDesc();
     if (currentCard.timer === 1)
         startCountDown();
