@@ -511,6 +511,10 @@
   <script src="/js/players.js"></script>
 
   <script>
+    const randomColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+    document.documentElement.style.setProperty('--planet-color', randomColor);
+    document.documentElement.style.setProperty('--eau-color', 'rgba(43,197,192, <%- card.modules.wtr.val %>%)');
+
     var observer = new MutationObserver(function (mutations) {
       mutations.forEach(async function (mutation) {
         if (mutation.type === "attributes" && mutation.attributeName === 'data-value') {
