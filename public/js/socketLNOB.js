@@ -126,6 +126,17 @@ class SocketLNOB {
             console.log('%cPlayer ' + data.player_id + ' : fail with a roll of ' + data.dice_result + ' (calculated: ' + data.result + ') on ' + data.stat, 'color:red');
         }
     }
+
+    triggerCustomEvent(eventName, eventData) {
+        let payload = {
+            action: 'passThrough',
+            data: {
+                action: eventName,
+                data: eventData
+            }
+        }
+        this.send(payload);
+    }
 }
 
 const wsLNOB = new SocketLNOB();
