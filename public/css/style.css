@@ -1175,12 +1175,147 @@ nav {
 
 .player-show {
     opacity: 1 !important;
-    transform: translateX(600px)!important;
+    transform: translateX(600px) !important;
 }
 
 .player-hide {
     opacity: 0 !important;
-    transform: translateX(0px)!important;
+    transform: translateX(0px) !important;
+}
+
+.combat-foe-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 9;
+    position: absolute;
+    left: 585px;
+}
+
+.foe-name {
+    margin: 0px 0px 0px 10px;
+}
+
+.foe {
+    background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
+    border: 5px solid #fff;
+    border-radius: 15px;
+    width: 340px;
+    height: 130px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.combat-foe-container .roll-type {
+    margin-top: 6px;
+    /* margin-right: 20px; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-content: center;
+    height: 55px;
+    margin-left: 1px;
+}
+
+.combat-foe-container .roll-type1,
+.roll-type2 {
+    top: 0px;
+    left: 0px;
+    width: 42px;
+    height: 17px;
+    display: flex;
+    justify-content: flex-start;
+    margin-right: 12px;
+}
+
+.combat-foe-container .combat-wrap {
+    position: absolute;
+    width: 48vw;
+    height: 500px;
+    background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
+    border: 5px solid #fff;
+    border-radius: 15px;
+    /* opacity: 0; */
+    transform: translateY(-800px);
+    transition: .5s;
+    top: 535px;
+    /* left: 966px; */
+}
+
+.combat-foe-container .player-name {
+    margin: 0px 10px 0px 0px;
+}
+
+.combat-foe-container .foe {
+    background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 100%) 100%);
+    border: 3px solid #fff;
+    border-radius: 15px;
+    width: 380px;
+    height: 130px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 4px;
+    transition: .5s;
+}
+
+.combat-foe-container .combat-roll {
+    margin: 15px 30px 0px 0px;
+    width: 155px;
+    height: 129px;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+}
+
+.combat-foe-container .output-icon {
+    width: 30px;
+    height: 30px;
+    margin: 7px 0px 0px 0px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Jura', sans-serif;
+    text-align: center;
+    color: #fff;
+    text-shadow: rgb(238 232 232 / 42%) 1px 1px 4px;
+    box-shadow: 1.5px 1.5px 3px #ffffff26, -1px -1px 2.5px #ffffff26;
+    background-color: rgba(0, 0, 0, 0.26);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.combat-foe-container .output-roll-value {
+    height: 50px;
+    width: 63px;
+    top: 0px;
+    left: 0px;
+    border: none;
+    border-radius: 10px;
+    margin: 10px 10px 10px 10px;
+    font-family: 'Jura', sans-serif;
+    font-size: 30px;
+    letter-spacing: 2px;
+    text-shadow: rgb(238 232 232 / 42%) 2px 2px 4px;
+    color: #fff;
+    box-shadow: 1.5px 1.5px 3px #c8d0e71f, -1px -1px 2.5px #ffffff29;
+    background-color: rgba(0, 0, 0, 0.26);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.foe-show {
+    opacity: 1 !important;
+    transform: translateX(-1100px) !important;
+}
+
+.foe-hide {
+    opacity: 0 !important;
+    transform: translateX(0px) !important;
 }
 
 /*---^^^---Combat-GUI----^^^---*/

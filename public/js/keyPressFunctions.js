@@ -20,6 +20,10 @@ async function initialiseKeyListener() {
                     e.classList.toggle("player-show");
                     e.classList.toggle("player-hide")
                 });
+                document.querySelectorAll(".foe").forEach(function (e) {
+                    e.classList.toggle("foe-show");
+                    e.classList.toggle("foe-hide")
+                });
                 break;
 //            case "F5":
 //                event.preventDefault();
