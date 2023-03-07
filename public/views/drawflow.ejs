@@ -192,6 +192,8 @@
                 <input type="text" df-name>
                 <p>Desc</p>
                 <textarea df-desc></textarea>
+                <p>mjreveal</p>
+                <input type="text" df-mjreveal>
                 <p>Timer</p>
                 <input type="checkbox" df-timer>
                 <p>Shuffle</p>
@@ -208,6 +210,8 @@
                     <div class="box">
                         <p>choice</p>
                         <textarea df-choice></textarea>
+                        <p>mjreveal</p>
+                        <input type="text" df-mjreveal>
                     </div>
                 </div>
                         `;
@@ -333,7 +337,8 @@
                     buildChoices[prevId] = []
                 }
                 buildChoices[prevId][prevNode] = {
-                    'value': choiceDoc.querySelector('textarea[df-choice]').value || choice.data.choice
+                    'value': choiceDoc.querySelector('textarea[df-choice]').value || choice.data.choice,
+                    'mjreveal': choiceDoc.querySelector('input[df-mjreveal]').value || choice.data.mjreveal,
                 }
 
                 if (reveal) {
@@ -364,6 +369,7 @@
                 }
 
                 cardExport['desc'] = card.data.desc || htmlDoc.querySelector('textarea[df-desc]').value;
+                cardExport['mjreveal'] = card.data.mjreveal || htmlDoc.querySelector('input[df-mjreveal]').value
                 cardExport['timer'] = card.data.timer === 'on';
                 cardExport['shuffle'] = card.data.shuffle === 'on';
                 cardExport['name'] = name;
