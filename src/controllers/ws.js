@@ -77,6 +77,9 @@ const makeAction = async function (raw_response) {
         case 'emote':
             payload = response;
             break;
+        case 'passThrough':
+            payload = response.data;
+            break;
         default:
             payload = {
                 error: true,
