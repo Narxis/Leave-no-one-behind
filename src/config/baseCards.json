@@ -7,34 +7,12 @@
         {
           "value": "Oui",
           "reveal": "\n\u00a0Erreur de l'autopilote ...",
-          "mjreveal": "blablabMJ"
         },
         {
           "value": "<s>Non</s>",
           "reveal": "\n\u00a0Erreur de l'autopilote ..."
         }
-      ],
-      "alts": {
-        "blackout": {
-          "desc": "kestuvoi",
-          "choices": [
-            {
-              "value": "jivoirien",
-              "reveal": "\n\u00a0Normal cé blacoute ...",
-              "mjreveal": "blablabMJ"
-            }
-          ]
-        },
-        "anticipation": {
-          "desc": "'ttention hein'",
-          "choices": [
-            {
-              "value": "ouéjecé",
-              "reveal": "\n\u00a0Ounaide, je my attendais ..."
-            }
-          ]
-        }
-      }
+      ]
     }
   ],
   "positive": [
