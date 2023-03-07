@@ -224,6 +224,7 @@ class Card {
                 'type',
                 'value',
                 'reveal',
+                'mjreveal',
                 'next'
             ],
             where: {
