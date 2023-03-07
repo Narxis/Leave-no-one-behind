@@ -288,7 +288,7 @@ async function showChoices() {
         choiceBtn.classList.add('choice');
         choiceBtn.classList.add('move-down');
         choiceBtn.id = 'choice' + i;
-        choiceBtn.innerText = choice.value;
+        choiceBtn.innerHTML = choice.value;
         choiceBtn.addEventListener('mouseup', async function() {
             stopCountdown();
             await hideChoices();
@@ -330,10 +330,24 @@ async function showChoices() {
 async function writeCardDesc(text = null) {
 
     let currentText = '';
+    let stopTokenToReplace = '{....}';
+    let stopToken = '‡';
+    let textDiv = document.querySelector('.card-text');
     text = text || currentCard.desc;
+    text = text.replaceAll(stopTokenToReplace, stopToken);
     for (let i = 0; i <= text.length; i++) {
-        document.querySelector('.card-text').innerText = currentText;
-        currentText += text.substring(i, i + 1)
+        textDiv.innerText = currentText;
+        if (text.substring(i, i + 1) === stopToken) {
+            for (let j=0; j<4; j++) {
+                await sleep(400);
+                currentText += '.';
+                textDiv.innerText = currentText;
+            }
+            currentText = '';
+            await sleep(500);
+        } else {
+            currentText += text.substring(i, i + 1)
+        }
         await sleep(21.7)
     }
 }
