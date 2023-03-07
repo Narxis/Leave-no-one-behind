@@ -7,6 +7,7 @@ class Card {
     value;
     name;
     desc;
+    mjreveal;
     timer;
     shuffle;
     alts;
@@ -39,6 +40,7 @@ class Card {
             value: this.value,
             name: this.name,
             desc: this.replaceVars(this.desc),
+            mjreveal: this.replaceVars(this.mjreveal),
             timer: this.timer,
             shuffle: this.shuffle
         }).then(async result => {
@@ -184,6 +186,7 @@ class Card {
                 'value',
                 'name',
                 'desc',
+                'mjreveal',
                 'timer',
                 'shuffle'
             ],
@@ -242,6 +245,7 @@ class Card {
                 choices.push({
                     value: mod.value,
                     reveal: mod.reveal,
+                    mjreveal: mod.mjreveal,
                     next: mod.next
                 });
             }
@@ -259,7 +263,8 @@ class Card {
             let foundChoices = await DB.tables.cards_alt.findAll({
                 attributes: [
                     'value',
-                    'reveal'
+                    'reveal',
+                    'mjreveal'
                 ],
                 raw:true,
                 where: {

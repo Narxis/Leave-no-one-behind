@@ -152,6 +152,7 @@ async function initialiseleLeftTabs() {
     todoListVar.item(0).classList.remove('hidden');
     modsLeftVar.item(0).classList.remove('hidden');
 }
+
 async function initialiseStatusList (){
     var activeStatus = await getActiveStatus();
 
