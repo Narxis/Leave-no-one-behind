@@ -3,7 +3,9 @@ const {Items} = require("../models/items");
 const {response} = require("express");
 const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
+const {friendFoe} = require("../models/friendFoe");
 const shipId = 1;
+const ff = require("../controllers/ff")
 const chalk = require("chalk")
 
 const init = function (){
@@ -42,6 +44,12 @@ const makeAction = async function (raw_response) {
             break;
         case 'roll':
             payload = actionRoll(response);
+            break;
+        case 'ff_switch':
+        case 'ff_create':
+        case 'ff_delete':
+        case 'ff_roll':
+            payload = actionFriendFoe(response);
             break;
         case 'setModule':
             payload = actionSetModule(response);
@@ -83,6 +91,37 @@ const makeAction = async function (raw_response) {
     }
     return payload;
 }
+
+const actionFriendFoe = async function(response) {
+
+    let payload = {action: response.action};
+    switch (response.action) {
+        case 'ff_switch':
+            payload.data = await new friendFoe(response.data.id).switchTeam();
+            break;
+        case 'ff_create':
+            if (response.data.type === 'slug') {
+                payload.data = await ff.createFromSlug(response.data.val, response.data.is_friend);
+            }
+            else if (response.data.type === 'race') {
+                payload.data = await ff.createFromRace(response.data.val, response.data.is_friend);
+            }
+            break;
+        case 'ff_delete':
+            await new friendFoe(response.data.id).delete();
+            payload.data = {};
+            break;
+        case 'ff_roll':
+            payload.data = {
+                stat: response.data.stat,
+                roll: await new friendFoe(response.data.id).roll(response.data.stat)
+            }
+            break;
+    }
+
+    return payload;
+}
+
 
 /**
  * Set stat during creation

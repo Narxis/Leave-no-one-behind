@@ -40,6 +40,57 @@ class SocketLNOB {
         this.send(payload);
     }
 
+    ffSwitchTeam(id) {
+        let payload = {
+            action: 'ff_switch',
+            data: {
+                id:id
+            }
+        }
+        this.send(payload);
+    }
+    ffRoll(id, stat) {
+        let payload = {
+            action: 'ff_roll',
+            data: {
+                id:id,
+                stat: stat
+            }
+        }
+        this.send(payload);
+    }
+    ffDelete(id) {
+        let payload = {
+            action: 'ff_delete',
+            data: {
+                id:id
+            }
+        }
+        this.send(payload);
+    }
+    ffCreateFromSlug(slug, is_friend) {
+        let payload = {
+            action: 'ff_create',
+            data: {
+                type: 'slug',
+                val: slug,
+                is_friend: is_friend
+            }
+        }
+        this.send(payload);
+    }
+    ffCreateFromRace(race, is_friend) {
+        let payload = {
+            action: 'ff_create',
+            data: {
+                type: 'race',
+                val: race,
+                is_friend: is_friend
+            }
+        }
+        this.send(payload);
+    }
+
     //Update a module integrity value in DB
     setModule(name, value) {
         let payload = {

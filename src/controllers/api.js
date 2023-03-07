@@ -4,7 +4,7 @@ const {hydrateCardDB, getCardsIds, cardPop} = require("./deck");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const {Card} = require("../models/card");
-const drawflow = require("../controllers/drawflow");
+const ff = require("../controllers/ff");
 const fs = require('fs');
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
@@ -225,6 +225,16 @@ module.exports = {
         }
 
         res.json(cards);
+    },
+
+    async getFriends(req, res) {
+        let dat = await ff.getAllFriends();
+        res.json(dat);
+    },
+
+    async getFoes(req, res) {
+        let dat = await ff.getAllFoes();
+        res.json(dat);
     },
 
     cleanObject(object, ...unusedKeys){

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
 
-const DB_VERSION = 8; // increment when structure changes are added
+const DB_VERSION = 12; // increment when structure changes are added
 const DB_FOLDER = 'storage/databases/';
 
 class DB {
@@ -190,6 +190,64 @@ class DB {
                 allowNull: false
             }
         });
+
+        let friend_foes = this.sequelize.define('friend_foes', {
+            id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            is_friend: {
+                type: Sequelize.INTEGER,
+                defaultValue: 1,
+                allowNull: false
+            },
+            name: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            slug: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            race: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            combat: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            pilotage: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            engineering: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            survival: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            recon: {
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            moral: {
+                type: Sequelize.INTEGER,
+                defaultValue: 100,
+                allowNull: false
+            }
+        })
 
         let ship = this.sequelize.define('ship', {
             id: {
@@ -397,6 +455,7 @@ class DB {
             cards: cards,
             card_modules: card_modules,
             players: players,
+            friend_foes: friend_foes,
             ship: ship,
             deck: deck,
             items: items,
