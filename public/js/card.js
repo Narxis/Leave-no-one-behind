@@ -1,5 +1,6 @@
 var currentCard = {};
 var interval_cd;
+var countDownRunning = false;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -43,6 +44,7 @@ async function getCardByName (name) {
 function startCountDown() {
 
     let time_left = 30;
+    countDownRunning = true;
 
     interval_cd = setInterval(async function () {
         let timerText = document.querySelector('#timer-text');
@@ -72,6 +74,7 @@ function startCountDown() {
                 break;
             case 0:
                 clearInterval(interval_cd);
+                countDownRunning = false;
                 choicetab.style.pointerEvents = 'none';
                 await sleep(500)
                 await hideChoices();
@@ -108,8 +111,9 @@ function startCountDown() {
 async function stopCountdown() {
 
     let bigBoite = document.querySelector('#bigboite');
-    if (typeof interval_cd !== 'undefined') {
+    if (typeof interval_cd !== 'undefined' && countDownRunning) {
         clearInterval(interval_cd);
+        countDownRunning = false;
         bigBoite.classList.remove("grow");
         bigBoite.classList.remove("flash");
         bigBoite.classList.add("plop");
