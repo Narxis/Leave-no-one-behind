@@ -1,5 +1,6 @@
 const {literal} = require("sequelize");
 const {Statuses} = require("./statuses");
+const chalk = require("chalk");
 
 class Card {
     id;
@@ -160,7 +161,7 @@ class Card {
 
     async getData() {
 
-        let activeStatus;
+        let activeStatus = false;
 
         let statuses = new Statuses();
         statuses = await statuses.getAllStatuses();
@@ -203,7 +204,7 @@ class Card {
             this[dat] = card[dat]
         }
 
-        if (activeStatus) {
+        if (activeStatus !== false) {
             let alt_desc = await DB.tables.cards_alt.findOne({
                 attributes: [
                     'value',
@@ -260,7 +261,7 @@ class Card {
         this.choices = choices;
 
         let alt_choices = [];
-        if (activeStatus) {
+        if (activeStatus !== false) {
             let foundChoices = await DB.tables.cards_alt.findAll({
                 attributes: [
                     'value',
