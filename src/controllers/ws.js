@@ -46,6 +46,7 @@ const makeAction = async function (raw_response) {
             payload = actionRoll(response);
             break;
         case 'ff_switch':
+        case 'ff_update':
         case 'ff_create':
         case 'ff_delete':
         case 'ff_roll':
@@ -112,10 +113,18 @@ const actionFriendFoe = async function(response) {
             payload.data = {};
             break;
         case 'ff_roll':
+            let roll = await new friendFoe(response.data.id).roll(response.data.stat);
             payload.data = {
                 stat: response.data.stat,
-                roll: await new friendFoe(response.data.id).roll(response.data.stat)
+                success: roll >= 50,
+                roll: roll
             }
+            break;
+        case 'ff_update':
+            let statToUpdate = response.data.stat;
+            let dataUpdate = {};
+            dataUpdate[statToUpdate] = response.data.val;
+            payload.data = await new friendFoe(response.data.id).update(dataUpdate);
             break;
     }
 
@@ -317,7 +326,7 @@ const actionRoll = async function (response) {
             error_msg: 'Player not in current game !'
         }
     }
-    let dice_result = Math.floor(Math.random() * 100) + 1;
+    let dice_result = randomIntFromInterval(1,100);
     let result = await player.roll(dice_result, response.data.stat, response.data.module);
     response.data['success'] = (result >= 50);
     response.data['result'] = result;

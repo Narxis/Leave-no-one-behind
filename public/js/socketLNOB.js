@@ -39,7 +39,17 @@ class SocketLNOB {
         }
         this.send(payload);
     }
-
+    ffUpdateStat(id, stat, newVal) {
+        let payload = {
+            action: 'ff_update',
+            data: {
+                id: id,
+                stat: stat,
+                val: newVal
+            }
+        }
+        this.send(payload);
+    }
     ffSwitchTeam(id) {
         let payload = {
             action: 'ff_switch',

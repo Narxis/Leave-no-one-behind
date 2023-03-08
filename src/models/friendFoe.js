@@ -127,7 +127,11 @@ class friendFoe {
     }
 
     async roll(stat) {
-        return 0;
+
+        let roll = randomIntFromInterval(1,100);
+        let res = roll * this[stat]/100 + (this.moral-50)/4;
+
+        return Math.ceil(res);
     }
 }
 
