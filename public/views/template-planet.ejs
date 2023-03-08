@@ -511,16 +511,36 @@
   <script src="/js/players.js"></script>
 
   <script>
-    // const randomColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
-    generatePastelColor = () => {
-      let R = Math.floor((Math.random() * 127) + 127);
-      let G = Math.floor((Math.random() * 127) + 127);
-      let B = Math.floor((Math.random() * 127) + 127);
-
-      let rgb = (R << 16) + (G << 8) + B;
-      return `#${rgb.toString(16)}`;
+    valueIsInRangeHSL = (value, allowedRanges) => {
+      for (let range of allowedRanges) {
+        if (value >= range[0] && value <= range[1])
+          return true;
+      }
+      return false;
     }
-    document.documentElement.style.setProperty('--planet-color', generatePastelColor());
+    generateHSL = () => {
+      const allowed = {
+        h: [ // max 255
+          [0,155], [215,255]
+        ],
+        s: [ // max 100
+          [45,55]
+        ],
+        l: [ // max 100
+          [50,50]
+        ]
+      }
+      let hsl = {};
+      for (let val in allowed) {
+        do {
+          hsl[val] = Math.floor(Math.random() * (allowed[val][allowed[val].length - 1][1] - allowed[val][0][0] + 1) + allowed[val][0][0])
+        } while (!valueIsInRangeHSL(hsl[val], allowed[val]));
+      }
+
+      return `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`
+    }
+
+    document.documentElement.style.setProperty('--planet-color', generateHSL());
     document.documentElement.style.setProperty('--eau-color', 'rgba(43,197,192, <%- card.modules.wtr.val %>%)');
 
     var observer = new MutationObserver(function (mutations) {
