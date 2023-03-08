@@ -163,11 +163,9 @@ async function initialiseStatusList (){
     activeStatusList = [];
     document.querySelector(".status").innerHTML = '<div class="status-title-line">\<div class="status-title1">Status :</div><div class="status-title2">Durée</div></div>';
     for (let i=0; i<activeStatus.length; i++){
-        // applystatus(activeStatus[i])
         addStatus(activeStatus[i]);
         activeStatusList.push(activeStatus[i].slug)
     }
-    blackout = activeStatusList.includes("blackout");
 }
 
 function removeStarterItem(id, slug) {
