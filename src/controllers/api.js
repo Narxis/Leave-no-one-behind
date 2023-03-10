@@ -23,7 +23,7 @@ module.exports = {
             let name = Object.keys(req.body)[0];
             let body = JSON.stringify(req.body);
             // SAVE A COPY IN CACHE (failsafe)
-            fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
+            fs.writeFileSync(__dirname + '/../../storage/cache/' + name + '_' + PLACESDAT_FILEMAME, body);
 
             // SAVE ON PASTEBIN
             // const client = new PasteClient(process.env.PASTEBIN_K);
@@ -54,8 +54,7 @@ module.exports = {
             res.json({
                 success: true
             })
-        }
-        catch (e) {
+        } catch (e) {
             res.json({
                 success: false,
                 error: e.toString()
@@ -67,9 +66,8 @@ module.exports = {
         let name = req.body.name;
 
         try {
-            fs.unlinkSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME);
-        }
-        catch {
+            fs.unlinkSync(__dirname + '/../../storage/cache/' + name + '_' + PLACESDAT_FILEMAME);
+        } catch {
             //
         }
 
@@ -92,7 +90,7 @@ module.exports = {
         // }
 
         res.json({});
-},
+    },
 
     async getAllStatuses(req, res) {
         let statuses = new Statuses();
@@ -101,7 +99,7 @@ module.exports = {
         res.json(statuses);
     },
 
-    async getActiveStatuses (req, res) {
+    async getActiveStatuses(req, res) {
         let statuses = new Statuses();
         statuses = await statuses.getAllStatuses();
 
@@ -122,7 +120,7 @@ module.exports = {
         res.json(items);
     },
 
-    async getPlayerItems (req, res) {
+    async getPlayerItems(req, res) {
         let itemsMan = new Items();
         let items = await itemsMan.getAllStarters();
 
@@ -185,7 +183,7 @@ module.exports = {
 
     async getShip(req, res) {
         let ship = new Ship(shipId);
-        if (! await ship.getData())
+        if (!await ship.getData())
             await ship.create();
         delete ship['accepted_datas'];
         res.json(ship);
@@ -215,12 +213,12 @@ module.exports = {
                 break;
         }
 
-        let cardsRaw = await DB.tables.cards.findAll({where:whereClause, raw:true});
+        let cardsRaw = await DB.tables.cards.findAll({where: whereClause, raw: true});
         let cards = [];
 
-        for (let item of cardsRaw){
-            let  card = await new Card(item.id).getData();
-            card = cleanObject(card, 'langVars','cardVars','accepted_datas');
+        for (let item of cardsRaw) {
+            let card = await new Card(item.id).getData();
+            card = cleanObject(card, 'langVars', 'cardVars', 'accepted_datas');
             cards.push(card);
         }
 
@@ -234,15 +232,8 @@ module.exports = {
     async getFoes(req, res) {
         let dat = await ff.getAllFoes();
         res.json(dat);
-    },
-
-    cleanObject(object, ...unusedKeys){
-        for (let key in object) {
-            if (unusedKeys.includes(key) === true)
-                delete object[key];
-        }
-        return object;
-    },
+    }
+}
 
 const cleanObject = function (object, ...unusedKeys){
     for (let key in object) {
