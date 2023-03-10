@@ -15,6 +15,7 @@ let speed = 0;
 let warpSpeed = 0;
 const starStretch = 5;
 const starBaseSize = 0.08;
+const fastTravelTime = 2000; //ms
 
 // Create the stars
 const stars = [];
@@ -51,7 +52,7 @@ function fastTravel() {
     warpSpeed = 1;
     setTimeout(function (){
         warpSpeed = 0
-    }, 2000)
+    }, fastTravelTime)
 }
 
 // Listen for animate update
