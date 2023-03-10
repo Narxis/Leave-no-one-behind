@@ -27,11 +27,11 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Vous remarquez que l'état [du_module-h-bdd_0] s'est amélioré. \n   Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n   Cela a résulté en une amélioration de l'état du module. \n   Vous ne savez cependant pas ce qui a causé ce changement.",
+          "desc": "\n\u00a0   Vous remarquez que l'état [du_module-h-bdd_0] s'est amélioré. \n   Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n   Cela a résulté en une amélioration de l'état du module. \n   Vous ne savez cependant pas ce qui a causé ce changement.",
           "choices": [
             {
               "value": "Continuer à voyager sans capteurs",
-              "reveal": "\n\u00a0Vous reprenez votre route."
+              "reveal": "\n\u00a0 Vous reprenez votre route."
             }
           ]
         }
@@ -69,7 +69,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Votre vaisseau continue son trajet dans l'espace. \n   Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.",
+          "desc": "\n\u00a0   Votre vaisseau continue son trajet dans l'espace. \n   Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.",
           "choices": [
             {
               "value": "Continuer à voyager sans capteurs",
@@ -150,7 +150,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Un débris a percuté [votre_module_0], vous auriez pu le détecter si vous aviez allumé vos modules de détection.",
+          "desc": "\n\u00a0   Un débris a percuté [votre_module_0], vous auriez pu le détecter si vous aviez allumé vos modules de détection.",
           "choices": [
             {
               "value": "  Ne rien faire",
@@ -183,7 +183,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  L'hyper-espace devient instable et vous êtes téléporté en dehors, des tirs sont dirigés vers votre [votre_module_0].",
+          "desc": "\n\u00a0   L'hyper-espace devient instable et vous êtes téléporté en dehors, des tirs sont dirigés vers votre [votre_module_0].",
           "choices": [
             {
               "value": "Ne rien faire",
@@ -230,7 +230,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Vous apercevez au loin la lumière d'un pulsar, heureusement que vos modules de détection sont éteints, sinon ils auraient pu être endommagés.",
+          "desc": "\n\u00a0   Vous apercevez au loin la lumière d'un pulsar, heureusement que vos modules de détection sont éteints, sinon ils auraient pu être endommagés.",
           "choices": [
             {
               "value": "Continuer votre voyage",
@@ -258,7 +258,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Une explosion lointaine vous aveugle pendant de longues secondes. \n   Il semble qu'une supernova ait explosé non loin de vous. \n   Heureusement, vos systèmes de détection étant éteints, ils ont pu être préservés des dommages.",
+          "desc": "\n\u00a0   Une explosion lointaine vous aveugle pendant de longues secondes. \n   Il semble qu'une supernova ait explosé non loin de vous. \n   Heureusement, vos systèmes de détection étant éteints, ils ont pu être préservés des dommages.",
           "choices": [
             {
               "value": ">Continuer votre voyage",
@@ -286,7 +286,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Vous traversez un amas stellaire, la grande quantité d'étoiles aurait pu surcharger vos capteurs d'informations, mais heureusement ils sont éteints et ne courent aucun risque d'être endommagés.",
+          "desc": "\n\u00a0   Vous traversez un amas stellaire, la grande quantité d'étoiles aurait pu surcharger vos capteurs d'informations, mais heureusement ils sont éteints et ne courent aucun risque d'être endommagés.",
           "choices": [
             {
               "value": "Continuer votre voyage",
@@ -309,7 +309,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  L'affichage du micro-onde clignote, il semble que des ondes électromagnétiques puissantes ont traversé votre vaisseau.",
+          "desc": "\n\u00a0   L'affichage du micro-onde clignote, il semble que des ondes électromagnétiques puissantes ont traversé votre vaisseau.",
           "choices": [
             {
               "value": "Continuer votre voyage",
@@ -527,7 +527,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Votre vaisseau continue son trajet dans l'espace. \n   Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.",
+          "desc": "\n\u00a0   Votre vaisseau continue son trajet dans l'espace. \n   Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.",
           "choices": [
             {
               "value": "  Continuer à voyager sans capteurs",
@@ -572,7 +572,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
@@ -659,7 +659,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
@@ -692,7 +692,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
@@ -725,7 +725,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
@@ -758,7 +758,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "  Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
