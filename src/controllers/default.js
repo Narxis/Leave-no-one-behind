@@ -132,14 +132,14 @@ module.exports = {
 
         if (CONFIG.gameState !== 'gameLive')
             await CONFIG.upsert('gameState', 'gameLive');
-
-        for (let i of activeStatuses) {
-            await statuses.remove(i.slug);
-        }
+        //
+        // for (let i of activeStatuses) {
+        //     await statuses.remove(i.slug);
+        // }
 
         let statusesAll = await statuses.getAllStatuses(false);
 
-        let current_card = await cardPop();
+        let current_card = await cardPop(false);
         // TESTING :
 
         if (!current_card) {
@@ -158,6 +158,7 @@ module.exports = {
 
         switch (current_card.type) {
             case TYPE_PLANET:
+                await cardPop();
                 res.render('template-planet', vars);
                 break;
             case TYPE_INITIAL:

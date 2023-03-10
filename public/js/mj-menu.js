@@ -103,9 +103,14 @@ function setMJCardValue(e) {
     document.querySelectorAll('.reveal-text').forEach(function (btn){
         btn.innerHTML = '';
     })
+    document.querySelectorAll('.mjreveal-text').forEach(function (btn){
+        btn.innerHTML = '';
+    })
     document.querySelector('.desc-text').innerHTML = card.desc;
+    document.querySelector('.desc-mjreveal').innerHTML = '<span class="mjreveal">'+card.mjreveal+'</span>';
     for (let choice of card.choices) {
         document.querySelector('#choice'+i+' .button-text').innerHTML = choice.value;
+        document.querySelector('#choice'+i+' .mjreveal-text').innerHTML = '<span class="mjreveal">'+choice.mjreveal+'</span>';
         document.querySelector('#choice'+i+++' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + choice.reveal;
         console.log(i)
     }
