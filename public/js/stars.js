@@ -1,6 +1,6 @@
 const app = new PIXI.Application({
     resizeTo: window,
-    background: '#1f1f23'
+    background: '#17181c'
 });
 document.body.appendChild(app.view);
 
