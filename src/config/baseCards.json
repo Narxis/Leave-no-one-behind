@@ -1,7 +1,7 @@
 {
   "initial": [
     {
-      "desc": "\n\u00a0Mise à jour de l’autopilote en v7.27 \u005brev B\u005D {....} \n\u00a0Vérification de l’état des cryopods {....} \n\u00a01000 humains détectés, démarrages des cryopods {....} \n\u00a0Calcul de l’itinéraire en cours {....} \n\u00a0Quantité carburant ~ 250mg {....} \n\u00a05 planètes trouvées sur l’itinéraire {....} \n\u00a0Initialisation de la phase de lancement {....} \n\u00a0Le vaisseau est opérationnel et prêt à partir. Vous pouvez effectuer une dernière inspection avant le départ. \n \u00a0 Êtes-vous prêt à partir un jour sans retour ?",
+      "desc": "\n\u00a0Mise à jour de l’autopilote en v7.27 \u005brev B\u005D {....} \n\u00a0Vérification de l’état des cryopods {....} \n\u00a01000 humains détectés, démarrage des cryopods {....} \n\u00a0Calcul de l’itinéraire en cours {....} \n\u00a0Quantité carburant ~ 250mg {....} \n\u00a05 planètes trouvées sur l’itinéraire {....} \n\u00a0Initialisation de la phase de lancement {....} \n\u00a0Le vaisseau est opérationnel et prêt à partir. Vous pouvez effectuer une dernière inspection avant le départ. \n\n\u00a0 Êtes-vous prêt à partir un jour sans retour ?",
       "timer": "false",
       "choices": [
         {
