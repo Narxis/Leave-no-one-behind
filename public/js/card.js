@@ -270,6 +270,7 @@ async function hideChoices() {
 }
 
 async function initCard(forceName = null) {
+    fastTravel();
     if (forceName)
         currentCard = await getCardByName(forceName);
     else
