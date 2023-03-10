@@ -29,6 +29,28 @@ function doPlayerRoll(e) {
     },50);
 }
 
+async function doPlayerEmote(e) {
+    let data = e.detail;
+    let rollDiv = document.getElementById('p'+ data.uid+'-roll');
+    let oldVal = rollDiv.innerText;
+
+    rollDiv.style.transition = '0.2s';
+    await sleep(10);
+    rollDiv.style.color = 'transparent';
+    await sleep(200);
+    if (data.type === 'glyph')
+        rollDiv.style.color = 'inherit';
+    rollDiv.innerHTML = data.emoji;
+    await sleep(2000);
+    if (data.type === 'glyph')
+        rollDiv.style.color = 'transparent';
+    await sleep(200);
+    rollDiv.innerHTML = oldVal;
+    rollDiv.style.color = 'inherit';
+    await sleep(200);
+    rollDiv.style.transition = 'none';
+}
+
 function quickUpdateStat(el, id, stat) {
 
     let currentVal = parseInt(document.querySelector('#player-tab'+id+' .'+stat+' .player-stat-value').innerText);
@@ -59,6 +81,7 @@ function setPlayerStat(id, stat, newValue) {
     wsLNOB.setStatistic(id, stat, newValue);
 }
 
+document.addEventListener('emote', doPlayerEmote);
 document.addEventListener('roll', doPlayerRoll);
 
 function initialiseItemExpand() {

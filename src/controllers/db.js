@@ -59,6 +59,11 @@ class DB {
                 defaultValue: '',
                 allowNull: false
             },
+            mjreveal: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
+            },
             timer: {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
@@ -135,8 +140,45 @@ class DB {
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
+            },
+            mjreveal: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
             }
-        })
+        });
+
+        let cards_alt = this.sequelize.define('cards_alt', {
+            card_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
+            type: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                defaultValue: 'blackout'
+            },
+            elem: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                defaultValue: 'desc'
+            },
+            value: {
+                type: Sequelize.TEXT,
+                allowNull: false,
+                defaultValue: ''
+            },
+            reveal: {
+                type: Sequelize.TEXT,
+                allowNull: false,
+                defaultValue: ''
+            },
+            mjreveal: {
+                type: Sequelize.TEXT,
+                allowNull: false,
+                defaultValue: ''
+            }
+        });
 
         let players = this.sequelize.define('players', {
             id: {
@@ -454,6 +496,7 @@ class DB {
             config: config,
             cards: cards,
             card_modules: card_modules,
+            cards_alt: cards_alt,
             players: players,
             friend_foes: friend_foes,
             ship: ship,

@@ -83,6 +83,12 @@ const makeAction = async function (raw_response) {
         case 'card-played':
             payload = response;
             break;
+        case 'emote':
+            payload = response;
+            break;
+        case 'passThrough':
+            payload = response.data;
+            break;
         default:
             payload = {
                 error: true,

@@ -17,7 +17,9 @@ module.exports = {
         const nameInput = new TextInputBuilder()
             .setCustomId('set-name')
             .setLabel("Quel est le nom de votre personnage ?")
-            .setStyle(TextInputStyle.Short);
+            .setStyle(TextInputStyle.Short)
+            .setMinLength(3)
+            .setMaxLength(20)
 
         const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
 
