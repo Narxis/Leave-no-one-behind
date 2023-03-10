@@ -278,6 +278,7 @@ async function initCard(forceName = null) {
         if (currentCard.type !== -1) {
             fastTravel();
             await sleep(fastTravelTime);
+            await sleep(500);
         }
     }
     await initialiseStatusList();

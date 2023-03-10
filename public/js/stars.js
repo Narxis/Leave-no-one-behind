@@ -7,7 +7,7 @@ document.body.appendChild(app.view);
 // Get the texture for star.
 const starTexture = PIXI.Texture.from('/img/star.png');
 
-const starAmount = 1500;
+const starAmount = 1000;
 let cameraZ = 0;
 const fov = 20;
 const baseSpeed = 0.015;
