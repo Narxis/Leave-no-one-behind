@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PixiJS Checkered Grid with Tokens</title>
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@7.x/dist/pixi.min.js"></script>
+    <style>
+        html, body {
+            background-color: #3b4952;
+        }
+    </style>
+</head>
+<body>
+<script>
+    const app = new PIXI.Application({
+        resizeTo: window,
+        backgroundAlpha: 0
+    });
+
+    document.body.appendChild(app.view);
+
+    // Define the tile size and grid dimensions
+    const tileSize = 40;
+    var numRows;
+    var numCols;
+
+    const tokenSprite = 'https://i.imgur.com/TOxTUaU.png';
+
+    var textures = [
+        {
+            marker: '0',
+            name: 'barrel_E',
+            texture: PIXI.Texture.from("/img/Isometric/barrel_E.png"),
+            isProp: true,
+        },
+        {
+            marker: '1',
+            name: 'stoneTile_E',
+            texture: PIXI.Texture.from("/img/Isometric/stoneTile_E.png"),
+            isProp: false,
+        },
+        {
+            marker: '2',
+            name: 'stone_E',
+            texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
+            isProp: false,
+        },
+        {
+            marker: '3',
+            name: 'planks_E',
+            texture: PIXI.Texture.from("/img/Isometric/planks_E.png"),
+            isProp: false,
+        }
+    ];
+
+    // Define the tile map, where 0 represents an empty tile and 1 represents a solid tile
+    const tileMap = generateTileMap(15,10);
+
+    // Define the token size and array
+    const tokenSize = 20;
+    const tokens = [];
+
+    let dragTarget = null;
+    app.stage.interactive = true;
+    app.stage.hitArea = app.screen;
+    app.stage.on('pointerup', onDragEnd);
+    app.stage.on('pointerupoutside', onDragEnd);
+
+    // createGrid();
+    createIsoGrid();
+
+    // Create the tokens
+    // for (let i = 0; i < 3; i++) {
+    //     let token = new PIXI.Graphics();
+    //     token.beginFill('0x' + randColor());
+    //     token.drawRect(0, 0, tokenSize, tokenSize);
+    //     token.endFill();
+    //     token.interactive = true;
+    //     token.buttonMode = true;
+    //     token.dragging = false;
+    //     token.position.set(tileSize * 2 + (i * tileSize), tileSize * 2);
+    //     token.id = i + 1; // Add a unique identifier to the token
+    //     token.on('pointerdown', onDragStart, token);
+    //     tokens.push(token);
+    //     app.stage.addChild(token);
+    // }
+
+    function getTextureInfosFromMarker(marker) {
+        return textures.find(el => el.marker === marker);
+    }
+    function getTextureInfosFromName(name) {
+        return textures.find(el => el.name === name);
+    }
+
+    // generate Random tile map
+    function generateTileMap(rows, cols) {
+        numRows = rows;
+        numCols = cols;
+        const tileMap = [];
+        for (let i = 0; i < numRows; i++) {
+            const row = [];
+            for (let j = 0; j < numCols; j++) {
+                let randomTileType = Math.floor(Math.random() * textures.length).toString();
+                row.push(randomTileType);
+            }
+            tileMap.push(row);
+        }
+        return tileMap;
+    }
+
+    function createIsoGrid() {
+
+        const TILE_WIDTH = tileSize;
+        const TILE_WIDTH_HALF = TILE_WIDTH / 2;
+        const TILE_HEIGHT = tileSize;
+        const TILE_HEIGHT_HALF = TILE_HEIGHT / 2;
+        const textStyle = new PIXI.TextStyle({
+            fontFamily: 'sans-serif',
+            fontSize: tileSize/3,
+            fill: ['#96c1d3'], // gradient
+        });
+
+        for (let row = -1; row < numRows; row++) {
+            for (let col = -1; col < numCols; col++) {
+                if (row === -1 && col === -1) continue;
+                let tile = new PIXI.Graphics();
+                tile.beginFill((row + col) % 2 === 0 ? 0x0a2647 : 0x0d2a4c);
+                tile.lineStyle(1, 0x205295);
+
+                let tileOriginX = (col-row) * TILE_WIDTH + (numRows * (numRows/numCols) * .7) * TILE_WIDTH;
+                let tileOriginY = (col+row) * TILE_HEIGHT_HALF + TILE_HEIGHT_HALF;
+
+                let northX = tileOriginX;
+                let northY = tileOriginY;
+                let eastX = tileOriginX + TILE_WIDTH;
+                let eastY = tileOriginY + TILE_HEIGHT_HALF;
+                let southX = tileOriginX;
+                let southY = tileOriginY + TILE_HEIGHT;
+                let westX = tileOriginX - TILE_WIDTH;
+                let westY = tileOriginY + TILE_HEIGHT_HALF;
+
+                let points = [
+                    northX, northY,
+                    eastX, eastY,
+                    southX, southY,
+                    westX, westY
+                ];
+                // Draw from North
+                tile.drawPolygon(points);
+                tile.endFill();
+                tile.col = col;
+                tile.row = row;
+                if (row === -1 || col === -1) {
+                    let text = '';
+                    if (row === -1) {
+                        text = String.fromCharCode(97 + col).toUpperCase();
+                    }
+                    else if (col === -1) {
+                        text = (row+1).toString();
+                    }
+
+                    let tileText = new PIXI.Text(text,textStyle);
+                    tileText.x = northX - TILE_WIDTH_HALF/4;
+                    tileText.y = northY + TILE_HEIGHT_HALF/2;
+                    tile.addChild(tileText);
+
+                } else {
+
+                    tile.interactive = true;
+                    tile
+                        .on('pointerover', onTileOver, tile)
+                        .on('pointerout', onTileOut, tile);
+
+                    let texture = getTextureInfosFromMarker(tileMap[row][col])
+                    let tileTexture = new PIXI.Sprite(texture.texture);
+                    let textureX = northX - TILE_WIDTH;
+                    let textureY = northY - TILE_HEIGHT * 3;
+                    tileTexture.x = textureX;
+                    tileTexture.y = textureY;
+                    tileTexture.width = TILE_WIDTH * 2;
+                    tileTexture.height = TILE_WIDTH * 4;
+                    tileTexture.hitArea = texture.isProp ? new PIXI.Polygon(0,0,0,0,0,0) : new PIXI.Polygon(points);
+
+                    if (texture.isProp) {
+                        let floorTexture = getTextureInfosFromName('stone_E');
+                        let tileObject = new PIXI.Sprite(floorTexture.texture);
+                        tileObject.x = textureX;
+                        tileObject.y = textureY;
+                        tileObject.width = TILE_WIDTH * 2;
+                        tileObject.height = TILE_WIDTH * 4;
+                        tileObject.hitArea = new PIXI.Polygon(points);
+                        tile.addChild(tileObject);
+                    }
+
+                    tile.addChild(tileTexture);
+                }
+
+                app.stage.addChild(tile);
+            }
+        }
+    }
+
+    function onTileOver() {
+        this.alpha = .8
+    }
+
+    function onTileOut() {
+        this.alpha = 1
+    }
+
+    function randColor() {
+        return Math.floor(Math.random() * (16777215 + 1)).toString(16)
+    }
+
+    function onDragMove(event) {
+        if (dragTarget) {
+            dragTarget.parent.toLocal(event.global, null, dragTarget.position);
+        }
+    }
+
+    function onDragStart() {
+        this.alpha = 0.5;
+        dragTarget = this;
+        app.stage.on('pointermove', onDragMove);
+    }
+
+    function onDragEnd() {
+        if (dragTarget) {
+            app.stage.off('pointermove', onDragMove);
+            dragTarget.alpha = 1;
+            dragTarget = null;
+        }
+    }
+
+    app.ticker.add(() => {
+        for (let i = 0; i < tokens.length; i++) {
+            if (tokens[i].dragging) {
+                continue;
+            }
+            let targetRow = Math.floor((tokens[i].y + tileSize / 2) / tileSize);
+            let targetCol = Math.floor((tokens[i].x + tileSize / 2) / tileSize);
+            if (targetRow >= 0 && targetRow < numRows && targetCol >= 0 && targetCol < numCols && tileMap[targetRow][targetCol] === 0) {
+                tokens[i].position.set(targetCol * tileSize + (tileSize - tokenSize) / 2, targetRow * tileSize + (tileSize - tokenSize) / 2);
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
