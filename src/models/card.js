@@ -131,6 +131,11 @@ class Card {
             article = article.toLowerCase();
         }
 
+        if (article === 'conf') {
+            if (CONFIG[type])
+                return CONFIG[type];
+        }
+
         if (!this.cardVars[type]) {
             log("Error with texte variable ["+variable+"]", "#f00");
             return variable;
