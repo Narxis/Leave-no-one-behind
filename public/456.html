@@ -12,6 +12,7 @@
 </head>
 <body>
 <script>
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
     const app = new PIXI.Application({
         resizeTo: window,
         backgroundAlpha: 0
@@ -25,6 +26,12 @@
     var numCols;
 
     const tokenSprite = 'https://i.imgur.com/TOxTUaU.png';
+
+    /*
+        TODO:
+            * Manage texture height on hitBoxes
+                /!\ This will create overlapping, need to manage this too...
+     */
 
     var textures = [
         {
@@ -56,6 +63,8 @@
     // Define the tile map, where 0 represents an empty tile and 1 represents a solid tile
     const tileMap = generateTileMap(15,10);
 
+    var tileSet = [];
+
     // Define the token size and array
     const tokenSize = 20;
     const tokens = [];
@@ -63,8 +72,8 @@
     let dragTarget = null;
     app.stage.interactive = true;
     app.stage.hitArea = app.screen;
-    app.stage.on('pointerup', onDragEnd);
-    app.stage.on('pointerupoutside', onDragEnd);
+    // app.stage.on('pointerup', onDragEnd);
+    // app.stage.on('pointerupoutside', onDragEnd);
 
     // createGrid();
     createIsoGrid();
@@ -90,6 +99,9 @@
     }
     function getTextureInfosFromName(name) {
         return textures.find(el => el.name === name);
+    }
+    function isPropFromMarker(marker) {
+        return getTextureInfosFromMarker(marker).isProp;
     }
 
     // generate Random tile map
@@ -139,18 +151,29 @@
                 let westX = tileOriginX - TILE_WIDTH;
                 let westY = tileOriginY + TILE_HEIGHT_HALF;
 
-                let points = [
+                let pointsPolygon = [
                     northX, northY,
                     eastX, eastY,
                     southX, southY,
                     westX, westY
                 ];
+
+                // Inset 1 to prevent overlapping
+                let pointsPolygonHitArea = [
+                    northX, northY+1,
+                    eastX-1, eastY,
+                    southX, southY-1,
+                    westX+1, westY
+                ];
+
                 // Draw from North
-                tile.drawPolygon(points);
+                tile.drawPolygon(pointsPolygon);
                 tile.endFill();
+                tile.isBlockedPath = false;
                 tile.col = col;
                 tile.row = row;
                 if (row === -1 || col === -1) {
+                    tile.isBlockedPath = true;
                     let text = '';
                     if (row === -1) {
                         text = String.fromCharCode(97 + col).toUpperCase();
@@ -165,13 +188,14 @@
                     tile.addChild(tileText);
 
                 } else {
-
+                    tile.marker = tileMap[row][col];
                     tile.interactive = true;
                     tile
+                        .on('click', onTileClick, tile)
                         .on('pointerover', onTileOver, tile)
-                        .on('pointerout', onTileOut, tile);
+                        .on('pointerout', onTileOut, tile)
 
-                    let texture = getTextureInfosFromMarker(tileMap[row][col])
+                    let texture = getTextureInfosFromMarker(tile.marker)
                     let tileTexture = new PIXI.Sprite(texture.texture);
                     let textureX = northX - TILE_WIDTH;
                     let textureY = northY - TILE_HEIGHT * 3;
@@ -179,71 +203,261 @@
                     tileTexture.y = textureY;
                     tileTexture.width = TILE_WIDTH * 2;
                     tileTexture.height = TILE_WIDTH * 4;
-                    tileTexture.hitArea = texture.isProp ? new PIXI.Polygon(0,0,0,0,0,0) : new PIXI.Polygon(points);
+                    tileTexture.hitArea = texture.isProp ? new PIXI.Polygon(0,0,0,0,0,0) : new PIXI.Polygon(pointsPolygonHitArea);
 
                     if (texture.isProp) {
+                        tile.isBlockedPath = true;
                         let floorTexture = getTextureInfosFromName('stone_E');
                         let tileObject = new PIXI.Sprite(floorTexture.texture);
                         tileObject.x = textureX;
                         tileObject.y = textureY;
                         tileObject.width = TILE_WIDTH * 2;
                         tileObject.height = TILE_WIDTH * 4;
-                        tileObject.hitArea = new PIXI.Polygon(points);
+                        tileObject.hitArea = new PIXI.Polygon(pointsPolygonHitArea);
                         tile.addChild(tileObject);
                     }
 
                     tile.addChild(tileTexture);
                 }
 
+                tileSet.push(tile);
                 app.stage.addChild(tile);
             }
         }
     }
 
+    var tileTarget;
+
+    function getTileFromTileSet(col, row) {
+        return tileSet.find(el => el.row === row && el.col === col);
+    }
+
     function onTileOver() {
-        this.alpha = .8
+        if (tileTarget)
+            this.alpha = .8
+    }
+
+    async function onTileClick() {
+        if (!tileTarget) {
+            tileTarget = this;
+            this.alpha = .8;
+        }
+        else if (tileTarget.col === this.col && tileTarget.row === this.row) {
+            this.alpha = 1;
+            tileTarget = null;
+        }
+        else {
+            await moveItemOnTile(tileTarget ,this)
+            tileTarget.alpha = 1;
+            this.alpha = 1;
+            tileTarget = null;
+        }
+
+    }
+
+    async function moveItemOnTile(from, to) {
+        let path = search(from,to);
+        for (let step of path) {
+            let tile = tileSet.find(el => el.col === step.x && el.row === step.y);
+            tile.alpha = .7;
+            setTimeout(function (){
+                tile.alpha = 1;
+            }, 1500)
+            await sleep(250);
+        }
+        await sleep(1500);
+        console.log(`Moving from [${from.col},${from.row}] to [${to.col},${to.row}]`);
+        if (to.isBlockedPath) {
+            console.error(`This tile is not a valid destination`);
+        }
     }
 
     function onTileOut() {
-        this.alpha = 1
+        if (tileTarget && tileTarget!==this)
+            this.alpha = 1
     }
 
-    function randColor() {
-        return Math.floor(Math.random() * (16777215 + 1)).toString(16)
+
+    /**
+     * Path finding spaghetti
+     */
+
+    let pfCols = numCols; //columns in the grid
+    let pfRows = numRows; //rows in the grid
+
+    let grid = new Array(pfCols); //array of all the grid points
+
+    let openSet = []; //array containing unevaluated grid points
+    let closedSet = []; //array containing completely evaluated grid points
+
+    let pfStart; //starting grid point
+    let pfEnd; // ending grid point
+    let path = [];
+
+
+    // Manhattan distance
+    function heuristic(position0, position1) {
+        let d1 = Math.abs(position1.x - position0.x);
+        let d2 = Math.abs(position1.y - position0.y);
+
+        return d1 + d2;
     }
 
-    function onDragMove(event) {
-        if (dragTarget) {
-            dragTarget.parent.toLocal(event.global, null, dragTarget.position);
-        }
-    }
+    //constructor function to create all the grid points as objects containind the data for the points
+    function GridPoint(x, y, g=0) {
+        this.x = x; //x location of the grid point
+        this.y = y; //y location of the grid point
+        this.f = 0; //total cost function
+        this.g = g; //cost function from start to the current grid point
+        this.h = 0; //heuristic estimated cost function from current grid point to the goal
+        this.neighbors = []; // neighbors of the current grid point
+        this.parent = undefined; // immediate source of the current grid point
 
-    function onDragStart() {
-        this.alpha = 0.5;
-        dragTarget = this;
-        app.stage.on('pointermove', onDragMove);
-    }
-
-    function onDragEnd() {
-        if (dragTarget) {
-            app.stage.off('pointermove', onDragMove);
-            dragTarget.alpha = 1;
-            dragTarget = null;
-        }
-    }
-
-    app.ticker.add(() => {
-        for (let i = 0; i < tokens.length; i++) {
-            if (tokens[i].dragging) {
-                continue;
+        // update neighbors array for a given grid point
+        this.updateNeighbors = function (grid) {
+            let i = this.x;
+            let j = this.y;
+            if (i < pfCols - 1) {
+                this.neighbors.push(grid[i + 1][j]);
             }
-            let targetRow = Math.floor((tokens[i].y + tileSize / 2) / tileSize);
-            let targetCol = Math.floor((tokens[i].x + tileSize / 2) / tileSize);
-            if (targetRow >= 0 && targetRow < numRows && targetCol >= 0 && targetCol < numCols && tileMap[targetRow][targetCol] === 0) {
-                tokens[i].position.set(targetCol * tileSize + (tileSize - tokenSize) / 2, targetRow * tileSize + (tileSize - tokenSize) / 2);
+            if (i > 0) {
+                this.neighbors.push(grid[i - 1][j]);
+            }
+            if (j < pfRows - 1) {
+                this.neighbors.push(grid[i][j + 1]);
+            }
+            if (j > 0) {
+                this.neighbors.push(grid[i][j - 1]);
+            }
+        };
+    }
+
+    function init(startTile, endTile) {
+
+        pfCols = numCols;
+        pfRows = numRows;
+
+        grid = new Array(pfCols);
+
+        openSet = []; //array containing unevaluated grid points
+        closedSet = []; //array containing completely evaluated grid points
+
+        path = [];
+        //making a 2D array
+        for (let i = 0; i < pfCols; i++) {
+            grid[i] = new Array(pfRows);
+        }
+
+        for (let i = 0; i < pfCols; i++) {
+            for (let j = 0; j < pfRows; j++) {
+                grid[i][j] = new GridPoint(i, j); // Third parameter here for cost malus
             }
         }
-    });
+
+        for (let i = 0; i < pfCols; i++) {
+            for (let j = 0; j < pfRows; j++) {
+                if (!getTileFromTileSet(i,j).isBlockedPath)
+                    grid[i][j].updateNeighbors(grid);
+            }
+        }
+
+        pfStart = grid[startTile.col][startTile.row];
+        pfEnd = grid[endTile.col][endTile.row];
+
+        openSet.push(pfStart);
+    }
+
+    //A star search implementation
+
+    function search(startTile, endTile) {
+        init(startTile, endTile);
+        while (openSet.length > 0) {
+            let lowestIndex = 0;
+            for (let i = 0; i < openSet.length; i++) {
+                if (openSet[i].f < openSet[lowestIndex].f) {
+                    lowestIndex = i;
+                }
+            }
+            let current = openSet[lowestIndex];
+
+            if (current === pfEnd) {
+                let temp = current;
+                path.push(temp);
+                while (temp.parent) {
+                    path.push(temp.parent);
+                    temp = temp.parent;
+                }
+                // return the traced path
+                return path.reverse();
+            }
+
+            //remove current from openSet
+            openSet.splice(lowestIndex, 1);
+            //add current to closedSet
+            closedSet.push(current);
+
+            let neighbors = current.neighbors;
+
+            for (let i = 0; i < neighbors.length; i++) {
+                let neighbor = neighbors[i];
+
+                if (!closedSet.includes(neighbor)) {
+                    let possibleG = current.g + 1;
+                    if (!openSet.includes(neighbor)) {
+                        openSet.push(neighbor);
+                    } else if (possibleG >= neighbor.g) {
+                        continue;
+                    }
+
+                    neighbor.g = neighbor.g + possibleG; // Add base G for malus path
+                    neighbor.h = heuristic(neighbor, pfEnd);
+                    neighbor.f = neighbor.g + neighbor.h;
+                    neighbor.parent = current;
+                }
+            }
+            console.log('====')
+        }
+
+        //no solution by default
+        return [];
+    }
+
+    // function randColor() {
+    //     return Math.floor(Math.random() * (16777215 + 1)).toString(16)
+    // }
+    //
+    // function onDragMove(event) {
+    //     if (dragTarget) {
+    //         dragTarget.parent.toLocal(event.global, null, dragTarget.position);
+    //     }
+    // }
+    //
+    // function onDragStart() {
+    //     this.alpha = 0.5;
+    //     dragTarget = this;
+    //     app.stage.on('pointermove', onDragMove);
+    // }
+    //
+    // function onDragEnd() {
+    //     if (dragTarget) {
+    //         app.stage.off('pointermove', onDragMove);
+    //         dragTarget.alpha = 1;
+    //         dragTarget = null;
+    //     }
+    // }
+    //
+    // app.ticker.add(() => {
+    //     for (let i = 0; i < tokens.length; i++) {
+    //         if (tokens[i].dragging) {
+    //             continue;
+    //         }
+    //         let targetRow = Math.floor((tokens[i].y + tileSize / 2) / tileSize);
+    //         let targetCol = Math.floor((tokens[i].x + tileSize / 2) / tileSize);
+    //         if (targetRow >= 0 && targetRow < numRows && targetCol >= 0 && targetCol < numCols && tileMap[targetRow][targetCol] === 0) {
+    //             tokens[i].position.set(targetCol * tileSize + (tileSize - tokenSize) / 2, targetRow * tileSize + (tileSize - tokenSize) / 2);
+    //         }
+    //     }
+    // });
 
 </script>
 </body>
