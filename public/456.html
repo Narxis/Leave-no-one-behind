@@ -21,7 +21,7 @@
     document.body.appendChild(app.view);
 
     // Define the tile size and grid dimensions
-    const tileSize = 40;
+    const tileSize = 32;
     var numRows;
     var numCols;
 
@@ -31,6 +31,15 @@
         TODO:
             * Manage texture height on hitBoxes
                 /!\ This will create overlapping, need to manage this too...
+
+        // Wall Blocking based on name
+        N block S | S block N | E block W | W block E
+             /\
+          W /  \ N
+           /    \
+           \    /
+          S \  / E
+             \/
      */
 
     var textures = [
@@ -39,24 +48,98 @@
             name: 'barrel_E',
             texture: PIXI.Texture.from("/img/Isometric/barrel_E.png"),
             isProp: true,
+            blockedPath: ['N', 'E', 'S', 'W']
         },
         {
             marker: '1',
             name: 'stoneTile_E',
             texture: PIXI.Texture.from("/img/Isometric/stoneTile_E.png"),
             isProp: false,
+            blockedPath: []
         },
         {
             marker: '2',
             name: 'stone_E',
             texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
             isProp: false,
+            blockedPath: []
         },
         {
             marker: '3',
             name: 'planks_E',
             texture: PIXI.Texture.from("/img/Isometric/planks_E.png"),
             isProp: false,
+            blockedPath: []
+        },
+        {
+            marker: '4',
+            name: 'stone_S',
+            texture: PIXI.Texture.from("/img/Isometric/stone_S.png"),
+            isProp: false,
+            blockedPath: []
+        },
+        {
+            marker: '5',
+            name: 'stone_N',
+            texture: PIXI.Texture.from("/img/Isometric/stone_N.png"),
+            isProp: false,
+            blockedPath: []
+        },
+        {
+            marker: '6',
+            name: 'dirtTiles_S',
+            texture: PIXI.Texture.from("/img/Isometric/dirtTiles_S.png"),
+            isProp: false,
+            blockedPath: []
+        },
+        {
+            marker: '7',
+            name: 'stoneLeft_S',
+            texture: PIXI.Texture.from("/img/Isometric/stoneLeft_S.png"),
+            isProp: false,
+            blockedPath: []
+        },
+        {
+            marker: '8',
+            name: 'stoneRight_E',
+            texture: PIXI.Texture.from("/img/Isometric/stoneRight_E.png"),
+            isProp: false,
+            blockedPath: []
+        },
+        {
+            marker: '9',
+            name: 'dirt_E',
+            texture: PIXI.Texture.from("/img/Isometric/dirt_E.png"),
+            isProp: false,
+            blockedPath: []
+        },
+        {
+            marker: '10',
+            name: 'stoneWall_E',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWall_E.png"),
+            isProp: true,
+            blockedPath: ["W"]
+        },
+        {
+            marker: '11',
+            name: 'stoneWall_S',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWall_S.png"),
+            isProp: true,
+            blockedPath: ["N"]
+        },
+        {
+            marker: '12',
+            name: 'stoneWall_W',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWall_W.png"),
+            isProp: true,
+            blockedPath: ["E"]
+        },
+        {
+            marker: '13',
+            name: 'stoneWall_N',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWall_N.png"),
+            isProp: true,
+            blockedPath: ["S"]
         }
     ];
 
@@ -169,11 +252,10 @@
                 // Draw from North
                 tile.drawPolygon(pointsPolygon);
                 tile.endFill();
-                tile.isBlockedPath = false;
+                tile.blockedPath = [];
                 tile.col = col;
                 tile.row = row;
                 if (row === -1 || col === -1) {
-                    tile.isBlockedPath = true;
                     let text = '';
                     if (row === -1) {
                         text = String.fromCharCode(97 + col).toUpperCase();
@@ -204,9 +286,9 @@
                     tileTexture.width = TILE_WIDTH * 2;
                     tileTexture.height = TILE_WIDTH * 4;
                     tileTexture.hitArea = texture.isProp ? new PIXI.Polygon(0,0,0,0,0,0) : new PIXI.Polygon(pointsPolygonHitArea);
+                    tile.blockedPaths = texture.blockedPath;
 
                     if (texture.isProp) {
-                        tile.isBlockedPath = true;
                         let floorTexture = getTextureInfosFromName('stone_E');
                         let tileObject = new PIXI.Sprite(floorTexture.texture);
                         tileObject.x = textureX;
@@ -238,6 +320,7 @@
     }
 
     async function onTileClick() {
+        console.log(this.blockedPaths)
         if (!tileTarget) {
             tileTarget = this;
             this.alpha = .8;
@@ -257,6 +340,7 @@
 
     async function moveItemOnTile(from, to) {
         let path = search(from,to);
+        console.log(path);
         for (let step of path) {
             let tile = tileSet.find(el => el.col === step.x && el.row === step.y);
             tile.alpha = .7;
@@ -267,9 +351,6 @@
         }
         await sleep(1500);
         console.log(`Moving from [${from.col},${from.row}] to [${to.col},${to.row}]`);
-        if (to.isBlockedPath) {
-            console.error(`This tile is not a valid destination`);
-        }
     }
 
     function onTileOut() {
@@ -304,7 +385,7 @@
     }
 
     //constructor function to create all the grid points as objects containind the data for the points
-    function GridPoint(x, y, g=0) {
+    function GridPoint(x, y, g=0, b) {
         this.x = x; //x location of the grid point
         this.y = y; //y location of the grid point
         this.f = 0; //total cost function
@@ -317,17 +398,23 @@
         this.updateNeighbors = function (grid) {
             let i = this.x;
             let j = this.y;
-            if (i < pfCols - 1) {
-                this.neighbors.push(grid[i + 1][j]);
+            let blockedPath = getTileFromTileSet(i,j).blockedPaths;
+
+            if (i < pfCols - 1 ) { // East Neighbor
+                if (!blockedPath.includes('E') && !getTileFromTileSet(i + 1,j).blockedPaths.includes('W'))
+                    this.neighbors.push(grid[i + 1][j]);
             }
-            if (i > 0) {
-                this.neighbors.push(grid[i - 1][j]);
+            if (i > 0) { // West Neighbor
+                if (!blockedPath.includes('W') && !getTileFromTileSet(i - 1,j).blockedPaths.includes('E'))
+                    this.neighbors.push(grid[i - 1][j]);
             }
-            if (j < pfRows - 1) {
-                this.neighbors.push(grid[i][j + 1]);
+            if (j < pfRows - 1) { // South Neighbor
+                if (!blockedPath.includes('S') && !getTileFromTileSet(i,j + 1).blockedPaths.includes('N'))
+                    this.neighbors.push(grid[i][j + 1]);
             }
-            if (j > 0) {
-                this.neighbors.push(grid[i][j - 1]);
+            if (j > 0) { // North Neighbor
+                if (!blockedPath.includes('N') && !getTileFromTileSet(i,j - 1).blockedPaths.includes('S'))
+                    this.neighbors.push(grid[i][j - 1]);
             }
         };
     }
@@ -356,8 +443,7 @@
 
         for (let i = 0; i < pfCols; i++) {
             for (let j = 0; j < pfRows; j++) {
-                if (!getTileFromTileSet(i,j).isBlockedPath)
-                    grid[i][j].updateNeighbors(grid);
+                grid[i][j].updateNeighbors(grid);
             }
         }
 
@@ -415,7 +501,6 @@
                     neighbor.parent = current;
                 }
             }
-            console.log('====')
         }
 
         //no solution by default
