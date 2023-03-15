@@ -22,15 +22,35 @@
         TextStyle,
         Texture
     } from "/js/pixijs/pixi-legacy.mjs";
+    import {autoDetectRenderer} from "./js/pixijs/pixi-legacy.mjs";
 
     const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const renderer = autoDetectRenderer();
     const app = new Application({
         resizeTo: window,
         backgroundAlpha: 0,
         antialias: true,
         resolution: 1,
-        autoDensity: true
+        autoDensity: true,
+        autoStart: false
     });
+
+    let stage = app.stage;
+
+    let players = [
+        {
+            race: 'pitiver',
+            id: '1'
+        },
+        {
+            race: 'pitiver',
+            id: '2'
+        },
+        {
+            race: 'pitiver',
+            id: '3'
+        },
+    ];
 
     document.body.appendChild(app.view);
 
@@ -64,20 +84,13 @@
             name: 'barrel_E',
             texture: Texture.from("/img/Isometric/barrel_E.png"),
             isProp: true,
-            blockedPath: ['N', 'E', 'S', 'W']
+            blockedPath: ['N', 'E', 'S', 'W'],
         },
         {
             marker: '1',
             name: 'stoneTile_E',
             texture: Texture.from("/img/Isometric/stoneTile_E.png"),
             isProp: false,
-            blockedPath: []
-        },
-        {
-            marker: 'svg',
-            name: 'svg',
-            texture: Texture.from("/img/test.svg"),
-            isProp: true,
             blockedPath: []
         },
         {
@@ -148,84 +161,96 @@
             name: 'stoneWall_E',
             texture: Texture.from("/img/Isometric/stoneWall_E.png"),
             isProp: true,
-            blockedPath: ["W"]
+            blockedPath: ["W"],
+            foreground: false
         },
         {
             marker: '^',
             name: 'stoneWall_S',
             texture: Texture.from("/img/Isometric/stoneWall_S.png"),
             isProp: true,
-            blockedPath: ["N"]
+            blockedPath: ["N"],
+            foreground: false
         },
         {
             marker: '>',
             name: 'stoneWall_W',
             texture: Texture.from("/img/Isometric/stoneWall_W.png"),
             isProp: true,
-            blockedPath: ["E"]
+            blockedPath: ["E"],
+            foreground: true
         },
         {
             marker: 'v',
             name: 'stoneWall_N',
             texture: Texture.from("/img/Isometric/stoneWall_N.png"),
             isProp: true,
-            blockedPath: ["S"]
+            blockedPath: ["S"],
+            foreground: true
         },
         {
             marker: '┘',
             name: 'stoneWallCorner_N',
             texture: Texture.from("/img/Isometric/stoneWallCorner_N.png"),
             isProp: true,
-            blockedPath: ["S", "E"]
+            blockedPath: ["S", "E"],
+            foreground: true
         },
         {
             marker: '└',
             name: 'stoneWallCorner_E',
             texture: Texture.from("/img/Isometric/stoneWallCorner_E.png"),
             isProp: true,
-            blockedPath: ["W", "S"]
+            blockedPath: ["W", "S"],
+            foreground: true
         },
         {
             marker: '┌',
             name: 'stoneWallCorner_S',
             texture: Texture.from("/img/Isometric/stoneWallCorner_S.png"),
             isProp: true,
-            blockedPath: ["W", "N"]
+            blockedPath: ["W", "N"],
+            foreground: false
         },
         {
             marker: '┐',
             name: 'stoneWallCorner_W',
             texture: Texture.from("/img/Isometric/stoneWallCorner_W.png"),
             isProp: true,
-            blockedPath: ["N", "E"]
+            blockedPath: ["N", "E"],
+            foreground: true
         },
         {
             marker: '18',
             name: 'stoneWallArchway_N',
             texture: Texture.from("/img/Isometric/stoneWallArchway_N.png"),
             isProp: true,
-            blockedPath: []
+            blockedPath: [],
+            foreground: false
         },
         {
             marker: '19',
             name: 'stoneWallArchway_E',
             texture: Texture.from("/img/Isometric/stoneWallArchway_E.png"),
             isProp: true,
-            blockedPath: []
+            blockedPath: [],
+            foreground: true
         },
         {
             marker: '20',
             name: 'stoneWallArchway_S',
             texture: Texture.from("/img/Isometric/stoneWallArchway_S.png"),
             isProp: true,
-            blockedPath: []
+            blockedPath: [],
+            foreground: true
         },
         {
             marker: '21',
             name: 'stoneWallArchway_W',
             texture: Texture.from("/img/Isometric/stoneWallArchway_W.png"),
             isProp: true,
-            blockedPath: []
+            blockedPath: [],
+            foreground: false
         },
 
     ];
@@ -235,7 +260,7 @@
 
     const tileMap = [
         ['┌', '^', '^', '┌', '^', '^', '┌', '^', '^', '^'],
-        ['<', '.', '.', '19', '.', '.', '19', '.', '.', '.'],
+        ['<', '.', '.', '19', '.', '.', '19', '@.', '.', '.'],
         ['<', '.', '.', '<', '.', '▉', '└', 'v', 'v', 'v'],
         ['<', '.', '.', '<', '.', '▉', '▉', '21', '.', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
@@ -245,34 +270,50 @@
         ['<', '.', '.', '<', '.', '.', '.', '>', '▉', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
         ['<', '.', '.', '<', '▉', '.', '.', '21', '.', '.'],
-        ['_', '_', '_', '└', 'v', '18', 'v', '┘', 'v', 'v'],
+        ['_', '_', '_', '└', 'v', '18', '@v', '┘', 'v', 'v'],
         ['.', '_', '_', '.', '.', '.', '.', '.', '.', '.'],
         ['.', '_', '_', '_', '.', '.', '.', '.', '▉', '.'],
-        ['svg', '.', '_', '.', '.', '.', '.', '.', '.', '.'],
+        ['.', '.', '_', '@.', '.', '.', '.', '.', '.', '.'],
     ];
     numRows = tileMap.length;
     numCols = tileMap[0].length;
 
     var tileSet = [];
+    var tokenSet = [];
 
     // Define the token size and array
     // const tokenSize = 20;
     const tokens = [
         {
-            name: 'Pitiver',
+            name: 'pitiver',
             textures : {
-                idle_N: Texture.from("/img/characters/pitiver-north-idle.png"),
-                idle_S: Texture.from("/img/characters/pitiver-south-idle.png"),
-                idle_E: Texture.from("/img/characters/pitiver-est-idle.png"),
-                idle_W: Texture.from("/img/characters/pitiver-west-idle.png"),
-
+                idle_N: [Texture.from("/img/characters/pitiver-north-idle2.png")],
+                idle_S: [Texture.from("/img/characters/pitiver-south-idle.png")],
+                idle_E: [Texture.from("/img/characters/pitiver-est-idle.png")],
+                idle_W: [Texture.from("/img/characters/pitiver-west-idle.png")],
+                move_N: [
+                    Texture.from("/img/characters/pitiver-north-walk1.png"),
+                    Texture.from("/img/characters/pitiver-north-walk2.png")
+                ],
+                move_S: [
+                    Texture.from("/img/characters/pitiver-south-walk1.png"),
+                    Texture.from("/img/characters/pitiver-south-walk2.png")
+                ],
+                move_E: [
+                    Texture.from("/img/characters/pitiver-est-walk1.png"),
+                    Texture.from("/img/characters/pitiver-est-walk2.png")
+                ],
+                move_W: [
+                    Texture.from("/img/characters/pitiver-west-walk1.png"),
+                    Texture.from("/img/characters/pitiver-west-walk2.png")
+                ],
             }
         }
     ];
 
     let dragTarget = null;
-    app.stage.interactive = true;
-    app.stage.hitArea = app.screen;
+    stage.interactive = true;
+    stage.hitArea = app.screen;
     // app.stage.on('pointerup', onDragEnd);
     // app.stage.on('pointerupoutside', onDragEnd);
 
@@ -303,6 +344,9 @@
     }
     function isPropFromMarker(marker) {
         return getTextureInfosFromMarker(marker).isProp;
+    }
+    function getTokenInfosFromName(name){
+        return tokens.find(el => el.name === name);
     }
 
     // generate Random tile map
@@ -371,6 +415,8 @@
                 tile.drawPolygon(pointsPolygon);
                 tile.endFill();
                 tile.blockedPath = [];
+                tile.playerIdOnIt = -1;
+                tile.foregroundProp = false;
                 tile.col = col;
                 tile.row = row;
                 if (row === numRows || col === numCols) {
@@ -388,26 +434,38 @@
                     tile.addChild(tileText);
 
                 } else {
-                    tile.marker = tileMap[row][col];
+                    let marker = tileMap[row][col];
+                    let spawnable = marker.startsWith('@');
+                    let textureX = Math.round(northX - TILE_WIDTH);
+                    let textureY = Math.round(northY - TILE_HEIGHT * 3);
+
+                    if (spawnable) {
+                        marker = marker.replace(/^@/, '');
+                    }
+
+                    // IF MARKER HAS @ prefix, try to spawn a player token
+                    tile.marker = marker;
                     tile.interactive = true;
                     tile
                         .on('click', onTileClick, tile)
                         .on('pointerover', onTileOver, tile)
                         .on('pointerout', onTileOut, tile)
 
-                    let texture = getTextureInfosFromMarker(tile.marker)
+                    let texture = getTextureInfosFromMarker(tile.marker);
                     let tileTexture = new Sprite(texture.texture);
-                    let textureX = northX - TILE_WIDTH;
-                    let textureY = northY - TILE_HEIGHT * 3;
+
                     tileTexture.x = textureX;
                     tileTexture.y = textureY;
                     tileTexture.width = TILE_WIDTH * 2;
                     tileTexture.height = TILE_WIDTH * 4;
                     tileTexture.hitArea = texture.isProp ? new Polygon(0,0,0,0,0,0) : new Polygon(pointsPolygonHitArea);
                     tile.texturePos = [textureX, textureY];
+                    tile.textureX = textureX;
+                    tile.textureY = textureY;
                     tile.blockedPaths = texture.blockedPath;
 
                     if (texture.isProp) {
+                        tile.foregroundProp = texture.foreground;
                         let floorTexture = getTextureInfosFromName('stone_E');
                         let tileObject = new Sprite(floorTexture.texture);
                         tileObject.x = textureX;
@@ -418,11 +476,40 @@
                         tile.addChild(tileObject);
                     }
 
-                    tile.addChild(tileTexture);
-                }
+                    if (!texture.foreground)
+                        tile.addChild(tileTexture);
 
-                tileSet.push(tile);
-                app.stage.addChild(tile);
+                    if (spawnable) {
+                        let player = players.splice(0,1);
+                        if (player.length) {
+                            player = player[0];
+                            let token = getTokenInfosFromName(player.race);
+                            let playerToken = new AnimatedSprite(token.textures.idle_N);
+                            playerToken.animationSpeed = .05;
+                            // playerToken.autoUpdate = true;
+                            playerToken.name = token.name;
+                            playerToken.uid = player.id
+                            playerToken.x = textureX;
+                            playerToken.y = textureY;
+                            playerToken.width = TILE_WIDTH * 2;
+                            playerToken.height = TILE_WIDTH * 4;
+                            playerToken.hitArea = new Polygon(0,0,0,0,0,0);
+                            playerToken.play();
+                            tokenSet.push(playerToken);
+                            tile.playerIdOnIt = player.id;
+                            tile.addChild(playerToken);
+                        }
+                    }
+
+                    if (texture.foreground) {
+                        if (tile.playerIdOnIt > -1)
+                            tileTexture.alpha = .8;
+                        tile.addChild(tileTexture);
+                    }
+
+                    tileSet.push(tile);
+                    stage.addChild(tile);
+                }
             }
         }
     }
@@ -457,17 +544,93 @@
     }
 
     async function moveItemOnTile(from, to) {
-        let path = search(from,to);
-        console.log(path);
-        for (let step of path) {
-            let tile = tileSet.find(el => el.col === step.x && el.row === step.y);
-            tile.alpha = .7;
-            setTimeout(function (){
-                tile.alpha = 1;
-            }, 1500)
-            await sleep(250);
+        let path = search(from,to).splice(1);
+        let playerToken = tokenSet.find(el => el.uid === from.playerIdOnIt);
+        let prevStep = {
+            x: from.textureX,
+            y: from.textureY,
         }
-        await sleep(1500);
+        let prevAnim;
+        from.addChild(playerToken);
+
+        if (playerToken && path)
+        {
+            for (let step of path)
+            {
+                let tile = tileSet.find(el => el.col === step.x && el.row === step.y);
+                if (tile.foregroundProp) {
+                    let swapChildren = tile.children.slice();
+                    tile.removeChildren();
+                    for (let i=0; i<swapChildren.length; i++) {
+                        if (i===1)
+                            tile.addChild(playerToken);
+                        tile.addChild(swapChildren[i]);
+                    }
+                }
+                else {
+                    tile.addChild(playerToken);
+                }
+                console.log(tile.children);
+                console.warn('====')
+                if (prevStep.x < tile.textureX && prevStep.y < tile.textureY) {
+                    if (prevAnim !== 'E'){
+                        playerToken.textures = getTokenInfosFromName(playerToken.name).textures.move_E;
+                        playerToken.play();
+                    }
+                    prevAnim = 'E';
+                    while (playerToken.x < tile.textureX && playerToken.y < tile.textureY) {
+                        playerToken.x = playerToken.x + 2;
+                        playerToken.y = playerToken.y + 1;
+                        await sleep(10);
+                    }
+                }
+
+                if (prevStep.x > tile.textureX && prevStep.y > tile.textureY) {
+                    if (prevAnim !== 'W') {
+                        playerToken.textures = getTokenInfosFromName(playerToken.name).textures.move_W;
+                        playerToken.play();
+                    }
+                    prevAnim = 'W';
+                    while (playerToken.x > tile.textureX && playerToken.y > tile.textureY) {
+                        playerToken.x = playerToken.x - 2;
+                        playerToken.y = playerToken.y - 1;
+                        await sleep(10);
+                    }
+                }
+                if (prevStep.x < tile.textureX && prevStep.y > tile.textureY) {
+                    if (prevAnim !== 'N') {
+                        playerToken.textures = getTokenInfosFromName(playerToken.name).textures.move_N;
+                        playerToken.play();
+                    }
+                    prevAnim = 'N';
+                    while (playerToken.x < tile.textureX && playerToken.y > tile.textureY) {
+                        playerToken.x = playerToken.x + 2;
+                        playerToken.y = playerToken.y - 1;
+                        await sleep(10);
+                    }
+                }
+                if (prevStep.x > tile.textureX && prevStep.y < tile.textureY) {
+                    if (prevAnim !== 'S') {
+                        playerToken.textures = getTokenInfosFromName(playerToken.name).textures.move_S;
+                        playerToken.play();
+                    }
+                    prevAnim = 'S';
+                    while (playerToken.x > tile.textureX && playerToken.y < tile.textureY) {
+                        playerToken.x = playerToken.x - 2;
+                        playerToken.y = playerToken.y + 1;
+                        await sleep(10);
+                    }
+                }
+                if (tile !== to)
+                    tile.removeChild(playerToken);
+                prevStep = {x: tile.textureX, y: tile.textureY}
+            }
+
+            playerToken.textures = getTokenInfosFromName(playerToken.name).textures['idle_' + prevAnim];
+            from.playerIdOnIt = -1;
+            to.playerIdOnIt = playerToken.uid;
+            await sleep(1500);
+        }
         console.log(`Moving from [${from.col},${from.row}] to [${to.col},${to.row}]`);
     }
 
@@ -625,32 +788,11 @@
         return [];
     }
 
-    // function randColor() {
-    //     return Math.floor(Math.random() * (16777215 + 1)).toString(16)
-    // }
-    //
-    // function onDragMove(event) {
-    //     if (dragTarget) {
-    //         dragTarget.parent.toLocal(event.global, null, dragTarget.position);
-    //     }
-    // }
-    //
-    // function onDragStart() {
-    //     this.alpha = 0.5;
-    //     dragTarget = this;
-    //     app.stage.on('pointermove', onDragMove);
-    // }
-    //
-    // function onDragEnd() {
-    //     if (dragTarget) {
-    //         app.stage.off('pointermove', onDragMove);
-    //         dragTarget.alpha = 1;
-    //         dragTarget = null;
-    //     }
-    // }
-    //
     // APP LOOP
+    app.start();
+
     app.ticker.add(() => {
+
         // for (let i = 0; i < tokens.length; i++) {
         //     if (tokens[i].dragging) {
         //         continue;
