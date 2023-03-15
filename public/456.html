@@ -21,7 +21,7 @@
     document.body.appendChild(app.view);
 
     // Define the tile size and grid dimensions
-    const tileSize = 32;
+    const tileSize = 64;
     var numRows;
     var numCols;
 
@@ -44,7 +44,7 @@
 
     var textures = [
         {
-            marker: '0',
+            marker: '▉',
             name: 'barrel_E',
             texture: PIXI.Texture.from("/img/Isometric/barrel_E.png"),
             isProp: true,
@@ -58,7 +58,21 @@
             blockedPath: []
         },
         {
-            marker: '2',
+            marker: 'svg',
+            name: 'svg',
+            texture: PIXI.Texture.from("/img/test.svg"),
+            isProp: true,
+            blockedPath: []
+        },
+        {
+            marker: '_',
+            name: '_',
+            texture: PIXI.Texture.from("/img/Isometric/empty-tile.png"),
+            isProp: false,
+            blockedPath: []
+        },
+        {
+            marker: '.',
             name: 'stone_E',
             texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
             isProp: false,
@@ -114,37 +128,114 @@
             blockedPath: []
         },
         {
-            marker: '10',
+            marker: '<',
             name: 'stoneWall_E',
             texture: PIXI.Texture.from("/img/Isometric/stoneWall_E.png"),
             isProp: true,
             blockedPath: ["W"]
         },
         {
-            marker: '11',
+            marker: '^',
             name: 'stoneWall_S',
             texture: PIXI.Texture.from("/img/Isometric/stoneWall_S.png"),
             isProp: true,
             blockedPath: ["N"]
         },
         {
-            marker: '12',
+            marker: '>',
             name: 'stoneWall_W',
             texture: PIXI.Texture.from("/img/Isometric/stoneWall_W.png"),
             isProp: true,
             blockedPath: ["E"]
         },
         {
-            marker: '13',
+            marker: 'v',
             name: 'stoneWall_N',
             texture: PIXI.Texture.from("/img/Isometric/stoneWall_N.png"),
             isProp: true,
             blockedPath: ["S"]
-        }
+        },
+        {
+            marker: '┘',
+            name: 'stoneWallCorner_N',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_N.png"),
+            isProp: true,
+            blockedPath: ["S", "E"]
+        },
+        {
+            marker: '└',
+            name: 'stoneWallCorner_E',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_E.png"),
+            isProp: true,
+            blockedPath: ["W", "S"]
+        },
+        {
+            marker: '┌',
+            name: 'stoneWallCorner_S',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_S.png"),
+            isProp: true,
+            blockedPath: ["W", "N"]
+        },
+        {
+            marker: '┐',
+            name: 'stoneWallCorner_W',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_W.png"),
+            isProp: true,
+            blockedPath: ["N", "E"]
+        },
+        {
+            marker: '18',
+            name: 'stoneWallArchway_N',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_N.png"),
+            isProp: true,
+            blockedPath: []
+        },
+        {
+            marker: '19',
+            name: 'stoneWallArchway_E',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_E.png"),
+            isProp: true,
+            blockedPath: []
+        },
+        {
+            marker: '20',
+            name: 'stoneWallArchway_S',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_S.png"),
+            isProp: true,
+            blockedPath: []
+        },
+        {
+            marker: '21',
+            name: 'stoneWallArchway_W',
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_W.png"),
+            isProp: true,
+            blockedPath: []
+        },
+
     ];
 
     // Define the tile map, where 0 represents an empty tile and 1 represents a solid tile
-    const tileMap = generateTileMap(15,10);
+    // const tileMap = generateTileMap(15,10);
+
+    const tileMap = [
+        ['┌', '^', '^', '┌', '^', '^', '┌', '^', '^', '^'],
+        ['<', '.', '.', '19', '.', '.', '19', '.', '.', '.'],
+        ['<', '.', '.', '<', '.', '▉', '└', 'v', 'v', 'v'],
+        ['<', '.', '.', '<', '.', '▉', '▉', '21', '.', '.'],
+        ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
+        ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
+        ['┌', '20', '^', '┌', '^', '^', '^', '┐', '^', '20'],
+        ['<', '.', '.', '19', '.', '.', '▉', '>', '.', '.'],
+        ['<', '.', '.', '<', '.', '.', '.', '>', '▉', '.'],
+        ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
+        ['<', '.', '.', '<', '▉', '.', '.', '21', '.', '.'],
+        ['_', '_', '_', '└', 'v', '18', 'v', '┘', 'v', 'v'],
+        ['.', '_', '_', '.', '.', '.', '.', '.', '.', '.'],
+        ['.', '_', '_', '_', '.', '.', '.', '.', '▉', '.'],
+        ['svg', '.', '_', '.', '.', '.', '.', '.', '.', '.'],
+    ];
+    numRows = tileMap.length;
+    numCols = tileMap[0].length;
 
     var tileSet = [];
 
