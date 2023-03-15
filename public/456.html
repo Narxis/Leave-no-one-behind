@@ -535,7 +535,7 @@
             tileTarget = null;
         }
         else {
-            await moveItemOnTile(tileTarget ,this)
+            moveItemOnTile(tileTarget ,this)
             tileTarget.alpha = 1;
             this.alpha = 1;
             tileTarget = null;
@@ -570,8 +570,6 @@
                 else {
                     tile.addChild(playerToken);
                 }
-                console.log(tile.children);
-                console.warn('====')
                 if (prevStep.x < tile.textureX && prevStep.y < tile.textureY) {
                     if (prevAnim !== 'E'){
                         playerToken.textures = getTokenInfosFromName(playerToken.name).textures.move_E;
