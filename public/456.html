@@ -28,7 +28,8 @@
         resizeTo: window,
         backgroundAlpha: 0,
         antialias: true,
-        resolution: 1
+        resolution: 1,
+        autoDensity: true
     });
 
     document.body.appendChild(app.view);
@@ -332,9 +333,9 @@
             fill: ['#96c1d3'], // gradient
         });
 
-        for (let row = -1; row < numRows; row++) {
-            for (let col = -1; col < numCols; col++) {
-                if (row === -1 && col === -1) continue;
+        for (let row = 0; row <= numRows; row++) {
+            for (let col = 0; col <= numCols; col++) {
+                if (row === numRows && col === numCols) continue;
                 let tile = new Graphics();
                 tile.beginFill((row + col) % 2 === 0 ? "#0a2647" : "#0d2a4c");
                 tile.lineStyle(1, "#205295");
@@ -372,13 +373,13 @@
                 tile.blockedPath = [];
                 tile.col = col;
                 tile.row = row;
-                if (row === -1 || col === -1) {
+                if (row === numRows || col === numCols) {
                     let text = '';
-                    if (row === -1) {
-                        text = String.fromCharCode(97 + col).toUpperCase();
+                    if (row === numRows) {
+                        text = String.fromCharCode(96 + numCols-col).toUpperCase();
                     }
-                    else if (col === -1) {
-                        text = (row+1).toString();
+                    else if (col === numCols) {
+                        text = (numRows-row).toString();
                     }
 
                     let tileText = new Text(text,textStyle);
