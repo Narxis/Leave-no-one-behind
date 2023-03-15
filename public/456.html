@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>PixiJS Checkered Grid with Tokens</title>
-    <script src="https://cdn.jsdelivr.net/npm/pixi.js@7.x/dist/pixi.min.js"></script>
     <style>
         html, body {
             background-color: #3b4952;
@@ -11,9 +10,21 @@
     </style>
 </head>
 <body>
-<script>
+<script type="module">
+
+    import {
+        AnimatedSprite,
+        Application,
+        Graphics,
+        Polygon,
+        Sprite,
+        Text,
+        TextStyle,
+        Texture
+    } from "/js/pixijs/pixi-legacy.mjs";
+    
     const sleep = ms => new Promise(r => setTimeout(r, ms));
-    const app = new PIXI.Application({
+    const app = new Application({
         resizeTo: window,
         backgroundAlpha: 0,
         antialias: true,
@@ -50,168 +61,168 @@
         {
             marker: '▉',
             name: 'barrel_E',
-            texture: PIXI.Texture.from("/img/Isometric/barrel_E.png"),
+            texture: Texture.from("/img/Isometric/barrel_E.png"),
             isProp: true,
             blockedPath: ['N', 'E', 'S', 'W']
         },
         {
             marker: '1',
             name: 'stoneTile_E',
-            texture: PIXI.Texture.from("/img/Isometric/stoneTile_E.png"),
+            texture: Texture.from("/img/Isometric/stoneTile_E.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: 'svg',
             name: 'svg',
-            texture: PIXI.Texture.from("/img/test.svg"),
+            texture: Texture.from("/img/test.svg"),
             isProp: true,
             blockedPath: []
         },
         {
             marker: '_',
             name: '_',
-            texture: PIXI.Texture.from("/img/Isometric/empty-tile.png"),
+            texture: Texture.from("/img/Isometric/empty-tile.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: '.',
             name: 'stone_E',
-            texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
+            texture: Texture.from("/img/Isometric/stone_E.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: '3',
             name: 'planks_E',
-            texture: PIXI.Texture.from("/img/Isometric/planks_E.png"),
+            texture: Texture.from("/img/Isometric/planks_E.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: '4',
             name: 'stone_S',
-            texture: PIXI.Texture.from("/img/Isometric/stone_S.png"),
+            texture: Texture.from("/img/Isometric/stone_S.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: '5',
             name: 'stone_N',
-            texture: PIXI.Texture.from("/img/Isometric/stone_N.png"),
+            texture: Texture.from("/img/Isometric/stone_N.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: '6',
             name: 'dirtTiles_S',
-            texture: PIXI.Texture.from("/img/Isometric/dirtTiles_S.png"),
+            texture: Texture.from("/img/Isometric/dirtTiles_S.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: '7',
             name: 'stoneLeft_S',
-            texture: PIXI.Texture.from("/img/Isometric/stoneLeft_S.png"),
+            texture: Texture.from("/img/Isometric/stoneLeft_S.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: '8',
             name: 'stoneRight_E',
-            texture: PIXI.Texture.from("/img/Isometric/stoneRight_E.png"),
+            texture: Texture.from("/img/Isometric/stoneRight_E.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: '9',
             name: 'dirt_E',
-            texture: PIXI.Texture.from("/img/Isometric/dirt_E.png"),
+            texture: Texture.from("/img/Isometric/dirt_E.png"),
             isProp: false,
             blockedPath: []
         },
         {
             marker: '<',
             name: 'stoneWall_E',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWall_E.png"),
+            texture: Texture.from("/img/Isometric/stoneWall_E.png"),
             isProp: true,
             blockedPath: ["W"]
         },
         {
             marker: '^',
             name: 'stoneWall_S',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWall_S.png"),
+            texture: Texture.from("/img/Isometric/stoneWall_S.png"),
             isProp: true,
             blockedPath: ["N"]
         },
         {
             marker: '>',
             name: 'stoneWall_W',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWall_W.png"),
+            texture: Texture.from("/img/Isometric/stoneWall_W.png"),
             isProp: true,
             blockedPath: ["E"]
         },
         {
             marker: 'v',
             name: 'stoneWall_N',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWall_N.png"),
+            texture: Texture.from("/img/Isometric/stoneWall_N.png"),
             isProp: true,
             blockedPath: ["S"]
         },
         {
             marker: '┘',
             name: 'stoneWallCorner_N',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_N.png"),
+            texture: Texture.from("/img/Isometric/stoneWallCorner_N.png"),
             isProp: true,
             blockedPath: ["S", "E"]
         },
         {
             marker: '└',
             name: 'stoneWallCorner_E',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_E.png"),
+            texture: Texture.from("/img/Isometric/stoneWallCorner_E.png"),
             isProp: true,
             blockedPath: ["W", "S"]
         },
         {
             marker: '┌',
             name: 'stoneWallCorner_S',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_S.png"),
+            texture: Texture.from("/img/Isometric/stoneWallCorner_S.png"),
             isProp: true,
             blockedPath: ["W", "N"]
         },
         {
             marker: '┐',
             name: 'stoneWallCorner_W',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_W.png"),
+            texture: Texture.from("/img/Isometric/stoneWallCorner_W.png"),
             isProp: true,
             blockedPath: ["N", "E"]
         },
         {
             marker: '18',
             name: 'stoneWallArchway_N',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_N.png"),
+            texture: Texture.from("/img/Isometric/stoneWallArchway_N.png"),
             isProp: true,
             blockedPath: []
         },
         {
             marker: '19',
             name: 'stoneWallArchway_E',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_E.png"),
+            texture: Texture.from("/img/Isometric/stoneWallArchway_E.png"),
             isProp: true,
             blockedPath: []
         },
         {
             marker: '20',
             name: 'stoneWallArchway_S',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_S.png"),
+            texture: Texture.from("/img/Isometric/stoneWallArchway_S.png"),
             isProp: true,
             blockedPath: []
         },
         {
             marker: '21',
             name: 'stoneWallArchway_W',
-            texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_W.png"),
+            texture: Texture.from("/img/Isometric/stoneWallArchway_W.png"),
             isProp: true,
             blockedPath: []
         },
@@ -244,8 +255,19 @@
     var tileSet = [];
 
     // Define the token size and array
-    const tokenSize = 20;
-    const tokens = [];
+    // const tokenSize = 20;
+    const tokens = [
+        {
+            name: 'Pitiver',
+            textures : {
+                idle_N: Texture.from("/img/characters/pitiver-north-idle.png"),
+                idle_S: Texture.from("/img/characters/pitiver-south-idle.png"),
+                idle_E: Texture.from("/img/characters/pitiver-est-idle.png"),
+                idle_W: Texture.from("/img/characters/pitiver-west-idle.png"),
+
+            }
+        }
+    ];
 
     let dragTarget = null;
     app.stage.interactive = true;
@@ -304,7 +326,7 @@
         const TILE_WIDTH_HALF = TILE_WIDTH / 2;
         const TILE_HEIGHT = tileSize;
         const TILE_HEIGHT_HALF = TILE_HEIGHT / 2;
-        const textStyle = new PIXI.TextStyle({
+        const textStyle = new TextStyle({
             fontFamily: 'sans-serif',
             fontSize: tileSize/3,
             fill: ['#96c1d3'], // gradient
@@ -313,7 +335,7 @@
         for (let row = -1; row < numRows; row++) {
             for (let col = -1; col < numCols; col++) {
                 if (row === -1 && col === -1) continue;
-                let tile = new PIXI.Graphics();
+                let tile = new Graphics();
                 tile.beginFill((row + col) % 2 === 0 ? 0x0a2647 : 0x0d2a4c);
                 tile.lineStyle(1, 0x205295);
 
@@ -359,7 +381,7 @@
                         text = (row+1).toString();
                     }
 
-                    let tileText = new PIXI.Text(text,textStyle);
+                    let tileText = new Text(text,textStyle);
                     tileText.x = northX - TILE_WIDTH_HALF/4;
                     tileText.y = northY + TILE_HEIGHT_HALF/2;
                     tile.addChild(tileText);
@@ -373,25 +395,25 @@
                         .on('pointerout', onTileOut, tile)
 
                     let texture = getTextureInfosFromMarker(tile.marker)
-                    let tileTexture = new PIXI.Sprite(texture.texture);
+                    let tileTexture = new Sprite(texture.texture);
                     let textureX = northX - TILE_WIDTH;
                     let textureY = northY - TILE_HEIGHT * 3;
                     tileTexture.x = textureX;
                     tileTexture.y = textureY;
                     tileTexture.width = TILE_WIDTH * 2;
                     tileTexture.height = TILE_WIDTH * 4;
-                    tileTexture.hitArea = texture.isProp ? new PIXI.Polygon(0,0,0,0,0,0) : new PIXI.Polygon(pointsPolygonHitArea);
+                    tileTexture.hitArea = texture.isProp ? new Polygon(0,0,0,0,0,0) : new Polygon(pointsPolygonHitArea);
                     tile.texturePos = [textureX, textureY];
                     tile.blockedPaths = texture.blockedPath;
 
                     if (texture.isProp) {
                         let floorTexture = getTextureInfosFromName('stone_E');
-                        let tileObject = new PIXI.Sprite(floorTexture.texture);
+                        let tileObject = new Sprite(floorTexture.texture);
                         tileObject.x = textureX;
                         tileObject.y = textureY;
                         tileObject.width = TILE_WIDTH * 2;
                         tileObject.height = TILE_WIDTH * 4;
-                        tileObject.hitArea = new PIXI.Polygon(pointsPolygonHitArea);
+                        tileObject.hitArea = new Polygon(pointsPolygonHitArea);
                         tile.addChild(tileObject);
                     }
 
