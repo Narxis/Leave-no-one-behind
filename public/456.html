@@ -550,6 +550,7 @@
             x: from.textureX,
             y: from.textureY,
         }
+        let prevTile = from;
         let prevAnim;
         from.addChild(playerToken);
 
@@ -570,6 +571,9 @@
                 else {
                     tile.addChild(playerToken);
                 }
+
+                // North and West still clipping...
+
                 if (prevStep.x < tile.textureX && prevStep.y < tile.textureY) {
                     if (prevAnim !== 'E'){
                         playerToken.textures = getTokenInfosFromName(playerToken.name).textures.move_E;
@@ -582,7 +586,6 @@
                         await sleep(10);
                     }
                 }
-
                 if (prevStep.x > tile.textureX && prevStep.y > tile.textureY) {
                     if (prevAnim !== 'W') {
                         playerToken.textures = getTokenInfosFromName(playerToken.name).textures.move_W;
