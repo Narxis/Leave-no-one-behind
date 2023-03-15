@@ -15,7 +15,9 @@
     const sleep = ms => new Promise(r => setTimeout(r, ms));
     const app = new PIXI.Application({
         resizeTo: window,
-        backgroundAlpha: 0
+        backgroundAlpha: 0,
+        antialias: true,
+        resolution: 1
     });
 
     document.body.appendChild(app.view);
@@ -41,6 +43,8 @@
           S  ╲    ╱ E
                ╲╱
      */
+
+    // https://github.com/kittykatattack/learningPixi#loading-images-into-the-texture-cache
 
     var textures = [
         {
@@ -377,6 +381,7 @@
                     tileTexture.width = TILE_WIDTH * 2;
                     tileTexture.height = TILE_WIDTH * 4;
                     tileTexture.hitArea = texture.isProp ? new PIXI.Polygon(0,0,0,0,0,0) : new PIXI.Polygon(pointsPolygonHitArea);
+                    tile.texturePos = [textureX, textureY];
                     tile.blockedPaths = texture.blockedPath;
 
                     if (texture.isProp) {
@@ -411,7 +416,6 @@
     }
 
     async function onTileClick() {
-        console.log(this.blockedPaths)
         if (!tileTarget) {
             tileTarget = this;
             this.alpha = .8;
@@ -622,18 +626,19 @@
     //     }
     // }
     //
-    // app.ticker.add(() => {
-    //     for (let i = 0; i < tokens.length; i++) {
-    //         if (tokens[i].dragging) {
-    //             continue;
-    //         }
-    //         let targetRow = Math.floor((tokens[i].y + tileSize / 2) / tileSize);
-    //         let targetCol = Math.floor((tokens[i].x + tileSize / 2) / tileSize);
-    //         if (targetRow >= 0 && targetRow < numRows && targetCol >= 0 && targetCol < numCols && tileMap[targetRow][targetCol] === 0) {
-    //             tokens[i].position.set(targetCol * tileSize + (tileSize - tokenSize) / 2, targetRow * tileSize + (tileSize - tokenSize) / 2);
-    //         }
-    //     }
-    // });
+    // APP LOOP
+    app.ticker.add(() => {
+        // for (let i = 0; i < tokens.length; i++) {
+        //     if (tokens[i].dragging) {
+        //         continue;
+        //     }
+        //     let targetRow = Math.floor((tokens[i].y + tileSize / 2) / tileSize);
+        //     let targetCol = Math.floor((tokens[i].x + tileSize / 2) / tileSize);
+        //     if (targetRow >= 0 && targetRow < numRows && targetCol >= 0 && targetCol < numCols && tileMap[targetRow][targetCol] === 0) {
+        //         tokens[i].position.set(targetCol * tileSize + (tileSize - tokenSize) / 2, targetRow * tileSize + (tileSize - tokenSize) / 2);
+        //     }
+        // }
+    });
 
 </script>
 </body>
