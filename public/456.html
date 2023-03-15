@@ -336,8 +336,8 @@
             for (let col = -1; col < numCols; col++) {
                 if (row === -1 && col === -1) continue;
                 let tile = new Graphics();
-                tile.beginFill((row + col) % 2 === 0 ? 0x0a2647 : 0x0d2a4c);
-                tile.lineStyle(1, 0x205295);
+                tile.beginFill((row + col) % 2 === 0 ? "#0a2647" : "#0d2a4c");
+                tile.lineStyle(1, "#205295");
 
                 let tileOriginX = (col-row) * TILE_WIDTH + (numRows * (numRows/numCols) * .7) * TILE_WIDTH;
                 let tileOriginY = (col+row) * TILE_HEIGHT_HALF + TILE_HEIGHT_HALF;
