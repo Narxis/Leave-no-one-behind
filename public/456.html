@@ -55,7 +55,7 @@
     document.body.appendChild(app.view);
 
     // Define the tile size and grid dimensions
-    const tileSize = 64;
+    const tileSize = 32;
     var numRows;
     var numCols;
 
@@ -553,6 +553,7 @@
         let prevTile = from;
         let prevAnim;
         from.addChild(playerToken);
+        let moveTimeStep = tileSize / 2;
 
         if (playerToken && path)
         {
@@ -583,7 +584,7 @@
                     while (playerToken.x < tile.textureX && playerToken.y < tile.textureY) {
                         playerToken.x = playerToken.x + 2;
                         playerToken.y = playerToken.y + 1;
-                        await sleep(10);
+                        await sleep(moveTimeStep);
                     }
                 }
                 if (prevStep.x > tile.textureX && prevStep.y > tile.textureY) {
@@ -595,7 +596,7 @@
                     while (playerToken.x > tile.textureX && playerToken.y > tile.textureY) {
                         playerToken.x = playerToken.x - 2;
                         playerToken.y = playerToken.y - 1;
-                        await sleep(10);
+                        await sleep(moveTimeStep);
                     }
                 }
                 if (prevStep.x < tile.textureX && prevStep.y > tile.textureY) {
@@ -607,7 +608,7 @@
                     while (playerToken.x < tile.textureX && playerToken.y > tile.textureY) {
                         playerToken.x = playerToken.x + 2;
                         playerToken.y = playerToken.y - 1;
-                        await sleep(10);
+                        await sleep(moveTimeStep);
                     }
                 }
                 if (prevStep.x > tile.textureX && prevStep.y < tile.textureY) {
@@ -619,7 +620,7 @@
                     while (playerToken.x > tile.textureX && playerToken.y < tile.textureY) {
                         playerToken.x = playerToken.x - 2;
                         playerToken.y = playerToken.y + 1;
-                        await sleep(10);
+                        await sleep(moveTimeStep);
                     }
                 }
                 if (tile !== to)
