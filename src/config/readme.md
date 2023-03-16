@@ -17,21 +17,38 @@ ___
 ```json
     {
       "desc": "\n \u00a0 ",
+      "mjreveal":"",
       "timer": false,
       "choices": [
         {
           "value": "",
-          "reveal": "\n \u00a0 "
+          "reveal": "\n \u00a0 ",
+          "mjreveal":""
         },
         {
           "value": "",
-          "reveal": "\n \u00a0 "
+          "reveal": "\n \u00a0 ",
+          "mjreveal":""
         },
         {
           "value": "Ne rien faire",
-          "reveal": "\n \u00a0 <span class=\"mjreveal\">\u00a0 Perte de moral.</span>"
+          "reveal": "\n \u00a0",
+          "mjreveal":"Perte de moral."
         }
       ]
+      "alts": {
+        "blackout": {
+          "desc": "\n\u00a0 ",
+          "choices": [
+            {
+              "value": "",
+              "reveal": "\n\u00a0 ",
+              "mjreveal":""
+            }
+          ]
+        }
+        "
+      }
     }
 ```
 
@@ -78,55 +95,49 @@ ___
 ```
 
 ### Place Template
+<br> 
+Pour tous les textes utiliser ChatGPT pour vérifier les fautes, le vocabulaires et la syntaxe 
+<br><br> <br> <br> 
 
-#### First place card
+#### Drawflow
+  http://localhost:8080/buildCard
+  <br> Il faut autoriser les notifications !!<br> <br> <br> 
 
-```json
-    {
-      "start": true,
-      "desc": "",
-      "timer": false,
-      "choices": [
-        {
-          "value": "",
-          "next": "carte1"
-        },
-        {
-          "value": "",
-          "next": "carte2"
-        },
-        {
-          "value": "",
-          "next": "carte3"
-        }
-      ]
-    }
-```
 
-#### Place choice template
+##### Tutoriel Drawflow
+<br>
+Pour créer une carte il suffit de rentrer le nom de la carte dans la textbox et d'appuyer sur le boutton "ADD" juste à droite.<br> 
+<br> 
+Pour Sauvegarder ta carte appuie sur "Save" en étant sur la carte que tu veux sauvegarder.<br> 
+<br> 
+Pour Récupérer le .json correspondant à ta carte lieu il faut cliquer sur "Export"  une fois le document télécharger il faut copier son contenu et le coller dans le baseCards.json dans la catégorie "place"
+<br> <br> 
 
-```json
-    {
-      "desc": "",
-      "name":"bibli2",
-      "timer": false,
-      "shuffle":true,
-      "choices": [
-        {
-          "value": "",
-          "next": ""
-        },
-        {
-          "value": "",
-          "next": ""
-        },
-        {
-          "value": "",
-          "next": ""
-        }
-      ]
-    }
-```
+Pour éditer une carte lieu tu peux ajouter des blocs avec un click&drag,
+tu peux relier plusieurs blocs avec un click&drag sur les points.
+Tu peux supprimer des objets en les selectionnant et ta touche "suppr" ou avec un clique droit
+<br> <br> 
+
+Pour supprimer une carte lieux il suffit de cliquer sur le boutton rouge "Delete" (un pop-up de confirmation apparaitra) <br> <br>
+
+Précisions :
+1) Tous les "name" doivent être différents pour pouvoir export 
+2) Tous les chemins doivent aboutir à un reveal
+3) pas de ctrl+z si tu modifie un truc 
+<br> 
+<br> 
+<br> 
+<br> 
+
+#### Creation Carte lieu
+
+1) Imaginner le lieux
+2) Le décrire (décris le décors et les personnages qui sont présents)
+3) trouver des actions que les joueurs auront naturellement envie de faire (parler aux personnages, visiter le lieu, inspecter un point d'intérert ...) et les transfromer en 3 choix
+4) Inventer une histoire pour ses trois choix
+5) faire progresser les joueurs étapes par étapes en décrivant petits à petits leur progression.
+6) Donner une récompense (si possible ayant un lien avec l'histoire que les joueurs viennent de suivre)
+<br> <br> 
 
 ### Item-Template
 
@@ -138,24 +149,6 @@ ___
       "race": ""
     },
 ```
-
-### Span
-
-Différents span présent dans le baseCards.json :
-
-### Blackout
-
-* ```<span class=\"blackout\">\u00a0 </span>```
-
-### MJ-Reveal
-
-* ```<span class=\"mjreveal\">\u00a0 </span>```
-
-### Data-condition
-
-* ```<span class=\"alt-text\" data-condition=\"ship.energy == 100\"></span>```
-
-  ship.motors, ship.scanner, ship.proximity, ship.oxygen, ship.energy, ship.gravity, ship.landing, ship.construction, ship.dbscience, ship.dbhistory
 
 ___
 
