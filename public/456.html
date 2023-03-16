@@ -80,86 +80,91 @@
 
     var textures = [
         {
+            marker: '$',
+            name: 'placeHolder',
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_N.png"),
+                    foreground: true
+                },
+            ],
+            isProp: true,
+            blockedPath: ["W", "S"],
+            foreground: true
+        },
+        {
             marker: '▉',
             name: 'barrel_E',
-            texture: Texture.from("/img/Isometric/barrel_E.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/barrel_E.png"),
+                    foreground: false
+                },
+            ],
             isProp: true,
             blockedPath: ['N', 'E', 'S', 'W'],
         },
         {
             marker: '1',
             name: 'stoneTile_E',
-            texture: Texture.from("/img/Isometric/stoneTile_E.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stoneTile_E.png"),
+                    foreground: false
+                },
+            ],
             isProp: false,
             blockedPath: []
         },
         {
             marker: '_',
             name: '_',
-            texture: Texture.from("/img/Isometric/empty-tile.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/empty-tile.png"),
+                    foreground: false
+                },
+            ],
             isProp: false,
             blockedPath: []
         },
         {
             marker: '.',
             name: 'stone_E',
-            texture: Texture.from("/img/Isometric/stone_E.png"),
-            isProp: false,
-            blockedPath: []
-        },
-        {
-            marker: '3',
-            name: 'planks_E',
-            texture: Texture.from("/img/Isometric/planks_E.png"),
-            isProp: false,
-            blockedPath: []
-        },
-        {
-            marker: '4',
-            name: 'stone_S',
-            texture: Texture.from("/img/Isometric/stone_S.png"),
-            isProp: false,
-            blockedPath: []
-        },
-        {
-            marker: '5',
-            name: 'stone_N',
-            texture: Texture.from("/img/Isometric/stone_N.png"),
-            isProp: false,
-            blockedPath: []
-        },
-        {
-            marker: '6',
-            name: 'dirtTiles_S',
-            texture: Texture.from("/img/Isometric/dirtTiles_S.png"),
-            isProp: false,
-            blockedPath: []
-        },
-        {
-            marker: '7',
-            name: 'stoneLeft_S',
-            texture: Texture.from("/img/Isometric/stoneLeft_S.png"),
-            isProp: false,
-            blockedPath: []
-        },
-        {
-            marker: '8',
-            name: 'stoneRight_E',
-            texture: Texture.from("/img/Isometric/stoneRight_E.png"),
-            isProp: false,
-            blockedPath: []
-        },
-        {
-            marker: '9',
-            name: 'dirt_E',
-            texture: Texture.from("/img/Isometric/dirt_E.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+            ],
             isProp: false,
             blockedPath: []
         },
         {
             marker: '<',
             name: 'stoneWall_E',
-            texture: Texture.from("/img/Isometric/stoneWall_E.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_E.png"),
+                    foreground: false
+                },
+            ],
             isProp: true,
             blockedPath: ["W"],
             foreground: false
@@ -167,7 +172,16 @@
         {
             marker: '^',
             name: 'stoneWall_S',
-            texture: Texture.from("/img/Isometric/stoneWall_S.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_S.png"),
+                    foreground: false
+                },
+            ],
             isProp: true,
             blockedPath: ["N"],
             foreground: false
@@ -175,7 +189,16 @@
         {
             marker: '>',
             name: 'stoneWall_W',
-            texture: Texture.from("/img/Isometric/stoneWall_W.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_W.png"),
+                    foreground: true
+                },
+            ],
             isProp: true,
             blockedPath: ["E"],
             foreground: true
@@ -183,39 +206,103 @@
         {
             marker: 'v',
             name: 'stoneWall_N',
-            texture: Texture.from("/img/Isometric/stoneWall_N.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_N.png"),
+                    foreground: true
+                },
+            ],
             isProp: true,
             blockedPath: ["S"],
             foreground: true
         },
         {
             marker: '┘',
-            name: 'stoneWallCorner_N',
-            texture: Texture.from("/img/Isometric/stoneWallCorner_N.png"),
+            name: 'stoneWallCorner_SE',
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_W.png"),
+                    foreground: true
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_N.png"),
+                    foreground: true
+                },
+            ],
             isProp: true,
             blockedPath: ["S", "E"],
             foreground: true
         },
         {
             marker: '└',
-            name: 'stoneWallCorner_E',
-            texture: Texture.from("/img/Isometric/stoneWallCorner_E.png"),
+            name: 'stoneWallCorner_SW',
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_N.png"),
+                    foreground: true
+                },
+            ],
+            texture: Texture.from("/img/Isometric/stoneWallCorner_N.png"),
             isProp: true,
-            blockedPath: ["W", "S"],
+            blockedPath: ["S", "W"],
             foreground: true
         },
         {
             marker: '┌',
-            name: 'stoneWallCorner_S',
-            texture: Texture.from("/img/Isometric/stoneWallCorner_S.png"),
+            name: 'stoneWallCorner_NW',
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_S.png"),
+                    foreground: false
+                },
+            ],
+            texture: Texture.from("/img/Isometric/stoneWallCorner_N.png"),
             isProp: true,
-            blockedPath: ["W", "N"],
-            foreground: false
+            blockedPath: ["N", "W"],
+            foreground: true
         },
         {
             marker: '┐',
-            name: 'stoneWallCorner_W',
-            texture: Texture.from("/img/Isometric/stoneWallCorner_W.png"),
+            name: 'stoneWallCorner_NE',
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_S.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWall_W.png"),
+                    foreground: true
+                },
+            ],
+            texture: Texture.from("/img/Isometric/stoneWallCorner_N.png"),
             isProp: true,
             blockedPath: ["N", "E"],
             foreground: true
@@ -223,7 +310,37 @@
         {
             marker: '18',
             name: 'stoneWallArchway_N',
-            texture: Texture.from("/img/Isometric/stoneWallArchway_N.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWallArchway_N.png"),
+                    foreground: true
+                },
+            ],
+            isProp: true,
+            blockedPath: [],
+            foreground: false
+        },
+        {
+            marker: '80',
+            name: 'stoneWallGate_N',
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWallGate_N2.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWallGate_N1.png"),
+                    foreground: true
+                },
+            ],
             isProp: true,
             blockedPath: [],
             foreground: false
@@ -231,7 +348,16 @@
         {
             marker: '19',
             name: 'stoneWallArchway_E',
-            texture: Texture.from("/img/Isometric/stoneWallArchway_E.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWallArchway_E.png"),
+                    foreground: true
+                },
+            ],
             isProp: true,
             blockedPath: [],
             foreground: true
@@ -239,7 +365,16 @@
         {
             marker: '20',
             name: 'stoneWallArchway_S',
-            texture: Texture.from("/img/Isometric/stoneWallArchway_S.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWallArchway_S.png"),
+                    foreground: true
+                },
+            ],
             isProp: true,
             blockedPath: [],
             foreground: true
@@ -247,7 +382,16 @@
         {
             marker: '21',
             name: 'stoneWallArchway_W',
-            texture: Texture.from("/img/Isometric/stoneWallArchway_W.png"),
+            images: [
+                {
+                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    foreground: false
+                },
+                {
+                    texture: Texture.from("/img/Isometric/stoneWallArchway_W.png"),
+                    foreground: true
+                },
+            ],
             isProp: true,
             blockedPath: [],
             foreground: false
@@ -265,14 +409,14 @@
         ['<', '.', '.', '<', '.', '▉', '▉', '21', '.', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
-        ['┌', '20', '^', '┌', '^', '^', '^', '┐', '^', '20'],
+        ['┌', '20', '^', '┌', '^', '^', '^', '┐', '^', '80'],
         ['<', '.', '.', '19', '.', '.', '▉', '>', '.', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '▉', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
         ['<', '.', '.', '<', '▉', '.', '.', '21', '.', '.'],
         ['_', '_', '_', '└', 'v', '18', '@v', '┘', 'v', 'v'],
         ['.', '_', '_', '.', '.', '.', '.', '.', '.', '.'],
-        ['.', '_', '_', '_', '.', '.', '.', '.', '▉', '.'],
+        ['.', '_', '_', '_', '.', '.', '@$', '.', '▉', '.'],
         ['.', '.', '_', '@.', '.', '.', '.', '.', '.', '.'],
     ];
     numRows = tileMap.length;
@@ -450,66 +594,54 @@
                         .on('click', onTileClick, tile)
                         .on('pointerover', onTileOver, tile)
                         .on('pointerout', onTileOut, tile)
+                    tile.hitArea = new Polygon(pointsPolygonHitArea);
 
                     let texture = getTextureInfosFromMarker(tile.marker);
-                    let tileTexture = new Sprite(texture.texture);
 
-                    tileTexture.x = textureX;
-                    tileTexture.y = textureY;
-                    tileTexture.width = TILE_WIDTH * 2;
-                    tileTexture.height = TILE_WIDTH * 4;
-                    tileTexture.hitArea = texture.isProp ? new Polygon(0,0,0,0,0,0) : new Polygon(pointsPolygonHitArea);
-                    tile.texturePos = [textureX, textureY];
-                    tile.textureX = textureX;
-                    tile.textureY = textureY;
-                    tile.blockedPaths = texture.blockedPath;
+                    let firstForegroundIndex = texture.images.findIndex(el => el.foreground === true);
 
-                    if (texture.isProp) {
-                        tile.foregroundProp = texture.foreground;
-                        let floorTexture = getTextureInfosFromName('stone_E');
-                        let tileObject = new Sprite(floorTexture.texture);
-                        tileObject.x = textureX;
-                        tileObject.y = textureY;
-                        tileObject.width = TILE_WIDTH * 2;
-                        tileObject.height = TILE_WIDTH * 4;
-                        tileObject.hitArea = new Polygon(pointsPolygonHitArea);
-                        tile.addChild(tileObject);
-                    }
-
-                    if (!texture.foreground)
+                    for (let i=0; i < texture.images.length; i++)
+                    {
+                        let image = texture.images[i];
+                        let tileTexture = new Sprite(image.texture);
+                        tileTexture.x = textureX;
+                        tileTexture.y = textureY;
+                        tileTexture.width = TILE_WIDTH * 2;
+                        tileTexture.height = TILE_WIDTH * 4;
+                        tileTexture.hitArea = new Polygon(0,0,0,0,0,0);
+                        tileTexture.isForeground = image.foreground;
+                        tile.texturePos = [textureX, textureY];
+                        tile.textureX = textureX;
+                        tile.textureY = textureY;
+                        tile.blockedPaths = texture.blockedPath;
                         tile.addChild(tileTexture);
 
-                    if (spawnable) {
-                        let player = players.splice(0,1);
-                        if (player.length) {
-                            player = player[0];
-                            let token = getTokenInfosFromName(player.race);
-                            let playerToken = new AnimatedSprite(token.textures.idle_N);
-                            playerToken.animationSpeed = .05;
-                            // playerToken.autoUpdate = true;
-                            playerToken.name = token.name;
-                            playerToken.uid = player.id
-                            playerToken.x = textureX;
-                            playerToken.y = textureY;
-                            playerToken.width = TILE_WIDTH * 2;
-                            playerToken.height = TILE_WIDTH * 4;
-                            playerToken.hitArea = new Polygon(0,0,0,0,0,0);
-                            playerToken.play();
-                            tokenSet.push(playerToken);
-                            tile.playerIdOnIt = player.id;
-                            tile.addChild(playerToken);
+                        if (spawnable
+                            && (i === firstForegroundIndex-1 || i === texture.images.length+firstForegroundIndex)) {
+                            let player = players.splice(0,1);
+                            if (player.length) {
+                                player = player[0];
+                                let token = getTokenInfosFromName(player.race);
+                                let playerToken = new AnimatedSprite(token.textures.idle_N);
+                                playerToken.animationSpeed = .05;
+                                // playerToken.autoUpdate = true;
+                                playerToken.name = token.name;
+                                playerToken.uid = player.id
+                                playerToken.x = textureX;
+                                playerToken.y = textureY;
+                                playerToken.width = TILE_WIDTH * 2;
+                                playerToken.height = TILE_WIDTH * 4;
+                                playerToken.hitArea = new Polygon(0,0,0,0,0,0);
+                                playerToken.play();
+                                tokenSet.push(playerToken);
+                                tile.playerIdOnIt = player.id;
+                                tile.addChild(playerToken);
+                            }
                         }
                     }
-
-                    if (texture.foreground) {
-                        if (tile.playerIdOnIt > -1)
-                            tileTexture.alpha = .8;
-                        tile.addChild(tileTexture);
-                    }
-
-                    tileSet.push(tile);
-                    stage.addChild(tile);
                 }
+                tileSet.push(tile);
+                stage.addChild(tile);
             }
         }
     }
@@ -535,12 +667,26 @@
             tileTarget = null;
         }
         else {
-            moveItemOnTile(tileTarget ,this)
-            tileTarget.alpha = 1;
-            this.alpha = 1;
-            tileTarget = null;
+            if (isValidDestination(this)) {
+                moveItemOnTile(tileTarget ,this)
+                tileTarget.alpha = 1;
+                this.alpha = 1;
+                tileTarget = null;
+            }
         }
 
+    }
+
+    function isValidDestination(tile) {
+
+        if (tileTarget.col === tile.col && tileTarget.row === tile.row)
+            return false;
+        if (tile.playerIdOnIt > 0)
+            return false;
+        if (tile.blockedPaths.length === 4)
+            return false;
+
+        return true;
     }
 
     async function moveItemOnTile(from, to) {
@@ -560,19 +706,20 @@
             for (let step of path)
             {
                 let tile = tileSet.find(el => el.col === step.x && el.row === step.y);
-                if (tile.foregroundProp) {
-                    let swapChildren = tile.children.slice();
-                    tile.removeChildren();
-                    for (let i=0; i<swapChildren.length; i++) {
-                        if (i===1)
-                            tile.addChild(playerToken);
-                        tile.addChild(swapChildren[i]);
-                    }
-                }
-                else {
+                let swapChildren = [...tile.children];
+                let firstForeGroundChildIndex = swapChildren.findIndex(el => el.isForeground === true);
+                if (firstForeGroundChildIndex === -1) {
                     tile.addChild(playerToken);
                 }
-
+                else {
+                    tile.removeChildren();
+                    for (let i=0; i<swapChildren.length; i++) {
+                        tile.addChild(swapChildren[i]);
+                        if (i === firstForeGroundChildIndex - 1) {
+                            tile.addChild(playerToken);
+                        }
+                    }
+                }
                 // North and West still clipping...
 
                 if (prevStep.x < tile.textureX && prevStep.y < tile.textureY) {
