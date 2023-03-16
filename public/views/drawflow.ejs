@@ -365,6 +365,7 @@
                 let nameExists = exportBuild.find(el => el.name === name);
                 if (nameExists) {
                     alert(name + " is used more than once !\nCancelling Export");
+                    console.error(name + " is used more than once !\nCancelling Export")
                     return;
                 }
 
