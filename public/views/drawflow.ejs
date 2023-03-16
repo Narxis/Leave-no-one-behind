@@ -365,7 +365,10 @@
                 let nameExists = exportBuild.find(el => el.name === name);
                 if (nameExists) {
                     alert(name + " is used more than once !\nCancelling Export");
-                    console.error(name + " is used more than once !\nCancelling Export")
+                    console.error(name + " is used more than once !\nCancelling Export");
+                    getInputsByValue(name).forEach(function (el) {
+                        el.parentElement.style.background = "#cd0000"
+                    })
                     return;
                 }
 
@@ -382,6 +385,16 @@
 
         exportBuild.sort((a,b) => a.length - b.length || a.name.localeCompare(b.name));
         downloadObjectAsJson(exportBuild, exportName);
+    }
+
+    function getInputsByValue(value)
+    {
+        let allInputs = document.getElementsByTagName("input");
+        let results = [];
+        for(let x=0;x<allInputs.length;x++)
+            if(allInputs[x].value == value)
+                results.push(allInputs[x]);
+        return results;
     }
 
     function removeSelected() {
