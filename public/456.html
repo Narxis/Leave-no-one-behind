@@ -12,21 +12,11 @@
 <body>
 <script type="module">
 
-    import {
-        AnimatedSprite,
-        Application,
-        Graphics,
-        Polygon,
-        Sprite,
-        Text,
-        TextStyle,
-        Texture
-    } from "/js/pixijs/pixi-legacy.mjs";
-    import {autoDetectRenderer} from "./js/pixijs/pixi-legacy.mjs";
+    import * as PIXI from '/js/pixijs/pixi-legacy.mjs'
 
     const sleep = ms => new Promise(r => setTimeout(r, ms));
-    const renderer = autoDetectRenderer();
-    const app = new Application({
+    const renderer = PIXI.autoDetectRenderer();
+    const app = new PIXI.Application({
         resizeTo: window,
         backgroundAlpha: 0,
         antialias: true,
@@ -55,7 +45,7 @@
     document.body.appendChild(app.view);
 
     // Define the tile size and grid dimensions
-    const tileSize = 32;
+    const tileSize = 64;
     var numRows;
     var numCols;
 
@@ -84,7 +74,7 @@
             name: 'emptyTile',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/_.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/_.png"),
                     foreground: false
                 }
             ],
@@ -96,11 +86,11 @@
             name: 'barrel_E',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/barrel_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/barrel_E.png"),
                     foreground: false
                 },
             ],
@@ -112,7 +102,7 @@
             name: 'stoneTile_E',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stoneTile_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneTile_E.png"),
                     foreground: false
                 },
             ],
@@ -124,7 +114,7 @@
             name: '_',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/empty-tile.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/empty-tile.png"),
                     foreground: false
                 },
             ],
@@ -136,7 +126,7 @@
             name: 'stone_E',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
             ],
@@ -148,11 +138,11 @@
             name: 'stoneWall_E',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_E.png"),
                     foreground: false
                 },
             ],
@@ -165,11 +155,11 @@
             name: 'stoneWall_S',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_S.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_S.png"),
                     foreground: false
                 },
             ],
@@ -182,11 +172,11 @@
             name: 'stoneWall_W',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_W.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_W.png"),
                     foreground: true
                 },
             ],
@@ -199,11 +189,11 @@
             name: 'stoneWall_N',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_N.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_N.png"),
                     foreground: true
                 },
             ],
@@ -216,15 +206,15 @@
             name: 'stoneWallCorner_SE',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_W.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_W.png"),
                     foreground: true
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_N.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_N.png"),
                     foreground: true
                 },
             ],
@@ -237,19 +227,19 @@
             name: 'stoneWallCorner_SW',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_N.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_N.png"),
                     foreground: true
                 },
             ],
-            texture: Texture.from("/img/Isometric/stoneWallCorner_N.png"),
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_N.png"),
             isProp: true,
             blockedPath: ["S", "W"],
             foreground: true
@@ -259,19 +249,19 @@
             name: 'stoneWallCorner_NW',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_S.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_S.png"),
                     foreground: false
                 },
             ],
-            texture: Texture.from("/img/Isometric/stoneWallCorner_N.png"),
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_N.png"),
             isProp: true,
             blockedPath: ["N", "W"],
             foreground: true
@@ -281,19 +271,19 @@
             name: 'stoneWallCorner_NE',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_S.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_S.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWall_W.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWall_W.png"),
                     foreground: true
                 },
             ],
-            texture: Texture.from("/img/Isometric/stoneWallCorner_N.png"),
+            texture: PIXI.Texture.from("/img/Isometric/stoneWallCorner_N.png"),
             isProp: true,
             blockedPath: ["N", "E"],
             foreground: true
@@ -303,11 +293,11 @@
             name: 'stoneWallArchway_N',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWallArchway_N.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_N.png"),
                     foreground: true
                 },
             ],
@@ -320,15 +310,15 @@
             name: 'stoneWallGate_N',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWallGate_N2.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWallGate_N2.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWallGate_N1.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWallGate_N1.png"),
                     foreground: true
                 },
             ],
@@ -341,11 +331,11 @@
             name: 'stoneWallArchway_E',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWallArchway_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_E.png"),
                     foreground: true
                 },
             ],
@@ -358,11 +348,11 @@
             name: 'stoneWallArchway_S',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWallArchway_S.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_S.png"),
                     foreground: true
                 },
             ],
@@ -375,11 +365,11 @@
             name: 'stoneWallArchway_W',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stone_E.png"),
                     foreground: false
                 },
                 {
-                    texture: Texture.from("/img/Isometric/stoneWallArchway_W.png"),
+                    texture: PIXI.Texture.from("/img/Isometric/stoneWallArchway_W.png"),
                     foreground: true
                 },
             ],
@@ -405,10 +395,10 @@
         ['<', '.', '.', '<', '.', '.', '.', '>', '▉', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
         ['$', '.', '.', '<', '▉', '.', '.', '21', '.', '.'],
-        ['$', '.', '.', '└', 'v', '18', '@v', '┘', 'v', 'v'],
-        ['$', '$', '.', '.', '.', '.', '.', '.', '.', '.'],
-        ['$', '$', '.', '.', '.', '.', '@.', '.', '.', '.'],
-        ['_', '$', '$', '.', '.', '.', '.', '.', '.', '.'],
+        ['_', '_', '.', '└', 'v', '18', '@v', '┘', 'v', 'v'],
+        ['$', '_', '.', '.', '.', '.', '.', '.', '.', '.'],
+        ['_', '$', '.', '.', '.', '.', '@.', '.', '.', '.'],
+        ['$', '$', '$', '.', '.', '.', '.', '.', '.', '_'],
     ];
     numRows = tileMap.length;
     numCols = tileMap[0].length;
@@ -422,25 +412,25 @@
         {
             name: 'pitiver',
             textures : {
-                idle_N: [Texture.from("/img/characters/pitiver-north-idle2.png")],
-                idle_S: [Texture.from("/img/characters/pitiver-south-idle.png")],
-                idle_E: [Texture.from("/img/characters/pitiver-est-idle.png")],
-                idle_W: [Texture.from("/img/characters/pitiver-west-idle.png")],
+                idle_N: [PIXI.Texture.from("/img/characters/pitiver-north-idle2.png")],
+                idle_S: [PIXI.Texture.from("/img/characters/pitiver-south-idle.png")],
+                idle_E: [PIXI.Texture.from("/img/characters/pitiver-est-idle.png")],
+                idle_W: [PIXI.Texture.from("/img/characters/pitiver-west-idle.png")],
                 move_N: [
-                    Texture.from("/img/characters/pitiver-north-walk1.png"),
-                    Texture.from("/img/characters/pitiver-north-walk2.png")
+                    PIXI.Texture.from("/img/characters/pitiver-north-walk1.png"),
+                    PIXI.Texture.from("/img/characters/pitiver-north-walk2.png")
                 ],
                 move_S: [
-                    Texture.from("/img/characters/pitiver-south-walk1.png"),
-                    Texture.from("/img/characters/pitiver-south-walk2.png")
+                    PIXI.Texture.from("/img/characters/pitiver-south-walk1.png"),
+                    PIXI.Texture.from("/img/characters/pitiver-south-walk2.png")
                 ],
                 move_E: [
-                    Texture.from("/img/characters/pitiver-est-walk1.png"),
-                    Texture.from("/img/characters/pitiver-est-walk2.png")
+                    PIXI.Texture.from("/img/characters/pitiver-est-walk1.png"),
+                    PIXI.Texture.from("/img/characters/pitiver-est-walk2.png")
                 ],
                 move_W: [
-                    Texture.from("/img/characters/pitiver-west-walk1.png"),
-                    Texture.from("/img/characters/pitiver-west-walk2.png")
+                    PIXI.Texture.from("/img/characters/pitiver-west-walk1.png"),
+                    PIXI.Texture.from("/img/characters/pitiver-west-walk2.png")
                 ],
             }
         }
@@ -506,7 +496,7 @@
         const TILE_WIDTH_HALF = TILE_WIDTH / 2;
         const TILE_HEIGHT = tileSize;
         const TILE_HEIGHT_HALF = TILE_HEIGHT / 2;
-        const textStyle = new TextStyle({
+        const textStyle = new PIXI.TextStyle({
             fontFamily: 'sans-serif',
             fontSize: tileSize/3,
             fill: ['#96c1d3'], // gradient
@@ -515,7 +505,7 @@
         for (let row = 0; row <= numRows; row++) {
             for (let col = 0; col <= numCols; col++) {
                 if (row === numRows && col === numCols) continue;
-                let tile = new Graphics();
+                let tile = new PIXI.Graphics();
                 tile.beginFill((row + col) % 2 === 0 ? "#0a2647" : "#0d2a4c");
                 tile.lineStyle(1, "#205295");
 
@@ -563,7 +553,7 @@
                         text = (numRows-row).toString();
                     }
 
-                    let tileText = new Text(text,textStyle);
+                    let tileText = new PIXI.Text(text,textStyle);
                     tileText.x = northX - TILE_WIDTH_HALF/4;
                     tileText.y = northY + TILE_HEIGHT_HALF/2;
                     tile.addChild(tileText);
@@ -572,7 +562,7 @@
                     let marker = tileMap[row][col];
                     let spawnable = marker.startsWith('@');
                     let textureX = Math.round(northX - TILE_WIDTH);
-                    let textureY = Math.round(northY - TILE_HEIGHT * 3);
+                    let textureY = Math.round(northY - TILE_HEIGHT * 3); // 2.78
 
                     if (spawnable) {
                         marker = marker.replace(/^@/, '');
@@ -585,7 +575,7 @@
                         .on('click', onTileClick, tile)
                         .on('pointerover', onTileOver, tile)
                         .on('pointerout', onTileOut, tile)
-                    tile.hitArea = new Polygon(pointsPolygonHitArea);
+                    tile.hitArea = new PIXI.Polygon(pointsPolygonHitArea);
 
                     let texture = getTextureInfosFromMarker(tile.marker);
 
@@ -594,12 +584,12 @@
                     for (let i=0; i < texture.images.length; i++)
                     {
                         let image = texture.images[i];
-                        let tileTexture = new Sprite(image.texture);
+                        let tileTexture = new PIXI.Sprite(image.texture);
                         tileTexture.x = textureX;
                         tileTexture.y = textureY;
                         tileTexture.width = TILE_WIDTH * 2;
                         tileTexture.height = TILE_WIDTH * 4;
-                        tileTexture.hitArea = new Polygon(0,0,0,0,0,0);
+                        tileTexture.hitArea = new PIXI.Polygon(0,0,0,0,0,0);
                         tileTexture.isForeground = image.foreground;
                         tile.texturePos = [textureX, textureY];
                         tile.textureX = textureX;
@@ -613,7 +603,7 @@
                             if (player.length) {
                                 player = player[0];
                                 let token = getTokenInfosFromName(player.race);
-                                let playerToken = new AnimatedSprite(token.textures.idle_N);
+                                let playerToken = new PIXI.AnimatedSprite(token.textures.idle_N);
                                 playerToken.animationSpeed = .05;
                                 // playerToken.autoUpdate = true;
                                 playerToken.name = token.name;
@@ -622,7 +612,7 @@
                                 playerToken.y = textureY;
                                 playerToken.width = TILE_WIDTH * 2;
                                 playerToken.height = TILE_WIDTH * 4;
-                                playerToken.hitArea = new Polygon(0,0,0,0,0,0);
+                                playerToken.hitArea = new PIXI.Polygon(0,0,0,0,0,0);
                                 playerToken.play();
                                 tokenSet.push(playerToken);
                                 tile.playerIdOnIt = player.id;
@@ -690,7 +680,7 @@
         let prevTile = from;
         let prevAnim;
         from.addChild(playerToken);
-        let moveTimeStep = tileSize / .4;
+        let moveTimeStep = tileSize / 2.5;
 
         if (playerToken && path)
         {
