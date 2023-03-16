@@ -6,13 +6,17 @@
     <style>
         html, body {
             background-color: #3b4952;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
 <script type="module">
 
-    import * as PIXI from '/js/pixijs/pixi-legacy.mjs'
+    import * as PIXI from '/js/pixijs/pixi-legacy.mjs';
+    import { Viewport } from '/js/pixijs/pixi_viewport.js';
 
     const sleep = ms => new Promise(r => setTimeout(r, ms));
     const renderer = PIXI.autoDetectRenderer();
@@ -26,6 +30,10 @@
     });
 
     let stage = app.stage;
+
+    const tileSize = 64;
+    var numRows;
+    var numCols;
 
     let players = [
         {
@@ -44,12 +52,29 @@
 
     document.body.appendChild(app.view);
 
-    // Define the tile size and grid dimensions
-    const tileSize = 64;
-    var numRows;
-    var numCols;
 
-    const tokenSprite = 'https://i.imgur.com/TOxTUaU.png';
+    // const viewport = stage;
+    const viewport = new Viewport({
+        screenWidth: window.innerWidth,
+        screenHeight: window.innerHeight,
+        worldWidth: 2048- 256,
+        worldHeight: 1024- 128,
+
+        events: app.renderer.events // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+    })
+
+    app.stage.addChild(viewport)
+    viewport
+        .drag()
+        .pinch()
+        .wheel()
+        .decelerate()
+        .clamp({direction:'all', underflow:'top-left'})
+        .clampZoom({ minWidth: 256, minHeight: 128, maxWidth: 4096, maxHeight: 2048 })
+        .fitWorld()
+
+
+    // Define the tile size and grid dimensions
 
     /*
         TODO:
@@ -66,9 +91,6 @@
                ╲╱
      */
 
-    window.addEventListener("wheel", event =>  {
-        console.info(event.deltaY)
-    });
 
     // https://github.com/kittykatattack/learningPixi#loading-images-into-the-texture-cache
 
@@ -626,7 +648,7 @@
                     }
                 }
                 tileSet.push(tile);
-                stage.addChild(tile);
+                viewport.addChild(tile);
             }
         }
     }
@@ -644,8 +666,10 @@
 
     async function onTileClick() {
         if (!tileTarget) {
-            tileTarget = this;
-            this.alpha = .8;
+            if (this.playerIdOnIt > 0) {
+                tileTarget = this;
+                this.alpha = .8;
+            }
         }
         else if (tileTarget.col === this.col && tileTarget.row === this.row) {
             this.alpha = 1;
@@ -684,7 +708,7 @@
         let prevTile = from;
         let prevAnim;
         from.addChild(playerToken);
-        let moveTimeStep = tileSize / 2.5;
+        let moveTimeStep = tileSize / 1.6;
 
         if (playerToken && path)
         {
