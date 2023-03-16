@@ -66,6 +66,10 @@
                ╲╱
      */
 
+    window.addEventListener("wheel", event =>  {
+        console.info(event.deltaY)
+    });
+
     // https://github.com/kittykatattack/learningPixi#loading-images-into-the-texture-cache
 
     var textures = [
