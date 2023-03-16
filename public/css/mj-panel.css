@@ -1,0 +1,129 @@
+body.mj-box {
+    display: flex;
+
+}
+
+.mj-box {
+    border: 3px solid #fff;
+    border-radius: 2vw;
+    overflow: scroll;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    height: 60svh;
+    max-height: 90vh;
+    width: 60vw;
+    min-width: 360px;
+    max-width: 1000px;
+    padding: 20px;
+}
+
+.roll-box,
+.choice-box,
+.combat-box {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    height: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.box1 {
+    width: 75%;
+    display: flex;
+    min-width: 430px;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.box2 {
+    width: 25%;
+    display: flex;
+}
+
+.box1-1,
+.box1-2 {
+    display: flex;
+    width: 50%;
+    min-width: 250px;
+    max-width: 250px;
+    flex-wrap: wrap;
+    margin: 0% 4%;
+    flex-direction: column;
+}
+
+.sous {
+    display: none;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+}
+
+ul li:hover .sous {
+    display: block;
+}
+
+.sous li {
+    float: none;
+    width: 100%;
+    text-align: left;
+}
+
+.deroulant::after {
+    content: "▽";
+    position: relative;
+    left: 213px;
+    top: -16px;
+}
+
+ul {
+    list-style-type: none;
+    border: 2px solid #fff;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    padding: 3px 0px 0px 10px;
+    text-align: start;
+    margin: 0px 0px 1em 0px;
+    height: 1.5em;
+}
+
+fieldset {
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.mj-box button {
+    width: 100%;
+    padding: 0px;
+    border: 1px solid #fff;
+    font-weight: 600;
+    transition: 0.6s ease;
+}
+
+.mj-box button:active {
+    
+}
+
+.send {
+    color: #F0F7FF;
+    background-color: #3083C7;
+    transition: 0.6s ease;
+}
+
+.send::after {
+    content: "▶";
+    color: #F0F7FF;
+    position: relative;
+    left: 6px;
+    filter: drop-shadow(0px 0px 3px #1A4A72);
+    transition: 0.6s ease;
+}
+
+.send:active::after {
+    color: rgba(255, 255, 255, 0.301);;
+    transition: 0.6s ease;
+    filter: drop-shadow(0px 0px 3px #fff);
+}
