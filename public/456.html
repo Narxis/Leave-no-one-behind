@@ -81,24 +81,15 @@
     var textures = [
         {
             marker: '$',
-            name: 'placeHolder',
+            name: 'emptyTile',
             images: [
                 {
-                    texture: Texture.from("/img/Isometric/stone_E.png"),
+                    texture: Texture.from("/img/Isometric/_.png"),
                     foreground: false
-                },
-                {
-                    texture: Texture.from("/img/Isometric/stoneWall_E.png"),
-                    foreground: false
-                },
-                {
-                    texture: Texture.from("/img/Isometric/stoneWall_N.png"),
-                    foreground: true
-                },
+                }
             ],
             isProp: true,
-            blockedPath: ["W", "S"],
-            foreground: true
+            blockedPath: ["W", "S", "E", "W"],
         },
         {
             marker: '▉',
@@ -413,11 +404,11 @@
         ['<', '.', '.', '19', '.', '.', '▉', '>', '.', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '▉', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
-        ['<', '.', '.', '<', '▉', '.', '.', '21', '.', '.'],
-        ['_', '_', '_', '└', 'v', '18', '@v', '┘', 'v', 'v'],
-        ['.', '_', '_', '.', '.', '.', '.', '.', '.', '.'],
-        ['.', '_', '_', '_', '.', '.', '@$', '.', '▉', '.'],
-        ['.', '.', '_', '@.', '.', '.', '.', '.', '.', '.'],
+        ['$', '.', '.', '<', '▉', '.', '.', '21', '.', '.'],
+        ['$', '.', '.', '└', 'v', '18', '@v', '┘', 'v', 'v'],
+        ['$', '$', '.', '.', '.', '.', '.', '.', '.', '.'],
+        ['$', '$', '.', '.', '.', '.', '@.', '.', '.', '.'],
+        ['_', '$', '$', '.', '.', '.', '.', '.', '.', '.'],
     ];
     numRows = tileMap.length;
     numCols = tileMap[0].length;
@@ -699,7 +690,7 @@
         let prevTile = from;
         let prevAnim;
         from.addChild(playerToken);
-        let moveTimeStep = tileSize / 2;
+        let moveTimeStep = tileSize / .4;
 
         if (playerToken && path)
         {
@@ -708,21 +699,27 @@
                 let tile = tileSet.find(el => el.col === step.x && el.row === step.y);
                 let swapChildren = [...tile.children];
                 let firstForeGroundChildIndex = swapChildren.findIndex(el => el.isForeground === true);
-                if (firstForeGroundChildIndex === -1) {
-                    tile.addChild(playerToken);
-                }
-                else {
-                    tile.removeChildren();
-                    for (let i=0; i<swapChildren.length; i++) {
-                        tile.addChild(swapChildren[i]);
-                        if (i === firstForeGroundChildIndex - 1) {
-                            tile.addChild(playerToken);
+
+                let updateChildren = () => {
+                    if (firstForeGroundChildIndex === -1) {
+                        tile.addChild(playerToken);
+                    }
+                    else {
+                        tile.removeChildren();
+                        for (let i=0; i<swapChildren.length; i++) {
+                            tile.addChild(swapChildren[i]);
+                            if (i === firstForeGroundChildIndex - 1) {
+                                tile.addChild(playerToken);
+                            }
                         }
                     }
-                }
+                    prevTile.removeChild(playerToken)
+                };
+
                 // North and West still clipping...
 
                 if (prevStep.x < tile.textureX && prevStep.y < tile.textureY) {
+                    updateChildren();
                     if (prevAnim !== 'E'){
                         playerToken.textures = getTokenInfosFromName(playerToken.name).textures.move_E;
                         playerToken.play();
@@ -745,6 +742,7 @@
                         playerToken.y = playerToken.y - 1;
                         await sleep(moveTimeStep);
                     }
+                    updateChildren();
                 }
                 if (prevStep.x < tile.textureX && prevStep.y > tile.textureY) {
                     if (prevAnim !== 'N') {
@@ -757,8 +755,10 @@
                         playerToken.y = playerToken.y - 1;
                         await sleep(moveTimeStep);
                     }
+                    updateChildren();
                 }
                 if (prevStep.x > tile.textureX && prevStep.y < tile.textureY) {
+                    updateChildren();
                     if (prevAnim !== 'S') {
                         playerToken.textures = getTokenInfosFromName(playerToken.name).textures.move_S;
                         playerToken.play();
@@ -770,8 +770,6 @@
                         await sleep(moveTimeStep);
                     }
                 }
-                if (tile !== to)
-                    tile.removeChild(playerToken);
                 prevStep = {x: tile.textureX, y: tile.textureY}
             }
 
