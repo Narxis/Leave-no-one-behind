@@ -39,7 +39,7 @@
     let players = [
         {
             race: 'pitiver',
-            id: '1'
+            id: '144877948275523584'
         },
         {
             race: 'pitiver',
@@ -58,8 +58,8 @@
     const viewport = new Viewport({
         screenWidth: window.innerWidth,
         screenHeight: window.innerHeight,
-        worldWidth: 2048- 256,
-        worldHeight: 1024- 128,
+        worldWidth: 2048- tileSize,
+        worldHeight: 1024- tileSize,
 
         events: app.renderer.events // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
     })
@@ -418,9 +418,9 @@
         ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
         ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
         ['┌', '20', '^', '┌', '^', '^', '^', '┐', '^', '80'],
-        ['<', '.', '.', '19', '.', '.', '▉', '>', '.', '.'],
-        ['<', '.', '.', '<', '.', '.', '.', '>', '▉', '.'],
-        ['<', '.', '.', '<', '.', '.', '.', '>', '.', '.'],
+        ['<', '.', '.', '19', '.', '.', '▉', '>', '.', '80'],
+        ['<', '.', '.', '<', '.', '.', '.', '>', '▉', '80'],
+        ['<', '.', '.', '<', '.', '.', '.', '>', '.', '80'],
         ['$', '.', '.', '<', '▉', '.', '.', '21', '.', '.'],
         ['_', '_', '.', '└', 'v', '18', '@v', '┘', 'v', 'v'],
         ['$', '_', '.', '.', '.', '.', '.', '.', '.', '.'],
@@ -464,29 +464,11 @@
     ];
 
     let dragTarget = null;
-    stage.interactive = true;
+    stage.eventMode = 'static';
     stage.hitArea = app.screen;
-    // app.stage.on('pointerup', onDragEnd);
-    // app.stage.on('pointerupoutside', onDragEnd);
 
     // createGrid();
     createIsoGrid();
-
-    // Create the tokens
-    // for (let i = 0; i < 3; i++) {
-    //     let token = new PIXI.Graphics();
-    //     token.beginFill('0x' + randColor());
-    //     token.drawRect(0, 0, tokenSize, tokenSize);
-    //     token.endFill();
-    //     token.interactive = true;
-    //     token.buttonMode = true;
-    //     token.dragging = false;
-    //     token.position.set(tileSize * 2 + (i * tileSize), tileSize * 2);
-    //     token.id = i + 1; // Add a unique identifier to the token
-    //     token.on('pointerdown', onDragStart, token);
-    //     tokens.push(token);
-    //     app.stage.addChild(token);
-    // }
 
     function getTextureInfosFromMarker(marker) {
         return textures.find(el => el.marker === marker);
@@ -597,7 +579,7 @@
 
                     // IF MARKER HAS @ prefix, try to spawn a player token
                     tile.marker = marker;
-                    tile.interactive = true;
+                    tile.eventMode = 'static';
                     tile
                         .on('click', onTileClick, tile)
                         .on('pointerover', onTileOver, tile)
@@ -616,7 +598,7 @@
                         tileTexture.y = textureY;
                         tileTexture.width = TILE_WIDTH * 2;
                         tileTexture.height = TILE_WIDTH * 4;
-                        tileTexture.hitArea = new PIXI.Polygon(0,0,0,0,0,0);
+                        tileTexture.eventMode = 'none';
                         tileTexture.isForeground = image.foreground;
                         tile.texturePos = [textureX, textureY];
                         tile.textureX = textureX;
@@ -639,7 +621,7 @@
                                 playerToken.y = textureY;
                                 playerToken.width = TILE_WIDTH * 2;
                                 playerToken.height = TILE_WIDTH * 4;
-                                playerToken.hitArea = new PIXI.Polygon(0,0,0,0,0,0);
+                                tileTexture.eventMode = 'none';
                                 playerToken.play();
                                 tokenSet.push(playerToken);
                                 tile.playerIdOnIt = player.id;
@@ -687,7 +669,6 @@
 
     }
 
-    document.addEventListener('moveToken', moveTokenIdToCoords);
     // wsLNOB.triggerCustomEvent('moveToken', {uid: '3', col: 'C', row:'1'})
 
     function moveTokenIdToCoords(e) {
@@ -699,8 +680,11 @@
         let from = tileSet.find(el => el.playerIdOnIt === dat.uid);
         let to = tileSet.find(el => el.col ===  colDest && el.row === rowDest);
 
+        console.log(from, to);
         moveTokenOnTile(from,to);
     }
+
+    document.addEventListener('moveToken', moveTokenIdToCoords);
 
     function isValidDestination(tile) {
 

@@ -68,12 +68,9 @@ const makeAction = async function (raw_response) {
         case 'roll-stats':
             payload = actionRollStats(response);
             break;
+        case 'moveToken':
         case 'game-ready':
-            payload = response;
-            break;
         case 'card-played':
-            payload = response;
-            break;
         case 'emote':
             payload = response;
             break;
