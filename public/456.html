@@ -11,6 +11,7 @@
             overflow: hidden;
         }
     </style>
+    <script src="/js/socketLNOB.js"></script>
 </head>
 <body>
 <script type="module">
@@ -677,13 +678,28 @@
         }
         else {
             if (isValidDestination(this)) {
-                moveItemOnTile(tileTarget ,this)
+                moveTokenOnTile(tileTarget ,this)
                 tileTarget.alpha = 1;
                 this.alpha = 1;
                 tileTarget = null;
             }
         }
 
+    }
+
+    document.addEventListener('moveToken', moveTokenIdToCoords);
+    // wsLNOB.triggerCustomEvent('moveToken', {uid: '3', col: 'C', row:'1'})
+
+    function moveTokenIdToCoords(e) {
+
+        let dat = e.detail.data;
+        let rowDest = numRows-parseInt(dat.row);
+        let colDest = numCols-(dat.col.toLowerCase().charCodeAt(0)-96);
+
+        let from = tileSet.find(el => el.playerIdOnIt === dat.uid);
+        let to = tileSet.find(el => el.col ===  colDest && el.row === rowDest);
+
+        moveTokenOnTile(from,to);
     }
 
     function isValidDestination(tile) {
@@ -698,7 +714,7 @@
         return true;
     }
 
-    async function moveItemOnTile(from, to) {
+    async function moveTokenOnTile(from, to) {
         let path = search(from,to).splice(1);
         let playerToken = tokenSet.find(el => el.uid === from.playerIdOnIt);
         let prevStep = {
@@ -708,7 +724,7 @@
         let prevTile = from;
         let prevAnim;
         from.addChild(playerToken);
-        let moveTimeStep = tileSize / 1.6;
+        let moveTimeStep = tileSize / (tileSize*.05);
 
         if (playerToken && path)
         {
