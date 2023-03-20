@@ -1512,6 +1512,256 @@
           "reveal": "\n\u00a0 Vous démarrez les moteurs et partez aussi vite que possible."
         }
       ]
+    },
+    {
+      "start": true,
+      "desc": "Vous arrivez devant le grand bowling galactique prenez quelques instants pour recharger les batteries du vaisseaux.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling",
+      "choices": [
+        {
+          "value": "Jouer une partie de bowling",
+          "next": "bowling1"
+        },
+        {
+          "value": "Faire un simple tour des pistes",
+          "next": "bowling2"
+        },
+        {
+          "value": "Parler au dirigeant [no_race_3]",
+          "next": "bowling3"
+        }
+      ]
+    },
+    {
+      "desc": "Vous vous approchez du comptoir pour demander de l'équipement afin de jouer une partie, mais malheureusement, [les_race_1] sont arrivés avant vous et il n'y a plus de chaussures disponibles.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling1",
+      "choices": [
+        {
+          "value": "Attaquer [les_race_1]",
+          "next": "bowling1-1"
+        },
+        {
+          "value": "Attendre",
+          "mjreveal": "Gain de moral moyen.",
+          "reveal": "[Les_race_1] viennent juste de finir leur partie et remettent les chaussures au comptoir. Vous jouez votre partie de bowling."
+        },
+        {
+          "value": "Partir",
+          "reveal": "Après un court instant, vous décidez de partir."
+        }
+      ]
+    },
+    {
+      "desc": "Vous initiez un combat contre [les_race_1].",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling1-1",
+      "choices": [
+        {
+          "value": "Jouer une partie de bowling",
+          "reveal": "Les dirigeants vous regardent de travers, mais vous permettent de jouer une partie de bowling, après tout [les_race_1] avait déjà payé."
+        }
+      ]
+    },
+    {
+      "desc": "Vous faites le tour des pistes de bowling, des êtres venus des quatre coins de la galaxie sont présents pour se divertir. Vous trouvez un groupe de jeunes [nos_race_2] en train de s'amuser.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling2",
+      "choices": [
+        {
+          "value": "Aller voir [les_race_2]",
+          "next": "bowling2-1"
+        },
+        {
+          "value": "Continuer votre tour",
+          "next": "bowling2-2"
+        }
+      ]
+    },
+    {
+      "desc": "Vous vous approchez [des_race_2] qui vous défient à un jeu de cartes très spécial. Les règles sont simples : si vous ne perdez pas, vous avez gagné. Encore faut-il comprendre comment ne pas perdre.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling2-1",
+      "choices": [
+        {
+          "value": "Piocher une carte ",
+          "mjreveal": "Choisir un joueur",
+          "next": "bowling2-1-1"
+        }
+      ]
+    },
+    {
+      "desc": "Vous piochez une Ygrl paresseuse et vous pouvez récupérer une carte située en dessous du paquet. Il s'agit d'un Fnek-romancien, vous devez embrasser [le_race_2] qui se trouve en face de vous. Félicitations, vous n'avez pas perdu, donc vous avez gagné.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling2-1-1",
+      "choices": [
+        {
+          "value": "Pousser un cri de victoire",
+          "reveal": "Incroyable, [les_race_2] sont très impressionnés. Ils poussent eux aussi un cri. Pour vous féliciter de votre victoire, ils vous offrent une Boule de Cristal."
+        }
+      ]
+    },
+    {
+      "desc": "Vous ne trouvez rien d'intéressant dans le bowling. Vous recevez une notification sur votre montre connectée indiquant que votre vaisseau est rechargé. Il est temps de partir.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling2-2",
+      "choices": [
+        {
+          "value": "Partir",
+          "reveal": "Vous retournez au vaisseau"
+        }
+      ]
+    },
+    {
+      "desc": "Vous apprenez que ce bowling est un lieu qui existe depuis quelques années, [le_race_3] l'a créé pour en faire un lieu de rencontre. Il voit beaucoup de monde passer. Il s'inquiète un peu car des agents de la PUTE ont tendance à tourner autour du bowling.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling3",
+      "choices": [
+        {
+          "value": "Retournez au vaisseau",
+          "reveal": "Après avoir discuté avec le dirigeant, vous n’obtenez aucune information supplémentaire et poursuivez votre voyage."
+        },
+        {
+          "value": "Poser des questions insistantes.",
+          "next": "bowling3-1"
+        }
+      ]
+    },
+    {
+      "desc": "Vous apprenez que le bowling est un moyen peu légal de blanchir de l’argent pour le dirigeant. Il vous promet une récompense si vous le débarrassez des forces de l’ordre.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling3-1",
+      "choices": [
+        {
+          "value": "Partir",
+          "reveal": "Vous refusez de vous engager pour le dirigeant que vous venez de rencontrer et vous partez sans avoir profité du bowling."
+        },
+        {
+          "value": "Aller voir les agent de police",
+          "next": "bowling3-1-1"
+        }
+      ]
+    },
+    {
+      "desc": "Deux agents près du bowling jettent des regards insistants vers l'établissement. Vous les abordez pour discuter, et ils vous demandent pourquoi vous leur parlez.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling3-1-1",
+      "choices": [
+        {
+          "value": "Pour tout leurs raconter",
+          "reveal": "Vous racontez comment le dirigeant du bowling vous a menacés avec ces 2 agents de sécurité. Les agents vous traitent d’une bande de victimes mais vous remercient pour ces informations. Vous repartez humiliés par cette expérience."
+        },
+        {
+          "value": "Pour se battre !",
+          "next": "bowling3-1-1-1"
+        },
+        {
+          "value": "Pour rien",
+          "mjreveal": "",
+          "next": "bowling3-1-1-2"
+        }
+      ]
+    },
+    {
+      "desc": "Vous initiez un combat avec les agents de police.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling3-1-1-1",
+      "choices": [
+        {
+          "value": "Retournez voir le dirigeant",
+          "mjreveal": "Si les joueurs gagnent",
+          "reveal": "Le dirigeant vous remercie de s’être chargés des agents, il vous cède [un_objet_1] et [un_objet_2]."
+        },
+        {
+          "value": "Vous vous faite fouillez",
+          "mjreveal": "Si les joueurs perdent",
+          "reveal": "Les forces de l’ordres vous fouillent et vous retirent tous les objets dangereux que vous possédez. Vous repartez perdant de cette affaire."
+        },
+        {
+          "value": "Vous prenez la fuite",
+          "reveal": "Vous prenez la fuite face à ce bourbier."
+        }
+      ]
+    },
+    {
+      "desc": "Vous tentez de persuader les agents que vous êtes venus leur parler par curiosité.",
+      "mjreveal": "Choisir un joueur pour faire un test de charisme.",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling3-1-1-2",
+      "choices": [
+        {
+          "value": "Ils vous croient",
+          "reveal": "Vous repartez sans avoir pu profiter du bowling, mais vous aurez échappé à un contrôle de police."
+        },
+        {
+          "value": "Ils ne vous croient pas.",
+          "next": "bowling3-1-1-2-1"
+        }
+      ]
+    },
+    {
+      "desc": "Les agents veulent vous fouiller, après un tel bégaiement vous paraissez suspect.",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling3-1-1-2-1",
+      "choices": [
+        {
+          "value": "Se laisser fouiller",
+          "reveal": "Les forces de l’ordres vous fouillent et vous retirent tous les objets dangereux que vous possédez. Vous repartez perdant de cette affaire."
+        },
+        {
+          "value": "Se battre",
+          "next": "bowling3-1-1-2-1-1"
+        }
+      ]
+    },
+    {
+      "desc": "",
+      "mjreveal": "",
+      "timer": false,
+      "shuffle": false,
+      "name": "bowling3-1-1-2-1-1",
+      "choices": [
+        {
+          "value": "Retournez voir le dirigeant",
+          "mjreveal": "Vous prenez la fuite",
+          "reveal": "Le dirigeant vous remercie de s’être chargés des agents, il vous cède [un_objet_1] et [un_objet_2]."
+        },
+        {
+          "value": "Vous vous faite fouillez",
+          "mjreveal": "Si les joueurs perdent",
+          "reveal": "Les forces de l’ordres vous fouillent et vous retirent tous les objets dangereux que vous possédez. Vous repartez perdant de cette affaire."
+        },
+        {
+          "value": "Vous prenez la fuite",
+          "reveal": "Vous prenez la fuite face à ce bourbier."
+        }
+      ]
     }
   ]
 }
