@@ -3,9 +3,7 @@ const {Items} = require("../models/items");
 const {response} = require("express");
 const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
-const {friendFoe} = require("../models/friendFoe");
 const shipId = 1;
-const ff = require("../controllers/ff")
 const chalk = require("chalk")
 
 const init = function (){
@@ -44,13 +42,6 @@ const makeAction = async function (raw_response) {
             break;
         case 'roll':
             payload = actionRoll(response);
-            break;
-        case 'ff_switch':
-        case 'ff_update':
-        case 'ff_create':
-        case 'ff_delete':
-        case 'ff_roll':
-            payload = actionFriendFoe(response);
             break;
         case 'setModule':
             payload = actionSetModule(response);
@@ -98,45 +89,6 @@ const makeAction = async function (raw_response) {
     }
     return payload;
 }
-
-const actionFriendFoe = async function(response) {
-
-    let payload = {action: response.action};
-    switch (response.action) {
-        case 'ff_switch':
-            payload.data = await new friendFoe(response.data.id).switchTeam();
-            break;
-        case 'ff_create':
-            if (response.data.type === 'slug') {
-                payload.data = await ff.createFromSlug(response.data.val, response.data.is_friend);
-            }
-            else if (response.data.type === 'race') {
-                payload.data = await ff.createFromRace(response.data.val, response.data.is_friend);
-            }
-            break;
-        case 'ff_delete':
-            await new friendFoe(response.data.id).delete();
-            payload.data = {};
-            break;
-        case 'ff_roll':
-            let roll = await new friendFoe(response.data.id).roll(response.data.stat);
-            payload.data = {
-                stat: response.data.stat,
-                success: roll >= 50,
-                roll: roll
-            }
-            break;
-        case 'ff_update':
-            let statToUpdate = response.data.stat;
-            let dataUpdate = {};
-            dataUpdate[statToUpdate] = response.data.val;
-            payload.data = await new friendFoe(response.data.id).update(dataUpdate);
-            break;
-    }
-
-    return payload;
-}
-
 
 /**
  * Set stat during creation
@@ -332,7 +284,7 @@ const actionRoll = async function (response) {
             error_msg: 'Player not in current game !'
         }
     }
-    let dice_result = randomIntFromInterval(1,100);
+    let dice_result = Math.floor(Math.random() * 100) + 1;
     let result = await player.roll(dice_result, response.data.stat, response.data.module);
     response.data['success'] = (result >= 50);
     response.data['result'] = result;
