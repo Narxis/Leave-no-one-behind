@@ -51,10 +51,6 @@ module.exports = {
         res.render('mj-menu', {lang: langJS});
     },
 
-    mjPanel(req, res) {
-        res.render('mj-panel', {lang: langJS});
-    },
-
     async persos(req, res) {
         await CONFIG.upsert('gameState', 'creation');
         res.render('perso', {lang: langJS});
