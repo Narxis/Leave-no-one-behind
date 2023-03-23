@@ -928,3 +928,8 @@ nav {
 .hide-opacity {
     opacity: 0;
 }
+
+.item-image {
+    width: 16px;
+    height: 16px;
+}
