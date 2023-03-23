@@ -134,9 +134,9 @@ class Player {
         let moyMod = ship.scanner + ship.proximity + ship.motors + ship.oxygen + ship.energy + ship.gravity;
         moyMod = moyMod/600;
         if (module !== '')
-            res = dice * this[stat]/100 * Math.pow(moyMod,2) + (this.moral-50)/2;
+            res = ((Math.log(2* dice + 145 + this.moral) - Math.log(200))/Math.log(2)) * (((this[stat]+moyMod)/2) +10);
         else
-            res = dice * this[stat]/100 + (this.moral-50)/4;
+            res = ((Math.log(2* dice + 145 + this.moral) - Math.log(200))/Math.log(2)) * (this[stat]+10);
 
         return Math.ceil(res);
     }
