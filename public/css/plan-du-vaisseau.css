@@ -16,8 +16,8 @@
     height: 710px;
     border-radius: 15px;
     border: 5px solid #fff;
-    left: -625px;
-    top: -354px;
+    left: -606px;
+    top: -378px;
     background: linear-gradient(45deg, rgb(0 0 0 / 100%) 0%, rgb(11 0 60 / 90%) 100%);
     filter: invert(1);
 }
@@ -26,14 +26,14 @@
     position: absolute;
     width: 1200px;
     height: 675px;
-    left: -600px;
-    top: -337px;
+    left: -584px;
+    top: -356px;
 }
 
 .plan-room {
     position: absolute;
-    top: -288px;
-    left: -560px;
+    top: -307px;
+    left: -544px;
     width: 1074px;
     height: 573px;
     transition: .5s;
@@ -51,9 +51,10 @@
     transition: .5s;
     filter: invert(1);
     position: absolute;
-    top: 50%;
+    top: 50.6%;
     left: 966px;
-    z-index: 1;
+    z-index: 10;
+    scale: 0.85;
 }
 
 .showroom {
@@ -80,6 +81,172 @@
 }
 
 .mapshow {
-    opacity: 1;
-    transform: translateY(-14px);
+    opacity: 1 !important;
+    transform: translateY(0px) !important;
+}
+
+.plan-room .module-moteur,
+.plan-room .salle-moteur,
+.plan-room .sas-moteur,
+.plan-room .salle-o2,
+.plan-room .module-o2,
+.plan-room .salle-elec,
+.plan-room .module-elec,
+.plan-room .salle-grav,
+.plan-room .module-grav,
+.plan-room .cuisine,
+.plan-room .refectoire,
+.plan-room .cinema,
+.plan-room .medic,
+.plan-room .sas-cockpit,
+.plan-room .armurerie,
+.plan-room .asc,
+.plan-room .gym,
+.plan-room .couloir,
+.plan-room .c1,
+.plan-room .c2,
+.plan-room .c3,
+.plan-room .c4,
+.plan-room .c5,
+.plan-room .wc,
+.plan-room .c6,
+.plan-room .sas1,
+.plan-room .cockpit,
+.plan-room .sas2,
+.plan-room .module-detec,
+.plan-room .module-scan {
+    position: absolute;
+}
+
+.plan-room .module-moteur {
+    top: 281px;
+    left: 9px;
+}
+
+.plan-room .sas-moteur {
+    top: 281px;
+    left: 204px;
+}
+
+.plan-room .module-o2 {
+    top: 281px;
+    left: 366px;
+}
+
+.plan-room .module-elec {
+    top: 128px;
+    left: 378px;
+    width: 100px;
+}
+
+.plan-room .module-grav {
+    top: 422px;
+    left: 378px;
+    width: 100px;
+}
+
+.plan-room .cuisine {
+    top: 89px;
+    left: 523px;
+}
+
+.plan-room .refectoire {
+    top: 89px;
+    left: 675px;
+}
+
+.plan-room .cinema {
+    top: 283px;
+    left: 554px;
+}
+
+.plan-room .medic {
+    top: 218px;
+    left: 747px;
+}
+
+.plan-room .sas-cockpit {
+    top: 283px;
+    left: 738px;
+}
+
+.plan-room .armurerie {
+    top: 345px;
+    left: 746px;
+}
+
+.plan-room .asc {
+    top: 405px;
+    left: 507px;
+}
+
+.plan-room .gym {
+    top: 415px;
+    left: 641px;
+}
+
+.plan-room .c1 {
+    top: 500px;
+    left: 504px;
+}
+
+.plan-room .c2 {
+    top: 500px;
+    left: 548px;
+}
+
+.plan-room .c3 {
+    top: 500px;
+    left: 595px;
+}
+
+.plan-room .c4 {
+    top: 500px;
+    left: 646px;
+}
+
+.plan-room .c5 {
+    top: 500px;
+    left: 695px;
+}
+
+.plan-room .c6 {
+    top: 476px;
+    left: 784px;
+}
+
+.plan-room .wc {
+    top: 540px;
+    left: 736px;
+}
+
+.plan-room .sas1 {
+    top: 84px;
+    left: 863px;
+}
+
+.plan-room .sas2 {
+    top: 481px;
+    left: 863px;
+}
+
+.plan-room .cockpit {
+    top: 283px;
+    left: 912px;
+}
+
+.plan-room .module-scan {
+    top: 393px;
+    left: 972px;
+    width: 80px;
+    rotate: 316deg;
+    scale: 0.9;
+}
+
+.plan-room .module-detec {
+    top: 156px;
+    left: 969px;
+    width: 90px;
+    rotate: 45deg;
+    scale: 0.9;
 }

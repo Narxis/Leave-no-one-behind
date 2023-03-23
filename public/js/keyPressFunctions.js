@@ -9,9 +9,22 @@ async function initialiseKeyListener() {
 // J'ai mis un toggle showroom sur tout les modules pour tester, à dégager si on veut rajouter quelque chose ici
             case "F2":
                 event.preventDefault();
-                document.querySelectorAll(".zone-active").forEach(function (e) {
-                    e.classList.toggle("showroom");
-                })
+                document.getElementById("combat-center").classList.toggle('mapshow');
+                document.getElementById("playertabs_container").classList.toggle("blur");
+                document.querySelector(".card").classList.toggle("blur");
+                document.querySelector(".human-status").classList.toggle("blur");
+                document.getElementById("playertabs_container").classList.toggle("deblur");
+                document.querySelector(".card").classList.toggle("deblur");
+                document.querySelector(".human-status").classList.toggle("deblur");
+                document.querySelectorAll(".player").forEach(function (e) {
+                    e.classList.toggle("player-show");
+                    e.classList.toggle("player-hide")
+                });
+                document.querySelectorAll(".foe").forEach(function (e) {
+                    e.classList.toggle("foe-show");
+                    e.classList.toggle("foe-hide")
+                });
+                break;
 //            case "F5":
 //                event.preventDefault();
 //                break;

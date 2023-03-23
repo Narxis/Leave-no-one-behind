@@ -5,7 +5,6 @@ const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
-const drawflow = require("../controllers/drawflow");
 const ws = require("ws");
 var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
@@ -16,23 +15,6 @@ module.exports = {
     },
 
     async returnOk(req, res) {
-
-        await generatePlanets(1,500);
-
-        // let cardsRaw = await DB.tables.cards.findAll({attributes: ['id'], raw:true, where: {type: TYPE_PLACE}});
-        //
-        // let objectDataSet = {"drawflow": {}};
-        //
-        // for (let cardRaw of cardsRaw) {
-        //     let card = await new Card(cardRaw.id).getData();
-        //     let module = await drawflow.buildPlaceDataSet(card);
-        //
-        //     for (let index in module) {
-        //         objectDataSet['drawflow'][index] = module[index];
-        //     }
-        // }
-        // res.json(objectDataSet)
-
         res.status(200);
         res.json({status: 200})
     },
@@ -46,38 +28,14 @@ module.exports = {
 
     async buildCardPage(req, res) {
 
-        // const client = new PasteClient(process.env.PASTEBIN_K);
-        // const token = await client.login({ name: process.env.PASTEBIN_U, password: process.env.PASTEBIN_P });
-        //
-        // const pastes = await client.getPastesByUser({
-        //     userKey: token,
-        //     limit: 10,
-        // });
-        //
         let data = {'drawflow': {}};
-        // for (let paste of pastes) {
-        //     if (paste.paste_title.endsWith(PLACESDAT_FILEMAME)) {
-        //         let rawData = await client.getRawPasteByKey({
-        //             pasteKey: paste.paste_key,
-        //             userKey: token,
-        //         });
-        //
-        //         let parsedRawData = JSON.parse(rawData);
-        //         for (let index in parsedRawData) {
-        //             data['drawflow'][index] = parsedRawData[index];
-        //         }
-        //     }
-        // }
 
-        // if (!data) {
-            // data = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
         fs.readdirSync(__dirname + '/../../storage/cache/').forEach(file => {
             let json = JSON.parse(fs.readFileSync(__dirname + '/../../storage/cache/'+file,'utf8'));
             let index = Object.keys(json)[0];
             data.drawflow[index] = json[index];
         });
-        // }
-        // else
+
         data = JSON.stringify(data);
 
         res.render('drawflow', {vars: {dat: data}});
@@ -91,6 +49,10 @@ module.exports = {
 
     mjMenu(req, res) {
         res.render('mj-menu', {lang: langJS});
+    },
+
+    mjPanel(req, res) {
+        res.render('mj-panel', {lang: langJS});
     },
 
     async persos(req, res) {
