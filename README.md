@@ -230,28 +230,3 @@ GET /api/items/owned/:discord_id'
   }
 ]
 ```
-
-### Friends/Foes
-```http
-GET /api/getFriends'
-# Obtient un tableau contenant tous les amis
-GET /api/getFoes'
-# Obtient un tableau contenant tous les ennemis
-```
-```json
-[
-  {
-    "id": 1,
-    "slug": "",
-    "name": "",
-    "is_friend": 0,
-    "race": "",
-    "combat": 0,
-    "pilotage": 0,
-    "engineering": 0,
-    "survival": 0,
-    "recon": 0,
-    "moral": 0
-  }
-]
-```

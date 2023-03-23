@@ -362,17 +362,6 @@ async function writeCardDesc(text = null) {
         await sleep(21.7)
     }
 }
-function add_friend(e) {
-    let data = e.detail.data;
-    wsLNOB.ffCreateFromSlug(data.race,true)
-
-}
-function add_foe(e) {
-    let data = e.detail.data;
-    wsLNOB.ffCreateFromRace(data.race,false)
-
-}
-document.addEventListener('add-friend', add_friend);
 
 (function(){
     initCard();

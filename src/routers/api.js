@@ -7,9 +7,6 @@ module.exports = function(router) {
     router.post(basePath + '/savePlaces', controller.savePlaces)
     router.post(basePath + '/deletePlace', controller.deletePlace)
 
-    router.get(basePath + '/getFriends', controller.getFriends)
-    router.get(basePath + '/getFoes', controller.getFoes)
-
     router.get(basePath + '/nextCard/get', controller.getNextCard);
     router.get(basePath + '/nextCard/pop', controller.popNextCard);
     router.get(basePath + '/nextCard/get/:name', controller.getCardByName);

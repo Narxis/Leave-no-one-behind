@@ -24,7 +24,4 @@ module.exports.register = function () {
     global.clear = function () {
         process.stdout.write('\033c')
     }
-    global.randomIntFromInterval= function (min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min)
-    }
 }

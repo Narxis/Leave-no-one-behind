@@ -15,7 +15,6 @@ module.exports = function(router) {
     router.get('/persos', controller.persos);
 
     router.get('/mj-menu', controller.mjMenu);
-    router.get('/mj-panel', controller.mjPanel);
     router.get('/end-screen', controller.endScreen);
     router.get('/fiche-vaisseau', controller.ficheVaisseau)
     router.get('/synopsis', controller.synopsis);
