@@ -270,17 +270,11 @@ async function hideChoices() {
 }
 
 async function initCard(forceName = null) {
-    if (forceName) {
+    fastTravel();
+    if (forceName)
         currentCard = await getCardByName(forceName);
-    }
-    else {
+    else
         currentCard = await getNextCard(true);
-        if (currentCard.type !== -1) {
-            fastTravel();
-            await sleep(fastTravelTime);
-            await sleep(500);
-        }
-    }
     await initialiseStatusList();
     await writeCardDesc();
     if (currentCard.timer === 1)
@@ -324,9 +318,7 @@ async function showChoices() {
                await showChoices();
             }
             else if (choice.continue && choice.continue === 3) { // NEXT IS PLANET ETAPE 2
-                fastTravel();
-                await sleep(fastTravelTime);
-                window.location.href = '/next';
+               window.location.href = '/next';
             }
             else if (choice.next && choice.next !== '') { // NEXT IS FOLLOWUP
                await initCard(choice.next);

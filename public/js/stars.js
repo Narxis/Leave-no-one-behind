@@ -1,13 +1,13 @@
 const app = new PIXI.Application({
     resizeTo: window,
-    background: '#17181c'
+    background: '#1f1f23'
 });
 document.body.appendChild(app.view);
 
 // Get the texture for star.
 const starTexture = PIXI.Texture.from('/img/star.png');
 
-const starAmount = 1000;
+const starAmount = 1500;
 let cameraZ = 0;
 const fov = 20;
 const baseSpeed = 0.015;
@@ -15,7 +15,6 @@ let speed = 0;
 let warpSpeed = 0;
 const starStretch = 5;
 const starBaseSize = 0.08;
-const fastTravelTime = 2000; //ms
 
 // Create the stars
 const stars = [];
@@ -52,7 +51,7 @@ function fastTravel() {
     warpSpeed = 1;
     setTimeout(function (){
         warpSpeed = 0
-    }, fastTravelTime)
+    }, 2000)
 }
 
 // Listen for animate update
