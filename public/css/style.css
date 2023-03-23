@@ -920,6 +920,7 @@ nav {
 }
 
 /*---vvv---Combat-GUI----vvv---*/
+
 .combat-wrap {
     position: absolute;
     width: 48vw;
@@ -987,7 +988,6 @@ nav {
     display: flex;
     flex-wrap: wrap;
     width: 222px;
-    height: 96px;
 }
 
 #stat-icon {
@@ -1190,7 +1190,7 @@ nav {
     flex-direction: column;
     z-index: 9;
     position: absolute;
-    left: 691px;
+    left: 585px;
 }
 
 .foe-name {
@@ -1246,8 +1246,6 @@ nav {
 
 .combat-foe-container .player-name {
     margin: 0px 10px 0px 0px;
-    width: 213px;
-    text-align-last: end;
 }
 
 .combat-foe-container .foe {
@@ -1265,8 +1263,8 @@ nav {
 
 .combat-foe-container .combat-roll {
     margin: 15px 30px 0px 0px;
-    width: 127px;
-    height: 115px;
+    width: 155px;
+    height: 129px;
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
@@ -1318,16 +1316,6 @@ nav {
 .foe-hide {
     opacity: 0 !important;
     transform: translateX(0px) !important;
-}
-
-.foemoral,
-.playermoral {
-    transform: translateY(-5px);
-}
-
-.playercmbt,
-.foecmbt {
-    transform: scale(0.8);
 }
 
 /*---^^^---Combat-GUI----^^^---*/
