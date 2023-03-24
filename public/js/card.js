@@ -364,15 +364,22 @@ async function writeCardDesc(text = null) {
 }
 function add_friend(e) {
     let data = e.detail.data;
-    wsLNOB.ffCreateFromSlug(data.race,true)
-
+    wsLNOB.ffCreateFromSlug(data.race,true);
 }
 function add_foe(e) {
     let data = e.detail.data;
     wsLNOB.ffCreateFromRace(data.race,false)
 
 }
+
+function display_life(e) {
+    let life = e.detail.data;
+   // if (life.is_friend == 1) {
+   //     document.querySelector('.friend-container').innerHTML = 
+   // }
+}
 document.addEventListener('add-friend', add_friend);
+document.addEventListener('ff_create', display_life);
 
 (function(){
     initCard();

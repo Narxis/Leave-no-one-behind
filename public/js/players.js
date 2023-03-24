@@ -78,6 +78,8 @@ function setPlayerStat(id, stat, newValue) {
 
     let statVal = document.querySelector('#player-tab'+id+' .'+stat+' .player-stat-value');
     statVal.innerText = newValue;
+    let combatStatVal = document.querySelector('#player-combat'+id+' .stat-container #'+stat+' #stat-value');
+    combatStatVal.innerText = newValue;
     wsLNOB.setStatistic(id, stat, newValue);
 }
 
