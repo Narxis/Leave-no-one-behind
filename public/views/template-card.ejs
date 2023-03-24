@@ -655,7 +655,13 @@
           <%- include("partials/player-tabs", {player:player}) %>
         <% }); %>
       <% } %>
-      <div class="friend-container"></div>
+      <div class="friend-container">
+        <% if(friends){ %>
+          <% friends.forEach(function(friend) { %>
+            <%- include("partials/compagnon-tab", {friend:friend}) %>
+          <% }); %>
+        <% } %>
+      </div>
     </div>
   </div>
   <div class="next-button" id="next1"></div>

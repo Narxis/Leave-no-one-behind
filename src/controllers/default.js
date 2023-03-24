@@ -6,6 +6,7 @@ const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const ws = require("ws");
+const ff = require("../controllers/ff")
 var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
@@ -75,6 +76,9 @@ module.exports = {
     async renderCardEvent(req, res) {
 
         let players = await DB.tables.players.findAll({raw:true});
+
+        let friends = await ff.getAllFriends();
+
         let ship = await new Ship().getData();
 
         let statuses = new Statuses();
@@ -111,6 +115,7 @@ module.exports = {
 
         let vars = {
             players: players,
+            friends: friends,
             card: current_card,
             ship: ship,
             statuses: statusesAll,
