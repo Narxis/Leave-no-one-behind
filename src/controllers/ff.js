@@ -28,5 +28,9 @@ module.exports = {
 
     async getAllFoes() {
         return await DB.tables.friend_foes.findAll({where:{is_friend:0}, raw:true});
+    },
+
+    async deleteAllFriendFoes() {
+        await DB.tables.friend_foes.destroy({truncate: true, restartIdentity: true});
     }
 }

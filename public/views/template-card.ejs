@@ -655,7 +655,7 @@
           <%- include("partials/player-tabs", {player:player}) %>
         <% }); %>
       <% } %>
-      <div class="friend-container">
+      <div class="friend-container" id="friends-container">
         <% if(friends){ %>
           <% friends.forEach(function(friend) { %>
             <%- include("partials/compagnon-tab", {friend:friend}) %>
@@ -685,6 +685,7 @@
   </script>
 
   <script src="/js/players.js"></script>
+  <script src="/js/friendFoes.js"></script>
   <script src="/js/card.js"></script>
   <script src="/js/template-card.js"></script>
   <script src="/js/items.js"></script>

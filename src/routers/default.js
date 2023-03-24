@@ -27,5 +27,6 @@ module.exports = function(router) {
     router.get('/index-legacy', controller.indexLegacy);
 
     router.post('/fiche', controller.renderSingleSheet);
+    router.post('/friendTab', controller.renderFriendTab);
     router.get('/next', controller.renderCardEvent);
 };

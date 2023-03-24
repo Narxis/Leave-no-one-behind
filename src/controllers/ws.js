@@ -116,7 +116,9 @@ const actionFriendFoe = async function(response) {
             break;
         case 'ff_delete':
             await new friendFoe(response.data.id).delete();
-            payload.data = {};
+            payload.data = {
+                id: response.data.id
+            };
             break;
         case 'ff_roll':
             let roll = await new friendFoe(response.data.id).roll(response.data.stat);

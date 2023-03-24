@@ -7,6 +7,7 @@ const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const ws = require("ws");
 const ff = require("../controllers/ff")
+const {friendFoe} = require("../models/friendFoe");
 var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
@@ -46,6 +47,12 @@ module.exports = {
 
         let player = await new Player().getData(req.body.discord_id);
         res.render('partials/fiche-perso', {player: player, langJS});
+    },
+
+    async renderFriendTab (req, res) {
+
+        let friend = await new friendFoe(req.body.id).getData();
+        res.render('partials/compagnon-tab', {friend: friend, langJS});
     },
 
     mjMenu(req, res) {
@@ -512,6 +519,7 @@ module.exports = {
     res.render('fiche-vaisseau', {lang: langJS});
     await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
     await destroyDeck();
+    await  ff.deleteAllFriendFoes();
 
     await hydrateCardDB(true);
     await deckGenerator();
