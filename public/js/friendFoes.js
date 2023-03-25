@@ -11,11 +11,22 @@ async function getFriendTab(id) {
 }
 
 async function addFriendTab (id) {
+    wsLNOB.ffDelete(id-1)
     let container = document.getElementById('friends-container');
     getFriendTab(id).then(sheet => {
         let div = document.createElement('div');
         div.innerHTML = sheet.trim();
         container.append(div.firstChild);
+    });
+    await sleep(100)
+    //initialise eventListener
+    let tab =container.querySelector('.player-tab');
+    tab.classList.remove('load-in');
+    tab.querySelector('.expander-item').addEventListener('mouseup', function () {
+        this.lastElementChild.classList.toggle("itemshow");
+    });
+    tab.querySelector('.expander').addEventListener('mouseup', function () {
+        this.parentElement.classList.toggle('move-up')
     });
 }
 
@@ -31,5 +42,23 @@ function deleteFriend(e) {
         el.remove()
 }
 
+
+async function createFriend(e) {
+    let data = e.detail.data;
+    wsLNOB.ffCreateFromSlug(data.race,true);
+    await sleep(500);
+    let container = document.getElementById('friends-container');
+    let fullID = container.querySelector('.player-tab').getAttribute('id');
+    let id= fullID.substring(10);
+    console.log(id);
+    wsLNOB.setStatistic(id, data.stat, 90);
+}
+function add_foe(e) {
+    let data = e.detail.data;
+    wsLNOB.ffCreateFromRace(data.race,false)
+
+}
+
+document.addEventListener('create-friend', createFriend);
 document.addEventListener('ff_create', addFriend)
 document.addEventListener('ff_delete', deleteFriend)

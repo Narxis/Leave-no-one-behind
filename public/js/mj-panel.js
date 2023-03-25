@@ -16,7 +16,7 @@ function addlife() {
                 break;
             }
         }
-        wsLNOB.triggerCustomEvent('add-friend', {name: 'Passager', race:''+race, stat: ''+main_stat})
+        wsLNOB.triggerCustomEvent('create-friend', {name: 'Passager', race:''+race, stat: ''+main_stat})
     }
     else {
         let race;
