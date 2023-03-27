@@ -13,7 +13,7 @@ const generateTemplate = (item) => {
                   <label for="todo_${listLength}">
                     <img class="item-image" src="${item.image}">
                     <span class="check"></span>
-                    ${item.name}
+                    <p>${item.name}</p>
                   </label>
                   <i class="far fa-trash-alt delete" data-slug="${item.slug}"></i>
                 </li>`;

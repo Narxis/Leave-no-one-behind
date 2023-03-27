@@ -1,7 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
-
-@font-face {
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap'); @import url('https://fonts.googleapis.com/css?family=Open+Sans:800'); @font-face {
     font-family: '7segments';
     src: url('/fonts/7segments.ttf') format('truetype');
 }
@@ -84,7 +81,6 @@ body {
     justify-content: center;
 }
 
-
 .bottomcenter {
     position: absolute;
     bottom: 0%;
@@ -144,7 +140,6 @@ body {
 
 /*----^^^--Star-Background--^^^---*/
 /*----vvv-----Nav-Menu-----vvv---*/
-
 nav {
     position: absolute;
     top: 0px;
@@ -209,9 +204,7 @@ nav {
     border-radius: 3px;
     z-index: 1;
     transform-origin: 4px 0px;
-    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
-        background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
-        opacity 0.55s ease;
+    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0), background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0), opacity 0.55s ease;
 }
 
 #menuToggle span:first-child {
@@ -388,7 +381,7 @@ nav {
     width: 100%;
 }
 
-.itemlist p{
+.itemlist p {
     width: 80%;
     margin: 5px 0px 5px 10px;
     text-align: start;
@@ -401,12 +394,12 @@ nav {
     opacity: 0;
 }
 
-.itemlist-line:hover .item-trash{
+.itemlist-line:hover .item-trash {
     opacity: 1;
     transition: .3s;
 }
 
-.itemlist-line:hover p{
+.itemlist-line:hover p {
     text-decoration: underline;
     text-decoration-color: #fff;
 }
@@ -504,8 +497,7 @@ nav {
     margin: 0px 0px 0px 4px;
 }
 
-.roll-type1,
-.roll-type2 {
+.roll-type1, .roll-type2 {
     top: 0px;
     left: 0px;
     width: 42px;
@@ -582,7 +574,6 @@ nav {
     outline: none;
     box-shadow: inset 2px 2px 2px #0000003b, inset -2px -2px 2px #c5c5c511;
 }
-
 
 .player-stats {
     display: flex;
@@ -694,8 +685,7 @@ nav {
     margin: 0px 6px;
 }
 
-.player-stat-up,
-.player-stat-down {
+.player-stat-up, .player-stat-down {
     margin: 0px 10px;
 }
 
@@ -707,9 +697,7 @@ nav {
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio : 2) {
-
-    /* Styles */
-    .hidden-mobile {
+    /* Styles */ .hidden-mobile {
         display: none;
     }
 
@@ -774,9 +762,7 @@ nav {
         border-radius: 3px;
         z-index: 1;
         transform-origin: 4px 0px;
-        transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
-            background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
-            opacity 0.55s ease;
+        transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0), background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0), opacity 0.55s ease;
     }
 
     #menuToggle span:first-child {
@@ -852,15 +838,11 @@ nav {
         font-family: 'jura', sans-serif;
         text-decoration: none;
     }
-
 }
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-device-height : 1920px) and (orientation : portrait) and (-webkit-min-device-pixel-ratio : 2) {
-
-    /* Styles */
-
-    .hidden-mobile {
+    /* Styles */ .hidden-mobile {
         display: none;
     }
 
@@ -895,7 +877,6 @@ nav {
     #stars3 {
         box-shadow: 85vh 8vh #fff, 28vh 67vh #fff, 15vh 93vh #fff, 50vh 78vh #fff, 42vh 89vh #fff, 6vh 10vh #fff, 58vh 51vh #fff, 27vh 12vh #fff, 92vh 24vh #fff, 57vh 24vh #fff, 26vh 9vh #fff, 24vh 17vh #fff, 89vh 37vh #fff, 52vh 91vh #fff, 22vh 44vh #fff, 62vh 60vh #fff, 45vh 44vh #fff, 93vh 13vh #fff, 94vh 44vh #fff, 81vh 99vh #fff, 93vh 41vh #fff, 82vh 26vh #fff, 68vh 35vh #fff, 1vh 54vh #fff, 50vh 42vh #fff, 8vh 55vh #fff, 70vh 19vh #fff, 59vh 98vh #fff, 2vh 33vh #fff, 38vh 16vh #fff, 54vh 93vh #fff, 97vh 36vh #fff, 76vh 48vh #fff, 4vh 80vh #fff, 75vh 65vh #fff, 29vh 9vh #fff, 59vh 1vh #fff, 97vh 84vh #fff, 27vh 62vh #fff, 50vh 47vh #fff, 65vh 89vh #fff, 38vh 27vh #fff, 1vh 42vh #fff, 73vh 63vh #fff, 92vh 4vh #fff, 3vh 35vh #fff, 32vh 51vh #fff, 39vh 29vh #fff, 65vh 68vh #fff, 89vh 59vh #fff, 33vh 83vh #fff, 47vh 77vh #fff, 69vh 88vh #fff, 44vh 91vh #fff, 32vh 75vh #fff, 74vh 19vh #fff, 39vh 47vh #fff, 33vh 89vh #fff, 67vh 98vh #fff, 34vh 61vh #fff, 21vh 8vh #fff, 26vh 64vh #fff, 37vh 19vh #fff, 19vh 76vh #fff, 3vh 93vh #fff, 10vh 62vh #fff, 14vh 87vh #fff, 44vh 56vh #fff, 45vh 31vh #fff, 99vh 99vh #fff, 42vh 39vh #fff, 66vh 8vh #fff, 2vh 11vh #fff, 4vh 74vh #fff, 65vh 29vh #fff, 3vh 41vh #fff, 91vh 39vh #fff, 91vh 16vh #fff, 69vh 87vh #fff, 25vh 51vh #fff, 88vh 64vh #fff, 79vh 69vh #fff, 5vh 32vh #fff, 33vh 75vh #fff, 7vh 18vh #fff, 13vh 74vh #fff, 29vh 21vh #fff, 97vh 57vh #fff, 98vh 77vh #fff, 15vh 13vh #fff, 63vh 88vh #fff, 8vh 36vh #fff, 98vh 79vh #fff, 44vh 33vh #fff, 57vh 39vh #fff, 63vh 2vh #fff, 5vh 77vh #fff, 61vh 67vh #fff, 72vh 63vh #fff, 45vh 12vh #fff, -94vh -25vh #fff, -23vh -50vh #fff, -78vh -7vh #fff, -79vh -83vh #fff, -3vh -30vh #fff, -52vh -95vh #fff, -100vh -19vh #fff, -57vh -73vh #fff, -61vh -64vh #fff, -14vh -57vh #fff, -40vh -60vh #fff, -91vh -100vh #fff, -51vh -26vh #fff, -67vh -90vh #fff, -17vh -3vh #fff, -52vh -24vh #fff, -92vh -40vh #fff, -83vh -18vh #fff, -70vh -87vh #fff, -20vh -94vh #fff, -29vh -8vh #fff, -53vh -88vh #fff, -90vh -41vh #fff, -51vh -87vh #fff, -14vh -65vh #fff, -28vh -69vh #fff, -8vh -14vh #fff, -60vh -27vh #fff, -36vh -69vh #fff, -89vh -97vh #fff, -78vh -18vh #fff, -50vh -84vh #fff, -92vh -74vh #fff, -24vh -68vh #fff, -81vh -91vh #fff, -79vh -86vh #fff, -45vh -30vh #fff, -31vh -77vh #fff, -37vh -40vh #fff, -94vh -49vh #fff, -25vh -46vh #fff, -85vh -50vh #fff, -76vh -20vh #fff, -76vh -89vh #fff, -21vh -58vh #fff, -18vh -53vh #fff, -43vh -79vh #fff, -7vh -27vh #fff, -92vh -80vh #fff, -16vh -5vh #fff, -49vh -86vh #fff, -80vh -16vh #fff, -78vh -4vh #fff, -91vh -74vh #fff, -10vh -38vh #fff, -72vh -53vh #fff, -44vh -87vh #fff, -81vh -32vh #fff, -5vh -77vh #fff, -44vh -45vh #fff, -60vh -64vh #fff, -79vh -88vh #fff, -96vh -6vh #fff, -23vh -52vh #fff, -19vh -19vh #fff, -33vh -58vh #fff, -6vh -99vh #fff, -94vh -21vh #fff, -44vh -29vh #fff, -65vh -2vh #fff, -6vh -24vh #fff, -80vh -83vh #fff, -19vh -70vh #fff, -92vh -77vh #fff, -64vh -76vh #fff, -42vh -34vh #fff, -36vh -27vh #fff, -42vh -77vh #fff, -15vh -99vh #fff, -63vh -76vh #fff, -85vh -45vh #fff, -1vh -26vh #fff, -50vh -18vh #fff, -43vh -97vh #fff, -81vh -13vh #fff, -38vh -26vh #fff, -32vh -4vh #fff, -34vh -63vh #fff, -98vh -37vh #fff, -39vh -11vh #fff, -89vh -31vh #fff, -57vh -16vh #fff, -6vh -81vh #fff, -19vh -51vh #fff, -45vh -5vh #fff, -75vh -96vh #fff, -60vh -37vh #fff, -92vh -61vh #fff, -13vh -84vh #fff, -27vh -59vh #fff, 88vh -1vh #fff, 9vh -40vh #fff, 58vh -95vh #fff, 22vh -32vh #fff, 13vh -69vh #fff, 5vh -96vh #fff, 13vh -72vh #fff, 9vh -23vh #fff, 76vh -83vh #fff, 26vh -86vh #fff, 14vh -50vh #fff, 38vh -63vh #fff, 42vh -30vh #fff, 21vh -61vh #fff, 95vh -46vh #fff, 14vh -42vh #fff, 61vh -56vh #fff, 82vh -96vh #fff, 33vh -73vh #fff, 86vh -33vh #fff, 39vh -80vh #fff, 62vh -70vh #fff, 25vh -32vh #fff, 41vh -48vh #fff, 44vh -34vh #fff, 4vh -97vh #fff, 64vh -17vh #fff, 30vh -23vh #fff, 89vh -64vh #fff, 65vh -19vh #fff, 90vh -53vh #fff, 66vh -63vh #fff, 89vh -16vh #fff, 65vh -98vh #fff, 23vh -63vh #fff, 18vh -54vh #fff, 13vh -67vh #fff, 97vh -15vh #fff, 100vh -93vh #fff, 41vh -75vh #fff, 51vh -31vh #fff, 74vh -15vh #fff, 27vh -26vh #fff, 20vh -19vh #fff, 39vh -68vh #fff, 78vh -58vh #fff, 34vh -39vh #fff, 69vh -14vh #fff, 31vh -2vh #fff, 82vh -32vh #fff, 96vh -13vh #fff, 68vh -27vh #fff, 84vh -88vh #fff, 45vh -37vh #fff, 86vh -78vh #fff, 89vh -99vh #fff, 28vh -65vh #fff, 21vh -85vh #fff, 40vh -40vh #fff, 53vh -82vh #fff, 11vh -18vh #fff, 13vh -19vh #fff, 75vh -71vh #fff, 62vh -38vh #fff, 8vh -42vh #fff, 72vh -51vh #fff, 37vh -18vh #fff, 5vh -34vh #fff, 47vh -45vh #fff, 11vh -97vh #fff, 66vh -62vh #fff, 93vh -24vh #fff, 95vh -46vh #fff, 98vh -60vh #fff, 13vh -89vh #fff, 96vh -74vh #fff, 5vh -39vh #fff, 82vh -70vh #fff, 19vh -83vh #fff, 82vh -20vh #fff, 40vh -4vh #fff, 20vh -79vh #fff, 33vh -15vh #fff, 47vh -25vh #fff, 73vh -62vh #fff, 32vh -46vh #fff, 7vh -94vh #fff, 8vh -63vh #fff, 35vh -58vh #fff, 80vh -90vh #fff, 39vh -11vh #fff, 54vh -20vh #fff, 2vh -73vh #fff, 94vh -67vh #fff, 16vh -87vh #fff, 28vh -37vh #fff, 21vh -24vh #fff, 5vh -54vh #fff, 46vh -38vh #fff, 72vh -88vh #fff, -42vh 35vh #fff, -97vh 98vh #fff, -87vh 97vh #fff, -50vh 96vh #fff, -93vh 88vh #fff, -40vh 78vh #fff, -51vh 93vh #fff, -19vh 84vh #fff, -39vh 23vh #fff, -5vh 27vh #fff, -26vh 21vh #fff, -9vh 30vh #fff, -78vh 42vh #fff, -92vh 47vh #fff, -57vh 81vh #fff, -30vh 25vh #fff, -66vh 26vh #fff, -65vh 48vh #fff, -23vh 8vh #fff, -79vh 97vh #fff, -55vh 21vh #fff, -15vh 68vh #fff, -4vh 28vh #fff, -66vh 87vh #fff, -5vh 28vh #fff, -24vh 89vh #fff, -47vh 62vh #fff, -23vh 80vh #fff, -86vh 9vh #fff, -38vh 84vh #fff, -73vh 82vh #fff, -85vh 40vh #fff, -94vh 50vh #fff, -44vh 91vh #fff, -69vh 87vh #fff, -37vh 12vh #fff, -23vh 70vh #fff, -47vh 80vh #fff, -94vh 41vh #fff, -47vh 83vh #fff, -14vh 63vh #fff, -10vh 24vh #fff, -27vh 9vh #fff, -96vh 2vh #fff, -45vh 81vh #fff, -45vh 4vh #fff, -62vh 40vh #fff, -74vh 99vh #fff, -93vh 4vh #fff, -94vh 36vh #fff, -64vh 5vh #fff, -69vh 31vh #fff, -14vh 68vh #fff, -84vh 57vh #fff, -41vh 34vh #fff, -65vh 4vh #fff, -50vh 32vh #fff, -55vh 66vh #fff, -4vh 56vh #fff, -83vh 70vh #fff, -40vh 53vh #fff, -90vh 21vh #fff, -15vh 14vh #fff, -46vh 1vh #fff, -10vh 45vh #fff, -50vh 30vh #fff, -86vh 38vh #fff, -53vh 29vh #fff, -21vh 48vh #fff, -34vh 33vh #fff, -83vh 82vh #fff, -95vh 51vh #fff, -78vh 64vh #fff, -20vh 2vh #fff, -3vh 49vh #fff, -61vh 61vh #fff, -61vh 73vh #fff, -85vh 28vh #fff, -9vh 48vh #fff, -68vh 90vh #fff, -86vh 17vh #fff, -62vh 85vh #fff, -67vh 57vh #fff, -76vh 46vh #fff, -39vh 11vh #fff, -65vh 11vh #fff, -10vh 24vh #fff, -68vh 41vh #fff, -75vh 58vh #fff, -94vh 80vh #fff, -1vh 100vh #fff, -80vh 8vh #fff, -52vh 71vh #fff, -94vh 34vh #fff, -80vh 12vh #fff, -95vh 27vh #fff, -16vh 34vh #fff, -14vh 94vh #fff, -33vh 93vh #fff, -87vh 66vh #fff;
     }
-
 }
 
 .hide {
@@ -916,11 +897,7 @@ nav {
     top: 3px;
 }
 
-#output-combat,
-#output-pilotage,
-#output-engineering,
-#output-survival,
-#output-recon {
+#output-combat, #output-pilotage, #output-engineering, #output-survival, #output-recon {
     transition: .5s;
 }
 
@@ -941,4 +918,20 @@ nav {
     position: relative;
     top: -2px;
     left: -4px;
+}
+
+.todos .item-image {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    top: -2px;
+}
+
+.todos p {
+    position: relative;
+    width: 170px;
+    top: -14px;
+    height: 35px;
+    overflow: hidden auto;
+    /* max-height: 50px; */
 }

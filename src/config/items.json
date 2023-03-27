@@ -202,6 +202,12 @@
       "slug": "drone",
       "desc": "Un drone pour  réveller les stats planètes.",
       "image": "drone.gif"
+    },
+    {
+      "name": "Spider-BOMB",
+      "slug": "spider-bomb",
+      "desc": "Une bombe qui permet d’infliger de lourd à sa cible sans causer beaucoup de dégâts collatéraux.",
+      "image": "spider-bomb.gif"
     }
   ],
   "tribal": [

@@ -454,7 +454,7 @@ textarea {
   flex-wrap: wrap;
   align-content: flex-start;
   border-radius: 15px;
-  border: 2.5px solid rgb(180, 180, 180);
+  border: 4.5px solid rgb(180, 180, 180);
   transform-origin: bottom center;
   background: linear-gradient(180deg, rgb(32 26 87 / 0%) 0%, rgb(8 0 44) 100%);
   backdrop-filter: blur(1px);
@@ -471,7 +471,7 @@ textarea {
 }
 
 .content {
-  padding: 10px 13.9px;
+  padding: 12px 4.9px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -514,20 +514,27 @@ textarea {
 
 .content ul.todos {
   display: flex;
-  margin-left: 0;
   padding: 0;
-  overflow: auto;
+  overflow: hidden auto;
   flex-direction: column;
-  flex-wrap: wrap;
+  max-height: 300px;
+  margin: 0px;
+  width: 300.5px;
 }
 
 .content li {
   user-select: none;
-  margin-bottom: 10px;
+  margin-top: 3px;
+  margin-bottom: 3px;
   display: inline-flex;
-  justify-content: space-between;
-  flex-grow: 1;
-  padding-top: 2px;
+  /* flex-grow: 1; */
+  padding-top: 0px;
+  height: 35px;
+  min-height: 35px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
 
 .content li i {
@@ -544,12 +551,18 @@ textarea {
 .content input[type="checkbox"]+label {
   color: rgb(180, 180, 180);
   text-shadow: rgb(238 232 232 / 27%) 2px 1px 4px;
-  font-size: 15px;
+  font-size: 14px;
   cursor: pointer;
   position: relative;
   border-radius: 20px;
   display: inline-block;
-  padding: 5px 10px 5px 35px;
+  padding: 0px 10px 0px 37px;
+  top: 0px;
+  width: 70%;
+  min-height: 35px;
+  height: 35px;
+  display: inline-flex;
+  align-items: flex-start;
 }
 
 .content input[type="checkbox"]+label:hover {
@@ -557,12 +570,12 @@ textarea {
 }
 
 .content input[type="checkbox"]+label span.check {
-  left: 4px;
-  top: 13px;
+  left: 8px;
+  top: 16px;
   position: absolute;
   transform: translatey(-50%);
-  width: 18px;
-  height: 18px;
+  width: 12px;
+  height: 12px;
   display: block;
   background: white;
   border-radius: 50%;
