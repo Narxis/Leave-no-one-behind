@@ -4,11 +4,10 @@ const {friendFoe} = require("../models/friendFoe");
  * Friend Foes Controller
  */
 
-let ffData = JSON.parse(fs.readFileSync(__dirname + '/../config/friendFoes.json'));
-
 module.exports = {
     async createFromSlug(slug, is_friend = false) {
 
+        let ffData = JSON.parse(fs.readFileSync(__dirname + '/../config/friendFoes.json'));
         let friendFoeDat = ffData.find(el => el.slug === slug);
         friendFoeDat.is_friend = is_friend ? 1 : 0;
         return new friendFoe().create(friendFoeDat);
@@ -16,6 +15,7 @@ module.exports = {
 
     async createFromRace(race, is_friend = false) {
 
+        let ffData = JSON.parse(fs.readFileSync(__dirname + '/../config/friendFoes.json'));
         let raceData = ffData.filter(el => el.race === race);
         const friendFoeDat = raceData[Math.floor(Math.random() * raceData.length)];
         friendFoeDat.is_friend = is_friend ? 1 : 0;
