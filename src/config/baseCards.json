@@ -980,7 +980,7 @@
       "choices": [
         {
           "value": "Prendre l'[objet_1] et quitter la bibliothèque",
-          "reveal": "\n\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet_1]"
+          "reveal": "\n\u00a0 Vous retournez dans le vaisseau avec votre nouvel [objet_1]."
         }
       ]
     },
