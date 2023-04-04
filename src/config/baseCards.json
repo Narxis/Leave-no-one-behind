@@ -1337,7 +1337,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Vous garez le PLUGS à l'arrière de la station et entrez dans la boutique. \n \n \u00a0 Après un bref tour sur vous-même, vous vous rendez compte que la station-service utilise des unités monétaires étranges comme moyen d'échange. \n \n \u00a0 Un automate vous accueille : \"Bienvenue visiteurs, êtes-vous intéressés par notre large choix d'outils de réparations ou de dispositifs de défense personnelle ?\"",
+      "desc": "\n\u00a0 Vous garez le PLUGS à l'arrière de la station et entrez dans la boutique.\n\n\u00a0 Après un bref tour sur vous-même, vous vous rendez compte que la station-service utilise des unités monétaires étranges comme moyen d'échange. \n\n\u00a0 Un automate vous accueille : \"Bienvenue visiteurs, êtes-vous intéressés par notre large choix d'outils de réparations ou de dispositifs de défense personnelle ?\"",
       "name":"station1",
       "timer": false,
       "choices": [
@@ -1375,7 +1375,7 @@
       ]
     },
     {
-      "desc": "\u00a0  \"Confirmation de la transaction, \"Article_1\" à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
+      "desc": "\n\u00a0  \"Confirmation de la transaction, \"Article_1\" à été transféré dans votre vaisseau, merci d'avoir utilisé la Plateforme d'échange.\"",
       "name":"station1-1-1",
       "timer": false,
       "choices": [
@@ -1468,8 +1468,8 @@
       ]
     },
     {
-      "desc": "\n\u00a0  \"Confirmation de la transaction,  \"Formule_Minimum\" , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient votre vaisseau de fond en comble. \n \n  \u00a0 Vous ressentez une certaine satisfaction en voyant votre vaisseau ainsi propre. ",
-      "mjreveal": "  Gain de moral moyen.",
+      "desc": "\n\u00a0  \"Confirmation de la transaction,  \"Formule_Minimum\" , merci d'avoir utilisé la Plateforme d'échange.\" \n\n\u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient votre vaisseau de fond en comble. \n \n  \u00a0 Vous ressentez une certaine satisfaction en voyant votre vaisseau ainsi propre. ",
+      "mjreveal": " Gain de moral moyen.",
       "name":"station2-1",
       "timer": false,
       "choices": [
@@ -1480,8 +1480,8 @@
       ]
     },
     {
-      "desc": "\u00a0 \"Confirmation de la transaction, \"Formule_Premium\" , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n \u00a0 Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n \u00a0 Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-air s'assurent que tout est conforme aux normes intergalactiques. \n \n \u00a0 Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. ",
-      "mjreveal": "  Fort gain de moral et fortes réparations de vaisseau.",
+      "desc": "\u00a0 \"Confirmation de la transaction, \"Formule_Premium\" , merci d'avoir utilisé la Plateforme d'échange.\" \n\n\u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n \u00a0 Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n \u00a0 Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-air s'assurent que tout est conforme aux normes intergalactiques. \n \n \u00a0 Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. ",
+      "mjreveal": " Fort gain de moral et fortes réparations de vaisseau.",
       "name":"station2-2",
       "timer": false,
       "choices": [
@@ -1492,7 +1492,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Vous garez le PLUGS à l'arrière du bâtiment. \n \n \u00a0 Alors que vous vous apprêtez à pénétrer dans l'enceinte de la station, deux [nos_race_1] tentent de vous racketter.",
+      "desc": "\n\u00a0 Vous garez le PLUGS à l'arrière du bâtiment. \n\n\u00a0 Alors que vous vous apprêtez à pénétrer dans l'enceinte de la station, deux [nos_race_1] tentent de vous racketter.",
       "name":"station3",
       "timer": false,
       "choices": [
@@ -1515,7 +1515,7 @@
     },
     {
       "start": true,
-      "desc": "Vous arrivez devant le grand bowling galactique prenez quelques instants pour recharger les batteries du vaisseaux.",
+      "desc": "\n\u00a0 Vous arrivez devant le grand bowling galactique prenez quelques instants pour recharger les batteries du vaisseaux.",
       "mjreveal": "",
       "timer": false,
       "shuffle": false,
@@ -1536,7 +1536,7 @@
       ]
     },
     {
-      "desc": "Vous vous approchez du comptoir pour demander de l'équipement afin de jouer une partie, mais malheureusement, [les_race_1] sont arrivés avant vous et il n'y a plus de chaussures disponibles.",
+      "desc": "\n\u00a0 Vous vous approchez du comptoir pour demander de l'équipement afin de jouer une partie, mais malheureusement, [les_race_1] sont arrivés avant vous et il n'y a plus de chaussures disponibles.",
       "mjreveal": "",
       "timer": false,
       "shuffle": false,
