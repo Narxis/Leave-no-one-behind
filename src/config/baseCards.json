@@ -1319,7 +1319,7 @@
     },
     {
       "start": true,
-      "desc": "\n\u00a0 Vous apercevez au loin une vieille station-service qui semble être abandonnée.\n\n\u00a0 À la radio, vous entendez un message en boucle disant : \"Bienvenue voyageurs, venez faire vos emplettes à la Station de Lavage Automatique et de Vente et Echange pendant que votre vaisseau se fait faire une nouvelle jeunesse.\"",
+      "desc": "\n\u00a0 Vous apercevez au loin une vieille station-service qui semble être abandonnée.\n\n\u00a0 À la radio, vous entendez un message en boucle disant :\n\u00a0 \"Bienvenue voyageurs, venez faire vos emplettes à la Station de Lavage Automatique et de Vente et Echange pendant que votre vaisseau se fait faire une nouvelle jeunesse.\"",
       "timer": false,
       "choices": [
         {
