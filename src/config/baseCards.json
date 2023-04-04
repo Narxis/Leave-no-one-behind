@@ -704,89 +704,89 @@
       }
     },
     {
-      "desc": "\n\u00a0 Vos capteurs détectent un vaisseau, il appartient à des shrymps.\n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ?",
+      "desc": "\n\u00a0 Vos capteurs détectent un vaisseau, il appartient à des shrymps.\n\n\u00a0 Voulez vous entrer en contact avec le vaisseau ?",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
           "reveal": "\n\u00a0 Les shrymps vous parlent de leur Ygrl favorite pendant des heures, vous n'avez pas su mettre fin à la conversation, vous êtes dépité d'avoir perdu tout ce temps.",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         },
         {
           "value": "Les inviter à bord",
-          "reveal": "\n\u00a0 En essayant de monter à bord, les Shrymps se sont trompés dans les coordonnées de téléportation et se sont retrouvés dans votre système de ventilation. \n \u00a0 Comme celui-ci était obstrué, ils ont dû le nettoyer pour pouvoir circuler.",
-          "mjreveal": "  Faire un roll de réparation du module d'oxygène."
+          "reveal": "\n\u00a0 En essayant de monter à bord, les Shrymps se sont trompés dans les coordonnées de téléportation et se sont retrouvés dans votre système de ventilation. \n\u00a0 Comme celui-ci était obstrué, ils ont dû le nettoyer pour pouvoir circuler.",
+          "mjreveal": " Faire un roll de réparation du module d'oxygène."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Le vaisseau s'éloigne hors de portée de vos radars.",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
-              "reveal": "  Votre voyage continue.",
-              "mjreveal": "  Perte de moral."
+              "reveal": "\n\u00a0 Votre voyage continue.",
+              "mjreveal": " Perte de moral."
             }
           ]
         }
       }
     },
     {
-      "desc": "\n\u00a0 Vos capteurs détectent un vaisseau, il appartient à des Yorcs. \n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ?",
+      "desc": "\n\u00a0 Vos capteurs détectent un vaisseau, il appartient à des Yorcs. \n\n\u00a0 Voulez vous entrer en contact avec le vaisseau ?",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
           "reveal": "\n\u00a0 Les Yorcs proclament faire partie du Groupuscule Armé des Yorcs Salvateurs et entrent dans votre vaisseau pour vous attaquer.",
-          "mjreveal": "  Engage un combat contre des Yorcs."
+          "mjreveal": " Engage un combat contre des Yorcs."
         },
         {
           "value": "Les inviter à bord",
           "reveal": "\n\u00a0 Les Yorcs arrivent dans votre vaisseau avec du pop-corn des chips, des pizza et des films.",
-          "mjreveal": "  Gain de moral."
+          "mjreveal": " Gain de moral."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Le vaisseau s'éloigne hors de portée de vos radars.",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
-              "reveal": "  Votre voyage continue.",
-              "mjreveal": "  Perte de moral."
+              "reveal": "\n\u00a0 Votre voyage continue.",
+              "mjreveal": " Perte de moral."
             }
           ]
         }
       }
     },
     {
-      "desc": "\n\u00a0 Votre vaisseau s'immobilise soudainement à cause d'un obstacle qui l'empêche de poursuivre sa route. \n \n \u00a0 Il s'agit d'un gros conteneur qui peut être chargé dans la soute du vaisseau.",
+      "desc": "\n\u00a0 Votre vaisseau s'immobilise soudainement à cause d'un obstacle qui l'empêche de poursuivre sa route. \n\n\u00a0 Il s'agit d'un gros conteneur qui peut être chargé dans la soute du vaisseau.",
       "timer": false,
       "choices": [
         {
           "value": "Récupérer le cargo et l'ouvrir",
           "reveal": "\n\u00a0 Vous ouvrez le conteneur et un système de défense se déclenche, des araignées mycophiles en sortent. Au fond du conteneur, vous apercevez un drone.",
-          "mjreveal": "  Perte de moral et donne un drone"
+          "mjreveal": " Perte de moral et donne un drone"
         },
         {
           "value": "Récupérer le cargo et appeler le propriétaire",
           "reveal": "\n\u00a0 Le propriétaire ne répond pas. Selon les lois galactiques concernant les containers perdus dans l'espace cosmique, le contenu vous appartient désormais.",
-          "mjreveal": "  Donne un item de votre choix."
+          "mjreveal": " Donne un item de votre choix."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Vous esquivez le conteneur et redémarrez l'autopilote.",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ]
     },
@@ -796,34 +796,34 @@
       "choices": [
         {
           "value": "Aider le premier vaisseau",
-          "reveal": "\n\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n \u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n \n \u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. ",
-          "mjreveal": "  Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne des \"outils de réparations\" et un \"drone\"."
+          "reveal": "\n\u00a0 Vous effectuez une manœuvre pour intercepter la poursuite du deuxième vaisseau. \n\u00a0 Ce dernier vous tire dessus pour vous faire dégager, mais il finit par changer de trajectoire pour éviter une collision avec vous. Le vaisseau effectue un demi-tour et s'en va. \n\n\u00a0 Vous recevez un message de gratitude du premier vaisseau, qui vous donne les coordonnées d'un rendez-vous. En remerciement, ils vous offrent des outils de réparation et un drone. ",
+          "mjreveal": " Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne des \"outils de réparations\" et un \"drone\"."
         },
         {
           "value": "Aider le deuxième vaisseau",
-          "reveal": "\n\u00a0 Vous interceptez la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n \u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.",
-          "mjreveal": "  Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne une \"SPIDER bomb\" et des \"outils de réparation\"."
+          "reveal": "\n\u00a0 Vous interceptez la course du premier vaisseau qui est attaqué par le second. Vous recevez quelques tirs perdus, mais finalement, le premier vaisseau est détruit. \n\u00a0 Le second vaisseau vous offre une partie du butin et s'excuse pour les tirs accidentels. Vous récupérez une spider-bomb et des outils de réparation.",
+          "mjreveal": " Faire un roll de dégats sur [le_module-bdd_0], [le_module-bdd_1] et [le_module-bdd_2]. Donne une \"SPIDER bomb\" et des \"outils de réparation\"."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Vous vous éloignez pour éviter les tirs. ",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ]
     },
     {
-      "desc": "\n\u00a0 Vous apercevez un gyrophare dans votre rétroviseur et entendez une communication sur votre radio vous demandant de vous ranger sur le bas-côté. \n \n \u00a0 Un agent de la Première Unité Tactique Expérimentale sort de son vaisseau et vous explique que votre véhicule se déplaçait à une vitesse non réglementaire et est sur le point de vous mettre une contravention.",
+      "desc": "\n\u00a0 Vous apercevez un gyrophare dans votre rétroviseur et entendez une communication sur votre radio vous demandant de vous ranger sur le bas-côté. \n\n\u00a0 Un agent de la Première Unité Tactique Expérimentale sort de son vaisseau et vous explique que votre véhicule se déplaçait à une vitesse non réglementaire et est sur le point de vous mettre une contravention.",
       "timer": "false",
       "choices": [
         {
           "value": "Négocier avec l'agent",
           "reveal": "\n\u00a0 L'agent vous écoute.",
-          "mjreveal": "  Négociation avec le MJ\n  Négociation avec le MJ."
+          "mjreveal": " Négociation avec le MJ."
         },
         {
           "value": "Payer l'amende",
           "reveal": "\n\u00a0 Après avoir reçu la confirmation de la transaction l'agent vous laisse partir.",
-          "mjreveal": "  Décidez du montant de l'amande en fonction des consommables et de l'état des modules des joueurs.(ex: 2 microprocesseurs que les joueurs pourront récuprer d'un module)"
+          "mjreveal": " Décidez du montant de l'amande en fonction des consommables et de l'état des modules des joueurs.(ex: 2 microprocesseurs que les joueurs pourront récuprer d'un module)"
         }
       ]
     }
@@ -831,7 +831,7 @@
   "place": [
     {
       "start": true,
-      "desc": "\n\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\n \n \u00a0Alors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et [un_race_3] marche dans l'allée.",
+      "desc": "\n\u00a0 Vos capteurs détectent une belle bibliothèque cosmique, vous décidez de faire une pause dans votre périple et de visiter cette merveille architecturale et culturelle.\n\n\u00a0 Alors que vous pénétrez dans le hall d'entrée, vous pouvez apercevoir [un_race_1] assis à une table au milieu de la pièce, [un_race_2] en train de lire un livre dans une allée secondaire, et [un_race_3] marche dans l'allée.",
       "timer": false,
       "choices": [
         {
@@ -849,7 +849,7 @@
       ]
     },
     {
-      "desc": "Vous tentez de communiquer avec [le_race_3] qui vous ignore et sort de la bibliothèque. Vous constatez qu'une porte est ouverte, c'est probablement par là que cette personne est venue.",
+      "desc": "\n\u00a0 Vous tentez de communiquer avec [le_race_3] qui vous ignore et sort de la bibliothèque. Vous constatez qu'une porte est ouverte, c'est probablement par là que cette personne est venue.",
       "name":"bibli3-intro",
       "timer": false,
       "shuffle":true,
@@ -876,7 +876,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Vous vous frayez un chemin dans les sous-sols de la bibliothèque et les bruits étranges deviennent de plus en plus forts.\n \n \u00a0 Soudain, vous êtes face à face avec deux Yorcs armés de manches à balais, qui ont l'air décidés à vous attaquer. \n \n \u00a0Vous vous préparez à vous défendre alors que vous vous demandez ce qui peut bien se passer ici.",
+      "desc": "\n\u00a0 Vous vous frayez un chemin dans les sous-sols de la bibliothèque et les bruits étranges deviennent de plus en plus forts.\n\n\u00a0 Soudain, vous êtes face à face avec deux Yorcs armés de manches à balais, qui ont l'air décidés à vous attaquer.\n\n\u00a0 Vous vous préparez à vous défendre alors que vous vous demandez ce qui peut bien se passer ici.",
       "name":"bibli1-1",
       "timer": false,
       "choices": [
@@ -891,7 +891,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Après avoir terrasser les Yorcs vous penetrez dans la salle et vous rendez compte que les Yorcs étaient en train synthétiser des Shrips dans un laboratoire clandestin, vous découvrez également des armes et des plans détaillés pour un projet d'invasion.\n \n \u00a0 Vous comprenez alors que vous venez de déjouer un complot visant à attaquer la bibliothèque et peut-être même tout le système.\n \u00a0 Vous contactez immédiatement les autorités pour les informer de la situation et leur remettre les preuves trouvées.",
+      "desc": "\n\u00a0 Après avoir terrasser les Yorcs vous penetrez dans la salle et vous rendez compte que les Yorcs étaient en train synthétiser des Shrips dans un laboratoire clandestin, vous découvrez également des armes et des plans détaillés pour un projet d'invasion.\n\n\u00a0 Vous comprenez alors que vous venez de déjouer un complot visant à attaquer la bibliothèque et peut-être même tout le système.\n\u00a0 Vous contactez immédiatement les autorités pour les informer de la situation et leur remettre les preuves trouvées.",
       "name":"bibli1-1-1",
       "timer": false,
       "choices": [
@@ -917,7 +917,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Vous et votre équipe avez réussi à neutraliser le laboratoire illégal du Groupuscule Armé de Yorcs Salvateurs et à fournir des preuves de leur activité illégale.\n \n \u00a0 La Première Unité Tactique Expérimentale arrive sur les lieux pour procéder à l'inspection et saisir les preuves.\n \u00a0 Le commandant de l'unité vous félicite pour votre mission réussie et s'éxclame : \"Bravo, vous voulez une médaille ?!\"",
+      "desc": "\n\u00a0 Vous et votre équipe avez réussi à neutraliser le laboratoire illégal du Groupuscule Armé de Yorcs Salvateurs et à fournir des preuves de leur activité illégale.\n\n\u00a0 La Première Unité Tactique Expérimentale arrive sur les lieux pour procéder à l'inspection et saisir les preuves.\n\u00a0 Le commandant de l'unité vous félicite pour votre mission réussie et s'éxclame : \"Bravo, vous voulez une médaille ?!\"",
       "name":"bibli1-1-1-1",
       "timer": false,
       "choices": [
@@ -954,7 +954,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 [Le_race_2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\n \n \u00a0 Il vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque.\n \u00a0 Il décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
+      "desc": "\n\u00a0 [Le_race_2] semble surpris de voir de nouvelle tête entrer dans la Belle Bibliothèque Cosmique.\n\n\u00a0 Il vous parle de son livre mais cela ne vous interesse pas plus que ça jusqu'au moment où il vous parle d'un objet technologique qu'il a trouvé dans la Bibliothèque.\n\u00a0 Il décide de vous donner l'objet si vous répondez correctement à sa question :\n\"Qu'est-ce qui est de conception Fnek, ne sent pas très bon et utilise l'energie cosmique ?\"",
       "name":"bibli2",
       "timer": false,
       "shuffle":true,
@@ -996,7 +996,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 \"Perdu c'était un [objet_1] j'allais pas vous le donner de toute manière.\" \n \n \u00a0[Le_race_2] se replonge dans son livre et vous ignore.",
+      "desc": "\n\u00a0 \"Perdu c'était un [objet_1] j'allais pas vous le donner de toute manière.\" \n\n\u00a0[Le_race_2] se replonge dans son livre et vous ignore.",
       "name":"bibli2-3",
       "timer": false,
       "choices": [
@@ -1007,7 +1007,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Vous entrez dans la pièce et appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\n \n \u00a0 Le livre est usé, vous pouvez difficillement lire [livre] écrit sur la couverture.",
+      "desc": "\n\u00a0 Vous entrez dans la pièce et appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\n\n\u00a0 Le livre est usé, vous pouvez difficillement lire [livre] écrit sur la couverture.",
       "name": "bibli3",
       "timer": false,
       "choices": [
@@ -1033,7 +1033,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\n \n \u00a0 Elle vous tend le [livre] en pensant que c'est le votre",
+      "desc": "\n\u00a0 La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\n\n\u00a0 Elle vous tend le [livre] en pensant que c'est le votre",
       "name": "bibli3-2",
       "timer": false,
       "choices": [
@@ -1045,7 +1045,7 @@
     },
     {
       "start": true,
-      "desc": "\n\u00a0 Vous arrivez devant un Pub de l'espace, l'enseigne indique qu'il s'agit du pub nommé : \"[no_pub_1]\"\n \n \u00a0 Vous êtes accueilli par un hôte Aku qui vous propose de vous asseoir à une table. Cependant, l'odeur de Fnek nauséabonde qui émane de l'intérieur vous rend mal à l'aise.\n \n \u00a0 Le barman [no_race_1] vous dévisage en nettoyant ses verres.\n \n \u00a0 Un bruit sourd retentit, au fond de la pièce deux [nos_race_2] bourrés ont fait tomber une boule de billard.",
+      "desc": "\n\u00a0 Vous arrivez devant un Pub de l'espace, l'enseigne indique qu'il s'agit du pub nommé : \"[no_pub_1]\"\n\n\u00a0 Vous êtes accueilli par un hôte Aku qui vous propose de vous asseoir à une table. Cependant, l'odeur de Fnek nauséabonde qui émane de l'intérieur vous rend mal à l'aise.\n\n\u00a0 Le barman [no_race_1] vous dévisage en nettoyant ses verres.\n\n\u00a0 Un bruit sourd retentit, au fond de la pièce deux [nos_race_2] bourrés ont fait tomber une boule de billard.",
       "timer": false,
       "choices": [
         {
@@ -1082,7 +1082,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 \"J'ai une quête pour vous, seriez-vous en mesure de m'aider à rendre mon humble échoppe plus accueillante ? Ne vous inquiétez pas, il ne s'agit pas de redécorer l'intérieur...\"\n \u00a0 \"C'était de l'humour, hein ! Les autres [nos_race_1] trouvent ça drôle.\"\n \u00a0 \"En réalité, j'ai besoin qu'on me débarrasse d'un rat qui boit toutes mes boissons et mange toutes les Prygrls dans ma réserve. Pourriez-vous m'en débarrasser, vaillants aventuriers ?\"",
+      "desc": "\n\u00a0 \"J'ai une quête pour vous, seriez-vous en mesure de m'aider à rendre mon humble échoppe plus accueillante ? Ne vous inquiétez pas, il ne s'agit pas de redécorer l'intérieur...\"\n\u00a0 \"C'était de l'humour, hein ! Les autres [nos_race_1] trouvent ça drôle.\"\n \u00a0 \"En réalité, j'ai besoin qu'on me débarrasse d'un rat qui boit toutes mes boissons et mange toutes les Prygrls dans ma réserve. Pourriez-vous m'en débarrasser, vaillants aventuriers ?\"",
       "name":"pub1-1",
       "timer": false,
       "choices": [
@@ -1097,7 +1097,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Une fois dans la réserve, vous commencez à chercher des signes du passage du rat, mais vous trouvez uniquement des tonneaux vides et des toiles d'araignées.\n\n\u00a0 Vous trouvez un tonneau un peu plus lourd, vous l'ouvrez et trouvez à l'intérieur [un_race_3] qui vous bondit dessus en hurlant.\n \u00a0 Ses cris ont attiré l'attention de plusieurs araignées mycophiles qui se joignent au combat.",
+      "desc": "\n\u00a0 Une fois dans la réserve, vous commencez à chercher des signes du passage du rat, mais vous trouvez uniquement des tonneaux vides et des toiles d'araignées.\n\n\u00a0 Vous trouvez un tonneau un peu plus lourd, vous l'ouvrez et trouvez à l'intérieur [un_race_3] qui vous bondit dessus en hurlant.\n\u00a0 Ses cris ont attiré l'attention de plusieurs araignées mycophiles qui se joignent au combat.",
       "name":"pub1-1-1",
       "timer": false,
       "choices": [
@@ -1113,7 +1113,7 @@
     },
     {
       "desc": "\n\u00a0 Le barman vous remercie pour votre aide, il vous offre une bouteille de [no_bouteille_1] ",
-      "mjreveal": "  Donner la bouteille de [no_bouteille_1] aux joueurs ",
+      "mjreveal": " Donner la bouteille de [no_bouteille_1] aux joueurs ",
       "name":"pub1-1-1-1",
       "timer": false,
       "choices": [
@@ -1125,7 +1125,7 @@
     },
     {
       "desc": "\n\u00a0 Le barman arrive dans la réserve et vous surprend en train de fouiller, mais il décide de faire comme s'il n'avait rien vu pour vous remercier. Avant qu'il n'arrive, vous avez trouvé [un_objet_1].",
-      "mjreveal": "  Donner [un_objet_1] aux joueurs ",
+      "mjreveal": " Donner [un_objet_1] aux joueurs ",
       "name":"pub1-1-1-2",
       "timer": false,
       "choices": [
@@ -1136,7 +1136,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Le barman soupire et vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\n\n \u00a0 Il n'en reste que 3...",
+      "desc": "\n\u00a0 Le barman soupire et vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\n\n\u00a0 Il n'en reste que 3...",
       "name":"pub1-3",
       "timer": false,
       "choices": [
@@ -1155,8 +1155,8 @@
       ]
     },
     {
-      "desc": "\n\u00a0Vous buvez votre verre les boissons sont automatiquement payée par l'OLI.\n vous repartez rapidement.",
-      "mjreveal": "  remonte le moral de tous les joueurs faiblement ",
+      "desc": "\n\u00a0 Vous buvez votre verre les boissons sont automatiquement payée par l'OLI.\n\n\u00a0 vous repartez rapidement.",
+      "mjreveal": " remonte le moral de tous les joueurs faiblement ",
       "name":"pub-boisson",
       "timer": false,
       "choices": [
@@ -1167,7 +1167,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0\"Désolé je n'ai plus assez de boisson pour autant d'alcoolique... vous aller devoir partir\"",
+      "desc": "\n\u00a0 \"Désolé je n'ai plus assez de boisson pour autant d'alcoolique... vous aller devoir partir\"",
       "name":"pub1-2",
       "timer": false,
       "choices": [
@@ -1183,7 +1183,7 @@
     },
     {
       "desc": "\n\u00a0 Après avoir assommé le barman, vous vous rendez compte du silence qui s'est installé dans le pub. Tout le monde vous regarde. Le silence est finalement rompu par un bip sonore, puis un autre, et enfin :\n\n\u00a0\"Première Unité Tactique Expérimentale, avez-vous été témoins d'un acte répréhensible selon la loi ?\"",
-      "mjreveal": "  ajoute le status recherché indéfiniment",
+      "mjreveal": " ajoute le status recherché indéfiniment",
       "name":"pub1-2-2",
       "timer": false,
       "choices": [
@@ -1209,20 +1209,20 @@
       ]
     },
     {
-      "desc": "\n\u00a0  Vous essayez d'expliquer [aux_race_2] que vous vouliez simplement leur rendre la boule, mais l'alcool leur est monté à la tête, il est impossible de les raisonner.\n \n \u00a0 Vous allez devoir leur faire comprendre par la force.",
+      "desc": "\n\u00a0 Vous essayez d'expliquer [aux_race_2] que vous vouliez simplement leur rendre la boule, mais l'alcool leur est monté à la tête, il est impossible de les raisonner.\n\n\u00a0 Vous allez devoir leur faire comprendre par la force.",
       "name":"pub2-1",
       "timer": false,
       "choices": [
         {
           "value": "Terminer le combat. ",
           "next": "pub2-1-1",
-          "mjreveal": "  Finir le combat avant de cliquer"
+          "mjreveal": " Finir le combat avant de cliquer"
         }
       ]
     },
     {
-      "desc": "\n\u00a0  Une fois [les_race_2] au sol, vous entendez le barman crier : \"C'est pas bientôt fini ce raffut ? Si vous avez cassé mon billard, ne pensez pas que vous vous en sortirez indemne.\" \n \n \u00a0 Vous avez encore le temps de quitter les lieux, vous partez en récupérant la boule de billard.",
-      "mjreveal": "  Donner aux joueurs une \"Boule de Chris Tale\"",
+      "desc": "\n\u00a0 Une fois [les_race_2] au sol, vous entendez le barman crier : \"C'est pas bientôt fini ce raffut ? Si vous avez cassé mon billard, ne pensez pas que vous vous en sortirez indemne.\" \n\n\u00a0 Vous avez encore le temps de quitter les lieux, vous partez en récupérant la boule de billard.",
+      "mjreveal": " Donner aux joueurs une \"Boule de Chris Tale\"",
       "name":"pub2-1-1",
       "timer": false,
       "choices": [
@@ -1233,7 +1233,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0  Vous laissez la boule au sol et retourner dans votre vaisseau.",
+      "desc": "\n\u00a0 Vous laissez la boule au sol et retourner dans votre vaisseau.",
       "name":"pub2-2",
       "timer": false,
       "choices": [
@@ -1259,7 +1259,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 L'Aku vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\n \n \u00a0 Il n'en reste que 3...",
+      "desc": "\n\u00a0 L'Aku vous pointe du doigt un tableau sur lequel est écrit la liste des boissons disponibles.\n\n\u00a0 Il n'en reste que 3...",
       "name":"pub3-1",
       "timer": false,
       "choices": [
@@ -1294,20 +1294,20 @@
     },
     {
       "desc": "\n\u00a0 Vous vous approchez de la table, les trois [nos_race_4] se levent et se préparent au combat.",
-      "mjreveal": "  l'un d'eux est un boss si possible ",
+      "mjreveal": " l'un d'eux est un boss si possible ",
       "name":"pub3-2-1",
       "timer": false,
       "choices": [
         {
           "value": "Terminer le combat",
           "next": "pub3-2-1-1",
-          "mjreveal": "  finir le combat avant de cliquer"
+          "mjreveal": " finir le combat avant de cliquer"
         }
       ]
     },
     {
-      "desc": "\n\u00a0 Une fois les trois [nos_race_4] mis hors combat, le barman les prend et les jette en dehors de son pub.\n \u00a0  Vous récupérez l'une de leurs armes et retournez dans votre vaisseau. ",
-      "mjreveal": "  donner une arme aux joueurs ",
+      "desc": "\n\u00a0 Une fois les trois [nos_race_4] mis hors combat, le barman les prend et les jette en dehors de son pub.\n\u00a0  Vous récupérez l'une de leurs armes et retournez dans votre vaisseau. ",
+      "mjreveal": " donner une arme aux joueurs ",
       "name":"pub3-2-1-1",
       "timer": false,
       "choices": [
@@ -1319,7 +1319,7 @@
     },
     {
       "start": true,
-      "desc": "\n\u00a0 Vous apercevez au loin une vieille station-service qui semble être abandonnée.\n \n \u00a0 À la radio, vous entendez un message en boucle disant : \"Bienvenue voyageurs, venez faire vos emplettes à la Station de Lavage Automatique et de Vente et Echange pendant que votre vaisseau se fait faire une nouvelle jeunesse.\"",
+      "desc": "\n\u00a0 Vous apercevez au loin une vieille station-service qui semble être abandonnée.\n\n\u00a0 À la radio, vous entendez un message en boucle disant : \"Bienvenue voyageurs, venez faire vos emplettes à la Station de Lavage Automatique et de Vente et Echange pendant que votre vaisseau se fait faire une nouvelle jeunesse.\"",
       "timer": false,
       "choices": [
         {
