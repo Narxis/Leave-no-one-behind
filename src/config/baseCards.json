@@ -1,7 +1,7 @@
 {
   "initial": [
     {
-      "desc": "\n\u00a0Mise à jour de l’autopilote en v7.27 \u005brev B\u005D {....} \n\u00a0Vérification de l’état des cryopods {....} \n\u00a01000 humains détectés, démarrage des cryopods {....} \n\u00a0Calcul de l’itinéraire en cours {....} \n\u00a0Quantité carburant ~ 250mg {....} \n\u00a0[conf_planetCount] planètes trouvées sur l’itinéraire {....} \n\u00a0Initialisation de la phase de lancement {....} \n\u00a0Le vaisseau est opérationnel et prêt à partir. Vous pouvez effectuer une dernière inspection avant le départ. \n\n\u00a0 Êtes-vous prêt à partir un jour sans retour ?",
+      "desc": "\n\u00a0Mise à jour de l'autopilote en v7.27 \u005brev B\u005D {....} \n\u00a0Vérification de l'état des cryopods {....} \n\u00a01000 humains détectés, démarrage des cryopods {....} \n\u00a0Calcul de l'itinéraire en cours {....} \n\u00a0Quantité carburant ~ 250mg {....} \n\u00a0[conf_planetCount] planètes trouvées sur l'itinéraire {....} \n\u00a0Initialisation de la phase de lancement {....} \n\u00a0Le vaisseau est opérationnel et prêt à partir. Vous pouvez effectuer une dernière inspection avant le départ. \n\n\u00a0 Êtes-vous prêt à partir un jour sans retour ?",
       "timer": "false",
       "choices": [
         {
@@ -27,7 +27,7 @@
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Vous remarquez que l'état [du_module-h-bdd_0] s'est amélioré. \n   Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n   Cela a résulté en une amélioration de l'état du module. \n   Vous ne savez cependant pas ce qui a causé ce changement.",
+          "desc": "\n\u00a0 Vous remarquez que l'état [du_module-h-bdd_0] s'est amélioré. \n\u00a0 Après avoir enquêté sur la cause de ce changement, vous trouvez que le vaisseau a automatiquement changé son comportement pour s'adapter aux dégâts subis. \n\u00a0 Cela a résulté en une amélioration de l'état du module. \n\u00a0 Vous ne savez cependant pas ce qui a causé ce changement.",
           "choices": [
             {
               "value": "Continuer à voyager sans capteurs",
@@ -43,13 +43,13 @@
       "choices": [
         {
           "value": "Lire le message",
-          "reveal": "\n\u00a0 Une mise à jour de votre bibliothèque de films est disponible. \n \n \u00a0 Vous devriez y jeter un coup d'oeil.",
-          "mjreveal": "  Remonte le moral"
+          "reveal": "\n\u00a0 Une mise à jour de votre bibliothèque de films est disponible. \n\n\u00a0 Vous devriez y jeter un coup d'oeil.",
+          "mjreveal": " Remonte le moral"
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Vous devriez lire vos messages un jour...",
-          "mjreveal": "  Perte de moral"
+          "mjreveal": " Perte de moral"
         }
       ]
     },
@@ -63,13 +63,13 @@
         },
         {
           "value": "Ne rien faire",
-          "reveal": "\n\u00a0 Il était peut-être gentil... \n \n \u00a0 Ou méchant, on ne le saura jamais...",
-          "mjreveal": "  Perte de moral."
+          "reveal": "\n\u00a0 Il était peut-être gentil... \n\n\u00a0 Ou méchant, on ne le saura jamais...",
+          "mjreveal": " Perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Votre vaisseau continue son trajet dans l'espace. \n   Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.",
+          "desc": "\n\u00a0 Votre vaisseau continue son trajet dans l'espace. \n\u00a0 Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.",
           "choices": [
             {
               "value": "Continuer à voyager sans capteurs",
@@ -80,8 +80,8 @@
       }
     },
     {
-      "desc": "\u00a0 Vous profitez d'un moment de calme pendant le voyage pour suivre un tutoriel de [de_stats_0]. \n \n \u00a0 Vous sentez vos capacités augmenter.",
-      "mjreveal": "  Rajouter 10 points à tous les joueurs dans leur statistique [de_stats_0]",
+      "desc": "\n\u00a0 Vous profitez d'un moment de calme pendant le voyage pour suivre un tutoriel de [de_stats_0]. \n\n\u00a0 Vous sentez vos capacités augmenter.",
+      "mjreveal": " Rajouter 10 points à tous les joueurs dans leur statistique [de_stats_0]",
       "timer": false,
       "choices": [
         {
@@ -96,13 +96,13 @@
       "choices": [
         {
           "value": "Lire le message",
-          "reveal": "\n\u00a0 Le message contient un système de défense contre les attaques informatiques. \n \n \u00a0 Il n'est utilisable qu'une fois.",
-          "mjreveal": "  Donne un \"Antivirus\""
+          "reveal": "\n\u00a0 Le message contient un système de défense contre les attaques informatiques. \n\n\u00a0 Il n'est utilisable qu'une fois.",
+          "mjreveal": " Donne un \"Antivirus\""
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 C'était un message l'OLI, c'est vraiment pas responsable...",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ]
     },
@@ -112,13 +112,13 @@
       "choices": [
         {
           "value": "Accepter le colis",
-          "reveal": "\n\u00a0 Le colis contient une SPIDER bomb et le manuel d'utilisation est illisible. \n \n \u00a0 Vous remarquez que l'auteur est Sylv.",
-          "mjreveal": "  Donne une \"SPIDER bomb\""
+          "reveal": "\n\u00a0 Le colis contient une SPIDER bomb et le manuel d'utilisation est illisible. \n\n\u00a0 Vous remarquez que l'auteur est Sylv.",
+          "mjreveal": " Donne une \"SPIDER bomb\""
         },
         {
           "value": "Questionner le livreur",
-          "reveal": "\n\u00a0 Le colis contient une SPIDER bomb, ce qui peut être utile en cas d'attaque. \n \n \u00a0 C'est une arme efficace qui ne cause pas beaucoup de dégâts collatéraux si elle est utilisée correctement.",
-          "mjreveal": "  Donne une \"SPIDER bomb\""
+          "reveal": "\n\u00a0 Le colis contient une SPIDER bomb, ce qui peut être utile en cas d'attaque. \n\n\u00a0 C'est une arme efficace qui ne cause pas beaucoup de dégâts collatéraux si elle est utilisée correctement.",
+          "mjreveal": " Donne une \"SPIDER bomb\""
         },
         {
           "value": "Faire croire qu'il n'y a personne.",
@@ -129,73 +129,73 @@
   ],
   "negative": [
     {
-      "desc": "\n\u00a0 Vos radars détectent des débris en mouvement à une vitesse élevée se dirigeant vers votre vaisseau. \n \n \u00a0 Ils vont percuter votre vaisseau au niveau [du_module_0].",
+      "desc": "\n\u00a0 Vos radars détectent des débris en mouvement à une vitesse élevée se dirigeant vers votre vaisseau. \n\n\u00a0 Ils vont percuter votre vaisseau au niveau [du_module_0].",
       "timer": true,
       "choices": [
         {
           "value": "Minimiser la casse",
           "reveal": "\n\u00a0 Vous essayez de minimiser les dégâts, mais les débris frappent votre vaisseau à une vitesse élevée et, malgré vos efforts, il est impossible de sauver intégralement le module.",
-          "mjreveal": "  Jet d'ingénieur"
+          "mjreveal": " Jet d'ingénieur"
         },
         {
           "value": "Tenter une manoeuvre d'evitement",
           "reveal": "\n\u00a0 Vous essayez d'éviter les débris, mais malheureusement, ils percutent une autre partie de votre vaisseau.",
-          "mjreveal": "  Jet de pilotage\n  Choississez un autre module."
+          "mjreveal": " Jet de pilotage\n Choississez un autre module."
         },
         {
           "value": "Ne rien faire",
-          "reveal": "\n\u00a0 Ne rien faire dans ce genre de situation n'est VRAIMENT PAS la meilleur chose à faire... \n \n \u00a0 Les débris ont gravement endommagé votre module.",
-          "mjreveal": "  Faire un roll des dégats du module et perte de moral."
+          "reveal": "\n\u00a0 Ne rien faire dans ce genre de situation n'est VRAIMENT PAS la meilleur chose à faire... \n\n\u00a0 Les débris ont gravement endommagé votre module.",
+          "mjreveal": " Faire un roll des dégats du module et perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Un débris a percuté [votre_module_0], vous auriez pu le détecter si vous aviez allumé vos modules de détection.",
+          "desc": "\n\u00a0 Un débris a percuté [votre_module_0], vous auriez pu le détecter si vous aviez allumé vos modules de détection.",
           "choices": [
             {
-              "value": "  Ne rien faire",
-              "reveal": "  Les débris ont gravement endommagé votre module.",
-              "mjreveal": "  Faire un roll des dégats du module et perte de moral."
+              "value": " Ne rien faire",
+              "reveal": "\n\u00a0 Les débris ont gravement endommagé votre module.",
+              "mjreveal": " Faire un roll des dégats du module et perte de moral."
             }
           ]
         }
       }
     },
     {
-      "desc": "\n\u00a0 L'hyper-espace devient instable, et vous êtes téléporté en dehors, en plein milieu d'un champ de bataille. \n \n \u00a0 Des tirs sont dirigés vers [votre_module_0].",
+      "desc": "\n\u00a0 L'hyper-espace devient instable, et vous êtes téléporté en dehors, en plein milieu d'un champ de bataille. \n\n\u00a0 Des tirs sont dirigés vers [votre_module_0].",
       "timer": true,
       "choices": [
         {
           "value": "Minimiser la casse",
           "reveal": "\n\u00a0 Vous tentez de minimiser les dommages causés par le tir, malgré vos efforts, il est impossible de sauver l'intégralité du module.",
-          "mjreveal": "  Jet d'ingénieur"
+          "mjreveal": " Jet d'ingénieur"
         },
         {
           "value": "Tenter une manoeuvre d'evitement",
           "reveal": "\n\u00a0 Vous essayez d'éviter le tir, mais malheureusement, il percute une autre partie de votre vaisseau.",
-          "mjreveal": "  Jet de pilotage\n  Choississez un autre module."
+          "mjreveal": " Jet de pilotage\n Choississez un autre module."
         },
         {
           "value": "Ne rien faire",
-          "reveal": "\n\u00a0 Vous auriez au moins pu faire semblant d'essayer... \n \n \u00a0 Le tir à gravement endommagé votre module.",
-          "mjreveal": "  Faire un roll des dégats du module et perte de moral."
+          "reveal": "\n\u00a0 Vous auriez au moins pu faire semblant d'essayer... \n\n\u00a0 Le tir à gravement endommagé votre module.",
+          "mjreveal": " Faire un roll des dégats du module et perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   L'hyper-espace devient instable et vous êtes téléporté en dehors, des tirs sont dirigés vers votre [votre_module_0].",
+          "desc": "\n\u00a0 L'hyper-espace devient instable et vous êtes téléporté en dehors, des tirs sont dirigés vers votre [votre_module_0].",
           "choices": [
             {
               "value": "Ne rien faire",
-              "reveal": "  Le tir à gravement endommagé votre module.",
-              "mjreveal": "  Faire un roll des dégats du module et perte de moral."
+              "reveal": "\n\u00a0 Le tir à gravement endommagé votre module.",
+              "mjreveal": " Faire un roll des dégats du module et perte de moral."
             }
           ]
         }
       }
     },
     {
-      "desc": "\n\u00a0 L'alarme retentit, le module d'oxygène s'éteint. \n \u00a0 Vous disposez d'assistances respiratoires individuelles qui vous permettent de rester conscient. \n \u00a0 Un intrus est détecté dans le vaisseau et se dirige vers le cockpit. \n \u00a0 Il s'agit d'un mercenaire, il exige la remise de 100 humains en échange de la réactivation de votre module d'oxygène et de son départ.",
+      "desc": "\n\u00a0 L'alarme retentit, le module d'oxygène s'éteint. \n\u00a0 Vous disposez d'assistances respiratoires individuelles qui vous permettent de rester conscient. \n\u00a0 Un intrus est détecté dans le vaisseau et se dirige vers le cockpit. \n\u00a0 Il s'agit d'un mercenaire, il exige la remise de 100 humains en échange de la réactivation de votre module d'oxygène et de son départ.",
       "timer": true,
       "choices": [
         {
@@ -205,7 +205,7 @@
         {
           "value": "Négocier",
           "reveal": "\n\u00a0 Le mercenaire accepte de négocier et rallume votre module d'oxygène.",
-          "mjreveal": "  Négociations avec le MJ"
+          "mjreveal": " Négociations avec le MJ"
         },
         {
           "value": "Céder les 100 humains",
@@ -220,22 +220,22 @@
         {
           "value": "Eteindre les modules de détection",
           "reveal": "\n\u00a0 Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace.",
-          "mjreveal": "  Donne le status \"blackout\"."
+          "mjreveal": " Donne le status \"blackout\"."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Le traitement des données excédentaires génère des erreurs, causant des dommages à tous les modules.",
-          "mjreveal": "  Faire un roll de dégats sur tout les modules et perte de moral."
+          "mjreveal": " Faire un roll de dégats sur tout les modules et perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Vous apercevez au loin la lumière d'un pulsar, heureusement que vos modules de détection sont éteints, sinon ils auraient pu être endommagés.",
+          "desc": "\n\u00a0 Vous apercevez au loin la lumière d'un pulsar, heureusement que vos modules de détection sont éteints, sinon ils auraient pu être endommagés.",
           "choices": [
             {
               "value": "Continuer votre voyage",
-              "reveal": "  Votre voyage continue paisiblement.",
-              "mjreveal": "  Faire un roll de dégats sur tout les modules et perte de moral."
+              "reveal": "\n\u00a0 Votre voyage continue paisiblement.",
+              "mjreveal": " Faire un roll de dégats sur tout les modules et perte de moral."
             }
           ]
         }
@@ -248,22 +248,22 @@
         {
           "value": "Eteindre les modules de détection",
           "reveal": "\n\u00a0 Vous éteignez les capteurs et naviguez à l'aveugle dans l'espace.",
-          "mjreveal": "  Donne le status \"blackout\"."
+          "mjreveal": " Donne le status \"blackout\"."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs.",
-          "mjreveal": "  Faire un roll de dégats sur tout les modules et perte de moral."
+          "mjreveal": " Faire un roll de dégats sur tout les modules et perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Une explosion lointaine vous aveugle pendant de longues secondes. \n   Il semble qu'une supernova ait explosé non loin de vous. \n   Heureusement, vos systèmes de détection étant éteints, ils ont pu être préservés des dommages.",
+          "desc": "\n\u00a0 Une explosion lointaine vous aveugle pendant de longues secondes. \n\u00a0 Il semble qu'une supernova ait explosé non loin de vous. \n\u00a0 Heureusement, vos systèmes de détection étant éteints, ils ont pu être préservés des dommages.",
           "choices": [
             {
               "value": ">Continuer votre voyage",
-              "reveal": "  Votre voyage continue.",
-              "mjreveal": "  Faire un roll de dégats sur tout les modules et perte de moral."
+              "reveal": "\n\u00a0 Votre voyage continue.",
+              "mjreveal": " Faire un roll de dégats sur tout les modules et perte de moral."
             }
           ]
         }
@@ -276,22 +276,22 @@
         {
           "value": "Eteindre les modules de détection",
           "reveal": "\n\u00a0 Au moment où vous éteignez vos capteurs, un groupe de yorcs se téléporte dans votre vaisseau et vous agresse.",
-          "mjreveal": "  Engage un combat contre des Yorcs et donne le status \"blackout\"."
+          "mjreveal": " Engage un combat contre des Yorcs et donne le status \"blackout\"."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Le surplus de données crée des erreurs dans leur traitement, tous les modules sont endommagés à cause de ces erreurs.",
-          "mjreveal": "  Faire un roll de dégats sur tout les modules et perte de moral."
+          "mjreveal": " Faire un roll de dégats sur tout les modules et perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Vous traversez un amas stellaire, la grande quantité d'étoiles aurait pu surcharger vos capteurs d'informations, mais heureusement ils sont éteints et ne courent aucun risque d'être endommagés.",
+          "desc": "\n\u00a0 Vous traversez un amas stellaire, la grande quantité d'étoiles aurait pu surcharger vos capteurs d'informations, mais heureusement ils sont éteints et ne courent aucun risque d'être endommagés.",
           "choices": [
             {
               "value": "Continuer votre voyage",
-              "reveal": "  Votre voyage continue paisiblement.",
-              "mjreveal": "  Faire un roll de dégats sur tout les modules et perte de moral."
+              "reveal": "\n\u00a0 Votre voyage continue paisiblement.",
+              "mjreveal": " Faire un roll de dégats sur tout les modules et perte de moral."
             }
           ]
         }
@@ -304,30 +304,30 @@
         {
           "value": "Continuer votre voyage",
           "reveal": "\n\u00a0 Vos capteurs doivent être redémarrés, vous poursuivez votre voyage à l'aveugle.",
-          "mjreveal": "  Donne le status \"blackout\", si les joueurs l'ont déjà, l'actualise."
+          "mjreveal": " Donne le status \"blackout\", si les joueurs l'ont déjà, l'actualise."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   L'affichage du micro-onde clignote, il semble que des ondes électromagnétiques puissantes ont traversé votre vaisseau.",
+          "desc": "\n\u00a0 L'affichage du micro-onde clignote, il semble que des ondes électromagnétiques puissantes ont traversé votre vaisseau.",
           "choices": [
             {
               "value": "Continuer votre voyage",
-              "reveal": "  Vos capteurs doivent être redémarrés, vous poursuivez votre voyage à l'aveugle.",
-              "mjreveal": "  Donne le status \"blackout\", si les joueurs l'ont déjà, l'actualise."
+              "reveal": "\n\u00a0 Vos capteurs doivent être redémarrés, vous poursuivez votre voyage à l'aveugle.",
+              "mjreveal": " Donne le status \"blackout\", si les joueurs l'ont déjà, l'actualise."
             }
           ]
         }
       }
     },
     {
-      "desc": "\n\u00a0 Tout est calme pour l'instant. \n \n \u00a0 Le bruit des écrans et des machines remplit l'air, mais ne parvient pas à masquer le vide qui vous entoure.",
+      "desc": "\n\u00a0 Tout est calme pour l'instant. \n\n\u00a0 Le bruit des écrans et des machines remplit l'air, mais ne parvient pas à masquer le vide qui vous entoure.",
       "timer": false,
       "choices": [
         {
           "value": "Continuer le voyage",
           "reveal": "\n\u00a0 Votre voyage continue, vous espérez étancher votre soif d'aventure.",
-          "mjreveal": "  Baisse de moral"
+          "mjreveal": " Baisse de moral"
         }
       ]
     },
@@ -338,175 +338,175 @@
         {
           "value": "Tenter de minimiser les dégats",
           "reveal": "\n\u00a0 Malgré vos efforts, pousser les moteurs au-delà de leur seuil de sécurité a tout de même endommagé leur intégrité.",
-          "mjreveal": "  Roll ingénieur"
+          "mjreveal": " Roll ingénieur"
         },
         {
           "value": "Accélérer",
           "reveal": "\n\u00a0 Il fallait pas avoir peur comme ça, les moteurs sont gravement endommagés à cause de vous.",
-          "mjreveal": "  Faire un roll des dégats sur les moteurs"
+          "mjreveal": " Faire un roll des dégats sur les moteurs"
         }
       ]
     },
     {
-      "desc": "\n\u00a0 Vous rencontrez un barrage de la première douane galactique et on vous demande de vous ranger sur le bas-côté. \n \n \u00a0 La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer.",
+      "desc": "\n\u00a0 Vous rencontrez un barrage de la première douane galactique et on vous demande de vous ranger sur le bas-côté. \n\n\u00a0 La douane considère tous vos consommables comme des biens illégaux et menace de vous les confisquer.",
       "timer": false,
       "choices": [
         {
           "value": "Negocier avec les douanniers",
           "reveal": "\n\u00a0 Vous essayez de négocier avec la douane, qui est surprenamment ouverte à ce genre de pratique.",
-          "mjreveal": "  Négociations avec le MJ"
+          "mjreveal": " Négociations avec le MJ"
         },
         {
           "value": "Menacer de les attaquer en justice grâce a votre avo-cat-e\n(Nek-Air présente)",
           "reveal": "\n\u00a0 La douane est terrifiée à l'idée de devoir aller au tribunal contre une Nek-air et vous laisse passer.",
-          "mjreveal": "  Une Nek-air doit faire partie de l'équipage."
+          "mjreveal": " Une Nek-air doit faire partie de l'équipage."
         },
         {
           "value": "Donnez vos consommables à la douane",
           "reveal": "\n\u00a0 Vous donnez vos consommables à la douane, qui vous laisse repartir.",
-          "mjreveal": "  Retire tout les consommables, sauf les items starters."
+          "mjreveal": " Retire tout les consommables, sauf les items starters."
         }
       ]
     },
     {
-      "desc": "\n\u00a0 Votre vaisseau est expulsé de l'hyperespace et vous atterrissez dans un nuage toxique. \n \u00a0 L'odeur qui s'en dégage est similaire à celle d'une foule de Fneks réunis dans un stade. \n \n \u00a0 Votre module de purification d'air est endommagé.",
+      "desc": "\n\u00a0 Votre vaisseau est expulsé de l'hyperespace et vous atterrissez dans un nuage toxique. \n\u00a0 L'odeur qui s'en dégage est similaire à celle d'une foule de Fneks réunis dans un stade. \n\n\u00a0 Votre module de purification d'air est endommagé.",
       "timer": true,
       "choices": [
         {
           "value": "Tenter de réparer le module d'oxygène",
-          "reveal": "\n\u00a0 Vous essayez de réparer le module, malgré vos efforts, il est impossible de sauver l'intégralité du module.\n \u00a0 L'odeur est insuportable mais les fneks et les yorcs ne sont pas plus génés que ça. ",
-          "mjreveal": "  Roll ingénieur\n  Rolle de dégats sur le module d'oxygène et perte de moral pour tout l'équipage sauf pour les Yorcs et les Fneks"
+          "reveal": "\n\u00a0 Vous essayez de réparer le module, malgré vos efforts, il est impossible de sauver l'intégralité du module.\n\u00a0 L'odeur est insuportable mais les fneks et les yorcs ne sont pas plus génés que ça. ",
+          "mjreveal": " Roll ingénieur\n Roll de dégats sur le module d'oxygène et perte de moral pour tout l'équipage sauf pour les Yorcs et les Fneks"
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Faites un effort quand même... ",
-          "mjreveal": "  Perte de moral pour tout l'équipage sauf pour les Yorcs et les Fneks"
+          "mjreveal": " Perte de moral pour tout l'équipage sauf pour les Yorcs et les Fneks"
         }
       ]
     },
     {
-      "desc": "\n\u00a0 De la vie a été détectée dans la salle des cryopods. Elle a été verrouillée de l'intérieur, vous entendez quelqu'un parler, il dit :\n \n \u00a0 \"Je suis membre de la PEACE, donnez-moi 2 microprocesseurs et 1 câble HDMI.\"",
+      "desc": "\n\u00a0 De la vie a été détectée dans la salle des cryopods. Elle a été verrouillée de l'intérieur, vous entendez quelqu'un parler, il dit :\n\n\u00a0 \"Je suis membre de la PEACE, donnez-moi 2 microprocesseurs et 1 câble HDMI.\"",
       "timer": true,
       "choices": [
         {
           "value": "Négocier avec le pirate ",
           "reveal": "\n\u00a0 Le pirate accepte de négocier. ",
-          "mjreveal": "Négocier avec le MJ\n  Négocier avec le MJ"
+          "mjreveal": " Négocier avec le MJ"
         },
         {
           "value": "Récupérer les micro-processeurs dans [le_module-h-bdd_1]",
-          "reveal": "\n\u00a0 Vous récupérez des microprocesseurs dans [le_module-h-bdd_1], cela endommage un peu le module.\n \n \u00a0 Vous les donnez au pirate qui se plaint de ne pas avoir de câble HDMI, mais il se téléporte hors du vaisseau.",
-          "mjreveal": "  Faire un roll de dégats sur [le_module-h-bdd_1]."
+          "reveal": "\n\u00a0 Vous récupérez des microprocesseurs dans [le_module-h-bdd_1], cela endommage un peu le module. \n\n\u00a0 Vous les donnez au pirate qui se plaint de ne pas avoir de câble HDMI, mais il se téléporte hors du vaisseau.",
+          "mjreveal": " Faire un roll de dégats sur [le_module-h-bdd_1]."
         },
         {
           "value": "Désactiver l'injection d'oxygène dans la salle",
-          "reveal": "\n\u00a0 Après quelques minutes, il n'y a plus de signe de vie dans la salle des cryopods, mais le pirate a profité de ce temps pour éteindre des cryopods.\n \n \u00a0 Vous réactivez l'oxygène dans la salle et vous débarrassez des corps.",
-          "mjreveal": "  Faire un roll de dégats sur les cryopods et le multiplier par 10."
+          "reveal": "\n\u00a0 Après quelques minutes, il n'y a plus de signe de vie dans la salle des cryopods, mais le pirate a profité de ce temps pour éteindre des cryopods.\n\n\u00a0 Vous réactivez l'oxygène dans la salle et vous débarrassez des corps.",
+          "mjreveal": " Faire un roll de dégats sur les cryopods et le multiplier par 10."
         }
       ]
     },
     {
-      "desc": "\n\u00a0 Les secousses du vaisseau ont fait renverser des produits chimiques dans la réserve dégageant une odeur de putrescence avancée. \n \n \u00a0 Les drones de nettoyage n'ont pas accès à la réserve, il faut donc qu'une personne s'en occupe.",
+      "desc": "\n\u00a0 Les secousses du vaisseau ont fait renverser des produits chimiques dans la réserve dégageant une odeur de putrescence avancée. \n\n\u00a0 Les drones de nettoyage n'ont pas accès à la réserve, il faut donc qu'une personne s'en occupe.",
       "timer": false,
       "choices": [
         {
           "value": "Envoyer un membre de l'équipage",
-          "reveal": "\n\u00a0 L'odeur est si puissante que vous ne pouvez pas la décrire.\n \u00a0 Elle vous donne la nausée, mais vous parvenez finalement à résoudre l'incident. ",
-          "mjreveal": "  Forte perte de morale pour le joueur choisit"
+          "reveal": "\n\u00a0 L'odeur est si puissante que vous ne pouvez pas la décrire. \n\u00a0 Elle vous donne la nausée, mais vous parvenez finalement à résoudre l'incident. ",
+          "mjreveal": " Forte perte de morale pour le joueur choisit"
         },
         {
           "value": "Activer le système de filtrage de l'air",
-          "reveal": "\n\u00a0 Vous activez le système de recyclage d'air du vaisseau, les vapeurs chimiques se dissipent peu à peu, mais l'odeur persiste dans la ventilation.\n \u00a0 Vous prenez des mesures pour éliminer complètement cette odeur et assurer la sécurité à bord du vaisseau.",
-          "mjreveal": "  Faible perte de morale pour tous l'équipage sauf pour les Fneks."
+          "reveal": "\n\u00a0 Vous activez le système de recyclage d'air du vaisseau, les vapeurs chimiques se dissipent peu à peu, mais l'odeur persiste dans la ventilation.\n\u00a0 Vous prenez des mesures pour éliminer complètement cette odeur et assurer la sécurité à bord du vaisseau.",
+          "mjreveal": " Faible perte de morale pour tous l'équipage sauf pour les Fneks."
         },
         {
           "value": "Envoyer un Fnek \n(Fnek présent)",
           "reveal": "\n\u00a0 Votre coéquipier, dépourvu de sens de l'odorat, s'attèle à la tâche avec détermination, pour lui c'est comme éponger une flaque d'eau.",
-          "mjreveal": "  Un Fnek doit faire partie de l'équipage."
+          "mjreveal": " Un Fnek doit faire partie de l'équipage."
         }
       ]
     },
     {
-      "desc": "\n\u00a0 Vous croisez sur le bord de la voie cosmique une QI-zine d'Ygrl accompagnée d'une poignée de Shrymps. \n \u00a0 La chef de la tribu tient un pot de cornichons fermé dans ses mains, ni elle ni les autres membres de la tribu ne parviennent à l'ouvrir.\n \u00a0 Elle attire votre attention à l'aide de son mycélium cosmique et vous fait comprendre qu'elle a besoin de votre aide.",
+      "desc": "\n\u00a0 Vous croisez sur le bord de la voie cosmique une QI-zine d'Ygrl accompagnée d'une poignée de Shrymps. \n\u00a0 La chef de la tribu tient un pot de cornichons fermé dans ses mains, ni elle ni les autres membres de la tribu ne parviennent à l'ouvrir.\n\u00a0 Elle attire votre attention à l'aide de son mycélium cosmique et vous fait comprendre qu'elle a besoin de votre aide.",
       "timer": false,
       "choices": [
         {
           "value": "Ouvrir le pot de cornichon",
           "reveal": "\n\u00a0 Vous réussisez finalement à ouvrir le pot de cornichon mais vous découvrez que la chef des Ygrls a essayé de vous tromper en vous faisant croire qu'elle avait besoin d'aide avec le pot de cornichons, alors qu'en réalité, elle envoyait ses sbires voler des vivres dans votre réserve pendant que vous étiez occupé.",
-          "mjreveal": "  Faible perte de morale pour tous les joueurs"
+          "mjreveal": " Faible perte de morale pour tous les joueurs"
         },
         {
           "value": "Demander à l'Omphor de l'équipage d'ouvrir le pot \n(Omphor présent)",
           "reveal": "\n\u00a0 D'un simple geste de la main, l'Omphor ouvre le pot de cornichons et le soulève au-dessus de sa tête pour célébrer sa victoire.\n \u00a0 Vous rendez le pot aux Ygrls qui sont impressionnées par cette démonstration de force. Elles reprennent leur voyage immédiatement. ",
-          "mjreveal": "  Un Omphor doit faire partie de l'équipage.\n  Remonte le moral"
+          "mjreveal": " Un Omphor doit faire partie de l'équipage.\n Remonte le moral"
         }
       ]
     },
     {
-      "desc": "\n\u00a0 Vous êtes touché par un projectile qui a percé la coque du vaisseau. \n \u00a0 Les systèmes de réparation ont rapidement colmaté la brèche, mais vous découvrez que ce projectile est une Spider-bomb. \n \n \u00a0 Il faut la désamorcer rapidement.",
+      "desc": "\n\u00a0 Vous êtes touché par un projectile qui a percé la coque du vaisseau. \n\u00a0 Les systèmes de réparation ont rapidement colmaté la brèche, mais vous découvrez que ce projectile est une Spider-bomb. \n\n\u00a0 Il faut la désamorcer rapidement.",
       "timer": true,
       "choices": [
         {
           "value": "Envoyer un membre de l'équipage",
-          "reveal": "\n\u00a0 Vous recevez une alerte indiquant qu'une spider-bomb a atterri dans la salle de cinéma à bord de votre vaisseau. \n \u00a0 Vous dépêchez un membre de l'équipe pour la désamorcer. \n \u00a0 Les portes sont verrouillées une fois qu'il se retrouve seul avec le dispositif, mais malheureusement, la bombe explose, libérant des araignées mycophiles qui se dirigent rapidement vers les conduits d'aération.",
-          "mjreveal": "  Forte perte de moral pour le membre désigné."
+          "reveal": "\n\u00a0 Vous recevez une alerte indiquant qu'une spider-bomb a atterri dans la salle de cinéma à bord de votre vaisseau. \n\u00a0 Vous dépêchez un membre de l'équipe pour la désamorcer. \n\u00a0 Les portes sont verrouillées une fois qu'il se retrouve seul avec le dispositif, mais malheureusement, la bombe explose, libérant des araignées mycophiles qui se dirigent rapidement vers les conduits d'aération.",
+          "mjreveal": " Forte perte de moral pour le membre désigné."
         },
         {
           "value": "Envoyer un Sylv désamorcer la bombe\n (Sylv présent)",
-          "reveal": "\n\u00a0 Le Sylv découvre une étiquette sur la spider-bomb, il la lit et réalise qu'il s'agit du manuel de désamorçage. \n \n \u00a0 Les instructions sont claires et la bombe est rapidement désamorcée avec succès.",
-          "mjreveal": "  Un sylv doit faire partie de l'équipage.\n  Donne une \"SPIDER bomb\"."
+          "reveal": "\n\u00a0 Le Sylv découvre une étiquette sur la spider-bomb, il la lit et réalise qu'il s'agit du manuel de désamorçage. \n\n\u00a0 Les instructions sont claires et la bombe est rapidement désamorcée avec succès.",
+          "mjreveal": " Un sylv doit faire partie de l'équipage.\n Donne une \"SPIDER bomb\"."
         },
         {
           "value": "Ne rien faire",
-          "reveal": "\n\u00a0 Vous vérrouillez les portes coupes-feu de la salle de cinéma et attendez d'entendre un bruit sourd venant de celle-ci. \n \u00a0 Sur les caméras un épais nuage de fumée vous empêche de voir ce qu'il s'y passe. \n \u00a0 Malheureusement, vous perdez la moitié de votre collection de films de pétanque dans l'incident.",
-          "mjreveal": "  Perte de moral pour tout l'équipage."
+          "reveal": "\n\u00a0 Vous vérrouillez les portes coupes-feu de la salle de cinéma et attendez d'entendre un bruit sourd venant de celle-ci. \n\u00a0 Sur les caméras un épais nuage de fumée vous empêche de voir ce qu'il s'y passe. \n\u00a0 Malheureusement, vous perdez la moitié de votre collection de films de pétanque dans l'incident.",
+          "mjreveal": " Perte de moral pour tout l'équipage."
         }
       ]
     },
     {
-      "desc": "\n\u00a0 Vous recevez un message vidéo d'un groupe d'extrémistes appelé les \"Shrymps Hacker d'Informations Antifongiques Sécurisés\" qui vous annoncent qu'ils ont pris possession de 16% de vos bases de données scientifiques et historiques. \n \u00a0 Après un discours confus sur leur méthode d'action, ils vous menacent de supprimer ces données si vous ne leur donnez pas 2 de vos consommables.",
+      "desc": "\n\u00a0 Vous recevez un message vidéo d'un groupe d'extrémistes appelé les \"Shrymps Hacker d'Informations Antifongiques Sécurisés\" qui vous annoncent qu'ils ont pris possession de 16% de vos bases de données scientifiques et historiques. \n\u00a0 Après un discours confus sur leur méthode d'action, ils vous menacent de supprimer ces données si vous ne leur donnez pas 2 de vos consommables.",
       "timer": true,
       "choices": [
         {
           "value": "Négocier avec les Shrymps ",
           "reveal": "\n\u00a0 Les hackers acceptent de négocier. ",
-          "mjreveal": "Négocier avec le MJ\n  Forcer une mauvaise négociation avec le MJ"
+          "mjreveal": "Négocier avec le MJ\n Forcer une mauvaise négociation avec le MJ"
         },
         {
           "value": "Donner 2 consommables",
           "reveal": "\n\u00a0 Les Shrymps ont accepté vos consommables, mais malheureusement, ils ont quand même supprimé 8% de votre base de données scientifiques, car elle contenait des informations sur les recettes de cuisine à base de champignons.",
-          "mjreveal": "  Retire 2 consommables."
+          "mjreveal": " Retire 2 consommables."
         },
         {
           "value": "Demander à une Ygrl de les raisonner\n (Ygrl présente)",
-          "reveal": "\n\u00a0 Vous demandez à l'Ygrl de votre équipage d'enregistrer une vidéo en réponse aux Shrymps.\n \u00a0 Après 15 minutes, vous recevez un autre message des Shrymps s'excusant de vous avoir menacé et vous expliquant qu'ils ont commis une erreur en prenant possession de ces données.",
-          "mjreveal": "  Une Ygrl doit faire partie de l'équipage."
+          "reveal": "\n\u00a0 Vous demandez à l'Ygrl de votre équipage d'enregistrer une vidéo en réponse aux Shrymps.\n\u00a0 Après 15 minutes, vous recevez un autre message des Shrymps s'excusant de vous avoir menacé et vous expliquant qu'ils ont commis une erreur en prenant possession de ces données.",
+          "mjreveal": " Une Ygrl doit faire partie de l'équipage."
         },
         {
           "value": "Ne rien faire",
-          "reveal": "\n\u00a0 Les Shrymps ont supprimé 16% de votre base de données scientifique et 16% de votre base de données historique en raison de votre absence de réponse. \n \n \u00a0 Ils vous ont envoyé un message: \"Cheh !\".",
-          "mjreveal": "  Retire 16% de BDD Scientifique et 16% de BDD Historique et perte de moral."
+          "reveal": "\n\u00a0 Les Shrymps ont supprimé 16% de votre base de données scientifique et 16% de votre base de données historique en raison de votre absence de réponse. \n\n\u00a0 Ils vous ont envoyé un message: \"Cheh !\".",
+          "mjreveal": " Retire 16% de BDD Scientifique et 16% de BDD Historique et perte de moral."
         }
       ]
     },
     {
-      "desc": "\n\u00a0 Vous entrez dans une zone fortement radiée qui affecte le système de \"direction-horaire\" de votre vaisseau. \n \n \u00a0  L'autopilote essaie constamment de corriger les problèmes d'orientation, ce qui pourrait endommager les moteurs.",
+      "desc": "\n\u00a0 Vous entrez dans une zone fortement radiée qui affecte le système de \"direction-horaire\" de votre vaisseau. \n\n\u00a0  L'autopilote essaie constamment de corriger les problèmes d'orientation, ce qui pourrait endommager les moteurs.",
       "timer": false,
       "choices": [
         {
           "value": "Renforcer les moteurs",
-          "reveal": "\n\u00a0 Malgré vos efforts pour prévenir les dégâts sur les moteurs, le système de navigation ne parvient pas à faire la différence entre l'heure actuelle et la direction à prendre. \n \n \u00a0  Vous vous dirigez maintenant vers 16h30 en direction de mercredi.",
-          "mjreveal": "  Roll ingénieur\n  Faire un roll de dégats sur les moteurs."
+          "reveal": "\n\u00a0 Malgré vos efforts pour prévenir les dégâts sur les moteurs, le système de navigation ne parvient pas à faire la différence entre l'heure actuelle et la direction à prendre. \n\n\u00a0  Vous vous dirigez maintenant vers 16h30 en direction de mercredi.",
+          "mjreveal": " Roll ingénieur\n Faire un roll de dégats sur les moteurs."
         },
         {
           "value": "Recalibrer le système à l'aide d'une montre-boussole d'Aku\n(Aku présent)",
           "reveal": "\n\u00a0 Vous placez la boussole dans le micro-ondes du tableau de bord, ce qui a pour effet de réinitialiser les systèmes de navigation. Vous poursuivez votre chemin.",
-          "mjreveal": "  Un Aku doit faire partie de l'équipage.\n  L'Aku peut récuperer sa montre-boussole."
+          "mjreveal": " Un Aku doit faire partie de l'équipage.\n L'Aku peut récuperer sa montre-boussole."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Le système de direction-horaire du vaisseau doit redémarrer, vous perdez temporairement l'utilisation de vos instruments de navigation.",
-          "mjreveal": "  Donne le status \"blackout\" et perte de moral."
+          "mjreveal": " Donne le status \"blackout\" et perte de moral."
         }
       ]
     },
@@ -517,29 +517,29 @@
         {
           "value": "Ouvrir le sas d'entrée",
           "reveal": "\n\u00a0 [Le_race_0] monte à bord et vous agresse.",
-          "mjreveal": "  Engage un combat."
+          "mjreveal": " Engage un combat."
         },
         {
           "value": "Ne rien faire",
-          "reveal": "\n\u00a0 Il était peut-être gentil... \n \n \u00a0 Ou méchant, on ne le saura jamais...",
-          "mjreveal": "  Perte de moral."
+          "reveal": "\n\u00a0 Il était peut-être gentil... \n\n\u00a0 Ou méchant, on ne le saura jamais...",
+          "mjreveal": " Perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Votre vaisseau continue son trajet dans l'espace. \n   Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.",
+          "desc": "\n\u00a0 Votre vaisseau continue son trajet dans l'espace. \n\u00a0 Les capteurs sont éteints, pour l'instant vous n'avez repéré aucun dysfonctionnement.",
           "choices": [
             {
-              "value": "  Continuer à voyager sans capteurs",
-              "reveal": "  Votre voyage continue.",
-              "mjreveal": "  Perte de moral."
+              "value": " Continuer à voyager sans capteurs",
+              "reveal": "\n\u00a0 Votre voyage continue.",
+              "mjreveal": " Perte de moral."
             }
           ]
         }
       }
     },
     {
-      "desc": "\n\u00a0 L'alarme retentit, 3 intrus se sont teleporté à bord.\n \n \u00a0 [Un_race_1], [un_race_2] et [un_race_3] vous agresse. ",
+      "desc": "\n\u00a0 L'alarme retentit, 3 intrus se sont teleporté à bord.\n\n\u00a0 [Un_race_1], [un_race_2] et [un_race_3] vous agresse. ",
       "timer": false,
       "choices": [
         {
@@ -551,49 +551,49 @@
   ],
   "neutral": [
     {
-      "desc": "\n\u00a0 Vos capteurs détectent un vaisseau, il appartient à [des_race_0].\n \n \u00a0 Voulez-vous entrer en contact avec le vaisseau ?",
+      "desc": "\n\u00a0 Vos capteurs détectent un vaisseau, il appartient à [des_race_0].\n\n\u00a0 Voulez-vous entrer en contact avec le vaisseau ?",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
           "reveal": "\n\u00a0 L'équipage du vaisseau communique avec vous, ils vous apprécient et vous donne des outils pour réparer un module de votre choix. ",
-          "mjreveal": "  Remonte le moral et donne des \"outils de réparation\"."
+          "mjreveal": " Remonte le moral et donne des \"outils de réparation\"."
         },
         {
           "value": "Les inviter à bord",
           "reveal": "\n\u00a0 L'équipage du vaisseau monte à bord, ils ont l'air amicaux. Une fois qu'ils sont repartis, vous constatez que [votre_module-h-bdd_0] ont été endommagés.",
-          "mjreveal": "  Faire un roll de dégats sur [le_module-h-bdd_0]."
+          "mjreveal": " Faire un roll de dégats sur [le_module-h-bdd_0]."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Vous avez râté une occasion de vous faire des amis...",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
-              "reveal": "  Votre voyage continue.",
-              "mjreveal": "  Perte de moral."
+              "reveal": "\n\u00a0 Votre voyage continue.",
+              "mjreveal": " Perte de moral."
             }
           ]
         }
       }
     },
     {
-      "desc": "\n\u00a0 Vous remarquez une entité en plus sur la carte du vaisseau.\n \n \u00a0 Vous avez un passager clandestin ! \n \n \u00a0 Quelqu'un doit rester au cockpit, qui envoyez-vous à la rencontre du passager ?",
+      "desc": "\n\u00a0 Vous remarquez une entité en plus sur la carte du vaisseau.\n\n\u00a0 Vous avez un passager clandestin ! \n\n\u00a0 Quelqu'un doit rester au cockpit, qui envoyez-vous à la rencontre du passager ?",
       "timer": false,
       "choices": [
         {
           "value": "Envoyer 1 équipier",
-          "reveal": "\n\u00a0 Le passager est [un_race_0], il appartient au clan \"Destin\" et pense que cette rencontre était prédestinée. \n \n \u00a0 Il propose de vous aider en mettant à disposition [ses_stats_0]."
+          "reveal": "\n\u00a0 Le passager est [un_race_0], il appartient au clan \"Destin\" et pense que cette rencontre était prédestinée. \n\n\u00a0 Il propose de vous aider en mettant à disposition [ses_stats_0]."
         },
         {
           "value": "Envoyer un robot de \"nettoyage\"",
-          "reveal": "\n\u00a0 Le robot de nettoyage s'exécute, il agit rapidement sans faire de bruit. \n \n \u00a0 En un rien de temps, le marqueur sur la carte du vaisseau disparaît."
+          "reveal": "\n\u00a0 Le robot de nettoyage s'exécute, il agit rapidement sans faire de bruit. \n\n\u00a0 En un rien de temps, le marqueur sur la carte du vaisseau disparaît."
         }
       ]
     },
@@ -604,7 +604,7 @@
         {
           "value": "Telecharger la transmission",
           "reveal": "\n\u00a0 Bonjour être inférieur *scrrrch* ...grand monarque *scrrrch* ...danger sur votre route *scrrrch* ...car comme le disait si bien le préfet Dimalou *scrrrch* ...solution de l'univers ! Faites attention à vous *scrrrch* mercredi.  ",
-          "mjreveal": "  Donne le status \"Anticipation\"."
+          "mjreveal": " Donne le status \"Anticipation\"."
         },
         {
           "value": "Marquer le message comme \"lu\"",
@@ -613,7 +613,7 @@
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Il faut penser à vider votre boite mail un jour...",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ]
     },
@@ -623,8 +623,8 @@
       "choices": [
         {
           "value": "Telecharger la transmission.",
-          "reveal": "\n\u00a0 Bonjour membres de l'OLI, \n \n \u00a0 Je me présente, Fnek Scécrable représentant galactique de la Fnak \n \u00a0 Je viens vous prévenir que nous somme de votre côté avec à disposition une arme nucléaire à puissance et portée sans précédent. \n \u00a0 Si vous vous trouvez dans une situation dangereuse lancez ce programme qui nous indiquera la position de votre cible : \n \u00a0 \"MDMA.py\" \n \n (ps: il faut 21 jours avant de recharger le massive death missile of annihilation) ",
-          "mjreveal": "  Donne status \"Anticipation\""
+          "reveal": "\n\u00a0 Bonjour membres de l'OLI, \n\n\u00a0 Je me présente, Fnek Scécrable représentant galactique de la Fnak \n\u00a0 Je viens vous prévenir que nous somme de votre côté avec à disposition une arme nucléaire à puissance et portée sans précédent. \n\u00a0 Si vous vous trouvez dans une situation dangereuse lancez ce programme qui nous indiquera la position de votre cible : \n\u00a0 \"MDMA.py\" \n \n (ps: il faut 21 jours avant de recharger le massive death missile of annihilation) ",
+          "mjreveal": " Donne status \"Anticipation\""
         },
         {
           "value": "Marquer le message comme \"lu\"",
@@ -633,7 +633,7 @@
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Il faut penser à vider votre boite mail un jour...",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ]
     },
@@ -644,60 +644,60 @@
         {
           "value": "Entrer en contact",
           "reveal": "\n\u00a0 Les Sylvs vous parlent des recherches de \"Dimalou\". Vous ne comprenez pas un mot de ce qu'ils racontent, mais ils vous ont bien diverti",
-          "mjreveal": "  Gain de moral."
+          "mjreveal": " Gain de moral."
         },
         {
           "value": "Les inviter à bord",
-          "reveal": "\n\u00a0 Les Sylvs n'ont pas compris vos intentions et sont offusqués de cette proposition. \n \n \u00a0 Ils vous insultent et repartent.",
-          "mjreveal": "  Perte de moral."
+          "reveal": "\n\u00a0 Les Sylvs n'ont pas compris vos intentions et sont offusqués de cette proposition. \n\n\u00a0 Ils vous insultent et repartent.",
+          "mjreveal": " Perte de moral."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Le vaisseau s'éloigne hors de portée de vos radars.",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
-              "reveal": "  Votre voyage continue.",
-              "mjreveal": "  Perte de moral."
+              "reveal": "\n\u00a0 Votre voyage continue.",
+              "mjreveal": " Perte de moral."
             }
           ]
         }
       }
     },
     {
-      "desc": "\n\u00a0 Vos capteurs détectent un vaisseau, il appartient à des Ygrls. \n \n \u00a0 Voulez vous entrer en contact avec le vaisseau ?",
+      "desc": "\n\u00a0 Vos capteurs détectent un vaisseau, il appartient à des Ygrls. \n\n\u00a0 Voulez vous entrer en contact avec le vaisseau ?",
       "timer": false,
       "choices": [
         {
           "value": "Entrer en contact",
-          "reveal": "\n\u00a0 Les Ygrls essaient tant bien que mal de communiquer avec vous, mais la barrière linguistique empêche toute discussion intelligible. \n \u00a0 Elles vous envoient des plats typiques de leur culture pour montrer leur amitié avant de poursuivre leur périple. ",
-          "mjreveal": "  Gain de moral."
+          "reveal": "\n\u00a0 Les Ygrls essaient tant bien que mal de communiquer avec vous, mais la barrière linguistique empêche toute discussion intelligible. \n\u00a0 Elles vous envoient des plats typiques de leur culture pour montrer leur amitié avant de poursuivre leur périple. ",
+          "mjreveal": " Gain de moral."
         },
         {
           "value": "Les inviter à bord",
           "reveal": "\n\u00a0 Des Ygrls apparaissent dans votre vaisseau et vous attaquent",
-          "mjreveal": "  Engage un combat contre des Ygrls."
+          "mjreveal": " Engage un combat contre des Ygrls."
         },
         {
           "value": "Ne rien faire",
           "reveal": "\n\u00a0 Le vaisseau s'éloigne hors de portée de vos radars.",
-          "mjreveal": "  Perte de moral."
+          "mjreveal": " Perte de moral."
         }
       ],
       "alts": {
         "blackout": {
-          "desc": "\n\u00a0   Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
+          "desc": "\n\u00a0 Vos capteurs sont toujours éteints , vous attendez avec impatience leur redémarrage.",
           "choices": [
             {
               "value": "Attendre",
-              "reveal": "  Votre voyage continue.",
-              "mjreveal": "  Perte de moral."
+              "reveal": "\n\u00a0 Votre voyage continue.",
+              "mjreveal": " Perte de moral."
             }
           ]
         }
