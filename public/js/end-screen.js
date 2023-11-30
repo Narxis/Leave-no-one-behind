@@ -1,16 +1,42 @@
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+//Recap var :
+var o2 = document.getElementById('reading-1');
+var cl = document.getElementById('reading-2');
+var ff = document.getElementById('reading-3');
+var re = document.getElementById('reading-4');
+var gr = document.getElementById('reading-6');
+var eau = document.getElementById('reading-5');
+var valueo2 = parseInt(o2.getAttribute('data-value'));
+var valuecl = parseInt(cl.getAttribute('data-value'));
+var valuefaune = parseInt(ff.getAttribute('data-fauvalue'));
+var valueflore = parseInt(ff.getAttribute('data-flovalue'));
+var valueciv = parseInt(ff.getAttribute('data-civvalue'));
+var valuere = parseInt(re.getAttribute('data-value'));
+var valuegr = parseInt(gr.getAttribute('data-value'));
+var valueeau = parseInt(eau.getAttribute('data-value'));
+const oxyValTab = [0,0.2,0.4,0.6,0.8,1];
+const clValTab = [0,0.25,0.5,0.75,1];
+const fauneValTab = [0,0.25,0.5,0.75,1];
+const floreValTab = [0,0.25,0.5,0.75,1];
+const civValTab = [0,0.1,0.2,0.8,1];
+const reValTab = [0,0.2,0.4,0.6,0.8,1];
+const grValTab = [0,0.3,0.6,0.8,1];
+const eauValTab = [0,0.2,0.3,0.4,0.6,0.8,1];
+var pre_planetState = valueo2*85 + valuegr*60 + valueeau*95 + valuere*80 + valuefaune*30 + valueflore*30 + valueciv*65 + valuecl*55 ;
+var planetState = Math.floor(pre_planetState/25);
+
+
 var scoreMultiplier = ["Humain", "Etat du vaisseau", "Etat de la planète"];
 var scoreAdder = ["Bonus carte", "Autres"]
-var bonusCarte = score.scoreCards;
-var shipState = score.scoreShip;
-var humans = ship.cryopods;
-var planetState = score.scorePlanet;
+var bonusCarte = Math.floor(score.scoreCards/100);
+var shipState = Math.floor(score.scoreShip/25);
+var humans = ship.cryopods-1;
 var other = 69;
-var valueScoreMultiplier = [humans, shipState, planetState];
+var valueScoreMultiplier = [humans, shipState-1, planetState-1];
 var valueScoreAdder = [bonusCarte, other];
-var currentscore = "1";
+var currentscore = "0";
 var scoring = false;
 var iswritting = 0
 
@@ -193,30 +219,7 @@ var planetText = pickRandom('planet');
 var cardText = pickRandom('card');
 var nerfText = 'Echelonnage des valeurs';
 var otherText = lang.card_vars.end_screen['other']['text1']
-var textArr = [humanText, shipText, planetText, nerfText, cardText, otherText];
-//Recap var :
-var o2 = document.getElementById('reading-1');
-var cl = document.getElementById('reading-2');
-var ff = document.getElementById('reading-3');
-var re = document.getElementById('reading-4');
-var gr = document.getElementById('reading-6');
-var eau = document.getElementById('reading-5');
-var valueo2 = o2.getAttribute('data-value');
-var valuecl = cl.getAttribute('data-value');
-var valuefaune = ff.getAttribute('data-fauvalue');
-var valueflore = ff.getAttribute('data-flovalue');
-var valueciv = ff.getAttribute('data-civvalue');
-var valuere = re.getAttribute('data-value');
-var valuegr = gr.getAttribute('data-value');
-var valueeau = eau.getAttribute('data-value');
-const oxyValTab = [0,0.2,0.4,0.6,0.8,1];
-const clValTab = [0,0.25,0.5,0.75,1];
-const fauneValTab = [0,0.25,0.5,0.75,1];
-const floreValTab = [0,0.25,0.5,0.75,1];
-const civValTab = [0,0.1,0.2,0.8,1];
-const reValTab = [0,0.2,0.4,0.6,0.8,1];
-const grValTab = [0,0.3,0.6,0.8,1];
-const eauValTab = [0,0.2,0.3,0.4,0.6,0.8,1];
+var textArr = [humanText, shipText, planetText, cardText, otherText];
 
 
 const getPlanetText = function (name,value,valueList,isgrav = false){
@@ -262,9 +265,9 @@ async function scoreCalcul() {
         while (iswritting != 0) {
             await sleep(100)
         }
-        scoreUp('1', '' + valueScoreMultiplier[i], 'amount' + i, speed)
+        scoreUp('1', '' + (1+valueScoreMultiplier[i]), 'amount' + i, speed)
         if (i==0){
-            scoreUp('1','' + valueScoreMultiplier[i], 'humain-value', speed)
+            scoreUp('1','' + (valueScoreMultiplier[i]+1), 'humain-value', speed)
         }
         if (i==1){
             for (let j=0; j<6; j++){
@@ -282,7 +285,11 @@ async function scoreCalcul() {
                 writeNoWait(recapText[j], document.getElementById('reading-'+(j+1)), '', true, interval)
             }
         }
-        score = parseInt(currentscore, 10) * valueScoreMultiplier[i];
+        score = parseInt(currentscore, 10) + Math.floor((valueScoreMultiplier[i]+1)*90/100) ;
+        if (parseInt(currentscore, 10)==0){
+            currentscore = "1";
+        }
+        score = score + (Math.floor(parseInt(currentscore, 10)/100) * Math.floor((valueScoreMultiplier[i]+1)*(20-(i*5))/100))
         scoreUp(currentscore, "" + score, 'amountfinal', speed).then(async function () {
             await sleep(500)
             scoring = false
@@ -295,20 +302,6 @@ async function scoreCalcul() {
     }
     text = id.innerText
     await sleep(1000);
-    write ('', id, '', false)
-    while (iswritting != 0) {
-        await sleep(100)
-    }
-    write(textArr[3], id,'', false)
-    while (iswritting != 0) {
-        await sleep(100)
-    }
-    score = Math.floor(score / 500000);
-    scoreDown(currentscore, '' + score, 'amountfinal', 75).then(async function () {
-        await sleep(1000)
-        scoring = false
-        currentscore = "" + score;
-    });
     speed = 100;
     for (let i = 0; i < scoreAdder.length; i++) {
         while (scoring) {
@@ -316,7 +309,7 @@ async function scoreCalcul() {
         }
         await sleep(1000)
         text = id.innerText;
-        write(textArr[4 + i], id, '', false);
+        write(textArr[3 + i], id, '', false);
         while (iswritting != 0) {
             await sleep(100)
         }
