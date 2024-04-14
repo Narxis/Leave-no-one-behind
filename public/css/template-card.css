@@ -95,7 +95,7 @@
   display: flex;
   align-items: flex-start;
   position: relative;
-  background: var(--lgrad), url(https://cdn.discordapp.com/attachments/935265509933477929/1027214236507701328/dark-space-wallpaper-d9c058bda14a3d5b66f7a82fc091d6ad.jpg);
+  background: var(--lgrad), url(https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
   background-position: var(--bY) var(--bX);
   background-size: 800px auto;
   transition: transform .6s 1s;
