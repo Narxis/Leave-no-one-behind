@@ -434,13 +434,26 @@ input[type="checkbox"] {
 
 /*---vvv---Objets (coffre des joueurs, volet objets)---vvv---*/
 
-/* Objet sans icône : pastille neutre à la place d'une image cassée */
+/* Objet sans icône : rond avec l'initiale de l'objet (une pastille carrée
+   vide ressemblait à une case à cocher) */
 .item-noimg {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
-    border-radius: 6px;
-    background: var(--ui-fill);
-    box-shadow: inset 0 0 0 1px var(--ui-border);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgb(176 166 255 / 45%), rgb(60 40 140 / 60%));
+    box-shadow: inset 0 0 0 1px var(--ui-border-strong);
+    color: var(--ui-text);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: default;
+}
+
+.todos .item-noimg {
+    font-size: 18px;
 }
 
 /* Menu du coffre au-dessus de la carte joueur (opacité, visibilité et
