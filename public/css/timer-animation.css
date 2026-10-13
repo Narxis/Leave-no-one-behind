@@ -212,19 +212,19 @@
 /*---vvv-----Timer Idle------vvv---*/
 #bigboite.idle #arm1 {
   opacity: 1;
-  animation: gunfloat1 2s ease-out infinite;
+  animation: gunfloat1 2s ease-in-out infinite;
 }
 
 #bigboite.idle #arm2 {
-  animation: gunfloat2 2s ease-out infinite;
+  animation: gunfloat2 2s ease-in-out infinite;
 }
 
 #bigboite.idle #arm3 {
-  animation: gunfloat3 2s ease-out infinite;
+  animation: gunfloat3 2s ease-in-out infinite;
 }
 
 #bigboite.idle #jaw-up {
-  animation: gunfloat4 2s ease-out infinite;
+  animation: gunfloat4 2s ease-in-out infinite;
 }
 
 @keyframes gunfloat1 {
@@ -327,12 +327,12 @@
   }
 
   25% {
-    transform: scale(150);
+    transform: scale(14);
     opacity: 0.8;
   }
 
   100% {
-    transform: scale(150);
+    transform: scale(14);
     opacity: 0;
   }
 }
@@ -453,6 +453,7 @@
 }
 
 .blue-orbit {
+  --ax: 1, 1, 0;
   width: 165px;
   height: 165px;
   border: 1px solid #ffffff;
@@ -462,15 +463,17 @@
 }
 
 .green-orbit {
+  --ax: 0, 1, 1;
   width: 120px;
   height: 120px;
   border: 1px solid #ffffff;
   background: rgb(255, 255, 255);
   background: radial-gradient(circle, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 36%, rgba(255, 255, 255, 1) 55%, rgba(255, 255, 255, 0) 56%);
-  animation: spin3D .95s reverse 0s infinite;
+  animation: spin3D .95s linear 0s infinite reverse;
 }
 
 .red-orbit {
+  --ax: 1, 0, 1;
   width: 90px;
   height: 90px;
   border: 1px solid #ffffff;
@@ -483,19 +486,19 @@
   width: 60px;
   height: 60px;
   border: 2px solid #ffffff;
-  animation: spin3D .7s reverse 0s infinite;
+  animation: spin3D .7s linear 0s infinite reverse;
 }
 
 .w1 {
-  transform: rotate3D(1, 1, 1, 90deg);
+  --ax: 1, 1, 1;
 }
 
 .w2 {
-  transform: rotate3D(1, 2, .5, 90deg);
+  --ax: 1, 2, .5;
 }
 
 .w3 {
-  transform: rotate3D(.5, 1, 2, 90deg);
+  --ax: .5, 1, 2;
 }
 
 #bigboite.float #floatboite {
@@ -505,26 +508,22 @@
 }
 
 @keyframes spin3D {
-  0% {
-    transform: rotate3d(.5, .5, .5, 360deg);
+  from {
+    transform: rotate3d(var(--ax, 1, 1, 0), 0deg);
   }
 
-  50% {
-    transform: rotate3d(0, 0, 0, 180deg);
-  }
-
-  100% {
-    transform: rotate3d(-0.5, -0.5, -0.5, 360deg);
+  to {
+    transform: rotate3d(var(--ax, 1, 1, 0), 360deg);
   }
 }
 
 @keyframes laserfloat {
   0% {
-    top: 15px;
+    translate: 0 15px;
   }
 
   100% {
-    top: 9px;
+    translate: 0 9px;
   }
 }
 
@@ -552,15 +551,20 @@
 }
 
 @keyframes shotarm1 {
-  0% {}
+  0% {
+    transform: rotate(-8deg);
+    animation-timing-function: ease-in-out;
+  }
 
   30% {
     transform: rotate(20deg);
+    animation-timing-function: ease-in;
   }
 
   70% {
     opacity: 1;
     transform: rotate(-65deg);
+    animation-timing-function: ease-out;
   }
 
   100% {
@@ -570,14 +574,18 @@
 }
 
 @keyframes shotarm2 {
-  0% {}
+  0% {
+    transform: rotate(20deg);
+  }
 
   40% {
     transform: rotate(120deg);
+    animation-timing-function: ease-in;
   }
 
   70% {
     transform: rotate(-10deg);
+    animation-timing-function: ease-out;
   }
 
   100% {
@@ -586,7 +594,9 @@
 }
 
 @keyframes shotarm3 {
-  0% {}
+  0% {
+    transform: rotate(-16deg);
+  }
 
   50% {
     transform: rotate(99deg);
@@ -602,17 +612,21 @@
 }
 
 @keyframes shotjaw-up {
-  0% {}
+  0% {
+    transform: rotate(-4deg);
+  }
 
   25% {
     transform: rotate(-50deg);
   }
 
   70% {
-    transform: rotate(15deg)
+    transform: rotate(15deg);
   }
 
-  100% {}
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 @keyframes shotjaw-down {
@@ -697,13 +711,11 @@
 
 @keyframes timer-beat {
   0% {
-    fill: #ff7b6b;
-    filter: drop-shadow(0 0 3px rgba(255, 50, 40, .95));
+    fill: #ff8a7a;
   }
 
   100% {
     fill: red;
-    filter: drop-shadow(0 0 1px rgba(255, 0, 0, .35));
   }
 }
 
@@ -712,20 +724,18 @@
   0%,
   45% {
     fill: #ffd2c8;
-    filter: drop-shadow(0 0 4px rgba(255, 60, 40, 1));
   }
 
   50%,
   100% {
     fill: #a00000;
-    filter: none;
   }
 }
 
 /*---vvv------Boule d'énergie------vvv---*/
 #bigboite.grow #boulboite {
   transform: scale(var(--charge, 0));
-  transition: transform .9s cubic-bezier(.34, 1.56, .64, 1), opacity 3s;
+  transition: transform 1s linear, opacity 3s;
 }
 
 #boulboite::before {
@@ -949,7 +959,6 @@
   transform-origin: 140px 360px;
   transform: scaleX(0);
   opacity: 0;
-  filter: drop-shadow(0 0 6px rgba(255, 140, 40, .8));
   transition: transform .4s ease-in, opacity .4s ease-in;
 }
 
