@@ -313,3 +313,116 @@
 }
 
 /*---^^^---Rafraîchissement de la page carte---^^^---*/
+
+/*---vvv---Volet objets : lignes, case "utilisé" et bouton +---vvv---*/
+
+/* Bouton + du champ "Add item..." centré verticalement (marge de 5px avant) */
+.content .input-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.content .input-buttons i {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* Ligne d'objet : case | icône | nom, alignés */
+.content input[type="checkbox"]+label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    padding: 0 10px 0 36px;
+    border-radius: 10px;
+    color: var(--ui-text);
+    text-shadow: none;
+    font-weight: 600;
+}
+
+.content input[type="checkbox"]+label:hover {
+    background-color: var(--ui-fill-hover);
+}
+
+.todos .item-image {
+    position: static;
+    float: none;
+    flex: none;
+    width: 26px;
+    height: 26px;
+    top: auto;
+    left: auto;
+}
+
+.todos .item-noimg {
+    font-size: 12px;
+}
+
+.todos p {
+    position: static;
+    top: auto;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Case "utilisé" : rond aux couleurs du jeu au lieu du rond blanc,
+   coche dessinée en CSS (avant : image chargée depuis un site externe) */
+.content input[type="checkbox"]+label span.check {
+    left: 10px;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    box-sizing: border-box;
+    background: transparent;
+    border: 1.5px solid var(--ui-border-strong);
+    box-shadow: none;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.content input[type="checkbox"]+label:hover span.check {
+    border-color: var(--ui-accent);
+}
+
+.content input[type="checkbox"]+label span.check::before {
+    display: none;
+}
+
+.content input[type="checkbox"]+label span.check::after {
+    width: 4px;
+    height: 8px;
+    left: 4.5px;
+    top: 1.5px;
+    background: none;
+    border: solid #1a1033;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    filter: none;
+}
+
+.content input[type="checkbox"]:checked+label span.check {
+    background: var(--ui-accent);
+    border-color: var(--ui-accent);
+}
+
+.content input[type="checkbox"]:checked+label span.check::after {
+    transform: rotate(45deg) scale(1);
+}
+
+.content input[type="checkbox"]:checked+label {
+    color: var(--ui-text-dim);
+}
+
+.content li i.delete {
+    color: var(--ui-text-dim);
+    transition: color 150ms var(--ui-ease);
+}
+
+.content li i.delete:hover {
+    color: var(--ui-danger);
+}
+
+/*---^^^---Volet objets---^^^---*/
