@@ -125,10 +125,10 @@ function quickUpdateModule(el, mod, left=false) {
     let isCryopods = mod === 'cryopods';
     let maxVal = isCryopods ? 1000 : 100;
     if (left) {
-        currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText);
+        currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText) || 0;
     }
     else {
-        currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value'));
+        currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value')) || 0;
         input = document.getElementsByName('i-'+ mod)[0];
         inputVal = input.value;
     }
@@ -184,6 +184,10 @@ function setModuleVal(mod, newValue, left) {
     let isCryopods = mod === 'cryopods';
     let maxVal = isCryopods ? 1000 : 100;
 
+    // Une valeur non numérique (case vide, saisie invalide) ne doit jamais
+    // être affichée ni envoyée au serveur
+    newValue = Number(newValue);
+    if (!Number.isFinite(newValue)) return;
     newValue = Math.min(Math.max(newValue, 0), maxVal);
 
     if (left) {
