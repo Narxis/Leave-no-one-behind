@@ -1,5 +1,6 @@
 // Combat côté MJ : préparation des adversaires, début / fin du combat,
-// PV et attaques des ennemis. L'état fait foi côté serveur
+// PV et attaques des ennemis, et désignation des attaques des joueurs
+// (cible puis attaquant ; le joueur valide avec /roll Combat sur Discord). L'état fait foi côté serveur
 // (src/controllers/combat.js) et revient par l'événement « combat ».
 (function () {
     const list = document.getElementById('mj-enemies');
@@ -12,6 +13,8 @@
     let pending = [];      // adversaires préparés avant le combat
     let startMoral = {};   // moral des joueurs au début, pour les évanouissements
     let localLog = [];     // lignes visibles uniquement par le MJ
+    let players = [];      // joueurs de la partie, pour choisir l'attaquant
+    let targetId = null;   // ennemi choisi, en attente du choix de l'attaquant
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -57,9 +60,37 @@
         });
     }
 
+    // Attaque désignée, en attente du /roll Combat du joueur
+    function renderWaiting() {
+        let p = state.pending;
+        if (!p)
+            return;
+        let box = el('div', 'mj-waiting');
+        box.append(el('span', 'mj-waiting-text', 'En attente du /roll Combat de ' + p.player + ' sur ' + p.enemy),
+            button('mj-waiting-cancel', 'Annuler', () => wsLNOB.send({action: 'combat-cancel', data: {}})));
+        list.append(box);
+    }
+
+    // Choix du joueur qui attaque l'ennemi ciblé
+    function renderAttackers(enemy) {
+        let box = el('div', 'mj-attackers');
+        box.append(el('span', 'mj-attackers-label', 'Qui attaque ' + enemy.name + ' ?'));
+        if (!players.length)
+            box.append(el('span', 'mj-attackers-label', 'aucun joueur dans la partie'));
+        for (let p of players)
+            box.append(button('mj-attacker', p.name, () => {
+                targetId = null;
+                wsLNOB.send({action: 'combat-target', data: {enemy_id: enemy.id, discord_id: p.discord_id}});
+            }));
+        list.append(box);
+    }
+
     function renderActive() {
+        renderWaiting();
         for (let enemy of state.enemies) {
-            let row = el('div', 'mj-enemy' + (enemy.hp <= 0 ? ' ko' : ''));
+            let targeted = state.pending && state.pending.enemy_id === enemy.id;
+            let row = el('div', 'mj-enemy' + (enemy.hp <= 0 ? ' ko' : '') + (targeted ? ' targeted' : '')
+                + (targetId === enemy.id ? ' selecting' : ''));
             row.append(el('div', 'mj-enemy-name', enemy.name));
 
             let bar = el('div', 'mj-enemy-bar');
@@ -80,8 +111,19 @@
             attack.disabled = enemy.hp <= 0;
             attack.title = 'Offense ' + enemy.offense + ' % — dégâts ' + TIERS[enemy.damage];
 
-            row.append(bar, hp, attack);
+            let aim = button('mj-enemy-target', 'Cibler', () => {
+                targetId = targetId === enemy.id ? null : enemy.id;
+                render();
+            });
+            aim.disabled = enemy.hp <= 0;
+            aim.title = 'Choisir le joueur qui attaque cet ennemi (défense ' + enemy.defense + ')';
+
+            let actions = el('div', 'mj-enemy-actions');
+            actions.append(aim, attack);
+            row.append(bar, hp, actions);
             list.append(row);
+            if (targetId === enemy.id && enemy.hp > 0)
+                renderAttackers(enemy);
         }
     }
 
@@ -111,9 +153,11 @@
     async function recordMoral() {
         startMoral = {};
         try {
-            for (let p of await getAllPlayers())
+            players = await getAllPlayers();
+            for (let p of players)
                 startMoral[p.discord_id] = p.moral;
         } catch (e) {}
+        render();
     }
 
     // Règle reprise de l'ancien menu : -10 de moral pendant le combat = évanoui

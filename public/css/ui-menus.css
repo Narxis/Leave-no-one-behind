@@ -563,7 +563,7 @@ body.mj-page {
 .mj-enemies.active .mj-enemy {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-        "name attack"
+        "name actions"
         "bar  bar"
         "hp   hp";
 }
@@ -653,8 +653,99 @@ body.mj-page {
     text-align: center;
 }
 
+.mj-enemy-actions {
+    grid-area: actions;
+    display: flex;
+    gap: 6px;
+}
+
+.mj-enemy-target {
+    padding: 5px 12px;
+    border: 1px solid rgb(255 204 0 / 55%);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-accent);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mj-enemy-target:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.mj-enemy.selecting {
+    border-color: var(--ui-accent);
+}
+
+.mj-enemy.targeted {
+    border-color: var(--ui-danger);
+    box-shadow: 0 0 0 1px var(--ui-danger);
+}
+
+.mj-attackers {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: -2px 0 4px;
+    padding: 10px;
+    border: 1px dashed rgb(255 204 0 / 45%);
+    border-radius: 10px;
+}
+
+.mj-attackers-label {
+    width: 100%;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.mj-attacker {
+    padding: 7px 14px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mj-attacker:hover {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.mj-waiting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid rgb(255 90 110 / 50%);
+    border-radius: 10px;
+    background: rgb(255 90 110 / 10%);
+    font-size: 13px;
+    animation: mj-waiting 1.6s ease-in-out infinite;
+}
+
+@keyframes mj-waiting {
+    50% { border-color: rgb(255 90 110 / 20%); }
+}
+
+.mj-waiting-cancel {
+    flex: none;
+    padding: 5px 10px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    cursor: pointer;
+}
+
 .mj-enemy-attack {
-    grid-area: attack;
     padding: 5px 12px;
     border-color: rgb(255 90 110 / 55%);
     color: var(--ui-danger);

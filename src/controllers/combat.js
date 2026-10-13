@@ -11,7 +11,8 @@ const LOG_SIZE = 20;
 
 // État du combat en cours, gardé en mémoire : il est renvoyé à chaque
 // action pour que l'écran de jeu et le menu MJ restent synchronisés
-let state = {active: false, enemies: [], log: []};
+// pending : attaque désignée par le MJ, en attente du /roll Combat du joueur
+let state = {active: false, enemies: [], log: [], pending: null};
 let nextId = 1;
 
 const rollRange = ([min, max]) => min + Math.floor(Math.random() * (max - min + 1));
@@ -54,12 +55,13 @@ const findEnemy = function (id) {
 
 const start = function (data) {
     let enemies = (data.enemies || []).map(makeEnemy);
-    state = {active: true, enemies: enemies, log: []};
+    state = {active: true, enemies: enemies, log: [], pending: null};
     return addLog({type: 'start'});
 }
 
 const end = function () {
     state.active = false;
+    state.pending = null;
     return addLog({type: 'end'});
 }
 
@@ -72,44 +74,66 @@ const setHp = function (data) {
     return addLog({type: 'hp', enemy_id: enemy.id, enemy: enemy.name, hp: enemy.hp});
 }
 
-// Attaque d'un joueur : son jet de combat habituel (Player.roll) doit
-// atteindre la défense de l'ennemi ; plus la marge est grande, plus le
-// palier de dégâts est élevé
-const playerAttack = async function (data) {
+// Le MJ désigne l'ennemi visé et le joueur qui attaque ; l'attaque attend
+// ensuite le /roll Combat de ce joueur sur Discord
+const target = async function (data) {
     let enemy = findEnemy(data.enemy_id);
+    if (!state.active || !enemy || enemy.hp <= 0)
+        return null;
+    let player = await new Player().getData(data.discord_id);
+    if (!player)
+        return null;
+    state.pending = {enemy_id: enemy.id, enemy: enemy.name, discord_id: player.discord_id, player: player.name};
+    return addLog(Object.assign({type: 'target'}, state.pending));
+}
+
+const cancelTarget = function () {
+    let pending = state.pending;
+    if (!pending)
+        return null;
+    state.pending = null;
+    return addLog({type: 'target-cancel', enemy: pending.enemy, player: pending.player});
+}
+
+// Appelé après chaque /roll : si c'est le jet de combat attendu, il règle
+// l'attaque. Le jet (Player.roll) doit atteindre la défense de l'ennemi ;
+// plus la marge est grande, plus le palier de dégâts est élevé
+const resolveRoll = function (roll) {
+    let data = roll && roll.data;
+    let pending = state.pending;
+    if (!state.active || !pending || !data || roll.error)
+        return null;
+    if (String(data.discord_id) !== String(pending.discord_id) || data.stat !== 'combat' || data.module)
+        return null;
+
+    state.pending = null;
+    let enemy = findEnemy(pending.enemy_id);
     if (!enemy || enemy.hp <= 0)
         return null;
-    let dice = Math.floor(Math.random() * 100) + 1;
-    let player = await new Player().getData(data.discord_id);
-    let result;
-    if (player) {
-        result = await player.roll(dice, 'combat');
-    }
-    else {
-        // Personnage absent de la base (page de démo /template-card) :
-        // statistiques neutres, même calcul que Player.roll
-        player = {discord_id: data.discord_id, name: String(data.name || 'Personnage').slice(0, 40)};
-        result = Math.ceil(dice * 50 / 100);
-    }
-    let hit = result >= enemy.defense;
+
     let entry = {
         type: 'player-attack',
-        discord_id: player.discord_id,
-        player: player.name,
+        discord_id: pending.discord_id,
+        player: pending.player,
         enemy_id: enemy.id,
         enemy: enemy.name,
-        dice: dice,
-        result: result,
-        hit: hit
+        dice: data.dice_result,
+        result: data.result,
+        hit: data.result >= enemy.defense
     };
-    if (hit) {
-        let margin = result - enemy.defense;
+    if (entry.hit) {
+        let margin = entry.result - enemy.defense;
         entry.tier = margin < 15 ? 'faible' : (margin < 30 ? 'moyen' : 'fort');
         entry.damage = rollRange(DAMAGE[entry.tier]);
         enemy.hp = Math.max(0, enemy.hp - entry.damage);
         entry.ko = enemy.hp === 0;
     }
-    return addLog(entry);
+    addLog(entry);
+    return {
+        action: 'combat',
+        error: false,
+        data: {state: getState(), event: entry}
+    };
 }
 
 // Attaque d'un ennemi, lancée par le MJ : l'offense est la chance de
@@ -137,7 +161,8 @@ const ACTIONS = {
     'combat-start': start,
     'combat-end': end,
     'combat-hp': setHp,
-    'combat-attack': playerAttack,
+    'combat-target': target,
+    'combat-cancel': cancelTarget,
     'combat-enemy-attack': enemyAttack
 };
 
@@ -153,4 +178,4 @@ const handle = async function (response) {
     };
 }
 
-module.exports = {handle, getState, getBestiary, ACTIONS};
+module.exports = {handle, getState, getBestiary, resolveRoll, ACTIONS};

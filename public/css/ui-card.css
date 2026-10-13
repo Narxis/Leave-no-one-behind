@@ -665,25 +665,11 @@
     color: var(--ui-text);
     font-family: 'Jura', sans-serif;
     text-align: left;
-    cursor: pointer;
-    transition: border-color 150ms var(--ui-ease), background 150ms var(--ui-ease), transform 150ms var(--ui-ease), opacity 300ms;
-}
-
-.combat-enemy:hover:not(:disabled) {
-    border-color: rgb(255 90 110 / 60%);
-    background: rgb(255 90 110 / 8%);
-    transform: translateY(-2px);
-}
-
-.combat-enemy.selected {
-    border-color: var(--ui-danger);
-    background: rgb(255 90 110 / 12%);
-    box-shadow: 0 0 0 1px var(--ui-danger), 0 0 22px rgb(255 90 110 / 30%);
+    transition: border-color 150ms var(--ui-ease), background 150ms var(--ui-ease), opacity 300ms;
 }
 
 .combat-enemy.ko {
     opacity: 0.4;
-    cursor: default;
     filter: grayscale(1);
 }
 
@@ -779,44 +765,55 @@
     100% { opacity: 0; transform: translateY(-26px); }
 }
 
-/* Choix du personnage qui attaque */
-.combat-attackers {
+/* Attaque désignée par le MJ : le joueur doit lancer /roll Combat */
+.combat-pending {
     display: none;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: baseline;
     justify-content: center;
-    gap: 8px;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 100%;
+    gap: 0 6px;
+    padding: 10px 14px;
+    border: 1px solid rgb(255 204 0 / 45%);
+    border-radius: 12px;
+    background: rgb(255 204 0 / 7%);
+    font-size: 15px;
+    text-align: center;
 }
 
-.combat-attackers.is-open {
+.combat-pending.is-open {
     display: flex;
+    animation: combat-pending 1.6s ease-in-out infinite;
 }
 
-.combat-attackers-label {
-    margin-right: 4px;
-    font-size: 13px;
-    color: var(--ui-text-dim);
+@keyframes combat-pending {
+    50% { border-color: rgb(255 204 0 / 15%); }
 }
 
-.combat-attacker {
-    padding: 7px 14px;
-    border: 1px solid var(--ui-border-strong);
-    border-radius: 10px;
-    background: var(--ui-fill);
-    color: var(--ui-text);
+.combat-pending-player,
+.combat-pending-enemy {
+    font-weight: 700;
+}
+
+.combat-pending-player {
+    color: var(--ui-accent);
+}
+
+.combat-pending-enemy {
+    color: var(--ui-danger);
+}
+
+.combat-pending-cmd {
+    padding: 1px 7px;
+    border-radius: 6px;
+    background: rgb(255 255 255 / 10%);
     font-family: 'Jura', sans-serif;
     font-weight: 700;
-    cursor: pointer;
-    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease), color 150ms var(--ui-ease);
 }
 
-.combat-attacker:hover {
-    border-color: var(--ui-accent);
-    background: var(--ui-accent-soft);
-    color: var(--ui-accent);
+.combat-enemy.targeted {
+    border-color: var(--ui-danger);
+    background: rgb(255 90 110 / 12%);
+    box-shadow: 0 0 0 1px var(--ui-danger), 0 0 22px rgb(255 90 110 / 30%);
 }
 
 /* Journal */

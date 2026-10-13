@@ -4,6 +4,8 @@ function describeCombatEntry(entry, forMJ = false) {
         case 'start': return 'Le combat commence !';
         case 'end': return 'Fin du combat';
         case 'hp': return 'PV de ' + entry.enemy + ' : ' + entry.hp;
+        case 'target': return entry.player + ' doit lancer /roll Combat pour attaquer ' + entry.enemy;
+        case 'target-cancel': return 'Attaque de ' + entry.player + ' sur ' + entry.enemy + ' annulée';
         case 'player-attack':
             if (!entry.hit)
                 return entry.player + ' rate ' + entry.enemy + ' (' + entry.result + ')';

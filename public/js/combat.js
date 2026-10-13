@@ -1,14 +1,13 @@
 // Écran de combat sur la page des cartes : il s'ouvre quand le MJ lance le
-// combat. Les joueurs choisissent un adversaire puis le personnage qui
-// attaque ; le jet est fait par le serveur (src/controllers/combat.js).
+// combat. Le MJ désigne la cible et l'attaquant depuis son menu ; le joueur
+// valide l'attaque avec /roll Combat sur Discord (src/controllers/combat.js).
 (function () {
     const area = document.getElementById('combat-area');
     const enemiesBox = document.getElementById('combat-enemies');
-    const attackersBox = document.getElementById('combat-attackers');
+    const pendingBox = document.getElementById('combat-pending');
     const logBox = document.getElementById('combat-log');
 
     let state = {active: false, enemies: [], log: []};
-    let selected = null;
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -17,20 +16,11 @@
         return e;
     };
 
-    // Les personnages sont ceux des onglets joueurs en bas de l'écran
-    function players() {
-        return [...document.querySelectorAll('.player-tab')].map(tab => ({
-            discord_id: tab.id.replace('player-tab', ''),
-            name: tab.querySelector('.player-name').firstChild.textContent.trim()
-        }));
-    }
-
     function enemyCard(enemy) {
         let ko = enemy.hp <= 0;
-        let card = el('button', 'combat-enemy' + (ko ? ' ko' : '') + (selected === enemy.id ? ' selected' : ''));
-        card.type = 'button';
+        let targeted = state.pending && state.pending.enemy_id === enemy.id;
+        let card = el('div', 'combat-enemy' + (ko ? ' ko' : '') + (targeted ? ' targeted' : ''));
         card.dataset.id = enemy.id;
-        card.disabled = ko;
         card.append(el('div', 'combat-enemy-name', enemy.name));
 
         let bar = el('div', 'combat-enemy-bar');
@@ -44,31 +34,21 @@
         meta.append(el('span', 'combat-enemy-hp', ko ? 'K.O.' : enemy.hp + ' / ' + enemy.maxHp + ' PV'),
             el('span', 'combat-enemy-def', 'Défense ' + enemy.defense));
         card.append(meta);
-
-        card.addEventListener('click', () => {
-            selected = selected === enemy.id ? null : enemy.id;
-            render();
-        });
         return card;
     }
 
-    function renderAttackers() {
-        attackersBox.innerHTML = '';
-        let target = state.enemies.find(e => e.id === selected && e.hp > 0);
-        attackersBox.classList.toggle('is-open', !!target);
-        if (!target)
+    // Bandeau « à toi de jouer » pour le joueur désigné par le MJ
+    function renderPending() {
+        pendingBox.innerHTML = '';
+        let p = state.pending;
+        pendingBox.classList.toggle('is-open', !!p);
+        if (!p)
             return;
-        attackersBox.append(el('span', 'combat-attackers-label', 'Qui attaque ' + target.name + ' ?'));
-        for (let p of players()) {
-            let b = el('button', 'combat-attacker', p.name);
-            b.type = 'button';
-            b.addEventListener('click', () => {
-                wsLNOB.send({action: 'combat-attack', data: {discord_id: p.discord_id, name: p.name, enemy_id: target.id}});
-                selected = null;
-                render();
-            });
-            attackersBox.append(b);
-        }
+        pendingBox.append(el('span', 'combat-pending-player', p.player),
+            document.createTextNode(' : lancez '),
+            el('code', 'combat-pending-cmd', '/roll Combat'),
+            document.createTextNode(' sur Discord pour attaquer '),
+            el('span', 'combat-pending-enemy', p.enemy));
     }
 
     function renderLog() {
@@ -81,7 +61,7 @@
         enemiesBox.innerHTML = '';
         enemiesBox.dataset.count = state.enemies.length;
         state.enemies.forEach(e => enemiesBox.append(enemyCard(e)));
-        renderAttackers();
+        renderPending();
         renderLog();
     }
 
@@ -111,9 +91,8 @@
         if (!event)
             return;
         let card = enemiesBox.querySelector('[data-id="' + event.enemy_id + '"]');
+        // Le jet lui-même s'affiche déjà sur l'onglet du joueur (événement « roll »)
         if (event.type === 'player-attack') {
-            if (typeof doPlayerRoll === 'function' && document.getElementById('p' + event.discord_id + '-roll'))
-                doPlayerRoll({detail: {data: {discord_id: event.discord_id, module: '', result: event.result, success: event.hit}}});
             if (card) {
                 card.classList.add(event.hit ? 'hit' : 'miss');
                 floatText(card, event.hit ? '-' + event.damage : 'Raté', event.hit ? 'dmg' : 'miss');
@@ -127,8 +106,6 @@
 
     document.addEventListener('combat', (e) => {
         state = e.detail.data.state;
-        if (!state.enemies.some(en => en.id === selected && en.hp > 0))
-            selected = null;
         render();
         show(state.active);
         animate(e.detail.data.event);
