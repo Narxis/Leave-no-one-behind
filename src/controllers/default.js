@@ -144,7 +144,7 @@ module.exports = {
 
         if (!current_card) {
             await CONFIG.upsert('gameState', 'postGame');
-            res.redirect('/land');
+            return res.redirect('/land');
         }
 
         let vars = {
@@ -464,6 +464,9 @@ module.exports = {
 
     async land(req, res) {
         let ship = await new Ship().getData();
+        // Pas de partie en cours : retour à l'accueil au lieu de crasher
+        if (!ship)
+            return res.redirect('/');
         await ship.land();
 
         res.redirect('/score')
@@ -471,7 +474,8 @@ module.exports = {
 
     async showScore(req, res) {
     let ship = await new Ship().getData();
-    await ship.getData();
+    if (!ship)
+        return res.redirect('/');
 
     let deck = await getDeck();
 
@@ -500,6 +504,9 @@ module.exports = {
     }
 
     let planet = await lastPlanet();
+    // Aucune planète jouée : pas de score possible
+    if (!planet)
+        return res.redirect('/');
 
     let scoreShip = 30*ship.scanner
         + 30*ship.proximity
