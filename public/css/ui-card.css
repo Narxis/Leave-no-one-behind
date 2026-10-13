@@ -100,6 +100,25 @@
     border-right-color: var(--ui-border-strong);
 }
 
+/* Infobulles des modules : centrées verticalement sur l'anneau, sur une
+   ligne (avant : départ à 30 % de la hauteur et largeur fixe de 122px,
+   donc les libellés longs passaient sur 2 lignes et descendaient) */
+.mod-button[data-tooltip]:before {
+    top: 50%;
+    left: calc(100% + 14px);
+    width: max-content;
+    margin: 0;
+    white-space: nowrap;
+    transform: translateY(-50%);
+}
+
+.mod-button[data-tooltip]:after {
+    top: 50%;
+    left: calc(100% + 4px);
+    margin: 0;
+    transform: translateY(-50%);
+}
+
 /*---Steppers - valeur + (onglets modules et modules secondaires)---*/
 .tab .mod-b,
 .mods-left .mod-b,
