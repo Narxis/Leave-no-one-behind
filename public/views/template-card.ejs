@@ -435,8 +435,9 @@
                         <li class="item-<%= item.slug %>">
                           <input type="checkbox" id="<%= item.slug %>-<%= i %>">
                           <label for="todo_1">
+                            <img class="item-image" src="<%= item.image %>">
                             <span class="check"></span>
-                            <%= item.name %>
+                            <p><%= item.name %></p>
                           </label>
                           <i class="far fa-trash-alt delete" data-slug="<%= item.slug %>"></i>
                         </li>
@@ -663,11 +664,6 @@
   <script src="/js/players.js"></script>
   <script src="/js/card.js"></script>
   <script src="/js/template-card.js"></script>
-<<<<<<< Updated upstream
-  <script src="/js/slidingtabs.js"></script>
-=======
-  <script src="/js/timer.js"></script>
->>>>>>> Stashed changes
   <script src="/js/items.js"></script>
   <script>
     var observer = new MutationObserver(function (mutations) {

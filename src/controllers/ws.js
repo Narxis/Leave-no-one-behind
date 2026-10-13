@@ -260,11 +260,12 @@ const actionItem = async function (response) {
         }
     }
     else {
-        await items.add(slug);
+        response.data = await items.add(slug);
     }
 
     return {
         action: response.action,
+        remove: remove,
         error: false,
         data: response.data
     }
