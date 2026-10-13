@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "yorc-epee",
+    "name": "Yorc avec une épée",
+    "hp": 20,
+    "offense": 65,
+    "defense": 45,
+    "damage": "moyen"
+  },
+  {
+    "slug": "yorc",
+    "name": "Yorc sans épée",
+    "hp": 16,
+    "offense": 50,
+    "defense": 40,
+    "damage": "faible"
+  },
+  {
+    "slug": "ygrl-fouet",
+    "name": "Ygrl avec un fouet",
+    "hp": 14,
+    "offense": 55,
+    "defense": 50,
+    "damage": "moyen"
+  },
+  {
+    "slug": "aku",
+    "name": "Aku",
+    "hp": 30,
+    "offense": 70,
+    "defense": 60,
+    "damage": "fort"
+  },
+  {
+    "slug": "sylv-baton",
+    "name": "Sylv avec un bâton",
+    "hp": 12,
+    "offense": 45,
+    "defense": 55,
+    "damage": "faible"
+  },
+  {
+    "slug": "nek-air-livre",
+    "name": "Nek-air avec un gros livre",
+    "hp": 12,
+    "offense": 40,
+    "defense": 50,
+    "damage": "faible"
+  },
+  {
+    "slug": "mercenaire",
+    "name": "Mercenaire",
+    "hp": 24,
+    "offense": 65,
+    "defense": 55,
+    "damage": "moyen"
+  },
+  {
+    "slug": "pirate",
+    "name": "Pirate de l'espace",
+    "hp": 18,
+    "offense": 60,
+    "defense": 45,
+    "damage": "moyen"
+  },
+  {
+    "slug": "nek-reant",
+    "name": "Nek-réant",
+    "hp": 40,
+    "offense": 75,
+    "defense": 65,
+    "damage": "fort"
+  }
+]

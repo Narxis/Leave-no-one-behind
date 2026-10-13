@@ -533,6 +533,176 @@ body.mj-page {
     }
 }
 
+/*---Menu MJ : combat---*/
+.mj-enemies {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mj-enemies-empty {
+    padding: 10px 0;
+    font-size: 13px;
+    text-align: center;
+    color: var(--ui-text-dim);
+}
+
+.mj-enemy {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-enemies.active .mj-enemy {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "name attack"
+        "bar  bar"
+        "hp   hp";
+}
+
+.mj-enemy.ko {
+    opacity: 0.45;
+}
+
+.mj-enemy-name {
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mj-enemy-hp-input {
+    width: 4em;
+    padding: 4px 6px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 14px;
+    text-align: center;
+}
+
+.mj-enemy-unit {
+    margin-left: -4px;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.mj-enemy-remove,
+.mj-hp-btn,
+.mj-enemy-attack {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mj-enemy-remove {
+    width: 28px;
+    height: 28px;
+    color: var(--ui-text-dim);
+}
+
+.mj-enemies.active .mj-enemy-name {
+    grid-area: name;
+}
+
+.mj-enemy-bar {
+    grid-area: bar;
+    height: 6px;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 8%);
+    overflow: hidden;
+}
+
+.mj-enemy-bar-fill {
+    height: 100%;
+    background: var(--ui-danger);
+    transition: width 300ms var(--ui-ease);
+}
+
+.mj-enemy-hp {
+    grid-area: hp;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.mj-hp-btn {
+    width: 32px;
+    height: 28px;
+}
+
+.mj-enemy-hp-value {
+    min-width: 5em;
+    font-size: 14px;
+    text-align: center;
+}
+
+.mj-enemy-attack {
+    grid-area: attack;
+    padding: 5px 12px;
+    border-color: rgb(255 90 110 / 55%);
+    color: var(--ui-danger);
+}
+
+.mj-enemy-attack:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.fight.running {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.fight.shake {
+    animation: mj-shake .35s;
+}
+
+@keyframes mj-shake {
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-2px); }
+}
+
+.mj-combat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 16px 12px;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.mj-combat-log:empty {
+    display: none;
+}
+
+.mj-log-line:first-child {
+    color: var(--ui-text);
+}
+
+.mj-log-line.faint {
+    color: var(--ui-danger);
+}
+
 /*---Fiches personnages---*/
 .player .player-stats,
 .race-img {

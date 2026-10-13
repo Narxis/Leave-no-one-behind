@@ -6,6 +6,7 @@ const {Items} = require("../models/items");
 const {Card} = require("../models/card");
 const drawflow = require("../controllers/drawflow");
 const fs = require('fs');
+const combat = require("./combat");
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 // TODO replace shipId with current game ship ID
@@ -140,6 +141,10 @@ module.exports = {
             delete player['accepted_datas'];
             res.json(player)
         }
+    },
+
+    getCombat(req, res) {
+        res.json(combat.getState());
     },
 
     async getAllPlayers(req, res) {

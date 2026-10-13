@@ -42,16 +42,9 @@
                             <div class="ennemy">
                                 <input type="text" id="search-ennemy" list="bestiaire" placeholder="Adversaire">
                                 <datalist id="bestiaire">
-                                    <!--Oui les ennemis c'est là dedans probablement un menu avec scroll bar et ce serait giga cool une barre de recherche-->
-                                    <option value="mob1"></option>
-                                    <option value="mob2"></option>
-                                    <option value="mob3"></option>
-                                    <option value="mob4"></option>
-                                    <option value="mob5"></option>
-                                    <option value="monstre1"></option>
-                                    <option value="monstre2"></option>
-                                    <option value="monstre3"></option>
-                                    <option value="monstre4"></option>
+                                    <% bestiary.forEach(function(mob) { %>
+                                    <option value="<%= mob.name %>"></option>
+                                    <% }); %>
                                 </datalist>
                                 <button class="add-life" id="add-monstre">+</button>
                                 <button class="add-life" id="monstre-list">x</button>
@@ -75,6 +68,7 @@
                             </div>
                         </div>
                     </div>
+                    <div class="mj-enemies" id="mj-enemies"></div>
                     <div class="status-box">
                         <input class="add-life status-search" type="text" id="search-status" list="status" placeholder="Status">
                         <datalist id="status">
@@ -89,7 +83,8 @@
                 </div>
                 <div class="combat">
                     <!--Un espace pour chaque joueurs pour un boutton join-->
-                    <button class="add-life fight" id="combat-start"> Commencer le combat</button>
+                    <button class="add-life fight" id="combat-start">Commencer le combat</button>
+                    <div class="mj-combat-log" id="mj-combat-log"></div>
                     <div id="console-container">
                         <div class="life-change">Choix du type de roll : <br>
                             <div class="empty-for-flex"></div>
@@ -121,6 +116,9 @@
     </div>
 </div>
 <script src="js/socketLNOB.js"></script>
+<script>var BESTIARY = <%- JSON.stringify(bestiary).replace(/</g, '\\u003c') %>;</script>
 <script src="js/mj-menu.js"></script>
+<script src="js/combat-text.js"></script>
+<script src="js/mj-combat.js"></script>
 <%- include("partials/bottom-scripts") %>
 </body>

@@ -5,6 +5,7 @@ const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const shipId = 1;
 const chalk = require("chalk")
+const combat = require("./combat");
 
 const init = function (){
 
@@ -79,6 +80,13 @@ const makeAction = async function (raw_response) {
             break;
         case 'passThrough':
             payload = response.data;
+            break;
+        case 'combat-start':
+        case 'combat-end':
+        case 'combat-hp':
+        case 'combat-attack':
+        case 'combat-enemy-attack':
+            payload = combat.handle(response);
             break;
         default:
             payload = {

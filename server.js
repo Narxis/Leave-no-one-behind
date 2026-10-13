@@ -41,7 +41,9 @@ const startServer = async function() {
     });
 
     WS.init();
-    Bot.start();
+    // DISABLE_BOT=true : serveur de test sans connecter le bot Discord
+    if (process.env.DISABLE_BOT !== 'true')
+        Bot.start();
 }
 
 if (process.env.FORCE_COLOR !== 'true') {
