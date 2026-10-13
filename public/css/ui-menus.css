@@ -450,6 +450,13 @@ input.add-life:focus,
     border-top: none;
 }
 
+.mj-page #add-monstre,
+.mj-page #monstre-list,
+.mj-page #add-friend,
+.mj-page #friend-list {
+    margin: 0;
+}
+
 @media (max-width: 1100px) {
     .mj-page .flex-container {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -486,6 +493,43 @@ input.add-life:focus,
 
     .mj-page .button-text {
         display: block;
+    }
+}
+
+/* C'est la page elle-même qui défile, pas un bloc intérieur : sur
+   téléphone, Safari ne masque ses barres (adresse, navigation) que lorsque
+   la page défile. style.css bloque le défilement du body sur tout le site */
+body.mj-page {
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+@media (max-width: 1100px) {
+    .mj-page .choice-reveal {
+        max-height: none;
+        overflow: visible;
+    }
+}
+
+/* Écrans tactiles (téléphones, tablettes) : pas de menu ☰ (masqué sur
+   mobile), marges sur les zones sûres (encoche, barre d'accueil), y compris
+   en mode plein écran depuis l'écran d'accueil */
+@media (hover: none) and (pointer: coarse) {
+    .mj-page .center {
+        padding:
+            max(16px, env(safe-area-inset-top))
+            max(12px, env(safe-area-inset-right))
+            max(24px, env(safe-area-inset-bottom))
+            max(12px, env(safe-area-inset-left));
+    }
+
+    .mj-page #search-ennemy,
+    .mj-page #search-ally,
+    .mj-page #search-status,
+    .mj-page .life-container .add-life {
+        font-size: 1.15em;
     }
 }
 

@@ -29,6 +29,14 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+/* Fond étoilé (canvas PIXI ajouté au body) : fixé à l'écran pour rester
+   visible quand la page défile */
+body > canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
 ::selection {
     background: rgb(255 204 0 / 35%);
     color: #fff;
