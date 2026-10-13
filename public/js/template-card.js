@@ -16,7 +16,11 @@ class parallaxTiltEffect {
     this.init();
   }
   handleMouseMove(event) {
-    const { offsetX, offsetY } = event;
+    // Position relative à la carte elle-même : offsetX/offsetY dépendaient
+    // de l'élément survolé (bouton, texte...) et faisaient sauter le fond
+    const rect = this.element.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const offsetY = event.clientY - rect.top;
     let X;
     let Y;
 
