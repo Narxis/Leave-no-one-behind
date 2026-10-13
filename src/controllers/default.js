@@ -10,6 +10,49 @@ const ws = require("ws");
 var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
+// Calcule le score final et affiche l'écran de fin (partie réelle et démo)
+const renderEndScreen = function (res, ship, planet, scoreCards) {
+    let scoreShip = 30*ship.scanner
+        + 30*ship.proximity
+        + (40*(ship.oxygen+ship.energy+ship.gravity))
+        + 80*ship.construction
+        + 120*(ship.dbscience+ship.dbhistory);
+
+    // Les valeurs des modules sont stockées en texte : sans conversion,
+    // fau.val + flo.val concatène ("32" + "31" = "3231") au lieu d'additionner
+    let mod = (name) => Number(planet.modules[name].val) || 0;
+
+    let scorePlanet = 85*mod('oxy')
+        + 60*mod('grv')
+        + 95*mod('wtr')
+        + 80*mod('res')
+        + 55*mod('cli')
+        + 30*(mod('fau')+mod('flo'))
+        + 65*mod('civ')
+    ;
+
+    let scoreTotal = ship.cryopods * scoreShip * scorePlanet / 500000 + scoreCards;
+
+    let score = {
+        scoreShip: scoreShip,
+        scorePlanet: scorePlanet,
+        scoreCards: scoreCards,
+        scoreTotal: scoreTotal
+    }
+
+    let js = {vars:`var score=JSON.parse('` + JSON.stringify(score) + `'); var ship=JSON.parse('` + JSON.stringify(ship) + `');`};
+
+    let vars = {
+        ship: ship,
+        score: score,
+        js: js,
+        planet: planet,
+        lang: langJS
+    }
+
+    res.render('end-screen', vars);
+}
+
 module.exports = {
     index(req, res) {
         res.render('index', {lang: langJS});
@@ -451,8 +494,39 @@ module.exports = {
     res.render('template-planet', vars);
 },
 
+    // Démo de l'écran de fin avec un vaisseau et une planète fictifs
     endScreen(req, res) {
-        res.render('end-screen', {lang: langJS});
+        let ship = {
+            name: '',
+            cryopods: 850,
+            scanner: 80,
+            proximity: 70,
+            motors: 90,
+            shield: 60,
+            oxygen: 75,
+            energy: 65,
+            gravity: 85,
+            landing: 70,
+            dbscience: 50,
+            dbhistory: 40,
+            construction: 60
+        };
+
+        let planet = {
+            value: 890,
+            modules: {
+                oxy: {cost: 2, val: 50},
+                grv: {cost: 3, val: 30},
+                wtr: {cost: 2, val: 30},
+                fau: {cost: 4, val: 60},
+                flo: {cost: 4, val: 60},
+                civ: {cost: 4, val: 60},
+                cli: {cost: 2, val: 30},
+                res: {cost: 1, val: 40}
+            }
+        };
+
+        renderEndScreen(res, ship, planet, 12000);
     },
 
     leaderboard(req, res) {
@@ -509,43 +583,9 @@ module.exports = {
     if (!planet)
         return res.redirect('/');
 
-    let scoreShip = 30*ship.scanner
-        + 30*ship.proximity
-        + (40*(ship.oxygen+ship.energy+ship.gravity))
-        + 80*ship.construction
-        + 120*(ship.dbscience+ship.dbhistory);
-
-    let scorePlanet = 85*planet.modules.oxy.val
-        + 60*planet.modules.grv.val
-        + 95*planet.modules.wtr.val
-        + 80*planet.modules.res.val
-        + 55*planet.modules.cli.val
-        + 30*(planet.modules.fau.val+planet.modules.flo.val)
-        + 65*(planet.modules.civ.val)
-    ;
-
     let scoreCards = Math.min(6000*cardNegPlayed + 3500*cardNeuPlayed + Math.min(CONFIG.planetCount,10) * Math.min((cardPlanetPlayed-1),9), 500000) - 4500*cardPosPlayed;
 
-    let scoreTotal = ship.cryopods * scoreShip * scorePlanet / 500000 + scoreCards;
-
-    let score = {
-        scoreShip: scoreShip,
-        scorePlanet: scorePlanet,
-        scoreCards: scoreCards,
-        scoreTotal: scoreTotal
-    }
-
-    let js = {vars:`var score=JSON.parse('` + JSON.stringify(score) + `'); var ship=JSON.parse('` + JSON.stringify(ship) + `');`};
-
-    let vars = {
-        ship: ship,
-        score: score,
-        js: js,
-        planet: planet,
-        lang: langJS
-    }
-
-    res.render('end-screen', vars);
+    renderEndScreen(res, ship, planet, scoreCards);
 },
 
     async start(req, res) {
