@@ -541,6 +541,13 @@ input[type="checkbox"] {
     box-shadow: var(--ui-shadow);
 }
 
+/* Même position sur /persos et sur la page des cartes : remontée de 14px
+   pour être centrée sur le cadre visible de la carte (502px en haut d'une
+   boîte de 530px centrée à l'écran) */
+.leftcenter > .stats-legend {
+    translate: 0 -14px;
+}
+
 .stats-legend-title {
     margin: 0 8px 8px;
     padding-bottom: 10px;

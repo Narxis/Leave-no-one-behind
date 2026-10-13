@@ -486,12 +486,6 @@
 }
 
 /* ---- Légende des statistiques à gauche de la carte ---- */
-/* Même marge que sur /persos ; remontée de 14px pour être centrée sur le
-   cadre visible de la carte (502px en haut d'une boîte de 530px centrée) */
-.card-legend {
-    top: calc(50% - 14px);
-}
-
 /* Pas la place à côté de la carte sur les petits écrans */
 @media (max-width: 1350px) {
     .card-legend {
