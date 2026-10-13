@@ -42,7 +42,7 @@
                             <div class="ennemy">
                                 <input type="text" id="search-ennemy" list="bestiaire" placeholder="Adversaire">
                                 <datalist id="bestiaire">
-                                    <% bestiary.forEach(function(mob) { %>
+                                    <% (locals.bestiary || []).forEach(function(mob) { %>
                                     <option value="<%= mob.name %>"></option>
                                     <% }); %>
                                 </datalist>
@@ -116,7 +116,7 @@
     </div>
 </div>
 <script src="js/socketLNOB.js"></script>
-<script>var BESTIARY = <%- JSON.stringify(bestiary).replace(/</g, '\\u003c') %>;</script>
+<script>var BESTIARY = <%- JSON.stringify(locals.bestiary || []).replace(/</g, '\\u003c') %>;</script>
 <script src="js/mj-menu.js"></script>
 <script src="js/combat-text.js"></script>
 <script src="js/mj-combat.js"></script>
