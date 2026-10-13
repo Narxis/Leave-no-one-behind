@@ -453,6 +453,12 @@ input.add-life:focus,
     transform: scale(1.25);
 }
 
+/* L'icône combat a un viewBox décalé ("0 70 384 512") : elle apparaît
+   2,5px trop haut, on la recentre */
+.stats-legend #combaticon svg {
+    transform: translateY(2.5px);
+}
+
 .stats-legend h4 {
     margin: 0;
     font-size: 14px;
