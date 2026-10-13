@@ -444,6 +444,7 @@ module.exports = {
         players: players,
         card: card,
         ship: ship,
+        items: [],
         lang: langJS
     }
 
