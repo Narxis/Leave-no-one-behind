@@ -82,6 +82,9 @@ const deckGenerator = async function (){
 
     let bulkDeck = [];
     for (let card of deck){
+        // Plus assez de cartes d'un type : on saute la carte au lieu de crasher
+        if (!card)
+            continue;
         bulkDeck.push({
             deck_id: 0,
             card_id: card.id,
@@ -164,7 +167,7 @@ const cardPop = async function (setPlayed = true){
 }
 
 const destroyDeck = async function (deck_id = 0){
-    DB.tables.deck.destroy({
+    await DB.tables.deck.destroy({
         where: {deck_id: deck_id},
         truncate: true,
         restartIdentity: true
@@ -302,9 +305,9 @@ const shuffle = function (array) {
 const hydrateCardDB = async function (cleanInstall = true) {
 
     if (cleanInstall) {
-        DB.tables.cards.destroy({truncate: true});
-        DB.tables.card_modules.destroy({truncate: true});
-        DB.tables.cards_alt.destroy({truncate: true});
+        await DB.tables.cards.destroy({truncate: true});
+        await DB.tables.card_modules.destroy({truncate: true});
+        await DB.tables.cards_alt.destroy({truncate: true});
     }
     let baseCardsRaw = fs.readFileSync(__dirname + '/../config/baseCards.json');
     let baseCards = JSON.parse(baseCardsRaw);

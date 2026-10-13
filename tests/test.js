@@ -1,18 +1,27 @@
 const db = require ('./../src/controllers/db');
 const type = require("./../src/config/constants");
 const fs = require('fs')
-const {getCardsIds, deckGenerator} = require("../src/controllers/deck");
+const {getCardsIds, deckGenerator, hydrateCardDB} = require("../src/controllers/deck");
 const {Player} = require("../src/models/player");
+const {Ship} = require("../src/models/ship");
+const {Config} = require("../src/models/config");
 const assert = require("assert");
 
 process.env.DB_URL = '';
 type.register();
 
-test();
+const TEST_DB = './storage/databases/test_db.sqlite';
+
+test().catch(e => {
+    console.error(e);
+    process.exit(1);
+});
 
 async function test() {
-    try {await fs.unlinkSync('./test_db.sqlite'); console.log('db deleted')}
-    catch (e){console.log(e)}
+    if (fs.existsSync(TEST_DB)) {
+        fs.unlinkSync(TEST_DB);
+        console.log('db deleted');
+    }
 
     await setup();
     await test_cards_setup();
@@ -23,18 +32,27 @@ async function test() {
 async function setup(){
     let DB = new db.DB;
     global.DB = await DB.init(true);
+    global.CONFIG = await new Config().hydrateDB();
 
-    await DB.test();
+    // Vraies cartes du jeu (baseCards.json + planètes générées)
+    await hydrateCardDB(true);
+    await new Ship().create();
+}
+
+// getCardsIds ne renvoie que les ids : on récupère les cartes complètes
+async function getCards(type, valMinMax = [-1, 0]) {
+    let ids = (await getCardsIds(type, ALL, valMinMax)).map(c => c.id);
+    return await DB.tables.cards.findAll({where: {id: ids}, raw: true});
 }
 
 async function test_cards_setup(){
-    let neuCardList = await getCardsIds(TYPE_NEUTRAL);
-    let negCardList = await getCardsIds(TYPE_NEGATIVE);
-    let posCardList = await getCardsIds(TYPE_POSITIVE);
+    let neuCardList = await getCards(TYPE_NEUTRAL);
+    let negCardList = await getCards(TYPE_NEGATIVE);
+    let posCardList = await getCards(TYPE_POSITIVE);
 
-    let firstPlaSlice = await getCardsIds(TYPE_PLANET, ALL, [1,500]);
-    let secondPlaSlice = await getCardsIds(TYPE_PLANET, ALL, [501,800]);
-    let thirdPlaSlice = await getCardsIds(TYPE_PLANET, ALL, [801,1000]);
+    let firstPlaSlice = await getCards(TYPE_PLANET, [1,500]);
+    let secondPlaSlice = await getCards(TYPE_PLANET, [501,800]);
+    let thirdPlaSlice = await getCards(TYPE_PLANET, [801,1000]);
 
     console.log('Testing for select in DB');
 
@@ -97,35 +115,51 @@ async function test_cards_setup(){
     console.log('Card setup DB OK')
 }
 
-async function test_deck_generation(gameMode = 'Fair', nbPla = 5, nbTot = 6, nbNeg=2, nbPos=1, nbNeu=3){
-    await deckGenerator(gameMode, nbPla, nbTot, nbNeg, nbPos, nbNeu);
-    let deck = await DB.tables.deck.findAll();
-    deck = deck.map(r => r.dataValues);
+// Teste le mode "Fair" avec les valeurs de baseConf.json
+async function test_deck_generation(){
+    let nbPla = parseInt(CONFIG.planetCount);
+    let nbNeg = parseInt(CONFIG.negativeByStep);
+    let nbPos = parseInt(CONFIG.positiveByStep);
+    let nbNeu = parseInt(CONFIG.neutralByStep);
+    let nbPlace = parseInt(CONFIG.placeByStep);
+
+    await deckGenerator();
+    let deck = await DB.tables.deck.findAll({order: [['id', 'ASC']], raw: true});
 
     let card_deck = [];
 
     for (let elt of deck)
-        card_deck.push(await DB.tables.cards.findOne({where: {id: elt.card_id}}))
-
-    card_deck = card_deck.map(r => r.dataValues);
+        card_deck.push(await DB.tables.cards.findOne({where: {id: elt.card_id}, raw: true}))
 
     let neu_count = 0;
     let neg_count = 0;
     let pos_count = 0;
+    let place_count = 0;
     let pla_count = 0;
 
     console.log('Testing deck generation');
 
+    console.log('Testing all deck cards exist');
+    assert(card_deck.length > 0 && card_deck.every(card => card));
+    console.log('OK');
+
     for (let card of card_deck){
-        if (card.type === TYPE_POSITIVE)
+        if (card.type === TYPE_INITIAL) {
+            console.log('Testing initial cards come first');
+            assert(pla_count === 0 && neu_count + neg_count + pos_count + place_count === 0);
+            console.log('OK');
+        }
+        else if (card.type === TYPE_POSITIVE)
             pos_count++;
         else if (card.type === TYPE_NEUTRAL)
             neu_count++;
         else if (card.type === TYPE_NEGATIVE)
             neg_count++;
+        else if (card.type === TYPE_PLACE)
+            place_count++;
         else if (card.type === TYPE_PLANET){
             console.log('Testing card distribution per slice');
-            assert(neu_count === nbNeu && neg_count === nbNeg && pos_count === nbPos);
+            assert(neu_count === nbNeu && neg_count === nbNeg && pos_count === nbPos && place_count === nbPlace);
             console.log('OK');
 
             console.log('Testing planet value');
@@ -140,6 +174,7 @@ async function test_deck_generation(gameMode = 'Fair', nbPla = 5, nbTot = 6, nbN
             pos_count = 0;
             neu_count = 0;
             neg_count = 0;
+            place_count = 0;
         }
     }
     console.log('Testing number of planets');
