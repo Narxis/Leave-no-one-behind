@@ -338,6 +338,17 @@ async function showChoices() {
     }
 }
 
+// Clic sur la carte pendant l'écriture : le texte s'accélère fortement
+// (remis à zéro à chaque nouveau texte)
+var cardTextFast = false;
+var cardTextWriting = false;
+const CARD_TEXT_FAST_FACTOR = 15;   // pauses divisées par 15
+const CARD_TEXT_FAST_CHARS = 5;     // et 5 caractères par pause
+
+function cardTextPause(ms) {
+    return sleep(cardTextFast ? ms / CARD_TEXT_FAST_FACTOR : ms);
+}
+
 async function writeCardDesc(text = null) {
 
     let currentText = '';
@@ -346,22 +357,32 @@ async function writeCardDesc(text = null) {
     let textDiv = document.querySelector('.card-text');
     text = text || currentCard.desc;
     text = text.replaceAll(stopTokenToReplace, stopToken);
+    cardTextFast = false;
+    cardTextWriting = true;
     for (let i = 0; i <= text.length; i++) {
         textDiv.innerText = currentText;
         if (text.substring(i, i + 1) === stopToken) {
             for (let j=0; j<4; j++) {
-                await sleep(400);
+                await cardTextPause(400);
                 currentText += '.';
                 textDiv.innerText = currentText;
             }
             currentText = '';
-            await sleep(500);
+            await cardTextPause(500);
         } else {
             currentText += text.substring(i, i + 1)
         }
-        await sleep(21.7)
+        if (!cardTextFast || i % CARD_TEXT_FAST_CHARS === 0)
+            await cardTextPause(21.7)
     }
+    textDiv.innerText = currentText;
+    cardTextWriting = false;
 }
+
+document.addEventListener('mouseup', function (e) {
+    if (cardTextWriting && e.button === 0 && e.target.closest('.container-card'))
+        cardTextFast = true;
+});
 
 (function(){
     initCard();
