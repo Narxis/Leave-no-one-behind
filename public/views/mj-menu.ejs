@@ -50,25 +50,14 @@
                                 <button class="add-life" id="monstre-list">x</button>
                             </div>
                             <div class="ally hide">
-                                <input type="text" id="search-ally" list="compagnon" placeholder="Compagnon">
-                                <datalist id="compagnon">
-                                    <!--Oui les compagnons/alliés c'est là dedans probablement un menu avec scroll bar et ce serait giga cool une barre de recherche-->
-                                    <option value="ally1"></option>
-                                    <option value="ally2"></option>
-                                    <option value="ally3"></option>
-                                    <option value="ally4"></option>
-                                    <option value="ally5"></option>
-                                    <option value="friend1"></option>
-                                    <option value="friend2"></option>
-                                    <option value="friend3"></option>
-                                    <option value="friend4"></option>
-                                </datalist>
+                                <input type="text" id="search-ally" placeholder="Nom du compagnon" maxlength="40">
                                 <button class="add-life" id="add-friend">+</button>
                                 <button class="add-life" id="friend-list">x</button>
                             </div>
                         </div>
                     </div>
                     <div class="mj-enemies" id="mj-enemies"></div>
+                    <div class="mj-allies hide" id="mj-allies"></div>
                     <div class="status-box">
                         <input class="add-life status-search" type="text" id="search-status" list="status" placeholder="Status">
                         <datalist id="status">
@@ -120,5 +109,6 @@
 <script src="js/mj-menu.js"></script>
 <script src="js/combat-text.js"></script>
 <script src="js/mj-combat.js"></script>
+<script src="js/mj-allies.js"></script>
 <%- include("partials/bottom-scripts") %>
 </body>

@@ -7,6 +7,7 @@ function describeCombatEntry(entry, forMJ = false) {
         case 'target': return entry.player + ' doit lancer /roll Combat pour attaquer ' + entry.enemy;
         case 'target-cancel': return 'Attaque de ' + entry.player + ' sur ' + entry.enemy + ' annulée';
         case 'player-attack':
+            entry = Object.assign({}, entry, {player: entry.player + (entry.npc ? ' (PNJ)' : '')});
             if (!entry.hit)
                 return entry.player + ' rate ' + entry.enemy + ' (' + entry.result + ')';
             return entry.player + ' touche ' + entry.enemy + ' (' + entry.result + ') : -' + entry.damage + ' PV'

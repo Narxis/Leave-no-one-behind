@@ -595,6 +595,11 @@
     z-index: 4;
 }
 
+/* display: flex ci-dessus écrase .combat-none de template-card.css */
+.combat-container.combat-none {
+    display: none;
+}
+
 .combat-in {
     animation: combat-in .35s var(--ui-ease) both;
 }

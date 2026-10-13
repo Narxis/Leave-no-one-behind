@@ -6,6 +6,7 @@ const {Statuses} = require("../models/statuses");
 const shipId = 1;
 const chalk = require("chalk")
 const combat = require("./combat");
+const allies = require("./allies");
 
 const init = function (){
 
@@ -96,6 +97,14 @@ const makeAction = async function (raw_response) {
         case 'combat-cancel':
         case 'combat-enemy-attack':
             payload = combat.handle(response);
+            break;
+        case 'combat-ally-attack':
+            payload = combat.allyAttack(response.data || {}) || combat.handle(response);
+            break;
+        case 'ally-add':
+        case 'ally-update':
+        case 'ally-remove':
+            payload = allies.handle(response);
             break;
         default:
             payload = {

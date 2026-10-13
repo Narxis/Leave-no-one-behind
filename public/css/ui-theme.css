@@ -438,6 +438,38 @@ input[type="checkbox"] {
     justify-content: space-between;
 }
 
+/* Allié (PNJ) contrôlé par le MJ : liseré cyan et badge « PNJ » */
+.player-tab.npc-tab {
+    border-color: rgb(79 216 224 / 55%);
+    background:
+        linear-gradient(180deg, rgb(79 216 224 / 12%), transparent 90px),
+        var(--ui-surface);
+    box-shadow: inset 0 1px 0 rgb(79 216 224 / 25%), 0 -12px 40px -16px rgb(79 216 224 / 45%);
+}
+
+.player-tab.npc-tab .expander {
+    border-color: rgb(79 216 224 / 55%);
+}
+
+.player-tab .npc-badge {
+    display: inline-block;
+    margin-right: 6px;
+    padding: 0 5px;
+    border-radius: 4px;
+    background: var(--ui-cyan);
+    color: #0b1220;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 16px;
+    vertical-align: 2px;
+}
+
+.player-tab.npc-tab .player-race {
+    color: var(--ui-text-dim);
+    border-color: var(--ui-border-strong);
+}
+
 /*---^^^---Cartes des joueurs---^^^---*/
 
 /*---vvv---Objets (coffre des joueurs, volet objets)---vvv---*/

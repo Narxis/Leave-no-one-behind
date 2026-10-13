@@ -16,6 +16,7 @@ module.exports = function(router) {
 
     router.get(basePath + '/players', controller.getAllPlayers);
     router.get(basePath + '/combat', controller.getCombat);
+    router.get(basePath + '/allies', controller.getAllies);
     router.get(basePath + '/player/:discordId', controller.getPlayer);
     // router.get(basePath + '/player/:playerId/:stat/:val', controller.updatePlayer); // :val can be SIGNED
 
