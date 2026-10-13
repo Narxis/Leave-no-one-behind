@@ -293,9 +293,8 @@ input.add-life:focus,
 }
 
 /* Colonne adversaires / compagnons / status : grille alignée au lieu
-   des blocs positionnés en absolu (écrans larges uniquement, les règles
-   mobiles de mj-menu.css restent en place) */
-@media (min-width: 1025px) {
+   des blocs positionnés en absolu, à toutes les tailles d'écran */
+@media all {
     .life-container {
         box-sizing: border-box;
         padding: 20px 24px;
@@ -363,6 +362,119 @@ input.add-life:focus,
         padding: 0;
         font-size: 1.5em;
         text-align: center;
+    }
+}
+
+/* Mise en page responsive : 3 colonnes, puis 2, puis 1. Le cadre n'est
+   plus centré sur un point fixe (.center 0x0) mais dans le flux, pour que
+   la page défile quand il ne tient pas à l'écran */
+.mj-page .center {
+    position: relative;
+    z-index: 1;
+    top: auto;
+    left: auto;
+    transform: none;
+    box-sizing: border-box;
+    width: auto !important;
+    height: auto;
+    min-height: 100vh;
+    padding: 96px 16px 32px;
+}
+
+.mj-page .overflownt {
+    display: block;
+    width: 100%;
+    max-width: 1450px;
+    height: auto;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.mj-page .flex-container {
+    display: grid;
+    grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr) minmax(0, 1fr);
+    box-sizing: border-box;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+}
+
+.mj-page .choice-reveal,
+.mj-page .life-container,
+.mj-page .combat {
+    box-sizing: border-box;
+    width: auto;
+    min-width: 0;
+    height: 100%;
+}
+
+.mj-page #console-container {
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+}
+
+/* Neutralise les hauteurs fixes et le débordement des anciennes règles
+   « téléphone » de mj-menu.css (media queries sur la densité de pixels) */
+.mj-page .choice-reveal {
+    overflow: hidden auto;
+}
+
+.mj-page .life-change,
+.mj-page .combat .life-change,
+.mj-page .ennemy,
+.mj-page .ally,
+.mj-page .status-box {
+    height: auto;
+}
+
+.mj-page .ennemy,
+.mj-page .ally,
+.mj-page .status-box {
+    margin: 0;
+}
+
+.mj-page .life-change {
+    border-top: none;
+}
+
+@media (max-width: 1100px) {
+    .mj-page .flex-container {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        height: auto;
+    }
+
+    .mj-page .choice-reveal {
+        grid-column: 1 / -1;
+        height: auto;
+        max-height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid var(--ui-border);
+    }
+
+    .mj-page .life-container,
+    .mj-page .combat {
+        height: auto;
+    }
+}
+
+@media (max-width: 680px) {
+    .mj-page .center {
+        padding-top: 84px;
+    }
+
+    .mj-page .flex-container {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mj-page .combat {
+        border-left: none;
+        border-top: 1px solid var(--ui-border);
+    }
+
+    .mj-page .button-text {
+        display: block;
     }
 }
 
