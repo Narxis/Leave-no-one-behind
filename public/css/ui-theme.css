@@ -354,4 +354,80 @@ input[type="checkbox"] {
     box-shadow: inset 0 2px 4px rgb(0 0 0 / 40%);
 }
 
+/* Onglets coffre et "?" : même taille, contenu centré */
+.player-tab .expander,
+.player-tab .expander-item {
+    width: 22px;
+    height: 18px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.player-tab .chestimg {
+    left: 50%;
+    top: 50%;
+    height: 12px;
+    transform: translate(-50%, -50%);
+}
+
+/* Ligne du jet : icône de la stat | résultat | type de jet.
+   Même hauteur totale qu'avant (82px) pour garder l'onglet replié intact */
+.player-tab .player-roll {
+    height: 40px;
+    padding: 30px 14px 12px;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-tab .input-roll,
+.player-tab .modform.input-roll {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+}
+
+.player-tab .output-roll-boite {
+    position: relative;
+    left: auto;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* L'icône de la stat lancée, centrée dans sa case (les id posaient
+   des décalages en dur) */
+.player-tab .output-absolute {
+    left: 50% !important;
+    top: 50% !important;
+    width: 20px !important;
+    height: 20px;
+    margin: 0;
+    transform: translate(-50%, -50%);
+}
+
+.player-tab .output-absolute svg {
+    fill: var(--ui-text);
+}
+
+.player-tab .output-roll {
+    width: 80px;
+    height: 40px;
+    margin: 0;
+    font-size: 28px;
+}
+
+.player-tab .roll-type {
+    height: 40px;
+    margin: 0 0 0 auto;
+    justify-content: space-between;
+}
+
 /*---^^^---Cartes des joueurs---^^^---*/
