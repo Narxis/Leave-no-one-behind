@@ -1,0 +1,239 @@
+/*---vvv---Rafraîchissement de la page carte (chargé en dernier)---vvv---*/
+/* Pas de transform sur les éléments animés : move-right / open,
+   slide-right / close-left, move-down et choice-hover les déplacent */
+
+/*---Cadre de la carte---*/
+.container-card {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 24px;
+    box-shadow: var(--ui-shadow);
+}
+
+.container-card:before,
+.container-card:after {
+    border-color: var(--ui-accent);
+    opacity: 0.45;
+}
+
+/*---Onglets des modules (à droite de la carte)---*/
+.tab,
+.tab-moteurs,
+.tab-scan,
+.tab-detect,
+.tab-o2,
+.tab-elec,
+.tab-grav {
+    border: 1px solid var(--ui-border-strong);
+    border-left: none;
+    border-radius: 0 36px 36px 0;
+    background: var(--ui-surface);
+    box-shadow: 0 10px 30px -14px rgb(0 0 0 / 85%);
+}
+
+.tab-txt {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ui-text-dim);
+}
+
+.tab:hover .tab-txt {
+    color: var(--ui-text);
+}
+
+.mod-button {
+    border: none;
+    border-radius: 0 36px 36px 0;
+    background: transparent;
+}
+
+/* L'anneau sert de fond à l'icône : pas de texte ni de filtre de teinte
+   qui fausserait la couleur d'état */
+.mod-button .dial svg.ui-gauge,
+.dial svg.ui-gauge {
+    animation: none;
+    filter: none;
+}
+
+.mod-button .dial svg.ui-gauge .ui-gauge-text,
+.tab .dial svg.ui-gauge .ui-gauge-text {
+    fill: transparent;
+}
+
+.mod-img {
+    filter: saturate(0.85) drop-shadow(0 0 4px rgb(0 0 0 / 60%));
+}
+
+/* Infobulle "Moteurs 100%" */
+[data-tooltip]:before {
+    padding: 6px 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background-color: var(--ui-surface-flat);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ui-text);
+    box-shadow: 0 8px 24px -10px rgb(0 0 0 / 80%);
+}
+
+[data-tooltip]:after {
+    border-right-color: var(--ui-border-strong);
+}
+
+/*---Steppers - valeur + (onglets modules et modules secondaires)---*/
+.tab .mod-b,
+.mods-left .mod-b,
+.human .mod-b {
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    box-shadow: none;
+    color: var(--ui-text-dim);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    text-shadow: none;
+    transition: background 150ms var(--ui-ease), color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.tab .mod-b:hover,
+.mods-left .mod-b:hover,
+.human .mod-b:hover {
+    background: var(--ui-accent-soft);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.tab .mod-b:active,
+.mods-left .mod-b:active,
+.human .mod-b:active {
+    box-shadow: inset 0 2px 4px rgb(0 0 0 / 40%);
+}
+
+.tab .form-input,
+.mod-left-value {
+    border: none;
+    border-radius: 8px;
+    background: rgb(0 0 0 / 30%);
+    box-shadow: inset 0 0 0 1px var(--ui-border);
+    color: var(--ui-text);
+    font-weight: 700;
+    text-shadow: none;
+}
+
+.tab .form-input:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--ui-accent), 0 0 0 3px rgb(255 204 0 / 15%);
+}
+
+/*---Choix sous la carte---*/
+.choice {
+    border: 1px solid var(--ui-border-strong);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 14px 30px -16px rgb(0 0 0 / 85%);
+    color: var(--ui-text);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: transform 1s, background 150ms var(--ui-ease), border-color 150ms var(--ui-ease), color 150ms var(--ui-ease), box-shadow 200ms var(--ui-ease);
+}
+
+.choice:hover {
+    background: linear-gradient(180deg, rgb(255 204 0 / 4%), rgb(255 204 0 / 14%)), var(--ui-surface);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    box-shadow: 0 0 22px -6px rgb(255 204 0 / 45%);
+}
+
+/*---Volet gauche : bouton menu, objets, modules secondaires---*/
+.consommable-tab {
+    border: 1px solid var(--ui-border-strong);
+    border-right: none;
+    border-radius: 16px 0 0 16px;
+    background: var(--ui-surface);
+    box-shadow: 0 10px 30px -14px rgb(0 0 0 / 85%);
+}
+
+.line-menu {
+    background-color: var(--ui-text);
+}
+
+.todoList,
+.mods-left {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 16px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+}
+
+.content form {
+    margin: 0 6px 10px;
+    padding: 0 6px 0 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: rgb(0 0 0 / 28%);
+    transition: border-color 150ms var(--ui-ease), box-shadow 150ms var(--ui-ease);
+}
+
+.content form:focus-within {
+    border-color: var(--ui-accent);
+    box-shadow: 0 0 0 3px rgb(255 204 0 / 15%);
+}
+
+.content input[type='text'] {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ui-text);
+    text-shadow: none;
+}
+
+.content .input-buttons i {
+    color: var(--ui-text-dim);
+    transition: color 150ms var(--ui-ease);
+}
+
+.content .input-buttons a:hover i {
+    color: var(--ui-accent);
+}
+
+.content input[type="checkbox"]+label:hover {
+    background-color: var(--ui-fill-hover);
+}
+
+.container-text-mod-left {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-shadow: none;
+    color: var(--ui-text);
+}
+
+.mod-left .plus,
+.mod-left .moins {
+    text-shadow: none;
+}
+
+/*---Encadré Humains / Status (en haut à droite)---*/
+.human-status {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 16px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    box-shadow: var(--ui-shadow);
+}
+
+.human-title {
+    margin-right: 8px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+/*---^^^---Rafraîchissement de la page carte---^^^---*/
