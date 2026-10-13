@@ -10,36 +10,47 @@
 }
 
 /* Fond illustré à la place de la photo Pexels (trop réaliste pour le
-   style du jeu). Étoiles proches et nébuleuses suivent la parallaxe de
-   template-card.js (--bX / --bY), étoiles lointaines fixes */
+   style du jeu). Couleurs sourdes et étoiles clairsemées. Étoiles proches
+   et nébuleuses suivent la parallaxe de template-card.js (--bX / --bY),
+   étoiles lointaines fixes */
 .container-card {
-    background-color: #06041c;
+    background-color: #0a0920;
     background-image:
-        radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 45%) 100%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='280' fill='white'%3E%3Ccircle cx='0' cy='125' r='0.7' fill-opacity='0.86'/%3E%3Ccircle cx='172' cy='145' r='0.9' fill-opacity='0.48'/%3E%3Ccircle cx='92' cy='200' r='1.8' fill-opacity='0.55'/%3E%3Ccircle cx='247' cy='231' r='0.7' fill-opacity='0.44'/%3E%3Ccircle cx='309' cy='166' r='0.9' fill-opacity='0.45'/%3E%3Ccircle cx='129' cy='223' r='1.8' fill-opacity='0.43'/%3E%3Ccircle cx='242' cy='200' r='1.8' fill-opacity='0.55'/%3E%3Ccircle cx='373' cy='146' r='1.8' fill-opacity='0.70'/%3E%3Ccircle cx='403' cy='90' r='0.7' fill-opacity='0.77'/%3E%3Ccircle cx='339' cy='266' r='0.8' fill-opacity='0.82'/%3E%3Ccircle cx='398' cy='205' r='1.0' fill-opacity='0.58'/%3E%3Ccircle cx='107' cy='172' r='1.8' fill-opacity='0.92'/%3E%3Ccircle cx='349' cy='98' r='0.7' fill-opacity='0.73'/%3E%3Ccircle cx='399' cy='154' r='0.9' fill-opacity='0.85'/%3E%3Ccircle cx='182' cy='260' r='0.9' fill-opacity='0.83'/%3E%3Ccircle cx='213' cy='63' r='1.8' fill-opacity='0.33'/%3E%3Ccircle cx='347' cy='30' r='0.9' fill-opacity='0.54'/%3E%3Ccircle cx='198' cy='30' r='0.8' fill-opacity='0.67'/%3E%3Ccircle cx='231' cy='259' r='1.8' fill-opacity='0.94'/%3E%3Ccircle cx='417' cy='217' r='0.8' fill-opacity='0.86'/%3E%3Ccircle cx='271' cy='141' r='0.9' fill-opacity='0.47'/%3E%3Ccircle cx='404' cy='159' r='0.8' fill-opacity='0.40'/%3E%3Ccircle cx='404' cy='193' r='1.0' fill-opacity='0.54'/%3E%3Ccircle cx='369' cy='135' r='0.8' fill-opacity='0.37'/%3E%3Ccircle cx='335' cy='245' r='1.0' fill-opacity='0.52'/%3E%3Ccircle cx='362' cy='122' r='1.8' fill-opacity='0.31'/%3E%3Ccircle cx='14' cy='156' r='1.0' fill-opacity='0.51'/%3E%3Ccircle cx='268' cy='277' r='1.0' fill-opacity='0.41'/%3E%3Ccircle cx='275' cy='139' r='0.8' fill-opacity='0.62'/%3E%3Ccircle cx='262' cy='129' r='0.9' fill-opacity='0.63'/%3E%3Ccircle cx='49' cy='176' r='0.9' fill-opacity='0.66'/%3E%3Ccircle cx='90' cy='217' r='0.7' fill-opacity='0.67'/%3E%3Ccircle cx='162' cy='55' r='1.1' fill-opacity='0.56'/%3E%3Ccircle cx='69' cy='235' r='1.0' fill-opacity='0.46'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='190' fill='white'%3E%3Ccircle cx='0' cy='155' r='0.5' fill-opacity='0.59'/%3E%3Ccircle cx='91' cy='69' r='0.6' fill-opacity='0.37'/%3E%3Ccircle cx='32' cy='12' r='0.4' fill-opacity='0.66'/%3E%3Ccircle cx='94' cy='88' r='0.4' fill-opacity='0.91'/%3E%3Ccircle cx='28' cy='174' r='0.7' fill-opacity='0.65'/%3E%3Ccircle cx='73' cy='127' r='0.4' fill-opacity='0.52'/%3E%3Ccircle cx='104' cy='20' r='0.5' fill-opacity='0.53'/%3E%3Ccircle cx='135' cy='66' r='0.6' fill-opacity='0.69'/%3E%3Ccircle cx='43' cy='94' r='0.7' fill-opacity='0.88'/%3E%3Ccircle cx='28' cy='60' r='0.7' fill-opacity='0.73'/%3E%3Ccircle cx='59' cy='162' r='0.7' fill-opacity='0.57'/%3E%3Ccircle cx='215' cy='21' r='0.5' fill-opacity='0.79'/%3E%3Ccircle cx='61' cy='120' r='0.5' fill-opacity='0.70'/%3E%3Ccircle cx='85' cy='136' r='0.5' fill-opacity='0.39'/%3E%3Ccircle cx='135' cy='27' r='0.6' fill-opacity='0.54'/%3E%3Ccircle cx='122' cy='55' r='0.4' fill-opacity='0.52'/%3E%3Ccircle cx='2' cy='121' r='0.7' fill-opacity='0.42'/%3E%3Ccircle cx='67' cy='67' r='0.7' fill-opacity='0.80'/%3E%3Ccircle cx='198' cy='168' r='0.7' fill-opacity='0.39'/%3E%3Ccircle cx='139' cy='181' r='0.6' fill-opacity='0.33'/%3E%3Ccircle cx='151' cy='108' r='0.5' fill-opacity='0.60'/%3E%3Ccircle cx='150' cy='51' r='0.5' fill-opacity='0.60'/%3E%3Ccircle cx='183' cy='133' r='0.6' fill-opacity='0.38'/%3E%3Ccircle cx='109' cy='120' r='0.6' fill-opacity='0.81'/%3E%3Ccircle cx='166' cy='183' r='0.4' fill-opacity='0.81'/%3E%3Ccircle cx='152' cy='38' r='0.5' fill-opacity='0.44'/%3E%3Ccircle cx='188' cy='173' r='0.6' fill-opacity='0.42'/%3E%3Ccircle cx='63' cy='94' r='0.4' fill-opacity='0.64'/%3E%3Ccircle cx='29' cy='134' r='0.5' fill-opacity='0.64'/%3E%3Ccircle cx='222' cy='21' r='0.5' fill-opacity='0.41'/%3E%3Ccircle cx='119' cy='166' r='0.6' fill-opacity='0.47'/%3E%3Ccircle cx='65' cy='128' r='0.4' fill-opacity='0.49'/%3E%3Ccircle cx='49' cy='155' r='0.7' fill-opacity='0.83'/%3E%3Ccircle cx='39' cy='70' r='0.5' fill-opacity='0.88'/%3E%3Ccircle cx='209' cy='130' r='0.6' fill-opacity='0.34'/%3E%3Ccircle cx='155' cy='64' r='0.6' fill-opacity='0.43'/%3E%3Ccircle cx='35' cy='22' r='0.4' fill-opacity='0.88'/%3E%3Ccircle cx='63' cy='135' r='0.5' fill-opacity='0.93'/%3E%3Ccircle cx='173' cy='128' r='0.6' fill-opacity='0.90'/%3E%3Ccircle cx='105' cy='112' r='0.6' fill-opacity='0.90'/%3E%3C/svg%3E"),
-        radial-gradient(ellipse 30% 35% at 30% 38%, rgb(118 78 255 / 40%), transparent 70%),
-        radial-gradient(ellipse 26% 30% at 72% 68%, rgb(79 216 224 / 20%), transparent 70%),
-        radial-gradient(ellipse 22% 26% at 82% 22%, rgb(255 90 180 / 14%), transparent 70%),
-        linear-gradient(160deg, #120a45 0%, #06041c 100%);
+        radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 40%) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='280' fill='white'%3E%3Ccircle cx='0' cy='125' r='0.7' fill-opacity='0.86'/%3E%3Ccircle cx='172' cy='145' r='0.8' fill-opacity='0.48'/%3E%3Ccircle cx='92' cy='200' r='1.6' fill-opacity='0.55'/%3E%3Ccircle cx='247' cy='231' r='0.7' fill-opacity='0.44'/%3E%3Ccircle cx='309' cy='166' r='0.8' fill-opacity='0.45'/%3E%3Ccircle cx='129' cy='223' r='1.6' fill-opacity='0.43'/%3E%3Ccircle cx='242' cy='200' r='1.6' fill-opacity='0.55'/%3E%3Ccircle cx='373' cy='146' r='1.6' fill-opacity='0.70'/%3E%3Ccircle cx='403' cy='90' r='0.7' fill-opacity='0.77'/%3E%3Ccircle cx='339' cy='266' r='0.8' fill-opacity='0.82'/%3E%3Ccircle cx='398' cy='205' r='0.9' fill-opacity='0.58'/%3E%3Ccircle cx='107' cy='172' r='1.6' fill-opacity='0.92'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='220' fill='white'%3E%3Ccircle cx='0' cy='179' r='0.5' fill-opacity='0.59'/%3E%3Ccircle cx='105' cy='80' r='0.5' fill-opacity='0.37'/%3E%3Ccircle cx='36' cy='14' r='0.4' fill-opacity='0.66'/%3E%3Ccircle cx='108' cy='102' r='0.4' fill-opacity='0.91'/%3E%3Ccircle cx='32' cy='202' r='0.6' fill-opacity='0.65'/%3E%3Ccircle cx='84' cy='147' r='0.4' fill-opacity='0.52'/%3E%3Ccircle cx='120' cy='23' r='0.5' fill-opacity='0.53'/%3E%3Ccircle cx='156' cy='76' r='0.5' fill-opacity='0.69'/%3E%3Ccircle cx='49' cy='109' r='0.6' fill-opacity='0.88'/%3E%3Ccircle cx='32' cy='70' r='0.6' fill-opacity='0.73'/%3E%3Ccircle cx='69' cy='188' r='0.6' fill-opacity='0.57'/%3E%3Ccircle cx='249' cy='24' r='0.5' fill-opacity='0.79'/%3E%3Ccircle cx='70' cy='139' r='0.5' fill-opacity='0.70'/%3E%3Ccircle cx='98' cy='158' r='0.5' fill-opacity='0.39'/%3E%3C/svg%3E"),
+        radial-gradient(ellipse 32% 36% at 30% 38%, rgb(110 90 200 / 16%), transparent 70%),
+        radial-gradient(ellipse 28% 32% at 72% 68%, rgb(79 180 200 / 8%), transparent 70%),
+        linear-gradient(160deg, #110e2c 0%, #08071a 100%);
     background-size:
         100% 100%,
         420px 280px,
-        260px 190px,
-        1000px 640px, 1000px 640px, 1000px 640px,
+        300px 220px,
+        1000px 640px, 1000px 640px,
         100% 100%;
     background-position:
         center,
         var(--bY) var(--bX),
         0 0,
-        var(--bY) var(--bX), var(--bY) var(--bX), var(--bY) var(--bX),
+        var(--bY) var(--bX), var(--bY) var(--bX),
         center;
     background-repeat:
         no-repeat,
         repeat,
         repeat,
-        no-repeat, no-repeat, no-repeat,
+        no-repeat, no-repeat,
         no-repeat;
+    /* parallaxe lissée (la transition du transform d origine est gardée) */
+    transition: transform .6s 1s, background-position .35s ease-out;
+}
+
+/* Grille de points plus discrète (s'atténue encore au survol, comme avant) */
+.bg-dot {
+    opacity: 0.45;
+}
+
+.wrap:hover .bg-dot {
+    opacity: 0.25;
 }
 
 .container-card:before,
