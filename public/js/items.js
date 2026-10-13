@@ -11,7 +11,7 @@ const generateTemplate = (item) => {
   const html = `<li>
                   <input type="checkbox" id="todo_${listLength}">
                   <label for="todo_${listLength}">
-                    <img class="item-image" src="${item.image}">
+                    ${item.image ? `<img class="item-image" src="${item.image}">` : `<span class="item-image item-noimg"></span>`}
                     <span class="check"></span>
                     <p>${item.name}</p>
                   </label>
