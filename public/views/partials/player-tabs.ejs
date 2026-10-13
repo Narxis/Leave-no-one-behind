@@ -6,7 +6,7 @@
         <% if(player.items){ %>
             <% player.items.forEach(function(item) { %>
                 <div class="itemlist-line <%= item.slug %>">
-                    <p><%= item.name %></p>
+                    <p><img src="<%= item.image %>" class="item-image">&nbsp;<%= item.name %></p>
                     <i onclick="removeStarterItem('<%= player.discord_id %>', '<%= item.slug %>')" class="far fa-trash-alt item-trash"></i>
                 </div>
             <% }); %>
