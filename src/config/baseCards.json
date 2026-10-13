@@ -209,6 +209,7 @@
         },
         {
           "value": "Céder les 100 humains",
+          "humans": -100,
           "reveal": "\n\u00a0 Le mercenaire teleporte les cryopods contenant les 100 humains et s'en va, vous devez maintenant réactiver votre module d'oxygène."
         }
       ]
@@ -1362,10 +1363,12 @@
       "choices": [
         {
           "value": "Échanger 100 cryopods contre des \"outils de réparation pour [no_module-h-bdd_0]\"",
+          "humans": -100,
           "next": "station1-1-1"
         },
         {
           "value": "Échanger 100 cryopods contre des \"outils de réparation pour [no_module-h-bdd_1]\"",
+          "humans": -100,
           "next": "station1-1-2"
         },
         {
@@ -1414,10 +1417,12 @@
       "choices": [
         {
           "value": "Échanger 150 cryopods contre un \"Projecteur de bouclier personnel\"",
+          "humans": -150,
           "next": "station1-2-1"
         },
         {
           "value": "Échanger 150 cryopods contre un \"Super sonic stars\"",
+          "humans": -150,
           "next": "station1-2-2"
         },
         {
@@ -1455,10 +1460,12 @@
       "choices": [
         {
           "value": "Choisir la formule \"Minimum\" pour 50 cryopods",
+          "humans": -50,
           "next": "station2-1"
         },
         {
           "value": "Choisir la formule \"Premium\" pour 150 cryopods",
+          "humans": -150,
           "next": "station2-2"
         },
         {

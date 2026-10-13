@@ -80,7 +80,7 @@ class Card {
                     reveal: this.replaceVars(this.choices[choice].reveal),
                     mjreveal: this.replaceVars(this.choices[choice].mjreveal),
                     next: this.choices[choice].next,
-                    cost: -1,
+                    humans: this.choices[choice].humans || 0,
                 });
             }
             for (let mod in this.modules)
@@ -231,7 +231,8 @@ class Card {
                 'value',
                 'reveal',
                 'mjreveal',
-                'next'
+                'next',
+                'humans'
             ],
             where: {
                 card_id: this.id
@@ -253,7 +254,8 @@ class Card {
                     value: mod.value,
                     reveal: mod.reveal,
                     mjreveal: mod.mjreveal,
-                    next: mod.next
+                    next: mod.next,
+                    humans: mod.humans
                 });
             }
             else {
