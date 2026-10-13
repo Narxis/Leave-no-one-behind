@@ -1,5 +1,6 @@
 const fs = require('fs');
 const {Player} = require("../models/player");
+const allies = require("./allies");
 
 // Paliers de dégâts, les mêmes que les jets du menu MJ
 const DAMAGE = {
@@ -95,32 +96,17 @@ const cancelTarget = function () {
     return addLog({type: 'target-cancel', enemy: pending.enemy, player: pending.player});
 }
 
-// Appelé après chaque /roll : si c'est le jet de combat attendu, il règle
-// l'attaque. Le jet (Player.roll) doit atteindre la défense de l'ennemi ;
+// Règle une attaque sur un ennemi : le jet doit atteindre sa défense ;
 // plus la marge est grande, plus le palier de dégâts est élevé
-const resolveRoll = function (roll) {
-    let data = roll && roll.data;
-    let pending = state.pending;
-    if (!state.active || !pending || !data || roll.error)
-        return null;
-    if (String(data.discord_id) !== String(pending.discord_id) || data.stat !== 'combat' || data.module)
-        return null;
-
-    state.pending = null;
-    let enemy = findEnemy(pending.enemy_id);
-    if (!enemy || enemy.hp <= 0)
-        return null;
-
-    let entry = {
+const applyAttack = function (attacker, enemy, data) {
+    let entry = Object.assign({
         type: 'player-attack',
-        discord_id: pending.discord_id,
-        player: pending.player,
         enemy_id: enemy.id,
         enemy: enemy.name,
         dice: data.dice_result,
         result: data.result,
         hit: data.result >= enemy.defense
-    };
+    }, attacker);
     if (entry.hit) {
         let margin = entry.result - enemy.defense;
         entry.tier = margin < 15 ? 'faible' : (margin < 30 ? 'moyen' : 'fort');
@@ -134,6 +120,37 @@ const resolveRoll = function (roll) {
         error: false,
         data: {state: getState(), event: entry}
     };
+}
+
+// Appelé après chaque /roll : si c'est le jet de combat attendu, il règle l'attaque
+const resolveRoll = function (roll) {
+    let data = roll && roll.data;
+    let pending = state.pending;
+    if (!state.active || !pending || !data || roll.error)
+        return null;
+    if (String(data.discord_id) !== String(pending.discord_id) || data.stat !== 'combat' || data.module)
+        return null;
+
+    state.pending = null;
+    let enemy = findEnemy(pending.enemy_id);
+    if (!enemy || enemy.hp <= 0)
+        return null;
+    return applyAttack({discord_id: pending.discord_id, player: pending.player}, enemy, data);
+}
+
+// Un allié (PNJ) n'a pas de Discord : quand le MJ le désigne, le serveur
+// lance son dé tout de suite. Renvoie le jet (affiché sur son onglet) puis l'attaque
+const allyAttack = function (data) {
+    let enemy = findEnemy(data.enemy_id);
+    let ally = allies.findAlly(data.ally_id);
+    if (!state.active || !enemy || enemy.hp <= 0 || !ally)
+        return null;
+    state.pending = null;
+    let roll = Object.assign({discord_id: 'npc' + ally.id, stat: 'combat', module: ''}, allies.roll(ally, 'combat'));
+    return [
+        {action: 'roll', error: false, data: roll},
+        applyAttack({discord_id: roll.discord_id, player: ally.name, npc: true}, enemy, roll)
+    ];
 }
 
 // Attaque d'un ennemi, lancée par le MJ : l'offense est la chance de
@@ -178,4 +195,4 @@ const handle = async function (response) {
     };
 }
 
-module.exports = {handle, getState, getBestiary, resolveRoll, ACTIONS};
+module.exports = {handle, getState, getBestiary, resolveRoll, allyAttack, ACTIONS};

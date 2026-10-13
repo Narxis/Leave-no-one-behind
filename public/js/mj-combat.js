@@ -14,6 +14,7 @@
     let startMoral = {};   // moral des joueurs au début, pour les évanouissements
     let localLog = [];     // lignes visibles uniquement par le MJ
     let players = [];      // joueurs de la partie, pour choisir l'attaquant
+    let allies = [];       // compagnons (PNJ) : le serveur lance leur dé directement
     let targetId = null;   // ennemi choisi, en attente du choix de l'attaquant
 
     const el = (tag, cls, text) => {
@@ -75,13 +76,22 @@
     function renderAttackers(enemy) {
         let box = el('div', 'mj-attackers');
         box.append(el('span', 'mj-attackers-label', 'Qui attaque ' + enemy.name + ' ?'));
-        if (!players.length)
+        if (!players.length && !allies.length)
             box.append(el('span', 'mj-attackers-label', 'aucun joueur dans la partie'));
         for (let p of players)
             box.append(button('mj-attacker', p.name, () => {
                 targetId = null;
                 wsLNOB.send({action: 'combat-target', data: {enemy_id: enemy.id, discord_id: p.discord_id}});
             }));
+        for (let a of allies) {
+            let b = button('mj-attacker npc', a.name, () => {
+                targetId = null;
+                wsLNOB.send({action: 'combat-ally-attack', data: {enemy_id: enemy.id, ally_id: a.id}});
+            });
+            b.prepend(el('span', 'mj-ally-badge', 'PNJ'));
+            b.title = 'Le dé de ' + a.name + ' est lancé tout de suite (Combat ' + a.combat + ')';
+            box.append(b);
+        }
         list.append(box);
     }
 
@@ -203,8 +213,14 @@
         render();
     });
     document.addEventListener('playerStat', checkFaint);
+    document.addEventListener('allies', (e) => {
+        allies = e.detail.data.allies;
+        if (targetId !== null)
+            render();
+    });
 
     function load() {
+        fetch('/api/allies').then(r => r.json()).then(list => { allies = list; }).catch(() => {});
         fetch('/api/combat').then(r => r.json()).then(s => {
             state = s;
             if (state.active)

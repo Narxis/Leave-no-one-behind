@@ -7,6 +7,7 @@ const {Card} = require("../models/card");
 const drawflow = require("../controllers/drawflow");
 const fs = require('fs');
 const combat = require("./combat");
+const allies = require("./allies");
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 // TODO replace shipId with current game ship ID
@@ -145,6 +146,10 @@ module.exports = {
 
     getCombat(req, res) {
         res.json(combat.getState());
+    },
+
+    getAllies(req, res) {
+        res.json(allies.getAllies());
     },
 
     async getAllPlayers(req, res) {

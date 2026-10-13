@@ -10,20 +10,21 @@ async function getAllPlayers () {
 }
 // Le combat (adversaires, début/fin, attaques) est géré dans mj-combat.js
 
-document.getElementById('add-friend').addEventListener('mouseup',function(){
-    let mob = document.getElementById("search-ally").value
-    //faire spawn le compagnon (surement rajouter un player tab temporairement)
-})
+// Les compagnons (PNJ) sont gérés dans mj-allies.js
 function initialiseRadio () {
     document.querySelector('.life-type1').addEventListener('mouseup', function(){
         document.getElementById('life-1').checked = true;
         document.querySelector('.ennemy').classList.remove('hide');
         document.querySelector('.ally').classList.add('hide');  
+        document.getElementById('mj-enemies').classList.remove('hide');
+        document.getElementById('mj-allies').classList.add('hide');
     })
     document.querySelector('.life-type2').addEventListener('mouseup', function(){
         document.getElementById('life-2').checked = true;
         document.querySelector('.ennemy').classList.add('hide');
         document.querySelector('.ally').classList.remove('hide');  
+        document.getElementById('mj-enemies').classList.add('hide');
+        document.getElementById('mj-allies').classList.remove('hide');
     })
 }
 function initialiseStatus () {
