@@ -65,6 +65,7 @@
 /*---Boutons---*/
 .next,
 .bouton-suivant,
+.mj-button,
 .add-life,
 .player-create,
 .player-delete,
@@ -86,6 +87,7 @@
 
 .next:hover,
 .bouton-suivant:hover,
+.mj-button:hover,
 .add-life:hover,
 .player-create:hover,
 .player-delete:hover,
@@ -100,6 +102,7 @@
 
 .next:active,
 .bouton-suivant:active,
+.mj-button:active,
 .add-life:active,
 .player-create:active,
 .player-delete:active,
@@ -111,13 +114,21 @@
 
 /* Boutons d'action principale : accent jaune permanent */
 .next,
-.bouton-suivant {
+.bouton-suivant,
+.mj-button {
     border-color: rgb(255 204 0 / 55%);
     color: var(--ui-accent);
     text-transform: uppercase;
     font-size: 1.1em;
     letter-spacing: 0.12em;
     text-align: center;
+}
+
+/* Accès au menu MJ depuis un téléphone (bouton visible sur mobile seulement) */
+.mj-button {
+    box-sizing: border-box;
+    border-radius: 14px;
+    text-decoration: none;
 }
 
 .bouton-suivant {
