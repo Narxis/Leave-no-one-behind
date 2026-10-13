@@ -436,7 +436,7 @@
                         <li class="item-<%= item.slug %>">
                           <input type="checkbox" id="<%= item.slug %>-<%= i %>">
                           <label for="todo_1">
-                            <img class="item-image" src="<%= item.image %>">
+                            <% if (item.image) { %><img class="item-image" src="<%= item.image %>"><% } else { %><span class="item-image item-noimg"></span><% } %>
                             <span class="check"></span>
                             <p><%= item.name %></p>
                           </label>
