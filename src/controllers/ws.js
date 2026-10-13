@@ -16,7 +16,12 @@ const init = function (){
             let data = isBinary ? message : message.toString();
             let data_json = JSON.parse(data);
             log('[WS] '+ chalk.hex('#aaaaaa')(data_json.action), '#ffcc00');
-            makeAction(data).then(data => {broadcastData(data, ws)})
+            // Une action peut produire plusieurs messages (un /roll qui règle
+            // aussi une attaque de combat)
+            makeAction(data).then(data => {
+                for (let payload of (Array.isArray(data) ? data : [data]))
+                    broadcastData(payload, ws);
+            })
         });
 
         //send immediatly a feedback to the incoming connection
@@ -42,7 +47,10 @@ const makeAction = async function (raw_response) {
             payload = actionSetPlayerStat(response);
             break;
         case 'roll':
-            payload = actionRoll(response);
+            payload = actionRoll(response).then(roll => {
+                let attack = combat.resolveRoll(roll);
+                return attack ? [roll, attack] : roll;
+            });
             break;
         case 'setModule':
             payload = actionSetModule(response);
@@ -84,7 +92,8 @@ const makeAction = async function (raw_response) {
         case 'combat-start':
         case 'combat-end':
         case 'combat-hp':
-        case 'combat-attack':
+        case 'combat-target':
+        case 'combat-cancel':
         case 'combat-enemy-attack':
             payload = combat.handle(response);
             break;
