@@ -558,66 +558,13 @@
           <div class="answer answer2"></div>
         </div>
         <div class="combat-container combat-none" id="combat-area">
-          <div class="ennemy-container">
-            <div class="ennemy-name">Yorc avec une épée</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
+          <div class="combat-head">
+            <span class="combat-title">Combat</span>
+            <span class="combat-hint">Choisissez un adversaire, puis le personnage qui attaque</span>
           </div>
-          <div class="ennemy-container">
-            <div class="ennemy-name">Yorc sans épée</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
-          </div>
-          <div class="ennemy-container">
-            <div class="ennemy-name">Ygrl avec un fouet</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
-          </div>
-          <div class="ennemy-container">
-            <div class="ennemy-name">Aku</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
-          </div>
-          
-          <div class="ennemy-container">
-            <div class="ennemy-name">Sylv avec un baton</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
-          </div>
-          <div class="ennemy-container">
-            <div class="ennemy-name">Nek-air avec un gros livre</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-          </div>
+          <div class="combat-enemies" id="combat-enemies"></div>
+          <div class="combat-attackers" id="combat-attackers"></div>
+          <div class="combat-log" id="combat-log"></div>
         </div>
       </div>
     </div>
@@ -673,6 +620,8 @@
   <script src="/js/players.js"></script>
   <script src="/js/timer-anim.js"></script>
   <script src="/js/card.js"></script>
+  <script src="/js/combat-text.js"></script>
+  <script src="/js/combat.js"></script>
   <script src="/js/template-card.js"></script>
   <script src="/js/items.js"></script>
   <script>

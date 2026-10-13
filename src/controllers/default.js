@@ -3,6 +3,7 @@ let {generatePlanets, cardPop, deckGenerator,getCardsIds, hydrateCardDB, destroy
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
+const combat = require("./combat");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
@@ -133,7 +134,7 @@ module.exports = {
     },
 
     mjMenu(req, res) {
-        res.render('mj-menu', {lang: langJS});
+        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary()});
     },
 
     async persos(req, res) {

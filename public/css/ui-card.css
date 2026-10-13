@@ -572,3 +572,273 @@
 .plan-room label {
     display: none;
 }
+
+/* ---- Écran de combat (par-dessus la carte) ---- */
+.combat-container {
+    box-sizing: border-box;
+    width: 752px;
+    height: 502px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 22px 26px 18px;
+    border: 1px solid rgb(255 90 110 / 45%);
+    border-radius: 24px;
+    background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgb(255 90 110 / 14%), transparent 70%),
+        linear-gradient(160deg, #180e28, #0a081a);
+    box-shadow: var(--ui-shadow), inset 0 0 60px rgb(0 0 0 / 50%), 0 0 40px rgb(255 90 110 / 15%);
+    text-shadow: none;
+    z-index: 4;
+}
+
+.combat-in {
+    animation: combat-in .35s var(--ui-ease) both;
+}
+
+.combat-out {
+    animation: combat-in .35s var(--ui-ease) reverse both;
+}
+
+@keyframes combat-in {
+    from {
+        opacity: 0;
+        transform: scale(.96);
+    }
+}
+
+.combat-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ui-border);
+}
+
+.combat-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ui-danger);
+}
+
+.combat-hint {
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.combat-enemies {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-content: center;
+    gap: 12px;
+    overflow: auto;
+}
+
+.combat-enemies[data-count="1"] {
+    grid-template-columns: minmax(0, 260px);
+    justify-content: center;
+}
+
+.combat-enemies[data-count="2"],
+.combat-enemies[data-count="4"] {
+    grid-template-columns: repeat(2, minmax(0, 260px));
+    justify-content: center;
+}
+
+.combat-enemy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 14px 12px;
+    border: 1px solid var(--ui-border);
+    border-radius: 14px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 150ms var(--ui-ease), background 150ms var(--ui-ease), transform 150ms var(--ui-ease), opacity 300ms;
+}
+
+.combat-enemy:hover:not(:disabled) {
+    border-color: rgb(255 90 110 / 60%);
+    background: rgb(255 90 110 / 8%);
+    transform: translateY(-2px);
+}
+
+.combat-enemy.selected {
+    border-color: var(--ui-danger);
+    background: rgb(255 90 110 / 12%);
+    box-shadow: 0 0 0 1px var(--ui-danger), 0 0 22px rgb(255 90 110 / 30%);
+}
+
+.combat-enemy.ko {
+    opacity: 0.4;
+    cursor: default;
+    filter: grayscale(1);
+}
+
+.combat-enemy-name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.combat-enemy-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 8%);
+    overflow: hidden;
+}
+
+.combat-enemy-bar-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: #5ee08a;
+    transition: width 400ms var(--ui-ease), background 400ms;
+}
+
+.combat-enemy-bar-fill[data-level="warn"] {
+    background: var(--ui-accent);
+}
+
+.combat-enemy-bar-fill[data-level="crit"] {
+    background: var(--ui-danger);
+}
+
+.combat-enemy-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.combat-enemy-hp {
+    font-weight: 700;
+    color: var(--ui-text);
+}
+
+/* Animations des attaques */
+.combat-enemy.hit {
+    animation: combat-shake .4s;
+}
+
+.combat-enemy.attacking {
+    animation: combat-lunge .45s;
+}
+
+@keyframes combat-shake {
+    20% { transform: translateX(-6px); background: rgb(255 90 110 / 25%); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(2px); }
+}
+
+@keyframes combat-lunge {
+    40% { transform: scale(1.06); box-shadow: 0 0 26px rgb(255 90 110 / 55%); }
+}
+
+.combat-float {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    pointer-events: none;
+    animation: combat-float 1.2s var(--ui-ease) forwards;
+}
+
+.combat-float.dmg {
+    color: var(--ui-danger);
+    text-shadow: 0 0 10px rgb(255 90 110 / 60%);
+}
+
+.combat-float.enemy-hit {
+    color: var(--ui-accent);
+    font-size: 15px;
+}
+
+.combat-float.miss {
+    color: var(--ui-text-dim);
+    font-size: 15px;
+}
+
+@keyframes combat-float {
+    0% { opacity: 0; transform: translateY(6px) scale(.8); }
+    20% { opacity: 1; transform: translateY(0) scale(1.1); }
+    100% { opacity: 0; transform: translateY(-26px); }
+}
+
+/* Choix du personnage qui attaque */
+.combat-attackers {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+}
+
+.combat-attackers.is-open {
+    display: flex;
+}
+
+.combat-attackers-label {
+    margin-right: 4px;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.combat-attacker {
+    padding: 7px 14px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 10px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease), color 150ms var(--ui-ease);
+}
+
+.combat-attacker:hover {
+    border-color: var(--ui-accent);
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+}
+
+/* Journal */
+.combat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-height: 74px;
+    padding-top: 10px;
+    border-top: 1px solid var(--ui-border);
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.combat-log-line:first-child {
+    color: var(--ui-text);
+}
+
+.combat-log-line.player-attack.hit:first-child {
+    color: #5ee08a;
+}
+
+.combat-log-line.enemy-attack.hit:first-child {
+    color: var(--ui-danger);
+}
