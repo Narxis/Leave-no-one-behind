@@ -1,0 +1,322 @@
+/*---vvv---Rafraîchissement des menus (chargé après le CSS de chaque page)---vvv---*/
+
+/*---Panneaux---*/
+.flex-container,
+.endscreen-container,
+.lecadre,
+.player,
+.form-container,
+.synopsis-page .card,
+.fiche-page .card {
+    border: 1px solid var(--ui-border);
+    border-radius: 20px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(12px) saturate(130%);
+    -webkit-backdrop-filter: blur(12px) saturate(130%);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+}
+
+/* Pas de flou ici : backdrop-filter changerait le repère des
+   blocs .ennemy/.ally/.status-box positionnés en absolu */
+.flex-container {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.fiche-page .vaisseau {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: var(--ui-radius);
+    box-shadow: var(--ui-shadow);
+}
+
+/*---Boutons---*/
+.next,
+.bouton-suivant,
+.add-life,
+.player-create,
+.player-delete,
+.game-start,
+.combat .player-stat-value {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 12px;
+    background: var(--ui-fill);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), 0 8px 24px -12px rgb(0 0 0 / 80%);
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease), color 150ms var(--ui-ease), box-shadow 200ms var(--ui-ease), transform 150ms var(--ui-ease);
+}
+
+.next:hover,
+.bouton-suivant:hover,
+.add-life:hover,
+.player-create:hover,
+.player-delete:hover,
+.game-start:hover,
+.combat .player-stat-value:hover {
+    background: var(--ui-accent-soft);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    box-shadow: var(--ui-glow-accent);
+    transform: translateY(-1px);
+}
+
+.next:active,
+.bouton-suivant:active,
+.add-life:active,
+.player-create:active,
+.player-delete:active,
+.game-start:active,
+.combat .player-stat-value:active {
+    transform: translateY(0);
+    box-shadow: inset 0 2px 6px rgb(0 0 0 / 40%);
+}
+
+/* Boutons d'action principale : accent jaune permanent */
+.next,
+.bouton-suivant {
+    border-color: rgb(255 204 0 / 55%);
+    color: var(--ui-accent);
+    text-transform: uppercase;
+    font-size: 1.1em;
+    letter-spacing: 0.12em;
+    text-align: center;
+}
+
+.bouton-suivant {
+    width: auto;
+    padding: 0 28px;
+    white-space: nowrap;
+    font-size: 0.95em;
+}
+
+/* Couleurs de sens conservées, en version plus sobre */
+.player-create {
+    background: rgb(79 216 224 / 12%);
+    border-color: rgb(79 216 224 / 55%);
+}
+
+.player-delete {
+    background: rgb(255 90 110 / 12%);
+    border-color: rgb(255 90 110 / 55%);
+}
+
+.game-start {
+    background: rgb(92 220 120 / 14%);
+    border-color: rgb(92 220 120 / 60%);
+}
+
+/*---Champs de saisie---*/
+#search-ally,
+#search-ennemy,
+#search-status,
+input.add-life,
+.player .player-name {
+    border: 1px solid var(--ui-border);
+    border-radius: 12px;
+    background: rgb(0 0 0 / 28%);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 500;
+    box-shadow: inset 0 2px 8px rgb(0 0 0 / 35%);
+    transition: border-color 150ms var(--ui-ease), box-shadow 150ms var(--ui-ease), background 150ms var(--ui-ease);
+}
+
+input.add-life {
+    cursor: text;
+}
+
+input.add-life:hover {
+    transform: none;
+    color: var(--ui-text);
+    background: rgb(0 0 0 / 28%);
+}
+
+#search-ally:focus,
+#search-ennemy:focus,
+#search-status:focus,
+input.add-life:focus,
+.player .player-name:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+    background: rgb(0 0 0 / 38%);
+    box-shadow: inset 0 2px 8px rgb(0 0 0 / 35%), 0 0 0 3px rgb(255 204 0 / 18%);
+}
+
+::placeholder {
+    color: var(--ui-text-dim);
+    opacity: 1;
+}
+
+/*---Menu principal---*/
+.pas-title {
+    width: max-content;
+    white-space: nowrap;
+    padding: 0.6em 1.4em;
+    font-size: clamp(14px, 1.4vw, 22px);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ui-text-dim);
+    text-shadow: none;
+    border: 1px solid var(--ui-border);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 3%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: ui-pulse 2.8s ease-in-out infinite;
+    transition: color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.pas-title:hover {
+    color: var(--ui-accent);
+    border-color: var(--ui-accent);
+    animation-play-state: paused;
+}
+
+@keyframes ui-pulse {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+}
+
+/*---Menu MJ---*/
+.choice-reveal,
+.combat {
+    border-color: var(--ui-border) !important;
+}
+
+.desc-title {
+    padding: 4px 18px 10px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-indent: 0;
+}
+
+.desc-text,
+.reveal-text {
+    margin: 0 12px;
+    padding: 12px 14px;
+    border-top: none;
+    border-left: 2px solid rgb(176 166 255 / 45%);
+    border-radius: 0 var(--ui-radius-sm) var(--ui-radius-sm) 0;
+    background: rgb(40 0 76 / 45%);
+    text-indent: 0;
+    line-height: 1.45;
+    text-shadow: none;
+}
+
+.button-text {
+    margin: 4px 12px 8px;
+    padding-left: 2px;
+    font-weight: 600;
+    text-indent: 0;
+    text-shadow: none;
+}
+
+.ennemy,
+.ally {
+    border-color: var(--ui-border);
+}
+
+.fight {
+    border-color: rgb(255 90 110 / 60%);
+    color: var(--ui-danger);
+    background: rgb(255 90 110 / 10%);
+    text-shadow: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 1.5em;
+}
+
+.fight:hover {
+    color: #fff;
+    border-color: var(--ui-danger);
+    background: rgb(255 90 110 / 25%);
+    box-shadow: 0 0 0 1px rgb(255 90 110 / 40%), 0 0 22px -4px rgb(255 90 110 / 55%);
+}
+
+#console-container {
+    border-color: var(--ui-border);
+}
+
+.combat .output-roll {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 12px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-accent);
+    text-shadow: 0 0 10px rgb(255 204 0 / 45%);
+}
+
+.mjroll-label {
+    transition: color 150ms var(--ui-ease);
+}
+
+.mjroll-label:hover {
+    color: var(--ui-accent);
+}
+
+/*---Fiches personnages---*/
+.player .player-stats,
+.race-img {
+    border-color: var(--ui-border);
+}
+
+.race-img {
+    border-radius: 12px;
+}
+
+.player-stat-value {
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 1px var(--ui-border);
+}
+
+.options-affichage li {
+    border: none;
+    border-bottom: 1px solid var(--ui-border);
+    transition: background 150ms var(--ui-ease), color 150ms var(--ui-ease);
+}
+
+.options-affichage li:hover {
+    background: var(--ui-fill-hover);
+    color: var(--ui-accent);
+}
+
+.display-options {
+    background-color: var(--ui-surface-flat);
+    border: 1px solid var(--ui-border);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.lecadre {
+    line-height: 1.5;
+    padding: 0 2em;
+    box-sizing: border-box;
+    justify-content: center;
+}
+
+.form-stats {
+    border-color: var(--ui-border);
+}
+
+/*---Écran de fin---*/
+.ship-recap,
+.planet-recap {
+    border-color: var(--ui-border) !important;
+    border-width: 1px !important;
+}
+
+/*---Synopsis---*/
+.synopsis-page .card {
+    line-height: 1.5;
+    padding: 24px 28px;
+    text-indent: 0;
+}
+
+/*---^^^---Rafraîchissement des menus---^^^---*/
