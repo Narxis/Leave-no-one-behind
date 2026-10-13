@@ -160,10 +160,14 @@
     });
     document.addEventListener('playerStat', checkFaint);
 
-    fetch('/api/combat').then(r => r.json()).then(s => {
-        state = s;
-        if (state.active)
-            recordMoral();
-        render();
-    }).catch(render);
+    function load() {
+        fetch('/api/combat').then(r => r.json()).then(s => {
+            state = s;
+            if (state.active)
+                recordMoral();
+            render();
+        }).catch(render);
+    }
+    load();
+    document.addEventListener('ws-reconnect', load);
 })();

@@ -134,9 +134,13 @@
         animate(e.detail.data.event);
     });
 
-    fetch('/api/combat').then(r => r.json()).then(s => {
-        state = s;
-        render();
-        show(state.active);
-    }).catch(() => {});
+    function load() {
+        fetch('/api/combat').then(r => r.json()).then(s => {
+            state = s;
+            render();
+            show(state.active);
+        }).catch(() => {});
+    }
+    load();
+    document.addEventListener('ws-reconnect', load);
 })();
