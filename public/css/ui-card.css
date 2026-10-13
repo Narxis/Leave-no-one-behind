@@ -496,3 +496,83 @@
         display: none;
     }
 }
+
+/* ---- Plan du vaisseau (F1) ----
+   L'ancien style inversait toutes les couleurs (filter: invert) pour obtenir
+   des murs blancs. On se sert maintenant de l'image des murs comme masque,
+   ce qui permet de les teinter comme le reste de l'interface */
+.plan-container {
+    left: 50%;
+    z-index: 50;
+    filter: none;
+    pointer-events: none;
+}
+
+.plan-container.mapshow {
+    pointer-events: auto;
+}
+
+.plan-card {
+    box-sizing: border-box;
+    width: 1250px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 24px;
+    background:
+        radial-gradient(ellipse 60% 70% at 30% 40%, rgb(110 90 200 / 16%), transparent 70%),
+        radial-gradient(ellipse 50% 60% at 75% 65%, rgb(79 180 200 / 8%), transparent 70%),
+        linear-gradient(160deg, #110e2c, #08071a);
+    box-shadow: var(--ui-shadow);
+    filter: none;
+}
+
+/* Le reste de l'écran s'assombrit derrière le plan */
+.mapshow .plan-card {
+    box-shadow: var(--ui-shadow), 0 0 0 100vmax rgb(5 4 15 / 55%);
+}
+
+/* Grille discrète façon plan technique */
+.plan-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image:
+        linear-gradient(rgb(160 150 255 / 5%) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(160 150 255 / 5%) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+.plan-card::after {
+    content: 'Plan du vaisseau';
+    position: absolute;
+    top: 18px;
+    right: 26px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ui-text-dim);
+}
+
+.plan-empty img {
+    opacity: 0;
+}
+
+/* Plan recentré dans le cadre (il était décalé de 25px vers la gauche) */
+.plan-empty {
+    left: -575px;
+    background: linear-gradient(160deg, rgb(205 198 255 / 90%), rgb(140 200 230 / 80%));
+    -webkit-mask: url(/img/plan-plugs-stroke.png) 0 0 / 1153px 681px no-repeat;
+    mask: url(/img/plan-plugs-stroke.png) 0 0 / 1153px 681px no-repeat;
+    filter: drop-shadow(0 0 6px rgb(130 110 255 / 45%));
+}
+
+.plan-room {
+    left: -535px;
+    filter: none;
+    fill: var(--ui-danger);
+}
+
+.plan-room label {
+    display: none;
+}
