@@ -42,8 +42,20 @@ function showRace(discord_id, race) {
     let desc = document.querySelector('#p' + discord_id + ' .race-desc');
     if (img)
         img.src = '/img/races/' + race + '.png';
-    if (desc)
-        desc.innerHTML = lang.card_vars[race] ? lang.card_vars[race].desc : '';
+
+    // Race active surlignée dans le menu, et son nom en titre de description
+    let label = '';
+    document.querySelectorAll('#p' + discord_id + ' .race-possible').forEach(li => {
+        let active = li.getAttribute('data-name') === race;
+        li.classList.toggle('selected', active);
+        if (active)
+            label = li.textContent;
+    });
+
+    if (desc) {
+        let text = lang.card_vars[race] ? lang.card_vars[race].desc : '';
+        desc.innerHTML = text ? '<div class="race-desc-title">' + label + '</div><p>' + text + '</p>' : '';
+    }
 }
 
 async function addPlayerSheet (discord_id) {
