@@ -260,6 +260,80 @@ input.add-life:focus,
     color: var(--ui-accent);
 }
 
+/* Colonne adversaires / compagnons / status : grille alignée au lieu
+   des blocs positionnés en absolu (écrans larges uniquement, les règles
+   mobiles de mj-menu.css restent en place) */
+@media (min-width: 1025px) {
+    .life-container {
+        box-sizing: border-box;
+        padding: 20px 24px;
+        gap: 20px;
+    }
+
+    .life-change,
+    .combat .life-change {
+        height: auto;
+        width: 100%;
+    }
+
+    .life-container .life-change {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px 24px;
+    }
+
+    .life-type1,
+    .life-type2 {
+        padding: 0 0 8px;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .life-selector {
+        height: auto;
+        width: 100%;
+    }
+
+    .ennemy:not(.hide),
+    .ally:not(.hide),
+    .status-box {
+        position: static;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        width: 100%;
+        height: auto;
+        margin: 0;
+        padding: 20px 0 0;
+        border-top: 1px solid var(--ui-border);
+        border-bottom: none;
+    }
+
+    #search-ennemy,
+    #search-ally,
+    #search-status {
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        width: 100%;
+        height: 2.4em;
+        margin: 0;
+        padding: 0 0.6em;
+        font-size: 1.5em;
+        text-align: left;
+    }
+
+    .life-container .add-life {
+        box-sizing: border-box;
+        width: 100%;
+        height: 2.4em;
+        margin: 0;
+        padding: 0;
+        font-size: 1.5em;
+        text-align: center;
+    }
+}
+
 /*---Fiches personnages---*/
 .player .player-stats,
 .race-img {
