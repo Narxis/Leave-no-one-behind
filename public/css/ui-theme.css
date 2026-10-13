@@ -136,3 +136,222 @@ input[type="checkbox"] {
 }
 
 /*---^^^---Menu hamburger---^^^---*/
+
+/*---vvv---Jauges des modules (construites par ui-gauges.js)---vvv---*/
+
+.dial {
+    --ui-gauge-color: var(--ui-cyan);
+}
+
+.dial[data-level="warn"],
+.ui-segbar[data-level="warn"] {
+    --ui-gauge-color: var(--ui-accent);
+}
+
+.dial[data-level="crit"],
+.ui-segbar[data-level="crit"] {
+    --ui-gauge-color: var(--ui-danger);
+}
+
+.dial svg.ui-gauge {
+    overflow: visible;
+}
+
+.dial svg.ui-gauge circle {
+    fill: none;
+    stroke-width: 9;
+    stroke-dashoffset: 0;
+}
+
+.dial svg.ui-gauge .ui-gauge-track {
+    stroke: rgb(255 255 255 / 10%);
+}
+
+.dial svg.ui-gauge .ui-gauge-fill {
+    stroke: var(--ui-gauge-color);
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 3px var(--ui-gauge-color));
+    transition: stroke-dasharray 500ms var(--ui-ease), stroke 400ms var(--ui-ease), opacity 200ms;
+}
+
+.dial svg.ui-gauge .ui-gauge-text {
+    fill: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+/* Barres à 10 segments de la fiche vaisseau */
+.ui-segbar {
+    --ui-gauge-color: var(--ui-cyan);
+    display: flex;
+    gap: 5px;
+    width: 230px;
+    height: 16px;
+    margin: 10px 0 0 24px;
+}
+
+.ui-segbar span {
+    flex: 1;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 8%);
+    transform: skewX(-20deg);
+    transition: background 300ms var(--ui-ease), box-shadow 300ms var(--ui-ease);
+}
+
+.ui-segbar span.on {
+    background: var(--ui-gauge-color);
+    box-shadow: 0 0 8px -1px var(--ui-gauge-color);
+}
+
+/*---^^^---Jauges des modules---^^^---*/
+
+/*---vvv---Cartes des joueurs (onglets en bas des pages de jeu)---vvv---*/
+/* Pas de transform ici : move-up / load-in déplacent les onglets */
+
+.player-tab {
+    border: 1px solid var(--ui-border-strong);
+    border-bottom: none;
+    border-radius: 16px 16px 0 0;
+    background: var(--ui-surface);
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), 0 -12px 40px -16px rgb(112 84 255 / 45%);
+    color: var(--ui-text);
+}
+
+/* Petits onglets "?" et coffre au-dessus de la carte */
+.player-tab .expander,
+.player-tab .expander-item {
+    border: 1px solid var(--ui-border-strong);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    background: var(--ui-surface-flat);
+    color: var(--ui-text-dim);
+    transition: color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.player-tab .expander:hover,
+.player-tab .expander-item:hover {
+    color: var(--ui-accent);
+    border-color: var(--ui-accent);
+}
+
+/* En-tête : nom + race */
+.player-tab .player-roll .player-name {
+    top: 6px;
+    left: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--ui-text);
+    text-shadow: none;
+}
+
+.player-tab .player-race {
+    display: inline-block;
+    margin-top: 2px;
+    padding: 0 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--ui-cyan);
+    border: 1px solid rgb(79 216 224 / 35%);
+    border-radius: 999px;
+}
+
+/* Résultat du jet */
+.player-tab .output-roll {
+    border-radius: 12px;
+    background: rgb(0 0 0 / 30%);
+    box-shadow: inset 0 0 0 1px var(--ui-border);
+    color: var(--ui-accent);
+    text-shadow: 0 0 10px rgb(255 204 0 / 40%);
+}
+
+.player-tab .output-roll.success {
+    color: #5cdc78;
+    text-shadow: 0 0 10px rgb(92 220 120 / 45%);
+}
+
+.player-tab .output-roll.fail {
+    color: var(--ui-danger);
+    text-shadow: 0 0 10px rgb(255 90 110 / 45%);
+}
+
+/* Lignes de stats */
+.player-tab hr.separateur {
+    width: calc(100% - 32px);
+    height: 1px;
+    margin: 0 16px;
+    box-shadow: none;
+    background: var(--ui-border);
+    opacity: 0.6;
+}
+
+.player-tab .player-stat {
+    width: 100%;
+    height: 54px;
+    box-sizing: border-box;
+    padding: 0 16px;
+    transition: background 150ms var(--ui-ease);
+}
+
+.player-tab .player-stat:hover {
+    background: var(--ui-fill);
+}
+
+.player-tab .player-stat-icon {
+    margin: 0 auto 0 4px;
+}
+
+.player-tab .player-stat-icon svg {
+    fill: var(--ui-text-dim);
+    transition: fill 150ms var(--ui-ease);
+}
+
+.player-tab .player-stat:hover .player-stat-icon svg {
+    fill: var(--ui-text);
+}
+
+/* Stepper - valeur + */
+.player-tab .player-stat-value {
+    width: 52px;
+    height: 30px;
+    margin: 0 2px;
+    border-radius: 8px;
+    background: rgb(0 0 0 / 30%);
+    box-shadow: inset 0 0 0 1px var(--ui-border);
+    font-weight: 700;
+    text-shadow: none;
+}
+
+.player-tab .mod-b {
+    width: 26px;
+    height: 26px;
+    margin: 0 2px;
+    padding: 0;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    box-shadow: none;
+    color: var(--ui-text-dim);
+    font-family: 'Jura', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    transition: background 150ms var(--ui-ease), color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.player-tab .mod-b:hover {
+    background: var(--ui-accent-soft);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.player-tab .mod-b:active {
+    box-shadow: inset 0 2px 4px rgb(0 0 0 / 40%);
+}
+
+/*---^^^---Cartes des joueurs---^^^---*/

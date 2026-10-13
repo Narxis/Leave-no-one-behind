@@ -386,6 +386,17 @@ input.add-life:focus,
     border-width: 1px !important;
 }
 
+/*---Fiche vaisseau : libellés des modules---*/
+.fiche-page .modtxt {
+    box-shadow: none;
+    padding: 0 0 0 24px;
+    color: var(--ui-text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
 /*---Synopsis---*/
 .synopsis-page .card {
     line-height: 1.5;
