@@ -60,7 +60,25 @@
     fill: transparent;
 }
 
-.mod-img {
+/* Anneau et icône centrés tous les deux au milieu du bouton
+   (avant : anneau décalé en dur, icône centrée + petits décalages par id) */
+/* Centre aligné sur celui de l'arrondi de l'onglet (rayon 36px) */
+.mod-button svg.ui-gauge {
+    left: calc(100% - 36px);
+    top: 50%;
+    width: 54px;
+    height: 54px;
+    transform: translate(-50%, -50%);
+}
+
+.mod-button .mod-img {
+    position: absolute;
+    left: calc(100% - 36px);
+    top: 50%;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    transform: translate(-50%, -50%) !important;
     filter: saturate(0.85) drop-shadow(0 0 4px rgb(0 0 0 / 60%));
 }
 
