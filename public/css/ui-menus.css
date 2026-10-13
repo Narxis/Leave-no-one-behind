@@ -564,10 +564,21 @@ input.add-life:focus,
 }
 
 /*---Synopsis---*/
+/* Hauteur fixe à la taille du texte complet : 185px d'origine ne suffisaient
+   plus avec l'interligne, et une hauteur automatique ferait grandir le
+   cadre pendant l'écriture */
 .synopsis-page .card {
+    height: auto;
+    min-height: 232px;
     line-height: 1.5;
     padding: 24px 28px;
     text-indent: 0;
+}
+
+/* « Suivant » sous le coin droit du cadre (il dépassait de 160px à droite) */
+.synopsis-page .next {
+    top: 172px;
+    left: 419px;
 }
 
 /*---^^^---Rafraîchissement des menus---^^^---*/
