@@ -164,6 +164,19 @@ function quickUpdateModule(el, mod, left=false) {
     setModuleVal(mod, newValue, left);
 }
 
+// Choix qui coûtent (ou rapportent) des humains : appliqué au clic
+function changeHumans(delta) {
+    let counter = document.querySelector('#cryopods-value');
+    let current = parseInt(counter.innerText) || 0;
+    setModuleVal('cryopods', current + delta, true);
+
+    let pop = document.createElement('div');
+    pop.className = 'human-delta ' + (delta < 0 ? 'loss' : 'gain');
+    pop.textContent = (delta > 0 ? '+' : '') + delta;
+    counter.parentElement.append(pop);
+    setTimeout(() => pop.remove(), 1800);
+}
+
 function setModuleVal(mod, newValue, left) {
     if (typeof wsLNOB === 'undefined'){
         console.error('YOU MUST INCLUDE socketLNOB.js before this');
@@ -245,6 +258,8 @@ async function showChoices() {
         choiceBtn.innerHTML = choice.value;
         choiceBtn.addEventListener('mouseup', async function() {
             stopCountdown();
+            if (choice.humans)
+                changeHumans(choice.humans);
             await hideChoices();
             if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL
 

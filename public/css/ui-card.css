@@ -437,3 +437,50 @@
 }
 
 /*---^^^---Volet objets---^^^---*/
+
+/* ---- Humains gagnés / perdus par un choix ---- */
+.human {
+    position: relative;
+}
+
+.human-delta {
+    position: absolute;
+    right: 34px;
+    top: 50%;
+    font-family: 'Jura', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    pointer-events: none;
+    animation: human-delta 1.8s var(--ui-ease) forwards;
+}
+
+.human-delta.loss {
+    color: var(--ui-danger);
+    text-shadow: 0 0 10px rgb(255 90 110 / 60%);
+}
+
+.human-delta.gain {
+    color: var(--ui-cyan);
+    text-shadow: 0 0 10px rgb(79 216 224 / 60%);
+}
+
+@keyframes human-delta {
+    0% {
+        opacity: 0;
+        transform: translateY(-50%) scale(.6);
+    }
+
+    15% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.15);
+    }
+
+    30% {
+        transform: translateY(-50%) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(calc(-50% + 34px));
+    }
+}
