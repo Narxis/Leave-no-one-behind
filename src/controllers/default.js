@@ -4,6 +4,7 @@ const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
 const combat = require("./combat");
+const allies = require("./allies");
 const inventory = require("./inventory");
 const planetGen = require("./planetGen");
 const leaderboard = require("./leaderboard");
@@ -149,8 +150,8 @@ module.exports = {
 
     async persos(req, res) {
         // Nouvelle création : les personnages de la partie précédente sont effacés
-        // (et leurs objets). Pas sur un rechargement de la page elle-même, pour ne
-        // pas perdre les joueurs qui viennent de rejoindre
+        // (avec leurs objets et les compagnons du MJ). Pas sur un rechargement de
+        // la page elle-même, pour ne pas perdre les joueurs qui viennent de rejoindre
         let from = '';
         try {
             from = new URL(req.get('referer') || '').pathname;
@@ -158,6 +159,7 @@ module.exports = {
         if (from !== '/persos') {
             await DB.tables.players.destroy({where: {}});
             await DB.tables.items.update({owners: ''}, {where: {}});
+            allies.clear();
         }
         await CONFIG.upsert('gameState', 'creation');
         res.render('perso', {lang: langJS});
