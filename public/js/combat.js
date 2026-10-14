@@ -147,6 +147,15 @@
             card.classList.add('attacking');
             floatText(card, event.hit ? 'Touché ! ' + event.damage : 'Raté', event.hit ? 'enemy-hit' : 'miss');
         }
+        // L'onglet du joueur ou du compagnon visé réagit sous la carte
+        let tab = event.type === 'enemy-attack' && event.target_id && document.getElementById('player-tab' + event.target_id);
+        if (tab) {
+            tab.classList.remove('under-attack', 'dodged');
+            void tab.offsetWidth;
+            tab.classList.add(event.hit ? 'under-attack' : 'dodged');
+            floatText(tab, event.hit ? '-' + event.damage : 'Esquivé', event.hit ? 'dmg tab-float' : 'miss tab-float');
+            setTimeout(() => tab.classList.remove('under-attack', 'dodged'), 900);
+        }
     }
 
     document.addEventListener('combat', (e) => {

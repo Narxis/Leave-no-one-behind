@@ -14,11 +14,14 @@ function describeCombatEntry(entry, forMJ = false) {
                 return entry.player + ' rate ' + entry.enemy + ' (' + entry.result + ')';
             return entry.player + ' touche ' + entry.enemy + ' (' + entry.result + ') : -' + entry.damage + ' PV'
                 + (entry.ko ? ' — K.O. !' : '');
-        case 'enemy-attack':
+        case 'enemy-attack': {
+            let who = entry.target ? entry.enemy + ' attaque ' + entry.target + (entry.npc_target ? ' (PNJ)' : '')
+                : entry.enemy + ' attaque';
             if (!entry.hit)
-                return entry.enemy + ' attaque : raté (' + entry.dice + ')';
-            return entry.enemy + ' attaque : touché (' + entry.dice + ') — ' + entry.damage + ' dégâts'
+                return who + ' : raté (' + entry.dice + ')';
+            return who + ' : touché (' + entry.dice + ') — ' + entry.damage + ' dégâts'
                 + (forMJ ? ' à appliquer' : '');
+        }
     }
     return '';
 }

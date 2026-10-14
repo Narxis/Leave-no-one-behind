@@ -207,18 +207,30 @@ const allyAttack = function (data) {
 
 // Attaque d'un ennemi, lancée par le MJ : l'offense est la chance de
 // toucher en %. Les dégâts sont affichés, le MJ les applique au joueur
-const enemyAttack = function (data) {
+// La cible est un joueur (discord_id) ou un compagnon (ally_id) choisi par le MJ
+const enemyAttack = async function (data) {
     let enemy = findEnemy(data.enemy_id);
     if (!enemy || enemy.hp <= 0)
         return null;
+    let target = {};
+    if (data.ally_id !== undefined) {
+        let ally = allies.findAlly(data.ally_id);
+        if (ally)
+            target = {target_id: 'npc' + ally.id, target: ally.name, npc_target: true};
+    }
+    else if (data.discord_id) {
+        let player = await new Player().getData(data.discord_id);
+        if (player)
+            target = {target_id: String(player.discord_id), target: player.name};
+    }
     let dice = Math.floor(Math.random() * 100) + 1;
-    let entry = {
+    let entry = Object.assign({
         type: 'enemy-attack',
         enemy_id: enemy.id,
         enemy: enemy.name,
         dice: dice,
         hit: dice <= enemy.offense
-    };
+    }, target);
     if (entry.hit) {
         entry.tier = enemy.damage;
         entry.damage = rollRange(DAMAGE[enemy.damage]);
