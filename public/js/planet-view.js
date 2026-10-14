@@ -1100,6 +1100,7 @@
     ];
     // Orbite de référence : l'ancienne lune (250px) faisait un tour en 30 s
     const MOON_REF_ORBIT = 250, MOON_REF_PERIOD = 30;
+    const MOON_SPIN_MIN = .5, MOON_SPIN_MAX = 30;
 
     function moonTexture(rng) {
         let pal = MOON_PALETTES[Math.floor(rng() * MOON_PALETTES.length)].map(hex);
@@ -1185,7 +1186,9 @@
             moons.push({
                 orbit, radius, shownOrbit,
                 period: MOON_REF_PERIOD * Math.pow(orbit / MOON_REF_ORBIT, 1.5),
-                spin: (rng() < .5 ? -1 : 1) * (6 + rng() * 24),
+                // Tour sur elle-même de 0,5 s à 30 s, tiré sur une échelle logarithmique : autant
+                // de lunes lentes que de très rapides (plus vite, la rotation saccaderait à 30 images/s)
+                spin: (rng() < .5 ? -1 : 1) * MOON_SPIN_MIN * Math.pow(MOON_SPIN_MAX / MOON_SPIN_MIN, rng()),
                 phase: rng() * Math.PI * 2,
                 tex: moonTexture(rng),
                 map: moonMap(Math.max(4, radius * k) * dpr)
