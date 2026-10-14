@@ -122,16 +122,16 @@
                 let i = v * TEX_W + u;
                 f.px[i] = x; f.py[i] = y; f.pz[i] = z; f.lat[i] = lat;
                 // Relief déformé par un second bruit, pour des continents moins ronds
-                let wx = fbm(x * 1.2 + off[5][0], y * 1.2 + off[5][1], z * 1.2 + off[5][2], 3);
-                f.elev[i] = fbm(x * 1.7 + off[0][0] + wx, y * 1.7 + off[0][1] + wx, z * 1.7 + off[0][2], 4);
-                f.moist[i] = fbm(x * 2.4 + off[1][0], y * 2.4 + off[1][1], z * 2.4 + off[1][2], 4);
-                f.detail[i] = fbm(x * 9 + off[2][0], y * 9 + off[2][1], z * 9 + off[2][2], 3);
-                f.ridge[i] = 1 - Math.abs(fbm(x * 3.2 + off[3][0], y * 3.2 + off[3][1], z * 3.2 + off[3][2], 4)) * 2.2;
-                f.city[i] = fbm(x * 16 + off[4][0], y * 16 + off[4][1], z * 16 + off[4][2], 3);
+                let wx = fbm(x * 1.2 + off[5][0], y * 1.2 + off[5][1], z * 1.2 + off[5][2], 1) * .6;
+                f.elev[i] = fbm(x * 1.25 + off[0][0] + wx, y * 1.25 + off[0][1] + wx, z * 1.25 + off[0][2], 2);
+                f.moist[i] = fbm(x * 1.6 + off[1][0], y * 1.6 + off[1][1], z * 1.6 + off[1][2], 2);
+                f.detail[i] = fbm(x * 4 + off[2][0], y * 4 + off[2][1], z * 4 + off[2][2], 1);
+                f.ridge[i] = 1 - Math.abs(fbm(x * 2 + off[3][0], y * 2 + off[3][1], z * 2 + off[3][2], 2)) * 2.2;
+                f.city[i] = fbm(x * 10 + off[4][0], y * 10 + off[4][1], z * 10 + off[4][2], 1);
                 // Nuages étirés en longitude, comme des bandes de vent. Relief et
                 // nuages sont ensuite remis à plat (rang de 0 à 1) pour régler la
                 // part de liquide et de ciel couvert au pourcentage près
-                f.cloud[i] = fbm(x * 2 + wx, y * 3.4, z * 2 + wx, 3);
+                f.cloud[i] = fbm(x * 1.6 + wx, y * 2.6, z * 1.6 + wx, 2);
             }
         }
         f.elev = toRank(f.elev);
@@ -175,9 +175,10 @@
     function makeCraters(seed) {
         let rng = mulberry32(seed ^ 0x5bd1e995);
         let list = [];
-        for (let i = 0; i < 14; i++) {
+        for (let i = 0; i < 4; i++) {
             let z = rng() * 2 - 1, a = rng() * Math.PI * 2, s = Math.sqrt(1 - z * z);
-            list.push({x: s * Math.cos(a), y: z * .85, z: s * Math.sin(a), r: .06 + rng() * .14});
+            let c = norm([s * Math.cos(a), z * .85, s * Math.sin(a)]);
+            list.push({x: c[0], y: c[1], z: c[2], r: .1 + rng() * .2});
         }
         return list;
     }
@@ -215,18 +216,19 @@
 
         for (let i = 0; i < n; i++) {
             // Léger bruit sur les seuils : contours irréguliers mais aplats nets
-            let e = f.elev[i] + f.detail[i] * .025, m = f.moist[i];
+            let e = f.elev[i], m = f.moist[i];
             let x = f.px[i], y = f.py[i], z = f.pz[i];
-            let latDeg = Math.abs(f.lat[i]) * 57.3 + f.detail[i] * 9;
+            let latDeg = Math.abs(f.lat[i]) * 57.3;
             let k = i * 3, j = i * 4;
             let c;
 
             if (liquid && e < sea) {
-                c = wT === 1 ? (sea - e < .05 ? liquid[1] : liquid[0]) : (sea - e < .05 ? liquid[0] : liquid[1]);
+                c = liquid[0];
             }
             else {
                 let land = (e - sea) / (1 - sea + 1e-6);
-                c = land > .9 ? rock[2] : (land > .55 ? rock[1] : rock[0]);
+                // Planète inconnue : un seul aplat, comme l'ancien disque
+                c = hasR && land > .62 ? rock[1] : rock[0];
                 if (hasR && rT === 3 && f.detail[i] > .36)
                     c = m > 0 ? hex('#78e6ff') : hex('#c58cff');
                 if (hasC && cT === 0) {
@@ -236,7 +238,7 @@
                     }
                 }
                 if (veg && fT > 0 && land < .9 && m > vegThresh)
-                    c = m > vegThresh + .14 ? veg[1] : veg[0];
+                    c = veg[1];
                 if (lights && f.city[i] > lights.t && land < .85) {
                     emit[j] = lights.c[0]; emit[j + 1] = lights.c[1]; emit[j + 2] = lights.c[2]; emit[j + 3] = 255;
                 }
@@ -250,7 +252,7 @@
                 }
             }
             if (lockSide) {
-                let facing = x * LIGHT[0] + y * LIGHT[1] + z * LIGHT[2] + f.detail[i] * .1;
+                let facing = x * LIGHT[0] + y * LIGHT[1] + z * LIGHT[2];
                 if (facing > .8)
                     c = hex('#f0d9a5');
                 else if (facing < -.15)
@@ -648,21 +650,20 @@
     const MOON_REF_ORBIT = 250, MOON_REF_PERIOD = 30;
 
     function moonTexture(rng) {
-        let fbm = makeNoise(rng);
         let pal = MOON_PALETTES[Math.floor(rng() * MOON_PALETTES.length)].map(hex);
         let craters = [];
-        for (let i = 0, n = 5 + Math.floor(rng() * 6); i < n; i++) {
+        for (let i = 0, n = 2 + Math.floor(rng() * 2); i < n; i++) {
             let z = rng() * 2 - 1, a = rng() * Math.PI * 2, s = Math.sqrt(1 - z * z);
-            craters.push({x: s * Math.cos(a), y: z * .85, z: s * Math.sin(a), r: .12 + rng() * .24});
+            let c = norm([s * Math.cos(a), z * .85, s * Math.sin(a)]);
+            craters.push({x: c[0], y: c[1], z: c[2], r: .2 + rng() * .2});
         }
-        let o = rng() * 100;
         let tex = new Uint8ClampedArray(MOON_TEX_W * MOON_TEX_H * 3);
         for (let v = 0; v < MOON_TEX_H; v++) {
             let lat = (.5 - (v + .5) / MOON_TEX_H) * Math.PI;
             for (let u = 0; u < MOON_TEX_W; u++) {
                 let lon = (u + .5) / MOON_TEX_W * Math.PI * 2;
                 let x = Math.cos(lat) * Math.sin(lon), y = Math.sin(lat), z = Math.cos(lat) * Math.cos(lon);
-                let c = fbm(x * 2 + o, y * 2 + o, z * 2 + o, 4) > .04 ? pal[1] : pal[0];
+                let c = pal[0];
                 for (let cr of craters) {
                     let d = Math.acos(Math.min(1, x * cr.x + y * cr.y + z * cr.z));
                     if (d < cr.r) {
