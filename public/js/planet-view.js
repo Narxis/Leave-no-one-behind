@@ -168,12 +168,13 @@
         ['#a39073', '#8c7b61']
     ];
     const UNKNOWN_ROCK = ['#8d8fa3', '#7b7d92', '#a2a4b6'];
-    // Couleur du gaz par palier d'oxygène ; dense = halo plus épais
+    // Couleur du gaz par palier d'oxygène ; dense = halo plus épais ; haze = filtre
+    // sur la planète quand l'air est mauvais pour les humains (gaz dense ou toxiques)
     const ATMOS = [
-        {color: '#f0cd6a', dense: .06},
-        {color: '#8fe0a8', dense: .02},
-        {color: '#9fd4ff', dense: 0},
-        {color: '#c9adff', dense: 0},
+        {color: '#f0cd6a', dense: .06, haze: .22},
+        {color: '#8fe0a8', dense: .02, haze: .2},
+        {color: '#9fd4ff', dense: 0, haze: .08},
+        {color: '#c9adff', dense: 0, haze: .19},
         {color: '#7cc0ff', dense: 0},
         {color: '#5fe6ff', dense: .02}
     ];
@@ -359,6 +360,7 @@
         let tex = paint(fields, s, shown), prevTex = null;
         let scale = radiusScale(s, shown), fromScale = scale;
         let rippleStart = 0, rippleScan = null, scans = [];
+        let haze = 0;    // filtre d'atmosphère affiché, qui rejoint sa valeur en fondu
         let rot = (seed % 628) / 100, cloudRot = rot;
         // Vents propres à chaque planète (tirés de la graine) : les nuages
         // tournent entre 0,75 et 1,6 fois la vitesse du sol, plus une dérive
@@ -900,6 +902,24 @@
                 ctx.arc(c, c, r, 0, Math.PI * 2);
                 ctx.clip();
                 ctx.drawImage(veil, vx, vy);
+                ctx.restore();
+            }
+            // Air mauvais pour les humains : la planète paraît voilée et ternie
+            let hazeTarget = (a && a.haze) || 0;
+            haze += (hazeTarget - haze) * .06;
+            if (haze > .005) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(c, c, r, 0, Math.PI * 2);
+                ctx.clip();
+                ctx.globalCompositeOperation = 'saturation';
+                ctx.globalAlpha = haze * 1.6;
+                ctx.fillStyle = '#808080';
+                ctx.fillRect(c - r, c - r, r * 2, r * 2);
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.globalAlpha = haze;
+                ctx.fillStyle = 'rgb(' + mix(hex(a ? a.color : '#808080'), [120, 120, 120], .3).map(Math.round).join(',') + ')';
+                ctx.fillRect(c - r, c - r, r * 2, r * 2);
                 ctx.restore();
             }
             drawSprites(r, true, rippleCanvas, now, 'cloud');
