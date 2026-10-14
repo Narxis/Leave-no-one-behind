@@ -280,6 +280,8 @@ async function scoreCalcul() {
             }
         }
         if (i==2){
+            // La planète se dévoile avec son bilan
+            document.dispatchEvent(new CustomEvent('planet-reveal-all'));
             for (let j=0; j<recapText.length; j++){
                 let interval = 50 + Math.floor(Math.random()*30)
                 writeNoWait(recapText[j], document.getElementById('reading-'+(j+1)), '', true, interval)

@@ -180,3 +180,41 @@
 }
 
 /*---^^^---Rafraîchissement de la page planète---^^^---*/
+
+/*---Planète générée (planet-view.js) à la place du disque vert---*/
+.planet {
+    background: none;
+    box-shadow: none;
+}
+
+.planet .crat1,
+.planet .crat2 {
+    display: none;
+}
+
+/* Même repère que les illustrations des scans (.gr-circle…) : le point
+   .center, la planète étant à +100px / -130px de ce point */
+.planet-canvas {
+    position: absolute;
+    top: -310px;
+    left: -80px;
+    width: 360px;
+    height: 360px;
+    pointer-events: none;
+}
+
+/* Les anciennes illustrations posées sur le disque (forme de l'eau, arbres,
+   nuages, montagnes, cercles) cacheraient la planète générée, qui montre
+   désormais ces stats elle-même : on garde seulement les traits et libellés */
+.planet .o2-circle,
+.planet .o2-blur,
+.planet .eau-fill,
+.planet .eau-border,
+.planet .ff-tree,
+.planet .cl-cloud,
+.planet .cloudshadow,
+.planet .re-mountain,
+.planet .re-background,
+.planet .gr-circle {
+    display: none;
+}

@@ -190,6 +190,7 @@
                 </div>
             </div>
             <div class="planet-recap">
+                <canvas class="planet-canvas end-planet" data-planet-view aria-hidden="true"></canvas>
                 <div class="planet-recap-line" id="planet-line-1">
                     <div class="planet-reading" data-value="<%= planet.modules.oxy.val %>" id="reading-1"></div>
                 </div>
@@ -217,6 +218,8 @@
     <script>
         <%- js.vars %>
     </script>
+    <script>var PLANET_DATA = <%- JSON.stringify({id: planet.id || 0, modules: planet.modules}).replace(/</g, '\\u003c') %>;</script>
+    <script src="/js/planet-view.js"></script>
     <script src="/js/end-screen.js"></script>
     <script>
         var observer = new MutationObserver(function (mutations) {

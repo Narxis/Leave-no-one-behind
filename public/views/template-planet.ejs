@@ -11,6 +11,7 @@
   <%- include("partials/nav") %>
     <div class="center">
       <div class="planet">
+        <canvas class="planet-canvas" data-planet-view aria-hidden="true"></canvas>
         <div class="crat1"></div>
         <div class="crat2"></div>
         <div class="orbit">
@@ -508,6 +509,8 @@
       </svg>
     </div>
     <div class="transparent"></div>
+  <script>var PLANET_DATA = <%- JSON.stringify({id: card.id || 0, modules: card.modules}).replace(/</g, '\\u003c') %>;</script>
+  <script src="/js/planet-view.js"></script>
   <script src="/js/planet.js"></script>
   <script src="/js/players.js"></script>
   <%- include("partials/npc-tabs") %>
