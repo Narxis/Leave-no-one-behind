@@ -667,30 +667,33 @@
             ctx.clearRect(0, 0, size, size);
             let a = atmos();
             drawRing(r, false);
-            // Atmosphère, dès qu'il y a de l'oxygène : halo en deux anneaux plats
-            // (style cartoon), d'autant plus épais que l'oxygène est présent
-            let thick = a ? r * (.07 + .09 * s.oxy / 100 + a.dense) : 0;
+            // Atmosphère, dès qu'il y a de l'oxygène : halo en dégradé qui
+            // s'estompe vers l'espace, d'autant plus épais que l'oxygène est présent
+            let thick = a ? r * (.16 + .1 * s.oxy / 100 + a.dense) : 0;
+            let ac = a ? hex(a.color).join(',') : '';
             if (a) {
-                let ac = hex(a.color).join(',');
-                ctx.fillStyle = 'rgba(' + ac + ',.3)';
+                let g = ctx.createRadialGradient(c, c, r * .9, c, c, r + thick);
+                g.addColorStop(0, 'rgba(' + ac + ',.7)');
+                g.addColorStop((r * .1) / (r * .1 + thick), 'rgba(' + ac + ',.6)');
+                g.addColorStop(.6, 'rgba(' + ac + ',.35)');
+                g.addColorStop(1, 'rgba(' + ac + ',0)');
+                ctx.fillStyle = g;
                 ctx.beginPath();
                 ctx.arc(c, c, r + thick, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = 'rgba(' + ac + ',.55)';
-                ctx.beginPath();
-                ctx.arc(c, c, r + thick * .5, 0, Math.PI * 2);
                 ctx.fill();
             }
             // Éléments derrière l'horizon : la planète cache leur base
             drawSprites(r, false, rippleCanvas, now);
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
-            // …et un liseré de la même couleur sur le bord du disque
+            // …et le même gaz qui voile le bord du disque, en dégradé vers l'intérieur
             if (a) {
-                ctx.strokeStyle = 'rgba(' + hex(a.color).join(',') + ',.5)';
-                ctx.lineWidth = thick * .45;
+                let g = ctx.createRadialGradient(c, c, r - thick * .6, c, c, r + 1);
+                g.addColorStop(0, 'rgba(' + ac + ',0)');
+                g.addColorStop(1, 'rgba(' + ac + ',.6)');
+                ctx.fillStyle = g;
                 ctx.beginPath();
-                ctx.arc(c, c, r - thick * .225, 0, Math.PI * 2);
-                ctx.stroke();
+                ctx.arc(c, c, r + 1, 0, Math.PI * 2);
+                ctx.fill();
             }
             drawSprites(r, true, rippleCanvas, now);
             drawRing(r, true);
