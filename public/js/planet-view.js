@@ -17,7 +17,9 @@
     };
     const LAYERS = ['wtr', 'res', 'cli', 'oxy', 'grv', 'ff'];
     const TEX_W = 512, TEX_H = 256;
-    const SWEEP_MS = 1500;
+    const REACH_MS = 380;      // le trait s'allonge jusqu'à la planète
+    const RIPPLE_MS = 1300;    // l'onde traverse la planète
+    const DOT_WAIT_MS = 2300;  // au plus, fin de l'animation CSS du trait
     const LIGHT = norm([-0.62, 0.42, 0.66]);
 
     function norm(v) {
@@ -291,7 +293,7 @@
         fields.craters = makeCraters(seed);
         let tex = paint(fields, s, shown), prevTex = null;
         let scale = radiusScale(s, shown), fromScale = scale;
-        let sweepStart = 0;
+        let rippleStart = 0, rippleLink = null, links = [];
         let rot = (seed % 628) / 100, cloudRot = rot;
         let rotSpeed = spin();
 
@@ -340,14 +342,17 @@
             return shown.has('oxy') ? ATMOS[tier(s.oxy, TABS.oxy)] : UNKNOWN_ATMOS;
         }
 
-        function drawSphere(sweepX) {
+        // ripple : {x, y, radius} en pixels de la sphère pendant un scan, sinon null
+        function drawSphere(ripple) {
             let m = map, data = m.img.data;
             data.fill(0);
             let u0 = rot / (Math.PI * 2) * TEX_W, cu0 = cloudRot / (Math.PI * 2) * TEX_W;
+            let band = 3 * dpr;
             for (let p = 0; p < m.count; p++) {
                 let px = m.idx[p] % m.w;
-                // Pendant un scan : à gauche du balayage la nouvelle couche, à droite l'ancienne
-                let t = (prevTex && px > sweepX) ? prevTex : tex;
+                // Pendant un scan : la nouvelle couche à l'intérieur de l'onde, l'ancienne au-delà
+                let dist = ripple ? Math.hypot(px - ripple.x, Math.floor(m.idx[p] / m.w) - ripple.y) : 0;
+                let t = (ripple && dist > ripple.radius) ? prevTex : tex;
                 // Lecture interpolée entre 4 texels : bords d'aplats nets mais lisses
                 let fu = m.lonF[p] + u0 - .5, fv = m.rowF[p];
                 let u = Math.floor(fu), v = Math.floor(fv), du = fu - u, dv = fv - v;
@@ -378,8 +383,16 @@
                         r += (C[c0] * sh - r) * ca; g += (C[c0 + 1] * sh - g) * ca; b += (C[c0 + 2] * sh - b) * ca;
                     }
                 }
-                if (prevTex && Math.abs(px - sweepX) < 2.5 * dpr) {
-                    r = 120; g = 236; b = 240;
+                if (ripple) {
+                    // Front de l'onde en cyan, suivi d'un reflet qui s'estompe
+                    let gap = ripple.radius - dist;
+                    if (Math.abs(gap) < band) {
+                        r = 140; g = 240; b = 244;
+                    }
+                    else if (gap > 0 && gap < band * 6) {
+                        let f = (1 - gap / (band * 6)) * .45;
+                        r += (140 - r) * f; g += (240 - g) * f; b += (244 - b) * f;
+                    }
                 }
                 let o = m.idx[p] * 4;
                 data[o] = r; data[o + 1] = g; data[o + 2] = b;
@@ -416,23 +429,57 @@
             ctx.restore();
         }
 
+        // Point d'arrivée d'un trait de scan sur le bord de la planète (ou le
+        // point lui-même s'il tombe déjà sur la planète)
+        function edgePoint(link, r) {
+            let c = size / 2, dx = link.x - c, dy = link.y - c, d = Math.hypot(dx, dy) || 1;
+            if (d <= r)
+                return {x: link.x, y: link.y};
+            return {x: c + dx / d * r * .98, y: c + dy / d * r * .98};
+        }
+
+        function drawLinks(r, now) {
+            ctx.save();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2 * dpr;
+            ctx.lineCap = 'round';
+            for (let link of links) {
+                let e = edgePoint(link, r);
+                // Le trait qui vient d'arriver s'allonge jusqu'à la planète
+                let t = link.start ? clamp01((now - link.start) / REACH_MS) : 1;
+                ctx.beginPath();
+                ctx.moveTo(link.x, link.y);
+                ctx.lineTo(link.x + (e.x - link.x) * t, link.y + (e.y - link.y) * t);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
         function frame(now) {
-            let k = sweepStart ? clamp01((now - sweepStart) / SWEEP_MS) : 1;
+            let k = rippleStart ? clamp01((now - rippleStart) / RIPPLE_MS) : 1;
             let sc = fromScale + (scale - fromScale) * smooth(0, 1, k);
             let r = baseR * sc;
             if (!map || Math.abs(map.r - r) > .25)
                 buildMap(r);
             rot += .0021 * rotSpeed;
             cloudRot += .0029 * rotSpeed + .0006;
-            let sweepX = prevTex ? -2 + k * (map.w + 4) : -1;
-            drawSphere(sweepX);
+            let c = size / 2;
+            let ripple = null;
+            if (prevTex) {
+                // Onde partie du point de contact, assez grande pour couvrir tout le disque
+                let o = rippleOrigin(r);
+                let reach = Math.hypot(o.x - c, o.y - c) + r + 6 * dpr;
+                let off = c - map.w / 2;
+                ripple = {x: o.x - off, y: o.y - off, radius: (1 - Math.pow(1 - k, 2.2)) * reach};
+            }
+            drawSphere(ripple);
             if (k >= 1 && prevTex) {
                 prevTex = null;
-                sweepStart = 0;
+                rippleStart = 0;
             }
 
             ctx.clearRect(0, 0, size, size);
-            let c = size / 2, a = atmos();
+            let a = atmos();
             drawRing(r, false);
             // Atmosphère : anneau plat de la couleur du gaz, plus épais si elle est dense
             if (a) {
@@ -442,6 +489,7 @@
                 ctx.arc(c, c, r * (1 + a.size * .9), 0, Math.PI * 2);
                 ctx.fill();
             }
+            drawLinks(r, now);
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
             drawRing(r, true);
         }
@@ -457,17 +505,74 @@
         }
         requestAnimationFrame(loop);
 
-        function reveal(keys) {
+        // Position (pixels du canvas) du point blanc au bout d'un trait de scan
+        function dotPosition(dot) {
+            let cr = canvas.getBoundingClientRect(), dr = dot.getBoundingClientRect();
+            if (!cr.width || !dr.width)
+                return null;
+            return {
+                x: (dr.left + dr.width / 2 - cr.left) * size / cr.width,
+                y: (dr.top + dr.height / 2 - cr.top) * size / cr.height
+            };
+        }
+
+        // L'onde part du point de contact du dernier trait, ou du centre
+        function rippleOrigin(r) {
+            return rippleLink ? edgePoint(rippleLink, r) : {x: size / 2, y: size / 2};
+        }
+
+        const wait = (ms) => new Promise(res => setTimeout(res, ms));
+
+        // Le point blanc du trait CSS apparaît en fin d'animation : on attend sa fin
+        function dotReady(dot) {
+            if (!dot)
+                return Promise.resolve();
+            return new Promise(res => {
+                let done = false;
+                const finish = () => { if (!done) { done = true; res(); } };
+                dot.addEventListener('animationend', finish, {once: true});
+                setTimeout(finish, DOT_WAIT_MS);
+            });
+        }
+
+        // Les scans sont joués l'un après l'autre : trait jusqu'à la planète, puis onde
+        let queue = [], busy = false;
+        async function runQueue() {
+            if (busy)
+                return;
+            busy = true;
+            while (queue.length) {
+                let job = queue.shift();
+                await dotReady(job.dot);
+                let link = job.dot && dotPosition(job.dot);
+                if (link) {
+                    link.start = performance.now();
+                    links.push(link);
+                    await wait(REACH_MS);
+                    link.start = 0;
+                }
+                let keys = job.keys.filter(k => !shown.has(k));
+                if (!keys.length)
+                    continue;
+                prevTex = tex;
+                keys.forEach(k => shown.add(k));
+                tex = paint(fields, s, shown);
+                fromScale = map ? map.r / baseR : scale;
+                scale = radiusScale(s, shown);
+                rotSpeed = spin();
+                rippleLink = link || null;
+                rippleStart = performance.now();
+                await wait(RIPPLE_MS + 40);
+            }
+            busy = false;
+        }
+
+        function reveal(keys, dot) {
             keys = (Array.isArray(keys) ? keys : [keys]).filter(k => LAYERS.includes(k) && !shown.has(k));
             if (!keys.length)
                 return;
-            prevTex = tex;
-            keys.forEach(k => shown.add(k));
-            tex = paint(fields, s, shown);
-            fromScale = baseR ? (map ? map.r / baseR : scale) : scale;
-            scale = radiusScale(s, shown);
-            rotSpeed = spin();
-            sweepStart = performance.now();
+            queue.push({keys, dot: dot || null});
+            runQueue();
         }
 
         return {reveal, revealAll: () => reveal(LAYERS)};
@@ -486,7 +591,9 @@
             revealed: canvas.dataset.planetView === 'all' ? 'all' : []
         });
         window.planetView = view;
-        document.addEventListener('planet-reveal', (e) => view.reveal(e.detail));
+        // Point blanc au bout du trait de chaque scan (template-planet.ejs)
+        const DOTS = {oxy: '.o2-linedot', ff: '.ff-linedot', cli: '.cl-linedot', wtr: '.eau-linedot', res: '.re-linedot', grv: '.gr-linedot'};
+        document.addEventListener('planet-reveal', (e) => view.reveal(e.detail, document.querySelector(DOTS[e.detail])));
         document.addEventListener('planet-reveal-all', () => view.revealAll());
     });
 })();
