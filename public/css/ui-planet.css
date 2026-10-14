@@ -185,6 +185,9 @@
 .planet {
     background: none;
     box-shadow: none;
+    /* La planète et ses scans étaient décalés de +100px / -130px par rapport
+       au centre de l'écran : on recentre tout le groupe entre les panneaux */
+    transform: translate(-100px, 130px);
 }
 
 .planet .crat1,
@@ -196,7 +199,7 @@
    .center, la planète étant à +100px / -130px de ce point */
 .planet-canvas {
     position: absolute;
-    top: -310px;
+    top: -210px;
     left: -80px;
     width: 360px;
     height: 360px;
@@ -227,7 +230,7 @@
 
 .moons-canvas {
     position: absolute;
-    top: -550px;
+    top: -450px;
     left: -320px;
     width: 840px;
     height: 840px;
