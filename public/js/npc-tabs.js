@@ -56,14 +56,15 @@
 
     function fill(tab, ally) {
         let name = tab.querySelector('.player-name');
-        let label = [...name.childNodes].find(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
-        if (label)
-            label.textContent = ally.name + ' '; // espace avant le badge de race
+        name.querySelector('.player-name-text').textContent = ally.name;
+        name.title = ally.name;
         let race = name.querySelector('.player-race');
         race.textContent = ally.race;
         race.style.display = ally.race ? '' : 'none';
         for (let stat of STATS)
             tab.querySelector('.' + stat + ' .player-stat-value').textContent = ally[stat];
+        if (window.fitPlayerName)
+            fitPlayerName(tab);
     }
 
     function render() {

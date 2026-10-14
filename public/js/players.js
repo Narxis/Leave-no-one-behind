@@ -99,3 +99,25 @@ function initialisePlayerExpander() {
         })
     })
 }
+// Nom long sur l'en-tête d'une carte : la police rétrécit jusqu'à 12px, puis le
+// nom est coupé par « … » (nom complet au survol)
+function fitPlayerName(tab) {
+    let text = tab.querySelector('.player-name-text');
+    if (!text)
+        return;
+    text.style.fontSize = '';
+    let size = parseFloat(getComputedStyle(text).fontSize);
+    while (text.scrollWidth > text.clientWidth + 1 && size > 12) {
+        size -= .5;
+        text.style.fontSize = size + 'px';
+    }
+}
+
+(function () {
+    const fitAll = () => document.querySelectorAll('.player-tab').forEach(fitPlayerName);
+    fitAll();
+    // La police Jura arrive après le premier rendu : on remesure
+    if (document.fonts)
+        document.fonts.ready.then(fitAll);
+    window.addEventListener('resize', fitAll);
+})();
