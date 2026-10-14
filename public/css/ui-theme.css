@@ -646,3 +646,53 @@ input[type="checkbox"] {
     letter-spacing: 0.02em;
     color: var(--ui-text);
 }
+
+/*---vvv---Noms des stats : normaux / pendant un combat (body.combat-mode)---vvv---*/
+.stat-label-combat {
+    display: none;
+}
+
+body.combat-mode .stat-label-normal {
+    display: none;
+}
+
+body.combat-mode .stat-label-combat {
+    display: inline;
+}
+
+body.combat-mode .stats-legend {
+    border-color: rgb(255 90 110 / 45%);
+}
+
+body.combat-mode .stats-legend-title {
+    color: var(--ui-danger);
+}
+
+/* Infobulle au survol d'une icône de stat (stat-tooltips.js) */
+.stat-tooltip {
+    position: fixed;
+    z-index: 1000;
+    padding: 5px 10px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: #120c22;
+    box-shadow: 0 6px 20px rgb(0 0 0 / 45%);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 120ms var(--ui-ease);
+}
+
+.stat-tooltip.visible {
+    opacity: 1;
+}
+
+.player-stat-icon,
+.output-roll-boite {
+    cursor: help;
+}
+/*---^^^---Noms des stats---^^^---*/
