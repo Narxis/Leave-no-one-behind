@@ -384,7 +384,7 @@
                 let px = m.idx[p] % m.w;
                 // Pendant un scan : la nouvelle couche à l'intérieur de l'onde, l'ancienne au-delà
                 let dist = ripple ? Math.hypot(px - ripple.x, Math.floor(m.idx[p] / m.w) - ripple.y) : 0;
-                let t = (ripple && dist > ripple.radius) ? prevTex : tex;
+                let t = (ripple && prevTex && dist > ripple.radius) ? prevTex : tex;
                 // Lecture interpolée entre 4 texels : bords d'aplats nets mais lisses
                 let fu = m.lonF[p] + u0 - .5, fv = m.rowF[p];
                 let u = Math.floor(fu), v = Math.floor(fv), du = fu - u, dv = fv - v;
@@ -430,7 +430,7 @@
             for (let p = 0; p < m.count; p++) {
                 let px = m.idx[p] % m.w;
                 let dist = ripple ? Math.hypot(px - off - ripple.x, Math.floor(m.idx[p] / m.w) - off - ripple.y) : 0;
-                let t = (ripple && dist > ripple.radius) ? prevTex : tex;
+                let t = (ripple && prevTex && dist > ripple.radius) ? prevTex : tex;
                 if (!t.hasClouds)
                     continue;
                 let fu = m.lonF[p] + cu0 - .5, fv = m.rowF[p];
