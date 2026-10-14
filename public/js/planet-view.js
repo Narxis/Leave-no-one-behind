@@ -1,9 +1,9 @@
-// PlanÃ¨te dessinÃ©e par le code Ã  partir de ses stats et d'une graine (l'id de
-// la carte) : chaque planÃ¨te est unique et toujours la mÃªme d'une page Ã  l'autre.
-// Les couches n'apparaissent qu'une fois la stat scannÃ©e, pour ne rien dÃ©voiler :
-//   wtr â†’ mers, lacs gelÃ©s ou liquide inconnu    res â†’ couleurs de la roche
-//   cli â†’ calottes, lave, monde figÃ©, nuages     oxy â†’ couleur de l'atmosphÃ¨re
-//   grv â†’ taille de la planÃ¨te                    ff  â†’ vÃ©gÃ©tation, lumiÃ¨res des villes
+// Planète dessinée par le code à partir de ses stats et d'une graine (l'id de
+// la carte) : chaque planète est unique et toujours la même d'une page à l'autre.
+// Les couches n'apparaissent qu'une fois la stat scannée, pour ne rien dévoiler :
+//   wtr → mers, lacs gelés ou liquide inconnu    res → couleurs de la roche
+//   cli → calottes, lave, monde figé, nuages     oxy → couleur de l'atmosphère
+//   grv → taille de la planète                    ff  → végétation, lumières des villes
 // Les paliers sont ceux des textes de scan (public/js/planet.js).
 (function () {
     const TABS = {
@@ -19,7 +19,6 @@
     const TEX_W = 512, TEX_H = 256;
     const SWEEP_MS = 1500;
     const LIGHT = norm([-0.62, 0.42, 0.66]);
-    const HALF = norm([LIGHT[0], LIGHT[1], LIGHT[2] + 1]);
 
     function norm(v) {
         let l = Math.hypot(v[0], v[1], v[2]);
@@ -50,7 +49,7 @@
         };
     }
 
-    // Bruit de Perlin 3D avec une table de permutation tirÃ©e de la graine
+    // Bruit de Perlin 3D avec une table de permutation tirée de la graine
     function makeNoise(rng) {
         let p = [...Array(256).keys()];
         for (let i = 255; i > 0; i--) {
@@ -100,8 +99,8 @@
         return h >>> 0;
     }
 
-    // Champs de bruit calculÃ©s une fois : relief, humiditÃ©, dÃ©tail, crÃªtes,
-    // villes, nuages. Les couleurs sont recalculÃ©es Ã  chaque scan
+    // Champs de bruit calculés une fois : relief, humidité, détail, crêtes,
+    // villes, nuages. Les couleurs sont recalculées à chaque scan
     function buildFields(seed) {
         let rng = mulberry32(seed);
         let fbm = makeNoise(rng);
@@ -121,17 +120,17 @@
                 let x = cl * Math.sin(lon), y = sl, z = cl * Math.cos(lon);
                 let i = v * TEX_W + u;
                 f.px[i] = x; f.py[i] = y; f.pz[i] = z; f.lat[i] = lat;
-                // Relief dÃ©formÃ© par un second bruit, pour des continents moins ronds
+                // Relief déformé par un second bruit, pour des continents moins ronds
                 let wx = fbm(x * 1.2 + off[5][0], y * 1.2 + off[5][1], z * 1.2 + off[5][2], 3);
-                f.elev[i] = fbm(x * 1.7 + off[0][0] + wx, y * 1.7 + off[0][1] + wx, z * 1.7 + off[0][2], 6);
+                f.elev[i] = fbm(x * 1.7 + off[0][0] + wx, y * 1.7 + off[0][1] + wx, z * 1.7 + off[0][2], 4);
                 f.moist[i] = fbm(x * 2.4 + off[1][0], y * 2.4 + off[1][1], z * 2.4 + off[1][2], 4);
                 f.detail[i] = fbm(x * 9 + off[2][0], y * 9 + off[2][1], z * 9 + off[2][2], 3);
                 f.ridge[i] = 1 - Math.abs(fbm(x * 3.2 + off[3][0], y * 3.2 + off[3][1], z * 3.2 + off[3][2], 4)) * 2.2;
                 f.city[i] = fbm(x * 16 + off[4][0], y * 16 + off[4][1], z * 16 + off[4][2], 3);
-                // Nuages Ã©tirÃ©s en longitude, comme des bandes de vent. Relief et
-                // nuages sont ensuite remis Ã  plat (rang de 0 Ã  1) pour rÃ©gler la
-                // part de liquide et de ciel couvert au pourcentage prÃ¨s
-                f.cloud[i] = fbm(x * 2.3 + wx * 1.4, y * 5.2, z * 2.3 + wx, 5);
+                // Nuages étirés en longitude, comme des bandes de vent. Relief et
+                // nuages sont ensuite remis à plat (rang de 0 à 1) pour régler la
+                // part de liquide et de ciel couvert au pourcentage près
+                f.cloud[i] = fbm(x * 2 + wx, y * 3.4, z * 2 + wx, 3);
             }
         }
         f.elev = toRank(f.elev);
@@ -147,116 +146,127 @@
         return rank;
     }
 
+    // Style cartoon, comme l'ancien disque : aplats de 2-3 tons par surface,
+    // ombre en croissant à 15 %, cratères plats, atmosphère en anneau
     const RES_PALETTE = [
-        ['#6d6862', '#a59e93'],
-        ['#5a2a1c', '#b65a3c'],
-        ['#4e3b2c', '#9c7c56'],
-        ['#463629', '#8f7352'],
-        ['#6a3b2a', '#b38c45']
+        ['#b7ad9e', '#9c9283', '#d3cabb'],
+        ['#c0623e', '#a24e2f', '#de8a5c'],
+        ['#b08655', '#94703f', '#cfa772'],
+        ['#8f7a63', '#76634f', '#b39e85'],
+        ['#b5783f', '#8d5aa0', '#e0b25a']
     ];
+    const UNKNOWN_ROCK = ['#8d8fa3', '#7b7d92', '#a2a4b6'];
     const ATMOS = [
-        {color: '#e6c56c', size: .17, tint: .16},
-        {color: '#8fd9a3', size: .11, tint: .07},
-        {color: '#c2d3e2', size: .05, tint: .02},
-        {color: '#c6abff', size: .08, tint: .04},
-        {color: '#73b4ff', size: .09, tint: .02},
-        {color: '#4ad9ff', size: .12, tint: .03}
+        {color: '#f0cd6a', size: .16},
+        {color: '#8fe0a8', size: .11},
+        {color: '#cfe0ee', size: .05},
+        {color: '#c9adff', size: .08},
+        {color: '#7cc0ff', size: .09},
+        {color: '#5fe6ff', size: .12}
     ];
-    const UNKNOWN_ATMOS = {color: '#9097a6', size: .04, tint: 0};
+    const UNKNOWN_ATMOS = null;
     const LIQUID_COVER = [0.34, 0.16, 0.10, 0.22, 0.50, 0.72];
+    const SHADOW = 0.85;
 
-    // Couleurs, Ã©missions (lave, villes) et nuages selon les couches rÃ©vÃ©lÃ©es
+    // Cratères tirés de la graine : centre sur la sphère et rayon angulaire
+    function makeCraters(seed) {
+        let rng = mulberry32(seed ^ 0x5bd1e995);
+        let list = [];
+        for (let i = 0; i < 14; i++) {
+            let z = rng() * 2 - 1, a = rng() * Math.PI * 2, s = Math.sqrt(1 - z * z);
+            list.push({x: s * Math.cos(a), y: z * .85, z: s * Math.sin(a), r: .06 + rng() * .14});
+        }
+        return list;
+    }
+
+    // Couleurs à plat selon les couches révélées. emit : pixels qui gardent
+    // leur couleur dans l'ombre (lave, lumières des villes)
     function paint(f, s, shown) {
         let n = TEX_W * TEX_H;
         let albedo = new Uint8ClampedArray(n * 3);
-        let emit = new Uint8ClampedArray(n * 3);
-        let night = new Uint8ClampedArray(n * 3);
-        let water = new Uint8Array(n);
+        let emit = new Uint8ClampedArray(n * 4);
         let clouds = new Uint8ClampedArray(n * 4);
 
         let wT = tier(s.wtr, TABS.wtr), rT = tier(s.res, TABS.res), cT = tier(s.cli, TABS.cli);
         let fT = tier(s.flo, TABS.flo), vT = tier(s.civ, TABS.civ);
         let hasW = shown.has('wtr'), hasR = shown.has('res'), hasC = shown.has('cli'), hasF = shown.has('ff');
         let sea = hasW ? LIQUID_COVER[wT] : 0;
-        let rock = hasR ? RES_PALETTE[rT].map(hex) : [hex('#43444e'), hex('#8b8d99')];
+        let rock = (hasR ? RES_PALETTE[rT] : UNKNOWN_ROCK).map(hex);
         let capLat = !hasC ? 99 : ([99, 99, 66, 74][cT] - (hasW && wT === 1 ? 22 : 0));
         let lockSide = hasC && cT === 1;
 
         let liquid = !hasW ? null : wT === 0
-            ? [hex('#4a2a10'), hex('#b8742c')]
-            : (wT === 1 ? [hex('#a9cfe2'), hex('#e4f2f8')] : [hex('#0b2c57'), hex('#2f93b6')]);
-        let veg = !hasF ? null : [null, [hex('#7d2aa8'), hex('#c4479f')], [hex('#46702d'), hex('#6f9a43')], [hex('#1f6a2c'), hex('#4fa046')]][fT];
-        let vegThresh = [1, .02, .14, -.10][fT];
-        let lights = !hasF ? null : [{c: hex('#ff5c3c'), t: .08, k: 1}, {c: hex('#ffad5a'), t: .26, k: .55}, null, {c: hex('#ffe7a8'), t: .1, k: 1}][vT];
-        let ice = hex('#e8f3f8');
-        let basalt = hex('#2b2326');
-        let lava = hex('#ff6a1c');
+            ? [hex('#e0952f'), hex('#c4751d')]
+            : (wT === 1 ? [hex('#eaf8fc'), hex('#c9eaf3')] : [hex('#46d3d6'), hex('#24a9c6')]);
+        let veg = !hasF ? null : [null, [hex('#a43fbf'), hex('#8a2fa3')], [hex('#6fb04a'), hex('#5c9a3c')], [hex('#2f9a3a'), hex('#227826')]][fT];
+        let vegThresh = [1, .04, .16, -.08][fT];
+        let lights = !hasF ? null : [{c: hex('#ff6a4a'), t: .27}, {c: hex('#ffb35c'), t: .36}, null, {c: hex('#ffd54a'), t: .3}][vT];
+        // Cratères : planète encore inconnue, ou sans eau ni végétation
+        let craters = (!hasW || wT <= 1) && !(veg && fT >= 2) ? f.craters : [];
+        let ice = hex('#f4fbff');
+        let basalt = hex('#3b3035');
+        let lava = hex('#ff8a1f');
 
-        // Part du ciel couverte : plus d'eau, plus de nuages ; tempÃªtes sur un monde figÃ©
-        let cover = hasC ? (lockSide ? .42 : .14 + (hasW ? wT * .045 : .08)) : 0;
-        let cloudCol = hasC && cT === 0 ? hex('#c7bd8c') : (shown.has('oxy') && tier(s.oxy, TABS.oxy) === 1 ? hex('#c3d9a2') : hex('#f4f7fb'));
+        let cover = hasC ? (lockSide ? .26 : .07 + (hasW ? wT * .026 : .05)) : 0;
+        let cloudCol = hasC && cT === 0 ? hex('#d6cc98') : (shown.has('oxy') && tier(s.oxy, TABS.oxy) === 1 ? hex('#d3e8b0') : hex('#ffffff'));
 
         for (let i = 0; i < n; i++) {
-            let e = f.elev[i], d = f.detail[i], m = f.moist[i];
-            let latDeg = Math.abs(f.lat[i]) * 57.3;
-            let c = mix(rock[0], rock[1], clamp01((e - sea) / (1 - sea + 1e-6) * 1.1 + d * .35));
-            let isWater = e < sea;
+            // Léger bruit sur les seuils : contours irréguliers mais aplats nets
+            let e = f.elev[i] + f.detail[i] * .025, m = f.moist[i];
+            let x = f.px[i], y = f.py[i], z = f.pz[i];
+            let latDeg = Math.abs(f.lat[i]) * 57.3 + f.detail[i] * 9;
+            let k = i * 3, j = i * 4;
+            let c;
 
-            // Roche : minerais rares (Ã©clats) et ressources variÃ©es (bandes)
-            if (hasR && rT === 3 && d > .33)
-                c = mix(c, (i % 2) ? hex('#78e6ff') : hex('#c58cff'), .75);
-            if (hasR && rT === 4)
-                c = mix(c, m > 0 ? hex('#7a4f86') : hex('#5d7a3c'), clamp01(Math.abs(m) * 1.6) * .3);
-            if (hasR && rT === 1 && m > .12)
-                c = mix(c, hex('#c7783a'), .35);
-
-            let k = i * 3;
-            if (isWater) {
-                let depth = clamp01((sea - e) / sea);
-                c = wT === 1 ? mix(liquid[1], liquid[0], depth * .6 + d * .4) : mix(liquid[1], liquid[0], Math.sqrt(depth));
-                water[i] = wT === 1 ? 0 : 1;
+            if (liquid && e < sea) {
+                c = wT === 1 ? (sea - e < .05 ? liquid[1] : liquid[0]) : (sea - e < .05 ? liquid[0] : liquid[1]);
             }
             else {
-                // Climat : basalte et lave, monde figÃ© (face brÃ»lÃ©e / face gelÃ©e)
+                let land = (e - sea) / (1 - sea + 1e-6);
+                c = land > .9 ? rock[2] : (land > .55 ? rock[1] : rock[0]);
+                if (hasR && rT === 3 && f.detail[i] > .36)
+                    c = m > 0 ? hex('#78e6ff') : hex('#c58cff');
                 if (hasC && cT === 0) {
-                    c = mix(c, basalt, .6);
-                    let r = f.ridge[i];
-                    if (r > .83) {
-                        let g = smooth(.83, .97, r);
-                        emit[k] = lava[0] * g; emit[k + 1] = lava[1] * g * .8; emit[k + 2] = lava[2] * g;
+                    c = basalt;
+                    if (f.ridge[i] > .9) {
+                        emit[j] = lava[0]; emit[j + 1] = lava[1]; emit[j + 2] = lava[2]; emit[j + 3] = 255;
                     }
                 }
-                if (veg && fT > 0 && e < .9 && m > vegThresh)
-                    c = mix(c, mix(veg[0], veg[1], clamp01(d + .5)), smooth(vegThresh, vegThresh + .2, m) * .85);
-                if (lights && f.city[i] > lights.t && e < .85) {
-                    let g = smooth(lights.t, lights.t + .12, f.city[i]) * lights.k;
-                    night[k] = lights.c[0] * g; night[k + 1] = lights.c[1] * g; night[k + 2] = lights.c[2] * g;
+                if (veg && fT > 0 && land < .9 && m > vegThresh)
+                    c = m > vegThresh + .14 ? veg[1] : veg[0];
+                if (lights && f.city[i] > lights.t && land < .85) {
+                    emit[j] = lights.c[0]; emit[j + 1] = lights.c[1]; emit[j + 2] = lights.c[2]; emit[j + 3] = 255;
+                }
+            }
+            // Cratères : disque plus sombre avec un bord d'ombre, comme .crat1/.crat2
+            for (let cr of craters) {
+                let d = Math.acos(Math.min(1, x * cr.x + y * cr.y + z * cr.z));
+                if (d < cr.r) {
+                    let rim = Math.acos(Math.min(1, x * (cr.x - .03) + y * (cr.y + .03) + z * cr.z)) > cr.r * .85;
+                    c = mix(c, [0, 0, 0], rim ? .17 : .1);
                 }
             }
             if (lockSide) {
-                let facing = f.px[i] * LIGHT[0] + f.py[i] * LIGHT[1] + f.pz[i] * LIGHT[2];
-                if (facing > .25)
-                    c = mix(c, hex('#e0c99c'), smooth(.25, .8, facing) * .7);
-                else if (facing < -.05)
-                    c = mix(c, ice, smooth(-.05, -.4, facing) * .9);
+                let facing = x * LIGHT[0] + y * LIGHT[1] + z * LIGHT[2] + f.detail[i] * .1;
+                if (facing > .8)
+                    c = hex('#f0d9a5');
+                else if (facing < -.15)
+                    c = ice;
             }
-            // Calottes polaires, Ã  bord irrÃ©gulier
-            if (latDeg + d * 9 > capLat)
-                c = mix(c, ice, smooth(capLat, capLat + 5, latDeg + d * 9));
+            if (latDeg > capLat)
+                c = ice;
 
             albedo[k] = c[0]; albedo[k + 1] = c[1]; albedo[k + 2] = c[2];
 
             if (cover) {
                 let cv = f.cloud[i];
-                // Monde figÃ© : les tempÃªtes se massent sur la ligne jour/nuit
                 if (lockSide)
-                    cv *= 1.25 - Math.abs(f.px[i] * LIGHT[0] + f.py[i] * LIGHT[1] + f.pz[i] * LIGHT[2]);
-                let a = smooth(1 - cover - .06, 1 - cover + .2, cv) * .85;
-                let j = i * 4;
-                clouds[j] = cloudCol[0]; clouds[j + 1] = cloudCol[1]; clouds[j + 2] = cloudCol[2]; clouds[j + 3] = a * 235;
+                    cv *= 1.25 - Math.abs(x * LIGHT[0] + y * LIGHT[1] + z * LIGHT[2]);
+                let a = cv > 1 - cover ? 245 : 0;
+                clouds[j] = cloudCol[0]; clouds[j + 1] = cloudCol[1]; clouds[j + 2] = cloudCol[2]; clouds[j + 3] = a;
             }
         }
-        return {albedo, emit, night, water, clouds, hasClouds: cover > 0};
+        return {albedo, emit, clouds, hasClouds: cover > 0};
     }
 
     function radiusScale(s, shown) {
@@ -274,10 +284,11 @@
             s[k] = Number(modules[k] && modules[k].val) || 0;
         let seed = Number(options.seed) || hashSeed(modules);
         let shown = new Set(options.revealed === 'all' ? LAYERS : (options.revealed || []));
-        // Monde figÃ© (face toujours tournÃ©e vers son Ã©toile) : il ne tourne pas
+        // Monde figé (face toujours tournée vers son étoile) : il ne tourne pas
         let spin = () => (shown.has('cli') && tier(s.cli, TABS.cli) === 1) ? 0 : 1;
 
         let fields = buildFields(seed);
+        fields.craters = makeCraters(seed);
         let tex = paint(fields, s, shown), prevTex = null;
         let scale = radiusScale(s, shown), fromScale = scale;
         let sweepStart = 0;
@@ -293,14 +304,15 @@
         let sctx = sphere.getContext('2d');
         let baseR = size * .3;
 
-        // Projection de la sphÃ¨re : pour chaque pixel du disque, sa longitude
-        // de base, sa ligne de texture et son Ã©clairage (recalculÃ©s si la taille change)
+        // Projection de la sphère : pour chaque pixel du disque, sa longitude
+        // de base, sa position verticale dans la texture et s'il est dans le
+        // croissant d'ombre (recalculés si la taille change)
         let map = null;
         function buildMap(r) {
             let R = Math.ceil(r);
             let w = R * 2;
             sphere.width = sphere.height = w;
-            let count = 0, idx = [], lonF = [], row = [], diff = [], spec = [], limb = [], dark = [];
+            let idx = [], lonF = [], rowF = [], shade = [], edge = [];
             for (let y = 0; y < w; y++) {
                 for (let x = 0; x < w; x++) {
                     let nx = (x + .5 - R) / r, ny = -(y + .5 - R) / r;
@@ -308,25 +320,19 @@
                     if (q > 1)
                         continue;
                     let nz = Math.sqrt(1 - q);
-                    let lat = Math.asin(ny);
-                    let lon = Math.atan2(nx, nz);
-                    let dot = nx * LIGHT[0] + ny * LIGHT[1] + nz * LIGHT[2];
-                    let h = Math.max(0, nx * HALF[0] + ny * HALF[1] + nz * HALF[2]);
                     idx.push(y * w + x);
-                    lonF.push(lon / (Math.PI * 2) * TEX_W);
-                    row.push(Math.min(TEX_H - 1, Math.floor((.5 - lat / Math.PI) * TEX_H)) * TEX_W);
-                    diff.push(smooth(-.18, .7, dot) * .97 + .05);
-                    spec.push(Math.pow(h, 70) * .45);
-                    limb.push(Math.pow(1 - nz, 2.2));
-                    dark.push(1 - smooth(-.12, .22, dot));
-                    // Antialiasing du bord du disque
-                    count++;
+                    lonF.push(Math.atan2(nx, nz) / (Math.PI * 2) * TEX_W);
+                    rowF.push(Math.min(TEX_H - 1.001, Math.max(0, (.5 - Math.asin(ny) / Math.PI) * TEX_H - .5)));
+                    // Ombre en croissant en bas à droite, comme box-shadow: inset -9px -7px
+                    let sx = nx + .11, sy = ny - .085;
+                    shade.push(sx * sx + sy * sy > 1 ? SHADOW : 1);
+                    edge.push(Math.min(1, (1 - Math.sqrt(q)) * r + .5));
                 }
             }
             map = {
-                r, w, count, idx: Int32Array.from(idx), lonF: Float32Array.from(lonF), row: Int32Array.from(row),
-                diff: Float32Array.from(diff), spec: Float32Array.from(spec), limb: Float32Array.from(limb),
-                dark: Float32Array.from(dark), img: sctx.createImageData(w, w)
+                r, w, count: idx.length, idx: Int32Array.from(idx), lonF: Float32Array.from(lonF),
+                rowF: Float32Array.from(rowF), shade: Float32Array.from(shade), edge: Float32Array.from(edge),
+                img: sctx.createImageData(w, w)
             };
         }
 
@@ -337,46 +343,47 @@
         function drawSphere(sweepX) {
             let m = map, data = m.img.data;
             data.fill(0);
-            let a = atmos(), ac = hex(a.color);
             let u0 = rot / (Math.PI * 2) * TEX_W, cu0 = cloudRot / (Math.PI * 2) * TEX_W;
-            let half = m.w / 2;
             for (let p = 0; p < m.count; p++) {
-                let lu = m.lonF[p];
-                let u = Math.floor(lu + u0) % TEX_W;
-                if (u < 0) u += TEX_W;
-                let ti = m.row[p] + u;
                 let px = m.idx[p] % m.w;
-                // Pendant un scan : Ã  gauche du balayage la nouvelle couche, Ã  droite l'ancienne
+                // Pendant un scan : à gauche du balayage la nouvelle couche, à droite l'ancienne
                 let t = (prevTex && px > sweepX) ? prevTex : tex;
-                let k = ti * 3;
-                let shade = m.diff[p];
-                let r = t.albedo[k] * shade, g = t.albedo[k + 1] * shade, b = t.albedo[k + 2] * shade;
-                if (t.water[ti]) {
-                    let sp = m.spec[p] * 255;
-                    r += sp; g += sp; b += sp;
+                // Lecture interpolée entre 4 texels : bords d'aplats nets mais lisses
+                let fu = m.lonF[p] + u0 - .5, fv = m.rowF[p];
+                let u = Math.floor(fu), v = Math.floor(fv), du = fu - u, dv = fv - v;
+                u = ((u % TEX_W) + TEX_W) % TEX_W;
+                let u2 = u + 1 === TEX_W ? 0 : u + 1;
+                let a0 = (v * TEX_W + u) * 3, a1 = (v * TEX_W + u2) * 3, a2 = a0 + TEX_W * 3, a3 = a1 + TEX_W * 3;
+                let w0 = (1 - du) * (1 - dv), w1 = du * (1 - dv), w2 = (1 - du) * dv, w3 = du * dv;
+                let A = t.albedo;
+                let sh = m.shade[p];
+                let r = (A[a0] * w0 + A[a1] * w1 + A[a2] * w2 + A[a3] * w3) * sh;
+                let g = (A[a0 + 1] * w0 + A[a1 + 1] * w1 + A[a2 + 1] * w2 + A[a3 + 1] * w3) * sh;
+                let b = (A[a0 + 2] * w0 + A[a1 + 2] * w1 + A[a2 + 2] * w2 + A[a3 + 2] * w3) * sh;
+                let ej = (Math.round(fv) * TEX_W + (Math.round(fu) % TEX_W + TEX_W) % TEX_W) * 4;
+                if (t.emit[ej + 3]) {
+                    r = t.emit[ej]; g = t.emit[ej + 1]; b = t.emit[ej + 2];
                 }
-                let dk = m.dark[p];
-                r += t.night[k] * dk + t.emit[k]; g += t.night[k + 1] * dk + t.emit[k + 1]; b += t.night[k + 2] * dk + t.emit[k + 2];
                 if (t.hasClouds) {
-                    let cu = Math.floor(lu + cu0) % TEX_W;
-                    if (cu < 0) cu += TEX_W;
-                    let cj = (m.row[p] + cu) * 4, ca = t.clouds[cj + 3] / 255;
+                    let cu = Math.floor(m.lonF[p] + cu0 - .5);
+                    let cdu = m.lonF[p] + cu0 - .5 - cu;
+                    cu = ((cu % TEX_W) + TEX_W) % TEX_W;
+                    let cu2 = cu + 1 === TEX_W ? 0 : cu + 1;
+                    let C = t.clouds;
+                    let c0 = (v * TEX_W + cu) * 4, c1 = (v * TEX_W + cu2) * 4, c2 = c0 + TEX_W * 4, c3 = c1 + TEX_W * 4;
+                    let ca = (C[c0 + 3] * (1 - cdu) * (1 - dv) + C[c1 + 3] * cdu * (1 - dv) + C[c2 + 3] * (1 - cdu) * dv + C[c3 + 3] * cdu * dv) / 255;
                     if (ca > 0) {
-                        let cs = shade * 1.05;
-                        r += (t.clouds[cj] * cs - r) * ca; g += (t.clouds[cj + 1] * cs - g) * ca; b += (t.clouds[cj + 2] * cs - b) * ca;
+                        // Seuil sur la valeur interpolée : nuage plein à bord net
+                        ca = clamp01((ca - .35) * 4) * .96;
+                        r += (C[c0] * sh - r) * ca; g += (C[c0 + 1] * sh - g) * ca; b += (C[c0 + 2] * sh - b) * ca;
                     }
                 }
-                // Brume de l'atmosphÃ¨re sur le bord et teinte gÃ©nÃ©rale
-                let haze = Math.min(1, m.limb[p] * (a.size * 4) + a.tint) * (shade * .7 + .3);
-                r += (ac[0] - r) * haze; g += (ac[1] - g) * haze; b += (ac[2] - b) * haze;
                 if (prevTex && Math.abs(px - sweepX) < 2.5 * dpr) {
-                    r = r * .3 + 79 * .7 + 60; g = g * .3 + 216 * .7 + 30; b = b * .3 + 224 * .7 + 30;
+                    r = 120; g = 236; b = 240;
                 }
                 let o = m.idx[p] * 4;
                 data[o] = r; data[o + 1] = g; data[o + 2] = b;
-                // Bord adouci sur un pixel
-                let dx = px + .5 - half, dy = Math.floor(m.idx[p] / m.w) + .5 - half;
-                data[o + 3] = Math.min(255, (m.r - Math.hypot(dx, dy)) * 255 + 128);
+                data[o + 3] = m.edge[p] * 255;
             }
             sctx.putImageData(m.img, 0, 0);
         }
@@ -390,7 +397,7 @@
             ctx.save();
             ctx.translate(c, c);
             ctx.rotate(-.32);
-            ctx.lineWidth = 1.6 * dpr;
+            ctx.lineWidth = 2.5 * dpr;
             ctx.strokeStyle = 'rgba(' + color + ',' + (front ? .75 : .3) + ')';
             ctx.beginPath();
             ctx.ellipse(0, 0, r * 1.55, r * .3, 0, front ? 0 : Math.PI, front ? Math.PI : Math.PI * 2);
@@ -427,15 +434,14 @@
             ctx.clearRect(0, 0, size, size);
             let c = size / 2, a = atmos();
             drawRing(r, false);
-            let glow = ctx.createRadialGradient(c, c, r * .92, c, c, r * (1.02 + a.size * 1.6));
-            let ac = hex(a.color).join(',');
-            glow.addColorStop(0, 'rgba(' + ac + ',.55)');
-            glow.addColorStop(.35, 'rgba(' + ac + ',.22)');
-            glow.addColorStop(1, 'rgba(' + ac + ',0)');
-            ctx.fillStyle = glow;
-            ctx.beginPath();
-            ctx.arc(c, c, r * (1.02 + a.size * 1.6), 0, Math.PI * 2);
-            ctx.fill();
+            // Atmosphère : anneau plat de la couleur du gaz, plus épais si elle est dense
+            if (a) {
+                let ac = hex(a.color).join(',');
+                ctx.fillStyle = 'rgba(' + ac + ',.5)';
+                ctx.beginPath();
+                ctx.arc(c, c, r * (1 + a.size * .9), 0, Math.PI * 2);
+                ctx.fill();
+            }
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
             drawRing(r, true);
         }
