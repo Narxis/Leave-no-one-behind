@@ -770,6 +770,98 @@
     100% { opacity: 0; transform: translateY(-26px); }
 }
 
+/* Victoire : les ennemis laissent place au butin */
+.combat-loot {
+    display: none;
+}
+
+.combat-won .combat-enemies {
+    display: none;
+}
+
+.combat-won .combat-loot {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    overflow: auto;
+}
+
+.combat-loot-title {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ui-accent);
+    text-shadow: 0 0 18px rgb(255 204 0 / 45%);
+    animation: combat-loot-in .5s var(--ui-ease) both;
+}
+
+.combat-loot-sub {
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+    animation: combat-loot-in .5s var(--ui-ease) .15s both;
+}
+
+.combat-loot-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    max-width: 100%;
+}
+
+.combat-loot-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 120px;
+    padding: 12px 8px 10px;
+    border: 1px solid rgb(255 204 0 / 40%);
+    border-radius: 14px;
+    background: radial-gradient(circle at 50% 30%, rgb(255 204 0 / 14%), var(--ui-fill) 70%);
+    box-shadow: 0 0 22px -8px rgb(255 204 0 / 45%);
+    animation: combat-loot-pop .45s var(--ui-ease) both;
+}
+
+.combat-loot-img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+
+.combat-loot-noimg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-accent);
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.combat-loot-name {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+}
+
+@keyframes combat-loot-in {
+    from { opacity: 0; transform: translateY(8px); }
+}
+
+@keyframes combat-loot-pop {
+    0% { opacity: 0; transform: scale(.6) rotate(-6deg); }
+    70% { opacity: 1; transform: scale(1.06); }
+}
+
 /* Attaque désignée par le MJ : le joueur doit lancer /roll Combat */
 .combat-pending {
     display: none;

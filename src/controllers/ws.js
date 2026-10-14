@@ -96,6 +96,7 @@ const makeAction = async function (raw_response) {
         case 'combat-target':
         case 'combat-cancel':
         case 'combat-enemy-attack':
+        case 'combat-loot':
             payload = combat.handle(response);
             break;
         case 'combat-ally-attack':

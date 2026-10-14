@@ -5,6 +5,8 @@ function describeCombatEntry(entry, forMJ = false) {
         case 'end': return 'Fin du combat';
         case 'hp': return 'PV de ' + entry.enemy + ' : ' + entry.hp;
         case 'target': return entry.player + ' doit lancer /roll Combat pour attaquer ' + entry.enemy;
+        case 'loot':
+            return entry.items.length ? 'Victoire ! Butin : ' + entry.items.join(', ') : 'Victoire ! Tous les ennemis sont vaincus';
         case 'target-cancel': return 'Attaque de ' + entry.player + ' sur ' + entry.enemy + ' annulée';
         case 'player-attack':
             entry = Object.assign({}, entry, {player: entry.player + (entry.npc ? ' (PNJ)' : '')});

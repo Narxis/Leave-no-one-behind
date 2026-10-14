@@ -6,6 +6,7 @@
     const enemiesBox = document.getElementById('combat-enemies');
     const pendingBox = document.getElementById('combat-pending');
     const logBox = document.getElementById('combat-log');
+    const lootBox = document.getElementById('combat-loot');
 
     let state = {active: false, enemies: [], log: []};
 
@@ -51,17 +52,61 @@
             el('span', 'combat-pending-enemy', p.enemy));
     }
 
+    // Victoire : le butin de tous les ennemis, caché jusque-là, est révélé.
+    // Pendant un combat, on laisse d'abord jouer l'animation du coup fatal
+    let revealTimer = null;
+    function renderLoot(delay = 0) {
+        let revealed = state.active && state.lootRevealed;
+        if (!revealed) {
+            clearTimeout(revealTimer);
+            revealTimer = null;
+            area.classList.remove('combat-won');
+            lootBox.innerHTML = '';
+            return;
+        }
+        if (lootBox.childElementCount || revealTimer)
+            return;
+        revealTimer = setTimeout(() => {
+            revealTimer = null;
+            fillLoot();
+            area.classList.add('combat-won');
+        }, delay);
+    }
+
+    function fillLoot() {
+        let items = state.enemies.flatMap(e => e.loot || []);
+        lootBox.append(el('div', 'combat-loot-title', 'Victoire !'),
+            el('div', 'combat-loot-sub', items.length ? 'Butin récupéré sur les ennemis' : 'Aucun butin sur ces ennemis'));
+        let grid = el('div', 'combat-loot-items');
+        items.forEach((item, i) => {
+            let card = el('div', 'combat-loot-item');
+            card.style.animationDelay = (300 + i * 180) + 'ms';
+            if (item.image) {
+                let img = el('img', 'combat-loot-img');
+                img.src = item.image;
+                img.alt = '';
+                card.append(img);
+            }
+            else
+                card.append(el('span', 'combat-loot-img combat-loot-noimg', item.name.charAt(0)));
+            card.append(el('span', 'combat-loot-name', item.name));
+            grid.append(card);
+        });
+        lootBox.append(grid);
+    }
+
     function renderLog() {
         logBox.innerHTML = '';
         for (let entry of state.log.slice(-4).reverse())
             logBox.append(el('div', 'combat-log-line ' + entry.type + (entry.hit ? ' hit' : ''), describeCombatEntry(entry)));
     }
 
-    function render() {
+    function render(delay = 0) {
         enemiesBox.innerHTML = '';
         enemiesBox.dataset.count = state.enemies.length;
         state.enemies.forEach(e => enemiesBox.append(enemyCard(e)));
         renderPending();
+        renderLoot(delay);
         renderLog();
     }
 
@@ -106,7 +151,7 @@
 
     document.addEventListener('combat', (e) => {
         state = e.detail.data.state;
-        render();
+        render(1300);
         show(state.active);
         animate(e.detail.data.event);
     });

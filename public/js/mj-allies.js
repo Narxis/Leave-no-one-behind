@@ -92,6 +92,18 @@
         search.value = '';
     }
 
+    // Onglets Adversaires / Compagnons : suit la case cochée, quelle que soit
+    // la façon de la cocher (clic, toucher, clavier)
+    function showTab() {
+        let allyTab = document.getElementById('life-2').checked;
+        document.querySelector('.ennemy').classList.toggle('hide', allyTab);
+        document.querySelector('.ally').classList.toggle('hide', !allyTab);
+        document.getElementById('mj-enemies').classList.toggle('hide', allyTab);
+        list.classList.toggle('hide', !allyTab);
+    }
+    document.querySelectorAll('input[name="life"]').forEach(r => r.addEventListener('change', showTab));
+    document.querySelectorAll('.life-type1, .life-type2').forEach(t => t.addEventListener('mouseup', () => setTimeout(showTab, 0)));
+
     document.getElementById('add-friend').addEventListener('click', addAlly);
     search.addEventListener('keydown', (e) => { if (e.key === 'Enter') addAlly(); });
     // « x » : retire tous les compagnons, après confirmation
