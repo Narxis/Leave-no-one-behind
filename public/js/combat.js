@@ -73,13 +73,21 @@
         }, delay);
     }
 
-    function fillLoot() {
+    // still : sans animation, quand le MJ vient de distribuer un objet
+    function fillLoot(still = false) {
         let items = state.enemies.flatMap(e => e.loot || []);
+        lootBox.classList.toggle('loot-still', still);
         lootBox.append(el('div', 'combat-loot-title', 'Victoire !'),
-            el('div', 'combat-loot-sub', items.length ? 'Butin récupéré sur les ennemis' : 'Aucun butin sur ces ennemis'));
+            el('div', 'combat-loot-sub', items.length ? 'Butin récupéré sur les ennemis' : (still ? 'Tout le butin a été distribué' : 'Aucun butin sur ces ennemis')));
+        if (items.length)
+            lootBox.append(el('div', 'combat-loot-hint', 'Glissez un objet sur un joueur pour le lui donner'));
         let grid = el('div', 'combat-loot-items');
         items.forEach((item, i) => {
             let card = el('div', 'combat-loot-item');
+            // Repères pour le glisser-déposer (inventory.js)
+            card.dataset.index = i;
+            card.dataset.name = item.name;
+            card.dataset.slug = item.slug || '';
             card.style.animationDelay = (300 + i * 180) + 'ms';
             if (item.image) {
                 let img = el('img', 'combat-loot-img');
@@ -162,6 +170,12 @@
 
     document.addEventListener('combat', (e) => {
         state = e.detail.data.state;
+        let ev = e.detail.data.event;
+        if (ev && ev.type === 'loot-taken' && lootBox.childElementCount) {
+            lootBox.innerHTML = '';
+            fillLoot(true);
+            return;
+        }
         render(1300);
         show(state.active);
         animate(e.detail.data.event);

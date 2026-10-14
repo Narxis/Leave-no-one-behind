@@ -115,6 +115,25 @@ const setLoot = function (data) {
     return {type: 'set-loot', enemy_id: enemy.id};
 }
 
+// Une fois le combat gagné, le MJ distribue le butin : l'objet n° index
+// (dans l'ordre affiché, tous ennemis confondus) quitte le butin. Le nom
+// évite de prendre un autre objet si la liste a changé entre-temps
+const takeLoot = function (index, slug, name) {
+    if (!state.lootRevealed)
+        return null;
+    let i = toInt(index, -1);
+    for (let enemy of state.enemies) {
+        if (i >= 0 && i < enemy.loot.length) {
+            let item = enemy.loot[i];
+            if ((slug && item.slug !== slug) || (name && item.name !== name))
+                return null;
+            return enemy.loot.splice(i, 1)[0];
+        }
+        i -= enemy.loot.length;
+    }
+    return null;
+}
+
 // Le MJ corrige les PV d'un ennemi à la main
 const setHp = function (data) {
     let enemy = findEnemy(data.enemy_id);
@@ -260,4 +279,4 @@ const handle = async function (response) {
     };
 }
 
-module.exports = {handle, getState, getBestiary, getLootList, resolveRoll, allyAttack, ACTIONS};
+module.exports = {handle, getState, getBestiary, getLootList, resolveRoll, allyAttack, takeLoot, ACTIONS};

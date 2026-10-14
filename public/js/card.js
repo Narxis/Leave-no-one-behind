@@ -113,8 +113,8 @@ async function initialiseStatusList (){
     }
 }
 
+// Le coffre est redessiné par l'événement « inventory » (inventory.js)
 function removeStarterItem(id, slug) {
-    document.querySelector('#player-tab'+id+' .itemlist-line.'+slug).remove();
     wsLNOB.delItem(slug, id);
 }
 

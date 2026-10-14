@@ -126,13 +126,17 @@ class Items {
         await DB.tables.items.update({owners:new_owners}, {where:{ slug:slug }})
     }
 
+    // Retire un seul exemplaire : un joueur peut en avoir plusieurs
     async removeItemFromPlayer(slug, discord_id) {
         let item = await DB.tables.items.findOne({where: {slug:slug}, raw:true});
+        if (!item) return;
 
         let new_owners = [];
         if (item.owners && item.owners !== '')
             new_owners = item.owners.split(',');
-        new_owners = new_owners.filter(v => v!==discord_id);
+        let at = new_owners.indexOf(discord_id);
+        if (at >= 0)
+            new_owners.splice(at, 1);
         new_owners = new_owners.join(',');
 
         await DB.tables.items.update({owners:new_owners}, {where:{ slug:slug }})

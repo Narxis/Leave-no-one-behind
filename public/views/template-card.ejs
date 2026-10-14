@@ -430,10 +430,10 @@
                     </div>
                   </form>
                   <ul class="todos">
-                    <% if(items){ %>
-                      <% items.forEach(function(item) { %>
-                        <% for(var i=0; i<item.quantity; i++) {%>
-                        <li class="item-<%= item.slug %>">
+                    <% if(typeof shipItems !== 'undefined'){ %>
+                      <% shipItems.forEach(function(item) { %>
+                        <% for(var i=0; i<item.count; i++) {%>
+                        <li class="item-<%= item.slug %>" data-slug="<%= item.slug %>">
                           <input type="checkbox" id="<%= item.slug %>-<%= i %>">
                           <label for="<%= item.slug %>-<%= i %>">
                             <% if (item.image) { %><img class="item-image" src="<%= item.image %>"><% } else { %><span class="item-image item-noimg"><%= item.name.charAt(0) %></span><% } %>
@@ -626,6 +626,7 @@
   <script src="/js/combat.js"></script>
   <script src="/js/template-card.js"></script>
   <script src="/js/items.js"></script>
+  <script src="/js/inventory.js"></script>
   <script>
     var observer = new MutationObserver(function (mutations) {
       mutations.forEach(async function (mutation) {
