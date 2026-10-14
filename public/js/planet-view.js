@@ -175,6 +175,7 @@
     const VEG_COVER = [0, .45, .65, .85];
     const SHADOW = 0.85;
     const VEIL_ALPHA = .45;    // voile nuageux translucide : on voit le sol à travers
+    const VEIL_LIFT = 1.07;    // altitude du voile : une sphère un peu plus grande que la planète
     // Formes reprises des anciennes illustrations SVG (template-planet.ejs)
     const MOUNTAIN_PATH = typeof Path2D !== 'undefined' ? new Path2D('M20.79,166.85H169.34a20.77,20.77,0,0,0,17.76-31.56L109,6.68a13.89,13.89,0,0,0-23.57-.27L3.28,134.87a20.78,20.78,0,0,0,17.51,32Z') : null;
     const TREE_PATH = typeof Path2D !== 'undefined' ? new Path2D('M210.6 5.9L62 169.4c-3.9 4.2-6 9.8-6 15.5C56 197.7 66.3 208 79.1 208H104L30.6 281.4c-4.2 4.2-6.6 10-6.6 16C24 309.9 34.1 320 46.6 320H80L5.4 409.5C1.9 413.7 0 419 0 424.5c0 13 10.5 23.5 23.5 23.5H192v32c0 17.7 14.3 32 32 32s32-14.3 32-32V448H424.5c13 0 23.5-10.5 23.5-23.5c0-5.5-1.9-10.8-5.4-15L368 320h33.4c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16L344 208h24.9c12.7 0 23.1-10.3 23.1-23.1c0-5.7-2.1-11.3-6-15.5L237.4 5.9C234 2.1 229.1 0 224 0s-10 2.1-13.4 5.9z') : null;
@@ -241,11 +242,12 @@
             let c;
 
             if (liquid && e < sea) {
-                // Bord translucide (on devine le sol), puis de plus en plus sombre vers le large
+                // Aplats : rivage translucide (on devine le sol), eaux claires,
+                // eaux moyennes, puis le large plus sombre
                 let depth = (sea - e) / sea;
-                c = mix(liquid[0], liquid[1], smooth(.06, .7, depth));
+                c = depth < .3 ? liquid[0] : (depth < .6 ? mix(liquid[0], liquid[1], .5) : liquid[1]);
                 if (depth < .07)
-                    c = mix(rock[0], c, .45 + depth / .07 * .35);
+                    c = mix(rock[0], c, .6);
             }
             else {
                 let land = (e - sea) / (1 - sea + 1e-6);
@@ -332,12 +334,18 @@
         // Projection de la sphère : pour chaque pixel du disque, sa longitude
         // de base, sa position verticale dans la texture et s'il est dans le
         // croissant d'ombre (recalculés si la taille change)
-        let map = null;
+        let map = null, veilMap = null;
+        let veil = document.createElement('canvas');
+        let vctx = veil.getContext('2d');
         function buildMap(r) {
+            map = project(r, sphere, sctx);
+            veilMap = project(r * VEIL_LIFT, veil, vctx);
+        }
+        function project(r, canvas, cctx) {
             let R = Math.ceil(r);
             let w = R * 2;
-            sphere.width = sphere.height = w;
-            let idx = [], lonF = [], rowF = [], shade = [], edge = [];
+            canvas.width = canvas.height = w;
+            let idx = [], lonF = [], rowF = [], shade = [], edge = [], face = [];
             for (let y = 0; y < w; y++) {
                 for (let x = 0; x < w; x++) {
                     let nx = (x + .5 - R) / r, ny = -(y + .5 - R) / r;
@@ -352,12 +360,13 @@
                     let sx = nx + .11, sy = ny - .085;
                     shade.push(sx * sx + sy * sy > 1 ? SHADOW : 1);
                     edge.push(Math.min(1, (1 - Math.sqrt(q)) * r + .5));
+                    face.push(nz);
                 }
             }
-            map = {
+            return {
                 r, w, count: idx.length, idx: Int32Array.from(idx), lonF: Float32Array.from(lonF),
-                rowF: Float32Array.from(rowF), shade: Float32Array.from(shade), edge: Float32Array.from(edge),
-                img: sctx.createImageData(w, w)
+                rowF: Float32Array.from(rowF), shade: Float32Array.from(shade), edge: Float32Array.from(edge), face: Float32Array.from(face),
+                img: cctx.createImageData(w, w)
             };
         }
 
@@ -369,7 +378,7 @@
         function drawSphere(ripple) {
             let m = map, data = m.img.data;
             data.fill(0);
-            let u0 = rot / (Math.PI * 2) * TEX_W, cu0 = cloudRot / (Math.PI * 2) * TEX_W;
+            let u0 = rot / (Math.PI * 2) * TEX_W;
             let band = 3 * dpr;
             for (let p = 0; p < m.count; p++) {
                 let px = m.idx[p] % m.w;
@@ -392,20 +401,6 @@
                 if (t.emit[ej + 3]) {
                     r = t.emit[ej]; g = t.emit[ej + 1]; b = t.emit[ej + 2];
                 }
-                if (t.hasClouds) {
-                    let cu = Math.floor(m.lonF[p] + cu0 - .5);
-                    let cdu = m.lonF[p] + cu0 - .5 - cu;
-                    cu = ((cu % TEX_W) + TEX_W) % TEX_W;
-                    let cu2 = cu + 1 === TEX_W ? 0 : cu + 1;
-                    let C = t.clouds;
-                    let c0 = (v * TEX_W + cu) * 4, c1 = (v * TEX_W + cu2) * 4, c2 = c0 + TEX_W * 4, c3 = c1 + TEX_W * 4;
-                    let ca = (C[c0 + 3] * (1 - cdu) * (1 - dv) + C[c1 + 3] * cdu * (1 - dv) + C[c2 + 3] * (1 - cdu) * dv + C[c3 + 3] * cdu * dv) / 255;
-                    if (ca > 0) {
-                        // Seuil sur la valeur interpolée : bord net, puis translucide
-                        ca = clamp01((ca - .35) * 4) * VEIL_ALPHA;
-                        r += (C[c0] * sh - r) * ca; g += (C[c0 + 1] * sh - g) * ca; b += (C[c0 + 2] * sh - b) * ca;
-                    }
-                }
                 if (ripple) {
                     // Front de l'onde en cyan, suivi d'un reflet qui s'estompe
                     let gap = ripple.radius - dist;
@@ -422,6 +417,41 @@
                 data[o + 3] = m.edge[p] * 255;
             }
             sctx.putImageData(m.img, 0, 0);
+        }
+
+        // Voile nuageux sur sa propre sphère, un peu au-dessus du sol : il
+        // déborde légèrement du disque et glisse avec les vents
+        function drawVeil(ripple) {
+            let m = veilMap, data = m.img.data;
+            data.fill(0);
+            let any = false;
+            let cu0 = cloudRot / (Math.PI * 2) * TEX_W;
+            let off = (m.w - map.w) / 2;
+            for (let p = 0; p < m.count; p++) {
+                let px = m.idx[p] % m.w;
+                let dist = ripple ? Math.hypot(px - off - ripple.x, Math.floor(m.idx[p] / m.w) - off - ripple.y) : 0;
+                let t = (ripple && dist > ripple.radius) ? prevTex : tex;
+                if (!t.hasClouds)
+                    continue;
+                let fu = m.lonF[p] + cu0 - .5, fv = m.rowF[p];
+                let u = Math.floor(fu), v = Math.floor(fv), du = fu - u, dv = fv - v;
+                u = ((u % TEX_W) + TEX_W) % TEX_W;
+                let u2 = u + 1 === TEX_W ? 0 : u + 1;
+                let C = t.clouds;
+                let c0 = (v * TEX_W + u) * 4, c1 = (v * TEX_W + u2) * 4, c2 = c0 + TEX_W * 4, c3 = c1 + TEX_W * 4;
+                let ca = (C[c0 + 3] * (1 - du) * (1 - dv) + C[c1 + 3] * du * (1 - dv) + C[c2 + 3] * (1 - du) * dv + C[c3 + 3] * du * dv) / 255;
+                if (ca <= 0)
+                    continue;
+                // Seuil sur la valeur interpolée : bord net, puis translucide
+                // Vu de biais, au bord, le voile s'efface : pas de traînées autour du disque
+                ca = clamp01((ca - .35) * 4) * VEIL_ALPHA * m.edge[p] * clamp01(m.face[p] * 2.6);
+                let sh = m.shade[p], o = m.idx[p] * 4;
+                data[o] = C[c0] * sh; data[o + 1] = C[c0 + 1] * sh; data[o + 2] = C[c0 + 2] * sh;
+                data[o + 3] = ca * 255;
+                any = true;
+            }
+            vctx.putImageData(m.img, 0, 0);
+            return any;
         }
 
         function drawRing(r, front) {
@@ -695,15 +725,16 @@
             ctx.clearRect(0, 0, size, size);
             let a = atmos();
             drawRing(r, false);
-            // Atmosphère, dès qu'il y a de l'oxygène : halo en dégradé qui
-            // s'estompe vers l'espace, d'autant plus épais que l'oxygène est présent
+            // Atmosphère, dès qu'il y a de l'oxygène : halo en dégradé, presque
+            // transparent contre la planète et plus dense vers l'espace,
+            // d'autant plus épais que l'oxygène est présent
             let thick = a ? r * (.16 + .1 * s.oxy / 100 + a.dense) : 0;
             let ac = a ? hex(a.color).join(',') : '';
             if (a) {
-                let g = ctx.createRadialGradient(c, c, r * .9, c, c, r + thick);
-                g.addColorStop(0, 'rgba(' + ac + ',.7)');
-                g.addColorStop((r * .1) / (r * .1 + thick), 'rgba(' + ac + ',.6)');
-                g.addColorStop(.6, 'rgba(' + ac + ',.35)');
+                let g = ctx.createRadialGradient(c, c, r, c, c, r + thick);
+                g.addColorStop(0, 'rgba(' + ac + ',.05)');
+                g.addColorStop(.7, 'rgba(' + ac + ',.32)');
+                g.addColorStop(.97, 'rgba(' + ac + ',.6)');
                 g.addColorStop(1, 'rgba(' + ac + ',0)');
                 ctx.fillStyle = g;
                 ctx.beginPath();
@@ -713,15 +744,18 @@
             // Éléments derrière l'horizon : la planète cache leur base
             drawSprites(r, false, rippleCanvas, now);
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
-            // …et le même gaz qui voile le bord du disque, en dégradé vers l'intérieur
-            if (a) {
-                let g = ctx.createRadialGradient(c, c, r - thick * .6, c, c, r + 1);
-                g.addColorStop(0, 'rgba(' + ac + ',0)');
-                g.addColorStop(1, 'rgba(' + ac + ',.6)');
-                ctx.fillStyle = g;
+            if (drawVeil(ripple)) {
+                // Ombre du voile sur le sol, décalée vers le croissant d'ombre : il flotte
+                let vx = c - veilMap.w / 2, vy = c - veilMap.w / 2, sd = r * .035;
+                ctx.save();
                 ctx.beginPath();
-                ctx.arc(c, c, r + 1, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.arc(c, c, r, 0, Math.PI * 2);
+                ctx.clip();
+                ctx.filter = 'brightness(0)';
+                ctx.globalAlpha = .22;
+                ctx.drawImage(veil, vx + sd, vy + sd * .8);
+                ctx.restore();
+                ctx.drawImage(veil, vx, vy);
             }
             drawSprites(r, true, rippleCanvas, now);
             drawRing(r, true);
