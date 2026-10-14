@@ -480,14 +480,18 @@
         let map = null, veilMap = null;
         let veil = document.createElement('canvas');
         let vctx = veil.getContext('2d');
+        // Inclinaison de l'axe (glisser vertical) : la planète bascule vers nous
+        let axisTilt = 0;
         function buildMap(r) {
             map = project(r, sphere, sctx);
             veilMap = project(r * VEIL_LIFT, veil, vctx);
+            map.tilt = axisTilt;
         }
         function project(r, canvas, cctx) {
             let R = Math.ceil(r);
             let w = R * 2;
             canvas.width = canvas.height = w;
+            let ct = Math.cos(axisTilt), st = Math.sin(axisTilt);
             let idx = [], lonF = [], rowF = [], shade = [], edge = [], face = [];
             for (let y = 0; y < w; y++) {
                 for (let x = 0; x < w; x++) {
@@ -497,8 +501,10 @@
                         continue;
                     let nz = Math.sqrt(1 - q);
                     idx.push(y * w + x);
-                    lonF.push(Math.atan2(nx, nz) / (Math.PI * 2) * TEX_W);
-                    rowF.push(Math.min(TEX_H - 1.001, Math.max(0, (.5 - Math.asin(ny) / Math.PI) * TEX_H - .5)));
+                    // Point vu → point de la planète (axe incliné autour de l'horizontale)
+                    let py = ny * ct + nz * st, pz = nz * ct - ny * st;
+                    lonF.push(Math.atan2(nx, pz) / (Math.PI * 2) * TEX_W);
+                    rowF.push(Math.min(TEX_H - 1.001, Math.max(0, (.5 - Math.asin(Math.max(-1, Math.min(1, py))) / Math.PI) * TEX_H - .5)));
                     // Ombre en croissant en bas à droite, comme box-shadow: inset -9px -7px
                     let sx = nx + .11, sy = ny - .085;
                     shade.push(sx * sx + sy * sy > 1 ? SHADOW : 1);
@@ -829,7 +835,10 @@
         function spriteScreen(sp, r) {
             let cloud = sp.type === 'cloud';
             let lon = sp.lon - (cloud ? cloudRot * sp.speed : rot), cl = Math.cos(sp.lat);
-            let nx = cl * Math.sin(lon), ny = Math.sin(sp.lat), nz = cl * Math.cos(lon);
+            let px = cl * Math.sin(lon), py = Math.sin(sp.lat), pz = cl * Math.cos(lon);
+            // Point de la planète → point vu, avec l'inclinaison de l'axe
+            let ct = Math.cos(axisTilt), st = Math.sin(axisTilt);
+            let nx = px, ny = py * ct - pz * st, nz = py * st + pz * ct;
             let c = size / 2, a = cloud ? sp.alt : 1;
             return {x: c + nx * r * a, y: c - ny * r * a, sx: c + nx * r, sy: c - ny * r, nz,
                 angle: Math.atan2(nx, ny), tilt: Math.sqrt(Math.max(0, 1 - nz * nz))};
@@ -999,7 +1008,13 @@
             let k = rippleStart ? clamp01((now - rippleStart) / RIPPLE_MS) : 1;
             let sc = fromScale + (scale - fromScale) * smooth(0, 1, k);
             let r = baseR * sc;
-            if (!map || Math.abs(map.r - r) > .25) {
+            // Lâchée, la planète revient doucement droite
+            if (!grab && axisTilt) {
+                axisTilt *= .96;
+                if (Math.abs(axisTilt) < .002)
+                    axisTilt = 0;
+            }
+            if (!map || Math.abs(map.r - r) > .25 || Math.abs(map.tilt - axisTilt) > .001) {
                 buildMap(r);
                 // Les traits déjà posés suivent le bord quand la planète change de taille
                 scans.forEach(placeScan);
@@ -1124,7 +1139,7 @@
         document.addEventListener('pointerdown', (e) => {
             if (e.button !== 0 || !onDisk(e))
                 return;
-            grab = {id: e.pointerId, x: e.clientX, t: performance.now()};
+            grab = {id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now()};
             fling = 0;
             document.body.classList.add('planet-grabbing');
             e.preventDefault();
@@ -1133,9 +1148,13 @@
             if (grab && e.pointerId === grab.id) {
                 let cr = canvas.getBoundingClientRect();
                 // Un rayon de déplacement ≈ un radian : le point saisi suit la souris
-                let delta = -(e.clientX - grab.x) / (map.r * cr.width / size);
+                let R = map.r * cr.width / size;
+                let delta = -(e.clientX - grab.x) / R;
                 rot += delta;
                 cloudRot += delta;
+                // Vertical : on bascule l'axe, jusqu'à voir presque le pôle
+                axisTilt = Math.max(-1.4, Math.min(1.4, axisTilt + (e.clientY - grab.y) / R));
+                grab.y = e.clientY;
                 let now = performance.now();
                 // Élan au lâcher : vitesse des derniers mouvements, par image (≈ 33 ms)
                 fling = delta / Math.max(8, now - grab.t) * 33;
