@@ -124,6 +124,6 @@ dist
 .idea/
 public/views/index-legacy.ejs
 
-# Alliés (PNJ) créés par le MJ en cours de partie
+# Données du jeu gardées entre les redémarrages : alliés (PNJ) du MJ, classement des équipes
 storage/cache/allies.json
 storage/cache/leaderboard.json
