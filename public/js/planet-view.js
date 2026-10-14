@@ -106,11 +106,12 @@
         let rng = mulberry32(seed);
         let fbm = makeNoise(rng);
         let o = () => rng() * 100;
-        let off = [[o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()]];
+        let off = [[o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()]];
         let n = TEX_W * TEX_H;
         let f = {
             elev: new Float32Array(n), moist: new Float32Array(n), detail: new Float32Array(n),
             ridge: new Float32Array(n), city: new Float32Array(n), cloud: new Float32Array(n),
+            river: new Float32Array(n), creek: new Float32Array(n),
             px: new Float32Array(n), py: new Float32Array(n), pz: new Float32Array(n), lat: new Float32Array(n)
         };
         for (let v = 0; v < TEX_H; v++) {
@@ -130,6 +131,10 @@
                 // Voile nuageux, étiré en longitude comme des bandes de vent
                 f.cloud[i] = fbm(x * 1.6 + wx, y * 2.6, z * 1.6 + wx, 2);
                 f.city[i] = fbm(x * 10 + off[4][0], y * 10 + off[4][1], z * 10 + off[4][2], 1);
+                // Cours d'eau : les lignes où un bruit passe par zéro serpentent comme
+                // des fleuves (grande échelle) et des rivières (petite échelle)
+                f.river[i] = Math.abs(fbm(x * 2.2 + off[6][0] + wx, y * 2.2 + off[6][1], z * 2.2 + off[6][2] + wx, 2));
+                f.creek[i] = Math.abs(fbm(x * 4.5 + off[7][0] + wx, y * 4.5 + off[7][1], z * 4.5 + off[7][2], 2));
             }
         }
         // Relief remis à plat (rang de 0 à 1) : la part de liquide est réglée au pourcentage près
@@ -170,7 +175,12 @@
         {color: '#5fe6ff', dense: .02}
     ];
     const UNKNOWN_ATMOS = null;
-    const LIQUID_COVER = [0.34, 0.16, 0.10, 0.22, 0.50, 0.72];
+    const LIQUID_COVER = [0.34, 0.16, 0.16, 0.42, 0.66, 0.8];
+    // Largeur des fleuves et des rivières par palier d'eau (0 : aucun), comme
+    // les textes du scan : rivières (2), fleuves (3), mers (4), océans (5)
+    const RIVER_WIDTH = [0, 0, 0, .022, .024, .024];
+    const CREEK_WIDTH = [0, 0, .022, .016, 0, 0];
+    const RIVER_REACH = .62;    // les cours d'eau naissent sous cette altitude (part des terres)
     // Part des terres couverte de végétation, par palier de flore
     const VEG_COVER = [0, .45, .65, .85];
     const SHADOW = 0.85;
@@ -225,6 +235,7 @@
         let basalt = hex('#3b3035');
         let lava = hex('#ff8a1f');
         let vegCol = veg && (harsh ? mix(veg[1], basalt, .35) : veg[1]);
+        let riverW = liquid && wT >= 2 ? RIVER_WIDTH[wT] : 0, creekW = liquid && wT >= 2 ? CREEK_WIDTH[wT] : 0;
         const LAVA_DRY = .4;    // la lave ne coule que dans les 40 % les plus secs
 
         // Part du ciel voilée : plus d'eau, plus de voile ; dense avec les tempêtes
@@ -260,8 +271,18 @@
                 }
                 if (veg && fT > 0 && land < .95 && m > vegThresh)
                     c = vegCol;
-                // Pas de villes dans les champs de lave : on ne confond pas leurs lumières
-                if (lights && !lavaZone && f.city[i] > lights.t && land < .85) {
+                // Fleuves et rivières : ils naissent dans les terres et s'élargissent
+                // en descendant vers la côte, où ils rejoignent la mer
+                let flow = 1 - land / RIVER_REACH;
+                // Fleuves dans les régions assez humides, rivières seulement dans les plus humides
+                // et les basses terres : peu nombreux, ils suivent la végétation
+                let creekFlow = 1 - land / (RIVER_REACH * .6);
+                let wet = flow > 0 && ((riverW && m > .5 && f.river[i] < riverW * (.25 + flow))
+                    || (creekW && m > .7 && creekFlow > 0 && f.creek[i] < creekW * (.2 + creekFlow * .8)));
+                if (wet)
+                    c = liquid[0];
+                // Pas de villes dans les champs de lave ni sur l'eau
+                if (lights && !lavaZone && !wet && f.city[i] > lights.t && land < .85) {
                     emit[j] = lights.c[0]; emit[j + 1] = lights.c[1]; emit[j + 2] = lights.c[2]; emit[j + 3] = 255;
                 }
             }
@@ -884,10 +905,11 @@
     function moonTexture(rng) {
         let pal = MOON_PALETTES[Math.floor(rng() * MOON_PALETTES.length)].map(hex);
         let craters = [];
-        for (let i = 0, n = 2 + Math.floor(rng() * 2); i < n; i++) {
+        // De 2 à 8 cratères : les deux ou trois premiers grands, les suivants plus petits
+        for (let i = 0, n = 2 + Math.floor(rng() * 7); i < n; i++) {
             let z = rng() * 2 - 1, a = rng() * Math.PI * 2, s = Math.sqrt(1 - z * z);
             let c = norm([s * Math.cos(a), z * .85, s * Math.sin(a)]);
-            craters.push({x: c[0], y: c[1], z: c[2], r: .2 + rng() * .2});
+            craters.push({x: c[0], y: c[1], z: c[2], r: i < 3 ? .2 + rng() * .2 : .09 + rng() * .12});
         }
         let tex = new Uint8ClampedArray(MOON_TEX_W * MOON_TEX_H * 3);
         for (let v = 0; v < MOON_TEX_H; v++) {
