@@ -198,6 +198,12 @@
     // Part des terres couverte de végétation, par palier de flore
     // Avec de la flore, la végétation recouvre toutes les terres (la moitié sur un monde volcanique)
     const VEG_COVER = [0, 1, 1, 1];
+    // Flore toxique : une teinte tirée par planète [clair, sombre] (sol et arbres)
+    const TOXIC_FLORA = [
+        ['#a43fbf', '#8a2fa3'], // violet
+        ['#e8842c', '#c8661a'], // orange
+        ['#d23c3c', '#a82a30']  // rouge
+    ];
     const SHADOW = 0.85;
     const VEIL_ALPHA = .45;    // voile nuageux translucide : on voit le sol à travers
     // Montagnes et nuages flottants évitent l'équateur (±20°) : pile face à nous,
@@ -309,7 +315,7 @@
         // superposent pas (lave dans les régions sèches, plantes dans les
         // humides), avec moins de végétation, ternie par la roche sombre
         let harsh = hasC && cT === 0;
-        let veg = !hasF ? null : [null, [hex('#a43fbf'), hex('#8a2fa3')], [hex('#6fb04a'), hex('#5c9a3c')], [hex('#2f9a3a'), hex('#227826')]][fT];
+        let veg = !hasF ? null : [null, f.toxicFlora.map(hex), [hex('#6fb04a'), hex('#5c9a3c')], [hex('#2f9a3a'), hex('#227826')]][fT];
         let vegThresh = 1 - VEG_COVER[fT] * (harsh ? .5 : 1);
         let lights = !hasF ? null : [{c: hex('#ff6a4a'), t: .27}, {c: hex('#ffb35c'), t: .36}, null, {c: hex('#ffd54a'), t: .3}][vT];
         // Cratères : planète encore inconnue, ou sans eau ni végétation
@@ -431,6 +437,7 @@
         let fields = buildFields(seed);
         let rings = makeRings(seed);
         fields.craters = makeCraters(seed);
+        fields.toxicFlora = TOXIC_FLORA[Math.floor(mulberry32(seed ^ 0x1b873593)() * TOXIC_FLORA.length)];
         fields.alienLiquid = ALIEN_LIQUIDS[Math.floor(mulberry32(seed ^ 0x3c6ef372)() * ALIEN_LIQUIDS.length)];
         let tex = paint(fields, s, shown), prevTex = null;
         let scale = radiusScale(s, shown), fromScale = scale;
@@ -782,7 +789,7 @@
             }
             if (shown.has('ff') && fT > 0) {
                 let vegThresh = 1 - VEG_COVER[fT];
-                let base = hex([null, '#8a2fa3', '#5c9a3c', '#227826'][fT]);
+                let base = hex([null, fields.toxicFlora[1], '#5c9a3c', '#227826'][fT]);
                 // Petites forêts : des bosquets d'arbres serrés, plus grands au centre
                 // qu'en bordure, avec une teinte propre à chaque bosquet à peine variée
                 for (let k = 0, count = [0, 9, 13, 18][fT]; k < count; k++) {
