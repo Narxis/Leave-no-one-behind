@@ -834,3 +834,34 @@ body.combat-mode .stats-legend-title {
     flex: none;
     margin: 0;
 }
+
+/* Nom trop long même réduit : deux lignes serrées au-dessus de la ligne du jet */
+.player-tab .player-roll .player-name.name-wrap {
+    top: 4px;
+}
+
+.player-tab .player-name.name-wrap .player-name-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+    line-height: 12.5px;
+}
+
+/* En mode deux lignes, les badges se font plus discrets pour laisser la place au nom */
+.player-tab .player-name.name-wrap {
+    gap: 4px;
+}
+
+.player-tab .player-name.name-wrap .player-race {
+    padding: 0 4px;
+    font-size: 10px;
+}
+
+.player-tab .player-name.name-wrap .npc-badge {
+    padding: 0 3px;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+}
