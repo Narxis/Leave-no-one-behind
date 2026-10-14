@@ -110,7 +110,7 @@
         let n = TEX_W * TEX_H;
         let f = {
             elev: new Float32Array(n), moist: new Float32Array(n), detail: new Float32Array(n),
-            ridge: new Float32Array(n), city: new Float32Array(n),
+            ridge: new Float32Array(n), city: new Float32Array(n), cloud: new Float32Array(n),
             px: new Float32Array(n), py: new Float32Array(n), pz: new Float32Array(n), lat: new Float32Array(n)
         };
         for (let v = 0; v < TEX_H; v++) {
@@ -127,11 +127,14 @@
                 f.moist[i] = fbm(x * 1.6 + off[1][0], y * 1.6 + off[1][1], z * 1.6 + off[1][2], 2);
                 f.detail[i] = fbm(x * 4 + off[2][0], y * 4 + off[2][1], z * 4 + off[2][2], 1);
                 f.ridge[i] = 1 - Math.abs(fbm(x * 2 + off[3][0], y * 2 + off[3][1], z * 2 + off[3][2], 2)) * 2.2;
+                // Voile nuageux, étiré en longitude comme des bandes de vent
+                f.cloud[i] = fbm(x * 1.6 + wx, y * 2.6, z * 1.6 + wx, 2);
                 f.city[i] = fbm(x * 10 + off[4][0], y * 10 + off[4][1], z * 10 + off[4][2], 1);
             }
         }
         // Relief remis à plat (rang de 0 à 1) : la part de liquide est réglée au pourcentage près
         f.elev = toRank(f.elev);
+        f.cloud = toRank(f.cloud);
         return f;
     }
 
@@ -167,6 +170,7 @@
     const UNKNOWN_ATMOS = null;
     const LIQUID_COVER = [0.34, 0.16, 0.10, 0.22, 0.50, 0.72];
     const SHADOW = 0.85;
+    const VEIL_ALPHA = .45;    // voile nuageux translucide : on voit le sol à travers
     // Formes reprises des anciennes illustrations SVG (template-planet.ejs)
     const MOUNTAIN_PATH = typeof Path2D !== 'undefined' ? new Path2D('M20.79,166.85H169.34a20.77,20.77,0,0,0,17.76-31.56L109,6.68a13.89,13.89,0,0,0-23.57-.27L3.28,134.87a20.78,20.78,0,0,0,17.51,32Z') : null;
     const TREE_PATH = typeof Path2D !== 'undefined' ? new Path2D('M210.6 5.9L62 169.4c-3.9 4.2-6 9.8-6 15.5C56 197.7 66.3 208 79.1 208H104L30.6 281.4c-4.2 4.2-6.6 10-6.6 16C24 309.9 34.1 320 46.6 320H80L5.4 409.5C1.9 413.7 0 419 0 424.5c0 13 10.5 23.5 23.5 23.5H192v32c0 17.7 14.3 32 32 32s32-14.3 32-32V448H424.5c13 0 23.5-10.5 23.5-23.5c0-5.5-1.9-10.8-5.4-15L368 320h33.4c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16L344 208h24.9c12.7 0 23.1-10.3 23.1-23.1c0-5.7-2.1-11.3-6-15.5L237.4 5.9C234 2.1 229.1 0 224 0s-10 2.1-13.4 5.9z') : null;
@@ -186,12 +190,13 @@
     }
 
     // Couleurs à plat selon les couches révélées. emit : pixels qui gardent
-    // leur couleur dans l'ombre (lave, lumières des villes). Les nuages ne sont
-    // pas dans la texture : ce sont les nuages flottants (drawSprites)
+    // leur couleur dans l'ombre (lave, lumières des villes). clouds : voile
+    // nuageux translucide, en plus des nuages flottants (drawSprites)
     function paint(f, s, shown) {
         let n = TEX_W * TEX_H;
         let albedo = new Uint8ClampedArray(n * 3);
         let emit = new Uint8ClampedArray(n * 4);
+        let clouds = new Uint8ClampedArray(n * 4);
 
         let wT = tier(s.wtr, TABS.wtr), rT = tier(s.res, TABS.res), cT = tier(s.cli, TABS.cli);
         let fT = tier(s.flo, TABS.flo), vT = tier(s.civ, TABS.civ);
@@ -212,6 +217,10 @@
         let ice = hex('#f4fbff');
         let basalt = hex('#3b3035');
         let lava = hex('#ff8a1f');
+
+        // Part du ciel voilée : plus d'eau, plus de voile ; dense avec les tempêtes
+        let cover = hasC ? (cT === 1 ? .22 : .07 + (hasW ? wT * .026 : .05)) : 0;
+        let cloudCol = hasC && cT === 0 ? hex('#d6cc98') : (cT === 1 ? hex('#c9ccd4') : hex('#ffffff'));
 
         for (let i = 0; i < n; i++) {
             // Léger bruit sur les seuils : contours irréguliers mais aplats nets
@@ -257,8 +266,12 @@
 
             albedo[k] = c[0]; albedo[k + 1] = c[1]; albedo[k + 2] = c[2];
 
+            if (cover && f.cloud[i] > 1 - cover) {
+                clouds[j] = cloudCol[0]; clouds[j + 1] = cloudCol[1]; clouds[j + 2] = cloudCol[2]; clouds[j + 3] = 245;
+            }
+
         }
-        return {albedo, emit};
+        return {albedo, emit, clouds, hasClouds: cover > 0};
     }
 
     function radiusScale(s, shown) {
@@ -299,7 +312,9 @@
         let ctx = canvas.getContext('2d');
         let sphere = document.createElement('canvas');
         let sctx = sphere.getContext('2d');
-        let baseR = size * .3;
+        // Rayon de base de la planète (px CSS) ; le canvas est plus grand pour
+        // laisser la place à l'atmosphère, aux montagnes et à l'anneau orbital
+        let baseR = (options.radius || cssSize * .3) * dpr;
 
         // Projection de la sphère : pour chaque pixel du disque, sa longitude
         // de base, sa position verticale dans la texture et s'il est dans le
@@ -363,6 +378,20 @@
                 let ej = (Math.round(fv) * TEX_W + (Math.round(fu) % TEX_W + TEX_W) % TEX_W) * 4;
                 if (t.emit[ej + 3]) {
                     r = t.emit[ej]; g = t.emit[ej + 1]; b = t.emit[ej + 2];
+                }
+                if (t.hasClouds) {
+                    let cu = Math.floor(m.lonF[p] + cu0 - .5);
+                    let cdu = m.lonF[p] + cu0 - .5 - cu;
+                    cu = ((cu % TEX_W) + TEX_W) % TEX_W;
+                    let cu2 = cu + 1 === TEX_W ? 0 : cu + 1;
+                    let C = t.clouds;
+                    let c0 = (v * TEX_W + cu) * 4, c1 = (v * TEX_W + cu2) * 4, c2 = c0 + TEX_W * 4, c3 = c1 + TEX_W * 4;
+                    let ca = (C[c0 + 3] * (1 - cdu) * (1 - dv) + C[c1 + 3] * cdu * (1 - dv) + C[c2 + 3] * (1 - cdu) * dv + C[c3 + 3] * cdu * dv) / 255;
+                    if (ca > 0) {
+                        // Seuil sur la valeur interpolée : bord net, puis translucide
+                        ca = clamp01((ca - .35) * 4) * VEIL_ALPHA;
+                        r += (C[c0] * sh - r) * ca; g += (C[c0 + 1] * sh - g) * ca; b += (C[c0 + 2] * sh - b) * ca;
+                    }
                 }
                 if (ripple) {
                     // Front de l'onde en cyan, suivi d'un reflet qui s'estompe
@@ -909,7 +938,9 @@
         let canvas = document.querySelector('canvas[data-planet-view]');
         if (!canvas || !window.PLANET_DATA)
             return;
+        let planetRadius = Number(canvas.dataset.planetRadius) || canvas.clientWidth * .3;
         let view = create(canvas, {
+            radius: planetRadius,
             modules: PLANET_DATA.modules,
             seed: PLANET_DATA.id,
             revealed: canvas.dataset.planetView === 'all' ? 'all' : []
@@ -920,7 +951,7 @@
             // Écran de fin : petite planète, orbites resserrées autour d'elle
             let compact = moonsCanvas.dataset.planetMoons === 'compact';
             window.planetMoons = createMoons(moonsCanvas, Number(PLANET_DATA.id) || hashSeed(PLANET_DATA.modules || {}),
-                compact ? {compact: true, planetRadius: canvas.clientWidth * .3} : {});
+                compact ? {compact: true, planetRadius: planetRadius} : {});
         }
         // Préfixe des éléments du trait de chaque scan (template-planet.ejs)
         const LINES = {oxy: 'o2', ff: 'ff', cli: 'cl', wtr: 'eau', res: 're', grv: 'gr'};

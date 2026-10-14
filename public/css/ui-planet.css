@@ -199,10 +199,10 @@
    .center, la planète étant à +100px / -130px de ce point */
 .planet-canvas {
     position: absolute;
-    top: -210px;
-    left: -80px;
-    width: 360px;
-    height: 360px;
+    top: -270px;
+    left: -140px;
+    width: 480px;
+    height: 480px;
     pointer-events: none;
 }
 
