@@ -510,6 +510,72 @@
       </svg>
     </div>
     <div class="transparent"></div>
+  <% if (typeof planetLab !== 'undefined' && planetLab) { %>
+  <script>var PLANET_LAB = true;</script>
+  <style>
+    /* Labo : pas de drones (ils retireraient ceux du vrai vaisseau), pas d'atterrissage
+       (il changerait l'état de la partie) ni d'onglets joueurs */
+    #planet-line-2, #planet-line-2 + .separateur-horizontal, .land-button, .leave-button, .player-tabs, .npc-tab { display: none !important; }
+    .planet-lab {
+      position: fixed; top: 16px; left: 50%; z-index: 1000; transform: translateX(-50%);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px;
+      max-width: calc(100vw - 32px); padding: 10px 14px;
+      border: 1px solid rgb(176 166 255 / 30%); border-radius: 14px;
+      background: rgb(26 20 48 / 88%); box-shadow: 0 8px 28px rgb(0 0 0 / 40%);
+      color: #e2deff; font-size: 13px;
+    }
+    .planet-lab-title { color: var(--jaune, #ffcc00); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; }
+    .planet-lab select, .planet-lab button {
+      padding: 6px 12px; border: 1px solid rgb(255 204 0 / 55%); border-radius: 10px;
+      background: rgb(255 204 0 / 8%); color: #ffe27a; font: inherit; cursor: pointer;
+    }
+    .planet-lab select option { background: #1a1430; color: #e2deff; }
+    .planet-lab button:hover { background: rgb(255 204 0 / 18%); }
+    .planet-lab-info { color: rgb(226 222 255 / 75%); }
+    .planet-lab-info b { color: #fff; }
+    .planet-lab-values { flex-basis: 100%; display: none; justify-content: center; flex-wrap: wrap; gap: 6px 14px; font-variant-numeric: tabular-nums; }
+    .planet-lab.show-values .planet-lab-values { display: flex; }
+  </style>
+  <div class="planet-lab">
+    <span class="planet-lab-title">Labo planètes</span>
+    <select id="lab-band" aria-label="Tranche de score">
+      <option value="" <%= planetLab.band === '' ? 'selected' : '' %>>Toutes les tranches</option>
+      <option value="1" <%= planetLab.band === '1' ? 'selected' : '' %>>Score 1 à 500</option>
+      <option value="2" <%= planetLab.band === '2' ? 'selected' : '' %>>Score 501 à 800</option>
+      <option value="3" <%= planetLab.band === '3' ? 'selected' : '' %>>Score 801 à 1000</option>
+    </select>
+    <button type="button" id="lab-new">Nouvelle planète</button>
+    <button type="button" id="lab-reveal">Tout révéler</button>
+    <button type="button" id="lab-values">Valeurs</button>
+    <span class="planet-lab-info"><b><%= planetLab.archetype %></b> · score <b><%= planetLab.score %></b></span>
+    <div class="planet-lab-values">
+      <% [['oxy', 'Oxygène'], ['cli', 'Climat'], ['fau', 'Faune'], ['flo', 'Flore'], ['civ', 'Civilisation'], ['res', 'Ressources'], ['wtr', 'Eau'], ['grv', 'Gravité']].forEach(function (s) { %>
+        <span><%= s[1] %> <b><%= planetLab.values[s[0]] %></b></span>
+      <% }); %>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const band = document.getElementById('lab-band');
+      const next = () => { location.href = '/planet-lab' + (band.value ? '?tranche=' + band.value : ''); };
+      document.getElementById('lab-new').addEventListener('click', next);
+      band.addEventListener('change', next);
+      document.addEventListener('keydown', (e) => { if (e.key === 'n' && e.target.tagName !== 'INPUT') next(); });
+      document.getElementById('lab-values').addEventListener('click', () => document.querySelector('.planet-lab').classList.toggle('show-values'));
+      // Les scans pas encore faits, un par un, comme des clics
+      document.getElementById('lab-reveal').addEventListener('click', async () => {
+        for (let sel of ['.o2-txt', '.cl-txt', '.ff-txt', '.re-txt', '.eau-txt', '.gr-txt']) {
+          let el = document.querySelector(sel);
+          let button = document.getElementById(sel.slice(1).replace('-txt', '-button'));
+          if (!el || (button && button.disabled))
+            continue;
+          el.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+          await new Promise(r => setTimeout(r, 700));
+        }
+      });
+    })();
+  </script>
+  <% } %>
   <script>var PLANET_DATA = <%- JSON.stringify({id: card.id || 0, modules: card.modules}).replace(/</g, '\\u003c') %>;</script>
   <script src="/js/planet-view.js"></script>
   <script src="/js/planet.js"></script>

@@ -5,6 +5,7 @@ const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
 const combat = require("./combat");
 const inventory = require("./inventory");
+const planetGen = require("./planetGen");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
@@ -500,6 +501,42 @@ module.exports = {
 
     res.render('template-planet', vars);
 },
+
+    // Labo de test : une planète tirée au hasard à chaque chargement, à scanner
+    // sans limite de points. Rien n'est lu ni écrit dans la partie en cours
+    renderPlanetLab(req, res) {
+        const BANDS = {1: [1, 500], 2: [501, 800], 3: [801, 1000]};
+        let band = BANDS[req.query.tranche] ? String(req.query.tranche) : '';
+        let [min, max] = BANDS[band] || BANDS[1 + Math.floor(Math.random() * 3)];
+        let planet = planetGen.rollPlanet(min, max);
+
+        let modules = {};
+        for (let stat in planet.values)
+            modules[stat] = {val: planet.values[stat], cost: 1 + Math.floor(Math.random() * 4)};
+
+        let archetype = planetGen.ARCHETYPES.archetypes[planet.archetype];
+        let card = {
+            // Graine du rendu (relief, lunes) : une nouvelle à chaque planète
+            id: 1 + Math.floor(Math.random() * 2147483646),
+            value: planet.score,
+            name: archetype ? archetype.name : '',
+            modules: modules
+        };
+        let ship = {
+            id: 0, name: '', cryopods: 1000, scanner: 100, proximity: 100, motors: 100, shield: 100,
+            oxygen: 100, energy: 100, gravity: 100, landing: 100, dbscience: 100, dbhistory: 100,
+            construction: 100, scanner_up: 0, oxygen_up: 0, energy_up: 0, gravity_up: 0
+        };
+
+        res.render('template-planet', {
+            players: [],
+            card: card,
+            ship: ship,
+            items: [],
+            lang: langJS,
+            planetLab: {band: band, archetype: card.name || 'Tirage libre', score: planet.score, values: planet.values}
+        });
+    },
 
     // Démo de l'écran de fin avec un vaisseau et une planète fictifs
     endScreen(req, res) {

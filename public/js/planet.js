@@ -14,6 +14,11 @@ async function getShip() {
 }
 var detectionPoints;
 function scanPoints() { //calcul points de detec
+    // Labo de planètes (/planet-lab) : scans illimités
+    if (window.PLANET_LAB) {
+        detectionPoints = Infinity;
+        return;
+    }
     let scan = parseInt(document.getElementById('dial-scanner').getAttribute('data-value'))
     console.log(scan)
     detectionPoints = Math.floor(scan / 16) * 2;
@@ -72,7 +77,7 @@ var iswritting = 0;
 var droneUse = false;
 
 function writePoints(place, number) {
-    document.querySelector(place).innerText = String(number);
+    document.querySelector(place).innerText = number === Infinity ? '∞' : String(number);
 };
 
 function getPlanetText(name,value,valueList,isgrav = false){
