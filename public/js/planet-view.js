@@ -536,10 +536,27 @@
             if (shown.has('ff') && fT > 0) {
                 let vegThresh = 1 - VEG_COVER[fT];
                 let base = hex([null, '#8a2fa3', '#5c9a3c', '#227826'][fT]);
-                for (let k = 0, count = [0, 6, 6, 12][fT]; k < count; k++) {
+                // Petites forêts : des bosquets d'arbres serrés, plus grands au centre
+                // qu'en bordure, avec une teinte propre à chaque bosquet à peine variée
+                for (let k = 0, count = [0, 9, 13, 18][fT]; k < count; k++) {
                     let at = pick((i) => land(i) && fields.moist[i] > vegThresh);
-                    if (at)
-                        list.push(Object.assign(at, {layer: 'ff', type: 'tree', h: .18 + rng() * .16, color: mix(base, [0, 0, 0], .15 + rng() * .4)}));
+                    if (!at)
+                        continue;
+                    let tone = mix(base, [0, 0, 0], .22 + rng() * .25);
+                    let spread = .13 + rng() * .08;
+                    let tall = .15 + rng() * .06;
+                    let trees = [];
+                    for (let t = 0, n = 6 + Math.floor(rng() * 6); t < n; t++) {
+                        // Le premier arbre est au centre, les autres autour (√ : répartition uniforme sur le disque)
+                        let d = t ? Math.sqrt(rng()) : 0, ang = rng() * Math.PI * 2;
+                        let lat = at.lat + Math.sin(ang) * d * spread;
+                        let lon = at.lon + Math.cos(ang) * d * spread / Math.max(.3, Math.cos(at.lat));
+                        trees.push({lat, lon, d, layer: 'ff', type: 'tree',
+                            h: tall * (1 - .45 * d) * (.88 + rng() * .24),
+                            color: mix(tone, rng() < .5 ? [0, 0, 0] : [255, 255, 255], rng() * .07)});
+                    }
+                    // Bordure dessinée d'abord : les grands arbres du centre passent devant
+                    trees.sort((p, q) => q.d - p.d).forEach(tr => list.push(tr));
                 }
             }
             if (shown.has('cli')) {
@@ -627,7 +644,9 @@
                     let vw = mountain ? 190.12 : 448, vh = mountain ? 166.85 : 512;
                     let w = h * (mountain ? 1.14 : .875);
                     ctx.rotate(p.angle);
-                    ctx.scale(w / vw * grow, h * Math.pow(p.tilt, .8) / vh * grow);
+                    // Arbres jamais complètement écrasés : les forêts restent visibles de face
+                    let lean = mountain ? Math.pow(p.tilt, .8) : Math.max(.55, Math.pow(p.tilt, .8));
+                    ctx.scale(w / vw * grow, h * lean / vh * grow);
                     ctx.translate(-vw / 2, -vh * .92);
                     ctx.fillStyle = 'rgb(' + sp.color.map(Math.round).join(',') + ')';
                     ctx.fill(mountain ? MOUNTAIN_PATH : TREE_PATH);
