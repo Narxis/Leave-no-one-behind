@@ -277,6 +277,25 @@
     }
 
     // Cratères tirés de la graine : centre sur la sphère et rayon angulaire
+    // Cyclones d'un monde à tempêtes : 1 ou 2, assez loin l'un de l'autre
+    function makeStorms(seed) {
+        let rng = mulberry32(seed ^ 0x68e31da4);
+        let list = [];
+        let lat0 = (rng() < .5 ? -1 : 1) * (.25 + rng() * .7), lon0 = rng() * Math.PI * 2;
+        let at = [[lat0, lon0]];
+        if (rng() < .6)
+            at.push([-Math.sign(lat0) * (.25 + rng() * .7), lon0 + Math.PI * (.6 + rng() * .8)]);
+        for (let [lat, lon] of at) {
+            let h = .3 + rng() * .12;
+            list.push({
+                lat, lon, h, reach: h * 2.3, arms: 3 + Math.floor(rng() * 2),
+                spin: (lat > 0 ? -1 : 1) * (.25 + rng() * .25), phase: rng() * 100, gray: 205 + rng() * 30,
+                x: Math.cos(lat) * Math.sin(lon), y: Math.sin(lat), z: Math.cos(lat) * Math.cos(lon)
+            });
+        }
+        return list;
+    }
+
     function makeCraters(seed) {
         let rng = mulberry32(seed ^ 0x5bd1e995);
         let list = [];
@@ -296,6 +315,8 @@
         let albedo = new Uint8ClampedArray(n * 3);
         let emit = new Uint8ClampedArray(n * 4);
         let clouds = new Uint8ClampedArray(n * 4);
+        // Proximité d'un cyclone (0 à 255) : le voile y est plus opaque
+        let stormy = new Uint8ClampedArray(n);
 
         let wT = tier(s.wtr, TABS.wtr), rT = tier(s.res, TABS.res), cT = tier(s.cli, TABS.cli);
         let fT = tier(s.flo, TABS.flo), vT = tier(s.civ, TABS.civ);
@@ -326,9 +347,11 @@
         let riverW = liquid && wT >= 2 ? RIVER_WIDTH[wT] : 0, creekW = liquid && wT >= 2 ? CREEK_WIDTH[wT] : 0;
         const LAVA_DRY = .4;    // la lave ne coule que dans les 40 % les plus secs
 
-        // Part du ciel voilée : plus d'eau, plus de voile. Monde à tempêtes : pas
-        // de voile, ce sont les cyclones (sprites « storm ») qui couvrent le ciel
-        let cover = hasC ? (cT === 1 ? 0 : .07 + (hasW ? wT * .026 : .05)) : 0;
+        // Part du ciel voilée : plus d'eau, plus de voile
+        let cover = hasC ? .07 + (hasW ? wT * .026 : .05) : 0;
+        // Monde à tempêtes : autour de chaque cyclone, le voile s'épaissit et s'assombrit
+        let storms = hasC && cT === 1 ? f.storms : [];
+        const STORM_DARK = [70, 74, 92];
         let cloudCol = hasC && cT === 0 ? hex('#9a918c') : (cT === 1 ? hex('#c9ccd4') : hex('#ffffff'));
 
         // Champs lus entre leurs 4 points voisins : chaque texel a sa propre valeur
@@ -410,12 +433,19 @@
             // Voile : opacité continue autour du contour (lissé au rendu), couleur partout
             // pour que l'interpolation ne fonce pas les bords
             if (cover) {
-                clouds[j] = cloudCol[0]; clouds[j + 1] = cloudCol[1]; clouds[j + 2] = cloudCol[2];
-                clouds[j + 3] = clamp01((at(f.cloud) - (1 - cover)) * 30 + .5) * 255;
+                let near = 0;
+                for (let st of storms) {
+                    let ang = Math.acos(Math.max(-1, Math.min(1, x * st.x + y * st.y + z * st.z)));
+                    near = Math.max(near, 1 - smooth(st.reach * .4, st.reach, ang));
+                }
+                let col = near ? mix(cloudCol, STORM_DARK, near * .85) : cloudCol;
+                clouds[j] = col[0]; clouds[j + 1] = col[1]; clouds[j + 2] = col[2];
+                clouds[j + 3] = clamp01((at(f.cloud) - (1 - cover - near * .7)) * 30 + .5) * 255;
+                stormy[i] = near * 255;
             }
 
         }
-        return {albedo, emit, clouds, hasClouds: cover > 0};
+        return {albedo, emit, clouds, stormy: storms.length ? stormy : null, hasClouds: cover > 0};
     }
 
     function radiusScale(s, shown) {
@@ -438,6 +468,7 @@
         let fields = buildFields(seed);
         let rings = makeRings(seed);
         fields.craters = makeCraters(seed);
+        fields.storms = makeStorms(seed);
         fields.toxicFlora = TOXIC_FLORA[Math.floor(mulberry32(seed ^ 0x1b873593)() * TOXIC_FLORA.length)];
         fields.alienLiquid = ALIEN_LIQUIDS[Math.floor(mulberry32(seed ^ 0x3c6ef372)() * ALIEN_LIQUIDS.length)];
         let tex = paint(fields, s, shown), prevTex = null;
@@ -612,7 +643,8 @@
                     continue;
                 // Seuil sur la valeur interpolée : bord net, puis translucide
                 // Vu de biais, au bord, le voile s'efface : pas de traînées autour du disque
-                ca = smooth(.3, .7, ca) * VEIL_ALPHA * m.edge[p] * clamp01(m.face[p] * 2.6);
+                let opacity = t.stormy ? VEIL_ALPHA + (1 - VEIL_ALPHA) * .7 * t.stormy[v * TEX_W + u] / 255 : VEIL_ALPHA;
+                ca = smooth(.3, .7, ca) * opacity * m.edge[p] * clamp01(m.face[p] * 2.6);
                 let sh = m.shade[p], o = m.idx[p] * 4;
                 data[o] = C[c0] * sh; data[o + 1] = C[c0 + 1] * sh; data[o + 2] = C[c0 + 2] * sh;
                 data[o + 3] = ca * 255;
@@ -826,18 +858,11 @@
                 ][cT];
                 let count = style.count + Math.round(wT * .6) + Math.floor(rng() * 3);
                 if (cT === 1) {
-                    // Tempêtes permanentes : 3 à 5 cyclones qui tournent sur eux-mêmes
-                    // (sens inverse d'un hémisphère à l'autre) et dérivent avec les vents
-                    for (let k = 0, n = 4 + Math.floor(rng() * 3); k < n; k++) {
-                        let lat = (rng() < .5 ? -1 : 1) * (.15 + rng() * .85);
-                        list.push({
-                            layer: 'cli', type: 'storm', alt: 1.04, speed: .6 + rng() * .4,
-                            lat, lon: rng() * Math.PI * 2,
-                            h: .32 + rng() * .2, arms: 3 + Math.floor(rng() * 2),
-                            spin: (lat > 0 ? -1 : 1) * (.25 + rng() * .25), phase: rng() * 100,
-                            gray: 205 + rng() * 30
-                        });
-                    }
+                    // Tempêtes permanentes : 1 ou 2 cyclones qui tournent sur eux-mêmes
+                    // (sens inverse d'un hémisphère à l'autre) et dérivent avec leur
+                    // voile sombre (même vitesse que le voile)
+                    for (let st of fields.storms)
+                        list.push(Object.assign({}, st, {layer: 'cli', type: 'storm', alt: VEIL_LIFT, speed: 1}));
                     // Moins de petits nuages : les cyclones occupent déjà le ciel
                     count = Math.round(count * .5);
                 }
