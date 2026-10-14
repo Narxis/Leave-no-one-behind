@@ -205,9 +205,10 @@
         let capLat = !hasC ? 99 : ([99, 99, 66, 74][cT] - (hasW && wT === 1 ? 22 : 0));
         let lockSide = hasC && cT === 1;
 
+        // [bord, large] : liquide inconnu, lacs gelés, eau
         let liquid = !hasW ? null : wT === 0
-            ? [hex('#e0952f'), hex('#c4751d')]
-            : (wT === 1 ? [hex('#eaf8fc'), hex('#c9eaf3')] : [hex('#46d3d6'), hex('#24a9c6')]);
+            ? [hex('#e0952f'), hex('#a35a12')]
+            : (wT === 1 ? [hex('#eaf8fc'), hex('#bfe2f0')] : [hex('#46d3d6'), hex('#1b7fa6')]);
         let veg = !hasF ? null : [null, [hex('#a43fbf'), hex('#8a2fa3')], [hex('#6fb04a'), hex('#5c9a3c')], [hex('#2f9a3a'), hex('#227826')]][fT];
         let vegThresh = [1, .04, .16, -.08][fT];
         let lights = !hasF ? null : [{c: hex('#ff6a4a'), t: .27}, {c: hex('#ffb35c'), t: .36}, null, {c: hex('#ffd54a'), t: .3}][vT];
@@ -229,7 +230,11 @@
             let c;
 
             if (liquid && e < sea) {
-                c = liquid[0];
+                // Bord translucide (on devine le sol), puis de plus en plus sombre vers le large
+                let depth = (sea - e) / sea;
+                c = mix(liquid[0], liquid[1], smooth(.06, .7, depth));
+                if (depth < .07)
+                    c = mix(rock[0], c, .45 + depth / .07 * .35);
             }
             else {
                 let land = (e - sea) / (1 - sea + 1e-6);
