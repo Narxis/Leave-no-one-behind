@@ -180,6 +180,16 @@
     ];
     const UNKNOWN_ATMOS = null;
     const LIQUID_COVER = [0.34, 0.16, 0.16, 0.42, 0.66, 0.8];
+    // Liquide autre que l'eau : une teinte tirée par planète [bord, large]
+    const ALIEN_LIQUIDS = [
+        ['#a8762f', '#5e3c14'], // marron
+        ['#7a4fa8', '#341a5c'], // violet foncé
+        ['#3f8a52', '#173f24'], // vert foncé
+        ['#a8423f', '#4e1416'], // rouge foncé
+        ['#6a5fb0', '#23204f'], // indigo
+        ['#8c6f3c', '#3a2c12'], // ocre sombre
+        ['#3c3c48', '#0d0d13']  // noir (goudron)
+    ];
     // Largeur des fleuves et des rivières par palier d'eau (0 : aucun), comme
     // les textes du scan : rivières (2), fleuves (3), mers (4), océans (5)
     const RIVER_WIDTH = [0, 0, 0, .022, .024, .024];
@@ -291,7 +301,7 @@
 
         // [bord, large] : liquide inconnu, lacs gelés, eau
         let liquid = !hasW ? null : wT === 0
-            ? [hex('#a8762f'), hex('#5e3c14')]
+            ? f.alienLiquid.map(hex)
             : (wT === 1 ? [hex('#eaf8fc'), hex('#bfe2f0')]
                 // Flore toxique (révélée par le scan Faune & flore) : l'eau devient verte
                 : (hasF && fT === 1 ? [hex('#8ed65c'), hex('#2f7a45')] : [hex('#46d3d6'), hex('#1b7fa6')]));
@@ -421,6 +431,7 @@
         let fields = buildFields(seed);
         let rings = makeRings(seed);
         fields.craters = makeCraters(seed);
+        fields.alienLiquid = ALIEN_LIQUIDS[Math.floor(mulberry32(seed ^ 0x3c6ef372)() * ALIEN_LIQUIDS.length)];
         let tex = paint(fields, s, shown), prevTex = null;
         let scale = radiusScale(s, shown), fromScale = scale;
         let rippleStart = 0, rippleScan = null, scans = [];
