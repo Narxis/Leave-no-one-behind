@@ -126,3 +126,4 @@ public/views/index-legacy.ejs
 
 # Alliés (PNJ) créés par le MJ en cours de partie
 storage/cache/allies.json
+storage/cache/leaderboard.json
