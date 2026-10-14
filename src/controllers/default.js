@@ -148,6 +148,17 @@ module.exports = {
     },
 
     async persos(req, res) {
+        // Nouvelle création : les personnages de la partie précédente sont effacés
+        // (et leurs objets). Pas sur un rechargement de la page elle-même, pour ne
+        // pas perdre les joueurs qui viennent de rejoindre
+        let from = '';
+        try {
+            from = new URL(req.get('referer') || '').pathname;
+        } catch (e) {}
+        if (from !== '/persos') {
+            await DB.tables.players.destroy({where: {}});
+            await DB.tables.items.update({owners: ''}, {where: {}});
+        }
         await CONFIG.upsert('gameState', 'creation');
         res.render('perso', {lang: langJS});
     },
