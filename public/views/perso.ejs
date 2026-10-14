@@ -18,13 +18,71 @@
         <div class="container-player" id="players_create"></div>
     </div>
     <div class="topcenter">
-        <div onclick="location.href = '/synopsis'" class="bouton-suivant">Commencer la partie</div>
+        <div class="bouton-suivant" id="start-game" role="button" tabindex="0">Commencer la partie</div>
     </div>
+
+    <%# Avant de commencer : le MJ nomme l'équipe, pour le classement de fin de partie %>
+    <dialog class="team-dialog" id="team-dialog" aria-labelledby="team-dialog-title">
+        <form method="dialog" class="team-form" id="team-form">
+            <h2 class="team-dialog-title" id="team-dialog-title">Nom de l'équipe</h2>
+            <p class="team-dialog-text">Il apparaîtra au classement avec le score de la partie.</p>
+            <input class="team-input" id="team-name" type="text" maxlength="40" autocomplete="off" required
+                   placeholder="Les Explorateurs de Kepler…" aria-label="Nom de l'équipe">
+            <p class="team-error" id="team-error" role="alert"></p>
+            <div class="team-actions">
+                <button type="button" class="team-cancel" id="team-cancel">Annuler</button>
+                <button type="submit" class="team-submit">Commencer la partie</button>
+            </div>
+        </form>
+    </dialog>
 
     <script src="/js/perso.js"></script>
 
     <script>
         loadPlayerSheets();
+
+        (function () {
+            const dialog = document.getElementById('team-dialog');
+            const input = document.getElementById('team-name');
+            const error = document.getElementById('team-error');
+            const open = () => {
+                error.textContent = '';
+                // Nom de l'équipe précédente proposé par défaut
+                fetch('/api/team').then(r => r.json()).then(team => {
+                    if (team && team.team && !input.value)
+                        input.value = team.team;
+                    input.select();
+                }).catch(() => {});
+                dialog.showModal();
+                input.focus();
+            };
+            let button = document.getElementById('start-game');
+            button.addEventListener('click', open);
+            button.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+            document.getElementById('team-cancel').addEventListener('click', () => dialog.close());
+            document.getElementById('team-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                let name = input.value.trim();
+                if (!name) {
+                    error.textContent = 'Entrez un nom d\'équipe.';
+                    input.focus();
+                    return;
+                }
+                try {
+                    let res = await fetch('/api/team', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({name: name})
+                    });
+                    if (!res.ok)
+                        throw new Error();
+                    location.href = '/synopsis';
+                }
+                catch (err) {
+                    error.textContent = 'Impossible d\'enregistrer le nom, réessayez.';
+                }
+            });
+        })();
     </script>
     <%- include("partials/bottom-scripts") %>
 </body>

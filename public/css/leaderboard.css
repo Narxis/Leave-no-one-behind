@@ -1,18 +1,134 @@
-.next {
-    position: absolute;
-    top: 271px;
-    left: 580px;
+/* Classement des équipes (leaderboard.ejs) */
+.leaderboard {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    width: min(900px, calc(100vw - 32px));
+    max-height: calc(100vh - 80px);
+    margin: 40px auto;
+    padding: 28px 32px;
     display: flex;
-    height: 70px;
-    width: 200px;
-    border-radius: 20px;
-    border: 2px solid #fff;
-    background: var(--lgrad);
-    font-size: 1.5em;
-    align-items: center;
+    flex-direction: column;
+    gap: 18px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius);
+    background: var(--ui-surface);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+}
+
+.leaderboard-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ui-accent);
     text-align: center;
-    backdrop-filter: blur(1px);
+}
+
+.leaderboard-empty {
+    margin: 24px 0;
+    text-align: center;
+    color: var(--ui-text-dim);
+}
+
+.leaderboard-scroll {
+    min-height: 0;
+    overflow: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.leaderboard-table th {
+    position: sticky;
+    top: 0;
+    padding: 10px 12px;
+    background: rgb(16 12 48 / 95%);
+    border-bottom: 1px solid var(--ui-border);
+    color: var(--ui-text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-align: left;
+}
+
+.leaderboard-table td {
+    padding: 11px 12px;
+    border-bottom: 1px solid rgb(176 166 255 / 10%);
+}
+
+.leaderboard-table .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.leaderboard-table .rank {
+    width: 36px;
+    color: var(--ui-text-dim);
+    font-weight: 700;
+}
+
+.leaderboard-table .team {
+    font-weight: 700;
+}
+
+.leaderboard-table .score {
+    color: var(--ui-accent);
+    font-weight: 700;
+}
+
+.leaderboard-table .date {
+    color: var(--ui-text-dim);
+    white-space: nowrap;
+}
+
+.leaderboard-table .podium-1 .rank { color: #ffd34d; }
+.leaderboard-table .podium-2 .rank { color: #d9dde6; }
+.leaderboard-table .podium-3 .rank { color: #e0a56b; }
+
+/* Partie qui vient de se terminer */
+.leaderboard-table tr.is-current td {
+    background: var(--ui-accent-soft);
+}
+
+.leaderboard-table tr.is-current td:first-child {
+    box-shadow: inset 3px 0 0 var(--ui-accent);
+}
+
+.leaderboard-back {
+    align-self: center;
+    padding: 10px 22px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    color: var(--ui-text);
     text-decoration: none;
-    color: #fff;
-    justify-content: center;
-  }
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.leaderboard-back:hover {
+    background: var(--ui-fill-hover);
+    border-color: var(--ui-accent);
+}
+
+@media (max-width: 640px) {
+    .leaderboard {
+        margin: 16px auto;
+        padding: 20px 16px;
+    }
+
+    .leaderboard-table {
+        font-size: 13px;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 8px 6px;
+    }
+}
