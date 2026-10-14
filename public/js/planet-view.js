@@ -200,6 +200,64 @@
     const CLOUD_PATH = typeof Path2D !== 'undefined' ? new Path2D('M0 336c0 79.5 64.5 144 144 144H512c70.7 0 128-57.3 128-128c0-61.9-44-113.6-102.4-125.4c4.1-10.7 6.4-22.4 6.4-34.6c0-53-43-96-96-96c-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32C167.6 32 96 103.6 96 192c0 2.7 .1 5.4 .2 8.1C40.2 219.8 0 273.2 0 336z') : null;
     const STAR_PATH = typeof Path2D !== 'undefined' ? new Path2D('M512 255.1c0 11.34-7.406 20.86-18.44 23.64l-171.3 42.78l-42.78 171.1C276.7 504.6 267.2 512 255.9 512s-20.84-7.406-23.62-18.44l-42.66-171.2L18.47 279.6C7.406 276.8 0 267.3 0 255.1c0-11.34 7.406-20.83 18.44-23.61l171.2-42.78l42.78-171.1C235.2 7.406 244.7 0 256 0s20.84 7.406 23.62 18.44l42.78 171.2l171.2 42.78C504.6 235.2 512 244.6 512 255.1z') : null;
 
+    // Anneaux tirés de la graine, comme les lunes (visibles dès le départ).
+    // Un tiers des planètes en ont, dans l'un des styles des géantes du
+    // système solaire. Rayons en multiples du rayon de la planète
+    const RING_CHANCE = .33;
+    function makeRings(seed) {
+        let rng = mulberry32(seed ^ 0x27d4eb2f);
+        if (rng() >= RING_CHANCE)
+            return null;
+        let pick = rng();
+        let between = (a, b) => a + rng() * (b - a);
+        let shade = (base, spread) => base.map(v => Math.max(0, Math.min(255, v + (rng() - .5) * spread)));
+        let bands = [], arcs = [];
+        let tilt = between(-.45, .45), flat = between(.2, .34);
+        if (pick < .35) {
+            // Saturne : larges bandes claires séparées par des divisions sombres
+            let base = [[214, 196, 160], [232, 218, 186], [196, 170, 128]][Math.floor(rng() * 3)];
+            let at = between(1.22, 1.32), end = between(1.7, 1.85);
+            while (at < end) {
+                let w = between(.05, .16);
+                bands.push({r0: at, r1: Math.min(end, at + w), color: shade(base, 40), alpha: between(.45, .85)});
+                at += w + (rng() < .35 ? between(.03, .07) : between(.005, .015));
+            }
+        }
+        else if (pick < .55) {
+            // Jupiter : un anneau fin, brunâtre et discret
+            let at = between(1.25, 1.35);
+            bands.push({r0: at, r1: at + between(.2, .35), color: shade([205, 175, 140], 30), alpha: between(.28, .42)});
+            if (rng() < .5)
+                bands.push({r0: at + .4, r1: at + between(.45, .55), color: shade([205, 175, 140], 30), alpha: between(.18, .28)});
+        }
+        else if (pick < .8) {
+            // Uranus : anneaux très fins et nets, fortement inclinés
+            tilt = (rng() < .5 ? -1 : 1) * between(1.05, 1.4);
+            flat = between(.25, .45);
+            let at = between(1.3, 1.4);
+            for (let i = 0, n = 4 + Math.floor(rng() * 4); i < n; i++) {
+                let w = between(.01, .025) * (i === n - 1 ? 2 : 1);
+                bands.push({r0: at, r1: at + w, color: shade([170, 190, 210], 30), alpha: between(.5, .8)});
+                at += w + between(.03, .06);
+            }
+        }
+        else {
+            // Neptune : quelques anneaux pâles, avec des arcs plus brillants
+            let at = between(1.4, 1.55);
+            for (let i = 0, n = 2 + Math.floor(rng() * 3); i < n; i++) {
+                let w = between(.015, .035);
+                bands.push({r0: at, r1: at + w, color: shade([175, 200, 225], 25), alpha: between(.22, .4)});
+                at += w + between(.08, .14);
+            }
+            let outer = bands[bands.length - 1];
+            for (let i = 0, n = 2 + Math.floor(rng() * 3); i < n; i++) {
+                let start = rng() * Math.PI * 2;
+                arcs.push({r0: outer.r0, r1: outer.r1, from: start, to: start + between(.15, .45), color: [225, 238, 255], alpha: .75});
+            }
+        }
+        return {tilt, flat, bands, arcs, spin: between(.02, .06) * (rng() < .5 ? -1 : 1)};
+    }
+
     // Cratères tirés de la graine : centre sur la sphère et rayon angulaire
     function makeCraters(seed) {
         let rng = mulberry32(seed ^ 0x5bd1e995);
@@ -359,6 +417,7 @@
         let spin = () => 1;
 
         let fields = buildFields(seed);
+        let rings = makeRings(seed);
         fields.craters = makeCraters(seed);
         let tex = paint(fields, s, shown), prevTex = null;
         let scale = radiusScale(s, shown), fromScale = scale;
@@ -534,6 +593,43 @@
             }
             vctx.putImageData(m.img, 0, 0);
             return any;
+        }
+
+        // Anneaux : la moitié arrière avant la planète, la moitié avant après.
+        // Ils restent dans le cadre (réduits si la planète grossit trop)
+        function drawPlanetRings(r, front, now) {
+            if (!rings)
+                return;
+            let c = size / 2;
+            let outer = Math.max(...rings.bands.map(b => b.r1));
+            // Dans le cadre, et à l'intérieur des orbites des lunes (≈ 1,85 rayon)
+            let k = Math.min(1, (c - 2 * dpr) / (outer * r), 1.85 * baseR / (outer * r));
+            ctx.save();
+            ctx.translate(c, c);
+            ctx.rotate(rings.tilt);
+            ctx.scale(1, rings.flat);
+            // Moitié avant (bas de l'ellipse) ou arrière (haut), par découpage
+            let big = outer * r * 2 + 10;
+            ctx.beginPath();
+            ctx.rect(-big, front ? 0 : -big, big * 2, big);
+            ctx.clip();
+            for (let b of rings.bands) {
+                ctx.beginPath();
+                ctx.arc(0, 0, (b.r0 + b.r1) / 2 * r * k, 0, Math.PI * 2);
+                ctx.lineWidth = Math.max(dpr * .8, (b.r1 - b.r0) * r * k);
+                ctx.strokeStyle = 'rgba(' + b.color.map(Math.round).join(',') + ',' + b.alpha + ')';
+                ctx.stroke();
+            }
+            // Arcs brillants (Neptune) : ils défilent lentement le long de l'anneau
+            let turn = (now / 1000) * rings.spin;
+            for (let a of rings.arcs) {
+                ctx.beginPath();
+                ctx.arc(0, 0, (a.r0 + a.r1) / 2 * r * k, a.from + turn, a.to + turn);
+                ctx.lineWidth = Math.max(dpr * 1.2, (a.r1 - a.r0) * r * k * 1.6);
+                ctx.strokeStyle = 'rgba(' + a.color.join(',') + ',' + a.alpha + ')';
+                ctx.stroke();
+            }
+            ctx.restore();
         }
 
         function drawRing(r, front) {
@@ -925,6 +1021,7 @@
 
             ctx.clearRect(0, 0, size, size);
             let a = atmos();
+            drawPlanetRings(r, false, now);
             drawRing(r, false);
             // Atmosphère, dès qu'il y a de l'oxygène : halo en dégradé, presque
             // transparent contre la planète et plus dense vers l'espace,
@@ -994,6 +1091,7 @@
             drawCloudShadows(r, rippleCanvas, now);
             drawSprites(r, true, rippleCanvas, now, 'cloud');
             drawRing(r, true);
+            drawPlanetRings(r, true, now);
         }
 
         buildSprites();
