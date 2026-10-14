@@ -211,20 +211,26 @@
 
         // [bord, large] : liquide inconnu, lacs gelés, eau
         let liquid = !hasW ? null : wT === 0
-            ? [hex('#e0952f'), hex('#a35a12')]
+            ? [hex('#a8762f'), hex('#5e3c14')]
             : (wT === 1 ? [hex('#eaf8fc'), hex('#bfe2f0')] : [hex('#46d3d6'), hex('#1b7fa6')]);
+        // Monde volcanique : la planète est découpée en zones qui ne se
+        // superposent pas (lave dans les régions sèches, plantes dans les
+        // humides), avec moins de végétation, ternie par la roche sombre
+        let harsh = hasC && cT === 0;
         let veg = !hasF ? null : [null, [hex('#a43fbf'), hex('#8a2fa3')], [hex('#6fb04a'), hex('#5c9a3c')], [hex('#2f9a3a'), hex('#227826')]][fT];
-        let vegThresh = 1 - VEG_COVER[fT];
+        let vegThresh = 1 - VEG_COVER[fT] * (harsh ? .5 : 1);
         let lights = !hasF ? null : [{c: hex('#ff6a4a'), t: .27}, {c: hex('#ffb35c'), t: .36}, null, {c: hex('#ffd54a'), t: .3}][vT];
         // Cratères : planète encore inconnue, ou sans eau ni végétation
         let craters = (!hasW || wT <= 1) && !(veg && fT >= 2) ? f.craters : [];
         let ice = hex('#f4fbff');
         let basalt = hex('#3b3035');
         let lava = hex('#ff8a1f');
+        let vegCol = veg && (harsh ? mix(veg[1], basalt, .35) : veg[1]);
+        const LAVA_DRY = .4;    // la lave ne coule que dans les 40 % les plus secs
 
         // Part du ciel voilée : plus d'eau, plus de voile ; dense avec les tempêtes
         let cover = hasC ? (cT === 1 ? .22 : .07 + (hasW ? wT * .026 : .05)) : 0;
-        let cloudCol = hasC && cT === 0 ? hex('#d6cc98') : (cT === 1 ? hex('#c9ccd4') : hex('#ffffff'));
+        let cloudCol = hasC && cT === 0 ? hex('#9a918c') : (cT === 1 ? hex('#c9ccd4') : hex('#ffffff'));
 
         for (let i = 0; i < n; i++) {
             // Léger bruit sur les seuils : contours irréguliers mais aplats nets
@@ -245,15 +251,18 @@
                 let land = (e - sea) / (1 - sea + 1e-6);
                 // Planète inconnue : un seul aplat, comme l'ancien disque
                 c = hasR && land > .62 ? rock[1] : rock[0];
-                if (hasC && cT === 0) {
+                let lavaZone = harsh && m < LAVA_DRY;
+                if (harsh) {
                     c = basalt;
-                    if (f.ridge[i] > .9) {
+                    // Les veines s'amincissent puis s'éteignent en approchant des régions humides
+                    if (lavaZone && f.ridge[i] > .88 + .1 * m / LAVA_DRY) {
                         emit[j] = lava[0]; emit[j + 1] = lava[1]; emit[j + 2] = lava[2]; emit[j + 3] = 255;
                     }
                 }
                 if (veg && fT > 0 && land < .95 && m > vegThresh)
-                    c = veg[1];
-                if (lights && f.city[i] > lights.t && land < .85) {
+                    c = vegCol;
+                // Pas de villes dans les champs de lave : on ne confond pas leurs lumières
+                if (lights && !lavaZone && f.city[i] > lights.t && land < .85) {
                     emit[j] = lights.c[0]; emit[j + 1] = lights.c[1]; emit[j + 2] = lights.c[2]; emit[j + 3] = 255;
                 }
             }
