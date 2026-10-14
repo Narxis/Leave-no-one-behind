@@ -628,8 +628,11 @@
                 angle: Math.atan2(nx, ny), tilt: Math.sqrt(Math.max(0, 1 - nz * nz))};
         }
 
-        function drawSprites(r, front, ripple, now) {
+        // kind : 'ground' (relief, arbres, scintillements) ou 'cloud', sinon tous
+        function drawSprites(r, front, ripple, now, kind) {
             for (let sp of sprites) {
+                if (kind && (sp.type === 'cloud') !== (kind === 'cloud'))
+                    continue;
                 let p = spriteScreen(sp, r);
                 let back = sp.type === 'cloud' ? -.45 : -.3;
                 if (sp.type === 'star' ? (!front || p.nz < .15) : (front ? p.nz < 0 : (p.nz >= 0 || p.nz < back)))
@@ -743,9 +746,11 @@
             // Éléments derrière l'horizon : la planète cache leur base
             drawSprites(r, false, rippleCanvas, now);
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
-            if (drawVeil(ripple)) {
+            // Ordre de haut en bas : sol, ombre du voile, relief et arbres, voile, nuages
+            let hasVeil = drawVeil(ripple);
+            let vx = c - veilMap.w / 2, vy = c - veilMap.w / 2, sd = r * .035;
+            if (hasVeil) {
                 // Ombre du voile sur le sol, décalée vers le croissant d'ombre : il flotte
-                let vx = c - veilMap.w / 2, vy = c - veilMap.w / 2, sd = r * .035;
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(c, c, r, 0, Math.PI * 2);
@@ -754,6 +759,9 @@
                 ctx.globalAlpha = .22;
                 ctx.drawImage(veil, vx + sd, vy + sd * .8);
                 ctx.restore();
+            }
+            drawSprites(r, true, rippleCanvas, now, 'ground');
+            if (hasVeil) {
                 // Le voile ne déborde pas du disque : au-delà, sur le noir, il faisait des traînées
                 ctx.save();
                 ctx.beginPath();
@@ -762,7 +770,7 @@
                 ctx.drawImage(veil, vx, vy);
                 ctx.restore();
             }
-            drawSprites(r, true, rippleCanvas, now);
+            drawSprites(r, true, rippleCanvas, now, 'cloud');
             drawRing(r, true);
         }
 
