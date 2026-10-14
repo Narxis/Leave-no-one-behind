@@ -105,6 +105,13 @@ const handle = function (response) {
     };
 }
 
+// Nouvelle équipe : plus aucun compagnon
+const clear = function () {
+    allies = [];
+    nextId = 1;
+    save();
+}
+
 load();
 
-module.exports = {handle, getAllies, findAlly, roll, STATS, ACTIONS};
+module.exports = {handle, getAllies, clear, findAlly, roll, STATS, ACTIONS};
