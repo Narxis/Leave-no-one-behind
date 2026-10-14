@@ -221,6 +221,8 @@
         let fT = tier(s.flo, TABS.flo), vT = tier(s.civ, TABS.civ);
         let hasW = shown.has('wtr'), hasR = shown.has('res'), hasC = shown.has('cli'), hasF = shown.has('ff');
         let sea = hasW ? LIQUID_COVER[wT] : 0;
+        // Vrai niveau des mers, même avant le scan de l'eau : la végétation s'arrête au rivage
+        let shore = LIQUID_COVER[wT];
         let rock = (hasR ? RES_PALETTE[rT] : UNKNOWN_ROCK).map(hex);
 
         // [bord, large] : liquide inconnu, lacs gelés, eau
@@ -296,7 +298,7 @@
                     }
                 }
                 // Hauteurs un peu plus sombres : le relief reste lisible sous la végétation
-                if (veg && fT > 0 && m >= vegThresh)
+                if (veg && fT > 0 && m >= vegThresh && e >= shore)
                     c = hasR && land > .62 ? mix(vegCol, [0, 0, 0], .12) : vegCol;
                 // Fleuves et rivières : ils naissent dans les terres et s'élargissent
                 // en descendant vers la côte, où ils rejoignent la mer
