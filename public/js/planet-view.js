@@ -185,7 +185,8 @@
     const CREEK_WIDTH = [0, 0, .022, .016, 0, 0];
     const RIVER_REACH = .62;    // les cours d'eau naissent sous cette altitude (part des terres)
     // Part des terres couverte de végétation, par palier de flore
-    const VEG_COVER = [0, .45, .65, .85];
+    // Avec de la flore, la végétation recouvre toutes les terres (la moitié sur un monde volcanique)
+    const VEG_COVER = [0, 1, 1, 1];
     const SHADOW = 0.85;
     const VEIL_ALPHA = .45;    // voile nuageux translucide : on voit le sol à travers
     const VEIL_LIFT = 1.07;    // altitude du voile : une sphère un peu plus grande que la planète
@@ -294,8 +295,9 @@
                         emit[j] = lava[0]; emit[j + 1] = lava[1]; emit[j + 2] = lava[2]; emit[j + 3] = 255;
                     }
                 }
-                if (veg && fT > 0 && land < .95 && m > vegThresh)
-                    c = vegCol;
+                // Hauteurs un peu plus sombres : le relief reste lisible sous la végétation
+                if (veg && fT > 0 && m >= vegThresh)
+                    c = hasR && land > .62 ? mix(vegCol, [0, 0, 0], .12) : vegCol;
                 // Fleuves et rivières : ils naissent dans les terres et s'élargissent
                 // en descendant vers la côte, où ils rejoignent la mer
                 let flow = 1 - land / RIVER_REACH;
@@ -603,11 +605,20 @@
             let high = (i) => land(i) && (fields.elev[i] - sea) / (1 - sea + 1e-6) > .45;
             let list = [];
             let rock = hex((RES_PALETTE[rT] || RES_PALETTE[0])[1]);
+            // Pas de neige sur les sommets d'un monde volcanique
+            let volcanic = shown.has('cli') && tier(s.cli, TABS.cli) === 0;
             if (shown.has('res')) {
                 for (let k = 0, count = 6 + rT; k < count; k++) {
                     let at = pick(high);
-                    if (at)
-                        list.push(Object.assign(at, {layer: 'res', type: 'mountain', h: .18 + rng() * .13, color: mix(rock, [0, 0, 0], .25 + rng() * .15)}));
+                    if (at) {
+                        // Petit massif : un pic principal et 0 à 2 pics plus bas derrière lui
+                        let h = .18 + rng() * .13;
+                        let peaks = [];
+                        for (let q = 0, nq = Math.floor(rng() * 3); q < nq; q++)
+                            peaks.push({x: (q % 2 ? 1 : -1) * (.24 + rng() * .14), s: .5 + rng() * .2});
+                        list.push(Object.assign(at, {layer: 'res', type: 'mountain', h, peaks,
+                            snow: !volcanic && h > .24, color: mix(rock, [0, 0, 0], .2 + rng() * .15)}));
+                    }
                 }
                 for (let k = 0, count = [1, 3, 4, 6, 9][rT]; k < count; k++) {
                     let at = pick(land);
@@ -678,6 +689,68 @@
         }
 
         // kind : 'ground' (relief, arbres, scintillements) ou 'cloud', sinon tous
+        // Massif cartoon dans un repère unité : base à y = 0, sommet à y = -1.
+        // Pics secondaires derrière, versant gauche éclairé, versant droit à
+        // l'ombre, neige crénelée sur les plus hauts
+        function drawMountain(sp) {
+            let rgb = (c) => 'rgb(' + c.map(v => Math.round(Math.max(0, Math.min(255, v)))).join(',') + ')';
+            let peak = (cx, top, half) => {
+                ctx.beginPath();
+                ctx.moveTo(cx - half, .06);
+                ctx.lineTo(cx - .07 * half / .5, top + .06 * -top);
+                ctx.quadraticCurveTo(cx, top - .03, cx + .07 * half / .5, top + .06 * -top);
+                ctx.lineTo(cx + half, .06);
+                ctx.closePath();
+            };
+            for (let pk of sp.peaks) {
+                peak(pk.x, -pk.s, .3);
+                ctx.fillStyle = rgb(mix(sp.color, [0, 0, 0], .18));
+                ctx.fill();
+            }
+            peak(0, -1, .5);
+            ctx.fillStyle = rgb(mix(sp.color, [255, 255, 255], .1));
+            ctx.fill();
+            // Versant à l'ombre : de la crête, en zigzag, jusqu'à la base
+            ctx.beginPath();
+            ctx.moveTo(0, -.99);
+            ctx.lineTo(.07, -.94);
+            ctx.lineTo(.5, .06);
+            ctx.lineTo(.04, .06);
+            ctx.lineTo(.1, -.3);
+            ctx.lineTo(-.01, -.55);
+            ctx.lineTo(.05, -.78);
+            ctx.closePath();
+            ctx.fillStyle = rgb(mix(sp.color, [0, 0, 0], .28));
+            ctx.fill();
+            if (sp.snow) {
+                // Bord gauche/droit du pic à la hauteur y : x = ±0,5 (y + 1) / 1,06
+                let edge = (y) => .5 * (y + 1) / 1.06;
+                let y0 = -.66;
+                ctx.beginPath();
+                ctx.moveTo(-edge(y0), y0);
+                ctx.lineTo(-edge(y0) * .45, y0 + .1);
+                ctx.lineTo(-.02, y0 - .02);
+                ctx.lineTo(edge(y0) * .45, y0 + .09);
+                ctx.lineTo(edge(y0), y0);
+                ctx.lineTo(.07, -.94);
+                ctx.quadraticCurveTo(0, -1.03, -.07, -.94);
+                ctx.closePath();
+                ctx.fillStyle = '#f4f8ff';
+                ctx.fill();
+                // Neige à l'ombre, à droite de la crête
+                ctx.beginPath();
+                ctx.moveTo(0, -.99);
+                ctx.lineTo(.07, -.94);
+                ctx.lineTo(edge(y0), y0);
+                ctx.lineTo(edge(y0) * .45, y0 + .09);
+                ctx.lineTo(.03, y0 + .02);
+                ctx.lineTo(.05, -.78);
+                ctx.closePath();
+                ctx.fillStyle = '#c9d6ea';
+                ctx.fill();
+            }
+        }
+
         function drawSprites(r, front, ripple, now, kind) {
             for (let sp of sprites) {
                 if (kind && (sp.type === 'cloud') !== (kind === 'cloud'))
@@ -731,6 +804,13 @@
                 }
                 else {
                     let mountain = sp.type === 'mountain';
+                    if (mountain) {
+                        ctx.rotate(p.angle);
+                        ctx.scale(h * 1.2 * grow, h * Math.pow(p.tilt, .8) * grow);
+                        drawMountain(sp);
+                        ctx.restore();
+                        continue;
+                    }
                     let vw = mountain ? 190.12 : 448, vh = mountain ? 166.85 : 512;
                     let w = h * (mountain ? 1.14 : .875);
                     ctx.rotate(p.angle);
