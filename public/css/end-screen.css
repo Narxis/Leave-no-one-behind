@@ -402,3 +402,14 @@
   position: relative;
   z-index: 1;
 }
+
+/* Planète qu'on peut faire tourner à la souris (planet-view.js) */
+body.planet-hover {
+  cursor: grab;
+}
+
+body.planet-grabbing,
+body.planet-grabbing * {
+  cursor: grabbing !important;
+  user-select: none;
+}
