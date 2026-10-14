@@ -326,8 +326,9 @@
         let riverW = liquid && wT >= 2 ? RIVER_WIDTH[wT] : 0, creekW = liquid && wT >= 2 ? CREEK_WIDTH[wT] : 0;
         const LAVA_DRY = .4;    // la lave ne coule que dans les 40 % les plus secs
 
-        // Part du ciel voilée : plus d'eau, plus de voile ; dense avec les tempêtes
-        let cover = hasC ? (cT === 1 ? .22 : .07 + (hasW ? wT * .026 : .05)) : 0;
+        // Part du ciel voilée : plus d'eau, plus de voile. Monde à tempêtes : pas
+        // de voile, ce sont les cyclones (sprites « storm ») qui couvrent le ciel
+        let cover = hasC ? (cT === 1 ? 0 : .07 + (hasW ? wT * .026 : .05)) : 0;
         let cloudCol = hasC && cT === 0 ? hex('#9a918c') : (cT === 1 ? hex('#c9ccd4') : hex('#ffffff'));
 
         // Champs lus entre leurs 4 points voisins : chaque texel a sa propre valeur
@@ -824,6 +825,22 @@
                     {count: 4, size: .9, gray: [215, 245], tint: [0, 0, 0]}
                 ][cT];
                 let count = style.count + Math.round(wT * .6) + Math.floor(rng() * 3);
+                if (cT === 1) {
+                    // Tempêtes permanentes : 3 à 5 cyclones qui tournent sur eux-mêmes
+                    // (sens inverse d'un hémisphère à l'autre) et dérivent avec les vents
+                    for (let k = 0, n = 4 + Math.floor(rng() * 3); k < n; k++) {
+                        let lat = (rng() < .5 ? -1 : 1) * (.15 + rng() * .85);
+                        list.push({
+                            layer: 'cli', type: 'storm', alt: 1.04, speed: .6 + rng() * .4,
+                            lat, lon: rng() * Math.PI * 2,
+                            h: .32 + rng() * .2, arms: 3 + Math.floor(rng() * 2),
+                            spin: (lat > 0 ? -1 : 1) * (.25 + rng() * .25), phase: rng() * 100,
+                            gray: 205 + rng() * 30
+                        });
+                    }
+                    // Moins de petits nuages : les cyclones occupent déjà le ciel
+                    count = Math.round(count * .5);
+                }
                 // Petits amas de 1 à 5 nuages qui voyagent ensemble : un nuage principal,
                 // entouré de plus petits ; à peu près autant de nuages qu'avant au total
                 for (let k = 0, clusters = Math.ceil(count / 2.5); k < clusters; k++) {
@@ -851,7 +868,7 @@
 
         // Position à l'écran (pixels du canvas) et orientation d'un élément
         function spriteScreen(sp, r) {
-            let cloud = sp.type === 'cloud';
+            let cloud = sp.type === 'cloud' || sp.type === 'storm';
             let lon = sp.lon - (cloud ? cloudRot * sp.speed : rot), cl = Math.cos(sp.lat);
             let px = cl * Math.sin(lon), py = Math.sin(sp.lat), pz = cl * Math.cos(lon);
             // Point de la planète → point vu, avec l'inclinaison de l'axe
@@ -950,9 +967,87 @@
             ctx.restore();
         }
 
+        // Cyclone vu de dessus, à plat sur la sphère (ellipse raccourcie vers le
+        // bord) : bras en spirale qui tournent autour d'un œil, éclairs de temps en temps
+        function drawStorm(sp, p, R, now) {
+            let fade = clamp01(p.nz * 2.6);
+            if (fade <= 0)
+                return;
+            ctx.globalAlpha = fade;
+            ctx.rotate(p.angle);
+            ctx.scale(1, Math.max(.06, p.nz));
+            ctx.rotate(now / 1000 * sp.spin + sp.phase);
+            let g = sp.gray;
+            // Nappe de fond
+            let haze = ctx.createRadialGradient(0, 0, 0, 0, 0, R);
+            haze.addColorStop(0, 'rgba(' + [g, g, g + 8].map(Math.round).join(',') + ',.7)');
+            haze.addColorStop(.7, 'rgba(' + [g, g, g + 8].map(Math.round).join(',') + ',.35)');
+            haze.addColorStop(1, 'rgba(' + [g, g, g + 8].map(Math.round).join(',') + ',0)');
+            ctx.fillStyle = haze;
+            ctx.beginPath();
+            ctx.arc(0, 0, R, 0, Math.PI * 2);
+            ctx.fill();
+            // Bras : un trait sombre (relief) puis un trait clair, épais près de l'œil
+            let dir = sp.spin < 0 ? 1 : -1;
+            ctx.lineCap = 'round';
+            for (let pass = 0; pass < 2; pass++) {
+                ctx.strokeStyle = pass ? 'rgb(' + [g + 25, g + 25, g + 30].map(v => Math.round(Math.min(255, v))).join(',') + ')'
+                    : 'rgba(' + [g - 70, g - 66, g - 55].map(Math.round).join(',') + ',.7)';
+                for (let a = 0; a < sp.arms; a++) {
+                    let base = a / sp.arms * Math.PI * 2;
+                    let prev = null;
+                    for (let i = 0; i <= 14; i++) {
+                        let t = i / 14;
+                        let rad = R * (.1 + .85 * t), th = base + dir * t * 3.2;
+                        let pt = [Math.cos(th) * rad, Math.sin(th) * rad];
+                        if (prev) {
+                            ctx.lineWidth = R * (.3 * (1 - t) + .05) * (pass ? 1 : 1.3);
+                            ctx.beginPath();
+                            ctx.moveTo(prev[0] + (pass ? 0 : R * .02), prev[1] + (pass ? 0 : R * .03));
+                            ctx.lineTo(pt[0] + (pass ? 0 : R * .02), pt[1] + (pass ? 0 : R * .03));
+                            ctx.stroke();
+                        }
+                        prev = pt;
+                    }
+                }
+            }
+            // Œil du cyclone
+            ctx.fillStyle = 'rgba(40,46,64,.75)';
+            ctx.beginPath();
+            ctx.arc(0, 0, R * .07, 0, Math.PI * 2);
+            ctx.fill();
+            // Éclair : par tranches de 110 ms, un tirage pseudo-aléatoire propre au cyclone
+            let slot = Math.floor(now / 110), hash = (n) => {
+                let x = Math.sin(n * 127.1 + sp.phase * 311.7) * 43758.5453;
+                return x - Math.floor(x);
+            };
+            if (hash(slot) < .035) {
+                let ang = hash(slot + .5) * Math.PI * 2, d = R * (.25 + hash(slot + .7) * .4);
+                let x = Math.cos(ang) * d, y = Math.sin(ang) * d;
+                let glow = ctx.createRadialGradient(x, y, 0, x, y, R * .35);
+                glow.addColorStop(0, 'rgba(220,232,255,.75)');
+                glow.addColorStop(1, 'rgba(220,232,255,0)');
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(x, y, R * .35, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff6c4';
+                ctx.lineWidth = Math.max(1, R * .025);
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                ctx.moveTo(x, y - R * .14);
+                for (let k = 1; k <= 4; k++)
+                    ctx.lineTo(x + (hash(slot + k) - .5) * R * .14, y - R * .14 + k * R * .07);
+                ctx.stroke();
+            }
+        }
+
         function drawSprites(r, front, ripple, now, kind) {
             for (let sp of sprites) {
-                if (kind && (sp.type === 'cloud') !== (kind === 'cloud'))
+                let sky = sp.type === 'cloud' || sp.type === 'storm';
+                if (kind && sky !== (kind === 'cloud'))
+                    continue;
+                if (sp.type === 'storm' && (!front || shadowPass))
                     continue;
                 let p = spriteScreen(sp, r);
                 let back = sp.type === 'cloud' ? -.45 : -.3;
@@ -967,6 +1062,11 @@
                 let h = sp.h * r;
                 ctx.save();
                 ctx.translate(p.x, p.y);
+                if (sp.type === 'storm') {
+                    drawStorm(sp, p, h * grow, now);
+                    ctx.restore();
+                    continue;
+                }
                 if (sp.type === 'star') {
                     // Scintillement : pulsation et rotation, comme .magic-star
                     let tw = .55 + .45 * Math.sin(now / 260 + sp.phase);
