@@ -16,7 +16,10 @@
         wtr: [0, .2, .3, .4, .6, .8, 1]
     };
     const LAYERS = ['wtr', 'res', 'cli', 'oxy', 'grv', 'ff'];
-    const TEX_W = 512, TEX_H = 256;
+    // Champs de bruit calculés en 512×256, couleurs peintes en 1024×512 à partir
+    // des champs interpolés : contours de l'eau et du voile lisses à l'écran
+    const FIELD_W = 512, FIELD_H = 256;
+    const TEX_W = 1024, TEX_H = 512;
     const REACH_MS = 380;      // le trait s'allonge jusqu'à la planète
     const RIPPLE_MS = 1300;    // l'onde traverse la planète
     const LIGHT = norm([-0.62, 0.42, 0.66]);
@@ -107,20 +110,20 @@
         let fbm = makeNoise(rng);
         let o = () => rng() * 100;
         let off = [[o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()], [o(), o(), o()]];
-        let n = TEX_W * TEX_H;
+        let n = FIELD_W * FIELD_H;
         let f = {
             elev: new Float32Array(n), moist: new Float32Array(n), detail: new Float32Array(n),
             ridge: new Float32Array(n), city: new Float32Array(n), cloud: new Float32Array(n),
             river: new Float32Array(n), creek: new Float32Array(n),
             px: new Float32Array(n), py: new Float32Array(n), pz: new Float32Array(n), lat: new Float32Array(n)
         };
-        for (let v = 0; v < TEX_H; v++) {
-            let lat = (0.5 - (v + 0.5) / TEX_H) * Math.PI;
+        for (let v = 0; v < FIELD_H; v++) {
+            let lat = (0.5 - (v + 0.5) / FIELD_H) * Math.PI;
             let cl = Math.cos(lat), sl = Math.sin(lat);
-            for (let u = 0; u < TEX_W; u++) {
-                let lon = (u + 0.5) / TEX_W * Math.PI * 2;
+            for (let u = 0; u < FIELD_W; u++) {
+                let lon = (u + 0.5) / FIELD_W * Math.PI * 2;
                 let x = cl * Math.sin(lon), y = sl, z = cl * Math.cos(lon);
-                let i = v * TEX_W + u;
+                let i = v * FIELD_W + u;
                 f.px[i] = x; f.py[i] = y; f.pz[i] = z; f.lat[i] = lat;
                 // Relief déformé par un second bruit, pour des continents moins ronds
                 let wx = fbm(x * 1.2 + off[5][0], y * 1.2 + off[5][1], z * 1.2 + off[5][2], 1) * .6;
@@ -244,10 +247,30 @@
         let cover = hasC ? (cT === 1 ? .22 : .07 + (hasW ? wT * .026 : .05)) : 0;
         let cloudCol = hasC && cT === 0 ? hex('#9a918c') : (cT === 1 ? hex('#c9ccd4') : hex('#ffffff'));
 
+        // Champs lus entre leurs 4 points voisins : chaque texel a sa propre valeur
+        let sinLon = new Float32Array(TEX_W), cosLon = new Float32Array(TEX_W);
+        for (let u = 0; u < TEX_W; u++) {
+            let lon = (u + .5) / TEX_W * Math.PI * 2;
+            sinLon[u] = Math.sin(lon); cosLon[u] = Math.cos(lon);
+        }
+        let sx = FIELD_W / TEX_W, sy = FIELD_H / TEX_H;
+        let i00, i01, i10, i11, w00, w01, w10, w11;
+        const at = (a) => a[i00] * w00 + a[i01] * w01 + a[i10] * w10 + a[i11] * w11;
+
         for (let i = 0; i < n; i++) {
-            // Léger bruit sur les seuils : contours irréguliers mais aplats nets
-            let e = f.elev[i], m = f.moist[i];
-            let x = f.px[i], y = f.py[i], z = f.pz[i];
+            let u = i % TEX_W, v = (i - u) / TEX_W;
+            let fv = Math.min(FIELD_H - 1, Math.max(0, (v + .5) * sy - .5));
+            let v0 = Math.floor(fv), v1 = Math.min(FIELD_H - 1, v0 + 1), dv = fv - v0;
+            let fu = (u + .5) * sx - .5;
+            let u0 = Math.floor(fu), du = fu - u0;
+            u0 = (u0 + FIELD_W) % FIELD_W;
+            let u1 = (u0 + 1) % FIELD_W;
+            i00 = v0 * FIELD_W + u0; i01 = v0 * FIELD_W + u1; i10 = v1 * FIELD_W + u0; i11 = v1 * FIELD_W + u1;
+            w00 = (1 - du) * (1 - dv); w01 = du * (1 - dv); w10 = (1 - du) * dv; w11 = du * dv;
+
+            let e = at(f.elev), m = at(f.moist);
+            let lat = (.5 - (v + .5) / TEX_H) * Math.PI, cl = Math.cos(lat);
+            let x = cl * sinLon[u], y = Math.sin(lat), z = cl * cosLon[u];
             let k = i * 3, j = i * 4;
             let c;
 
@@ -267,7 +290,7 @@
                 if (harsh) {
                     c = basalt;
                     // Les veines s'amincissent puis s'éteignent en approchant des régions humides
-                    if (lavaZone && f.ridge[i] > .88 + .1 * m / LAVA_DRY) {
+                    if (lavaZone && at(f.ridge) > .88 + .1 * m / LAVA_DRY) {
                         emit[j] = lava[0]; emit[j + 1] = lava[1]; emit[j + 2] = lava[2]; emit[j + 3] = 255;
                     }
                 }
@@ -279,12 +302,12 @@
                 // Fleuves dans les régions assez humides, rivières seulement dans les plus humides
                 // et les basses terres : peu nombreux, ils suivent la végétation
                 let creekFlow = 1 - land / (RIVER_REACH * .6);
-                let wet = flow > 0 && ((riverW && m > .5 && f.river[i] < riverW * (.25 + flow))
-                    || (creekW && m > .7 && creekFlow > 0 && f.creek[i] < creekW * (.2 + creekFlow * .8)));
+                let wet = flow > 0 && ((riverW && m > .5 && at(f.river) < riverW * (.25 + flow))
+                    || (creekW && m > .7 && creekFlow > 0 && at(f.creek) < creekW * (.2 + creekFlow * .8)));
                 if (wet)
                     c = liquid[0];
                 // Pas de villes dans les champs de lave ni sur l'eau
-                if (lights && !lavaZone && !wet && f.city[i] > lights.t && land < .85) {
+                if (lights && !lavaZone && !wet && at(f.city) > lights.t && land < .85) {
                     emit[j] = lights.c[0]; emit[j + 1] = lights.c[1]; emit[j + 2] = lights.c[2]; emit[j + 3] = 255;
                 }
             }
@@ -299,8 +322,11 @@
 
             albedo[k] = c[0]; albedo[k + 1] = c[1]; albedo[k + 2] = c[2];
 
-            if (cover && f.cloud[i] > 1 - cover) {
-                clouds[j] = cloudCol[0]; clouds[j + 1] = cloudCol[1]; clouds[j + 2] = cloudCol[2]; clouds[j + 3] = 245;
+            // Voile : opacité continue autour du contour (lissé au rendu), couleur partout
+            // pour que l'interpolation ne fonce pas les bords
+            if (cover) {
+                clouds[j] = cloudCol[0]; clouds[j + 1] = cloudCol[1]; clouds[j + 2] = cloudCol[2];
+                clouds[j + 3] = clamp01((at(f.cloud) - (1 - cover)) * 30 + .5) * 255;
             }
 
         }
@@ -462,7 +488,7 @@
                     continue;
                 // Seuil sur la valeur interpolée : bord net, puis translucide
                 // Vu de biais, au bord, le voile s'efface : pas de traînées autour du disque
-                ca = clamp01((ca - .35) * 4) * VEIL_ALPHA * m.edge[p] * clamp01(m.face[p] * 2.6);
+                ca = smooth(.3, .7, ca) * VEIL_ALPHA * m.edge[p] * clamp01(m.face[p] * 2.6);
                 let sh = m.shade[p], o = m.idx[p] * 4;
                 data[o] = C[c0] * sh; data[o + 1] = C[c0 + 1] * sh; data[o + 2] = C[c0 + 2] * sh;
                 data[o + 3] = ca * 255;
@@ -564,12 +590,12 @@
             let wT = tier(s.wtr, TABS.wtr), rT = tier(s.res, TABS.res), fT = tier(s.flo, TABS.flo);
             // Emplacements réels (eau comprise), pour qu'ils ne bougent pas aux scans suivants
             let sea = LIQUID_COVER[wT];
-            let n = TEX_W * TEX_H;
+            let n = FIELD_W * FIELD_H;
             let pick = (test) => {
                 for (let tries = 0; tries < 4000; tries++) {
                     let i = Math.floor(rng() * n);
                     if (Math.abs(fields.lat[i]) < 1.2 && test(i))
-                        return {lat: fields.lat[i], lon: ((i % TEX_W) + .5) / TEX_W * Math.PI * 2};
+                        return {lat: fields.lat[i], lon: ((i % FIELD_W) + .5) / FIELD_W * Math.PI * 2};
                 }
                 return null;
             };
@@ -856,6 +882,10 @@
             busy = true;
             while (queue.length) {
                 let job = queue.shift();
+                if (job.hide) {
+                    await hideJob(job);
+                    continue;
+                }
                 if (job.scan)
                     await drawScanLine(job.scan);
                 let keys = job.keys.filter(k => !shown.has(k));
@@ -876,6 +906,35 @@
             busy = false;
         }
 
+        // Retour en arrière (labo /planet-lab) : le trait disparaît et une onde
+        // partie du centre retire la couche
+        async function hideJob(job) {
+            if (job.scan) {
+                scans = scans.filter(sc => sc.line !== job.scan.line);
+                for (let el of [job.scan.line, job.scan.dot])
+                    ['animation', 'filter', 'width', 'transform', 'left', 'top'].forEach(p => el.style[p] = '');
+            }
+            let keys = job.keys.filter(k => shown.has(k));
+            if (!keys.length)
+                return;
+            prevTex = tex;
+            keys.forEach(k => shown.delete(k));
+            tex = paint(fields, s, shown);
+            revealing = new Set();
+            buildSprites();
+            fromScale = map ? map.r / baseR : scale;
+            scale = radiusScale(s, shown);
+            rippleScan = null;
+            rippleStart = performance.now();
+            await wait(RIPPLE_MS + 40);
+        }
+
+        function hide(keys, scan) {
+            keys = (Array.isArray(keys) ? keys : [keys]).filter(k => LAYERS.includes(k));
+            queue.push({keys, scan: scan && scan.line && scan.dot ? scan : null, hide: true});
+            runQueue();
+        }
+
         // scan : {first, line, dot} éléments du trait de ce scan (template-planet.ejs)
         function reveal(keys, scan) {
             keys = (Array.isArray(keys) ? keys : [keys]).filter(k => LAYERS.includes(k) && !shown.has(k));
@@ -889,7 +948,7 @@
             runQueue();
         }
 
-        return {reveal, revealAll: () => reveal(LAYERS)};
+        return {reveal, hide, revealAll: () => reveal(LAYERS)};
     }
 
     // Lunes : de 0 à 3 par planète, tirées de sa graine. Même style que la
@@ -1066,5 +1125,9 @@
             view.reveal(e.detail, {first: q('-line'), line: q('-line2'), dot: q('-linedot')});
         });
         document.addEventListener('planet-reveal-all', () => view.revealAll());
+        document.addEventListener('planet-hide', (e) => {
+            let k = LINES[e.detail], q = (sel) => k && document.querySelector('.' + k + sel);
+            view.hide(e.detail, {first: q('-line'), line: q('-line2'), dot: q('-linedot')});
+        });
     });
 })();

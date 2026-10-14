@@ -562,14 +562,66 @@
       band.addEventListener('change', next);
       document.addEventListener('keydown', (e) => { if (e.key === 'n' && e.target.tagName !== 'INPUT') next(); });
       document.getElementById('lab-values').addEventListener('click', () => document.querySelector('.planet-lab').classList.toggle('show-values'));
+      // Re-cliquer sur une stat déjà dévoilée l'annule : trait, texte, coût et
+      // couche du visuel reviennent à l'état d'avant le scan
+      const STATS = {
+        o2: {key: 'oxy', reading: 1, extra: '#rond1, #rond2, .o2-blur'},
+        cl: {key: 'cli', reading: 2, extra: '.cl-cloud, .cloudshadow'},
+        ff: {key: 'ff', reading: 3, extra: '.ff-tree'},
+        re: {key: 'res', reading: 4, extra: '.re-mountain, .re-background'},
+        eau: {key: 'wtr', reading: 5, extra: '.eau-fill, .eau-border'},
+        gr: {key: 'grv', reading: 6, extra: '.gr-circle'}
+      };
+      const revealed = new Set();
+      const initialText = {};
+      for (let p in STATS) {
+        let reading = document.getElementById('reading-' + STATS[p].reading);
+        initialText[p] = reading.innerText;
+        // planet.js désactive le bouton après le scan : on le garde cliquable
+        let button = document.getElementById(p + '-button');
+        new MutationObserver(() => { if (button.disabled) button.disabled = false; })
+          .observe(button, {attributes: true, attributeFilter: ['disabled']});
+      }
+
+      function undo(p) {
+        let st = STATS[p];
+        document.querySelectorAll('.' + p + '-line, .' + p + '-line2, .' + p + '-linedot, ' + st.extra).forEach(el => {
+          [...el.classList].filter(c => c.startsWith('trace-') || ['rond1', 'rond2', 'blurring'].includes(c))
+            .forEach(c => el.classList.remove(c));
+        });
+        document.querySelector('.' + p + '-pulsebox').classList.remove('pulse');
+        document.getElementById('points' + p).classList.remove('display-off');
+        let reading = document.getElementById('reading-' + st.reading);
+        reading.innerText = initialText[p];
+        reading.classList.add('scanning');
+        costList.push(window['cost' + p]);
+        revealed.delete(p);
+        document.dispatchEvent(new CustomEvent('planet-hide', {detail: st.key}));
+      }
+
+      // Avant planet.js (phase de capture) : un 2e clic annule au lieu de rescanner
+      document.addEventListener('mouseup', (e) => {
+        let button = e.target.closest && e.target.closest('.p-txt');
+        let p = button && button.id.replace('-button', '');
+        if (!p || !STATS[p])
+          return;
+        if (!revealed.has(p)) {
+          revealed.add(p);
+          return;
+        }
+        e.stopImmediatePropagation();
+        // Le texte du scan est encore en train de s'écrire : on attend qu'il ait fini
+        if (window.iswritting)
+          return;
+        undo(p);
+      }, true);
+
       // Les scans pas encore faits, un par un, comme des clics
       document.getElementById('lab-reveal').addEventListener('click', async () => {
-        for (let sel of ['.o2-txt', '.cl-txt', '.ff-txt', '.re-txt', '.eau-txt', '.gr-txt']) {
-          let el = document.querySelector(sel);
-          let button = document.getElementById(sel.slice(1).replace('-txt', '-button'));
-          if (!el || (button && button.disabled))
+        for (let p in STATS) {
+          if (revealed.has(p))
             continue;
-          el.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+          document.getElementById(p + '-button').dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
           await new Promise(r => setTimeout(r, 700));
         }
       });
