@@ -1135,7 +1135,7 @@
     ];
     // Orbite de référence : l'ancienne lune (250px) faisait un tour en 30 s
     const MOON_REF_ORBIT = 250, MOON_REF_PERIOD = 30;
-    const MOON_SPIN_MIN = .5, MOON_SPIN_MAX = 30;
+    const MOON_SPIN_MIN = .5, MOON_SPIN_MAX = 30, MOON_LOCKED = .45;
 
     function moonTexture(rng) {
         let pal = MOON_PALETTES[Math.floor(rng() * MOON_PALETTES.length)].map(hex);
@@ -1191,7 +1191,18 @@
                 });
             }
         }
-        return {canvas, ctx, w, px, img: ctx.createImageData(w, w)};
+        // Croissant d'ombre à part, pour les lunes verrouillées qui pivotent :
+        // l'ombre reste du même côté pendant que la lune tourne
+        let shadow = document.createElement('canvas');
+        shadow.width = shadow.height = w;
+        let sctx = shadow.getContext('2d');
+        let simg = sctx.createImageData(w, w);
+        for (let p of px) {
+            if (p.shade < 1)
+                simg.data[p.o + 3] = (1 - SHADOW) * p.edge;
+        }
+        sctx.putImageData(simg, 0, 0);
+        return {canvas, ctx, w, px, img: ctx.createImageData(w, w), shadow};
     }
 
     // opts.planetRadius : rayon de la planète affichée à côté (108px sur la page
@@ -1221,9 +1232,11 @@
             moons.push({
                 orbit, radius, shownOrbit,
                 period: MOON_REF_PERIOD * Math.pow(orbit / MOON_REF_ORBIT, 1.5),
-                // Tour sur elle-même de 0,5 s à 30 s, tiré sur une échelle logarithmique : autant
-                // de lunes lentes que de très rapides (plus vite, la rotation saccaderait à 30 images/s)
-                spin: (rng() < .5 ? -1 : 1) * MOON_SPIN_MIN * Math.pow(MOON_SPIN_MAX / MOON_SPIN_MIN, rng()),
+                // Verrouillée (45 %) : elle montre toujours la même face à la planète.
+                // Sinon, tour sur elle-même de 0,5 s à 30 s, le plus souvent lent : les
+                // rotations rapides sont rares (plus vite, elle saccaderait à 30 images/s)
+                locked: rng() < MOON_LOCKED,
+                spin: (rng() < .5 ? -1 : 1) * MOON_SPIN_MIN * Math.pow(MOON_SPIN_MAX / MOON_SPIN_MIN, Math.pow(rng(), .4)),
                 phase: rng() * Math.PI * 2,
                 tex: moonTexture(rng),
                 map: moonMap(Math.max(4, radius * k) * dpr)
@@ -1232,21 +1245,38 @@
         }
 
         function drawMoon(m, t) {
-            let u0 = (t / m.spin) * MOON_TEX_W;
+            let a = m.phase + t / m.period * Math.PI * 2;
+            let c = size / 2;
+            let x = c + Math.cos(a) * m.shownOrbit * dpr, y = c + Math.sin(a) * m.shownOrbit * dpr;
+            // Verrouillée : surface figée (calculée une fois), la lune pivote dans le
+            // plan de l'orbite au même rythme que sa révolution
+            if (m.locked && m.painted) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(a);
+                ctx.drawImage(m.map.canvas, -m.map.w / 2, -m.map.w / 2);
+                ctx.restore();
+                ctx.drawImage(m.map.shadow, x - m.map.w / 2, y - m.map.w / 2);
+                return;
+            }
+            let u0 = m.locked ? 0 : (t / m.spin) * MOON_TEX_W;
             let data = m.map.img.data;
             for (let p of m.map.px) {
                 let u = Math.floor(p.lon + u0) % MOON_TEX_W;
                 if (u < 0) u += MOON_TEX_W;
                 let k = (p.row + u) * 3;
-                data[p.o] = m.tex[k] * p.shade;
-                data[p.o + 1] = m.tex[k + 1] * p.shade;
-                data[p.o + 2] = m.tex[k + 2] * p.shade;
+                let shade = m.locked ? 1 : p.shade;
+                data[p.o] = m.tex[k] * shade;
+                data[p.o + 1] = m.tex[k + 1] * shade;
+                data[p.o + 2] = m.tex[k + 2] * shade;
                 data[p.o + 3] = p.edge;
             }
             m.map.ctx.putImageData(m.map.img, 0, 0);
-            let a = m.phase + t / m.period * Math.PI * 2;
-            let c = size / 2;
-            let x = c + Math.cos(a) * m.shownOrbit * dpr, y = c + Math.sin(a) * m.shownOrbit * dpr;
+            if (m.locked) {
+                m.painted = true;
+                drawMoon(m, t);
+                return;
+            }
             ctx.drawImage(m.map.canvas, x - m.map.w / 2, y - m.map.w / 2);
         }
 
@@ -1269,7 +1299,7 @@
         }
         if (moons.length)
             requestAnimationFrame(loop);
-        return moons.map(m => ({orbit: m.orbit, radius: m.radius, period: m.period, spin: m.spin}));
+        return moons.map(m => ({orbit: m.orbit, radius: m.radius, period: m.period, spin: m.locked ? m.period : m.spin, locked: m.locked}));
     }
 
     window.PlanetView = {create, createMoons, LAYERS};
