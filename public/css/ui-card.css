@@ -486,6 +486,17 @@
 }
 
 /* ---- Légende des statistiques à gauche de la carte ---- */
+/* Le panneau des objets et modules, ouvert, passe par-dessus : la légende
+   s'efface pour ne pas bloquer ses objets (glisser vers les joueurs) */
+.card-legend {
+    transition: opacity 200ms var(--ui-ease);
+}
+
+body:has(.consommable-tab.open-left) .card-legend {
+    opacity: 0;
+    pointer-events: none;
+}
+
 /* Pas la place à côté de la carte sur les petits écrans */
 @media (max-width: 1350px) {
     .card-legend {
