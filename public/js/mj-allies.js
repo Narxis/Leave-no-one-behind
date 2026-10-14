@@ -35,7 +35,7 @@
             input.inputMode = 'numeric';
         }
         else
-            input.maxLength = name === 'name' ? 40 : 30;
+            input.maxLength = name === 'name' ? 20 : 30;
         input.value = ally[name];
         input.addEventListener('change', () => send('ally-update', {id: ally.id, field: name, value: input.value}));
         input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });

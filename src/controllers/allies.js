@@ -43,7 +43,7 @@ const findAlly = function (id) {
 }
 
 const add = function (data) {
-    let name = cleanText(data.name, 40);
+    let name = cleanText(data.name, 20);
     if (!name || allies.length >= MAX_ALLIES)
         return null;
     let ally = {id: nextId++, name: name, race: cleanText(data.race, 30)};
@@ -59,7 +59,7 @@ const update = function (data) {
     if (!ally)
         return null;
     if (data.field === 'name') {
-        let name = cleanText(data.value, 40);
+        let name = cleanText(data.value, 20);
         if (name)
             ally.name = name;
     }
