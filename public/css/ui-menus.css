@@ -1178,3 +1178,22 @@ body.mj-page {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* Description du vaisseau : texte un peu resserré, et la colonne défile
+   au lieu de déborder du panneau (zoom ou police plus large) */
+.fiche-page .descriptif {
+    box-sizing: border-box;
+    max-height: calc(100% - 64px);
+    padding-right: 8px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.fiche-page .descriptif .text {
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.fiche-page .descriptif hr {
+    margin: 6px 0;
+}
