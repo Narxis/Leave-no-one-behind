@@ -533,6 +533,11 @@
     .planet-lab button:hover { background: rgb(255 204 0 / 18%); }
     .planet-lab-info { color: rgb(226 222 255 / 75%); }
     .planet-lab-info b { color: #fff; }
+    .planet-lab-seed { display: flex; align-items: center; gap: 6px; }
+    .planet-lab-seed input {
+      width: 110px; padding: 6px 8px; border: 1px solid rgb(176 166 255 / 35%); border-radius: 10px;
+      background: rgb(0 0 0 / 25%); color: #fff; font: inherit; font-variant-numeric: tabular-nums;
+    }
     .planet-lab-values { flex-basis: 100%; display: none; justify-content: center; flex-wrap: wrap; gap: 6px 14px; font-variant-numeric: tabular-nums; }
     .planet-lab.show-values .planet-lab-values { display: flex; }
   </style>
@@ -548,6 +553,12 @@
     <button type="button" id="lab-reveal">Tout révéler</button>
     <button type="button" id="lab-values">Valeurs</button>
     <span class="planet-lab-info"><b><%= planetLab.archetype %></b> · score <b><%= planetLab.score %></b></span>
+    <span class="planet-lab-seed">
+      <label for="lab-seed">Graine</label>
+      <input id="lab-seed" type="text" inputmode="numeric" value="<%= planetLab.seed %>" aria-label="Graine de la planète">
+      <button type="button" id="lab-load">Charger</button>
+      <button type="button" id="lab-copy">Copier le lien</button>
+    </span>
     <div class="planet-lab-values">
       <% [['oxy', 'Oxygène'], ['cli', 'Climat'], ['fau', 'Faune'], ['flo', 'Flore'], ['civ', 'Civilisation'], ['res', 'Ressources'], ['wtr', 'Eau'], ['grv', 'Gravité']].forEach(function (s) { %>
         <span><%= s[1] %> <b><%= planetLab.values[s[0]] %></b></span>
@@ -557,9 +568,23 @@
   <script>
     (function () {
       const band = document.getElementById('lab-band');
-      const next = () => { location.href = '/planet-lab' + (band.value ? '?tranche=' + band.value : ''); };
+      const seedInput = document.getElementById('lab-seed');
+      const url = (seed) => '/planet-lab?' + new URLSearchParams(Object.assign(seed ? {seed: seed} : {}, band.value ? {tranche: band.value} : {}));
+      const next = () => { location.href = url(''); };
+      // L'adresse garde la graine : un rechargement ou un lien copié redonne la même planète
+      history.replaceState(null, '', url(<%= planetLab.seed %>));
       document.getElementById('lab-new').addEventListener('click', next);
-      band.addEventListener('change', next);
+      band.addEventListener('change', () => { location.href = url(seedInput.value.trim()); });
+      const load = () => { let s = seedInput.value.trim(); if (/^\d+$/.test(s)) location.href = url(s); };
+      document.getElementById('lab-load').addEventListener('click', load);
+      seedInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') load(); });
+      document.getElementById('lab-copy').addEventListener('click', (e) => {
+        let button = e.currentTarget;
+        navigator.clipboard.writeText(location.origin + url(<%= planetLab.seed %>)).then(() => {
+          button.textContent = 'Lien copié';
+          setTimeout(() => { button.textContent = 'Copier le lien'; }, 1500);
+        }).catch(() => {});
+      });
       document.addEventListener('keydown', (e) => { if (e.key === 'n' && e.target.tagName !== 'INPUT') next(); });
       document.getElementById('lab-values').addEventListener('click', () => document.querySelector('.planet-lab').classList.toggle('show-values'));
       // Re-cliquer sur une stat déjà dévoilée l'annule : trait, texte, coût et
