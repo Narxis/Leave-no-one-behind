@@ -635,7 +635,146 @@
         return {reveal, revealAll: () => reveal(LAYERS)};
     }
 
-    window.PlanetView = {create, LAYERS};
+    // Lunes : de 0 à 3 par planète, tirées de sa graine. Même style que la
+    // planète encore inconnue (aplats gris, cratères, ombre en croissant)
+    const MOON_TEX_W = 128, MOON_TEX_H = 64;
+    const MOON_PALETTES = [
+        ['#8d8fa3', '#7b7d92'],
+        ['#a39a8e', '#8c8377'],
+        ['#8fa0b0', '#7a8a9b'],
+        ['#b4b4bc', '#9a9aa4']
+    ];
+    // Orbite de référence : l'ancienne lune (250px) faisait un tour en 30 s
+    const MOON_REF_ORBIT = 250, MOON_REF_PERIOD = 30;
+
+    function moonTexture(rng) {
+        let fbm = makeNoise(rng);
+        let pal = MOON_PALETTES[Math.floor(rng() * MOON_PALETTES.length)].map(hex);
+        let craters = [];
+        for (let i = 0, n = 5 + Math.floor(rng() * 6); i < n; i++) {
+            let z = rng() * 2 - 1, a = rng() * Math.PI * 2, s = Math.sqrt(1 - z * z);
+            craters.push({x: s * Math.cos(a), y: z * .85, z: s * Math.sin(a), r: .12 + rng() * .24});
+        }
+        let o = rng() * 100;
+        let tex = new Uint8ClampedArray(MOON_TEX_W * MOON_TEX_H * 3);
+        for (let v = 0; v < MOON_TEX_H; v++) {
+            let lat = (.5 - (v + .5) / MOON_TEX_H) * Math.PI;
+            for (let u = 0; u < MOON_TEX_W; u++) {
+                let lon = (u + .5) / MOON_TEX_W * Math.PI * 2;
+                let x = Math.cos(lat) * Math.sin(lon), y = Math.sin(lat), z = Math.cos(lat) * Math.cos(lon);
+                let c = fbm(x * 2 + o, y * 2 + o, z * 2 + o, 4) > .04 ? pal[1] : pal[0];
+                for (let cr of craters) {
+                    let d = Math.acos(Math.min(1, x * cr.x + y * cr.y + z * cr.z));
+                    if (d < cr.r) {
+                        let rim = Math.acos(Math.min(1, x * (cr.x - .05) + y * (cr.y + .05) + z * cr.z)) > cr.r * .85;
+                        c = mix(c, [0, 0, 0], rim ? .17 : .1);
+                    }
+                }
+                let k = (v * MOON_TEX_W + u) * 3;
+                tex[k] = c[0]; tex[k + 1] = c[1]; tex[k + 2] = c[2];
+            }
+        }
+        return tex;
+    }
+
+    // Projection d'un petit disque : longitude, ligne de texture, ombre, bord
+    function moonMap(r) {
+        let R = Math.ceil(r), w = R * 2;
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = w;
+        let ctx = canvas.getContext('2d');
+        let px = [];
+        for (let y = 0; y < w; y++) {
+            for (let x = 0; x < w; x++) {
+                let nx = (x + .5 - R) / r, ny = -(y + .5 - R) / r;
+                let q = nx * nx + ny * ny;
+                if (q > 1)
+                    continue;
+                let nz = Math.sqrt(1 - q);
+                let sx = nx + .11, sy = ny - .085;
+                px.push({
+                    o: (y * w + x) * 4,
+                    lon: Math.atan2(nx, nz) / (Math.PI * 2) * MOON_TEX_W,
+                    row: Math.min(MOON_TEX_H - 1, Math.floor((.5 - Math.asin(ny) / Math.PI) * MOON_TEX_H)) * MOON_TEX_W,
+                    shade: sx * sx + sy * sy > 1 ? SHADOW : 1,
+                    edge: Math.min(1, (1 - Math.sqrt(q)) * r + .5) * 255
+                });
+            }
+        }
+        return {canvas, ctx, w, px, img: ctx.createImageData(w, w)};
+    }
+
+    function createMoons(canvas, seed) {
+        let rng = mulberry32(seed ^ 0x6d2b79f5);
+        let count = Math.floor(rng() * 4);
+        let cssSize = canvas.clientWidth || 840;
+        let dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        let size = Math.round(cssSize * dpr);
+        canvas.width = canvas.height = size;
+        let ctx = canvas.getContext('2d');
+
+        // Orbites de plus en plus lointaines, sans se toucher ; la période suit
+        // la 3e loi de Kepler (T ∝ a^1,5), la rotation propre est tirée au hasard
+        let moons = [];
+        let edge = 200;
+        for (let i = 0; i < count; i++) {
+            let radius = 8 + rng() * 13;
+            let orbit = edge + radius + (i ? 12 + rng() * 26 : rng() * 25);
+            if (orbit + radius > cssSize / 2 - 4)
+                break;
+            moons.push({
+                orbit, radius,
+                period: MOON_REF_PERIOD * Math.pow(orbit / MOON_REF_ORBIT, 1.5),
+                spin: (rng() < .5 ? -1 : 1) * (6 + rng() * 24),
+                phase: rng() * Math.PI * 2,
+                tex: moonTexture(rng),
+                map: moonMap(radius * dpr)
+            });
+            edge = orbit + radius;
+        }
+
+        function drawMoon(m, t) {
+            let u0 = (t / m.spin) * MOON_TEX_W;
+            let data = m.map.img.data;
+            for (let p of m.map.px) {
+                let u = Math.floor(p.lon + u0) % MOON_TEX_W;
+                if (u < 0) u += MOON_TEX_W;
+                let k = (p.row + u) * 3;
+                data[p.o] = m.tex[k] * p.shade;
+                data[p.o + 1] = m.tex[k + 1] * p.shade;
+                data[p.o + 2] = m.tex[k + 2] * p.shade;
+                data[p.o + 3] = p.edge;
+            }
+            m.map.ctx.putImageData(m.map.img, 0, 0);
+            let a = m.phase + t / m.period * Math.PI * 2;
+            let c = size / 2;
+            let x = c + Math.cos(a) * m.orbit * dpr, y = c + Math.sin(a) * m.orbit * dpr;
+            ctx.drawImage(m.map.canvas, x - m.map.w / 2, y - m.map.w / 2);
+        }
+
+        let last = 0;
+        function loop(now) {
+            if (now - last > 32) {
+                last = now;
+                let t = now / 1000;
+                ctx.clearRect(0, 0, size, size);
+                ctx.strokeStyle = 'rgba(176, 166, 255, .18)';
+                ctx.lineWidth = dpr;
+                for (let m of moons) {
+                    ctx.beginPath();
+                    ctx.arc(size / 2, size / 2, m.orbit * dpr, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                moons.forEach(m => drawMoon(m, t));
+            }
+            requestAnimationFrame(loop);
+        }
+        if (moons.length)
+            requestAnimationFrame(loop);
+        return moons.map(m => ({orbit: m.orbit, radius: m.radius, period: m.period, spin: m.spin}));
+    }
+
+    window.PlanetView = {create, createMoons, LAYERS};
 
     // Branchement automatique : <canvas data-planet-view> + window.PLANET_DATA
     document.addEventListener('DOMContentLoaded', () => {
@@ -648,6 +787,9 @@
             revealed: canvas.dataset.planetView === 'all' ? 'all' : []
         });
         window.planetView = view;
+        let moonsCanvas = document.querySelector('canvas[data-planet-moons]');
+        if (moonsCanvas)
+            window.planetMoons = createMoons(moonsCanvas, Number(PLANET_DATA.id) || hashSeed(PLANET_DATA.modules || {}));
         // Préfixe des éléments du trait de chaque scan (template-planet.ejs)
         const LINES = {oxy: 'o2', ff: 'ff', cli: 'cl', wtr: 'eau', res: 're', grv: 'gr'};
         document.addEventListener('planet-reveal', (e) => {

@@ -218,3 +218,18 @@
 .planet .gr-circle {
     display: none;
 }
+
+/* Lunes générées (planet-view.js) à la place de l'ancienne lune CSS :
+   même centre que la planète (+100px / -130px du point .center) */
+.planet .orbit {
+    display: none;
+}
+
+.moons-canvas {
+    position: absolute;
+    top: -550px;
+    left: -320px;
+    width: 840px;
+    height: 840px;
+    pointer-events: none;
+}
