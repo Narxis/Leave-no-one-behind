@@ -2,7 +2,7 @@
 // la carte) : chaque planète est unique et toujours la même d'une page à l'autre.
 // Les couches n'apparaissent qu'une fois la stat scannée, pour ne rien dévoiler :
 //   wtr → mers, lacs gelés ou liquide inconnu    res → couleurs de la roche
-//   cli → calottes, lave, monde figé, nuages     oxy → couleur de l'atmosphère
+//   cli → lave, nuages, voile     oxy → couleur de l'atmosphère
 //   grv → taille de la planète                    ff  → végétation, lumières des villes
 // Les paliers sont ceux des textes de scan (public/js/planet.js).
 (function () {
@@ -208,7 +208,6 @@
         let hasW = shown.has('wtr'), hasR = shown.has('res'), hasC = shown.has('cli'), hasF = shown.has('ff');
         let sea = hasW ? LIQUID_COVER[wT] : 0;
         let rock = (hasR ? RES_PALETTE[rT] : UNKNOWN_ROCK).map(hex);
-        let capLat = !hasC ? 99 : ([99, 99, 66, 74][cT] - (hasW && wT === 1 ? 22 : 0));
 
         // [bord, large] : liquide inconnu, lacs gelés, eau
         let liquid = !hasW ? null : wT === 0
@@ -223,7 +222,6 @@
         let lights = !hasF ? null : [{c: hex('#ff6a4a'), t: .27}, {c: hex('#ffb35c'), t: .36}, null, {c: hex('#ffd54a'), t: .3}][vT];
         // Cratères : planète encore inconnue, ou sans eau ni végétation
         let craters = (!hasW || wT <= 1) && !(veg && fT >= 2) ? f.craters : [];
-        let ice = hex('#f4fbff');
         let basalt = hex('#3b3035');
         let lava = hex('#ff8a1f');
         let vegCol = veg && (harsh ? mix(veg[1], basalt, .35) : veg[1]);
@@ -237,7 +235,6 @@
             // Léger bruit sur les seuils : contours irréguliers mais aplats nets
             let e = f.elev[i], m = f.moist[i];
             let x = f.px[i], y = f.py[i], z = f.pz[i];
-            let latDeg = Math.abs(f.lat[i]) * 57.3;
             let k = i * 3, j = i * 4;
             let c;
 
@@ -276,8 +273,6 @@
                     c = mix(c, [0, 0, 0], rim ? .17 : .1);
                 }
             }
-            if (latDeg > capLat)
-                c = ice;
 
             albedo[k] = c[0]; albedo[k + 1] = c[1]; albedo[k + 2] = c[2];
 
@@ -664,6 +659,10 @@
                     let w = h * 1.25 * grow, hh = h * Math.max(.55, Math.pow(p.tilt, .6)) * grow;
                     if (front) {
                         ctx.save();
+                        // L'ombre reste sur le sol : près du bord, elle ne déborde pas dans l'espace
+                        ctx.beginPath();
+                        ctx.arc(size / 2 - p.x, size / 2 - p.y, r, 0, Math.PI * 2);
+                        ctx.clip();
                         ctx.translate(p.sx - p.x + 2 * dpr, p.sy - p.y + 2 * dpr);
                         ctx.rotate(p.angle);
                         ctx.scale(w / 640, hh / 512);
@@ -755,7 +754,13 @@
                 ctx.globalAlpha = .22;
                 ctx.drawImage(veil, vx + sd, vy + sd * .8);
                 ctx.restore();
+                // Le voile ne déborde pas du disque : au-delà, sur le noir, il faisait des traînées
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(c, c, r, 0, Math.PI * 2);
+                ctx.clip();
                 ctx.drawImage(veil, vx, vy);
+                ctx.restore();
             }
             drawSprites(r, true, rippleCanvas, now);
             drawRing(r, true);
