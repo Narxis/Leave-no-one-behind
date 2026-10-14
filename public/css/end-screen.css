@@ -320,3 +320,22 @@
   color: #fff;
   justify-content: center;
 }
+
+/* Planète atteinte, à droite du bilan de la planète */
+.planet-recap {
+  position: relative;
+}
+
+.planet-recap .planet-reading {
+  max-width: 285px;
+}
+
+.end-planet {
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  width: 230px;
+  height: 230px;
+  margin: 0;
+  transform: translateY(-50%);
+}
