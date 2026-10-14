@@ -700,15 +700,26 @@
                     {count: 4, size: .9, gray: [215, 245], tint: [0, 0, 0]}
                 ][cT];
                 let count = style.count + Math.round(wT * .6) + Math.floor(rng() * 3);
-                for (let k = 0; k < count; k++) {
-                    let g = style.gray[0] + rng() * (style.gray[1] - style.gray[0]);
-                    list.push({
-                        layer: 'cli', type: 'cloud',
-                        lat: (rng() < .5 ? -1 : 1) * (EQUATOR_GAP + rng() * (1.1 - EQUATOR_GAP)), lon: rng() * Math.PI * 2,
-                        alt: 1.1 + rng() * .12, speed: .8 + rng() * .4,
-                        h: (.12 + rng() * .16) * style.size,
-                        color: [g + style.tint[0], g + style.tint[1], g + style.tint[2]]
-                    });
+                // Petits amas de 1 à 5 nuages qui voyagent ensemble : un nuage principal,
+                // entouré de plus petits ; à peu près autant de nuages qu'avant au total
+                for (let k = 0, clusters = Math.ceil(count / 2.5); k < clusters; k++) {
+                    let lat0 = (rng() < .5 ? -1 : 1) * (EQUATOR_GAP + .08 + rng() * (1.05 - EQUATOR_GAP));
+                    let lon0 = rng() * Math.PI * 2;
+                    let alt = 1.1 + rng() * .12, speed = .8 + rng() * .4;
+                    let main = (.09 + rng() * .08) * style.size;
+                    let g0 = style.gray[0] + rng() * (style.gray[1] - style.gray[0]);
+                    for (let q = 0, n = 1 + Math.floor(rng() * 5); q < n; q++) {
+                        let g = q ? Math.min(255, g0 + (rng() - .5) * 16) : g0;
+                        let lat = q ? lat0 + (rng() - .5) * .22 : lat0;
+                        // Jamais dans la bande équatoriale, même au bord de l'amas
+                        lat = Math.sign(lat0) * Math.max(EQUATOR_GAP, Math.abs(lat));
+                        list.push({
+                            layer: 'cli', type: 'cloud', alt, speed,
+                            lat, lon: q ? lon0 + (rng() - .5) * .34 / Math.max(.3, Math.cos(lat0)) : lon0,
+                            h: q ? main * (.5 + rng() * .35) : main,
+                            color: [g + style.tint[0], g + style.tint[1], g + style.tint[2]]
+                        });
+                    }
                 }
             }
             sprites = list;
