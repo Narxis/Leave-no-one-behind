@@ -19,7 +19,6 @@
     const TEX_W = 512, TEX_H = 256;
     const REACH_MS = 380;      // le trait s'allonge jusqu'à la planète
     const RIPPLE_MS = 1300;    // l'onde traverse la planète
-    const DOT_WAIT_MS = 2300;  // au plus, fin de l'animation CSS du trait
     const LIGHT = norm([-0.62, 0.42, 0.66]);
 
     function norm(v) {
@@ -293,7 +292,7 @@
         fields.craters = makeCraters(seed);
         let tex = paint(fields, s, shown), prevTex = null;
         let scale = radiusScale(s, shown), fromScale = scale;
-        let rippleStart = 0, rippleLink = null, links = [];
+        let rippleStart = 0, rippleScan = null, scans = [];
         let rot = (seed % 628) / 100, cloudRot = rot;
         let rotSpeed = spin();
 
@@ -429,45 +428,75 @@
             ctx.restore();
         }
 
-        // Point d'arrivée d'un trait de scan sur le bord de la planète (ou le
-        // point lui-même s'il tombe déjà sur la planète)
-        function edgePoint(link, r) {
-            let c = size / 2, dx = link.x - c, dy = link.y - c, d = Math.hypot(dx, dy) || 1;
-            if (d <= r)
-                return {x: link.x, y: link.y};
-            return {x: c + dx / d * r * .98, y: c + dy / d * r * .98};
+        // Traits de scan : le segment diagonal (…-line2) part dans son angle
+        // d'origine et s'arrête au bord de la planète, où se pose le point
+        // (…-linedot). Coordonnées de la page ; la planète peut changer de taille
+        function lineGeometry(line) {
+            let parent = line.offsetParent;
+            if (!parent)
+                return null;
+            let pr = parent.getBoundingClientRect();
+            let cs = getComputedStyle(line);
+            let ang = 0;
+            let m = /matrix\(([^)]+)\)/.exec(cs.transform || '');
+            if (m) {
+                let [a, b] = m[1].split(',').map(Number);
+                ang += Math.atan2(b, a);
+            }
+            if (cs.rotate && cs.rotate !== 'none')
+                ang += parseFloat(cs.rotate) * Math.PI / 180;
+            return {
+                x: pr.left + parent.clientLeft + line.offsetLeft,
+                y: pr.top + parent.clientTop + line.offsetTop + line.offsetHeight / 2,
+                dx: Math.cos(ang), dy: Math.sin(ang)
+            };
         }
 
-        function drawLinks(r, now) {
-            ctx.save();
-            ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 2 * dpr;
-            ctx.lineCap = 'round';
-            for (let link of links) {
-                let e = edgePoint(link, r);
-                // Le trait qui vient d'arriver s'allonge jusqu'à la planète
-                let t = link.start ? clamp01((now - link.start) / REACH_MS) : 1;
-                ctx.beginPath();
-                ctx.moveTo(link.x, link.y);
-                ctx.lineTo(link.x + (e.x - link.x) * t, link.y + (e.y - link.y) * t);
-                ctx.stroke();
+        // Longueur du segment pour toucher le bord de la planète, et point d'arrivée
+        function scanReach(scan) {
+            let g = lineGeometry(scan.line);
+            let cr = canvas.getBoundingClientRect();
+            if (!g || !cr.width || !map)
+                return null;
+            let cx = cr.left + cr.width / 2, cy = cr.top + cr.height / 2;
+            let R = map.r * cr.width / size;
+            let vx = cx - g.x, vy = cy - g.y;
+            let proj = vx * g.dx + vy * g.dy;
+            let miss = vx * vx + vy * vy - proj * proj;
+            let len = Math.max(0, miss < R * R ? proj - Math.sqrt(R * R - miss) : proj);
+            return {len, x: g.x + g.dx * len, y: g.y + g.dy * len, cr};
+        }
+
+        function placeScan(scan) {
+            let reach = scanReach(scan);
+            if (!reach)
+                return null;
+            scan.line.style.width = reach.len + 'px';
+            let dp = scan.dot.offsetParent;
+            if (dp) {
+                let pr = dp.getBoundingClientRect();
+                scan.dot.style.left = (reach.x - pr.left - dp.clientLeft - scan.dot.offsetWidth / 2) + 'px';
+                scan.dot.style.top = (reach.y - pr.top - dp.clientTop - scan.dot.offsetHeight / 2) + 'px';
             }
-            ctx.restore();
+            return reach;
         }
 
         function frame(now) {
             let k = rippleStart ? clamp01((now - rippleStart) / RIPPLE_MS) : 1;
             let sc = fromScale + (scale - fromScale) * smooth(0, 1, k);
             let r = baseR * sc;
-            if (!map || Math.abs(map.r - r) > .25)
+            if (!map || Math.abs(map.r - r) > .25) {
                 buildMap(r);
+                // Les traits déjà posés suivent le bord quand la planète change de taille
+                scans.forEach(placeScan);
+            }
             rot += .0021 * rotSpeed;
             cloudRot += .0029 * rotSpeed + .0006;
             let c = size / 2;
             let ripple = null;
             if (prevTex) {
                 // Onde partie du point de contact, assez grande pour couvrir tout le disque
-                let o = rippleOrigin(r);
+                let o = rippleOrigin();
                 let reach = Math.hypot(o.x - c, o.y - c) + r + 6 * dpr;
                 let off = c - map.w / 2;
                 ripple = {x: o.x - off, y: o.y - off, radius: (1 - Math.pow(1 - k, 2.2)) * reach};
@@ -489,7 +518,6 @@
                 ctx.arc(c, c, r * (1 + a.size * .9), 0, Math.PI * 2);
                 ctx.fill();
             }
-            drawLinks(r, now);
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
             drawRing(r, true);
         }
@@ -505,34 +533,42 @@
         }
         requestAnimationFrame(loop);
 
-        // Position (pixels du canvas) du point blanc au bout d'un trait de scan
-        function dotPosition(dot) {
-            let cr = canvas.getBoundingClientRect(), dr = dot.getBoundingClientRect();
-            if (!cr.width || !dr.width)
-                return null;
-            return {
-                x: (dr.left + dr.width / 2 - cr.left) * size / cr.width,
-                y: (dr.top + dr.height / 2 - cr.top) * size / cr.height
-            };
-        }
-
-        // L'onde part du point de contact du dernier trait, ou du centre
-        function rippleOrigin(r) {
-            return rippleLink ? edgePoint(rippleLink, r) : {x: size / 2, y: size / 2};
+        // L'onde part du point d'arrivée du dernier trait, ou du centre
+        function rippleOrigin() {
+            let reach = rippleScan && scanReach(rippleScan);
+            if (!reach)
+                return {x: size / 2, y: size / 2};
+            return {x: (reach.x - reach.cr.left) * size / reach.cr.width, y: (reach.y - reach.cr.top) * size / reach.cr.height};
         }
 
         const wait = (ms) => new Promise(res => setTimeout(res, ms));
 
-        // Le point blanc du trait CSS apparaît en fin d'animation : on attend sa fin
-        function dotReady(dot) {
-            if (!dot)
-                return Promise.resolve();
-            return new Promise(res => {
-                let done = false;
-                const finish = () => { if (!done) { done = true; res(); } };
-                dot.addEventListener('animationend', finish, {once: true});
-                setTimeout(finish, DOT_WAIT_MS);
-            });
+        // Le code prend la main sur le segment vers la planète et sur le point :
+        // le premier segment (depuis le libellé) garde son animation CSS
+        function holdScanLine(scan) {
+            for (let el of [scan.line, scan.dot]) {
+                el.style.animation = 'none';
+                el.style.filter = 'none';
+            }
+            scan.line.style.width = '0px';
+            scan.dot.style.transform = 'scale(0)';
+        }
+
+        async function drawScanLine(scan) {
+            let {line, dot, first} = scan;
+            // Attente de la fin du premier segment (30 % de son animation)
+            let d = parseFloat(first ? getComputedStyle(first).animationDuration : '') || 1;
+            await wait(d * 300);
+            let reach = scanReach(scan);
+            if (!reach)
+                return;
+            let grow = line.animate([{width: '0px'}, {width: reach.len + 'px'}], {duration: REACH_MS, easing: 'ease-out'});
+            await grow.finished.catch(() => {});
+            scans.push(scan);
+            placeScan(scan);
+            dot.style.transform = '';
+            dot.animate([{transform: 'scale(0)'}, {transform: 'scale(1.5)'}, {transform: 'scale(1)'}], {duration: 260, easing: 'ease-out'});
+            await wait(200);
         }
 
         // Les scans sont joués l'un après l'autre : trait jusqu'à la planète, puis onde
@@ -543,14 +579,8 @@
             busy = true;
             while (queue.length) {
                 let job = queue.shift();
-                await dotReady(job.dot);
-                let link = job.dot && dotPosition(job.dot);
-                if (link) {
-                    link.start = performance.now();
-                    links.push(link);
-                    await wait(REACH_MS);
-                    link.start = 0;
-                }
+                if (job.scan)
+                    await drawScanLine(job.scan);
                 let keys = job.keys.filter(k => !shown.has(k));
                 if (!keys.length)
                     continue;
@@ -560,18 +590,23 @@
                 fromScale = map ? map.r / baseR : scale;
                 scale = radiusScale(s, shown);
                 rotSpeed = spin();
-                rippleLink = link || null;
+                rippleScan = job.scan && scans.includes(job.scan) ? job.scan : null;
                 rippleStart = performance.now();
                 await wait(RIPPLE_MS + 40);
             }
             busy = false;
         }
 
-        function reveal(keys, dot) {
+        // scan : {first, line, dot} éléments du trait de ce scan (template-planet.ejs)
+        function reveal(keys, scan) {
             keys = (Array.isArray(keys) ? keys : [keys]).filter(k => LAYERS.includes(k) && !shown.has(k));
             if (!keys.length)
                 return;
-            queue.push({keys, dot: dot || null});
+            scan = scan && scan.line && scan.dot ? scan : null;
+            // Figé tout de suite, même si un scan précédent est encore en cours
+            if (scan)
+                holdScanLine(scan);
+            queue.push({keys, scan});
             runQueue();
         }
 
@@ -591,9 +626,12 @@
             revealed: canvas.dataset.planetView === 'all' ? 'all' : []
         });
         window.planetView = view;
-        // Point blanc au bout du trait de chaque scan (template-planet.ejs)
-        const DOTS = {oxy: '.o2-linedot', ff: '.ff-linedot', cli: '.cl-linedot', wtr: '.eau-linedot', res: '.re-linedot', grv: '.gr-linedot'};
-        document.addEventListener('planet-reveal', (e) => view.reveal(e.detail, document.querySelector(DOTS[e.detail])));
+        // Préfixe des éléments du trait de chaque scan (template-planet.ejs)
+        const LINES = {oxy: 'o2', ff: 'ff', cli: 'cl', wtr: 'eau', res: 're', grv: 'gr'};
+        document.addEventListener('planet-reveal', (e) => {
+            let k = LINES[e.detail], q = (sel) => k && document.querySelector('.' + k + sel);
+            view.reveal(e.detail, {first: q('-line'), line: q('-line2'), dot: q('-linedot')});
+        });
         document.addEventListener('planet-reveal-all', () => view.revealAll());
     });
 })();
