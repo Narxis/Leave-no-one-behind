@@ -149,12 +149,14 @@
 
     // Style cartoon, comme l'ancien disque : aplats de 2-3 tons par surface,
     // ombre en croissant à 15 %, cratères plats, atmosphère en anneau
+    // Roche aux tons naturels (gris, bruns, ocre) : les minerais sont
+    // montrés par les montagnes et les scintillements, pas par la couleur
     const RES_PALETTE = [
-        ['#b7ad9e', '#9c9283', '#d3cabb'],
-        ['#c0623e', '#a24e2f', '#de8a5c'],
-        ['#b08655', '#94703f', '#cfa772'],
-        ['#8f7a63', '#76634f', '#b39e85'],
-        ['#b5783f', '#8d5aa0', '#e0b25a']
+        ['#9a9286', '#857e73'],
+        ['#a07a62', '#8a6852'],
+        ['#a08c72', '#8a7860'],
+        ['#958775', '#807364'],
+        ['#a39073', '#8c7b61']
     ];
     const UNKNOWN_ROCK = ['#8d8fa3', '#7b7d92', '#a2a4b6'];
     // Couleur du gaz par palier d'oxygène ; dense = halo plus épais
@@ -169,6 +171,10 @@
     const UNKNOWN_ATMOS = null;
     const LIQUID_COVER = [0.34, 0.16, 0.10, 0.22, 0.50, 0.72];
     const SHADOW = 0.85;
+    // Formes reprises des anciennes illustrations SVG (template-planet.ejs)
+    const MOUNTAIN_PATH = typeof Path2D !== 'undefined' ? new Path2D('M20.79,166.85H169.34a20.77,20.77,0,0,0,17.76-31.56L109,6.68a13.89,13.89,0,0,0-23.57-.27L3.28,134.87a20.78,20.78,0,0,0,17.51,32Z') : null;
+    const TREE_PATH = typeof Path2D !== 'undefined' ? new Path2D('M210.6 5.9L62 169.4c-3.9 4.2-6 9.8-6 15.5C56 197.7 66.3 208 79.1 208H104L30.6 281.4c-4.2 4.2-6.6 10-6.6 16C24 309.9 34.1 320 46.6 320H80L5.4 409.5C1.9 413.7 0 419 0 424.5c0 13 10.5 23.5 23.5 23.5H192v32c0 17.7 14.3 32 32 32s32-14.3 32-32V448H424.5c13 0 23.5-10.5 23.5-23.5c0-5.5-1.9-10.8-5.4-15L368 320h33.4c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16L344 208h24.9c12.7 0 23.1-10.3 23.1-23.1c0-5.7-2.1-11.3-6-15.5L237.4 5.9C234 2.1 229.1 0 224 0s-10 2.1-13.4 5.9z') : null;
+    const STAR_PATH = typeof Path2D !== 'undefined' ? new Path2D('M512 255.1c0 11.34-7.406 20.86-18.44 23.64l-171.3 42.78l-42.78 171.1C276.7 504.6 267.2 512 255.9 512s-20.84-7.406-23.62-18.44l-42.66-171.2L18.47 279.6C7.406 276.8 0 267.3 0 255.1c0-11.34 7.406-20.83 18.44-23.61l171.2-42.78l42.78-171.1C235.2 7.406 244.7 0 256 0s20.84 7.406 23.62 18.44l42.78 171.2l171.2 42.78C504.6 235.2 512 244.6 512 255.1z') : null;
     const CLOUD_ALPHA = .62;   // nuages translucides : on voit le sol à travers
 
     // Cratères tirés de la graine : centre sur la sphère et rayon angulaire
@@ -229,8 +235,6 @@
                 let land = (e - sea) / (1 - sea + 1e-6);
                 // Planète inconnue : un seul aplat, comme l'ancien disque
                 c = hasR && land > .62 ? rock[1] : rock[0];
-                if (hasR && rT === 3 && f.detail[i] > .36)
-                    c = m > 0 ? hex('#78e6ff') : hex('#c58cff');
                 if (hasC && cT === 0) {
                     c = basalt;
                     if (f.ridge[i] > .9) {
@@ -491,6 +495,102 @@
             return reach;
         }
 
+        // Montagnes, arbres et scintillements, comme les anciennes illustrations
+        // (mêmes formes SVG) : posés sur la surface, ils tournent avec la planète
+        // et se dressent vers l'extérieur ; vus de face ils sont raccourcis, au
+        // bord ils dépassent en silhouette
+        let sprites = [];
+        let revealing = new Set();
+        function buildSprites() {
+            let rng = mulberry32(seed ^ 0x2545f491);
+            let wT = tier(s.wtr, TABS.wtr), rT = tier(s.res, TABS.res), fT = tier(s.flo, TABS.flo);
+            // Emplacements réels (eau comprise), pour qu'ils ne bougent pas aux scans suivants
+            let sea = LIQUID_COVER[wT];
+            let n = TEX_W * TEX_H;
+            let pick = (test) => {
+                for (let tries = 0; tries < 4000; tries++) {
+                    let i = Math.floor(rng() * n);
+                    if (Math.abs(fields.lat[i]) < 1.2 && test(i))
+                        return {lat: fields.lat[i], lon: ((i % TEX_W) + .5) / TEX_W * Math.PI * 2};
+                }
+                return null;
+            };
+            let land = (i) => fields.elev[i] >= sea;
+            let high = (i) => land(i) && (fields.elev[i] - sea) / (1 - sea + 1e-6) > .45;
+            let list = [];
+            let rock = hex((RES_PALETTE[rT] || RES_PALETTE[0])[1]);
+            if (shown.has('res')) {
+                for (let k = 0, count = 6 + rT; k < count; k++) {
+                    let at = pick(high);
+                    if (at)
+                        list.push(Object.assign(at, {layer: 'res', type: 'mountain', h: .18 + rng() * .13, color: mix(rock, [0, 0, 0], .25 + rng() * .15)}));
+                }
+                for (let k = 0, count = [1, 3, 4, 6, 9][rT]; k < count; k++) {
+                    let at = pick(land);
+                    if (at)
+                        list.push(Object.assign(at, {layer: 'res', type: 'star', h: .11 + rng() * .07, phase: rng() * 6.28,
+                            color: rT === 3 && k % 2 ? [120, 230, 255] : [255, 158, 0]}));
+                }
+            }
+            if (shown.has('ff') && fT > 0) {
+                let vegThresh = [1, .04, .16, -.08][fT];
+                let base = hex([null, '#8a2fa3', '#5c9a3c', '#227826'][fT]);
+                for (let k = 0, count = [0, 6, 6, 12][fT]; k < count; k++) {
+                    let at = pick((i) => land(i) && fields.moist[i] > vegThresh);
+                    if (at)
+                        list.push(Object.assign(at, {layer: 'ff', type: 'tree', h: .18 + rng() * .16, color: mix(base, [0, 0, 0], .15 + rng() * .4)}));
+                }
+            }
+            sprites = list;
+        }
+
+        // Position à l'écran (pixels du canvas) et orientation d'un élément
+        function spriteScreen(sp, r) {
+            let lon = sp.lon - rot, cl = Math.cos(sp.lat);
+            let nx = cl * Math.sin(lon), ny = Math.sin(sp.lat), nz = cl * Math.cos(lon);
+            let c = size / 2;
+            return {x: c + nx * r, y: c - ny * r, nz, angle: Math.atan2(nx, ny), tilt: Math.sqrt(Math.max(0, 1 - nz * nz))};
+        }
+
+        function drawSprites(r, front, ripple, now) {
+            for (let sp of sprites) {
+                let p = spriteScreen(sp, r);
+                if (sp.type === 'star' ? (!front || p.nz < .15) : (front ? p.nz < 0 : (p.nz >= 0 || p.nz < -.3)))
+                    continue;
+                // Pendant le scan de sa couche : il surgit au passage de l'onde
+                let grow = 1;
+                if (ripple && revealing.has(sp.layer))
+                    grow = clamp01((ripple.radius - Math.hypot(p.x - ripple.x, p.y - ripple.y)) / (14 * dpr));
+                if (grow <= 0)
+                    continue;
+                let h = sp.h * r;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                if (sp.type === 'star') {
+                    // Scintillement : pulsation et rotation, comme .magic-star
+                    let tw = .55 + .45 * Math.sin(now / 260 + sp.phase);
+                    let sz = h * tw * grow;
+                    ctx.rotate(now / 1000 * Math.PI * 2 / 1.6 + sp.phase);
+                    ctx.scale(sz / 512, sz / 512);
+                    ctx.translate(-256, -256);
+                    ctx.globalAlpha = .85;
+                    ctx.fillStyle = 'rgb(' + sp.color.join(',') + ')';
+                    ctx.fill(STAR_PATH);
+                }
+                else {
+                    let mountain = sp.type === 'mountain';
+                    let vw = mountain ? 190.12 : 448, vh = mountain ? 166.85 : 512;
+                    let w = h * (mountain ? 1.14 : .875);
+                    ctx.rotate(p.angle);
+                    ctx.scale(w / vw * grow, h * Math.pow(p.tilt, .8) / vh * grow);
+                    ctx.translate(-vw / 2, -vh * .92);
+                    ctx.fillStyle = 'rgb(' + sp.color.map(Math.round).join(',') + ')';
+                    ctx.fill(mountain ? MOUNTAIN_PATH : TREE_PATH);
+                }
+                ctx.restore();
+            }
+        }
+
         function frame(now) {
             let k = rippleStart ? clamp01((now - rippleStart) / RIPPLE_MS) : 1;
             let sc = fromScale + (scale - fromScale) * smooth(0, 1, k);
@@ -511,10 +611,12 @@
                 let off = c - map.w / 2;
                 ripple = {x: o.x - off, y: o.y - off, radius: (1 - Math.pow(1 - k, 2.2)) * reach};
             }
+            let rippleCanvas = ripple ? {x: ripple.x + c - map.w / 2, y: ripple.y + c - map.w / 2, radius: ripple.radius} : null;
             drawSphere(ripple);
             if (k >= 1 && prevTex) {
                 prevTex = null;
                 rippleStart = 0;
+                revealing.clear();
             }
 
             ctx.clearRect(0, 0, size, size);
@@ -534,6 +636,8 @@
                 ctx.arc(c, c, r + thick * .5, 0, Math.PI * 2);
                 ctx.fill();
             }
+            // Éléments derrière l'horizon : la planète cache leur base
+            drawSprites(r, false, rippleCanvas, now);
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
             // …et un liseré de la même couleur sur le bord du disque
             if (a) {
@@ -543,8 +647,11 @@
                 ctx.arc(c, c, r - thick * .225, 0, Math.PI * 2);
                 ctx.stroke();
             }
+            drawSprites(r, true, rippleCanvas, now);
             drawRing(r, true);
         }
+
+        buildSprites();
 
         let last = 0;
         function loop(now) {
@@ -611,6 +718,8 @@
                 prevTex = tex;
                 keys.forEach(k => shown.add(k));
                 tex = paint(fields, s, shown);
+                revealing = new Set(keys);
+                buildSprites();
                 fromScale = map ? map.r / baseR : scale;
                 scale = radiusScale(s, shown);
                 rotSpeed = spin();
@@ -705,7 +814,11 @@
         return {canvas, ctx, w, px, img: ctx.createImageData(w, w)};
     }
 
-    function createMoons(canvas, seed) {
+    // opts.planetRadius : rayon de la planète affichée à côté (108px sur la page
+    // planète) ; opts.compact : orbites resserrées pour un petit cadre (écran de fin).
+    // Le tirage ne dépend pas du cadre : ce sont les mêmes lunes partout
+    const MOON_LIMIT = 416;
+    function createMoons(canvas, seed, opts = {}) {
         let rng = mulberry32(seed ^ 0x6d2b79f5);
         let count = Math.floor(rng() * 4);
         let cssSize = canvas.clientWidth || 840;
@@ -721,15 +834,17 @@
         for (let i = 0; i < count; i++) {
             let radius = 8 + rng() * 13;
             let orbit = edge + radius + (i ? 12 + rng() * 26 : rng() * 25);
-            if (orbit + radius > cssSize / 2 - 4)
+            if (orbit + radius > MOON_LIMIT)
                 break;
+            let k = (opts.planetRadius || 108) / 108;
+            let shownOrbit = (opts.compact ? 171 + (orbit - 171) * .45 : orbit) * k;
             moons.push({
-                orbit, radius,
+                orbit, radius, shownOrbit,
                 period: MOON_REF_PERIOD * Math.pow(orbit / MOON_REF_ORBIT, 1.5),
                 spin: (rng() < .5 ? -1 : 1) * (6 + rng() * 24),
                 phase: rng() * Math.PI * 2,
                 tex: moonTexture(rng),
-                map: moonMap(radius * dpr)
+                map: moonMap(Math.max(4, radius * k) * dpr)
             });
             edge = orbit + radius;
         }
@@ -749,7 +864,7 @@
             m.map.ctx.putImageData(m.map.img, 0, 0);
             let a = m.phase + t / m.period * Math.PI * 2;
             let c = size / 2;
-            let x = c + Math.cos(a) * m.orbit * dpr, y = c + Math.sin(a) * m.orbit * dpr;
+            let x = c + Math.cos(a) * m.shownOrbit * dpr, y = c + Math.sin(a) * m.shownOrbit * dpr;
             ctx.drawImage(m.map.canvas, x - m.map.w / 2, y - m.map.w / 2);
         }
 
@@ -763,7 +878,7 @@
                 ctx.lineWidth = dpr;
                 for (let m of moons) {
                     ctx.beginPath();
-                    ctx.arc(size / 2, size / 2, m.orbit * dpr, 0, Math.PI * 2);
+                    ctx.arc(size / 2, size / 2, m.shownOrbit * dpr, 0, Math.PI * 2);
                     ctx.stroke();
                 }
                 moons.forEach(m => drawMoon(m, t));
@@ -789,8 +904,12 @@
         });
         window.planetView = view;
         let moonsCanvas = document.querySelector('canvas[data-planet-moons]');
-        if (moonsCanvas)
-            window.planetMoons = createMoons(moonsCanvas, Number(PLANET_DATA.id) || hashSeed(PLANET_DATA.modules || {}));
+        if (moonsCanvas) {
+            // Écran de fin : petite planète, orbites resserrées autour d'elle
+            let compact = moonsCanvas.dataset.planetMoons === 'compact';
+            window.planetMoons = createMoons(moonsCanvas, Number(PLANET_DATA.id) || hashSeed(PLANET_DATA.modules || {}),
+                compact ? {compact: true, planetRadius: canvas.clientWidth * .3} : {});
+        }
         // Préfixe des éléments du trait de chaque scan (template-planet.ejs)
         const LINES = {oxy: 'o2', ff: 'ff', cli: 'cl', wtr: 'eau', res: 're', grv: 'gr'};
         document.addEventListener('planet-reveal', (e) => {

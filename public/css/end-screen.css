@@ -339,3 +339,20 @@
   margin: 0;
   transform: translateY(-50%);
 }
+
+/* Lunes autour de la planète atteinte (même centre que .end-planet) */
+.end-moons {
+  position: absolute;
+  top: 50%;
+  right: -89px;
+  width: 400px;
+  height: 400px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Textes du bilan au-dessus des lunes */
+.planet-recap .planet-recap-line {
+  position: relative;
+  z-index: 1;
+}

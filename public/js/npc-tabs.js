@@ -58,7 +58,7 @@
         let name = tab.querySelector('.player-name');
         let label = [...name.childNodes].find(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
         if (label)
-            label.textContent = ally.name;
+            label.textContent = ally.name + ' '; // espace avant le badge de race
         let race = name.querySelector('.player-race');
         race.textContent = ally.race;
         race.style.display = ally.race ? '' : 'none';
