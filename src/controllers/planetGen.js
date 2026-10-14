@@ -6,6 +6,14 @@ const STAT_WEIGHTS = {oxy: 85, grv: 60, wtr: 95, res: 80, fau: 30, flo: 30, civ:
 const STATS = Object.keys(STAT_WEIGHTS);
 const MAX_TRIES = 3000;
 
+// Règles de cohérence entre stats, appliquées à chaque tirage :
+// activité tectonique forte et pluies acides (climat ≤ 25) => pas d'eau en
+// surface, seulement « un autre liquide » (eau ≤ 20)
+const RULES = [
+    (v) => v.cli > 25 || v.wtr <= 20
+];
+const isCoherent = (values) => RULES.every(rule => rule(values));
+
 const scoreOf = (values) => Math.round(STATS.reduce((sum, s) => sum + values[s] * STAT_WEIGHTS[s], 0) / 50);
 
 const rangesFor = (archetype, stat) => archetype[stat] || ARCHETYPES.default[stat];
@@ -56,7 +64,7 @@ const rollPlanet = function (min, max, rng = Math.random) {
         for (let i = 0; i < MAX_TRIES; i++) {
             let values = rollWith(archetype, rng);
             let score = scoreOf(values);
-            if (score >= min && score <= max)
+            if (score >= min && score <= max && isCoherent(values))
                 return {archetype: slug, values, score};
         }
         // Tranche trop étroite pour cet archétype : on en essaie un autre
@@ -66,9 +74,9 @@ const rollPlanet = function (min, max, rng = Math.random) {
     for (;;) {
         let values = rollWith({}, rng);
         let score = scoreOf(values);
-        if (score >= min && score <= max)
+        if (score >= min && score <= max && isCoherent(values))
             return {archetype: '', values, score};
     }
 }
 
-module.exports = {rollPlanet, scoreOf, scoreBounds, STAT_WEIGHTS, ARCHETYPES};
+module.exports = {rollPlanet, scoreOf, scoreBounds, isCoherent, STAT_WEIGHTS, ARCHETYPES};
