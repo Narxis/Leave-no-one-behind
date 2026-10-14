@@ -1004,8 +1004,16 @@
                 // Les traits déjà posés suivent le bord quand la planète change de taille
                 scans.forEach(placeScan);
             }
-            rot += .0021 * rotSpeed;
-            cloudRot += .0021 * rotSpeed * cloudFactor + cloudDrift;
+            // Rotation propre, plus l'élan laissé par un glisser (qui s'amortit)
+            let turn = .0021 * rotSpeed;
+            if (!grab) {
+                turn += fling;
+                fling *= .94;
+                if (Math.abs(fling) < 1e-5)
+                    fling = 0;
+            }
+            rot += turn;
+            cloudRot += turn * cloudFactor + cloudDrift;
             let c = size / 2;
             let ripple = null;
             if (prevTex) {
@@ -1100,6 +1108,55 @@
         }
 
         buildSprites();
+
+        // Glisser la planète à la souris (ou au doigt) pour la faire tourner.
+        // Le canvas laisse passer les clics (boutons de scan autour) : on écoute
+        // la page et on ne réagit qu'à un appui posé sur le disque
+        let grab = null, fling = 0;
+        function onDisk(e) {
+            let cr = canvas.getBoundingClientRect();
+            if (!cr.width || !map)
+                return false;
+            let k = cr.width / size;
+            let dx = e.clientX - (cr.left + cr.width / 2), dy = e.clientY - (cr.top + cr.height / 2);
+            return Math.hypot(dx, dy) <= map.r * k;
+        }
+        document.addEventListener('pointerdown', (e) => {
+            if (e.button !== 0 || !onDisk(e))
+                return;
+            grab = {id: e.pointerId, x: e.clientX, t: performance.now()};
+            fling = 0;
+            document.body.classList.add('planet-grabbing');
+            e.preventDefault();
+        });
+        document.addEventListener('pointermove', (e) => {
+            if (grab && e.pointerId === grab.id) {
+                let cr = canvas.getBoundingClientRect();
+                // Un rayon de déplacement ≈ un radian : le point saisi suit la souris
+                let delta = -(e.clientX - grab.x) / (map.r * cr.width / size);
+                rot += delta;
+                cloudRot += delta;
+                let now = performance.now();
+                // Élan au lâcher : vitesse des derniers mouvements, par image (≈ 33 ms)
+                fling = delta / Math.max(8, now - grab.t) * 33;
+                grab.x = e.clientX;
+                grab.t = now;
+                return;
+            }
+            document.body.classList.toggle('planet-hover', onDisk(e));
+        });
+        const release = (e) => {
+            if (!grab || e.pointerId !== grab.id)
+                return;
+            // Lâché après une pause : pas d'élan
+            if (performance.now() - grab.t > 80)
+                fling = 0;
+            fling = Math.max(-.15, Math.min(.15, fling));
+            grab = null;
+            document.body.classList.remove('planet-grabbing');
+        };
+        document.addEventListener('pointerup', release);
+        document.addEventListener('pointercancel', release);
 
         let last = 0;
         function loop(now) {
