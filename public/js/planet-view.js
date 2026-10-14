@@ -204,6 +204,7 @@
     // Un tiers des planètes en ont, dans l'un des styles des géantes du
     // système solaire. Rayons en multiples du rayon de la planète
     const RING_CHANCE = .33;
+    const CIV_ORBIT = 1.35;    // orbite des stations d'une civilisation (rayon de la planète)
     function makeRings(seed) {
         let rng = mulberry32(seed ^ 0x27d4eb2f);
         if (rng() >= RING_CHANCE)
@@ -640,11 +641,12 @@
             let c = size / 2;
             ctx.save();
             ctx.translate(c, c);
-            ctx.rotate(-.32);
+            // À 45° des anneaux de la planète s'il y en a
+            ctx.rotate(rings ? rings.tilt + Math.PI / 4 : -.32);
             ctx.lineWidth = 2.5 * dpr;
             ctx.strokeStyle = 'rgba(' + color + ',' + (front ? .75 : .3) + ')';
             ctx.beginPath();
-            ctx.ellipse(0, 0, r * 1.55, r * .3, 0, front ? 0 : Math.PI, front ? Math.PI : Math.PI * 2);
+            ctx.ellipse(0, 0, r * CIV_ORBIT, r * .28, 0, front ? 0 : Math.PI, front ? Math.PI : Math.PI * 2);
             ctx.stroke();
             // Stations en orbite
             for (let i = 0; i < 5; i++) {
@@ -654,7 +656,7 @@
                     continue;
                 ctx.fillStyle = 'rgba(' + color + ',' + (front ? 1 : .45) + ')';
                 ctx.beginPath();
-                ctx.arc(Math.cos(ang) * r * 1.55, Math.sin(ang) * r * .3, 2.2 * dpr, 0, Math.PI * 2);
+                ctx.arc(Math.cos(ang) * r * CIV_ORBIT, Math.sin(ang) * r * .28, 2.2 * dpr, 0, Math.PI * 2);
                 ctx.fill();
             }
             ctx.restore();
@@ -1021,8 +1023,6 @@
 
             ctx.clearRect(0, 0, size, size);
             let a = atmos();
-            drawPlanetRings(r, false, now);
-            drawRing(r, false);
             // Atmosphère, dès qu'il y a de l'oxygène : halo en dégradé, presque
             // transparent contre la planète et plus dense vers l'espace,
             // d'autant plus épais que l'oxygène est présent
@@ -1039,6 +1039,9 @@
                 ctx.arc(c, c, r + thick, 0, Math.PI * 2);
                 ctx.fill();
             }
+            // Moitiés arrière des anneaux et de l'orbite : après le halo, qui ne les voile pas
+            drawPlanetRings(r, false, now);
+            drawRing(r, false);
             // Air mauvais pour les humains : la planète paraît voilée et ternie,
             // relief et arbres compris, même ceux qui dépassent du disque
             let hazeTarget = (a && a.haze) || 0;
