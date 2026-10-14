@@ -798,6 +798,31 @@
             }
         }
 
+        // Ombres des nuages : toutes dessinées opaques sur un calque, posé ensuite
+        // une seule fois en transparence, pour qu'un amas fasse une ombre uniforme
+        let shadowLayer = document.createElement('canvas'), shctx = shadowLayer.getContext('2d');
+        let shadowPass = false;
+        function drawCloudShadows(r, ripple, now) {
+            if (shadowLayer.width !== canvas.width || shadowLayer.height !== canvas.height) {
+                shadowLayer.width = canvas.width;
+                shadowLayer.height = canvas.height;
+            }
+            else
+                shctx.clearRect(0, 0, shadowLayer.width, shadowLayer.height);
+            shadowPass = true;
+            drawSprites(r, true, ripple, now, 'cloud');
+            shadowPass = false;
+            let c = size / 2;
+            ctx.save();
+            // L'ombre reste sur le sol : près du bord, elle ne déborde pas dans l'espace
+            ctx.beginPath();
+            ctx.arc(c, c, r, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.globalAlpha = .14;
+            ctx.drawImage(shadowLayer, 0, 0);
+            ctx.restore();
+        }
+
         function drawSprites(r, front, ripple, now, kind) {
             for (let sp of sprites) {
                 if (kind && (sp.type === 'cloud') !== (kind === 'cloud'))
@@ -829,19 +854,17 @@
                 else if (sp.type === 'cloud') {
                     // Nuage plat orienté vers l'extérieur, avec son ombre sur le sol
                     let w = h * 1.25 * grow, hh = h * Math.max(.55, Math.pow(p.tilt, .6)) * grow;
-                    if (front) {
-                        ctx.save();
-                        // L'ombre reste sur le sol : près du bord, elle ne déborde pas dans l'espace
-                        ctx.beginPath();
-                        ctx.arc(size / 2 - p.x, size / 2 - p.y, r, 0, Math.PI * 2);
-                        ctx.clip();
-                        ctx.translate(p.sx - p.x + 2 * dpr, p.sy - p.y + 2 * dpr);
-                        ctx.rotate(p.angle);
-                        ctx.scale(w / 640, hh / 512);
-                        ctx.translate(-320, -256);
-                        ctx.fillStyle = 'rgba(0, 0, 0, .14)';
-                        ctx.fill(CLOUD_PATH);
+                    if (shadowPass) {
+                        shctx.save();
+                        shctx.translate(p.sx + 2 * dpr, p.sy + 2 * dpr);
+                        shctx.rotate(p.angle);
+                        shctx.scale(w / 640, hh / 512);
+                        shctx.translate(-320, -256);
+                        shctx.fillStyle = '#000';
+                        shctx.fill(CLOUD_PATH);
+                        shctx.restore();
                         ctx.restore();
+                        continue;
                     }
                     ctx.rotate(p.angle);
                     ctx.scale(w / 640, hh / 512);
@@ -968,6 +991,7 @@
                 ctx.drawImage(veil, vx, vy);
                 ctx.restore();
             }
+            drawCloudShadows(r, rippleCanvas, now);
             drawSprites(r, true, rippleCanvas, now, 'cloud');
             drawRing(r, true);
         }
