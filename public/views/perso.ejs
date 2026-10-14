@@ -10,7 +10,10 @@
 <body>
     <%- include("partials/nav") %>
     <div class="leftcenter">
-        <%- include("partials/stats-legend") %>
+        <div class="legend-stack">
+            <%- include("partials/stats-legend") %>
+            <button type="button" class="stats-rules-open" id="stats-rules-open">Comment sont tirées les stats ?</button>
+        </div>
     </div>
     <div class="center">
         <div class="lecadre">Pour rejoindre la partie tappez "/join" sur discord, puis créez votre personnage avec
@@ -36,7 +39,84 @@
         </form>
     </dialog>
 
+    <%# Règle du tirage des stats (même calcul que le bouton roll-stats du bot) %>
+    <%
+        const STAT_COLS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'],
+            ['survival', 'Survie'], ['recon', 'Recon.']];
+        // Valeur moyenne de la stat finale : 50 + le meilleur (bonus) ou le pire (malus) de |mod| + 1 dés de 50
+        const average = (mod) => {
+            let k = Math.abs(mod) + 1, sum = 0;
+            for (let v = 1; v <= 50; v++) {
+                let p = mod >= 0 ? Math.pow(v / 50, k) - Math.pow((v - 1) / 50, k)
+                    : Math.pow((51 - v) / 50, k) - Math.pow((50 - v) / 50, k);
+                sum += v * p;
+            }
+            return Math.round(50 + sum);
+        };
+        const signed = (mod) => mod > 0 ? '+' + mod : String(mod);
+        const raceName = (r) => r.charAt(0).toUpperCase() + r.slice(1).replace('_', '-');
+    %>
+    <dialog class="stats-rules" id="stats-rules" aria-labelledby="stats-rules-title">
+        <div class="stats-rules-head">
+            <h2 class="stats-rules-title" id="stats-rules-title">Répartition des stats</h2>
+            <button type="button" class="stats-rules-close" id="stats-rules-close" aria-label="Fermer">×</button>
+        </div>
+        <div class="stats-rules-body">
+            <p>Chaque stat vaut <b>50 + un dé de 50</b>, donc entre 51 et 100. La race donne à chaque stat un bonus ou un malus qui change le nombre de dés lancés avec <b>/create</b> :</p>
+            <table class="stats-rules-table stats-rules-mods">
+                <thead>
+                    <tr><th scope="col">Bonus de race</th><th scope="col">Dés lancés</th><th scope="col">Dé gardé</th><th scope="col" class="num">Moyenne</th></tr>
+                </thead>
+                <tbody>
+                    <% [2, 1, 0, -1, -2].forEach(function (mod) { %>
+                        <tr>
+                            <td><span class="stats-mod mod-<%= mod < 0 ? 'm' + -mod : mod %>"><%= signed(mod) %></span></td>
+                            <td><%= Math.abs(mod) + 1 %></td>
+                            <td><%= mod > 0 ? 'le meilleur' : mod < 0 ? 'le pire' : 'le seul' %></td>
+                            <td class="num"><%= average(mod) %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+            <p class="stats-rules-note">Le moral part toujours à 100.</p>
+
+            <h3 class="stats-rules-sub">Bonus et malus par race</h3>
+            <div class="stats-rules-scroll">
+                <table class="stats-rules-table stats-rules-races">
+                    <thead>
+                        <tr>
+                            <th scope="col">Race</th>
+                            <% STAT_COLS.forEach(function (col) { %><th scope="col" class="num"><%= col[1] %></th><% }); %>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% Object.keys(raceStats).forEach(function (race) { %>
+                            <tr>
+                                <th scope="row"><%= raceName(race) %></th>
+                                <% STAT_COLS.forEach(function (col) { let mod = parseInt(raceStats[race][col[0]]) || 0; %>
+                                    <td class="num" title="Moyenne <%= average(mod) %>">
+                                        <span class="stats-mod mod-<%= mod < 0 ? 'm' + -mod : mod %>"><%= signed(mod) %></span>
+                                        <span class="stats-avg">≈<%= average(mod) %></span>
+                                    </td>
+                                <% }); %>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </dialog>
+
     <script src="/js/perso.js"></script>
+    <script>
+        (function () {
+            const dialog = document.getElementById('stats-rules');
+            document.getElementById('stats-rules-open').addEventListener('click', () => dialog.showModal());
+            document.getElementById('stats-rules-close').addEventListener('click', () => dialog.close());
+            // Clic en dehors de la fenêtre : elle se ferme
+            dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+        })();
+    </script>
 
     <script>
         loadPlayerSheets();

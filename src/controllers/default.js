@@ -162,7 +162,9 @@ module.exports = {
             allies.clear();
         }
         await CONFIG.upsert('gameState', 'creation');
-        res.render('perso', {lang: langJS});
+        // Bonus et malus des races, pour l'explication de la répartition des stats
+        let raceStats = JSON.parse(fs.readFileSync(__dirname + '/../config/raceStats.json', 'utf8'));
+        res.render('perso', {lang: langJS, raceStats: raceStats});
     },
 
     ficheVaisseau(req, res) {
