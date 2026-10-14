@@ -190,6 +190,9 @@
     const VEG_COVER = [0, 1, 1, 1];
     const SHADOW = 0.85;
     const VEIL_ALPHA = .45;    // voile nuageux translucide : on voit le sol à travers
+    // Montagnes et nuages flottants évitent l'équateur (±20°) : pile face à nous,
+    // ils s'écrasent et pivotent brusquement
+    const EQUATOR_GAP = .35;
     const VEIL_LIFT = 1.12;    // altitude du voile : une sphère un peu plus grande que la planète
     // Formes reprises des anciennes illustrations SVG (template-planet.ejs)
     const MOUNTAIN_PATH = typeof Path2D !== 'undefined' ? new Path2D('M20.79,166.85H169.34a20.77,20.77,0,0,0,17.76-31.56L109,6.68a13.89,13.89,0,0,0-23.57-.27L3.28,134.87a20.78,20.78,0,0,0,17.51,32Z') : null;
@@ -642,7 +645,7 @@
             let volcanic = shown.has('cli') && tier(s.cli, TABS.cli) === 0;
             if (shown.has('res')) {
                 for (let k = 0, count = 6 + rT; k < count; k++) {
-                    let at = pick(high);
+                    let at = pick((i) => high(i) && Math.abs(fields.lat[i]) > EQUATOR_GAP);
                     if (at) {
                         // Petit massif : un pic principal et 0 à 2 pics plus bas derrière lui
                         let h = .18 + rng() * .13;
@@ -701,7 +704,7 @@
                     let g = style.gray[0] + rng() * (style.gray[1] - style.gray[0]);
                     list.push({
                         layer: 'cli', type: 'cloud',
-                        lat: (rng() * 2 - 1) * 1.1, lon: rng() * Math.PI * 2,
+                        lat: (rng() < .5 ? -1 : 1) * (EQUATOR_GAP + rng() * (1.1 - EQUATOR_GAP)), lon: rng() * Math.PI * 2,
                         alt: 1.1 + rng() * .12, speed: .8 + rng() * .4,
                         h: (.12 + rng() * .16) * style.size,
                         color: [g + style.tint[0], g + style.tint[1], g + style.tint[2]]
