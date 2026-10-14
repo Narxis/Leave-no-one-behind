@@ -204,7 +204,8 @@
     // Un tiers des planètes en ont, dans l'un des styles des géantes du
     // système solaire. Rayons en multiples du rayon de la planète
     const RING_CHANCE = .33;
-    const CIV_ORBIT = 1.35;    // orbite des stations d'une civilisation (rayon de la planète)
+    const CIV_ORBIT = 1.35;
+    const MAX_SCALE = 1.3;     // plus grande taille donnée par la gravité (radiusScale)    // orbite des stations d'une civilisation (rayon de la planète)
     function makeRings(seed) {
         let rng = mulberry32(seed ^ 0x27d4eb2f);
         if (rng() >= RING_CHANCE)
@@ -603,8 +604,9 @@
                 return;
             let c = size / 2;
             let outer = Math.max(...rings.bands.map(b => b.r1));
-            // Dans le cadre, et à l'intérieur des orbites des lunes (≈ 1,85 rayon)
-            let k = Math.min(1, (c - 2 * dpr) / (outer * r), 1.85 * baseR / (outer * r));
+            // Réduction fixée sur la taille de départ (orbites des lunes ≈ 1,85 rayon) et sur
+            // la plus grande taille possible (cadre) : ensuite, anneaux et planète grandissent ensemble
+            let k = Math.min(1, (c - 2 * dpr) / (outer * baseR * MAX_SCALE), 1.85 / outer);
             ctx.save();
             ctx.translate(c, c);
             ctx.rotate(rings.tilt);
