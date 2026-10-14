@@ -222,7 +222,9 @@
         // [bord, large] : liquide inconnu, lacs gelés, eau
         let liquid = !hasW ? null : wT === 0
             ? [hex('#a8762f'), hex('#5e3c14')]
-            : (wT === 1 ? [hex('#eaf8fc'), hex('#bfe2f0')] : [hex('#46d3d6'), hex('#1b7fa6')]);
+            : (wT === 1 ? [hex('#eaf8fc'), hex('#bfe2f0')]
+                // Flore toxique (révélée par le scan Faune & flore) : l'eau devient verte
+                : (hasF && fT === 1 ? [hex('#8ed65c'), hex('#2f7a45')] : [hex('#46d3d6'), hex('#1b7fa6')]));
         // Monde volcanique : la planète est découpée en zones qui ne se
         // superposent pas (lave dans les régions sèches, plantes dans les
         // humides), avec moins de végétation, ternie par la roche sombre
