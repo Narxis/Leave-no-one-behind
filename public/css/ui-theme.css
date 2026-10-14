@@ -810,3 +810,27 @@ body.combat-mode .stats-legend-title {
 .loot-still .combat-loot-item {
     animation: none;
 }
+
+/* Nom long sur une carte joueur ou PNJ : une seule ligne, badges toujours
+   visibles, le nom rétrécit (players.js) puis se coupe par « … » */
+.player-tab .player-roll .player-name {
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    white-space: nowrap;
+}
+
+.player-tab .player-name-text {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-tab .player-name .npc-badge,
+.player-tab .player-name .player-race {
+    flex: none;
+    margin: 0;
+}
