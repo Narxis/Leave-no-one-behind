@@ -506,18 +506,31 @@ module.exports = {
     // sans limite de points. Rien n'est lu ni écrit dans la partie en cours
     renderPlanetLab(req, res) {
         const BANDS = {1: [1, 500], 2: [501, 800], 3: [801, 1000]};
+        // Graine : tout en découle (tranche si elle n'est pas imposée, stats,
+        // coûts, relief, lunes) ; ?seed=… redonne exactement la même planète
+        let seed = parseInt(req.query.seed);
+        if (!(seed > 0 && seed < 2147483647))
+            seed = 1 + Math.floor(Math.random() * 2147483646);
+        let rng = (function (a) {
+            return function () {
+                a = (a + 0x6D2B79F5) | 0;
+                let t = Math.imul(a ^ (a >>> 15), 1 | a);
+                t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+                return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+        })(seed);
         let band = BANDS[req.query.tranche] ? String(req.query.tranche) : '';
-        let [min, max] = BANDS[band] || BANDS[1 + Math.floor(Math.random() * 3)];
-        let planet = planetGen.rollPlanet(min, max);
+        let [min, max] = BANDS[band] || BANDS[1 + Math.floor(rng() * 3)];
+        let planet = planetGen.rollPlanet(min, max, rng);
 
         let modules = {};
         for (let stat in planet.values)
-            modules[stat] = {val: planet.values[stat], cost: 1 + Math.floor(Math.random() * 4)};
+            modules[stat] = {val: planet.values[stat], cost: 1 + Math.floor(rng() * 4)};
 
         let archetype = planetGen.ARCHETYPES.archetypes[planet.archetype];
         let card = {
-            // Graine du rendu (relief, lunes) : une nouvelle à chaque planète
-            id: 1 + Math.floor(Math.random() * 2147483646),
+            // Graine du rendu (relief, lunes)
+            id: seed,
             value: planet.score,
             name: archetype ? archetype.name : '',
             modules: modules
@@ -534,7 +547,7 @@ module.exports = {
             ship: ship,
             items: [],
             lang: langJS,
-            planetLab: {band: band, archetype: card.name || 'Tirage libre', score: planet.score, values: planet.values}
+            planetLab: {seed: seed, band: band, archetype: card.name || 'Tirage libre', score: planet.score, values: planet.values}
         });
     },
 

@@ -189,7 +189,7 @@
     const VEG_COVER = [0, 1, 1, 1];
     const SHADOW = 0.85;
     const VEIL_ALPHA = .45;    // voile nuageux translucide : on voit le sol à travers
-    const VEIL_LIFT = 1.07;    // altitude du voile : une sphère un peu plus grande que la planète
+    const VEIL_LIFT = 1.12;    // altitude du voile : une sphère un peu plus grande que la planète
     // Formes reprises des anciennes illustrations SVG (template-planet.ejs)
     const MOUNTAIN_PATH = typeof Path2D !== 'undefined' ? new Path2D('M20.79,166.85H169.34a20.77,20.77,0,0,0,17.76-31.56L109,6.68a13.89,13.89,0,0,0-23.57-.27L3.28,134.87a20.78,20.78,0,0,0,17.51,32Z') : null;
     const TREE_PATH = typeof Path2D !== 'undefined' ? new Path2D('M210.6 5.9L62 169.4c-3.9 4.2-6 9.8-6 15.5C56 197.7 66.3 208 79.1 208H104L30.6 281.4c-4.2 4.2-6.6 10-6.6 16C24 309.9 34.1 320 46.6 320H80L5.4 409.5C1.9 413.7 0 419 0 424.5c0 13 10.5 23.5 23.5 23.5H192v32c0 17.7 14.3 32 32 32s32-14.3 32-32V448H424.5c13 0 23.5-10.5 23.5-23.5c0-5.5-1.9-10.8-5.4-15L368 320h33.4c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16L344 208h24.9c12.7 0 23.1-10.3 23.1-23.1c0-5.7-2.1-11.3-6-15.5L237.4 5.9C234 2.1 229.1 0 224 0s-10 2.1-13.4 5.9z') : null;
@@ -879,15 +879,16 @@
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
             // Ordre de haut en bas : sol, ombre du voile, relief et arbres, voile, nuages
             let hasVeil = drawVeil(ripple);
-            let vx = c - veilMap.w / 2, vy = c - veilMap.w / 2, sd = r * .035;
+            let vx = c - veilMap.w / 2, vy = c - veilMap.w / 2, sd = r * .07;
             if (hasVeil) {
                 // Ombre du voile sur le sol, décalée vers le croissant d'ombre : il flotte
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(c, c, r, 0, Math.PI * 2);
                 ctx.clip();
-                ctx.filter = 'brightness(0)';
-                ctx.globalAlpha = .22;
+                // Ombre bien décalée et floue : le voile paraît flotter haut au-dessus du sol
+                ctx.filter = 'brightness(0) blur(' + (1.5 * dpr) + 'px)';
+                ctx.globalAlpha = .26;
                 ctx.drawImage(veil, vx + sd, vy + sd * .8);
                 ctx.restore();
             }
