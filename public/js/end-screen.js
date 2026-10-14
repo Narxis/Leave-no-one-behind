@@ -280,6 +280,15 @@ async function scoreCalcul() {
             }
         }
         if (i==2){
+            // La planète laisse la place au texte de son bilan
+            document.querySelector('.planet-recap').classList.add('with-text');
+            // Place réservée pour le texte complet de chaque ligne
+            recapText.forEach((text, j) => {
+                let ghost = document.createElement('span');
+                ghost.className = 'reading-ghost';
+                ghost.textContent = text;
+                document.getElementById('reading-' + (j + 1)).after(ghost);
+            });
             for (let j=0; j<recapText.length; j++){
                 let interval = 50 + Math.floor(Math.random()*30)
                 writeNoWait(recapText[j], document.getElementById('reading-'+(j+1)), '', true, interval)
