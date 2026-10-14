@@ -135,6 +135,8 @@
         // Relief remis à plat (rang de 0 à 1) : la part de liquide est réglée au pourcentage près
         f.elev = toRank(f.elev);
         f.cloud = toRank(f.cloud);
+        // Humidité aussi : la part de terres couverte de végétation est réglée au pourcentage près
+        f.moist = toRank(f.moist);
         return f;
     }
 
@@ -169,6 +171,8 @@
     ];
     const UNKNOWN_ATMOS = null;
     const LIQUID_COVER = [0.34, 0.16, 0.10, 0.22, 0.50, 0.72];
+    // Part des terres couverte de végétation, par palier de flore
+    const VEG_COVER = [0, .45, .65, .85];
     const SHADOW = 0.85;
     const VEIL_ALPHA = .45;    // voile nuageux translucide : on voit le sol à travers
     // Formes reprises des anciennes illustrations SVG (template-planet.ejs)
@@ -210,7 +214,7 @@
             ? [hex('#e0952f'), hex('#a35a12')]
             : (wT === 1 ? [hex('#eaf8fc'), hex('#bfe2f0')] : [hex('#46d3d6'), hex('#1b7fa6')]);
         let veg = !hasF ? null : [null, [hex('#a43fbf'), hex('#8a2fa3')], [hex('#6fb04a'), hex('#5c9a3c')], [hex('#2f9a3a'), hex('#227826')]][fT];
-        let vegThresh = [1, .04, .16, -.08][fT];
+        let vegThresh = 1 - VEG_COVER[fT];
         let lights = !hasF ? null : [{c: hex('#ff6a4a'), t: .27}, {c: hex('#ffb35c'), t: .36}, null, {c: hex('#ffd54a'), t: .3}][vT];
         // Cratères : planète encore inconnue, ou sans eau ni végétation
         let craters = (!hasW || wT <= 1) && !(veg && fT >= 2) ? f.craters : [];
@@ -247,7 +251,7 @@
                         emit[j] = lava[0]; emit[j + 1] = lava[1]; emit[j + 2] = lava[2]; emit[j + 3] = 255;
                     }
                 }
-                if (veg && fT > 0 && land < .9 && m > vegThresh)
+                if (veg && fT > 0 && land < .95 && m > vegThresh)
                     c = veg[1];
                 if (lights && f.city[i] > lights.t && land < .85) {
                     emit[j] = lights.c[0]; emit[j + 1] = lights.c[1]; emit[j + 2] = lights.c[2]; emit[j + 3] = 255;
@@ -530,7 +534,7 @@
                 }
             }
             if (shown.has('ff') && fT > 0) {
-                let vegThresh = [1, .04, .16, -.08][fT];
+                let vegThresh = 1 - VEG_COVER[fT];
                 let base = hex([null, '#8a2fa3', '#5c9a3c', '#227826'][fT]);
                 for (let k = 0, count = [0, 6, 6, 12][fT]; k < count; k++) {
                     let at = pick((i) => land(i) && fields.moist[i] > vegThresh);
