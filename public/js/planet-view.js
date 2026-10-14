@@ -157,13 +157,14 @@
         ['#b5783f', '#8d5aa0', '#e0b25a']
     ];
     const UNKNOWN_ROCK = ['#8d8fa3', '#7b7d92', '#a2a4b6'];
+    // Couleur du gaz par palier d'oxygène ; dense = halo plus épais
     const ATMOS = [
-        {color: '#f0cd6a', size: .16},
-        {color: '#8fe0a8', size: .11},
-        {color: '#cfe0ee', size: .05},
-        {color: '#c9adff', size: .08},
-        {color: '#7cc0ff', size: .09},
-        {color: '#5fe6ff', size: .12}
+        {color: '#f0cd6a', dense: .06},
+        {color: '#8fe0a8', dense: .02},
+        {color: '#9fd4ff', dense: 0},
+        {color: '#c9adff', dense: 0},
+        {color: '#7cc0ff', dense: 0},
+        {color: '#5fe6ff', dense: .02}
     ];
     const UNKNOWN_ATMOS = null;
     const LIQUID_COVER = [0.34, 0.16, 0.10, 0.22, 0.50, 0.72];
@@ -510,15 +511,29 @@
             ctx.clearRect(0, 0, size, size);
             let a = atmos();
             drawRing(r, false);
-            // Atmosphère : anneau plat de la couleur du gaz, plus épais si elle est dense
+            // Atmosphère, dès qu'il y a de l'oxygène : halo en deux anneaux plats
+            // (style cartoon), d'autant plus épais que l'oxygène est présent
+            let thick = a ? r * (.07 + .09 * s.oxy / 100 + a.dense) : 0;
             if (a) {
                 let ac = hex(a.color).join(',');
-                ctx.fillStyle = 'rgba(' + ac + ',.5)';
+                ctx.fillStyle = 'rgba(' + ac + ',.3)';
                 ctx.beginPath();
-                ctx.arc(c, c, r * (1 + a.size * .9), 0, Math.PI * 2);
+                ctx.arc(c, c, r + thick, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = 'rgba(' + ac + ',.55)';
+                ctx.beginPath();
+                ctx.arc(c, c, r + thick * .5, 0, Math.PI * 2);
                 ctx.fill();
             }
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
+            // …et un liseré de la même couleur sur le bord du disque
+            if (a) {
+                ctx.strokeStyle = 'rgba(' + hex(a.color).join(',') + ',.5)';
+                ctx.lineWidth = thick * .45;
+                ctx.beginPath();
+                ctx.arc(c, c, r - thick * .225, 0, Math.PI * 2);
+                ctx.stroke();
+            }
             drawRing(r, true);
         }
 
