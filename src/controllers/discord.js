@@ -52,6 +52,13 @@ const start = function () {
             '  Bot Ready !\n', '#7289DA');
     });
 
+    // Invité sur un nouveau serveur pendant qu'il tourne : ses commandes y sont
+    // enregistrées tout de suite (sinon il fallait redémarrer)
+    client.on('guildCreate', async guild => {
+        log('[DS] Nouveau serveur : ' + guild.name, '#7289DA');
+        await deployCommands(guild);
+    });
+
     /* SLASH COMMANDS */
     client.on('interactionCreate', async interaction => {
         if (!interaction.isChatInputCommand()) return;
