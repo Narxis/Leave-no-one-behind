@@ -5,11 +5,16 @@ const { REST } = require('@discordjs/rest');
 const chalk = require("chalk");
 const token = process.env.DS_TOKEN;
 
+// Client connecté, pour retrouver un pseudo Discord hors d'une commande
+let activeClient = null;
+const getClient = () => activeClient;
+
 const start = function () {
 
     if (!process.env.DS_TOKEN) return false;
 
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    activeClient = client;
 
     const commandsType = [
         'selectMenus',
@@ -184,4 +189,4 @@ const deployCommands = async function (guild) {
         .catch(console.error);
 }
 
-module.exports = {start, deployCommands}
+module.exports = {start, deployCommands, getClient}

@@ -16,7 +16,7 @@ var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 
 // Calcule le score final et affiche l'écran de fin (partie réelle et démo)
 // record : vraie fin de partie, le score de l'équipe entre au classement
-const renderEndScreen = function (res, ship, planet, scoreCards, record = false) {
+const renderEndScreen = async function (res, ship, planet, scoreCards, record = false) {
     let scoreShip = 30*ship.scanner
         + 30*ship.proximity
         + (40*(ship.oxygen+ship.energy+ship.gravity))
@@ -45,7 +45,10 @@ const renderEndScreen = function (res, ship, planet, scoreCards, record = false)
         scoreTotal: scoreTotal
     }
 
-    let leaderboardId = record ? leaderboard.record({score: scoreTotal, cryopods: ship.cryopods, planet: planet.name}) : null;
+    let leaderboardId = record ? await leaderboard.record({
+        score: scoreTotal, cryopods: ship.cryopods, planet: planet.name,
+        scoreShip: scoreShip, scorePlanet: scorePlanet, scoreCards: scoreCards
+    }) : null;
 
     let js = {vars:`var score=JSON.parse('` + JSON.stringify(score) + `'); var ship=JSON.parse('` + JSON.stringify(ship) + `');`};
 
@@ -588,7 +591,7 @@ module.exports = {
             }
         };
 
-        renderEndScreen(res, ship, planet, 12000);
+        return renderEndScreen(res, ship, planet, 12000);
     },
 
     leaderboard(req, res) {
@@ -651,7 +654,7 @@ module.exports = {
 
     let scoreCards = Math.min(6000*cardNegPlayed + 3500*cardNeuPlayed + Math.min(CONFIG.planetCount,10) * Math.min((cardPlanetPlayed-1),9), 500000) - 4500*cardPosPlayed;
 
-    renderEndScreen(res, ship, planet, scoreCards, true);
+    await renderEndScreen(res, ship, planet, scoreCards, true);
 },
 
     async start(req, res) {
