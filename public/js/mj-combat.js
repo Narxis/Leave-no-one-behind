@@ -16,6 +16,7 @@
     let players = [];      // joueurs de la partie, pour choisir l'attaquant
     let allies = [];       // compagnons (PNJ) : le serveur lance leur dé directement
     let targetId = null;   // ennemi choisi, en attente du choix de l'attaquant
+    let victimFor = null;  // ennemi qui attaque, en attente du choix de sa cible
     let lootOpen = null;   // butin en cours d'édition : 'p<index>' (préparation) ou id de l'ennemi
     let lootDraft = '';    // texte en cours de saisie, gardé quand la liste se redessine
     let lootFocus = false; // donner le focus au champ au prochain rendu
@@ -149,6 +150,26 @@
         list.append(box);
     }
 
+    // Choix du joueur ou du compagnon que l'ennemi attaque
+    function renderVictims(enemy) {
+        let box = el('div', 'mj-attackers mj-victims');
+        box.append(el('span', 'mj-attackers-label', 'Qui ' + enemy.name + ' attaque ?'));
+        const attack = (data) => {
+            victimFor = null;
+            wsLNOB.send({action: 'combat-enemy-attack', data: Object.assign({enemy_id: enemy.id}, data)});
+        };
+        for (let p of players)
+            box.append(button('mj-attacker', p.name, () => attack({discord_id: p.discord_id})));
+        for (let a of allies) {
+            let b = button('mj-attacker npc', a.name, () => attack({ally_id: a.id}));
+            b.prepend(el('span', 'mj-ally-badge', 'PNJ'));
+            box.append(b);
+        }
+        if (!players.length && !allies.length)
+            box.append(button('mj-attacker', 'Attaquer sans cible', () => attack({})));
+        list.append(box);
+    }
+
     function renderActive() {
         renderWaiting();
         for (let enemy of state.enemies) {
@@ -169,14 +190,17 @@
                 button('mj-hp-btn', '+', () => setHp(enemy, enemy.hp + 1))
             );
 
-            let attack = button('mj-enemy-attack', 'Attaque', () => {
-                wsLNOB.send({action: 'combat-enemy-attack', data: {enemy_id: enemy.id}});
+            let attack = button('mj-enemy-attack' + (victimFor === enemy.id ? ' selecting' : ''), 'Attaque', () => {
+                victimFor = victimFor === enemy.id ? null : enemy.id;
+                targetId = null;
+                render();
             });
             attack.disabled = enemy.hp <= 0;
             attack.title = 'Offense ' + enemy.offense + ' % — dégâts ' + TIERS[enemy.damage];
 
             let aim = button('mj-enemy-target', 'Cibler', () => {
                 targetId = targetId === enemy.id ? null : enemy.id;
+                victimFor = null;
                 render();
             });
             aim.disabled = enemy.hp <= 0;
@@ -191,6 +215,8 @@
             list.append(row);
             if (targetId === enemy.id && enemy.hp > 0)
                 renderAttackers(enemy);
+            if (victimFor === enemy.id && enemy.hp > 0)
+                renderVictims(enemy);
         }
     }
 

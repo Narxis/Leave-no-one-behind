@@ -862,6 +862,33 @@
     70% { opacity: 1; transform: scale(1.06); }
 }
 
+/* Onglet du joueur / compagnon attaqué par un ennemi */
+.player-tab.under-attack {
+    animation: tab-hit .6s var(--ui-ease);
+}
+
+.player-tab.dodged {
+    animation: tab-dodge .5s var(--ui-ease);
+}
+
+@keyframes tab-hit {
+    15% { border-color: var(--ui-danger); box-shadow: 0 0 30px rgb(255 90 110 / 60%); margin-left: -6px; }
+    35% { margin-left: 5px; }
+    55% { margin-left: -3px; }
+    75% { margin-left: 2px; }
+}
+
+@keyframes tab-dodge {
+    40% { margin-left: 10px; }
+}
+
+.combat-float.tab-float {
+    top: 34px;
+    right: 62px;
+    z-index: 2;
+    font-size: 24px;
+}
+
 /* Attaque désignée par le MJ : le joueur doit lancer /roll Combat */
 .combat-pending {
     display: none;

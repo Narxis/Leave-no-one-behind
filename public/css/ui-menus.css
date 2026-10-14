@@ -763,6 +763,20 @@ body.mj-page {
     color: var(--ui-danger);
 }
 
+.mj-enemy-attack.selecting {
+    background: rgb(255 90 110 / 18%);
+}
+
+/* Choix de la cible d'un ennemi : même boîte que le choix de l'attaquant, en rouge */
+.mj-victims {
+    border-color: rgb(255 90 110 / 50%);
+}
+
+.mj-victims .mj-attacker:hover {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
 .mj-enemy-attack:disabled {
     opacity: 0.4;
     cursor: default;
