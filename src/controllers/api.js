@@ -8,6 +8,7 @@ const drawflow = require("../controllers/drawflow");
 const fs = require('fs');
 const combat = require("./combat");
 const allies = require("./allies");
+const leaderboard = require("./leaderboard");
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 // TODO replace shipId with current game ship ID
@@ -150,6 +151,18 @@ module.exports = {
 
     getAllies(req, res) {
         res.json(allies.getAllies());
+    },
+
+    // Équipe de la partie en cours (nommée par le MJ avant de commencer)
+    getTeam(req, res) {
+        res.json(leaderboard.getCurrent());
+    },
+
+    setTeam(req, res) {
+        let team = leaderboard.setTeam(req.body && req.body.name);
+        if (!team)
+            return res.status(400).json({error: 'Nom d\'équipe vide'});
+        res.json(team);
     },
 
     async getAllPlayers(req, res) {

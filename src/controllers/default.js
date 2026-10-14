@@ -6,6 +6,7 @@ const {Ship} = require("../models/ship");
 const combat = require("./combat");
 const inventory = require("./inventory");
 const planetGen = require("./planetGen");
+const leaderboard = require("./leaderboard");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
@@ -14,7 +15,8 @@ var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 // Calcule le score final et affiche l'écran de fin (partie réelle et démo)
-const renderEndScreen = function (res, ship, planet, scoreCards) {
+// record : vraie fin de partie, le score de l'équipe entre au classement
+const renderEndScreen = function (res, ship, planet, scoreCards, record = false) {
     let scoreShip = 30*ship.scanner
         + 30*ship.proximity
         + (40*(ship.oxygen+ship.energy+ship.gravity))
@@ -43,6 +45,8 @@ const renderEndScreen = function (res, ship, planet, scoreCards) {
         scoreTotal: scoreTotal
     }
 
+    let leaderboardId = record ? leaderboard.record({score: scoreTotal, cryopods: ship.cryopods, planet: planet.name}) : null;
+
     let js = {vars:`var score=JSON.parse('` + JSON.stringify(score) + `'); var ship=JSON.parse('` + JSON.stringify(ship) + `');`};
 
     let vars = {
@@ -50,6 +54,7 @@ const renderEndScreen = function (res, ship, planet, scoreCards) {
         score: score,
         js: js,
         planet: planet,
+        leaderboardId: leaderboardId,
         lang: langJS
     }
 
@@ -587,7 +592,11 @@ module.exports = {
     },
 
     leaderboard(req, res) {
-        res.render('leaderboard', {lang: langJS});
+        res.render('leaderboard', {
+            entries: leaderboard.list(),
+            highlight: String(req.query.highlight || ''),
+            lang: langJS
+        });
     },
 
     indexLegacy(req, res) {
@@ -642,7 +651,7 @@ module.exports = {
 
     let scoreCards = Math.min(6000*cardNegPlayed + 3500*cardNeuPlayed + Math.min(CONFIG.planetCount,10) * Math.min((cardPlanetPlayed-1),9), 500000) - 4500*cardPosPlayed;
 
-    renderEndScreen(res, ship, planet, scoreCards);
+    renderEndScreen(res, ship, planet, scoreCards, true);
 },
 
     async start(req, res) {

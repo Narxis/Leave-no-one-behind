@@ -8,9 +8,45 @@
 }) %>
 <body>
     <%- include("partials/nav") %>
-    <div class="center">
-        <a href="/" class="next">Retour au menu principal</a>
-    </div>
-    <script src="js/leaderboard.js"></script>
+    <main class="leaderboard">
+        <h1 class="leaderboard-title">Classement des équipes</h1>
+        <% if (!entries.length) { %>
+            <p class="leaderboard-empty">Aucune partie terminée pour l'instant. Le score d'une équipe s'ajoute ici à la fin de sa partie.</p>
+        <% } else { %>
+            <div class="leaderboard-scroll">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Équipe</th>
+                            <th scope="col" class="num">Score</th>
+                            <th scope="col" class="num">Survivants</th>
+                            <th scope="col">Planète</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% entries.forEach(function (entry, i) { %>
+                            <tr class="<%= entry.id === highlight ? 'is-current' : '' %><%= i < 3 ? ' podium podium-' + (i + 1) : '' %>">
+                                <td class="rank"><%= i + 1 %></td>
+                                <td class="team"><%= entry.team %></td>
+                                <td class="num score"><%= entry.score.toLocaleString('fr-FR') %></td>
+                                <td class="num"><%= entry.cryopods.toLocaleString('fr-FR') %></td>
+                                <td><%= entry.planet || '—' %></td>
+                                <td class="date"><%= new Date(entry.date).toLocaleDateString('fr-FR') %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+        <a href="/" class="leaderboard-back">Retour au menu principal</a>
+    </main>
+    <script>
+        // La ligne de la partie qui vient de se terminer est amenée à l'écran
+        let current = document.querySelector('.leaderboard-table .is-current');
+        if (current)
+            current.scrollIntoView({block: 'center'});
+    </script>
     <%- include("partials/bottom-scripts") %>
 </body>

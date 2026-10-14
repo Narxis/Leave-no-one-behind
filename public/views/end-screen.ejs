@@ -213,7 +213,7 @@
             </div>
             <div class="consolescore"></div>
         </div>
-        <a href="/leaderboard" class="next">Suivant</a>
+        <a href="/leaderboard<%= leaderboardId ? '?highlight=' + encodeURIComponent(leaderboardId) : '' %>" class="next">Suivant</a>
     </div>
 
     <script>
