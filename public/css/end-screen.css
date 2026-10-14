@@ -326,28 +326,74 @@
   position: relative;
 }
 
+/* Bilan de la planète : colonne de 300px à gauche de la planète. Chaque
+   ligne réserve d'avance la hauteur de son texte complet (.reading-ghost,
+   invisible) : les textes ne se chevauchent pas et rien ne saute à l'écriture */
+.planet-recap {
+  gap: 8px;
+  padding-top: 22px;
+}
+
+.planet-recap .planet-recap-line {
+  height: auto;
+  width: 300px;
+}
+
+.planet-recap .planet-reading,
+.planet-recap .reading-ghost {
+  max-width: 300px;
+  font-size: 12.5px;
+  line-height: 1.3;
+}
+
 .planet-recap .planet-reading {
-  max-width: 285px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 85%);
+}
+
+.planet-recap .reading-ghost {
+  display: block;
+  visibility: hidden;
+}
+
+/* Planète et lunes centrées dans la case ; quand le bilan de la planète
+   s'écrit (.with-text, end-screen.js), elles glissent à droite du texte */
+.end-planet,
+.end-moons {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+.end-planet,
+.end-moons {
+  transition: left 1s cubic-bezier(.4, 0, .2, 1), transform 1s cubic-bezier(.4, 0, .2, 1), opacity 1s;
+}
+
+/* Pendant le bilan : plus petite, à droite, lunes en retrait */
+.with-text .end-planet,
+.with-text .end-moons {
+  left: calc(100% - 92px);
+  transform: translate(-50%, -50%) scale(.72);
+}
+
+.with-text .end-moons {
+  opacity: .45;
 }
 
 .end-planet {
-  position: absolute;
-  top: 50%;
-  right: -4px;
   width: 230px;
   height: 230px;
-  margin: 0;
-  transform: translateY(-50%);
 }
 
 /* Lunes autour de la planète atteinte (même centre que .end-planet) */
 .end-moons {
-  position: absolute;
-  top: 50%;
-  right: -89px;
   width: 400px;
   height: 400px;
-  transform: translateY(-50%);
   pointer-events: none;
 }
 
