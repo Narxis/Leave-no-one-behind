@@ -9,6 +9,13 @@ const token = process.env.DS_TOKEN;
 let activeClient = null;
 const getClient = () => activeClient;
 
+// Commande refusée parce que la partie n'en est pas à la bonne étape : on dit pourquoi
+const STEP_HINTS = {
+    creation: 'La création des personnages n\'est pas ouverte : le MJ doit d\'abord ouvrir la page « Fiche Personnages ».',
+    gameLive: 'La partie n\'a pas encore commencé : attends que le MJ lance la partie.'
+};
+const blockedMessage = (command) => STEP_HINTS[command && command.step] || 'Tu ne peux pas faire ça maintenant !';
+
 const start = function () {
 
     if (!process.env.DS_TOKEN) return false;
@@ -68,7 +75,7 @@ const start = function () {
 
         if (!slash) return;
         if (slash.step !== '' && slash.step !== CONFIG.gameState) {
-            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            await interaction.reply({ content: blockedMessage(slash), ephemeral: true });
             log("[Blocked]", "#dd0000");
             return
         }
@@ -105,7 +112,7 @@ const start = function () {
 
         if (!selectMenu) return;
         if (selectMenu.step !== '' && selectMenu.step !== CONFIG.gameState) {
-            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            await interaction.reply({ content: blockedMessage(selectMenu), ephemeral: true });
             return
         }
 
@@ -127,7 +134,7 @@ const start = function () {
 
         if (!modal) return;
         if (modal.step !== '' && modal.step !== CONFIG.gameState) {
-            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            await interaction.reply({ content: blockedMessage(modal), ephemeral: true });
             return
         }
 
@@ -156,7 +163,7 @@ const start = function () {
 
         if (!button) return;
         if (button.step !== '' && button.step !== CONFIG.gameState) {
-            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            await interaction.reply({ content: blockedMessage(button), ephemeral: true });
             return
         }
 
