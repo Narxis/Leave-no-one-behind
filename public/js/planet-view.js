@@ -361,6 +361,35 @@
         let scale = radiusScale(s, shown), fromScale = scale;
         let rippleStart = 0, rippleScan = null, scans = [];
         let haze = 0;    // filtre d'atmosphère affiché, qui rejoint sa valeur en fondu
+        // Calque pour filtrer les éléments posés sur la planète (relief, arbres) :
+        // couleurs ternies puis teinte du gaz, seulement sur leurs formes
+        let fx = document.createElement('canvas'), fctx = fx.getContext('2d');
+        function hazed(draw, color) {
+            if (haze <= .005) {
+                draw();
+                return;
+            }
+            if (fx.width !== canvas.width || fx.height !== canvas.height) {
+                fx.width = canvas.width;
+                fx.height = canvas.height;
+            }
+            else
+                fctx.clearRect(0, 0, fx.width, fx.height);
+            let main = ctx;
+            ctx = fctx;
+            fctx.save();
+            fctx.filter = 'saturate(' + Math.max(0, 1 - Math.min(1, haze * 1.6)).toFixed(3) + ')';
+            draw();
+            fctx.restore();
+            ctx = main;
+            fctx.save();
+            fctx.globalCompositeOperation = 'source-atop';
+            fctx.globalAlpha = haze;
+            fctx.fillStyle = color;
+            fctx.fillRect(0, 0, fx.width, fx.height);
+            fctx.restore();
+            ctx.drawImage(fx, 0, 0);
+        }
         let rot = (seed % 628) / 100, cloudRot = rot;
         // Vents propres à chaque planète (tirés de la graine) : les nuages
         // tournent entre 0,75 et 1,6 fois la vitesse du sol, plus une dérive
@@ -876,8 +905,14 @@
                 ctx.arc(c, c, r + thick, 0, Math.PI * 2);
                 ctx.fill();
             }
+            // Air mauvais pour les humains : la planète paraît voilée et ternie,
+            // relief et arbres compris, même ceux qui dépassent du disque
+            let hazeTarget = (a && a.haze) || 0;
+            haze += (hazeTarget - haze) * .06;
+            let hazeCol = 'rgb(' + mix(hex(a ? a.color : '#808080'), [120, 120, 120], .3).map(Math.round).join(',') + ')';
             // Éléments derrière l'horizon : la planète cache leur base
-            drawSprites(r, false, rippleCanvas, now);
+            hazed(() => drawSprites(r, false, rippleCanvas, now, 'ground'), hazeCol);
+            drawSprites(r, false, rippleCanvas, now, 'cloud');
             ctx.drawImage(sphere, c - map.w / 2, c - map.w / 2);
             // Ordre de haut en bas : sol, ombre du voile, relief et arbres, voile, nuages
             let hasVeil = drawVeil(ripple);
@@ -894,7 +929,22 @@
                 ctx.drawImage(veil, vx + sd, vy + sd * .8);
                 ctx.restore();
             }
-            drawSprites(r, true, rippleCanvas, now, 'ground');
+            if (haze > .005) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(c, c, r, 0, Math.PI * 2);
+                ctx.clip();
+                ctx.globalCompositeOperation = 'saturation';
+                ctx.globalAlpha = Math.min(1, haze * 1.6);
+                ctx.fillStyle = '#808080';
+                ctx.fillRect(c - r, c - r, r * 2, r * 2);
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.globalAlpha = haze;
+                ctx.fillStyle = hazeCol;
+                ctx.fillRect(c - r, c - r, r * 2, r * 2);
+                ctx.restore();
+            }
+            hazed(() => drawSprites(r, true, rippleCanvas, now, 'ground'), hazeCol);
             if (hasVeil) {
                 // Le voile ne déborde pas du disque : au-delà, sur le noir, il faisait des traînées
                 ctx.save();
@@ -902,24 +952,6 @@
                 ctx.arc(c, c, r, 0, Math.PI * 2);
                 ctx.clip();
                 ctx.drawImage(veil, vx, vy);
-                ctx.restore();
-            }
-            // Air mauvais pour les humains : la planète paraît voilée et ternie
-            let hazeTarget = (a && a.haze) || 0;
-            haze += (hazeTarget - haze) * .06;
-            if (haze > .005) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(c, c, r, 0, Math.PI * 2);
-                ctx.clip();
-                ctx.globalCompositeOperation = 'saturation';
-                ctx.globalAlpha = haze * 1.6;
-                ctx.fillStyle = '#808080';
-                ctx.fillRect(c - r, c - r, r * 2, r * 2);
-                ctx.globalCompositeOperation = 'source-over';
-                ctx.globalAlpha = haze;
-                ctx.fillStyle = 'rgb(' + mix(hex(a ? a.color : '#808080'), [120, 120, 120], .3).map(Math.round).join(',') + ')';
-                ctx.fillRect(c - r, c - r, r * 2, r * 2);
                 ctx.restore();
             }
             drawSprites(r, true, rippleCanvas, now, 'cloud');
