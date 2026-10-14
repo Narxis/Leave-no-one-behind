@@ -386,8 +386,8 @@
 }
 
 .end-planet {
-  width: 230px;
-  height: 230px;
+  width: 300px;
+  height: 300px;
 }
 
 /* Lunes autour de la planète atteinte (même centre que .end-planet) */
