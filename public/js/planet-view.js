@@ -110,7 +110,7 @@
         let n = TEX_W * TEX_H;
         let f = {
             elev: new Float32Array(n), moist: new Float32Array(n), detail: new Float32Array(n),
-            ridge: new Float32Array(n), city: new Float32Array(n), cloud: new Float32Array(n),
+            ridge: new Float32Array(n), city: new Float32Array(n),
             px: new Float32Array(n), py: new Float32Array(n), pz: new Float32Array(n), lat: new Float32Array(n)
         };
         for (let v = 0; v < TEX_H; v++) {
@@ -128,14 +128,10 @@
                 f.detail[i] = fbm(x * 4 + off[2][0], y * 4 + off[2][1], z * 4 + off[2][2], 1);
                 f.ridge[i] = 1 - Math.abs(fbm(x * 2 + off[3][0], y * 2 + off[3][1], z * 2 + off[3][2], 2)) * 2.2;
                 f.city[i] = fbm(x * 10 + off[4][0], y * 10 + off[4][1], z * 10 + off[4][2], 1);
-                // Nuages étirés en longitude, comme des bandes de vent. Relief et
-                // nuages sont ensuite remis à plat (rang de 0 à 1) pour régler la
-                // part de liquide et de ciel couvert au pourcentage près
-                f.cloud[i] = fbm(x * 1.6 + wx, y * 2.6, z * 1.6 + wx, 2);
             }
         }
+        // Relief remis à plat (rang de 0 à 1) : la part de liquide est réglée au pourcentage près
         f.elev = toRank(f.elev);
-        f.cloud = toRank(f.cloud);
         return f;
     }
 
@@ -174,8 +170,8 @@
     // Formes reprises des anciennes illustrations SVG (template-planet.ejs)
     const MOUNTAIN_PATH = typeof Path2D !== 'undefined' ? new Path2D('M20.79,166.85H169.34a20.77,20.77,0,0,0,17.76-31.56L109,6.68a13.89,13.89,0,0,0-23.57-.27L3.28,134.87a20.78,20.78,0,0,0,17.51,32Z') : null;
     const TREE_PATH = typeof Path2D !== 'undefined' ? new Path2D('M210.6 5.9L62 169.4c-3.9 4.2-6 9.8-6 15.5C56 197.7 66.3 208 79.1 208H104L30.6 281.4c-4.2 4.2-6.6 10-6.6 16C24 309.9 34.1 320 46.6 320H80L5.4 409.5C1.9 413.7 0 419 0 424.5c0 13 10.5 23.5 23.5 23.5H192v32c0 17.7 14.3 32 32 32s32-14.3 32-32V448H424.5c13 0 23.5-10.5 23.5-23.5c0-5.5-1.9-10.8-5.4-15L368 320h33.4c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16L344 208h24.9c12.7 0 23.1-10.3 23.1-23.1c0-5.7-2.1-11.3-6-15.5L237.4 5.9C234 2.1 229.1 0 224 0s-10 2.1-13.4 5.9z') : null;
+    const CLOUD_PATH = typeof Path2D !== 'undefined' ? new Path2D('M0 336c0 79.5 64.5 144 144 144H512c70.7 0 128-57.3 128-128c0-61.9-44-113.6-102.4-125.4c4.1-10.7 6.4-22.4 6.4-34.6c0-53-43-96-96-96c-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32C167.6 32 96 103.6 96 192c0 2.7 .1 5.4 .2 8.1C40.2 219.8 0 273.2 0 336z') : null;
     const STAR_PATH = typeof Path2D !== 'undefined' ? new Path2D('M512 255.1c0 11.34-7.406 20.86-18.44 23.64l-171.3 42.78l-42.78 171.1C276.7 504.6 267.2 512 255.9 512s-20.84-7.406-23.62-18.44l-42.66-171.2L18.47 279.6C7.406 276.8 0 267.3 0 255.1c0-11.34 7.406-20.83 18.44-23.61l171.2-42.78l42.78-171.1C235.2 7.406 244.7 0 256 0s20.84 7.406 23.62 18.44l42.78 171.2l171.2 42.78C504.6 235.2 512 244.6 512 255.1z') : null;
-    const CLOUD_ALPHA = .62;   // nuages translucides : on voit le sol à travers
 
     // Cratères tirés de la graine : centre sur la sphère et rayon angulaire
     function makeCraters(seed) {
@@ -190,12 +186,12 @@
     }
 
     // Couleurs à plat selon les couches révélées. emit : pixels qui gardent
-    // leur couleur dans l'ombre (lave, lumières des villes)
+    // leur couleur dans l'ombre (lave, lumières des villes). Les nuages ne sont
+    // pas dans la texture : ce sont les nuages flottants (drawSprites)
     function paint(f, s, shown) {
         let n = TEX_W * TEX_H;
         let albedo = new Uint8ClampedArray(n * 3);
         let emit = new Uint8ClampedArray(n * 4);
-        let clouds = new Uint8ClampedArray(n * 4);
 
         let wT = tier(s.wtr, TABS.wtr), rT = tier(s.res, TABS.res), cT = tier(s.cli, TABS.cli);
         let fT = tier(s.flo, TABS.flo), vT = tier(s.civ, TABS.civ);
@@ -203,7 +199,6 @@
         let sea = hasW ? LIQUID_COVER[wT] : 0;
         let rock = (hasR ? RES_PALETTE[rT] : UNKNOWN_ROCK).map(hex);
         let capLat = !hasC ? 99 : ([99, 99, 66, 74][cT] - (hasW && wT === 1 ? 22 : 0));
-        let lockSide = hasC && cT === 1;
 
         // [bord, large] : liquide inconnu, lacs gelés, eau
         let liquid = !hasW ? null : wT === 0
@@ -217,9 +212,6 @@
         let ice = hex('#f4fbff');
         let basalt = hex('#3b3035');
         let lava = hex('#ff8a1f');
-
-        let cover = hasC ? (lockSide ? .26 : .07 + (hasW ? wT * .026 : .05)) : 0;
-        let cloudCol = hasC && cT === 0 ? hex('#d6cc98') : (shown.has('oxy') && tier(s.oxy, TABS.oxy) === 1 ? hex('#d3e8b0') : hex('#ffffff'));
 
         for (let i = 0; i < n; i++) {
             // Léger bruit sur les seuils : contours irréguliers mais aplats nets
@@ -260,27 +252,13 @@
                     c = mix(c, [0, 0, 0], rim ? .17 : .1);
                 }
             }
-            if (lockSide) {
-                let facing = x * LIGHT[0] + y * LIGHT[1] + z * LIGHT[2];
-                if (facing > .8)
-                    c = hex('#f0d9a5');
-                else if (facing < -.15)
-                    c = ice;
-            }
             if (latDeg > capLat)
                 c = ice;
 
             albedo[k] = c[0]; albedo[k + 1] = c[1]; albedo[k + 2] = c[2];
 
-            if (cover) {
-                let cv = f.cloud[i];
-                if (lockSide)
-                    cv *= 1.25 - Math.abs(x * LIGHT[0] + y * LIGHT[1] + z * LIGHT[2]);
-                let a = cv > 1 - cover ? 245 : 0;
-                clouds[j] = cloudCol[0]; clouds[j + 1] = cloudCol[1]; clouds[j + 2] = cloudCol[2]; clouds[j + 3] = a;
-            }
         }
-        return {albedo, emit, clouds, hasClouds: cover > 0};
+        return {albedo, emit};
     }
 
     function radiusScale(s, shown) {
@@ -298,8 +276,7 @@
             s[k] = Number(modules[k] && modules[k].val) || 0;
         let seed = Number(options.seed) || hashSeed(modules);
         let shown = new Set(options.revealed === 'all' ? LAYERS : (options.revealed || []));
-        // Monde figé (face toujours tournée vers son étoile) : il ne tourne pas
-        let spin = () => (shown.has('cli') && tier(s.cli, TABS.cli) === 1) ? 0 : 1;
+        let spin = () => 1;
 
         let fields = buildFields(seed);
         fields.craters = makeCraters(seed);
@@ -386,20 +363,6 @@
                 let ej = (Math.round(fv) * TEX_W + (Math.round(fu) % TEX_W + TEX_W) % TEX_W) * 4;
                 if (t.emit[ej + 3]) {
                     r = t.emit[ej]; g = t.emit[ej + 1]; b = t.emit[ej + 2];
-                }
-                if (t.hasClouds) {
-                    let cu = Math.floor(m.lonF[p] + cu0 - .5);
-                    let cdu = m.lonF[p] + cu0 - .5 - cu;
-                    cu = ((cu % TEX_W) + TEX_W) % TEX_W;
-                    let cu2 = cu + 1 === TEX_W ? 0 : cu + 1;
-                    let C = t.clouds;
-                    let c0 = (v * TEX_W + cu) * 4, c1 = (v * TEX_W + cu2) * 4, c2 = c0 + TEX_W * 4, c3 = c1 + TEX_W * 4;
-                    let ca = (C[c0 + 3] * (1 - cdu) * (1 - dv) + C[c1 + 3] * cdu * (1 - dv) + C[c2 + 3] * (1 - cdu) * dv + C[c3 + 3] * cdu * dv) / 255;
-                    if (ca > 0) {
-                        // Seuil sur la valeur interpolée : nuage plein à bord net
-                        ca = clamp01((ca - .35) * 4) * CLOUD_ALPHA;
-                        r += (C[c0] * sh - r) * ca; g += (C[c0 + 1] * sh - g) * ca; b += (C[c0 + 2] * sh - b) * ca;
-                    }
                 }
                 if (ripple) {
                     // Front de l'onde en cyan, suivi d'un reflet qui s'estompe
@@ -546,21 +509,46 @@
                         list.push(Object.assign(at, {layer: 'ff', type: 'tree', h: .18 + rng() * .16, color: mix(base, [0, 0, 0], .15 + rng() * .4)}));
                 }
             }
+            if (shown.has('cli')) {
+                // Comme les anciens nuages (.cl-cloud) : ils flottent au-dessus de la
+                // surface. Nombre, taille et gris selon le climat, plus avec beaucoup d'eau
+                let cT = tier(s.cli, TABS.cli);
+                let style = [
+                    {count: 7, size: 1, gray: [175, 205], tint: [10, 6, -14]},   // pluies acides : jaunâtres
+                    {count: 11, size: 1.3, gray: [125, 175], tint: [0, 0, 0]},   // tempêtes permanentes
+                    {count: 6, size: 1, gray: [190, 225], tint: [0, 0, 0]},
+                    {count: 4, size: .9, gray: [215, 245], tint: [0, 0, 0]}
+                ][cT];
+                let count = style.count + Math.round(wT * .6) + Math.floor(rng() * 3);
+                for (let k = 0; k < count; k++) {
+                    let g = style.gray[0] + rng() * (style.gray[1] - style.gray[0]);
+                    list.push({
+                        layer: 'cli', type: 'cloud',
+                        lat: (rng() * 2 - 1) * 1.1, lon: rng() * Math.PI * 2,
+                        alt: 1.1 + rng() * .12, speed: .8 + rng() * .4,
+                        h: (.12 + rng() * .16) * style.size,
+                        color: [g + style.tint[0], g + style.tint[1], g + style.tint[2]]
+                    });
+                }
+            }
             sprites = list;
         }
 
         // Position à l'écran (pixels du canvas) et orientation d'un élément
         function spriteScreen(sp, r) {
-            let lon = sp.lon - rot, cl = Math.cos(sp.lat);
+            let cloud = sp.type === 'cloud';
+            let lon = sp.lon - (cloud ? cloudRot * sp.speed : rot), cl = Math.cos(sp.lat);
             let nx = cl * Math.sin(lon), ny = Math.sin(sp.lat), nz = cl * Math.cos(lon);
-            let c = size / 2;
-            return {x: c + nx * r, y: c - ny * r, nz, angle: Math.atan2(nx, ny), tilt: Math.sqrt(Math.max(0, 1 - nz * nz))};
+            let c = size / 2, a = cloud ? sp.alt : 1;
+            return {x: c + nx * r * a, y: c - ny * r * a, sx: c + nx * r, sy: c - ny * r, nz,
+                angle: Math.atan2(nx, ny), tilt: Math.sqrt(Math.max(0, 1 - nz * nz))};
         }
 
         function drawSprites(r, front, ripple, now) {
             for (let sp of sprites) {
                 let p = spriteScreen(sp, r);
-                if (sp.type === 'star' ? (!front || p.nz < .15) : (front ? p.nz < 0 : (p.nz >= 0 || p.nz < -.3)))
+                let back = sp.type === 'cloud' ? -.45 : -.3;
+                if (sp.type === 'star' ? (!front || p.nz < .15) : (front ? p.nz < 0 : (p.nz >= 0 || p.nz < back)))
                     continue;
                 // Pendant le scan de sa couche : il surgit au passage de l'onde
                 let grow = 1;
@@ -581,6 +569,25 @@
                     ctx.globalAlpha = .85;
                     ctx.fillStyle = 'rgb(' + sp.color.join(',') + ')';
                     ctx.fill(STAR_PATH);
+                }
+                else if (sp.type === 'cloud') {
+                    // Nuage plat orienté vers l'extérieur, avec son ombre sur le sol
+                    let w = h * 1.25 * grow, hh = h * Math.max(.55, Math.pow(p.tilt, .6)) * grow;
+                    if (front) {
+                        ctx.save();
+                        ctx.translate(p.sx - p.x + 2 * dpr, p.sy - p.y + 2 * dpr);
+                        ctx.rotate(p.angle);
+                        ctx.scale(w / 640, hh / 512);
+                        ctx.translate(-320, -256);
+                        ctx.fillStyle = 'rgba(0, 0, 0, .14)';
+                        ctx.fill(CLOUD_PATH);
+                        ctx.restore();
+                    }
+                    ctx.rotate(p.angle);
+                    ctx.scale(w / 640, hh / 512);
+                    ctx.translate(-320, -256);
+                    ctx.fillStyle = 'rgb(' + sp.color.map(v => Math.round(Math.min(255, v))).join(',') + ')';
+                    ctx.fill(CLOUD_PATH);
                 }
                 else {
                     let mountain = sp.type === 'mountain';
