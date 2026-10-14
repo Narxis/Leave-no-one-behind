@@ -4,6 +4,7 @@ const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
 const combat = require("./combat");
+const inventory = require("./inventory");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
@@ -164,12 +165,12 @@ module.exports = {
 
         let itemsMan = new Items();
         let items = await itemsMan.getAllItems(false);
-        let starters = await itemsMan.getAllStarters();
+        let inventories = await inventory.getInventories();
+        let shipItems = await inventory.getShip();
 
         players = players.map(player => {
 
-            let playerItems = starters.filter(item => item.owners.includes(player.discord_id));
-            player['items'] = playerItems;
+            player['items'] = inventories[player.discord_id] || [];
 
             return player;
         })
@@ -197,6 +198,7 @@ module.exports = {
             ship: ship,
             statuses: statusesAll,
             items: items,
+            shipItems: shipItems,
             lang: langJS
         }
 

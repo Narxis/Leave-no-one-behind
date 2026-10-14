@@ -69,6 +69,20 @@ const start = function () {
         }
     });
 
+    /* AUTOCOMPLETE : propositions pendant la saisie d'une option */
+    client.on('interactionCreate', async interaction => {
+        if (!interaction.isAutocomplete()) return;
+
+        const slash = client.slash.get(interaction.commandName);
+        if (!slash || !slash.autocomplete) return;
+
+        try {
+            await slash.autocomplete(interaction);
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
     /* SELECT MENU */
     client.on('interactionCreate', async interaction => {
 

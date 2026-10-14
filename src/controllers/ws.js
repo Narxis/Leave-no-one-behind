@@ -7,6 +7,7 @@ const shipId = 1;
 const chalk = require("chalk")
 const combat = require("./combat");
 const allies = require("./allies");
+const inventory = require("./inventory");
 
 const init = function (){
 
@@ -101,6 +102,10 @@ const makeAction = async function (raw_response) {
             break;
         case 'combat-ally-attack':
             payload = combat.allyAttack(response.data || {}) || combat.handle(response);
+            break;
+        case 'inventory-move':
+        case 'inventory-sync':
+            payload = inventory.handle(response);
             break;
         case 'ally-add':
         case 'ally-update':
@@ -281,6 +286,8 @@ const actionItem = async function (response) {
     if (remove) {
         if (discord_id !== '') {
             await items.removeItemFromPlayer(slug, discord_id);
+            // Les onglets des joueurs se mettent à jour partout
+            return inventory.payload(null);
         }
         else {
             await items.remove(slug);
