@@ -9,11 +9,13 @@ const DAMAGE = {
     fort: [9, 12]
 };
 const LOG_SIZE = 20;
+const LOOT_SIZE = 12;
 
 // État du combat en cours, gardé en mémoire : il est renvoyé à chaque
 // action pour que l'écran de jeu et le menu MJ restent synchronisés
 // pending : attaque désignée par le MJ, en attente du /roll Combat du joueur
-let state = {active: false, enemies: [], log: [], pending: null};
+// lootRevealed : tous les ennemis sont K.O., leur butin est montré aux joueurs
+let state = {active: false, enemies: [], log: [], pending: null, lootRevealed: false};
 let nextId = 1;
 
 const rollRange = ([min, max]) => min + Math.floor(Math.random() * (max - min + 1));
@@ -22,6 +24,34 @@ const toInt = (v, def) => Number.isFinite(parseInt(v)) ? parseInt(v) : def;
 
 const getBestiary = function () {
     return JSON.parse(fs.readFileSync(__dirname + '/../config/bestiary.json', 'utf8'));
+}
+
+// Objets proposés au MJ pour le butin : tous ceux de items.json
+const getLootList = function () {
+    let pools = JSON.parse(fs.readFileSync(__dirname + '/../config/items.json', 'utf8'));
+    let seen = new Set();
+    let list = [];
+    for (let item of Object.values(pools).flat()) {
+        if (seen.has(item.name.toLowerCase()))
+            continue;
+        seen.add(item.name.toLowerCase());
+        list.push({name: item.name, slug: item.slug, image: item.image ? '/img/items/' + item.image : ''});
+    }
+    return list;
+}
+
+// Butin d'un ennemi : un objet connu (avec son image) ou une saisie libre du MJ
+const makeLoot = function (raw) {
+    let known = getLootList();
+    let items = [];
+    for (let entry of (Array.isArray(raw) ? raw : []).slice(0, LOOT_SIZE)) {
+        let name = String((entry && entry.name) || entry || '').trim().slice(0, 60);
+        if (!name)
+            continue;
+        let item = known.find(k => k.name.toLowerCase() === name.toLowerCase());
+        items.push(item ? Object.assign({}, item) : {name: name, slug: '', image: '', custom: true});
+    }
+    return items;
 }
 
 const getState = function () {
@@ -46,7 +76,8 @@ const makeEnemy = function (raw) {
         hp: maxHp,
         offense: clamp(toInt(raw.offense, base.offense || 50), 0, 100),
         defense: clamp(toInt(raw.defense, base.defense || 50), 0, 100),
-        damage: DAMAGE[raw.damage] ? raw.damage : (base.damage || 'moyen')
+        damage: DAMAGE[raw.damage] ? raw.damage : (base.damage || 'moyen'),
+        loot: makeLoot(raw.loot)
     };
 }
 
@@ -56,7 +87,7 @@ const findEnemy = function (id) {
 
 const start = function (data) {
     let enemies = (data.enemies || []).map(makeEnemy);
-    state = {active: true, enemies: enemies, log: [], pending: null};
+    state = {active: true, enemies: enemies, log: [], pending: null, lootRevealed: false};
     return addLog({type: 'start'});
 }
 
@@ -66,13 +97,33 @@ const end = function () {
     return addLog({type: 'end'});
 }
 
+// Quand le dernier ennemi tombe, le butin de tous les ennemis est révélé
+const checkVictory = function () {
+    if (state.lootRevealed || !state.enemies.length || state.enemies.some(e => e.hp > 0))
+        return;
+    state.lootRevealed = true;
+    let items = state.enemies.flatMap(e => e.loot);
+    addLog({type: 'loot', items: items.map(i => i.name)});
+}
+
+// Le MJ choisit le butin d'un ennemi (avant ou pendant le combat)
+const setLoot = function (data) {
+    let enemy = findEnemy(data.enemy_id);
+    if (!enemy)
+        return null;
+    enemy.loot = makeLoot(data.loot);
+    return {type: 'set-loot', enemy_id: enemy.id};
+}
+
 // Le MJ corrige les PV d'un ennemi à la main
 const setHp = function (data) {
     let enemy = findEnemy(data.enemy_id);
     if (!enemy)
         return null;
     enemy.hp = clamp(toInt(data.hp, enemy.hp), 0, enemy.maxHp);
-    return addLog({type: 'hp', enemy_id: enemy.id, enemy: enemy.name, hp: enemy.hp});
+    let entry = addLog({type: 'hp', enemy_id: enemy.id, enemy: enemy.name, hp: enemy.hp});
+    checkVictory();
+    return entry;
 }
 
 // Le MJ désigne l'ennemi visé et le joueur qui attaque ; l'attaque attend
@@ -115,6 +166,7 @@ const applyAttack = function (attacker, enemy, data) {
         entry.ko = enemy.hp === 0;
     }
     addLog(entry);
+    checkVictory();
     return {
         action: 'combat',
         error: false,
@@ -180,7 +232,8 @@ const ACTIONS = {
     'combat-hp': setHp,
     'combat-target': target,
     'combat-cancel': cancelTarget,
-    'combat-enemy-attack': enemyAttack
+    'combat-enemy-attack': enemyAttack,
+    'combat-loot': setLoot
 };
 
 // Point d'entrée des actions websocket « combat-* » : renvoie l'état
@@ -195,4 +248,4 @@ const handle = async function (response) {
     };
 }
 
-module.exports = {handle, getState, getBestiary, resolveRoll, allyAttack, ACTIONS};
+module.exports = {handle, getState, getBestiary, getLootList, resolveRoll, allyAttack, ACTIONS};

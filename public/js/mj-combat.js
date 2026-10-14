@@ -16,6 +16,9 @@
     let players = [];      // joueurs de la partie, pour choisir l'attaquant
     let allies = [];       // compagnons (PNJ) : le serveur lance leur dé directement
     let targetId = null;   // ennemi choisi, en attente du choix de l'attaquant
+    let lootOpen = null;   // butin en cours d'édition : 'p<index>' (préparation) ou id de l'ennemi
+    let lootDraft = '';    // texte en cours de saisie, gardé quand la liste se redessine
+    let lootFocus = false; // donner le focus au champ au prochain rendu
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -33,12 +36,62 @@
 
     function renderLog() {
         logBox.innerHTML = '';
-        let lines = state.log.map(e => ({at: e.at, text: describeCombatEntry(e, true), cls: e.type}))
+        let lines = state.log.slice().reverse().map(e => ({at: e.at, text: describeCombatEntry(e, true), cls: e.type}))
             .concat(localLog)
             .sort((a, b) => b.at - a.at)
             .slice(0, 8);
         for (let line of lines)
             logBox.append(el('div', 'mj-log-line ' + line.cls, line.text));
+    }
+
+    // Butin d'un ennemi : résumé cliquable, et sous lui l'éditeur (suggestions
+    // de items.json via la datalist, ou saisie libre). Révélé aux joueurs
+    // quand tous les ennemis sont K.O.
+    function lootLine(row, key, loot, onChange) {
+        let names = loot.map(i => i.name);
+        let open = lootOpen === key;
+        let toggle = button('mj-loot-toggle' + (open ? ' open' : ''),
+            names.length ? 'Butin : ' + names.join(', ') : '+ Ajouter un butin', () => {
+                lootOpen = open ? null : key;
+                lootDraft = '';
+                lootFocus = !open;
+                render();
+            });
+        toggle.title = 'Révélé aux joueurs quand tous les ennemis sont vaincus';
+        row.append(toggle);
+        if (!open)
+            return;
+
+        let box = el('div', 'mj-loot');
+        let chips = el('div', 'mj-loot-items');
+        loot.forEach((item, i) => {
+            let chip = el('span', 'mj-loot-item' + (item.custom ? ' custom' : ''), item.name);
+            chip.append(button('mj-loot-remove', '×', () => onChange(loot.filter((_, j) => j !== i))));
+            chips.append(chip);
+        });
+        let input = el('input', 'mj-loot-input');
+        input.setAttribute('list', 'loot-list');
+        input.placeholder = 'Objet (liste ou texte libre)';
+        input.maxLength = 60;
+        input.value = lootDraft;
+        input.addEventListener('input', () => { lootDraft = input.value; });
+        const add = () => {
+            let name = input.value.trim();
+            if (!name)
+                return;
+            lootDraft = '';
+            lootFocus = true;
+            onChange(loot.concat([{name: name}]));
+        };
+        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
+        let form = el('div', 'mj-loot-form');
+        form.append(input, button('mj-loot-add', '+', add));
+        box.append(chips, form);
+        row.append(box);
+        if (lootFocus) {
+            lootFocus = false;
+            setTimeout(() => input.focus(), 0);
+        }
     }
 
     function renderPending() {
@@ -56,7 +109,8 @@
             hp.title = 'PV';
             hp.addEventListener('change', () => { mob.hp = Math.max(1, parseInt(hp.value) || 1); });
             row.append(hp, el('span', 'mj-enemy-unit', 'PV'));
-            row.append(button('mj-enemy-remove', '×', () => { pending.splice(i, 1); render(); }));
+            row.append(button('mj-enemy-remove', '×', () => { pending.splice(i, 1); lootOpen = null; render(); }));
+            lootLine(row, 'p' + i, mob.loot || [], (loot) => { mob.loot = loot; render(); });
             list.append(row);
         });
     }
@@ -131,6 +185,9 @@
             let actions = el('div', 'mj-enemy-actions');
             actions.append(aim, attack);
             row.append(bar, hp, actions);
+            lootLine(row, enemy.id, enemy.loot || [], (loot) => {
+                wsLNOB.send({action: 'combat-loot', data: {enemy_id: enemy.id, loot: loot}});
+            });
             list.append(row);
             if (targetId === enemy.id && enemy.hp > 0)
                 renderAttackers(enemy);
@@ -138,6 +195,9 @@
     }
 
     function render() {
+        // Un événement de combat ne doit pas faire perdre la saisie du butin en cours
+        if (document.activeElement && document.activeElement.classList.contains('mj-loot-input'))
+            lootFocus = true;
         list.innerHTML = '';
         list.classList.toggle('active', state.active);
         state.active ? renderActive() : renderPending();
@@ -207,6 +267,7 @@
         let event = e.detail.data.event;
         if (event && event.type === 'start') {
             pending = [];
+            lootOpen = null;
             localLog = [];
             recordMoral();
         }

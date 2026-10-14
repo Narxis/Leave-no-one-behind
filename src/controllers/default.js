@@ -134,7 +134,7 @@ module.exports = {
     },
 
     mjMenu(req, res) {
-        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary()});
+        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), loot: combat.getLootList()});
     },
 
     async persos(req, res) {
