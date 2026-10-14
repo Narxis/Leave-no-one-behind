@@ -8,7 +8,7 @@ const hiddenAnswer = document.querySelector('#add-item-hidden');
 let listLength = list.length;
 
 const generateTemplate = (item) => {
-  const html = `<li>
+  const html = `<li class="item-${item.slug}" data-slug="${item.slug}">
                   <input type="checkbox" id="todo_${listLength}">
                   <label for="todo_${listLength}">
                     ${item.image ? `<img class="item-image" src="${item.image}">` : `<span class="item-image item-noimg">${item.name.charAt(0)}</span>`}
