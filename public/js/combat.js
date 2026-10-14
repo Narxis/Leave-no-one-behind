@@ -111,6 +111,8 @@
     }
 
     function show(active) {
+        // La légende et les infobulles des stats passent aux noms de combat
+        document.body.classList.toggle('combat-mode', !!active);
         if (active) {
             area.classList.remove('combat-none', 'combat-out');
             area.classList.add('combat-in');
