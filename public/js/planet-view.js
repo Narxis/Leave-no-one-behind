@@ -169,6 +169,7 @@
     const UNKNOWN_ATMOS = null;
     const LIQUID_COVER = [0.34, 0.16, 0.10, 0.22, 0.50, 0.72];
     const SHADOW = 0.85;
+    const CLOUD_ALPHA = .62;   // nuages translucides : on voit le sol à travers
 
     // Cratères tirés de la graine : centre sur la sphère et rayon angulaire
     function makeCraters(seed) {
@@ -295,6 +296,12 @@
         let scale = radiusScale(s, shown), fromScale = scale;
         let rippleStart = 0, rippleScan = null, scans = [];
         let rot = (seed % 628) / 100, cloudRot = rot;
+        // Vents propres à chaque planète (tirés de la graine) : les nuages
+        // tournent entre 0,75 et 1,6 fois la vitesse du sol, plus une dérive
+        // dans un sens ou l'autre, qui les fait bouger même sur un monde figé
+        let windRng = mulberry32(seed ^ 0x9e3779b9);
+        let cloudFactor = .75 + windRng() * .85;
+        let cloudDrift = (windRng() < .5 ? -1 : 1) * (.0003 + windRng() * .0007);
         let rotSpeed = spin();
 
         let cssSize = options.size || canvas.clientWidth || 340;
@@ -379,7 +386,7 @@
                     let ca = (C[c0 + 3] * (1 - cdu) * (1 - dv) + C[c1 + 3] * cdu * (1 - dv) + C[c2 + 3] * (1 - cdu) * dv + C[c3 + 3] * cdu * dv) / 255;
                     if (ca > 0) {
                         // Seuil sur la valeur interpolée : nuage plein à bord net
-                        ca = clamp01((ca - .35) * 4) * .96;
+                        ca = clamp01((ca - .35) * 4) * CLOUD_ALPHA;
                         r += (C[c0] * sh - r) * ca; g += (C[c0 + 1] * sh - g) * ca; b += (C[c0 + 2] * sh - b) * ca;
                     }
                 }
@@ -492,7 +499,7 @@
                 scans.forEach(placeScan);
             }
             rot += .0021 * rotSpeed;
-            cloudRot += .0029 * rotSpeed + .0006;
+            cloudRot += .0021 * rotSpeed * cloudFactor + cloudDrift;
             let c = size / 2;
             let ripple = null;
             if (prevTex) {
