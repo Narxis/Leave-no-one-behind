@@ -6,6 +6,8 @@ const {Items} = require("../models/items");
 const {Card} = require("../models/card");
 const drawflow = require("../controllers/drawflow");
 const fs = require('fs');
+// Nom d'un lieu de l'éditeur : il sert de nom de fichier, rien d'autre que lettres, chiffres, - et _
+const validPlaceName = (name) => typeof name === 'string' && /^[a-z0-9_-]{1,40}$/i.test(name);
 const combat = require("./combat");
 const allies = require("./allies");
 const leaderboard = require("./leaderboard");
@@ -24,6 +26,8 @@ module.exports = {
 
         try {
             let name = Object.keys(req.body)[0];
+            if (!validPlaceName(name))
+                return res.json({success: false, error: 'Nom de lieu invalide'});
             let body = JSON.stringify(req.body);
             // SAVE A COPY IN CACHE (failsafe)
             fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
@@ -68,6 +72,8 @@ module.exports = {
 
     async deletePlace(req, res) {
         let name = req.body.name;
+        if (!validPlaceName(name))
+            return res.json({success: false, error: 'Nom de lieu invalide'});
 
         try {
             fs.unlinkSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME);
