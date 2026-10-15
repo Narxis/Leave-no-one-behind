@@ -465,6 +465,11 @@
     color: var(--pe-type);
 }
 
+.pe-card-num {
+    color: var(--ui-text);
+    letter-spacing: .04em;
+}
+
 .pe-start-badge {
     display: none;
     padding: 1px 8px;
@@ -475,7 +480,12 @@
     letter-spacing: .08em;
 }
 
-.drawflow-node.is-start .pe-start-badge {
+.drawflow-node.is-start .pe-card-num {
+    color: var(--ui-text);
+    letter-spacing: .04em;
+}
+
+.pe-start-badge {
     display: inline-block;
 }
 
