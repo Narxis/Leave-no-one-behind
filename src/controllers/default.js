@@ -137,7 +137,7 @@ module.exports = {
         data = JSON.stringify(data);
 
         // « < » échappé : un texte contenant </script> ne casse pas la page
-        res.render('drawflow', {vars: {dat: data.replace(/</g, '\\u003c')}, lang: langJS});
+        res.render('drawflow', {vars: {dat: data.replace(/</g, '\\u003c')}, lang: langJS, lootItems: combat.getLootList()});
     },
 
     async renderSingleSheet (req, res) {

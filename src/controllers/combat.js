@@ -279,4 +279,4 @@ const handle = async function (response) {
     };
 }
 
-module.exports = {handle, getState, getBestiary, getLootList, resolveRoll, allyAttack, takeLoot, ACTIONS};
+module.exports = {handle, getState, getBestiary, getLootList, makeLoot, resolveRoll, allyAttack, takeLoot, ACTIONS};

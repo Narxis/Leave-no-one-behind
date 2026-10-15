@@ -871,3 +871,124 @@ kbd {
         padding: 8px 10px;
     }
 }
+
+/* ---------- Butin d'un choix ---------- */
+
+.pe-loot {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    border: 1px dashed rgb(255 204 0 / 35%);
+    border-radius: 8px;
+    background: rgb(255 204 0 / 4%);
+}
+
+.pe-loot-label {
+    font-size: 12px;
+    color: var(--ui-accent);
+}
+
+.pe-loot-label small {
+    color: var(--ui-text-dim);
+}
+
+.pe-loot-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.pe-loot-list:empty {
+    display: none;
+}
+
+.pe-loot-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 100%;
+    padding: 2px 2px 2px 4px;
+    border: 1px solid rgb(255 204 0 / 40%);
+    border-radius: 999px;
+    background: rgb(255 204 0 / 10%);
+    font-size: 12px;
+}
+
+.pe-loot-chip.is-custom {
+    border-style: dashed;
+}
+
+.pe-loot-chip img,
+.pe-loot-initial {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    object-fit: contain;
+}
+
+.pe-loot-initial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 35%);
+    color: var(--ui-accent);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.pe-loot-chip > span:not(.pe-loot-initial) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pe-loot-chip button {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--ui-text-dim);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.pe-loot-chip button:hover {
+    background: rgb(255 90 110 / 20%);
+    color: var(--ui-danger);
+}
+
+.pe-loot-add {
+    display: flex;
+    gap: 4px;
+}
+
+.pe-loot-add[hidden] {
+    display: none;
+}
+
+.pe-node .pe-loot-add input {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 8px;
+    border: 1px solid var(--ui-border);
+    border-radius: 7px;
+    background: rgb(0 0 0 / 32%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 12px;
+}
+
+.pe-loot-add button {
+    width: 28px;
+    border: 1px solid rgb(255 204 0 / 50%);
+    border-radius: 7px;
+    background: rgb(255 204 0 / 10%);
+    color: var(--ui-accent);
+    cursor: pointer;
+}

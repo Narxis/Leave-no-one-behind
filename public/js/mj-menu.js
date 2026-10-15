@@ -51,7 +51,10 @@ function setMJCardValue(e) {
     for (let choice of card.choices) {
         document.querySelector('#choice'+i+' .button-text').innerHTML = choice.value;
         document.querySelector('#choice'+i+' .mjreveal-text').innerHTML = '<span class="mjreveal">'+choice.mjreveal+'</span>';
-        document.querySelector('#choice'+i+++' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + choice.reveal;
+        // Butin du choix : distribué sur la page de jeu avant la suite
+        let loot = Array.isArray(choice.loot) && choice.loot.length
+            ? '<br><br><span class="mj-loot">Butin : ' + choice.loot.map(n => String(n).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]))).join(', ') + '</span>' : '';
+        document.querySelector('#choice'+i+++' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + choice.reveal + loot;
         console.log(i)
     }
 }

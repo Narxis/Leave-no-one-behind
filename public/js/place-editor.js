@@ -28,6 +28,15 @@
         <button type="button" class="pe-node-del" data-action="delete" title="Supprimer ce bloc">×</button></div>
     <label>Texte du choix<textarea df-choice rows="2" placeholder="ex. Fouiller les caisses"></textarea></label>
     <label>Infos MJ <small>(facultatif)</small><input type="text" df-mjreveal></label>
+    <div class="pe-loot">
+        <span class="pe-loot-label"><i class="fas fa-gem"></i> Butin <small>(facultatif)</small></span>
+        <div class="pe-loot-list"></div>
+        <div class="pe-loot-add">
+            <input type="text" list="pe-loot-items" maxlength="60" placeholder="Ajouter un objet…">
+            <button type="button" data-action="loot-add" title="Ajouter cet objet au butin"><i class="fas fa-plus"></i></button>
+        </div>
+        <input type="hidden" df-loot>
+    </div>
     <div class="pe-node-adds">
         <button type="button" class="pe-node-add" data-action="add-next"><i class="fas fa-plus"></i> Carte suivante</button>
         <button type="button" class="pe-node-add" data-action="add-reveal"><i class="fas fa-plus"></i> Résultat</button>
@@ -195,6 +204,7 @@
             if (node.name === 'choice') {
                 let taken = node.outputs.output_1.connections.length > 0;
                 el.querySelectorAll('.pe-node-adds button').forEach(btn => btn.disabled = taken);
+                renderLoot(el, lootOf(node));
             }
         }
     }
@@ -428,6 +438,74 @@
             setTimeout(() => field.focus(), 50);
     }
 
+    /* ---------- Butin d'un choix ---------- */
+
+    const LOOT_MAX = 12;
+    // Butin rangé dans node.data.loot en JSON (le champ caché df-loot)
+    function lootOf(node) {
+        try {
+            let list = JSON.parse(node.data.loot || '[]');
+            return Array.isArray(list) ? list : [];
+        }
+        catch (e) {
+            return [];
+        }
+    }
+
+    function setLoot(el, list) {
+        let field = el.querySelector('[df-loot]');
+        field.value = list.length ? JSON.stringify(list) : '';
+        field.dispatchEvent(new Event('input', {bubbles: true}));
+        renderLoot(el, list);
+    }
+
+    // Pastilles des objets, avec l'image de ceux du jeu
+    function renderLoot(el, list) {
+        let box = el.querySelector('.pe-loot-list');
+        if (!box)
+            return;
+        box.innerHTML = '';
+        list.forEach((name, i) => {
+            let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === String(name).toLowerCase());
+            let chip = document.createElement('span');
+            chip.className = 'pe-loot-chip' + (known ? '' : ' is-custom');
+            chip.title = known ? name : name + ' (objet hors catalogue, créé à la distribution)';
+            chip.innerHTML = (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<span class="pe-loot-initial">' + esc(String(name).charAt(0)) + '</span>')
+                + '<span>' + esc(name) + '</span>'
+                + '<button type="button" data-action="loot-remove" data-index="' + i + '" title="Retirer">×</button>';
+            box.append(chip);
+        });
+        let add = el.querySelector('.pe-loot-add');
+        if (add)
+            add.hidden = list.length >= LOOT_MAX;
+    }
+
+    function addLoot(el, node) {
+        let input = el.querySelector('.pe-loot-add input');
+        let name = input.value.trim().slice(0, 60);
+        if (!name)
+            return input.focus();
+        // Même casse que le catalogue quand l'objet existe
+        let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === name.toLowerCase());
+        let list = lootOf(node);
+        if (list.length >= LOOT_MAX)
+            return toast(LOOT_MAX + ' objets au plus par choix', 'error');
+        list.push(known ? known.name : name);
+        setLoot(el, list);
+        input.value = '';
+        input.focus();
+    }
+
+    // Entrée dans le champ : ajoute l'objet
+    board.addEventListener('keydown', (e) => {
+        let input = e.target.closest('.pe-loot-add input');
+        if (input && e.key === 'Enter') {
+            e.preventDefault();
+            let el = input.closest('.drawflow-node');
+            addLoot(el, editor.getNodeFromId(el.id.slice(5)));
+        }
+    });
+
     // Taille d'un bloc à l'écran (estimée tant qu'il n'est pas encore dessiné)
     const SIZE = {card: [260, 340], choice: [230, 240], reveal: [230, 170]};
     function boxOf(node) {
@@ -494,6 +572,15 @@
             case 'add-reveal':
                 addLinked(id, 'output_1', 'reveal', 0);
                 break;
+            case 'loot-add':
+                addLoot(btn.closest('.drawflow-node'), node);
+                break;
+            case 'loot-remove': {
+                let list = lootOf(node);
+                list.splice(parseInt(btn.dataset.index), 1);
+                setLoot(btn.closest('.drawflow-node'), list);
+                break;
+            }
         }
     });
 
@@ -619,6 +706,9 @@
                 let c = {value: choice.data.choice || ''};
                 if ((choice.data.mjreveal || '').trim())
                     c.mjreveal = choice.data.mjreveal;
+                let loot = lootOf(choice);
+                if (loot.length)
+                    c.loot = loot;
                 let next = byId(choice.outputs.output_1.connections[0].node);
                 if (next.name === 'reveal')
                     c.reveal = next.data.reveal || '';

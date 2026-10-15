@@ -567,6 +567,13 @@
           <div class="combat-pending" id="combat-pending"></div>
           <div class="combat-log" id="combat-log"></div>
         </div>
+        <%# Butin d'un choix de carte (card-loot.js) : même présentation que le butin d'un combat %>
+        <div class="combat-container card-loot-area combat-won combat-none" id="card-loot-area">
+          <div class="combat-loot" id="card-loot"></div>
+          <button type="button" class="card-loot-all" id="card-loot-all" hidden>
+            <i class="fas fa-box-open"></i> Tout récupérer dans le vaisseau
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -624,6 +631,7 @@
   <script src="/js/card.js"></script>
   <script src="/js/combat-text.js"></script>
   <script src="/js/combat.js"></script>
+  <script src="/js/card-loot.js"></script>
   <script src="/js/template-card.js"></script>
   <script src="/js/items.js"></script>
   <script src="/js/inventory.js"></script>

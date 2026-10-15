@@ -265,9 +265,11 @@ async function showChoices() {
             if (choice.humans)
                 changeHumans(choice.humans);
             await hideChoices();
+            let loot = Array.isArray(choice.loot) ? choice.loot : [];
             if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL
 
                await writeCardDesc(choice.reveal);
+               await CardLoot.collect(loot);
                let nextCard = await getNextCard();
                currentCard.choices = [{
                        value: 'Continuer votre chemin',
@@ -293,6 +295,7 @@ async function showChoices() {
                 window.location.href = '/next';
             }
             else if (choice.next && choice.next !== '') { // NEXT IS FOLLOWUP
+               await CardLoot.collect(loot);
                await initCard(choice.next);
             }
         });

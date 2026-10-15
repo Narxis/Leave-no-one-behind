@@ -107,6 +107,10 @@
 
     // Ce qu'on attrape : {item: {slug, name}, from, node}
     function sourceOf(target) {
+        let cardLoot = target.closest('.card-loot-item[data-index]');
+        if (cardLoot)
+            return {node: cardLoot, slug: cardLoot.dataset.slug || '', name: cardLoot.dataset.name,
+                from: {type: 'card-loot', index: parseInt(cardLoot.dataset.index)}};
         let loot = target.closest('.combat-loot-item[data-index]');
         if (loot)
             return {node: loot, slug: loot.dataset.slug || '', name: loot.dataset.name,

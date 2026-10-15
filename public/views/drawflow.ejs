@@ -90,6 +90,7 @@
         <ol class="pe-steps">
             <li><b>Une carte de départ.</b> Le lieu commence par la carte qui n'a aucun lien entrant (badge « Départ »).</li>
             <li><b>Des choix.</b> Dans une carte, clique sur « + Ajouter un choix » (3 au plus). Chaque choix est relié à une sortie de la carte.</li>
+            <li><b>Du butin.</b> Un choix peut rapporter des objets (section « Butin » du choix). En jeu, ils s'affichent comme après un combat : le MJ les glisse sur les joueurs ou clique sur « Tout récupérer » pour les ranger dans le vaisseau, puis l'histoire continue.</li>
             <li><b>La suite.</b> Dans un choix, clique sur « + Carte suivante » pour continuer l'histoire, ou sur « + Résultat » pour la terminer.</li>
             <li><b>Enregistrer</b> (Ctrl+S) garde ton travail dans l'éditeur. Un point jaune signale un lieu modifié non enregistré.</li>
             <li><b>Pas de nom à inventer.</b> Les cartes sont numérotées toutes seules dans l'ordre de l'histoire (n° 1 = départ). À l'export, elles s'appellent « lieu-1 », « lieu-2 »…</li>
@@ -143,6 +144,10 @@
 
 <script src="/js/drawflow/drawflow.min.js"></script>
 <script>var PLACES_DATA = <%- vars.dat %>;</script>
+<script>var LOOT_ITEMS = <%- JSON.stringify(lootItems).replace(/</g, '\\u003c') %>;</script>
+<datalist id="pe-loot-items">
+    <% lootItems.forEach(function (item) { %><option value="<%= item.name %>"></option><% }); %>
+</datalist>
 <script src="/js/place-editor.js"></script>
 </body>
 </html>
