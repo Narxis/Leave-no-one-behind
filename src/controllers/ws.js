@@ -8,6 +8,7 @@ const chalk = require("chalk")
 const combat = require("./combat");
 const allies = require("./allies");
 const inventory = require("./inventory");
+const cardLoot = require("./cardLoot");
 
 const init = function (){
 
@@ -105,7 +106,11 @@ const makeAction = async function (raw_response) {
             break;
         case 'inventory-move':
         case 'inventory-sync':
+        case 'card-loot-all':
             payload = inventory.handle(response);
+            break;
+        case 'card-loot-offer':
+            payload = cardLoot.handle(response);
             break;
         case 'ally-add':
         case 'ally-update':

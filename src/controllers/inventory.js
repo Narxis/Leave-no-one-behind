@@ -1,4 +1,5 @@
 const combat = require('./combat');
+const cardLoot = require('./cardLoot');
 
 // Inventaires des joueurs : un objet appartient à un joueur quand son
 // discord_id figure dans « owners » (liste séparée par des virgules). Un id
@@ -72,7 +73,7 @@ const move = async function (data) {
         return {error: 'L\'objet y est déjà'};
 
     // On vérifie et on retire d'abord la source : rien n'est créé si elle est vide
-    let row, lootTaken = false;
+    let row, lootTaken = false, cardLootTaken = false;
     if (from.type === 'player') {
         row = await DB.tables.items.findOne({raw: true, where: {slug: String(data.slug || '')}});
         let owners = row ? ownersOf(row) : [];
@@ -98,6 +99,15 @@ const move = async function (data) {
         if (!row)
             return {error: 'Objet inconnu'};
     }
+    else if (from.type === 'card-loot') {
+        let loot = cardLoot.take(from.index, data.slug, data.name);
+        if (!loot)
+            return {error: 'Ce butin n\'est plus disponible'};
+        row = await ensureItem(loot);
+        cardLootTaken = true;
+        if (!row)
+            return {error: 'Objet inconnu'};
+    }
     else
         return {error: 'Origine inconnue'};
 
@@ -108,7 +118,18 @@ const move = async function (data) {
     else
         await DB.tables.items.increment({quantity: 1}, {where: {id: row.id}});
 
-    return {item: itemView(row, 1), from: from, to: to, lootTaken: lootTaken};
+    return {item: itemView(row, 1), from: from, to: to, lootTaken: lootTaken, cardLootTaken: cardLootTaken};
+}
+
+// « Tout récupérer » : tout le butin de la carte va dans le vaisseau
+const takeAllCardLoot = async function () {
+    let items = cardLoot.takeAll();
+    for (let item of items) {
+        let row = await ensureItem(item);
+        if (row)
+            await DB.tables.items.increment({quantity: 1}, {where: {id: row.id}});
+    }
+    return {cardLootTaken: true, toShip: items.length};
 }
 
 // Message websocket : inventaires à jour (+ l'état du combat si le butin a changé)
@@ -120,6 +141,8 @@ const payload = async function (event) {
     }];
     if (event && event.lootTaken)
         messages.push({action: 'combat', error: false, data: {state: combat.getState(), event: {type: 'loot-taken'}}});
+    if (event && event.cardLootTaken)
+        messages.push(cardLoot.message({type: event.toShip ? 'all-taken' : 'taken', count: event.toShip || 1}));
     return messages;
 }
 
@@ -131,6 +154,8 @@ const handle = async function (response) {
             return {action: 'inventory-error', error: false, data: {message: result.error}};
         return payload(result);
     }
+    if (response.action === 'card-loot-all')
+        return payload(await takeAllCardLoot());
     // inventory-sync : le bot Discord a déjà déplacé l'objet, on diffuse
     return payload((response.data && response.data.event) || null);
 }

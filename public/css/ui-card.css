@@ -974,3 +974,44 @@ body:has(.consommable-tab.open-left) .card-legend {
 .combat-log-line.enemy-attack.hit:first-child {
     color: var(--ui-danger);
 }
+
+/* Butin d'un choix de carte (card-loot.js) : le cadre du combat, aux couleurs du butin */
+.card-loot-area {
+    border-color: rgb(255 204 0 / 45%);
+    background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgb(255 204 0 / 12%), transparent 70%),
+        linear-gradient(160deg, #1a1430, #0a081a);
+    box-shadow: var(--ui-shadow), inset 0 0 60px rgb(0 0 0 / 50%), 0 0 40px rgb(255 204 0 / 12%);
+    z-index: 5;
+}
+
+.card-loot-all {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid var(--ui-accent);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 150ms var(--ui-ease), box-shadow 150ms var(--ui-ease);
+}
+
+.card-loot-all:hover:not(:disabled) {
+    background: rgb(255 204 0 / 18%);
+    box-shadow: var(--ui-glow-accent);
+}
+
+.card-loot-all:disabled {
+    opacity: .5;
+    cursor: wait;
+}
+
+.card-loot-all[hidden] {
+    display: none;
+}
