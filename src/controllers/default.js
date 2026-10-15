@@ -126,7 +126,8 @@ module.exports = {
 
         // if (!data) {
             // data = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
-        fs.readdirSync(__dirname + '/../../storage/cache/').forEach(file => {
+        // Seuls les fichiers des lieux (le cache contient aussi les compagnons, le classement…)
+        fs.readdirSync(__dirname + '/../../storage/cache/').filter(file => file.endsWith('_' + PLACESDAT_FILEMAME)).forEach(file => {
             let json = JSON.parse(fs.readFileSync(__dirname + '/../../storage/cache/'+file,'utf8'));
             let index = Object.keys(json)[0];
             data.drawflow[index] = json[index];
@@ -135,7 +136,8 @@ module.exports = {
         // else
         data = JSON.stringify(data);
 
-        res.render('drawflow', {vars: {dat: data}});
+        // « < » échappé : un texte contenant </script> ne casse pas la page
+        res.render('drawflow', {vars: {dat: data.replace(/</g, '\\u003c')}, lang: langJS});
     },
 
     async renderSingleSheet (req, res) {
