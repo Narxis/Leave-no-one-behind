@@ -41,6 +41,7 @@ function showRace(discord_id, race) {
     let img = document.querySelector('#p' + discord_id + ' .race-img');
     let desc = document.querySelector('#p' + discord_id + ' .race-desc');
     if (img)
+        img.onerror = () => { img.onerror = null; img.src = '/img/races/wat.png'; };
         img.src = '/img/races/' + race + '.png';
 
     // Race active surlignée dans le menu, et son nom en titre de description

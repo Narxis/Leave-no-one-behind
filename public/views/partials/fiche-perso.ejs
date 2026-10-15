@@ -4,17 +4,9 @@
     <div class="race-selector-container">
         <div class="select-affichage"></div>
         <div class="options-affichage">
-            <li class="race-possible" data-name="fnek">Fnek</li>
-            <li class="race-possible" data-name="omphor">Omphor</li>
-            <li class="race-possible" data-name="sylv">Sylv</li>
-            <li class="race-possible" data-name="ygrl">Ygrl</li>
-            <li class="race-possible" data-name="shrymp">Shrymp</li>
-            <li class="race-possible" data-name="aku">Aku</li>
-            <li class="race-possible" data-name="yorc">Yorc</li>
-            <li class="race-possible" data-name="nek_eau">Nek-eau</li>
-            <li class="race-possible" data-name="nek_feu">Nek-feu</li>
-            <li class="race-possible" data-name="nek_terre">Nek-terre</li>
-            <li class="race-possible" data-name="nek_air">Nek-air</li>
+            <% races.forEach(function (race) { %>
+                <li class="race-possible" data-name="<%= race.slug %>"><%= race.name %></li>
+            <% }); %>
         </div>
     </div>
     <div class="player-stats">
