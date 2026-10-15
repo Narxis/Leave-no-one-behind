@@ -1,6 +1,7 @@
 const ws = require("ws");
 const {StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder} = require("discord.js");
 const fs = require("fs");
+const races = require('../../controllers/races');
 
 module.exports = {
 
@@ -10,8 +11,7 @@ module.exports = {
     step: 'creation',
     async execute(interaction) {
 
-        let rawData = fs.readFileSync(__dirname  + './../../config/raceStats.json');
-        let raceStats = JSON.parse(rawData);
+        let raceStats = races.getStats();
         let options = [];
 
         // SEND Data through WebSocket
@@ -33,7 +33,7 @@ module.exports = {
             let desc = `[⚔️` + stats.combat + `] [👟` + stats.pilotage + `] [🧠` + stats.engineering + `] [🛡️` + stats.survival + `] [🗣️` + stats.recon + `]`;
 
             options.push({
-                label: i,
+                label: races.nameOf(i),
                 description: desc,
                 value: i,
                 default: interaction.values[0] === i,

@@ -2,6 +2,7 @@ const ws = require("ws");
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder} = require("discord.js");
 const fs = require("fs");
 const {Player} = require(__dirname + '/../../models/player');
+const races = require('../../controllers/races');
 
 module.exports = {
 
@@ -16,8 +17,7 @@ module.exports = {
         let dataStats = {
             moral: 100
         };
-        let rawData = fs.readFileSync(__dirname  + '/../../config/raceStats.json');
-        let raceStats = JSON.parse(rawData)[race];
+        let raceStats = races.getStats()[race] || {};
         let components = [];
 
         let currentRoll = () => {

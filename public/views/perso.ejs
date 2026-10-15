@@ -90,10 +90,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% Object.keys(raceStats).forEach(function (race) { %>
+                        <% races.forEach(function (race) { %>
                             <tr>
-                                <th scope="row"><%= raceName(race) %></th>
-                                <% STAT_COLS.forEach(function (col) { let mod = parseInt(raceStats[race][col[0]]) || 0; %>
+                                <th scope="row"><%= race.name %><% if (race.custom) { %> <span class="stats-custom">custom</span><% } %></th>
+                                <% STAT_COLS.forEach(function (col) { let mod = parseInt(race.stats[col[0]]) || 0; %>
                                     <td class="num" title="Moyenne <%= average(mod) %>">
                                         <span class="stats-mod mod-<%= mod < 0 ? 'm' + -mod : mod %>"><%= signed(mod) %></span>
                                         <span class="stats-avg">≈<%= average(mod) %></span>

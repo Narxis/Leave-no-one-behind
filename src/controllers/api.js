@@ -10,6 +10,7 @@ const fs = require('fs');
 const validPlaceName = (name) => typeof name === 'string' && /^[a-z0-9_-]{1,40}$/i.test(name);
 const combat = require("./combat");
 const allies = require("./allies");
+const races = require("./races");
 const leaderboard = require("./leaderboard");
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
@@ -20,6 +21,20 @@ module.exports = {
     async index(req, res) {
         res.status(200);
         res.json({});
+    },
+
+    getRaces(req, res) {
+        res.json(races.list());
+    },
+
+    saveRace(req, res) {
+        let result = races.save(req.body || {});
+        res.status(result.error ? 400 : 200).json(result);
+    },
+
+    async deleteRace(req, res) {
+        let result = await races.remove(req.params.slug);
+        res.status(result.error ? 400 : 200).json(result);
     },
 
     async savePlaces(req, res) {

@@ -8,11 +8,14 @@ const allies = require("./allies");
 const inventory = require("./inventory");
 const planetGen = require("./planetGen");
 const leaderboard = require("./leaderboard");
+const races = require("./races");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
 const ws = require("ws");
-var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
+// Textes du jeu pour les pages : recalculés à chaque rendu, pour inclure les
+// races customs créées depuis le démarrage
+var langJS = {get lang() { return 'var lang=' + JSON.stringify(LANG).replace(/</g, '\\u003c') + ';'; }};
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 // Calcule le score final et affiche l'écran de fin (partie réelle et démo)
@@ -143,7 +146,7 @@ module.exports = {
     async renderSingleSheet (req, res) {
 
         let player = await new Player().getData(req.body.discord_id);
-        res.render('partials/fiche-perso', {player: player, langJS});
+        res.render('partials/fiche-perso', {player: player, langJS, races: races.list()});
     },
 
     mjMenu(req, res) {
@@ -164,9 +167,13 @@ module.exports = {
             allies.clear();
         }
         await CONFIG.upsert('gameState', 'creation');
-        // Bonus et malus des races, pour l'explication de la répartition des stats
-        let raceStats = JSON.parse(fs.readFileSync(__dirname + '/../config/raceStats.json', 'utf8'));
-        res.render('perso', {lang: langJS, raceStats: raceStats});
+        // Bonus et malus des races (customs comprises), pour l'explication de la répartition des stats
+        res.render('perso', {lang: langJS, races: races.list()});
+    },
+
+    // Éditeur des races customs
+    renderRaces(req, res) {
+        res.render('races', {lang: langJS, races: races.list(), maxRaces: races.MAX_RACES});
     },
 
     ficheVaisseau(req, res) {

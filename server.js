@@ -15,6 +15,8 @@ const qrcode = require('qrcode-terminal');
 const startServer = async function() {
 
     constants.register();
+    // Races customs (éditeur /races) ajoutées aux textes du jeu
+    require('./src/controllers/races').applyToLang();
     let DB = new db.DB;
     global.DB = await DB.init();
     global.CONFIG = await new Config().hydrateDB();
