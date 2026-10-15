@@ -92,8 +92,9 @@
             <li><b>Des choix.</b> Dans une carte, clique sur « + Ajouter un choix » (3 au plus). Chaque choix est relié à une sortie de la carte.</li>
             <li><b>La suite.</b> Dans un choix, clique sur « + Carte suivante » pour continuer l'histoire, ou sur « + Résultat » pour la terminer.</li>
             <li><b>Enregistrer</b> (Ctrl+S) garde ton travail dans l'éditeur. Un point jaune signale un lieu modifié non enregistré.</li>
-            <li><b>Vérifier</b> liste ce qui manque (choix sans suite, noms en double…). Clique sur un problème pour aller au bloc.</li>
-            <li><b>Exporter pour le jeu</b> produit le JSON des cartes du lieu, à coller dans la section <code>place</code> de <code>src/config/baseCards.json</code>.</li>
+            <li><b>Pas de nom à inventer.</b> Les cartes sont numérotées toutes seules dans l'ordre de l'histoire (n° 1 = départ). À l'export, elles s'appellent « lieu-1 », « lieu-2 »…</li>
+            <li><b>Vérifier</b> liste ce qui manque (choix sans suite, carte sans texte…). Clique sur un problème pour aller au bloc.</li>
+            <li><b>Exporter pour le jeu</b> produit le JSON des cartes du lieu, à coller dans la section <code>place</code> de <code>src/config/baseCards.json</code>, à la place des anciennes cartes de ce lieu.</li>
         </ol>
         <h3>Raccourcis</h3>
         <ul class="pe-keys">
@@ -113,7 +114,7 @@
         <button type="button" class="pe-close" data-close aria-label="Fermer">×</button>
     </div>
     <div class="pe-dialog-body">
-        <p>Colle ces cartes dans la section <code>place</code> de <code>src/config/baseCards.json</code>, puis recharge la base des cartes.</p>
+        <p>Remplace les anciennes cartes de ce lieu par celles-ci dans la section <code>place</code> de <code>src/config/baseCards.json</code>, puis recharge la base des cartes. Les noms ont changé : ne garde pas un mélange des deux.</p>
         <textarea class="pe-export-text" id="pe-export-text" readonly spellcheck="false"></textarea>
         <div class="pe-dialog-actions">
             <button type="button" class="pe-btn" id="pe-export-download"><i class="fas fa-download"></i> Télécharger le fichier</button>

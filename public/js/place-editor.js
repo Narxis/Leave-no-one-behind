@@ -10,10 +10,9 @@
     const TEMPLATES = {
         card: `
 <div class="pe-node">
-    <div class="pe-node-head"><i class="fas fa-money-check"></i><span>Carte</span>
+    <div class="pe-node-head"><i class="fas fa-money-check"></i><span>Carte <span class="pe-card-num"></span></span>
         <span class="pe-start-badge">Départ</span>
         <button type="button" class="pe-node-del" data-action="delete" title="Supprimer ce bloc">×</button></div>
-    <label>Nom (unique)<input type="text" df-name placeholder="ex. hangar-entree"></label>
     <label>Texte lu aux joueurs<textarea df-desc rows="4" placeholder="Ce que découvrent les joueurs…"></textarea></label>
     <label>Infos MJ <small>(visibles seulement par le MJ)</small><input type="text" df-mjreveal placeholder="facultatif"></label>
     <div class="pe-toggles">
@@ -133,16 +132,50 @@
         $('pe-empty').hidden = !!current();
     }
 
-    // Badge « Départ », boutons d'ajout grisés quand il n'y a plus de place, bascules
+    // Numéro de chaque carte d'un lieu, dans l'ordre de l'histoire : la carte de
+    // départ est la n° 1, puis on suit les choix de haut en bas, étape par étape.
+    // Il sert aussi de nom à l'export (« lieu-12 ») : plus de nom à inventer
+    function cardNumbers(place) {
+        let nodes = nodesOf(place);
+        let byId = new Map(nodes.map(n => [String(n.id), n]));
+        let cards = nodes.filter(n => n.name === 'card');
+        let order = new Map();
+        let queue = cards.filter(n => !n.inputs.input_1.connections.length);
+        while (queue.length) {
+            let card = queue.shift();
+            if (order.has(card.id))
+                continue;
+            order.set(card.id, order.size + 1);
+            for (let k = 1; k <= MAX_CHOICES; k++) {
+                let link = card.outputs['output_' + k] && card.outputs['output_' + k].connections[0];
+                let choice = link && byId.get(String(link.node));
+                let next = choice && choice.outputs.output_1.connections[0];
+                let target = next && byId.get(String(next.node));
+                if (target && target.name === 'card' && !order.has(target.id))
+                    queue.push(target);
+            }
+        }
+        // Cartes isolées : à la suite, de haut en bas
+        cards.filter(n => !order.has(n.id)).sort((a, b) => a.pos_y - b.pos_y || a.pos_x - b.pos_x)
+            .forEach(n => order.set(n.id, order.size + 1));
+        return order;
+    }
+    const cardLabel = (numbers, node) => 'carte n° ' + numbers.get(node.id);
+
+    // Badge « Départ », numéros, boutons d'ajout grisés quand il n'y a plus de place, bascules
     function refreshNodes() {
         if (!current())
             return;
+        let numbers = cardNumbers(current());
         for (let node of nodesOf(current())) {
             let el = nodeEl(node.id);
             if (!el)
                 continue;
             if (node.name === 'card') {
                 el.classList.toggle('is-start', !node.inputs.input_1.connections.length);
+                let num = el.querySelector('.pe-card-num');
+                if (num)
+                    num.textContent = 'n° ' + numbers.get(node.id);
                 let used = Object.values(node.outputs).filter(o => o.connections.length).length;
                 let add = el.querySelector('[data-action="add-choice"]');
                 if (add)
@@ -287,16 +320,6 @@
         fitView();
     }
 
-    function suggestCardName(place) {
-        let used = new Set();
-        for (let p of places())
-            nodesOf(p).forEach(n => n.name === 'card' && used.add(n.data.name));
-        let i = 1;
-        while (used.has(place + '-' + i))
-            i++;
-        return place + '-' + i;
-    }
-
     $('pe-new-place').addEventListener('submit', (e) => {
         e.preventDefault();
         let input = $('pe-new-name'), error = $('pe-new-error');
@@ -309,7 +332,7 @@
         editor.addModule(name);
         selectPlace(name);
         // Un lieu commence toujours par une carte de départ
-        let id = addBlock('card', 120, 120, {name: suggestCardName(name)});
+        let id = addBlock('card', 120, 120);
         input.value = '';
         dirty.add(name);
         refresh();
@@ -353,7 +376,7 @@
             toast('Choisis ou crée d\'abord un lieu', 'error');
             return null;
         }
-        let defaults = type === 'card' ? {name: suggestCardName(current()), desc: '', mjreveal: '', timer: 'off', shuffle: 'off'}
+        let defaults = type === 'card' ? {desc: '', mjreveal: '', timer: 'off', shuffle: 'off'}
             : type === 'choice' ? {choice: '', mjreveal: ''} : {reveal: ''};
         let id = editor.addNode(type, PORTS[type][0], PORTS[type][1], x, y, type, Object.assign(defaults, values || {}), TEMPLATES[type]);
         refreshNodes();
@@ -458,6 +481,7 @@
 
     ['nodeCreated', 'nodeRemoved', 'connectionCreated', 'connectionRemoved', 'nodeMoved', 'nodeDataChanged']
         .forEach(ev => editor.on(ev, markDirty));
+    ['connectionCreated', 'connectionRemoved', 'nodeRemoved'].forEach(ev => editor.on(ev, () => refreshNodes()));
 
     /* ---------- Vérification et export ---------- */
 
@@ -472,24 +496,15 @@
         let starts = cards.filter(n => !n.inputs.input_1.connections.length);
         if (cards.length && !starts.length)
             add('error', cards[0], 'Aucune carte de départ : une carte ne doit avoir aucun lien entrant.');
+        let numbers = cardNumbers(place);
         if (starts.length > 1)
-            starts.slice(1).forEach(n => add('error', n, 'Plusieurs cartes de départ : « ' + (n.data.name || '?') + ' » n\'est reliée à rien.'));
+            starts.slice(1).forEach(n => add('error', n, 'Plusieurs cartes de départ : la ' + cardLabel(numbers, n) + ' n\'est reliée à rien.'));
 
-        let names = new Map();
-        for (let p of places())
-            for (let n of nodesOf(p))
-                if (n.name === 'card' && n.data.name)
-                    names.set(n.data.name, (names.get(n.data.name) || 0) + 1);
         for (let n of cards) {
-            let name = (n.data.name || '').trim();
-            if (!name)
-                add('error', n, 'Une carte n\'a pas de nom.');
-            else if (names.get(name) > 1)
-                add('error', n, 'Le nom « ' + name + ' » est utilisé par plusieurs cartes.');
             if (!(n.data.desc || '').trim())
-                add('warn', n, 'La carte « ' + (name || '?') + ' » n\'a pas de texte.');
+                add('warn', n, 'La ' + cardLabel(numbers, n) + ' n\'a pas de texte.');
             if (!Object.values(n.outputs).some(o => o.connections.length))
-                add('warn', n, 'La carte « ' + (name || '?') + ' » ne propose aucun choix.');
+                add('warn', n, 'La ' + cardLabel(numbers, n) + ' ne propose aucun choix.');
         }
         for (let n of nodes.filter(n => n.name === 'choice')) {
             let label = (n.data.choice || '').trim();
@@ -543,13 +558,15 @@
     function buildExport(place) {
         let nodes = nodesOf(place);
         let byId = (id) => nodes.find(n => String(n.id) === String(id));
-        let cards = nodes.filter(n => n.name === 'card');
+        let numbers = cardNumbers(place);
+        let nameOf = (card) => place + '-' + numbers.get(card.id);
+        let cards = nodes.filter(n => n.name === 'card').sort((a, b) => numbers.get(a.id) - numbers.get(b.id));
         let out = [];
         for (let card of cards) {
             let entry = {};
             if (!card.inputs.input_1.connections.length)
                 entry.start = true;
-            entry.name = card.data.name.trim();
+            entry.name = nameOf(card);
             entry.desc = card.data.desc || '';
             if ((card.data.mjreveal || '').trim())
                 entry.mjreveal = card.data.mjreveal;
@@ -568,14 +585,13 @@
                 if (next.name === 'reveal')
                     c.reveal = next.data.reveal || '';
                 else
-                    c.next = next.data.name.trim();
+                    c.next = nameOf(next);
                 choices.push(c);
             }
             entry.choices = choices;
             out.push(entry);
         }
-        // Carte de départ d'abord, puis par nom
-        return out.sort((a, b) => (b.start ? 1 : 0) - (a.start ? 1 : 0) || a.name.localeCompare(b.name));
+        return out;
     }
 
     let exportName = '';
