@@ -480,12 +480,7 @@
     letter-spacing: .08em;
 }
 
-.drawflow-node.is-start .pe-card-num {
-    color: var(--ui-text);
-    letter-spacing: .04em;
-}
-
-.pe-start-badge {
+.drawflow-node.is-start .pe-start-badge {
     display: inline-block;
 }
 
@@ -841,6 +836,26 @@ kbd {
 .pe-toast.show {
     opacity: 1;
     transform: translate(-50%, 0);
+}
+
+.pe-toast.has-action {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-right: 8px;
+    pointer-events: auto;
+}
+
+.pe-toast button {
+    padding: 5px 12px;
+    border: 1px solid var(--ui-accent);
+    border-radius: 999px;
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
 }
 
 .pe-toast.error {
