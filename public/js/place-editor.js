@@ -74,12 +74,22 @@
     /* ---------- Messages ---------- */
 
     let toastTimer = null;
-    function toast(text, kind) {
+    function toast(text, kind, action) {
         let t = $('pe-toast');
         t.textContent = text;
-        t.className = 'pe-toast show' + (kind ? ' ' + kind : '');
+        t.className = 'pe-toast show' + (kind ? ' ' + kind : '') + (action ? ' has-action' : '');
+        if (action) {
+            let btn = document.createElement('button');
+            btn.type = 'button';
+            btn.textContent = action.label;
+            btn.addEventListener('click', () => {
+                t.classList.remove('show');
+                action.run();
+            });
+            t.append(btn);
+        }
         clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+        toastTimer = setTimeout(() => t.classList.remove('show'), action ? 8000 : 2600);
     }
 
     function confirmBox(title, text, okLabel) {
@@ -245,7 +255,7 @@
         let byId = new Map(nodes.map(n => [String(n.id), n]));
         let children = (n) => Object.keys(n.outputs).sort().flatMap(k => n.outputs[k].connections.map(c => byId.get(String(c.node)))).filter(Boolean);
         let placed = new Set(), cursor = 0, depthX = [];
-        const GAP_X = 90, GAP_Y = 30;
+        const GAP_X = 110, GAP_Y = 40;
         let colX = (d) => depthX[d];
         // Largeur de chaque colonne = son bloc le plus large
         let widths = [];
@@ -278,14 +288,31 @@
             place(start, 0);
         // Blocs qui ne partent d'aucune carte de départ : rangés en dessous
         cursor += 120;
-        let x0 = 0;
+        let x0 = 0, rowH = 0, inRow = 0;
         for (let n of nodes.filter(n => !placed.has(n.id))) {
+            if (inRow === 6) {
+                cursor += rowH + GAP_Y;
+                x0 = rowH = inRow = 0;
+            }
             move(n, x0, cursor);
             x0 += boxOf(n).w + GAP_X;
+            rowH = Math.max(rowH, boxOf(n).h);
+            inRow++;
         }
         nodes.forEach(n => editor.updateConnectionNodes('node-' + n.id));
         markDirty();
+        showArranged();
+    }
+
+    // Après un rangement : tout le lieu s'il reste lisible, sinon le début de
+    // l'histoire, à une taille où les blocs se lisent
+    function showArranged() {
         fitView();
+        let start = nodesOf(current()).find(n => n.name === 'card' && !n.inputs.input_1.connections.length);
+        if (editor.zoom >= .45 || !start)
+            return;
+        let z = .7, W = editor.precanvas.clientWidth;
+        setView(start.pos_x - 60 + W / (2 * z), start.pos_y + boxOf(start).h / 2, z);
     }
 
     function move(node, x, y) {
@@ -298,12 +325,23 @@
         }
     }
 
-    $('pe-arrange').addEventListener('click', async () => {
-        if (!current())
-            return;
-        let ok = await confirmBox('Ranger le lieu ?', 'Les blocs de « ' + current() + ' » seront replacés en arbre, de la carte de départ vers la droite. Recharge la page sans enregistrer pour annuler.', 'Ranger');
-        if (ok)
-            arrange();
+    $('pe-arrange').addEventListener('click', () => {
+        let place = current();
+        if (!place)
+            return toast('Choisis d\'abord un lieu', 'error');
+        let before = nodesOf(place).map(n => [n, n.pos_x, n.pos_y]);
+        let wasDirty = dirty.has(place);
+        arrange();
+        toast('Blocs réorganisés', null, {label: 'Annuler', run: () => {
+            if (current() !== place)
+                selectPlace(place);
+            before.forEach(([n, x, y]) => move(n, x, y));
+            before.forEach(([n]) => editor.updateConnectionNodes('node-' + n.id));
+            if (!wasDirty)
+                dirty.delete(place);
+            refresh();
+            fitView();
+        }});
     });
 
     $('pe-zoom-in').addEventListener('click', () => editor.zoom_in());

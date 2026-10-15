@@ -21,6 +21,7 @@
         <span class="pe-status" id="pe-status" role="status">Tout est enregistré</span>
         <div class="pe-actions">
             <button type="button" class="pe-btn" id="pe-help-btn"><i class="fas fa-question-circle"></i> Aide</button>
+            <button type="button" class="pe-btn" id="pe-arrange" title="Écarter et aligner les blocs en arbre, depuis la carte de départ"><i class="fas fa-sitemap"></i> Réorganiser</button>
             <button type="button" class="pe-btn" id="pe-check"><i class="fas fa-check-double"></i> Vérifier</button>
             <button type="button" class="pe-btn" id="pe-export"><i class="fas fa-file-export"></i> Exporter pour le jeu</button>
             <button type="button" class="pe-btn pe-btn-primary" id="pe-save" title="Ctrl+S"><i class="fas fa-save"></i> Enregistrer</button>
@@ -68,7 +69,6 @@
         <div class="pe-zoom">
             <button type="button" id="pe-zoom-out" title="Dézoomer"><i class="fas fa-search-minus"></i></button>
             <button type="button" id="pe-fit" title="Voir tout le lieu"><i class="fas fa-expand"></i> Tout voir</button>
-            <button type="button" id="pe-arrange" title="Replacer les blocs en arbre"><i class="fas fa-sitemap"></i> Ranger</button>
             <button type="button" id="pe-zoom-in" title="Zoomer"><i class="fas fa-search-plus"></i></button>
         </div>
         <section class="pe-problems" id="pe-problems" hidden>
@@ -93,6 +93,7 @@
             <li><b>La suite.</b> Dans un choix, clique sur « + Carte suivante » pour continuer l'histoire, ou sur « + Résultat » pour la terminer.</li>
             <li><b>Enregistrer</b> (Ctrl+S) garde ton travail dans l'éditeur. Un point jaune signale un lieu modifié non enregistré.</li>
             <li><b>Pas de nom à inventer.</b> Les cartes sont numérotées toutes seules dans l'ordre de l'histoire (n° 1 = départ). À l'export, elles s'appellent « lieu-1 », « lieu-2 »…</li>
+            <li><b>Réorganiser</b> écarte et aligne tous les blocs du lieu en un clic, en arbre depuis la carte de départ. « Annuler » dans la notification remet tout comme avant.</li>
             <li><b>Vérifier</b> liste ce qui manque (choix sans suite, carte sans texte…). Clique sur un problème pour aller au bloc.</li>
             <li><b>Exporter pour le jeu</b> produit le JSON des cartes du lieu, à coller dans la section <code>place</code> de <code>src/config/baseCards.json</code>, à la place des anciennes cartes de ce lieu.</li>
         </ol>
