@@ -1,0 +1,260 @@
+/* Panneau MJ : marchand et bourses (mj-shop.js), même cadre que le plan du vaisseau */
+.mj-shop {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr);
+    gap: 24px;
+    align-items: start;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 24px;
+    padding: 20px 24px;
+    border: 1px solid var(--ui-border);
+    border-radius: 20px;
+    background: var(--ui-surface);
+    box-shadow: var(--ui-shadow);
+}
+
+.mj-shop.is-open {
+    border-color: rgb(255 204 0 / 55%);
+    box-shadow: var(--ui-shadow), 0 0 30px rgb(255 204 0 / 10%);
+}
+
+.mj-shop-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.mj-shop-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mj-shop-state {
+    font-size: .9em;
+    opacity: .7;
+}
+
+.mj-shop.is-open .mj-shop-state {
+    color: var(--ui-accent);
+    opacity: 1;
+}
+
+.mj-page .mj-shop .add-life {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    margin: 0;
+    padding: 7px 12px;
+    font-size: .95em;
+}
+
+.mj-page .mj-shop select.add-life,
+.mj-page .mj-shop input.add-life {
+    cursor: auto;
+    text-align: left;
+}
+
+.mj-page .mj-shop select.add-life option {
+    background: #17181c;
+}
+
+.mj-page .mj-shop button:disabled {
+    opacity: .4;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Lignes de l'étal et de la vente : objet | prix | cryopods | stock | bouton | × */
+.mj-shop-stock-head,
+.mj-shop-stock .mj-shop-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 76px 84px 60px 84px 24px;
+    align-items: center;
+    gap: 8px;
+}
+
+.mj-shop-stock-head {
+    font-size: .8em;
+    opacity: .6;
+}
+
+.mj-shop-stock,
+.mj-shop-sell,
+.mj-shop-wallets {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mj-shop-sell .mj-shop-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 70px 40px 84px;
+    align-items: center;
+    gap: 8px;
+}
+
+.mj-shop-row {
+    padding: 4px 6px;
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-shop-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.mj-shop-name > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mj-shop-img {
+    width: 26px;
+    height: 26px;
+    flex: none;
+    object-fit: contain;
+}
+
+.mj-shop-noimg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 35%);
+    color: var(--ui-accent);
+    font-weight: 700;
+}
+
+.mj-shop-input {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    padding: 5px 6px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: .95em;
+}
+
+.mj-shop-input:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+}
+
+.mj-shop-cryo {
+    font-size: .8em;
+    opacity: .7;
+}
+
+.mj-page .mj-shop .mj-shop-buy {
+    padding: 5px 8px;
+    font-size: .85em;
+}
+
+.mj-shop-remove {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--ui-text-dim);
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.mj-shop-remove:hover {
+    color: var(--ui-danger);
+}
+
+.mj-shop-empty {
+    margin: 4px 0;
+    font-size: .9em;
+    opacity: .6;
+}
+
+.mj-shop-add {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px auto;
+    gap: 8px;
+}
+
+.mj-shop-add[hidden] {
+    display: none;
+}
+
+.mj-shop-pay,
+.mj-shop-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.mj-shop-pay label,
+.mj-shop-seller {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: .85em;
+    opacity: .9;
+}
+
+.mj-shop-msg {
+    min-height: 1.2em;
+    font-size: .9em;
+    color: var(--ui-accent);
+}
+
+.mj-shop-msg.error {
+    color: var(--ui-danger);
+}
+
+.mj-shop-wallet {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 90px 52px;
+    align-items: center;
+    gap: 8px;
+}
+
+.mj-shop-wallet-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mj-shop-wallet-amount {
+    color: var(--ui-accent);
+    white-space: nowrap;
+}
+
+.mj-shop-cryopods {
+    font-size: .9em;
+    opacity: .7;
+}
+
+.mj-shop-log {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 160px;
+    overflow-y: auto;
+    font-size: .9em;
+}
+
+.mj-shop-log-line.sell {
+    color: #8fd18f;
+}
+
+@media (max-width: 1100px) {
+    .mj-shop {
+        grid-template-columns: 1fr;
+    }
+}

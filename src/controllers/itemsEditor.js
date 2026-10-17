@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const races = require('./races');
+const money = require('./money');
 
 // Catalogue des objets (éditeur /items) : src/config/items.json, rangé par
 // catégorie (« pool »). Chaque objet a aussi un type facultatif (arme,
@@ -12,6 +13,8 @@ const races = require('./races');
 // La quantité (« qty », 1 si absente) est le nombre d'exemplaires donnés à
 // chaque joueur pour un objet de départ, et la quantité proposée d'office
 // quand on ajoute l'objet à un butin (cartes, ennemis, combat).
+// Le prix (« price », en monnaie du jeu, absent : pas de prix) est celui des
+// marchands ; ils le rachètent à une part de ce prix (config/currency.json).
 
 const ITEMS_FILE = path.join(__dirname, '../config/items.json');
 const IMAGE_DIR = path.join(__dirname, '../../public/img/items');
@@ -20,6 +23,7 @@ const STARTER = 'starter';
 const MAX_NAME = 60;
 const MAX_DESC = 600;
 const MAX_QTY = 99;
+const MAX_PRICE = 99999;
 // Types proposés d'office dans l'éditeur ; on peut en créer d'autres
 // Raretés, de la plus courante à la plus rare
 const RARITIES = ['commun', 'peu_commun', 'rare', 'epique', 'legendaire'];
@@ -34,6 +38,7 @@ const slugify = (text, sep = '-') => String(text).toLowerCase()
 
 const imageUrl = (file) => file ? IMAGE_PATH + file : '';
 const qtyOf = (v) => Math.min(Math.max(parseInt(v) || 1, 1), MAX_QTY);
+const priceOf = (v) => Math.min(Math.max(parseInt(v) || 0, 0), MAX_PRICE);
 const ownersOf = (row) => row && row.owners ? String(row.owners).split(',').filter(Boolean) : [];
 
 // Exemplaires dans la partie en cours : {slug: {players, ship}}
@@ -60,11 +65,12 @@ const list = async function () {
                 rarity: RARITIES.includes(item.rarity) ? item.rarity : RARITIES[0],
                 race: item.race || '',
                 qty: qtyOf(item.qty),
+                price: priceOf(item.price),
                 image: imageUrl(item.image),
                 used: used[item.slug] || {players: 0, ship: 0}
             });
     let types = TYPES.concat([...new Set(items.map(i => i.type).filter(t => t && !TYPES.includes(t)))]);
-    return {items: items, pools: Object.keys(pools), types: types, races: races.list().map(r => ({slug: r.slug, name: r.name}))};
+    return {items: items, pools: Object.keys(pools), types: types, races: races.list().map(r => ({slug: r.slug, name: r.name})), currency: money.publicConfig()};
 }
 
 const find = function (pools, slug) {
@@ -135,6 +141,8 @@ const save = async function (data) {
         item.race = race;
     if (qtyOf(data.qty) > 1)
         item.qty = qtyOf(data.qty);
+    if (priceOf(data.price) > 0)
+        item.price = priceOf(data.price);
     item.image = existing ? (existing.item.image || '') : '';
 
     // Image envoyée par l'éditeur : un PNG déjà redimensionné par le navigateur

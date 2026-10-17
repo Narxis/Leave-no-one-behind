@@ -1,0 +1,10 @@
+{
+  "name": "crédit",
+  "plural": "crédits",
+  "short": "cr",
+  "lore": "Le crédit galactique est la monnaie des stations, des marchés et des casinos de la galaxie. L'OLI en confie un petit pécule à chaque membre d'équipage avant le départ. Les marchands les moins regardants acceptent aussi d'être payés en cryopods.",
+  "cryopodsPerCredit": 5,
+  "sellRatio": 0.5,
+  "startPlayer": 20,
+  "startShip": 0
+}

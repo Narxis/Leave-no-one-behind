@@ -1010,6 +1010,11 @@
     flex: 0 1 220px;
 }
 
+.ie-price-hint {
+    color: var(--ui-text-dim);
+    font-size: 12px;
+}
+
 .ie-qty-badge {
     margin-left: 4px;
     opacity: .8;
