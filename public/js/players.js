@@ -99,3 +99,50 @@ function initialisePlayerExpander() {
         })
     })
 }
+// Nom long sur l'en-tête d'une carte : la police rétrécit jusqu'à 13px ; si ça
+// ne tient toujours pas (cartes étroites), le nom passe sur deux lignes en 12px
+function fitPlayerName(tab) {
+    let name = tab.querySelector('.player-name');
+    let text = tab.querySelector('.player-name-text');
+    if (!name || !text || !text.clientWidth)
+        return;
+    name.classList.remove('name-wrap');
+    text.style.fontSize = text.style.lineHeight = '';
+    let size = parseFloat(getComputedStyle(text).fontSize);
+    while (text.scrollWidth > text.clientWidth + 1 && size > 13) {
+        size -= .5;
+        text.style.fontSize = size + 'px';
+    }
+    if (text.scrollWidth > text.clientWidth + 1) {
+        text.style.fontSize = '';
+        name.classList.add('name-wrap');
+        // Trois lignes nécessaires (mots longs, PNJ à race longue) : un cran plus petit
+        if (text.scrollHeight > text.clientHeight + 1) {
+            text.style.fontSize = '11px';
+            text.style.lineHeight = '11.5px';
+        }
+    }
+}
+
+(function () {
+    const fitAll = () => document.querySelectorAll('.player-tab').forEach(fitPlayerName);
+    // Une carte qui change de largeur (arrivée d'un PNJ, animation d'entrée,
+    // fenêtre redimensionnée) remesure son nom
+    let resized = typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(entries => entries.forEach(e => fitPlayerName(e.target))) : null;
+    const watch = () => document.querySelectorAll('.player-tab').forEach(tab => {
+        if (resized && !tab.dataset.fitWatched) {
+            tab.dataset.fitWatched = '1';
+            resized.observe(tab);
+        }
+    });
+    watch();
+    fitAll();
+    let container = document.getElementById('playertabs_container');
+    if (container)
+        new MutationObserver(() => { watch(); fitAll(); }).observe(container, {childList: true});
+    // La police Jura arrive après le premier rendu : on remesure
+    if (document.fonts)
+        document.fonts.ready.then(fitAll);
+    window.addEventListener('resize', fitAll);
+})();

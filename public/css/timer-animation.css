@@ -212,19 +212,19 @@
 /*---vvv-----Timer Idle------vvv---*/
 #bigboite.idle #arm1 {
   opacity: 1;
-  animation: gunfloat1 2s ease-out infinite;
+  animation: gunfloat1 2s ease-in-out infinite;
 }
 
 #bigboite.idle #arm2 {
-  animation: gunfloat2 2s ease-out infinite;
+  animation: gunfloat2 2s ease-in-out infinite;
 }
 
 #bigboite.idle #arm3 {
-  animation: gunfloat3 2s ease-out infinite;
+  animation: gunfloat3 2s ease-in-out infinite;
 }
 
 #bigboite.idle #jaw-up {
-  animation: gunfloat4 2s ease-out infinite;
+  animation: gunfloat4 2s ease-in-out infinite;
 }
 
 @keyframes gunfloat1 {
@@ -327,12 +327,12 @@
   }
 
   25% {
-    transform: scale(150);
+    transform: scale(14);
     opacity: 0.8;
   }
 
   100% {
-    transform: scale(150);
+    transform: scale(14);
     opacity: 0;
   }
 }
@@ -453,6 +453,7 @@
 }
 
 .blue-orbit {
+  --ax: 1, 1, 0;
   width: 165px;
   height: 165px;
   border: 1px solid #ffffff;
@@ -462,15 +463,17 @@
 }
 
 .green-orbit {
+  --ax: 0, 1, 1;
   width: 120px;
   height: 120px;
   border: 1px solid #ffffff;
   background: rgb(255, 255, 255);
   background: radial-gradient(circle, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 36%, rgba(255, 255, 255, 1) 55%, rgba(255, 255, 255, 0) 56%);
-  animation: spin3D .95s reverse 0s infinite;
+  animation: spin3D .95s linear 0s infinite reverse;
 }
 
 .red-orbit {
+  --ax: 1, 0, 1;
   width: 90px;
   height: 90px;
   border: 1px solid #ffffff;
@@ -483,23 +486,19 @@
   width: 60px;
   height: 60px;
   border: 2px solid #ffffff;
-  animation: spin3D .01s reverse 0s infinite;
+  animation: spin3D .7s linear 0s infinite reverse;
 }
 
 .w1 {
-  transform: rotate3D(1, 1, 1, 90deg);
+  --ax: 1, 1, 1;
 }
 
 .w2 {
-  transform: rotate3D(1, 2, .5, 90deg);
+  --ax: 1, 2, .5;
 }
 
 .w3 {
-  transform: rotate3D(.5, 1, 2, 90deg);
-}
-
-#bigboite.grow #boulboite{
-  animation: spingrow 20.5s linear forwards;
+  --ax: .5, 1, 2;
 }
 
 #bigboite.float #floatboite {
@@ -508,86 +507,28 @@
   animation-direction: alternate-reverse;
 }
 
-@keyframes spingrow {
-  0% {
-    transform: scale(0);
-  }
-
-  33% {
-    transform: scale(0.10);
-  }
-
-  97% {
-    transform: scale(0.12);
-  }
-
-  99.9% {
-    transform: scale(1.2);
-  }
-
-  100% {
-    transform: scale(0.8);
-  }
-}
-
 @keyframes spin3D {
-  0% {
-    transform: rotate3d(.5, .5, .5, 360deg);
+  from {
+    transform: rotate3d(var(--ax, 1, 1, 0), 0deg);
   }
 
-  50% {
-    transform: rotate3d(0, 0, 0, 180deg);
-  }
-
-  100% {
-    transform: rotate3d(-0.5, -0.5, -0.5, 360deg);
+  to {
+    transform: rotate3d(var(--ax, 1, 1, 0), 360deg);
   }
 }
 
 @keyframes laserfloat {
   0% {
-    top: 15px;
+    translate: 0 15px;
   }
 
   100% {
-    top: 9px;
+    translate: 0 9px;
   }
 }
 
 /*---^^^------Laser boule-----^^^---*/
 /*---vvv------Timer Shot------vvv---*/
-#bigboite.shot .ringl,
-#bigboite.shot .ringl2 {
-  transition: 2s;
-  animation: ringshotl 1s linear forwards;
-}
-
-#bigboite.shot .ringr,
-#bigboite.shot .ringr {
-  transition: 2s;
-  animation: ringshotr 1s linear forwards;
-}
-
-@keyframes ringshotl {
-  50% {
-    transform: translatex(-200px), scale(1.5);
-  }
-
-  100% {
-    transform: translatex(100px), scale(1);
-  }
-}
-
-@keyframes ringshotr {
-  50% {
-    transform: translatex(200px), scale(1.5);
-  }
-
-  100% {
-    transform: translatex(-100px), scale(1);
-  }
-}
-
 #bigboite.shot #arm1 {
   opacity: 1;
   animation: shotarm1 2.67s ease-in-out forwards;
@@ -610,30 +551,41 @@
 }
 
 @keyframes shotarm1 {
-  0% {}
+  0% {
+    transform: rotate(-8deg);
+    animation-timing-function: ease-in-out;
+  }
 
   30% {
     transform: rotate(20deg);
+    animation-timing-function: ease-in;
   }
 
   70% {
+    opacity: 1;
     transform: rotate(-65deg);
+    animation-timing-function: ease-out;
   }
 
   100% {
+    opacity: 0;
     transform: rotate(-190deg);
   }
 }
 
 @keyframes shotarm2 {
-  0% {}
+  0% {
+    transform: rotate(20deg);
+  }
 
   40% {
     transform: rotate(120deg);
+    animation-timing-function: ease-in;
   }
 
   70% {
     transform: rotate(-10deg);
+    animation-timing-function: ease-out;
   }
 
   100% {
@@ -642,7 +594,9 @@
 }
 
 @keyframes shotarm3 {
-  0% {}
+  0% {
+    transform: rotate(-16deg);
+  }
 
   50% {
     transform: rotate(99deg);
@@ -658,17 +612,21 @@
 }
 
 @keyframes shotjaw-up {
-  0% {}
+  0% {
+    transform: rotate(-4deg);
+  }
 
   25% {
     transform: rotate(-50deg);
   }
 
   70% {
-    transform: rotate(15deg)
+    transform: rotate(15deg);
   }
 
-  100% {}
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 @keyframes shotjaw-down {
@@ -707,8 +665,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  rotate: 31deg;
-  animation: yeet .8s ease-out forwards;
+  animation: yeet 1.1s linear forwards;
   display: block;
 }
 
@@ -718,34 +675,256 @@
 
 @keyframes yeet {
   0% {
-    transform: translate(-72px, -75px) rotate(31deg);
+    opacity: 1;
+    transform: translate(-42px, -15px) rotate(62deg);
+    animation-timing-function: cubic-bezier(.35, .1, .6, .9);
+  }
+
+  25% {
+    transform: translate(-223px, -160px) rotate(-29deg);
+    animation-timing-function: cubic-bezier(.4, 0, .8, .6);
+  }
+
+  /* Impact sur le vaisseau, puis ricochet hors champ */
+  51% {
+    opacity: 1;
+    transform: translate(-573px, -174px) rotate(-119deg);
+    animation-timing-function: cubic-bezier(.15, .6, .35, 1);
   }
 
   100% {
-    transform: translate(-1120px, 275px) rotate(-280deg);
+    opacity: 0;
+    transform: translate(-980px, -545px) rotate(-529deg);
   }
 }
 
+/*---vvv------Chiffres du timer------vvv---*/
+#bigboite.beat #timer-text,
+#bigboite.beat #timer-text2 {
+  animation: timer-beat 1s ease-out;
+}
+
+#bigboite.critical.beat #timer-text,
+#bigboite.critical.beat #timer-text2 {
+  animation: timer-crit 1s linear;
+}
+
+@keyframes timer-beat {
+  0% {
+    fill: #ff8a7a;
+  }
+
+  100% {
+    fill: red;
+  }
+}
+
+@keyframes timer-crit {
+
+  0%,
+  45% {
+    fill: #ffd2c8;
+  }
+
+  50%,
+  100% {
+    fill: #a00000;
+  }
+}
+
+/*---vvv------Boule d'énergie------vvv---*/
+#bigboite.grow #boulboite {
+  transform: scale(var(--charge, 0));
+  transition: transform 1s linear, opacity 3s;
+}
+
+#boulboite::before {
+  content: '';
+  position: absolute;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 248, 255, .9) 0%, rgba(90, 210, 255, .45) 24%, rgba(60, 120, 255, .14) 48%, transparent 68%);
+  animation: halo-pulse 1.4s ease-in-out infinite;
+}
+
+#bigboite.overcharge #boulboite::before {
+  background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(160, 235, 255, .6) 26%, rgba(90, 140, 255, .22) 50%, transparent 70%);
+  animation-duration: .45s;
+}
+
+@keyframes halo-pulse {
+  50% {
+    transform: scale(1.18);
+    opacity: .75;
+  }
+}
+
+/* Surcharge : la boule tremble */
+#bigboite.overcharge #boulboite {
+  animation: ball-jitter .16s steps(1) infinite;
+}
+
+@keyframes ball-jitter {
+  0% {
+    translate: 2px -1px;
+  }
+
+  25% {
+    translate: -2px 1px;
+  }
+
+  50% {
+    translate: 1px 2px;
+  }
+
+  75% {
+    translate: -1px -2px;
+  }
+}
+
+#bigboite.overcharge .ringl,
+#bigboite.overcharge .ringl2 {
+  transition: .6s;
+  transform: translateX(-45px);
+}
+
+#bigboite.overcharge .ringr,
+#bigboite.overcharge .ringr2 {
+  transition: .6s;
+  transform: translateX(45px);
+}
+
+/* Fin du temps : la boule enfle... et fait pschitt */
+#bigboite.fizzle #boulboite {
+  opacity: 1;
+  animation: fizzle 1s ease-in forwards;
+}
+
+@keyframes fizzle {
+  0% {
+    transform: scale(1);
+  }
+
+  18% {
+    transform: scale(1.3);
+  }
+
+  30% {
+    transform: scale(1.05);
+  }
+
+  42% {
+    transform: scale(1.22);
+    opacity: 1;
+  }
+
+  60% {
+    opacity: .5;
+  }
+
+  66% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0);
+    opacity: .3;
+  }
+}
+
+#bigboite.fizzle .ring,
+#bigboite.shot .ring {
+  transition: .4s;
+  transform: none;
+}
+
+.fizzle-puff {
+  position: absolute;
+  left: -9px;
+  top: 61px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(190, 198, 214, .8);
+  filter: blur(1px);
+  opacity: 0;
+  pointer-events: none;
+  animation: puff 1.1s ease-out forwards;
+}
+
+@keyframes puff {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(.3);
+  }
+
+  45% {
+    opacity: .85;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(2.4);
+  }
+}
+
+/*---vvv------Vaisseau percuté------vvv---*/
+.ship-impact {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  margin: -48px 0 0 -48px;
+  background: radial-gradient(circle, #fff 0 16%, #fff1a8 28%, #ffc531 50%, #ff8a1f 70%);
+  clip-path: polygon(50% 0%, 59% 33%, 93% 18%, 70% 45%, 100% 58%, 66% 64%, 77% 97%, 50% 72%, 22% 96%, 33% 64%, 0% 56%, 30% 45%, 8% 18%, 41% 33%);
+  pointer-events: none;
+  z-index: 30;
+  animation: impact-burst .55s ease-out forwards;
+}
+
+@keyframes impact-burst {
+  0% {
+    opacity: 1;
+    transform: scale(.2) rotate(0deg);
+  }
+
+  35% {
+    opacity: 1;
+    transform: scale(1.15) rotate(18deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.5) rotate(32deg);
+  }
+}
+
+.bonk,
+.comeback {
+  z-index: 20;
+}
+
 .bonk {
-  animation: bonk 1.2s cubic-bezier(.22, -0.02, .14, 1.16) forwards;
+  animation: bonk 1s cubic-bezier(.15, .75, .35, 1) forwards;
 }
 
 @keyframes bonk {
   0% {
-    transform: translate(0px, 0px) rotate(0deg);
+    transform: translate(0px, 0px) rotate(-14deg);
   }
 
-  25% {
-    transform: translate(-328px, 275px) rotate(31deg);
+  8% {
+    transform: translate(-30px, 16px) rotate(-55deg);
   }
 
   100% {
-    transform: translate(-328px, 275px) rotate(10deg);
+    transform: translate(-328px, 275px) rotate(-350deg);
   }
 }
 
+/* Retour : le vaisseau s'oriente vers sa place, pousse, puis freine */
 .comeback {
-  animation: reguys 1.6s ease-in-out forwards;
+  animation: reguys 1.9s ease-in-out forwards;
 }
 
 @keyframes reguys {
@@ -753,8 +932,80 @@
     transform: translate(-328px, 275px) rotate(10deg);
   }
 
+  18% {
+    transform: translate(-320px, 266px) rotate(-38deg);
+  }
+
+  68% {
+    transform: translate(-34px, 12px) rotate(-34deg);
+  }
+
+  84% {
+    transform: translate(6px, -6px) rotate(-6deg);
+  }
+
   100% {
     transform: translate(0px, 0px) rotate(-14deg);
+  }
+}
+
+/*---vvv------Flammes du réacteur------vvv---*/
+#vaisseau {
+  overflow: visible;
+}
+
+#ship-flame {
+  transform-box: view-box;
+  transform-origin: 140px 360px;
+  transform: scaleX(0);
+  opacity: 0;
+  transition: transform .4s ease-in, opacity .4s ease-in;
+}
+
+#plugship.thrust #ship-flame {
+  transform: scaleX(1);
+  opacity: 1;
+  transition: transform .18s cubic-bezier(.3, 1.6, .6, 1), opacity .1s;
+}
+
+#ship-flame path {
+  transform-box: view-box;
+  transform-origin: 140px 360px;
+}
+
+#plugship.thrust #ship-flame path {
+  animation: flame-flicker .09s ease-in-out infinite alternate;
+}
+
+#plugship.thrust #ship-flame .flame-mid {
+  animation-duration: .07s;
+  animation-delay: -.03s;
+}
+
+#plugship.thrust #ship-flame .flame-core {
+  animation-duration: .11s;
+}
+
+.flame-outer {
+  fill: #ff6a1a;
+  opacity: .85;
+}
+
+.flame-mid {
+  fill: #ffb31a;
+}
+
+.flame-core {
+  fill: #fff4c8;
+}
+
+@keyframes flame-flicker {
+  from {
+    transform: scale(1, 1);
+  }
+
+  to {
+    transform: scale(.8, 1.1);
   }
 }
 

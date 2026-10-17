@@ -1,6 +1,25 @@
 class SocketLNOB {
     constructor() {
+        this.queue = [];
+        this.connected = false;
+        this.connect();
+    }
+
+    // Connexion, et reconnexion automatique si le serveur redémarre : sans
+    // ça, une page ouverte restait sourde jusqu'au rechargement
+    connect() {
         this.socket = new WebSocket("ws://" + window.location.host);
+        this.socket.onopen = () => {
+            let reconnected = this.connected;
+            this.connected = true;
+            for (let data of this.queue.splice(0))
+                this.socket.send(data);
+            if (reconnected)
+                document.dispatchEvent(new CustomEvent('ws-reconnect'));
+        };
+        this.socket.onclose = () => {
+            setTimeout(() => this.connect(), 2000);
+        };
         this.socket.onmessage = (event) => {
             try {
                 let resp = JSON.parse(event.data);
@@ -22,9 +41,13 @@ class SocketLNOB {
         }
     }
 
-    // Send payload to backend
+    // Send payload to backend (mis en attente si la connexion est coupée)
     send(data) {
-        this.socket.send(JSON.stringify(data));
+        let payload = JSON.stringify(data);
+        if (this.socket.readyState === WebSocket.OPEN)
+            this.socket.send(payload);
+        else
+            this.queue.push(payload);
     }
 
     // Send a roll request to the backend

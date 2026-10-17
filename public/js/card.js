@@ -46,88 +46,33 @@ function startCountDown() {
     let time_left = 30;
     countDownRunning = true;
 
-    interval_cd = setInterval(async function () {
-        let timerText = document.querySelector('#timer-text');
-        let timerText2 = document.querySelector('#timer-text2');
-        let bigBoite = document.querySelector('#bigboite');
-        let plugShip = document.querySelector('#plugship');
-        let choicetab = document.getElementById('choicetab');
-
-        timerText.textContent = (time_left < 10 ? '0' : '') + time_left;
-        timerText2.textContent = (time_left < 10 ? '0' : '') + time_left;
-        switch (time_left) {
-            case 30:
-                bigBoite.classList.add('start')
-                bigBoite.classList.add('grow')
-                bigBoite.classList.add('float')
-                break;
-            case 28:
-                bigBoite.classList.add('idle')
-                bigBoite.classList.remove('start')
-                break;
-            case 10:
-                bigBoite.classList.add('flash')
-                break;
-            case 9:
-                await sleep(300)
-                bigBoite.classList.remove('flash')
-                break;
-            case 0:
-                clearInterval(interval_cd);
-                countDownRunning = false;
-                choicetab.style.pointerEvents = 'none';
-                await sleep(500)
-                await hideChoices();
-                bigBoite.classList.remove('grow')
-                bigBoite.classList.add('plop')
-                await sleep(100)
-                choicetab.style.pointerEvents = 'init';
-                await sleep(400)
-                bigBoite.classList.add('shot')
-                await sleep(1520)
-                bigBoite.classList.add('show-plugun')
-                bigBoite.classList.add('hide-plugun')
-                await sleep(250)
-                plugShip.classList.remove('shipflotte')
-                plugShip.classList.add('bonk')
-                await sleep(900)
-                plugShip.classList.remove('bonk')
-                plugShip.classList.add('comeback')
-                await sleep(1200)
-                plugShip.classList.add('shipflotte')
-                bigBoite.classList.remove('idle')
-                bigBoite.classList.add('hide')
-                await sleep(300)
-                plugShip.classList.remove('comeback')
-                currentCard.choices = currentCard.choices.slice(-1)
-                await showChoices();
-                break;
+    const tick = async function () {
+        if (time_left > 0) {
+            TimerAnim.tick(time_left);
+            time_left--;
+            return;
         }
-        time_left--;
-
-    }, 1000);
+        clearInterval(interval_cd);
+        countDownRunning = false;
+        let choicetab = document.getElementById('choicetab');
+        TimerAnim.tick(0);
+        choicetab.style.pointerEvents = 'none';
+        await sleep(500);
+        await hideChoices();
+        choicetab.style.pointerEvents = '';
+        await TimerAnim.finish();
+        currentCard.choices = currentCard.choices.slice(-1);
+        await showChoices();
+    };
+    tick();
+    interval_cd = setInterval(tick, 1000);
 }
 
 async function stopCountdown() {
-
-    let bigBoite = document.querySelector('#bigboite');
     if (typeof interval_cd !== 'undefined' && countDownRunning) {
         clearInterval(interval_cd);
         countDownRunning = false;
-        bigBoite.classList.remove("grow");
-        bigBoite.classList.remove("flash");
-        bigBoite.classList.add("plop");
-        await sleep(500);
-        bigBoite.classList.remove("idle");
-        bigBoite.classList.remove("start");
-        bigBoite.classList.add("startnot");
-        await sleep(3870);
-        bigBoite.classList.remove("startnot");
-        bigBoite.classList.remove("plop");
-        bigBoite.classList.remove('idle')
-        bigBoite.classList.remove('shot')
-        bigBoite.classList.remove('show-plugun')
-        bigBoite.classList.remove('hide-plugun')
+        await TimerAnim.cancel();
     }
 }
 
@@ -168,8 +113,8 @@ async function initialiseStatusList (){
     }
 }
 
+// Le coffre est redessiné par l'événement « inventory » (inventory.js)
 function removeStarterItem(id, slug) {
-    document.querySelector('#player-tab'+id+' .itemlist-line.'+slug).remove();
     wsLNOB.delItem(slug, id);
 }
 
@@ -180,10 +125,10 @@ function quickUpdateModule(el, mod, left=false) {
     let isCryopods = mod === 'cryopods';
     let maxVal = isCryopods ? 1000 : 100;
     if (left) {
-        currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText);
+        currentVal = parseInt(document.querySelector('#'+mod+'-value').innerText) || 0;
     }
     else {
-        currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value'));
+        currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value')) || 0;
         input = document.getElementsByName('i-'+ mod)[0];
         inputVal = input.value;
     }
@@ -219,6 +164,19 @@ function quickUpdateModule(el, mod, left=false) {
     setModuleVal(mod, newValue, left);
 }
 
+// Choix qui coûtent (ou rapportent) des humains : appliqué au clic
+function changeHumans(delta) {
+    let counter = document.querySelector('#cryopods-value');
+    let current = parseInt(counter.innerText) || 0;
+    setModuleVal('cryopods', current + delta, true);
+
+    let pop = document.createElement('div');
+    pop.className = 'human-delta ' + (delta < 0 ? 'loss' : 'gain');
+    pop.textContent = (delta > 0 ? '+' : '') + delta;
+    counter.parentElement.append(pop);
+    setTimeout(() => pop.remove(), 1800);
+}
+
 function setModuleVal(mod, newValue, left) {
     if (typeof wsLNOB === 'undefined'){
         console.error('YOU MUST INCLUDE socketLNOB.js before this');
@@ -226,6 +184,10 @@ function setModuleVal(mod, newValue, left) {
     let isCryopods = mod === 'cryopods';
     let maxVal = isCryopods ? 1000 : 100;
 
+    // Une valeur non numérique (case vide, saisie invalide) ne doit jamais
+    // être affichée ni envoyée au serveur
+    newValue = Number(newValue);
+    if (!Number.isFinite(newValue)) return;
     newValue = Math.min(Math.max(newValue, 0), maxVal);
 
     if (left) {
@@ -300,10 +262,14 @@ async function showChoices() {
         choiceBtn.innerHTML = choice.value;
         choiceBtn.addEventListener('mouseup', async function() {
             stopCountdown();
+            if (choice.humans)
+                changeHumans(choice.humans);
             await hideChoices();
+            let loot = Array.isArray(choice.loot) ? choice.loot : [];
             if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL
 
                await writeCardDesc(choice.reveal);
+               await CardLoot.collect(loot);
                let nextCard = await getNextCard();
                currentCard.choices = [{
                        value: 'Continuer votre chemin',
@@ -329,6 +295,7 @@ async function showChoices() {
                 window.location.href = '/next';
             }
             else if (choice.next && choice.next !== '') { // NEXT IS FOLLOWUP
+               await CardLoot.collect(loot);
                await initCard(choice.next);
             }
         });
@@ -336,6 +303,17 @@ async function showChoices() {
         await sleep(150);
         choiceBtn.classList.remove('move-down');
     }
+}
+
+// Clic sur la carte pendant l'écriture : le texte s'accélère fortement
+// (remis à zéro à chaque nouveau texte)
+var cardTextFast = false;
+var cardTextWriting = false;
+const CARD_TEXT_FAST_FACTOR = 15;   // pauses divisées par 15
+const CARD_TEXT_FAST_CHARS = 5;     // et 5 caractères par pause
+
+function cardTextPause(ms) {
+    return sleep(cardTextFast ? ms / CARD_TEXT_FAST_FACTOR : ms);
 }
 
 async function writeCardDesc(text = null) {
@@ -346,22 +324,32 @@ async function writeCardDesc(text = null) {
     let textDiv = document.querySelector('.card-text');
     text = text || currentCard.desc;
     text = text.replaceAll(stopTokenToReplace, stopToken);
+    cardTextFast = false;
+    cardTextWriting = true;
     for (let i = 0; i <= text.length; i++) {
         textDiv.innerText = currentText;
         if (text.substring(i, i + 1) === stopToken) {
             for (let j=0; j<4; j++) {
-                await sleep(400);
+                await cardTextPause(400);
                 currentText += '.';
                 textDiv.innerText = currentText;
             }
             currentText = '';
-            await sleep(500);
+            await cardTextPause(500);
         } else {
             currentText += text.substring(i, i + 1)
         }
-        await sleep(21.7)
+        if (!cardTextFast || i % CARD_TEXT_FAST_CHARS === 0)
+            await cardTextPause(21.7)
     }
+    textDiv.innerText = currentText;
+    cardTextWriting = false;
 }
+
+document.addEventListener('mouseup', function (e) {
+    if (cardTextWriting && e.button === 0 && e.target.closest('.container-card'))
+        cardTextFast = true;
+});
 
 (function(){
     initCard();

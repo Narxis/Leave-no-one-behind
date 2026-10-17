@@ -6,6 +6,12 @@ const {Items} = require("../models/items");
 const {Card} = require("../models/card");
 const drawflow = require("../controllers/drawflow");
 const fs = require('fs');
+// Nom d'un lieu de l'éditeur : il sert de nom de fichier, rien d'autre que lettres, chiffres, - et _
+const validPlaceName = (name) => typeof name === 'string' && /^[a-z0-9_-]{1,40}$/i.test(name);
+const combat = require("./combat");
+const allies = require("./allies");
+const races = require("./races");
+const leaderboard = require("./leaderboard");
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 // TODO replace shipId with current game ship ID
@@ -17,10 +23,26 @@ module.exports = {
         res.json({});
     },
 
+    getRaces(req, res) {
+        res.json(races.list());
+    },
+
+    saveRace(req, res) {
+        let result = races.save(req.body || {});
+        res.status(result.error ? 400 : 200).json(result);
+    },
+
+    async deleteRace(req, res) {
+        let result = await races.remove(req.params.slug);
+        res.status(result.error ? 400 : 200).json(result);
+    },
+
     async savePlaces(req, res) {
 
         try {
             let name = Object.keys(req.body)[0];
+            if (!validPlaceName(name))
+                return res.json({success: false, error: 'Nom de lieu invalide'});
             let body = JSON.stringify(req.body);
             // SAVE A COPY IN CACHE (failsafe)
             fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
@@ -65,6 +87,8 @@ module.exports = {
 
     async deletePlace(req, res) {
         let name = req.body.name;
+        if (!validPlaceName(name))
+            return res.json({success: false, error: 'Nom de lieu invalide'});
 
         try {
             fs.unlinkSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME);
@@ -140,6 +164,26 @@ module.exports = {
             delete player['accepted_datas'];
             res.json(player)
         }
+    },
+
+    getCombat(req, res) {
+        res.json(combat.getState());
+    },
+
+    getAllies(req, res) {
+        res.json(allies.getAllies());
+    },
+
+    // Équipe de la partie en cours (nommée par le MJ avant de commencer)
+    getTeam(req, res) {
+        res.json(leaderboard.getCurrent());
+    },
+
+    setTeam(req, res) {
+        let team = leaderboard.setTeam(req.body && req.body.name);
+        if (!team)
+            return res.status(400).json({error: 'Nom d\'équipe vide'});
+        res.json(team);
     },
 
     async getAllPlayers(req, res) {

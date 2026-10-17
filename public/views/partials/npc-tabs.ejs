@@ -1,0 +1,6 @@
+<%# Modèle d'onglet pour les alliés (PNJ) : le même que celui des joueurs, rempli par /js/npc-tabs.js %>
+<template id="npc-tab-template">
+  <%- include("player-tabs", {player: {discord_id: 'NPCID', name: 'NPCNAME', race: 'NPCRACE', items: [],
+      combat: 0, pilotage: 0, engineering: 0, survival: 0, recon: 0, moral: 0}}) %>
+</template>
+<script src="/js/npc-tabs.js"></script>

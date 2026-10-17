@@ -5,7 +5,8 @@
         "/css/timer-animation.css",
         "/css/style.css",
         "https://use.fontawesome.com/releases/v5.7.2/css/all.css",
-        "/css/plan-du-vaisseau.css"
+        "/css/plan-du-vaisseau.css",
+        "/css/ui-card.css"
     ]
 }) %>
 
@@ -74,7 +75,7 @@
                           d="M1444.38,808.89c-112.71,32.34-181.75,9.6-216.92-11.06a21.51,21.51,0,0,1-1.92-35.79c24.69-18.18,59.5-61.42,75-163.81,11.74-80.49.51-124.79-12.46-148.6a21.48,21.48,0,0,1,17.78-31.76c40.51-2,106.78,3.24,182.07,42.94,78,41.13,115,94.08,132,125.12,25.64,46.65,40.35,77.62.07,123.52C1602.3,729.74,1545,780,1444.38,808.89Z" />
                         <text id="timer-background" class="timer-dim" data-name="88-background" font-size="228.26"
                           font-family="7Segments">88</text>
-                        <text id="timer-text" class="timer-text" font-family="7Segments">31</text>
+                        <text id="timer-text" class="timer-text" font-family="7Segments">30</text>
                         <path id="ring1r-fill" class="ring1 ring1r ringr ring"
                           d="M1047.54,588.65c-2.14,46.81-35.92,279.84-222.73,255.43-13.92-15.11-7.38-65.68-5.38-69.78A84.85,84.85,0,0,0,861.54,769c20.66-8.36,38.24-24.84,52.75-46.67.12-.17.23-.33.33-.49,19.53-30.18,36.58-70.51,44.76-141.12,7-81.07-1.27-137.34-19.3-173.61-.16-.3-.31-.61-.46-.9-14.85-28.92-37-47-66.52-45.59-.52,0-1,.1-1.56.16a.22.22,0,0,0,0-.08c2.69-18.59,9.87-53.58,27.77-54.47C1011.43,311.72,1059.22,458.72,1047.54,588.65Z"
                           fill="#94eeff" />
@@ -208,7 +209,7 @@
                 d="M1444.38,808.89c-112.71,32.34-181.75,9.6-216.92-11.06a21.51,21.51,0,0,1-1.92-35.79c24.69-18.18,59.5-61.42,75-163.81,11.74-80.49.51-124.79-12.46-148.6a21.48,21.48,0,0,1,17.78-31.76c40.51-2,106.78,3.24,182.07,42.94,78,41.13,115,94.08,132,125.12,25.64,46.65,40.35,77.62.07,123.52C1602.3,729.74,1545,780,1444.38,808.89Z" />
               <text id="timer-background2" class="timer-dim" data-name="88-background" font-size="228.26"
                 font-family="7Segments">88</text>
-              <text id="timer-text2" class="timer-text" font-family="7Segments">31</text>
+              <text id="timer-text2" class="timer-text" font-family="7Segments">30</text>
               <path id="ring1r-fill2" class="ring1 ring1r ringr ring"
                 d="M1047.54,588.65c-2.14,46.81-35.92,279.84-222.73,255.43-13.92-15.11-7.38-65.68-5.38-69.78A84.85,84.85,0,0,0,861.54,769c20.66-8.36,38.24-24.84,52.75-46.67.12-.17.23-.33.33-.49,19.53-30.18,36.58-70.51,44.76-141.12,7-81.07-1.27-137.34-19.3-173.61-.16-.3-.31-.61-.46-.9-14.85-28.92-37-47-66.52-45.59-.52,0-1,.1-1.56.16a.22.22,0,0,0,0-.08c2.69-18.59,9.87-53.58,27.77-54.47C1011.43,311.72,1059.22,458.72,1047.54,588.65Z"
                 fill="#94eeff" />
@@ -429,14 +430,15 @@
                     </div>
                   </form>
                   <ul class="todos">
-                    <% if(items){ %>
-                      <% items.forEach(function(item) { %>
-                        <% for(var i=0; i<item.quantity; i++) {%>
-                        <li class="item-<%= item.slug %>">
+                    <% if(typeof shipItems !== 'undefined'){ %>
+                      <% shipItems.forEach(function(item) { %>
+                        <% for(var i=0; i<item.count; i++) {%>
+                        <li class="item-<%= item.slug %>" data-slug="<%= item.slug %>">
                           <input type="checkbox" id="<%= item.slug %>-<%= i %>">
-                          <label for="todo_1">
+                          <label for="<%= item.slug %>-<%= i %>">
+                            <% if (item.image) { %><img class="item-image" src="<%= item.image %>"><% } else { %><span class="item-image item-noimg"><%= item.name.charAt(0) %></span><% } %>
                             <span class="check"></span>
-                            <%= item.name %>
+                            <p><%= item.name %></p>
                           </label>
                           <i class="far fa-trash-alt delete" data-slug="<%= item.slug %>"></i>
                         </li>
@@ -541,6 +543,11 @@
               d="M1001.1,278.54c-11.6-25.59-30.18-45.73-50.61-64.32C922.26,188.75,821.65,111.6,680.07,86.43a8.28,8.28,0,0,1-2-.62c-.15-8.37-.36-14.15-.51-25.67-13.12-6.73-32.57-10.2-52.12-10.7v-4H614.31v4c-19.43.59-37.74,4.11-48.64,10.23L569,85.92c-43.7,7.81-82.84,25.41-114.62,57.19C423,174.52,403.82,213,391.67,256l-70.86,2c-3.95-10.38-7.45-20.54-11.58-30.55-16.12-39.44-37.93-75-72.48-101.16-29.51-22.31-62.55-35-100.28-30.24-33.81,4.18-59.42,22.85-80.65,48.44C29.8,176,16.66,213.07,9.3,252.61-3.72,322-3.82,391.14,13.79,459.8,25,503.2,43.59,542.94,76.4,574.65c25.3,24.42,54.68,41.36,90.21,45.73,31.9,3.87,58.88-7.41,82.13-28.84,19.32-17.76,33.27-39.37,45-62.59,15.65-31.1,26.6-64,34.36-97.78.37-1.49.79-2.84,1.36-5l67.47-3.35c3,7.17,5.65,13.82,8.7,20.24,23.13,48.27,57.47,85.9,105.88,109.6,24.8,12.13,51.76,15.66,78.93,18.08,65,5.74,127.43-4.62,188.32-27.32,55.35-20.57,105.59-49.29,148.16-90.58a360.27,360.27,0,0,0,74.78-104.71C1013,324.7,1011.61,301.51,1001.1,278.54ZM568.82,61.41c12.12-6.27,28.7-9.33,45.48-9.91v2.1c-15,.52-23,3.1-23,4.82,0,.93,1,1.82,2.78,2.48s7.59,2.81,25.89,2.81c20.56,0,28.69-3.17,28.69-5.09,0-.93-1-1.81-2.77-2.48s-6.18-2.24-20.44-2.57V51.48c19.6.55,38.13,4.32,48.66,10.13.12,3.48.52,20.7.69,26-28.23,11.8-63.11,12.09-102,3.66C572.05,83.17,569.88,68.54,568.82,61.41Zm.59,29.47.34,2.28c42.5,11.39,85.1,9.42,107.66-3.67,2.88.69,14.06,2.76,17.79,3.3,0,0-47.22,23.73-59.48,44.81C620.3,119,568.89,99.25,551.4,95.54c5.79-2.08,13.37-4.2,18-4.66ZM330.66,418.45c-5.63.22-8.09,2.16-9.34,7.87a432.18,432.18,0,0,1-30.66,91.78c-10.16,21.09-22.71,43-40.45,61.42-23.63,24.57-51.58,38.37-86.42,32.78-32-5.12-58.91-20.68-81.88-43-32.17-31.19-50.25-70.23-61-112.79C3.19,386.37,4,315.89,18.62,245.5c7.28-35.15,20.2-68,43.21-96.15,40.54-49.65,95.81-60.2,151.82-29.15,26.29,14.6,46.33,35.65,62.74,60.41A276.17,276.17,0,0,1,312.07,259c1.46,5.11,4.05,7.11,9.32,6.72,6-.5,11.94-.45,18-.59,22.5-.35,45-1.58,67.4-.63,27.54,1.15,51.53,11.24,65.09,36.87,17,32,12.89,63.9-5.29,94-7.36,12.34-18.84,18.87-34.53,19.1C398.26,415.05,364.45,417.13,330.66,418.45ZM841.71,506a11.46,11.46,0,0,1,3.16-2.93c39.58-29.1,73.36-63.71,99.91-105.25a33,33,0,0,0,2.37-5.74l-1.77-1.17a18.11,18.11,0,0,0-3.47,3.13c-6.84,9.59-13.14,19.67-20.57,28.88C871.58,484.14,812.52,531.59,733.52,549.3c-2.71.6-5.47,1.29-8.32,1.94l-8.14,1.8c22.46-9.65,43.9-20.66,64.12-34,46.39-30.87,84.58-69.91,115.08-116.56,1.08-1.59,1.39-3.66,2.06-5.55l-2-1.07a51.49,51.49,0,0,0-3.53,4c-34,51.07-76.24,93.74-129.42,124.94C728.06,545.53,690.56,560.13,649.2,563c-5.81.36-11.66.58-17.43.85,15-5.18,30.29-9.6,44.82-15.58,48.74-20.14,90.58-50.72,128.71-86.59,14.31-13.48,27.43-28.19,41-42.37,1.31-1.37,1.76-3.49,2.61-5.3l-2-1.16a50,50,0,0,0-4.2,3.77,533.24,533.24,0,0,1-63.47,62.17c-37.83,31.48-78.74,57.52-125.74,73.51-43.85,14.93-87.23,13.61-130.06-2.93-29.48-11.35-53.72-30.52-74.57-54a22.86,22.86,0,0,1-2.27-3.17c20.85,15.57,43.11,28.16,67.72,36.23,48.09,15.7,95.29,12,141.59-7,36.87-15.13,68.59-38.1,98.41-64.06,34.55-29.92,71.24-56.63,113.55-74.61,27.55-11.78,56.13-19.42,86.5-16.05,8.29.92,16.4,3.42,26.16,5.47C945.81,430.8,899.4,474.37,841.71,506ZM982.92,368.25c-5.24-2.25-20.25-4.9-30-6-27.36-2.94-53.34,3.38-78.65,13.23-39.41,15.36-74,38.62-106.65,65.15-23.67,19.24-46.14,39.94-72.3,55.8-31.45,19.12-64.77,32.82-101.72,36.4-44.68,4.48-85.38-7-123.49-30C418.41,474.19,406.17,426,404.58,423c10.81-.43,19.74-1.31,28.61-.89,17.42.8,29.51-8,39.1-21C485,383.74,489,363.65,490,342.64c1.88-40.35-23.74-74.42-63.13-83.48-8.68-2-17.56-2.86-26.85-4.25.39-2.25,7.85-31.54,24.05-58.31,25.59-48.19,67.46-83.07,119.74-99,19.61.84,86.24,30.47,92.58,45.63,7.82-21.75,61.11-49.91,62.69-49.5,60.39,11.44,190,58.93,276,150.65-54.19-43.11-129.05-53.63-185.8-58.94,29.67,52.9,48.4,107.94,39.15,170.24,59.73,6,119,4,174.08-26.18C1002.51,329.5,999,345.11,982.92,368.25Zm-51-18c-32.66,5.72-65.41,5.32-98.69,1.57,4.25-28.73,1.86-56.5-5.12-83.89s-18.15-53.22-33-78.77c12.53,1.81,113.09,5.65,183.46,60.16,7.43,9.58,27.87,36.35,24.45,74.31-21,14.31-46.52,22.37-71.11,26.66Z" />
             <path id="valve-trait" class="cls-6"
               d="M659.48,41.87a31.39,31.39,0,0,0-10.26-1.59s-21.89-.7-29-.72-29,.52-29,.52c-8,0-14.5,2.33-14.51,5.25,0,1.41,1.5,2.76,4.22,3.76a31,31,0,0,0,10.25,1.59s21.89.82,29,.84,29-.64,29-.64c8,0,14.51-2.33,14.51-5.25C663.69,44.22,662.21,42.88,659.48,41.87ZM620.17,41c7.15,0,24.79.7,24.79.7-21.09,2.65-.33.07-20.87,2.64a28.73,28.73,0,0,0-3.93-.27,32.58,32.58,0,0,0-3.95.23L606,43l-10.67-1.43S613,41,620.17,41Zm-34.68,7.55c-.62-.16-1.19-.33-1.72-.52-2-.73-3-1.7-3-2.72,0-1.37,2-2.57,5-3.23,26.19,3.25-1.1-.15,27.34,3.39-28.58,3.22-1.06.17-27.57,3.12ZM620.15,50c-7.15,0-25.31-.83-25.31-.83l20.81-2.49a25.24,25.24,0,0,0,4.51.35,27.77,27.77,0,0,0,4.55-.31h0c19.94,2.5-.84-.1,20.81,2.62,0,0-18.22.72-25.37.7Zm34.68-1.25c-26.49-3.12,1,.14-27.52-3.25,28.47-3.33,1.16-.13,27.36-3.21a15.69,15.69,0,0,1,1.89.55c2,.73,3.05,1.7,3,2.73.05,1.42-1.86,2.56-4.73,3.22Z" />
+            <g id="ship-flame">
+              <path class="flame-outer" d="M135,255 C60,272 -260,335 -480,360 C-260,385 60,448 135,465 C160,420 160,300 135,255 Z" />
+              <path class="flame-mid" d="M135,290 C50,305 -190,345 -330,360 C-190,375 50,415 135,430 C152,400 152,320 135,290 Z" />
+              <path class="flame-core" d="M135,322 C80,332 -60,352 -150,360 C-60,368 80,388 135,398 C146,380 146,340 135,322 Z" />
+            </g>
           </svg>
         </div>
         <div class="container-card container--1">
@@ -551,69 +558,27 @@
           <div class="answer answer2"></div>
         </div>
         <div class="combat-container combat-none" id="combat-area">
-          <div class="ennemy-container">
-            <div class="ennemy-name">Yorc avec une épée</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
+          <div class="combat-head">
+            <span class="combat-title">Combat</span>
+            <span class="combat-hint">Le MJ désigne la cible et l'attaquant</span>
           </div>
-          <div class="ennemy-container">
-            <div class="ennemy-name">Yorc sans épée</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
-          </div>
-          <div class="ennemy-container">
-            <div class="ennemy-name">Ygrl avec un fouet</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
-          </div>
-          <div class="ennemy-container">
-            <div class="ennemy-name">Aku</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
-          </div>
-          
-          <div class="ennemy-container">
-            <div class="ennemy-name">Sylv avec un baton</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-            <div class="ennemy-separateur"></div>
-          </div>
-          <div class="ennemy-container">
-            <div class="ennemy-name">Nek-air avec un gros livre</div>
-            <div class="offense-container">
-              <button class="roll-button offense-roll" id="offense-ennemy1">Offense</button>
-              <button class="roll-button defence-roll" id="defense-ennemy1">Défense</button>
-            </div>
-            <div class="ennemy-damage output-roll"></div>
-            <button class="roll-button damage-roll" id="defense-ennemy1">Dégâts</button>
-          </div>
+          <div class="combat-enemies" id="combat-enemies"></div>
+          <div class="combat-loot" id="combat-loot"></div>
+          <div class="combat-pending" id="combat-pending"></div>
+          <div class="combat-log" id="combat-log"></div>
+        </div>
+        <%# Butin d'un choix de carte (card-loot.js) : même présentation que le butin d'un combat %>
+        <div class="combat-container card-loot-area combat-won combat-none" id="card-loot-area">
+          <div class="combat-loot" id="card-loot"></div>
+          <button type="button" class="card-loot-all" id="card-loot-all" hidden>
+            <i class="fas fa-box-open"></i> Tout récupérer dans le vaisseau
+          </button>
         </div>
       </div>
     </div>
+  </div>
+  <div class="leftcenter card-legend">
+    <%- include("partials/stats-legend") %>
   </div>
   <div class="rightcenter">
     <div class="human-status">
@@ -661,14 +626,15 @@
   </script>
 
   <script src="/js/players.js"></script>
+  <%- include("partials/npc-tabs") %>
+  <script src="/js/timer-anim.js"></script>
   <script src="/js/card.js"></script>
+  <script src="/js/combat-text.js"></script>
+  <script src="/js/combat.js"></script>
+  <script src="/js/card-loot.js"></script>
   <script src="/js/template-card.js"></script>
-<<<<<<< Updated upstream
-  <script src="/js/slidingtabs.js"></script>
-=======
-  <script src="/js/timer.js"></script>
->>>>>>> Stashed changes
   <script src="/js/items.js"></script>
+  <script src="/js/inventory.js"></script>
   <script>
     var observer = new MutationObserver(function (mutations) {
       mutations.forEach(async function (mutation) {

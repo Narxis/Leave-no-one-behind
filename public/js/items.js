@@ -7,14 +7,15 @@ const list = document.querySelectorAll(".todos li");
 const hiddenAnswer = document.querySelector('#add-item-hidden');
 let listLength = list.length;
 
-const generateTemplate = (item, slug) => {
-  const html = `<li>
+const generateTemplate = (item) => {
+  const html = `<li class="item-${item.slug}" data-slug="${item.slug}">
                   <input type="checkbox" id="todo_${listLength}">
                   <label for="todo_${listLength}">
+                    ${item.image ? `<img class="item-image" src="${item.image}">` : `<span class="item-image item-noimg">${item.name.charAt(0)}</span>`}
                     <span class="check"></span>
-                    ${item}
+                    <p>${item.name}</p>
                   </label>
-                  <i class="far fa-trash-alt delete" data-slug="${slug}"></i>
+                  <i class="far fa-trash-alt delete" data-slug="${item.slug}"></i>
                 </li>`;
   itemList.innerHTML += html;
 };
@@ -26,14 +27,20 @@ function addItem(e) {
   hiddenAnswer.value = "";
   if (item.length) {
     listLength += 1;
-    generateTemplate(item, slug);
+    // generateTemplate(item, slug);
     submitForm.reset();
   }
   wsLNOB.addItem(slug)
 }
 
+function displayItem(e) {
+  if (!e.detail.remove)
+    generateTemplate(e.detail.data)
+}
+
 submitForm.addEventListener("submit", addItem);
 addButton.addEventListener("click", addItem);
+document.addEventListener("item", displayItem);
 
 function deleteTodos(e) {
   if (e.target.classList.contains("delete")) {

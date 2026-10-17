@@ -15,6 +15,8 @@ const qrcode = require('qrcode-terminal');
 const startServer = async function() {
 
     constants.register();
+    // Races customs (éditeur /races) ajoutées aux textes du jeu
+    require('./src/controllers/races').applyToLang();
     let DB = new db.DB;
     global.DB = await DB.init();
     global.CONFIG = await new Config().hydrateDB();
@@ -41,7 +43,9 @@ const startServer = async function() {
     });
 
     WS.init();
-    Bot.start();
+    // DISABLE_BOT=true : serveur de test sans connecter le bot Discord
+    if (process.env.DISABLE_BOT !== 'true')
+        Bot.start();
 }
 
 if (process.env.FORCE_COLOR !== 'true') {

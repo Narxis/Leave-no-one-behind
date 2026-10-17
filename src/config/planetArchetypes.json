@@ -1,0 +1,108 @@
+{
+  "_readme": "Archétypes de planètes : chaque stat est tirée dans une des plages [min, max] (1-100, plus c'est haut plus c'est accueillant). Une stat absente suit la plage par défaut. weight = fréquence relative. Les paliers des textes sont dans public/js/planet.js (oxyValTab, eauValTab…).",
+  "default": {
+    "oxy": [[1, 100]],
+    "grv": [[1, 100]],
+    "wtr": [[1, 100]],
+    "res": [[1, 100]],
+    "fau": [[1, 100]],
+    "flo": [[1, 100]],
+    "civ": [[21, 79], [21, 79], [11, 20], [1, 10], [81, 100]],
+    "cli": [[1, 100]]
+  },
+  "archetypes": {
+    "ocean": {
+      "name": "Monde océan",
+      "weight": 3,
+      "wtr": [[81, 100]],
+      "cli": [[51, 100]],
+      "oxy": [[41, 100]],
+      "flo": [[26, 85]],
+      "fau": [[26, 100]],
+      "res": [[1, 60]]
+    },
+    "desert": {
+      "name": "Désert",
+      "weight": 3,
+      "wtr": [[31, 40]],
+      "cli": [[26, 75]],
+      "oxy": [[21, 80]],
+      "flo": [[1, 50]],
+      "fau": [[1, 60]],
+      "res": [[41, 100]]
+    },
+    "ice": {
+      "name": "Monde glacé",
+      "weight": 2,
+      "wtr": [[21, 30]],
+      "cli": [[51, 75]],
+      "oxy": [[21, 80]],
+      "flo": [[1, 30]],
+      "fau": [[1, 55]],
+      "res": [[21, 80]]
+    },
+    "jungle": {
+      "name": "Jungle",
+      "weight": 2,
+      "flo": [[76, 100]],
+      "fau": [[51, 100]],
+      "wtr": [[41, 75]],
+      "cli": [[51, 100]],
+      "oxy": [[61, 100]],
+      "res": [[21, 85]]
+    },
+    "volcanic": {
+      "name": "Monde volcanique",
+      "weight": 2,
+      "cli": [[1, 25]],
+      "oxy": [[1, 40]],
+      "wtr": [[1, 20]],
+      "flo": [[1, 30]],
+      "fau": [[1, 30]],
+      "res": [[51, 100]]
+    },
+    "toxic": {
+      "name": "Monde toxique",
+      "weight": 2,
+      "oxy": [[21, 40]],
+      "flo": [[26, 50]],
+      "fau": [[26, 50]],
+      "wtr": [[1, 20], [41, 60]],
+      "cli": [[1, 60]],
+      "res": [[21, 80]]
+    },
+    "temperate": {
+      "name": "Monde tempéré",
+      "weight": 2,
+      "oxy": [[61, 100]],
+      "grv": [[61, 100]],
+      "wtr": [[41, 90]],
+      "res": [[41, 100]],
+      "fau": [[51, 100]],
+      "flo": [[51, 100]],
+      "cli": [[76, 100]]
+    },
+    "inhabited": {
+      "name": "Monde habité",
+      "weight": 1,
+      "civ": [[1, 10], [81, 100]],
+      "oxy": [[41, 95]],
+      "wtr": [[41, 90]],
+      "res": [[41, 90]],
+      "cli": [[51, 95]],
+      "flo": [[26, 80]],
+      "fau": [[26, 80]]
+    },
+    "barren": {
+      "name": "Planète rocheuse",
+      "weight": 2,
+      "oxy": [[1, 30]],
+      "wtr": [[1, 20]],
+      "flo": [[1, 25]],
+      "fau": [[1, 25]],
+      "cli": [[21, 60]],
+      "res": [[1, 60]],
+      "civ": [[21, 79]]
+    }
+  }
+}

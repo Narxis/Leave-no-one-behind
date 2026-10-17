@@ -3,12 +3,70 @@ let {generatePlanets, cardPop, deckGenerator,getCardsIds, hydrateCardDB, destroy
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
+const combat = require("./combat");
+const allies = require("./allies");
+const inventory = require("./inventory");
+const planetGen = require("./planetGen");
+const leaderboard = require("./leaderboard");
+const races = require("./races");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
 const ws = require("ws");
-var langJS = {lang:`var lang=JSON.parse(\``+JSON.stringify(LANG)+`\`);`};
+// Textes du jeu pour les pages : recalculés à chaque rendu, pour inclure les
+// races customs créées depuis le démarrage
+var langJS = {get lang() { return 'var lang=' + JSON.stringify(LANG).replace(/</g, '\\u003c') + ';'; }};
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
+
+// Calcule le score final et affiche l'écran de fin (partie réelle et démo)
+// record : vraie fin de partie, le score de l'équipe entre au classement
+const renderEndScreen = async function (res, ship, planet, scoreCards, record = false) {
+    let scoreShip = 30*ship.scanner
+        + 30*ship.proximity
+        + (40*(ship.oxygen+ship.energy+ship.gravity))
+        + 80*ship.construction
+        + 120*(ship.dbscience+ship.dbhistory);
+
+    // Les valeurs des modules sont stockées en texte : sans conversion,
+    // fau.val + flo.val concatène ("32" + "31" = "3231") au lieu d'additionner
+    let mod = (name) => Number(planet.modules[name].val) || 0;
+
+    let scorePlanet = 85*mod('oxy')
+        + 60*mod('grv')
+        + 95*mod('wtr')
+        + 80*mod('res')
+        + 55*mod('cli')
+        + 30*(mod('fau')+mod('flo'))
+        + 65*mod('civ')
+    ;
+
+    let scoreTotal = ship.cryopods * scoreShip * scorePlanet / 500000 + scoreCards;
+
+    let score = {
+        scoreShip: scoreShip,
+        scorePlanet: scorePlanet,
+        scoreCards: scoreCards,
+        scoreTotal: scoreTotal
+    }
+
+    let leaderboardId = record ? await leaderboard.record({
+        score: scoreTotal, cryopods: ship.cryopods, planet: planet.name,
+        scoreShip: scoreShip, scorePlanet: scorePlanet, scoreCards: scoreCards
+    }) : null;
+
+    let js = {vars:`var score=JSON.parse('` + JSON.stringify(score) + `'); var ship=JSON.parse('` + JSON.stringify(ship) + `');`};
+
+    let vars = {
+        ship: ship,
+        score: score,
+        js: js,
+        planet: planet,
+        leaderboardId: leaderboardId,
+        lang: langJS
+    }
+
+    res.render('end-screen', vars);
+}
 
 module.exports = {
     index(req, res) {
@@ -71,7 +129,8 @@ module.exports = {
 
         // if (!data) {
             // data = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
-        fs.readdirSync(__dirname + '/../../storage/cache/').forEach(file => {
+        // Seuls les fichiers des lieux (le cache contient aussi les compagnons, le classement…)
+        fs.readdirSync(__dirname + '/../../storage/cache/').filter(file => file.endsWith('_' + PLACESDAT_FILEMAME)).forEach(file => {
             let json = JSON.parse(fs.readFileSync(__dirname + '/../../storage/cache/'+file,'utf8'));
             let index = Object.keys(json)[0];
             data.drawflow[index] = json[index];
@@ -80,22 +139,41 @@ module.exports = {
         // else
         data = JSON.stringify(data);
 
-        res.render('drawflow', {vars: {dat: data}});
+        // « < » échappé : un texte contenant </script> ne casse pas la page
+        res.render('drawflow', {vars: {dat: data.replace(/</g, '\\u003c')}, lang: langJS, lootItems: combat.getLootList()});
     },
 
     async renderSingleSheet (req, res) {
 
         let player = await new Player().getData(req.body.discord_id);
-        res.render('partials/fiche-perso', {player: player, langJS});
+        res.render('partials/fiche-perso', {player: player, langJS, races: races.list()});
     },
 
     mjMenu(req, res) {
-        res.render('mj-menu', {lang: langJS});
+        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), loot: combat.getLootList()});
     },
 
     async persos(req, res) {
+        // Nouvelle création : les personnages de la partie précédente sont effacés
+        // (avec leurs objets et les compagnons du MJ). Pas sur un rechargement de
+        // la page elle-même, pour ne pas perdre les joueurs qui viennent de rejoindre
+        let from = '';
+        try {
+            from = new URL(req.get('referer') || '').pathname;
+        } catch (e) {}
+        if (from !== '/persos') {
+            await DB.tables.players.destroy({where: {}});
+            await DB.tables.items.update({owners: ''}, {where: {}});
+            allies.clear();
+        }
         await CONFIG.upsert('gameState', 'creation');
-        res.render('perso', {lang: langJS});
+        // Bonus et malus des races (customs comprises), pour l'explication de la répartition des stats
+        res.render('perso', {lang: langJS, races: races.list()});
+    },
+
+    // Éditeur des races customs
+    renderRaces(req, res) {
+        res.render('races', {lang: langJS, races: races.list(), maxRaces: races.MAX_RACES});
     },
 
     ficheVaisseau(req, res) {
@@ -120,12 +198,12 @@ module.exports = {
 
         let itemsMan = new Items();
         let items = await itemsMan.getAllItems(false);
-        let starters = await itemsMan.getAllStarters();
+        let inventories = await inventory.getInventories();
+        let shipItems = await inventory.getShip();
 
         players = players.map(player => {
 
-            let playerItems = starters.filter(item => item.owners.includes(player.discord_id));
-            player['items'] = playerItems;
+            player['items'] = inventories[player.discord_id] || [];
 
             return player;
         })
@@ -144,7 +222,7 @@ module.exports = {
 
         if (!current_card) {
             await CONFIG.upsert('gameState', 'postGame');
-            res.redirect('/land');
+            return res.redirect('/land');
         }
 
         let vars = {
@@ -153,6 +231,7 @@ module.exports = {
             ship: ship,
             statuses: statusesAll,
             items: items,
+            shipItems: shipItems,
             lang: langJS
         }
 
@@ -248,6 +327,8 @@ module.exports = {
             energy: 100,
             gravity: 100,
             landing: 100,
+            dbscience: 100,
+            dbhistory: 100,
             construction: 100,
             scanner_up: 0,
             oxygen_up: 0,
@@ -350,6 +431,8 @@ module.exports = {
             energy: 100,
             gravity: 100,
             landing: 100,
+            dbscience: 100,
+            dbhistory: 100,
             construction: 100,
             scanner_up: 0,
             oxygen_up: 0,
@@ -444,19 +527,103 @@ module.exports = {
         players: players,
         card: card,
         ship: ship,
+        items: [],
         lang: langJS
     }
 
     res.render('template-planet', vars);
 },
 
+    // Labo de test : une planète tirée au hasard à chaque chargement, à scanner
+    // sans limite de points. Rien n'est lu ni écrit dans la partie en cours
+    renderPlanetLab(req, res) {
+        const BANDS = {1: [1, 500], 2: [501, 800], 3: [801, 1000]};
+        // Graine : tout en découle (tranche si elle n'est pas imposée, stats,
+        // coûts, relief, lunes) ; ?seed=… redonne exactement la même planète
+        let seed = parseInt(req.query.seed);
+        if (!(seed > 0 && seed < 2147483647))
+            seed = 1 + Math.floor(Math.random() * 2147483646);
+        let rng = (function (a) {
+            return function () {
+                a = (a + 0x6D2B79F5) | 0;
+                let t = Math.imul(a ^ (a >>> 15), 1 | a);
+                t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+                return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+        })(seed);
+        let band = BANDS[req.query.tranche] ? String(req.query.tranche) : '';
+        let [min, max] = BANDS[band] || BANDS[1 + Math.floor(rng() * 3)];
+        let planet = planetGen.rollPlanet(min, max, rng);
+
+        let modules = {};
+        for (let stat in planet.values)
+            modules[stat] = {val: planet.values[stat], cost: 1 + Math.floor(rng() * 4)};
+
+        let archetype = planetGen.ARCHETYPES.archetypes[planet.archetype];
+        let card = {
+            // Graine du rendu (relief, lunes)
+            id: seed,
+            value: planet.score,
+            name: archetype ? archetype.name : '',
+            modules: modules
+        };
+        let ship = {
+            id: 0, name: '', cryopods: 1000, scanner: 100, proximity: 100, motors: 100, shield: 100,
+            oxygen: 100, energy: 100, gravity: 100, landing: 100, dbscience: 100, dbhistory: 100,
+            construction: 100, scanner_up: 0, oxygen_up: 0, energy_up: 0, gravity_up: 0
+        };
+
+        res.render('template-planet', {
+            players: [],
+            card: card,
+            ship: ship,
+            items: [],
+            lang: langJS,
+            planetLab: {seed: seed, band: band, archetype: card.name || 'Tirage libre', score: planet.score, values: planet.values}
+        });
+    },
+
+    // Démo de l'écran de fin avec un vaisseau et une planète fictifs
     endScreen(req, res) {
-        // The end screen needs a landed planet and a score, which /score computes
-        res.redirect('/score');
+        let ship = {
+            name: '',
+            cryopods: 850,
+            scanner: 80,
+            proximity: 70,
+            motors: 90,
+            shield: 60,
+            oxygen: 75,
+            energy: 65,
+            gravity: 85,
+            landing: 70,
+            dbscience: 50,
+            dbhistory: 40,
+            construction: 60
+        };
+
+        let planet = {
+            value: 890,
+            modules: {
+                oxy: {cost: 2, val: 50},
+                grv: {cost: 3, val: 30},
+                wtr: {cost: 2, val: 30},
+                fau: {cost: 4, val: 60},
+                flo: {cost: 4, val: 60},
+                civ: {cost: 4, val: 60},
+                cli: {cost: 2, val: 30},
+                res: {cost: 1, val: 40}
+            }
+        };
+
+        return renderEndScreen(res, ship, planet, 12000);
     },
 
     leaderboard(req, res) {
-        res.render('leaderboard', {lang: langJS});
+        res.render('leaderboard', {
+            entries: leaderboard.list(),
+            highlight: String(req.query.highlight || ''),
+            lang: langJS
+        });
     },
 
     indexLegacy(req, res) {
@@ -465,6 +632,9 @@ module.exports = {
 
     async land(req, res) {
         let ship = await new Ship().getData();
+        // Pas de partie en cours : retour à l'accueil au lieu de crasher
+        if (!ship)
+            return res.redirect('/');
         await ship.land();
 
         res.redirect('/score')
@@ -472,7 +642,8 @@ module.exports = {
 
     async showScore(req, res) {
     let ship = await new Ship().getData();
-    await ship.getData();
+    if (!ship)
+        return res.redirect('/');
 
     let deck = await getDeck();
 
@@ -501,49 +672,13 @@ module.exports = {
     }
 
     let planet = await lastPlanet();
-
-    // No planet reached yet: nothing to score, go back instead of crashing the server
-    if (!planet) {
+    // Aucune planète jouée : pas de score possible
+    if (!planet)
         return res.redirect('/');
-    }
-
-    let scoreShip = 30*ship.scanner
-        + 30*ship.proximity
-        + (40*(ship.oxygen+ship.energy+ship.gravity))
-        + 80*ship.construction
-        + 120*(ship.dbscience+ship.dbhistory);
-
-    let scorePlanet = 85*planet.modules.oxy.val
-        + 60*planet.modules.grv.val
-        + 95*planet.modules.wtr.val
-        + 80*planet.modules.res.val
-        + 55*planet.modules.cli.val
-        + 30*(planet.modules.fau.val+planet.modules.flo.val)
-        + 65*(planet.modules.civ.val)
-    ;
 
     let scoreCards = Math.min(6000*cardNegPlayed + 3500*cardNeuPlayed + Math.min(CONFIG.planetCount,10) * Math.min((cardPlanetPlayed-1),9), 500000) - 4500*cardPosPlayed;
 
-    let scoreTotal = ship.cryopods * scoreShip * scorePlanet / 500000 + scoreCards;
-
-    let score = {
-        scoreShip: scoreShip,
-        scorePlanet: scorePlanet,
-        scoreCards: scoreCards,
-        scoreTotal: scoreTotal
-    }
-
-    let js = {vars:`var score=JSON.parse('` + JSON.stringify(score) + `'); var ship=JSON.parse('` + JSON.stringify(ship) + `');`};
-
-    let vars = {
-        ship: ship,
-        score: score,
-        js: js,
-        planet: planet,
-        lang: langJS
-    }
-
-    res.render('end-screen', vars);
+    await renderEndScreen(res, ship, planet, scoreCards, true);
 },
 
     async start(req, res) {

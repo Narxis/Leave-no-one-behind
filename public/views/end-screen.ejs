@@ -2,7 +2,8 @@
     title: "FIN",
     cssFiles:[
         "/css/style.css",
-        "/css/end-screen.css"
+        "/css/end-screen.css",
+        "/css/ui-menus.css"
     ]
 }) %>
 
@@ -36,12 +37,6 @@
                     <div class="scoretext" id="text3">Bonus cartes: </div>
                     <div class="scorevalue" id="score0">
                         <span class="amount" id="amount3" data-value="">0</span>
-                    </div>
-                </div>
-                <div class="line">
-                    <div class="scoretext" id="text4">Autres </div>
-                    <div class="scorevalue" id="score0">
-                        <span class="amount" id="amount4" data-value="">0</span>
                     </div>
                 </div>
                 <div class="line">
@@ -189,6 +184,8 @@
                 </div>
             </div>
             <div class="planet-recap">
+                <canvas class="moons-canvas end-moons" data-planet-moons="compact" aria-hidden="true"></canvas>
+                <canvas class="planet-canvas end-planet" data-planet-view="all" data-planet-radius="69" aria-hidden="true"></canvas>
                 <div class="planet-recap-line" id="planet-line-1">
                     <div class="planet-reading" data-value="<%= planet.modules.oxy.val %>" id="reading-1"></div>
                 </div>
@@ -210,12 +207,14 @@
             </div>
             <div class="consolescore"></div>
         </div>
-        <a href="/leaderboard" class="next">Suivant</a>
+        <a href="/leaderboard<%= leaderboardId ? '?highlight=' + encodeURIComponent(leaderboardId) : '' %>" class="next">Suivant</a>
     </div>
 
     <script>
         <%- js.vars %>
     </script>
+    <script>var PLANET_DATA = <%- JSON.stringify({id: planet.id || 0, modules: planet.modules}).replace(/</g, '\\u003c') %>;</script>
+    <script src="/js/planet-view.js"></script>
     <script src="/js/end-screen.js"></script>
     <script>
         var observer = new MutationObserver(function (mutations) {

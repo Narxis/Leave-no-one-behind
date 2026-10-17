@@ -22,6 +22,8 @@ module.exports = function(router) {
     router.get('/template-card-lieu', controller.renderTestCardPlace);
     router.get('/template-card', controller.renderTestCardEvent);
     router.get('/template-planet', controller.templatePlanet);
+    router.get('/planet-lab', controller.renderPlanetLab);
+    router.get('/races', controller.renderRaces);
     router.get('/leaderboard', controller.leaderboard);
     router.get('/index-legacy', controller.indexLegacy);
 

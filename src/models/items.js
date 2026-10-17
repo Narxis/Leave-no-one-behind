@@ -12,6 +12,7 @@ class Items {
     pool;
     race;
     quantity;
+    image;
     accepted_datas = {
         'owners': [],
         'slug': '',
@@ -19,8 +20,10 @@ class Items {
         'desc': '',
         'pool': '',
         'race': '',
-        'quantity': 0
+        'quantity': 0,
+        'image': ''
     }
+    IMAGE_PATH = '/img/items/';
 
     constructor() {}
 
@@ -29,6 +32,9 @@ class Items {
         for (let dat in this.accepted_datas)
             this[dat] = (typeof data[dat] === 'undefined' ? this.accepted_datas[dat]: data[dat]);
 
+        if (this.image !== '')
+            this.image = this.IMAGE_PATH + this.image;
+
         await DB.tables.items.create({
             owners: this.owners.join(','),
             slug: this.slug,
@@ -36,7 +42,8 @@ class Items {
             desc: this.desc,
             pool: this.pool,
             race: this.race,
-            quantity: this.quantity
+            quantity: this.quantity,
+            image: this.image,
         }).then(result => {
             this.id = result.id;
         });
@@ -55,7 +62,8 @@ class Items {
                 'desc',
                 'pool',
                 'race',
-                'quantity'
+                'quantity',
+                'image'
             ],
             raw: true,
             where: {
@@ -78,12 +86,17 @@ class Items {
     async add(slug, quantity=1) {
         let ret = await DB.tables.items.increment({quantity: quantity}, { where: { slug: slug } });
         if (ret[0][1] === 0) {
-            await this.create({name: slug, slug: slug, quantity:quantity})
+            return await this.create({name: slug, slug: slug, quantity:quantity})
         }
+        return this.getItemBySlug(slug);
     }
 
     async remove(slug, quantity=1) {
         await DB.tables.items.decrement({quantity: quantity}, { where: { slug: slug } });
+    }
+
+    async getItemBySlug(slug) {
+        return await DB.tables.items.findOne({raw:true, where : {slug: slug}})
     }
 
     async giveAllStarters () {
@@ -113,13 +126,17 @@ class Items {
         await DB.tables.items.update({owners:new_owners}, {where:{ slug:slug }})
     }
 
+    // Retire un seul exemplaire : un joueur peut en avoir plusieurs
     async removeItemFromPlayer(slug, discord_id) {
         let item = await DB.tables.items.findOne({where: {slug:slug}, raw:true});
+        if (!item) return;
 
         let new_owners = [];
         if (item.owners && item.owners !== '')
             new_owners = item.owners.split(',');
-        new_owners = new_owners.filter(v => v!==discord_id);
+        let at = new_owners.indexOf(discord_id);
+        if (at >= 0)
+            new_owners.splice(at, 1);
         new_owners = new_owners.join(',');
 
         await DB.tables.items.update({owners:new_owners}, {where:{ slug:slug }})
@@ -193,6 +210,7 @@ class Items {
             let itemPool = baseItems[i];
             for (let j in itemPool) {
                 let dat = itemPool[j];
+                dat.image = dat.image.length > 3 ? this.IMAGE_PATH + dat.image : "";
                 dat['pool'] = i;
                 bulkItems.push(dat);
             }
