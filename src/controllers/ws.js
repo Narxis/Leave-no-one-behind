@@ -151,6 +151,10 @@ const makeAction = async function (raw_response) {
         case 'ship-alerts':
             payload = shipAlerts.handle(response);
             break;
+        case 'ally-roll':
+            payload = allies.rollAction(response.data);
+            break;
+        case 'ally-random':
         case 'ally-add': {
             // Compagnon créé en plein combat : annoncé comme renfort
             let added = allies.handle(response);

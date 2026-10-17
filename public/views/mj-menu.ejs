@@ -59,6 +59,7 @@
                                     <% }); %>
                                 </datalist>
                                 <button class="add-life" id="add-friend">+</button>
+                                <button class="add-life" id="random-friend" title="Compagnon au hasard : race, nom et stats tirés comme un personnage">🎲</button>
                                 <button class="add-life" id="friend-list">x</button>
                             </div>
                         </div>
@@ -108,7 +109,7 @@
                     <div class="mj-combat-log" id="mj-combat-log"></div>
                     <!-- Jet à la place d'un joueur (AFK, pas de moyen de lancer) : même chemin que /roll -->
                     <div class="mj-player-roll" id="mj-player-roll">
-                        <div class="mj-team-title">Jet pour un joueur</div>
+                        <div class="mj-team-title">Jet pour un joueur ou un compagnon</div>
                         <div class="mj-player-roll-fields">
                             <select class="add-life" id="mj-player-roll-player" title="Joueur"></select>
                             <select class="add-life" id="mj-player-roll-stat" title="Stat">
