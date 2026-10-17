@@ -110,6 +110,7 @@ async function test_remote() {
 
     await test_chat();
     await test_votes();
+    await test_item_use();
     test_stat_rolls();
     test_player_view();
     test_player_assets();
@@ -218,6 +219,51 @@ async function test_votes() {
     CONFIG.gameState = 'gameLive';
     votes.clear();
     console.log('Votes OK');
+}
+
+// Objets : un joueur demande, le MJ accepte (objet retiré) ou refuse
+async function test_item_use() {
+    console.log('Testing item use');
+    const itemUse = require('../src/controllers/itemUse');
+    const remote = require('../src/controllers/remote');
+    const inventory = require('../src/controllers/inventory');
+    const chat = require('../src/controllers/chat');
+    let alice = {id: 'a1b2c3d4e5f6a7b8', name: 'Alice'};
+    let use = (slug) => remote.translate(alice, {kind: 'action', action: 'item-use', data: {slug}});
+    itemUse.clear();
+    chat.clear();
+    CONFIG.gameState = 'gameLive';
+    await DB.tables.items.create({slug: 'test-medkit', name: 'Medkit', desc: '', pool: '', race: '', quantity: 0, image: '', owners: alice.id + ',' + alice.id});
+    let row = await DB.tables.items.findOne({raw: true, where: {slug: 'test-medkit'}});
+
+    assert.ok((await use('pas-a-moi')).refused);
+    let sent = await use(row.slug);
+    assert.equal(sent.action, 'passThrough');
+    let req = sent.data.data.requests[0];
+    assert.deepEqual([req.playerName, req.slug], ['Alice', row.slug]); // nom du perso
+    assert.ok((await use(row.slug)).refused); // déjà demandé
+    assert.deepEqual(itemUse.pendingFor(alice.id), [row.slug]);
+
+    // Refusé : rien ne change
+    await itemUse.answer({id: req.id, ok: false});
+    assert.equal((await inventory.getInventory(alice.id)).find(i => i.slug === row.slug).count, 2);
+    assert.deepEqual(itemUse.pendingFor(alice.id), []);
+
+    // Accepté : un exemplaire retiré, annoncé au salon
+    req = (await use(row.slug)).data.data.requests[0];
+    let out = await itemUse.answer({id: req.id, ok: true});
+    assert.equal(out[0].data.requests.length, 0);
+    assert.equal((await inventory.getInventory(alice.id)).find(i => i.slug === row.slug).count, 1);
+    assert.ok(chat.historyFor(alice.id).pop().text.includes('utilise'));
+    // Réponse à une demande inconnue : sans effet
+    assert.equal((await itemUse.answer({id: 'x', ok: true})).data.requests.length, 0);
+
+    CONFIG.gameState = 'creation';
+    assert.ok((await use(row.slug)).refused);
+    CONFIG.gameState = 'gameLive';
+    await DB.tables.items.destroy({where: {id: row.id}});
+    chat.clear();
+    console.log('Item use OK');
 }
 
 // Règles du tirage : dés = |bonus| + 1, meilleur dé avec un bonus, pire avec un malus

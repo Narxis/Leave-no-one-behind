@@ -85,6 +85,9 @@ button {
 .secondary { border: 1px solid var(--border); background: transparent; color: var(--dim); }
 
 .error { margin: 0; color: var(--danger); font-size: 14px; }
+.error.info { color: var(--ok); }
+.use-item { align-self: flex-start; }
+.use-item:disabled { opacity: .6; cursor: default; }
 .dim { margin: 0; color: var(--dim); }
 .dim strong { color: var(--accent); letter-spacing: 0.15em; }
 

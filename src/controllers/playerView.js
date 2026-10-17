@@ -17,6 +17,7 @@ const shipAlerts = require('./shipAlerts');
 const statRolls = require('./statRolls');
 const votes = require('./votes');
 const planetScan = require('./planetScan');
+const itemUse = require('./itemUse');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -125,7 +126,9 @@ const playerState = async function (id) {
         character: character,
         inventory: player ? await inventory.getInventory(id) : [],
         creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null,
-        vote: votes.voteOf(id)
+        vote: votes.voteOf(id),
+        // Objets dont l'utilisation attend la réponse du MJ
+        pendingItems: itemUse.pendingFor(id)
     };
 };
 

@@ -866,3 +866,36 @@ body.combat-mode .stats-legend-title {
     font-size: 9px;
     letter-spacing: 0.04em;
 }
+
+/*---Objets demandés par les joueurs en ligne (item-requests.js)---*/
+.item-requests {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1000;
+    width: min(320px, calc(100vw - 32px));
+    padding: 12px 14px;
+    border: 1px solid var(--ui-accent);
+    border-radius: var(--ui-radius);
+    background: var(--ui-surface);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+    font-family: Jura, sans-serif;
+}
+.item-requests[hidden] { display: none; }
+.item-requests-title { margin: 0 0 8px; color: var(--ui-accent); font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.item-request { padding: 8px 0; border-top: 1px solid var(--ui-border); }
+.item-request p { margin: 0 0 8px; font-size: 15px; }
+.item-request-actions { display: flex; gap: 8px; }
+.item-request-actions button {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: 600 14px Jura, sans-serif;
+    cursor: pointer;
+}
+.item-request-actions .accept { border-color: var(--ui-cyan); color: var(--ui-cyan); }
+.item-request-actions button:hover { background: var(--ui-fill-hover); }

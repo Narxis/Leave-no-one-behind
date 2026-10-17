@@ -113,8 +113,9 @@
     };
 
     let errorTimer = null;
-    const showActionError = function (message) {
+    const showActionError = function (message, info) {
         clearTimeout(errorTimer);
+        $('action-error').classList.toggle('info', !!info);
         $('action-error').textContent = message || '';
         $('action-error').hidden = !message;
         if (message)
@@ -455,6 +456,15 @@
             li.append(el('strong', '', item.name + (item.count > 1 ? ' ×' + item.count : '')));
             if (item.desc)
                 li.append(el('span', 'dim small-text', String(item.desc).replace(/<[^>]*>/g, '')));
+            // Utiliser : demande au MJ, qui accepte ou refuse
+            if (game && game.phase === 'gameLive') {
+                let pending = ((you && you.pendingItems) || []).includes(item.slug);
+                let use = el('button', 'secondary small use-item', pending ? 'Demande envoyée au MJ' : 'Utiliser');
+                use.type = 'button';
+                use.disabled = pending;
+                use.addEventListener('click', () => sendAction('item-use', {slug: item.slug}));
+                li.append(use);
+            }
             if (others.length) {
                 let form = el('form', 'inline-form');
                 let select = el('select');
@@ -512,6 +522,10 @@
         else if (data.kind === 'refused') {
             showActionError(data.message);
             renderMe();
+        }
+        // Réponse du MJ à une demande (objet utilisé ou non)
+        else if (data.kind === 'notice' && data.text) {
+            showActionError(String(data.text), true);
         }
         else if (data.kind === 'result' && data.action === 'roll' && data.data) {
             let r = data.data;
