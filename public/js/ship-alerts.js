@@ -23,34 +23,9 @@
 
     let shownByMJ = false;   // plan ouvert par le MJ (pas par F1)
     let lastAlertId = null;
-    // Alerte déjà vue avant un changement de page : pas de nouvelle sirène
+    // Alerte déjà vue avant un changement de page : il ne réapparaît pas en grand
     try { lastAlertId = parseInt(sessionStorage.getItem('shipAlertSeen')) || null; } catch (e) {}
     let compactTimer = null;
-
-    // Sirène courte (deux tons), générée sans fichier son
-    function siren() {
-        try {
-            let AudioCtx = window.AudioContext || window.webkitAudioContext;
-            if (!AudioCtx)
-                return;
-            let ctx = siren.ctx || (siren.ctx = new AudioCtx());
-            if (ctx.state === 'suspended')
-                ctx.resume();
-            let osc = ctx.createOscillator();
-            let gain = ctx.createGain();
-            osc.type = 'sawtooth';
-            let t = ctx.currentTime;
-            for (let i = 0; i < 6; i++)
-                osc.frequency.setValueAtTime(i % 2 ? 620 : 880, t + i * 0.35);
-            gain.gain.setValueAtTime(0.0001, t);
-            gain.gain.exponentialRampToValueAtTime(0.08, t + 0.05);
-            gain.gain.setValueAtTime(0.08, t + 2);
-            gain.gain.exponentialRampToValueAtTime(0.0001, t + 2.1);
-            osc.connect(gain).connect(ctx.destination);
-            osc.start(t);
-            osc.stop(t + 2.15);
-        } catch (e) {}
-    }
 
     function showMap(show) {
         if (show && !container.classList.contains('mapshow')) {
@@ -97,7 +72,6 @@
                     overlay.classList.add('compact');
                     overlay.classList.remove('fresh');
                 }, 6000);
-                siren();
             }
             else if (!overlay.classList.contains('fresh'))
                 overlay.classList.add('compact');

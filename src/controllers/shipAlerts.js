@@ -1,7 +1,7 @@
 // Alertes sur le plan du vaisseau, pilotées par le MJ :
 // - des salles qui clignotent sur le plan des joueurs
 // - le plan affiché d'office chez les joueurs
-// - une alerte dans une salle (bandeau, sirène et salle mise en évidence)
+// - une alerte dans une salle (bandeau et salle mise en évidence)
 // L'état est gardé en mémoire : il ne concerne que la scène en cours.
 const ROOMS = require('../config/shipRooms.json');
 const ROOM_IDS = new Set(ROOMS.map(r => r.id));
