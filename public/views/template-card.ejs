@@ -614,12 +614,13 @@
     var statusNameList = [];
     var statusDurationList = [];
     var activeStatusList = [];
-    var statusSvgList = {};
+    // Icône des statuts créés à la volée par le MJ
+    var statusSvgList = {custom: `<%- include('svg/custom') %>`};
 
     <% statuses.forEach(function(status) {%>
     statusNameList.push(`<%- status.slug %>`);
     statusDurationList[`<%- status.slug %>`] = `<%- status.duration %>`;
-    statusSvgList[`<%- status.slug %>`] = `<%- include('svg/'+(status.slug)) %>`;
+    statusSvgList[`<%- status.slug %>`] = `<%- include('svg/'+(status.custom ? 'custom' : status.slug)) %>`;
     if (<%- status.duration %> > 0) {
       activeStatusList.push(`<%- status.slug %>`);
     }
