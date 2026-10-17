@@ -24,6 +24,10 @@
                 <li>Main Menu</li>
             </a>
             <hr class="separateur">
+            <a href="#" id="options-open">
+                <li>Options</li>
+            </a>
+            <hr class="separateur">
             <a href="/mj-menu">
                 <li>MJ-Menu</li>
             </a>
@@ -71,3 +75,35 @@
         </ul>
     </div>
 </nav>
+<!-- Menu Options : réglages propres à cet écran (sound-settings.js) -->
+<link rel="stylesheet" href="/css/options-menu.css">
+<div class="options-modal" id="options-modal" hidden>
+    <div class="options-panel" role="dialog" aria-modal="true" aria-labelledby="options-title">
+        <div class="options-header">
+            <div class="options-title" id="options-title">Options</div>
+            <button type="button" class="options-close" id="options-close" aria-label="Fermer">×</button>
+        </div>
+        <div class="options-section">Son</div>
+        <p class="options-help">Réglages propres à cet écran.</p>
+        <label class="options-row">
+            <span>Volume général</span>
+            <input type="range" min="0" max="100" step="5" data-sound="master">
+            <output></output>
+        </label>
+        <label class="options-row">
+            <span>Effets sonores</span>
+            <input type="range" min="0" max="100" step="5" data-sound="effects">
+            <output></output>
+        </label>
+        <label class="options-row">
+            <span>Musique</span>
+            <input type="range" min="0" max="100" step="5" data-sound="music">
+            <output></output>
+        </label>
+        <label class="options-check">
+            <input type="checkbox" data-sound="muted">
+            <span>Couper le son</span>
+        </label>
+    </div>
+</div>
+<script src="/js/sound-settings.js"></script>
