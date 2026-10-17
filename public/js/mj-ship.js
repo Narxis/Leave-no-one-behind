@@ -61,7 +61,8 @@
         }
         // Calque sous les zones cliquables, pour ne pas gêner les clics
         let g = ShipMap.layer(svg, 'ship-alert-layer');
-        svg.insertBefore(g, hit);
+        svg.insertBefore(g, svg.querySelector('.ship-room-labels') || hit);
+        ShipMap.markAlertLabel(svg, alert && alert.room);
         state.blink.filter(id => !alert || id !== alert.room)
             .forEach(id => ShipMap.roomFill(svg, id, 'ship-blink-fill', g));
         if (alert) {
