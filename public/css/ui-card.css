@@ -236,6 +236,57 @@
     box-shadow: 0 0 22px -6px rgb(255 204 0 / 45%);
 }
 
+/*---Choix en attente (délai d'annulation, card.js)---*/
+.has-pending .choice:not(.choice-pending) {
+    opacity: 0.55;
+}
+
+.choice.choice-pending {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    box-shadow: var(--ui-glow-accent);
+    padding-bottom: 26px;
+    overflow: hidden;
+}
+
+.choice-cancel {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    padding: 2px 14px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 999px;
+    background: rgb(0 0 0 / 45%);
+    color: var(--ui-text);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.choice-cancel:hover {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
+.choice-delay-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+    background: var(--ui-accent);
+    transform-origin: left;
+    animation: choice-delay var(--choice-delay, 2500ms) linear forwards;
+}
+
+@keyframes choice-delay {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+}
+
 /*---Volet gauche : bouton menu, objets, modules secondaires---*/
 .consommable-tab {
     border: 1px solid var(--ui-border-strong);
