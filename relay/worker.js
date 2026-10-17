@@ -1,9 +1,11 @@
 // Relais LNOB sur Cloudflare Workers : un Durable Object par lobby.
-// Il sert la page joueur (public/player, voir wrangler.toml) et les
-// connexions WebSocket sur /host, /host/CODE et /join/CODE.
+// Il sert la page joueur (public/player, voir wrangler.toml), les
+// connexions WebSocket sur /host, /host/CODE et /join/CODE, et la connexion
+// Discord des joueurs sur /auth/discord/* (discord-auth.js).
 // La logique est dans lobby-core.js, partagée avec le relais Node.
 import {DurableObject} from 'cloudflare:workers';
 import core from './lobby-core.js';
+import discordAuth from './discord-auth.js';
 
 const {Lobby, newCode, normalizeCode, EXPIRY_MS} = core;
 
@@ -36,7 +38,8 @@ export class LobbyRoom extends DurableObject {
                 }
             },
             expireLater: () => this.ctx.storage.setAlarm(Date.now() + EXPIRY_MS),
-            cancelExpiry: () => this.ctx.storage.deleteAlarm()
+            cancelExpiry: () => this.ctx.storage.deleteAlarm(),
+            checkProfile: (token) => discordAuth.checkProfile(this.env, token)
         });
     }
 
@@ -62,7 +65,7 @@ export class LobbyRoom extends DurableObject {
         else if (role === 'host')
             await lobby.hostConnect(server, {isNew: false, token: q.get('token')});
         else
-            await lobby.playerConnect(server, {id: q.get('id'), name: q.get('name'), protocol: q.get('v')});
+            await lobby.playerConnect(server, {id: q.get('id'), name: q.get('name'), protocol: q.get('v'), discord: q.get('discord')});
 
         return new Response(null, {status: 101, webSocket: client});
     }
@@ -105,6 +108,9 @@ export default {
         let parts = url.pathname.split('/').filter(Boolean);
         let q = url.searchParams;
 
+        let auth = await discordAuth.handle(request, env);
+        if (auth)
+            return auth;
         if (parts[0] !== 'host' && parts[0] !== 'join')
             return env.ASSETS.fetch(request);
         if (request.headers.get('Upgrade') !== 'websocket')
@@ -124,6 +130,6 @@ export default {
         let code = normalizeCode(parts[1]) || 'XXXXXX';
         if (parts[0] === 'host')
             return forward(env, code, request, {role: 'host', token: q.get('token') || ''});
-        return forward(env, code, request, {role: 'player', id: q.get('id') || '', name: q.get('name') || '', v: q.get('v') || ''});
+        return forward(env, code, request, {role: 'player', id: q.get('id') || '', name: q.get('name') || '', v: q.get('v') || '', discord: q.get('discord') || ''});
     }
 };

@@ -32,6 +32,19 @@
             let name = document.createElement('span');
             name.className = 'lobby-player-name';
             name.textContent = p.name;
+            // Compte Discord vérifié par le relais : avatar et pseudo
+            if (p.discord) {
+                let avatar = document.createElement('img');
+                avatar.className = 'discord-avatar';
+                avatar.src = p.discord.avatar;
+                avatar.alt = '';
+                avatar.referrerPolicy = 'no-referrer';
+                name.prepend(avatar);
+                let tag = document.createElement('span');
+                tag.className = 'discord-name';
+                tag.textContent = ' · Discord : ' + p.discord.name;
+                name.append(tag);
+            }
             // Perso retrouvé grâce à l'identifiant d'app du joueur
             let character = document.createElement('span');
             character.className = 'lobby-player-character';

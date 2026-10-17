@@ -9,6 +9,9 @@ compatibility_date = "2026-09-01"
 directory = "../public/player"
 binding = "ASSETS"
 
+# Connexion Discord des joueurs (facultative) : DISCORD_CLIENT_ID et
+# DISCORD_CLIENT_SECRET en secrets (npx wrangler secret put …), voir README.md
+
 [[durable_objects.bindings]]
 name = "LOBBY"
 class_name = "LobbyRoom"

@@ -201,3 +201,7 @@
     font: 500 15px Jura, sans-serif;
     resize: vertical;
 }
+
+/* Compte Discord du joueur */
+.discord-avatar { width: 22px; height: 22px; margin-right: 8px; border-radius: 50%; vertical-align: middle; }
+.discord-name { font-weight: 400; color: var(--ui-text-dim); }

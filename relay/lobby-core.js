@@ -24,6 +24,8 @@
 //   getToken() / setToken(token)   jeton secret du MJ (null = lobby inconnu)
 //   expireLater() / cancelExpiry() sans MJ, le lobby est oublié au bout de
 //                    EXPIRY_MS : l'adaptateur appelle alors lobby.expire()
+//   checkProfile(token)  (facultatif) profil Discord signé présenté par le
+//                    joueur → {id, name, avatar} ou null (discord-auth.js)
 
 const PROTOCOL = 1;
 const MAX_PLAYERS = 8;
@@ -83,7 +85,7 @@ class Lobby {
     }
 
     players() {
-        return this.sockets('player').map(s => ({id: s.meta.id, name: s.meta.name}));
+        return this.sockets('player').map(s => Object.assign({id: s.meta.id, name: s.meta.name}, s.meta.discord ? {discord: s.meta.discord} : {}));
     }
 
     reject(ws, code) {
@@ -114,7 +116,7 @@ class Lobby {
         return true;
     }
 
-    async playerConnect(ws, {id, name, protocol}) {
+    async playerConnect(ws, {id, name, protocol, discord}) {
         id = cleanId(id);
         if (!id)
             return this.reject(ws, 'invalid');
@@ -134,6 +136,10 @@ class Lobby {
         }
 
         let player = {id: id, name: cleanName(name)};
+        // Compte Discord vérifié par le relais : affiché à côté du perso
+        let profile = discord && this.a.checkProfile ? await this.a.checkProfile(discord) : null;
+        if (profile)
+            player.discord = profile;
         this.a.setMeta(ws, Object.assign({role: 'player'}, player));
         let host = this.host();
         this.a.send(ws, {type: 'welcome', you: player, code: this.code, host: !!host});
