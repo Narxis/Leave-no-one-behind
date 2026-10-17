@@ -368,6 +368,9 @@
         let items = (you && you.inventory) || [];
         let others = ((game && game.team) || []).filter(c => c.id !== playerId);
         $('items-empty').hidden = items.length > 0;
+        // Bourse du joueur (« 20 crédits »)
+        $('money').hidden = !(you && you.money);
+        $('money').textContent = you && you.money ? 'Bourse : ' + you.money : '';
         $('items').replaceChildren(...items.map(item => {
             let li = el('li', 'item');
             li.append(el('strong', '', item.name + (item.count > 1 ? ' ×' + item.count : '')));

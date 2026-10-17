@@ -6,7 +6,8 @@
         "/css/mj-menu.css",
         "/css/ui-menus.css",
         "/css/ship-alerts.css",
-        "/css/mj-ship.css"
+        "/css/mj-ship.css",
+        "/css/mj-shop.css"
     ]
 }) %>
 
@@ -166,6 +167,43 @@
                     </div>
                 </div>
             </section>
+            <!-- Marchand et bourses (mj-shop.js) -->
+            <section class="mj-shop" id="mj-shop">
+                <div class="mj-shop-col">
+                    <div class="mj-shop-head">
+                        <div class="mj-ship-title">Marchand</div>
+                        <span class="mj-shop-state" id="mj-shop-state">Boutique fermée</span>
+                    </div>
+                    <input type="text" id="mj-shop-name" class="add-life" maxlength="40" placeholder="Nom du marchand (ex. Walt DiFnek)">
+                    <div class="mj-shop-stock-head"><span>Objet</span><span>Prix</span><span></span><span>Stock</span><span></span><span></span></div>
+                    <div class="mj-shop-stock" id="mj-shop-stock"></div>
+                    <div class="mj-shop-add" id="mj-shop-add-box">
+                        <input type="text" id="mj-shop-item" class="add-life" list="mj-shop-items" maxlength="60" placeholder="Ajouter un objet à l'étal">
+                        <button type="button" class="add-life" id="mj-shop-add" title="Ajouter à l'étal">+</button>
+                        <button type="button" class="add-life" id="mj-shop-fill" title="Ajoute tous les objets qui ont un prix dans l'éditeur d'objets">Objets à prix</button>
+                    </div>
+                    <datalist id="mj-shop-items"></datalist>
+                    <div class="mj-shop-pay">
+                        <label>Acheteur <select id="mj-shop-buyer" class="add-life"></select></label>
+                        <label>Paiement <select id="mj-shop-pay" class="add-life"><option value="credits">Monnaie</option><option value="cryopods">Cryopods</option></select></label>
+                    </div>
+                    <div class="mj-shop-actions">
+                        <button type="button" class="add-life fight" id="mj-shop-open">Ouvrir la boutique</button>
+                        <button type="button" class="add-life" id="mj-shop-close" disabled>Fermer la boutique</button>
+                    </div>
+                    <div class="mj-shop-msg" id="mj-shop-msg" role="status"></div>
+                </div>
+                <div class="mj-shop-col">
+                    <div class="mj-ship-subtitle">Bourses</div>
+                    <div class="mj-shop-wallets" id="mj-shop-wallets"></div>
+                    <div class="mj-shop-cryopods" id="mj-shop-cryopods"></div>
+                    <div class="mj-ship-subtitle">Vendre au marchand</div>
+                    <label class="mj-shop-seller">Vendeur <select id="mj-shop-seller" class="add-life"></select></label>
+                    <div class="mj-shop-sell" id="mj-shop-sell"></div>
+                    <div class="mj-ship-subtitle">Journal</div>
+                    <div class="mj-shop-log" id="mj-shop-log"></div>
+                </div>
+            </section>
         </div>
     </div>
 <script>var BESTIARY = <%- JSON.stringify(locals.bestiary || []).replace(/</g, '\\u003c') %>;
@@ -183,5 +221,6 @@ var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u00
 <script src="js/mj-allies.js"></script>
 <script src="js/ship-map.js"></script>
 <script src="js/mj-ship.js"></script>
+<script src="js/mj-shop.js"></script>
 <%- include("partials/bottom-scripts") %>
 </body>

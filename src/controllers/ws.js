@@ -10,6 +10,7 @@ const allies = require("./allies");
 const inventory = require("./inventory");
 const cardLoot = require("./cardLoot");
 const loot = require("./loot");
+const merchant = require("./merchant");
 const shipAlerts = require("./shipAlerts");
 const lobby = require("./lobby");
 const remote = require("./remote");
@@ -132,6 +133,15 @@ const makeAction = async function (raw_response) {
             break;
         case 'card-loot-offer':
             payload = cardLoot.handle(response);
+            break;
+        case 'merchant-state':
+        case 'merchant-open':
+        case 'merchant-close':
+        case 'merchant-buy':
+        case 'merchant-sell':
+        case 'money-add':
+        case 'money-transfer':
+            payload = merchant.handle(response);
             break;
         case 'lobby-state':
         case 'lobby-open':

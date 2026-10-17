@@ -3,7 +3,7 @@
 // Après chaque action du jeu (tout passe par le WebSocket du MJ), l'état est
 // recalculé ; seul ce qui a changé repart vers les joueurs :
 //   {kind: 'game', phase, card, ship, statuses, alerts, team, races}  à tous
-//   {kind: 'you', character, inventory, creation}                     à chacun
+//   {kind: 'you', character, inventory, money, creation}              à chacun
 // Les secrets du MJ (révélations, suites des choix, butin, valeurs des
 // planètes) ne sortent jamais d'ici.
 const {Player} = require('../models/player');
@@ -13,6 +13,7 @@ const deck = require('./deck');
 const lobby = require('./lobby');
 const races = require('./races');
 const inventory = require('./inventory');
+const money = require('./money');
 const shipAlerts = require('./shipAlerts');
 const statRolls = require('./statRolls');
 
@@ -102,6 +103,8 @@ const playerState = async function (id) {
         kind: 'you',
         character: character,
         inventory: player ? await inventory.getInventory(id) : [],
+        // Bourse : « 20 crédits »
+        money: player ? money.label(await money.balance({type: 'player', id: id}) || 0) : null,
         creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null
     };
 };

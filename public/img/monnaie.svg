@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Crédits : pile de pièces (butin, bourses, marchand) -->
+  <ellipse cx="26" cy="46" rx="18" ry="7" fill="#b8860b"/>
+  <rect x="8" y="38" width="36" height="8" fill="#b8860b"/>
+  <ellipse cx="26" cy="38" rx="18" ry="7" fill="#ffcc00"/>
+  <ellipse cx="26" cy="38" rx="12" ry="4.5" fill="none" stroke="#b8860b" stroke-width="2"/>
+  <circle cx="42" cy="24" r="16" fill="#e0a800"/>
+  <circle cx="40" cy="22" r="16" fill="#ffcc00"/>
+  <circle cx="40" cy="22" r="11" fill="none" stroke="#b8860b" stroke-width="2.5"/>
+  <path d="M44.5 17.5a6.5 6.5 0 1 0 0 9" fill="none" stroke="#8a6508" stroke-width="3" stroke-linecap="round"/>
+</svg>

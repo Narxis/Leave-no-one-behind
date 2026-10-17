@@ -6,7 +6,8 @@
         "/css/style.css",
         "https://use.fontawesome.com/releases/v5.7.2/css/all.css",
         "/css/plan-du-vaisseau.css",
-        "/css/ui-card.css"
+        "/css/ui-card.css",
+        "/css/merchant.css"
     ]
 }) %>
 
@@ -574,6 +575,15 @@
             <i class="fas fa-box-open"></i> Tout récupérer dans le vaisseau
           </button>
         </div>
+        <%# Boutique ouverte par le MJ depuis son menu (merchant.js) %>
+        <div class="combat-container merchant-area combat-none" id="merchant-area">
+          <div class="merchant-head">
+            <i class="fas fa-store"></i>
+            <span class="merchant-title" id="merchant-name">Marchand</span>
+          </div>
+          <div class="merchant-items" id="merchant-items"></div>
+          <div class="merchant-news" id="merchant-news" role="status"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -635,6 +645,7 @@
   <script src="/js/template-card.js"></script>
   <script src="/js/items.js"></script>
   <script src="/js/inventory.js"></script>
+  <script src="/js/merchant.js"></script>
   <script>
     var observer = new MutationObserver(function (mutations) {
       mutations.forEach(async function (mutation) {
