@@ -3,6 +3,8 @@
     {
       "name": "Fronde Fnek",
       "slug": "fronde-fnek",
+      "type": "arme",
+      "rarity": "commun",
       "desc": "Malgrès leur avancées technologique les Fneks préfèrent utiliser une fronde pour se battre. Généralement ces frondes sont fournies avec des boules puante qui libèrent un puissant concentré d'odeur de Fnek.",
       "race": "fnek",
       "image": "fronde-fnek.png"
@@ -10,6 +12,8 @@
     {
       "name": "Shrips",
       "slug": "shrips",
+      "type": "consommable",
+      "rarity": "commun",
       "desc": "Les Shrips sont des chips goût crevette qui ont la forme de shrymps, elles peuvent remonter le moral des Omphors",
       "race": "omphor",
       "image": "shrips.png"
@@ -17,6 +21,8 @@
     {
       "name": "Armure en \"Kev-lard\"",
       "slug": "armure-omphor",
+      "type": "armure",
+      "rarity": "commun",
       "desc": "L'armure en Kev-lard rend son utilisateur plus résistant mais limite ses déplacement",
       "race": "omphor",
       "image": "kev-lar.png"
@@ -24,6 +30,8 @@
     {
       "name": "Pelotte de laine",
       "slug": "pelotte",
+      "type": "consommable",
+      "rarity": "commun",
       "desc": "Offir une pelotte de laine à un Nek lui remonte le moral.",
       "race": "sylv",
       "image": "pelotte.png"
@@ -31,6 +39,8 @@
     {
       "name": "Tazer cosmique",
       "slug": "tazer-cosmique",
+      "type": "arme",
+      "rarity": "commun",
       "desc": "Un tazer utilisant l'énergie cosmique",
       "race": "sylv",
       "image": "taser.png"
@@ -38,6 +48,8 @@
     {
       "name": "Fouet Ygrl",
       "slug": "fouet-ygrl",
+      "type": "arme",
+      "rarity": "commun",
       "desc": "Un fouet",
       "race": "ygrl",
       "image": "fouetygrl.png"
@@ -45,6 +57,8 @@
     {
       "name": "Shrymp utility Kit",
       "slug": "shrymp-kit",
+      "type": "outil",
+      "rarity": "commun",
       "desc": "Le shrymp utility campement kit contient de nombreux ustensiles",
       "race": "shrymp",
       "image": ""
@@ -52,6 +66,8 @@
     {
       "name": "Corde",
       "slug": "corde",
+      "type": "outil",
+      "rarity": "commun",
       "desc": "Une corde dans le Shrymp Kit",
       "race": "shrymp",
       "image": "corde.png"
@@ -59,6 +75,8 @@
     {
       "name": "Lampe torche",
       "slug": "lampe-torche",
+      "type": "outil",
+      "rarity": "commun",
       "desc": "Une lampe torche dans le Shrymp Kit",
       "race": "shrymp",
       "image": "flashlight.png"
@@ -66,6 +84,8 @@
     {
       "name": "Nourriture déshydraté",
       "slug": "nourriture-deshydrate",
+      "type": "consommable",
+      "rarity": "commun",
       "desc": "De la nourriture déshydraté",
       "race": "shrymp",
       "image": "desfood.png"
@@ -73,6 +93,8 @@
     {
       "name": "Dictionnaire Ygrlien",
       "slug": "dictionnaire-ygrl",
+      "type": "divers",
+      "rarity": "commun",
       "desc": "Un dictionnaire du langage Ygrl (inutile)",
       "race": "shrymp",
       "image": "dictionnaire.png"
@@ -80,6 +102,8 @@
     {
       "name": "Mèche Ygrl",
       "slug": "meche-ygrl",
+      "type": "divers",
+      "rarity": "commun",
       "desc": "Une mèche de cheveux d'Ygrl",
       "race": "shrymp",
       "image": "ygrlhair.png"
@@ -87,6 +111,8 @@
     {
       "name": "Lance Shrymp",
       "slug": "lance-shrymp",
+      "type": "arme",
+      "rarity": "commun",
       "desc": "Une lance qui fait approximativement la taille d'un cure-dent.",
       "race": "shrymp",
       "image": "lance.png"
@@ -94,6 +120,8 @@
     {
       "name": "L'aku tosswice",
       "slug": "aku-tosswice",
+      "type": "outil",
+      "rarity": "commun",
       "desc": "Une sorte de boite à outil contenant beaucoup d'objet",
       "race": "aku",
       "image": "aku-tosswice.png"
@@ -101,6 +129,8 @@
     {
       "name": "Outils",
       "slug": "outil-aku",
+      "type": "outil",
+      "rarity": "commun",
       "desc": "Outils de maintenance variés",
       "race": "aku",
       "image": "outils-repa.png"
@@ -108,6 +138,8 @@
     {
       "name": "Boule puante Fnek",
       "slug": "boule-fnek",
+      "type": "munition",
+      "rarity": "commun",
       "desc": "Une boule puante pour fronde fnek",
       "race": "aku",
       "image": "boule-fnek.png"
@@ -115,6 +147,8 @@
     {
       "name": "Paquet de shrips",
       "slug": "paquet-shrimps",
+      "type": "consommable",
+      "rarity": "commun",
       "desc": "Les Shrips sont des chips goût crevette qui ont la forme de Shrymps, elles peuvent remonter le moral des Omphors",
       "race": "aku",
       "image": "shrips.png"
@@ -122,6 +156,8 @@
     {
       "name": "Cure-dent",
       "slug": "cure-dent",
+      "type": "divers",
+      "rarity": "commun",
       "desc": "Un cure-dent",
       "race": "aku",
       "image": ""
@@ -129,6 +165,8 @@
     {
       "name": "Montre-Boussole",
       "slug": "montre-boussole",
+      "type": "outil",
+      "rarity": "commun",
       "desc": "Une montre-boussole (qui montre soit l'heure soit la direction, en fonction de l'heure actuelle)",
       "race": "aku",
       "image": "montre-boussole.png"
@@ -136,6 +174,8 @@
     {
       "name": "Passeport",
       "slug": "passeport",
+      "type": "divers",
+      "rarity": "commun",
       "desc": "Un passeport",
       "race": "aku",
       "image": "passeport-aku.png"
@@ -143,6 +183,8 @@
     {
       "name": "Balle de Nek-k47",
       "slug": "balle-nek-k47",
+      "type": "munition",
+      "rarity": "commun",
       "desc": "Un balle de Nek-k47",
       "race": "aku",
       "image": "ball-nekk47.png"
@@ -150,6 +192,8 @@
     {
       "name": "Massue Yorc",
       "slug": "massue-yorc",
+      "type": "arme",
+      "rarity": "commun",
       "desc": "Une massue seulement utilisable par un Yorc au coeur pur",
       "race": "yorc",
       "image": "massue-yorc.png"
@@ -157,6 +201,8 @@
     {
       "name": "Filet paralysant",
       "slug": "filet-paralysant",
+      "type": "arme",
+      "rarity": "commun",
       "desc": "Filet pouvant neutraliser temporairement une cible à distance",
       "race": "nek_eau",
       "image": "fap.png"
@@ -164,6 +210,8 @@
     {
       "name": "Projectile à combustion",
       "slug": "projectile-nek-feu",
+      "type": "arme",
+      "rarity": "commun",
       "desc": "Dagues de lancée utilisant la chaleur des nek-feux pour accélérer vers sa cible",
       "race": "nek_feu",
       "image": ""
@@ -171,6 +219,8 @@
     {
       "name": "Nek'ronomicon",
       "slug": "nek-ronomicon",
+      "type": "divers",
+      "rarity": "commun",
       "desc": "Un receuil religieux avec un double fond pour stocker des objets",
       "race": "nek_terre",
       "image": ""
@@ -178,6 +228,8 @@
     {
       "name": "Nek-k47",
       "slug": "nek-k47",
+      "type": "arme",
+      "rarity": "commun",
       "desc": "Un revolver nektologique pouvant être stocké dans un double fond",
       "race": "nek_terre",
       "image": ""
@@ -185,6 +237,8 @@
     {
       "name": "Em-0 Droid",
       "slug": "em-o-droid",
+      "type": "gadget",
+      "rarity": "commun",
       "desc": "Un drone pouvant prendre des videos en 64k 1440fps",
       "race": "nek_air",
       "image": ""
@@ -194,32 +248,30 @@
     {
       "name": "Projecteur de bouclier personnel",
       "slug": "personal-shield",
+      "type": "armure",
+      "rarity": "commun",
       "desc": "Le projecteur de bouclier personnel est une dispositif utilisant l'énergie cosmique permettant d'absorber un coup ou un projectile ciblant l'utilisateur. Le projecteur de bouclier personnel doit être rechargé en énergie cosmique avant de pouvoir être réutilisé.",
       "image": ""
     },
     {
       "name": "Drone",
       "slug": "drone",
+      "type": "gadget",
+      "rarity": "commun",
       "desc": "Un drone pour  réveller les stats planètes.",
       "image": "drone.gif"
     },
     {
       "name": "Spider-BOMB",
       "slug": "spider-bomb",
+      "type": "arme",
+      "rarity": "commun",
       "desc": "Une bombe qui permet d’infliger de lourd à sa cible sans causer beaucoup de dégâts collatéraux.",
       "image": "spider-bomb.gif"
     }
   ],
-  "tribal": [
-
-  ],
-  "bois": [
-
-  ],
-  "nektologie": [
-
-  ],
-  "livres": [
-
-  ]
+  "tribal": [],
+  "bois": [],
+  "nektologie": [],
+  "livres": []
 }

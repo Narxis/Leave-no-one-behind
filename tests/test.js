@@ -28,6 +28,7 @@ async function test() {
     await test_deck_generation();
     await test_roll();
     test_ship_alerts();
+    await test_items_editor();
     test_npcs();
 }
 
@@ -238,6 +239,50 @@ function test_ship_alerts() {
     for (let room of shipAlerts.ROOMS)
         assert.ok(room.label && Number.isFinite(room.label.x) && Number.isFinite(room.label.y), 'nom placé sur le plan : ' + room.id);
     console.log('ship alerts OK');
+}
+
+
+// Éditeur d'objets : création, déplacement de catégorie, suppression. items.json est remis en l'état
+async function test_items_editor() {
+    console.log('Testing items editor');
+    const itemsEditor = require('../src/controllers/itemsEditor');
+    const file = __dirname + '/../src/config/items.json';
+    const backup = fs.readFileSync(file);
+    try {
+        let before = (await itemsEditor.list()).items.length;
+        assert.ok((await itemsEditor.save({name: ''})).error, 'un objet sans nom est refusé');
+        assert.ok((await itemsEditor.save({name: 'Truc', pool: 'starter'})).error, 'un objet de départ sans race est refusé');
+
+        let out = await itemsEditor.save({name: 'Clé à molette test', pool: 'Outils test', type: 'Relique sacrée', desc: 'Pour les tests'});
+        assert.strictEqual(out.item.slug, 'cle-a-molette-test');
+        assert.strictEqual(out.item.type, 'relique_sacree');
+        assert.strictEqual(out.item.rarity, 'commun', 'rareté par défaut');
+        out = await itemsEditor.save({slug: 'cle-a-molette-test', name: 'Clé à molette test', pool: 'Outils test', type: 'Relique sacrée', rarity: 'legendaire'});
+        assert.strictEqual(out.item.rarity, 'legendaire');
+        out = await itemsEditor.save({slug: 'cle-a-molette-test', name: 'Clé à molette test', pool: 'Outils test', type: 'Relique sacrée', rarity: 'divin'});
+        assert.strictEqual(out.item.rarity, 'commun', 'une rareté inconnue redevient commun');
+        assert.ok((await itemsEditor.list()).types.includes('relique_sacree'), 'un nouveau type rejoint la liste');
+        assert.strictEqual(out.item.pool, 'outils_test');
+        assert.ok((await itemsEditor.save({name: 'clé à MOLETTE test', pool: 'electronique'})).error, 'deux objets ne portent pas le même nom');
+        let row = await DB.tables.items.findOne({raw: true, where: {slug: 'cle-a-molette-test'}});
+        assert.strictEqual(row.name, 'Clé à molette test');
+
+        out = await itemsEditor.save({slug: 'cle-a-molette-test', name: 'Clé à molette', pool: 'starter', race: 'aku', desc: 'Modifiée'});
+        assert.strictEqual(out.item.slug, 'cle-a-molette-test', 'le slug ne change pas avec le nom');
+        let list = await itemsEditor.list();
+        assert.ok(!list.pools.includes('outils_test'), 'la catégorie vidée disparaît');
+        row = await DB.tables.items.findOne({raw: true, where: {slug: 'cle-a-molette-test'}});
+        assert.strictEqual(row.pool, 'starter');
+        assert.strictEqual(row.race, 'aku');
+
+        await itemsEditor.remove('cle-a-molette-test');
+        assert.strictEqual((await itemsEditor.list()).items.length, before);
+        assert.strictEqual(await DB.tables.items.count({where: {slug: 'cle-a-molette-test'}}), 0);
+        console.log('OK');
+    }
+    finally {
+        fs.writeFileSync(file, backup);
+    }
 }
 
 // Fiches de l'éditeur d'ennemis et compagnons : valeurs nettoyées et bornées
