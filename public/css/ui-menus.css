@@ -994,7 +994,8 @@ body.mj-page {
     color: var(--ui-accent);
 }
 
-.fight.shake {
+.fight.shake,
+.status-search.shake {
     animation: mj-shake .35s;
 }
 
@@ -1196,4 +1197,37 @@ body.mj-page {
 
 .fiche-page .descriptif hr {
     margin: 6px 0;
+}
+
+/* Status actifs (mj-menu.js) : nom, durée restante en cartes, retrait */
+.mj-statuses {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.mj-status {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-status-name {
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mj-status-duration {
+    font-size: 13px;
+    color: var(--ui-text-dim);
 }
