@@ -9,8 +9,11 @@
   height: 130px;
   top: -119px;
   left: 36px;
+  transform: rotate(-14deg);
 }
 
+/* Le flottement passe par translate/rotate et ne s'arrête jamais : la vrille
+   et le retour (sur transform) s'y ajoutent sans saut au début ni à la fin */
 .shipflotte {
   animation: shipfloat 10s ease-in-out infinite;
 }
@@ -284,28 +287,27 @@
 }
 
 @keyframes shipfloat {
-  0% {
-    transform: translatey(0px) rotate(346deg);
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
   }
 
   50% {
-    transform: translatey(-10px) rotate(348deg);
-  }
-
-  100% {
-    transform: translatey(0px) rotate(346deg);
+    translate: 0 -10px;
+    rotate: 2deg;
   }
 }
 
 #bigboite.idle .ringl,
 #bigboite.idle .ringl2 {
-  transition: 6s;
+  transition: transform 6s;
   transform: translateX(-20px);
 }
 
 #bigboite.idle .ringr,
 #bigboite.idle .ringr2 {
-  transition: 6s;
+  transition: transform 6s;
   transform: translateX(20px);
 }
 
@@ -339,13 +341,13 @@
 
 #bigboite.flash .ringl,
 #bigboite.flash .ringl2 {
-  transition: .3s;
+  transition: transform .3s;
   transform: translatex(-60px);
 }
 
 #bigboite.flash .ringr,
 #bigboite.flash .ringr2 {
-  transition: .3s;
+  transition: transform .3s;
   transform: translatex(60px);
 }
 
@@ -353,7 +355,7 @@
 /* ---^^^---Timer Idle----^^^--- */
 /* ---vvv---Laser boule---vvv---*/
 #bigboite.idle .pop {
-  transition: 3s;
+  transition: opacity 3s;
   opacity: 1;
 }
 
@@ -367,7 +369,7 @@
 }
 
 #bigboite.idle #canvas {
-  transition: 5s;
+  transition: opacity 5s;
   opacity: 0.8;
 }
 
@@ -661,23 +663,33 @@
   display: none;
 }
 
-#bigboite.show-plugun #robot-arm2 {
+/* Le lâcher est calé sur l'animation du bras (même départ, délai de 1,6 s) :
+   le pistolet lancé prend exactement la place de celui de la pince */
+#bigboite.shot #robot-arm2 {
   position: absolute;
   top: 0px;
   left: 0px;
-  animation: yeet 1.1s linear forwards;
+  opacity: 0;
+  animation: yeet 1.1s linear 1.6s forwards;
   display: block;
 }
 
-#bigboite.hide-plugun #plugun {
-  opacity: 0;
+#bigboite.shot #plugun {
+  animation: drop-gun 0s 1.6s forwards;
+}
+
+@keyframes drop-gun {
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes yeet {
+  /* Pose et vitesse du pistolet dans la pince au moment du lâcher */
   0% {
     opacity: 1;
-    transform: translate(-42px, -15px) rotate(62deg);
-    animation-timing-function: cubic-bezier(.35, .1, .6, .9);
+    transform: translate(7px, -113px) rotate(62deg);
+    animation-timing-function: cubic-bezier(.3, .5, .6, .9);
   }
 
   25% {
@@ -689,12 +701,12 @@
   51% {
     opacity: 1;
     transform: translate(-573px, -174px) rotate(-119deg);
-    animation-timing-function: cubic-bezier(.15, .6, .35, 1);
+    animation-timing-function: cubic-bezier(.3, .45, .55, 1);
   }
 
   100% {
     opacity: 0;
-    transform: translate(-980px, -545px) rotate(-529deg);
+    transform: translate(-980px, -545px) rotate(-399deg);
   }
 }
 
@@ -785,13 +797,13 @@
 
 #bigboite.overcharge .ringl,
 #bigboite.overcharge .ringl2 {
-  transition: .6s;
+  transition: transform .6s;
   transform: translateX(-45px);
 }
 
 #bigboite.overcharge .ringr,
 #bigboite.overcharge .ringr2 {
-  transition: .6s;
+  transition: transform .6s;
   transform: translateX(45px);
 }
 
@@ -835,7 +847,7 @@
 
 #bigboite.fizzle .ring,
 #bigboite.shot .ring {
-  transition: .4s;
+  transition: transform .4s;
   transform: none;
 }
 
@@ -905,16 +917,14 @@
 }
 
 .bonk {
-  animation: bonk 1s cubic-bezier(.15, .75, .35, 1) forwards;
+  animation: bonk 1s forwards;
 }
 
+/* Une seule décélération : plus d'arrêt net juste après le choc */
 @keyframes bonk {
   0% {
     transform: translate(0px, 0px) rotate(-14deg);
-  }
-
-  8% {
-    transform: translate(-30px, 16px) rotate(-55deg);
+    animation-timing-function: cubic-bezier(.2, .6, .4, 1);
   }
 
   100% {
@@ -922,26 +932,32 @@
   }
 }
 
-/* Retour : le vaisseau s'oriente vers sa place, pousse, puis freine */
+/* Retour : le vaisseau s'oriente vers sa place, pousse, puis freine.
+   L'accélération de la poussée enchaîne sur le freinage à la même vitesse,
+   sans s'arrêter à mi-chemin */
 .comeback {
-  animation: reguys 1.9s ease-in-out forwards;
+  animation: reguys 1.9s forwards;
 }
 
 @keyframes reguys {
   0% {
     transform: translate(-328px, 275px) rotate(10deg);
+    animation-timing-function: ease-in-out;
   }
 
   18% {
     transform: translate(-320px, 266px) rotate(-38deg);
+    animation-timing-function: ease-in;
   }
 
   68% {
-    transform: translate(-34px, 12px) rotate(-34deg);
+    transform: translate(-34px, 12px) rotate(-26deg);
+    animation-timing-function: cubic-bezier(.1, .48, .3, 1);
   }
 
   84% {
     transform: translate(6px, -6px) rotate(-6deg);
+    animation-timing-function: ease-in-out;
   }
 
   100% {
