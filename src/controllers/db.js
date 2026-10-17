@@ -261,6 +261,11 @@ class DB {
                 type: Sequelize.STRING,
                 defaultValue: '',
                 allowNull: false
+            },
+            credits: { // bourse du joueur (monnaie : config/currency.json)
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
             }
         });
 
@@ -278,6 +283,11 @@ class DB {
             cryopods: {
                 type: Sequelize.INTEGER,
                 defaultValue: 1000,
+                allowNull: false
+            },
+            credits: { // caisse de bord, commune à l'équipage
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
                 allowNull: false
             },
             scanner: {
@@ -505,7 +515,8 @@ class DB {
         // Colonnes ajoutées après coup : on les crée dans une base existante
         // plutôt que d'incrémenter DB_VERSION (qui repartirait d'une base vide)
         await this.addMissingColumns('card_modules', ['humans', 'loot', 'status', 'roll', 'outcomes']);
-        await this.addMissingColumns('players', ['role']);
+        await this.addMissingColumns('players', ['role', 'credits']);
+        await this.addMissingColumns('ship', ['credits']);
         await this.addMissingColumns('statuses', ['player_id', 'custom', 'clear_after_planet']);
     }
 

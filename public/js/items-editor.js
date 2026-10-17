@@ -178,8 +178,25 @@
         return Number.isFinite(n) ? Math.min(Math.max(n, 1), 99) : 1;
     }
 
+    // Prix saisi (0 : pas de prix)
+    function currentPrice() {
+        let n = parseInt($('ie-price').value);
+        return Number.isFinite(n) ? Math.min(Math.max(n, 0), 99999) : 0;
+    }
+
+    const money = catalog.currency || {name: 'crédit', plural: 'crédits', short: 'cr', cryopodsPerCredit: 5, sellRatio: .5};
+    const moneyLabel = (n) => n + ' ' + (n >= 2 ? money.plural : money.name);
+
+    function renderPrice() {
+        let price = currentPrice();
+        $('ie-price-unit').textContent = '(' + money.plural + ')';
+        $('ie-price-hint').textContent = price
+            ? 'ou ' + Math.ceil(price * money.cryopodsPerCredit) + ' cryopods · racheté ' + moneyLabel(Math.floor(price * money.sellRatio))
+            : 'Le marchand ne le propose pas d\'office';
+    }
+
     function formState() {
-        return JSON.stringify([$('ie-name').value.trim(), currentPool(), currentType(), rarity, $('ie-race').value, $('ie-desc').value.trim(), image, removeImage, currentQty()]);
+        return JSON.stringify([$('ie-name').value.trim(), currentPool(), currentType(), rarity, $('ie-race').value, $('ie-desc').value.trim(), image, removeImage, currentQty(), currentPrice()]);
     }
 
     const isDirty = () => formState() !== saved;
@@ -265,6 +282,7 @@
         renderTypes();
         renderImage();
         renderPreview();
+        renderPrice();
         renderStatus();
     }
 
@@ -277,6 +295,7 @@
         $('ie-name').value = src.name || '';
         $('ie-desc').value = src.desc || '';
         $('ie-qty').value = src.qty || 1;
+        $('ie-price').value = src.price || '';
         let pool = src.pool || (filter !== 'all' ? filter : catalog.pools.find(p => p !== STARTER) || STARTER);
         fillPools(pool);
         fillRaces(src.race || '');
@@ -350,6 +369,7 @@
                     race: $('ie-race').value,
                     desc: $('ie-desc').value,
                     qty: currentQty(),
+                    price: currentPrice(),
                     image: image || undefined,
                     removeImage: removeImage
                 })
@@ -467,7 +487,7 @@
             $('ie-new-type').focus();
     });
     $('ie-search').addEventListener('input', renderList);
-    ['ie-name', 'ie-desc', 'ie-new-pool', 'ie-new-type', 'ie-qty'].forEach(id => $(id).addEventListener('input', refresh));
+    ['ie-name', 'ie-desc', 'ie-new-pool', 'ie-new-type', 'ie-qty', 'ie-price'].forEach(id => $(id).addEventListener('input', refresh));
     ['ie-pool', 'ie-race'].forEach(id => $(id).addEventListener('change', () => {
         refresh();
         if (id === 'ie-pool' && $('ie-pool').value === NEW_POOL)
@@ -487,7 +507,7 @@
     });
     $('ie-duplicate').addEventListener('click', () => {
         let src = editing;
-        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, type: currentType(), rarity: rarity, race: $('ie-race').value, qty: currentQty()});
+        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, type: currentType(), rarity: rarity, race: $('ie-race').value, qty: currentQty(), price: currentPrice()});
         $('ie-name').focus();
         $('ie-name').select();
     });
