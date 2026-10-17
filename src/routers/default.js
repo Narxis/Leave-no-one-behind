@@ -26,6 +26,7 @@ module.exports = function(router) {
     router.get('/planet-lab', controller.renderPlanetLab);
     router.get('/races', controller.renderRaces);
     router.get('/leaderboard', controller.leaderboard);
+    router.get('/lobby', controller.lobby);
     router.get('/index-legacy', controller.indexLegacy);
 
     router.post('/fiche', controller.renderSingleSheet);
