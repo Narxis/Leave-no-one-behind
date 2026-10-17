@@ -82,27 +82,92 @@
     color: var(--ui-text);
 }
 
+.cp-path button.is-marked {
+    color: var(--ui-accent);
+}
+
+.cp-path button.is-marked::after {
+    content: " ★";
+}
+
 .cp-path button[aria-current] {
     border-color: var(--ui-accent);
     color: var(--ui-accent);
     font-weight: 700;
 }
 
-.cp-tools {
+.cp-modes {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: rgb(0 0 0 / 25%);
+}
+
+.cp-modes button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 7px;
+    background: none;
+    color: var(--ui-text-dim);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cp-modes button[aria-pressed="true"] {
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+    box-shadow: inset 0 0 0 1px rgb(255 204 0 / 45%);
+}
+
+.cp-nav {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
+    padding: 8px 16px 8px 20px;
+    border-bottom: 1px solid var(--ui-border);
+    background: rgb(255 255 255 / 2%);
 }
 
-.cp-tools .pe-btn {
+.cp-nav .pe-btn {
     padding: 6px 11px;
     font-size: 13px;
 }
 
-.cp-tools .pe-btn:disabled {
+.cp-nav .pe-btn:disabled {
     opacity: .4;
     cursor: default;
+}
+
+.cp-nav-gap {
+    flex: 1;
+}
+
+.cp-jump {
+    max-width: 260px;
+    padding: 6px 8px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: rgb(16 12 48);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 13px;
+}
+
+.cp-mark.is-on {
+    border-color: var(--ui-accent);
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+}
+
+.cp-dialog.is-editing .cp-play-only {
+    display: none;
 }
 
 .cp-switch {
@@ -202,6 +267,27 @@
     white-space: pre-wrap;
 }
 
+/* Mode Éditer : le texte de la carte devient un champ */
+.cp-edit {
+    position: absolute;
+    inset: 34px 32px 34px;
+    padding: 6px 8px;
+    border: 1px dashed rgb(255 204 0 / 45%);
+    border-radius: 12px;
+    background: rgb(0 0 0 / 25%);
+    color: #fff;
+    font: inherit;
+    font-size: 19px;
+    line-height: 1.32;
+    resize: none;
+}
+
+.cp-edit:focus {
+    outline: none;
+    border-style: solid;
+    border-color: var(--ui-accent);
+}
+
 .cp-card:has(.cp-text.is-writing) {
     cursor: pointer;
 }
@@ -268,6 +354,89 @@
     border-color: var(--ui-accent);
     color: var(--ui-accent);
     box-shadow: 0 0 22px -6px rgb(255 204 0 / 45%);
+}
+
+.cp-choice kbd {
+    font: inherit;
+    font-size: 10px;
+    color: var(--ui-text-dim);
+    opacity: .7;
+}
+
+/* Choix en mode Éditer : texte modifiable et lien vers la suite */
+.cp-choice.is-edit {
+    flex-basis: 100%;
+    max-width: none;
+    flex-direction: row;
+    gap: 10px;
+    padding: 8px 10px 8px 14px;
+    cursor: default;
+}
+
+.cp-choice.is-edit input {
+    flex: 1;
+    min-width: 0;
+    padding: 7px 9px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: rgb(0 0 0 / 25%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 14px;
+}
+
+.cp-choice.is-edit input:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+}
+
+.cp-go,
+.cp-go-new button,
+.cp-add-choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.cp-go:hover,
+.cp-go-new button:hover,
+.cp-add-choice:hover {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.cp-go-new {
+    display: inline-flex;
+    gap: 6px;
+}
+
+.cp-add-choice {
+    padding: 9px 14px;
+    border-style: dashed;
+    color: var(--ui-text-dim);
+}
+
+.cp-keys {
+    margin: 4px 0 0;
+    font-size: 11px;
+    color: var(--ui-text-dim);
+}
+
+.cp-keys kbd {
+    padding: 0 4px;
+    border: 1px solid var(--ui-border);
+    border-radius: 4px;
+    font: inherit;
 }
 
 .cp-choice small {
@@ -453,6 +622,79 @@
     color: var(--ui-danger);
 }
 
+.cp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0 0 10px;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.cp-field textarea,
+.cp-field input,
+.cp-mj-input {
+    padding: 6px 8px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: rgb(0 0 0 / 25%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 13px;
+    resize: vertical;
+}
+
+.cp-field textarea:focus,
+.cp-field input:focus,
+.cp-mj-input:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+}
+
+.cp-marker-field span {
+    color: var(--ui-accent);
+}
+
+.cp-checks {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 4px;
+}
+
+.cp-mj-sub {
+    margin: 22px 0 8px !important;
+}
+
+.cp-markers {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cp-markers button {
+    width: 100%;
+    padding: 6px 9px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.cp-markers button:hover {
+    border-color: var(--ui-accent);
+}
+
+.cp-markers b {
+    color: var(--ui-accent);
+}
+
 .cp-mj-loot {
     display: flex;
     flex-wrap: wrap;
@@ -480,6 +722,17 @@
 .pe-node-play:hover {
     background: rgb(255 204 0 / 14%);
     color: var(--ui-accent);
+}
+
+/* Marqueur sur la carte dans l'éditeur */
+.pe-marker-badge {
+    display: none;
+    color: var(--ui-accent);
+    font-size: 12px;
+}
+
+.drawflow-node.is-marked .pe-marker-badge {
+    display: inline-block;
 }
 
 @media (max-width: 860px) {
