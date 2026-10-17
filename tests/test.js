@@ -31,6 +31,7 @@ async function test() {
     await test_place_endings();
     await test_statuses_after_planet();
     test_random_ship();
+    await test_last_planet();
     await test_roll();
     test_ship_alerts();
     await test_items_editor();
@@ -197,7 +198,10 @@ function test_player_view() {
     let seen = playerView.publicCard(card);
     assert.deepEqual(seen, {id: 4, kind: 'event', desc: 'Une alarme… retentit', timer: true, choices: ['Fuir', 'Combattre']});
     let planet = playerView.publicCard({id: 9, type: TYPE_PLANET, name: 'archetype', desc: '', modules: {oxy: {val: 80, cost: 2}}});
-    assert.deepEqual(planet, {id: 9, kind: 'planet', desc: '', choices: []});
+    assert.deepEqual(planet, {id: 9, kind: 'planet', desc: '', choices: [], lastPlanet: null});
+    let last = playerView.publicCard({id: 9, type: TYPE_PLANET, modules: {}, lastPlanet: true});
+    assert.deepEqual(last.lastPlanet, LANG.last_planet);
+    assert(LANG.last_planet.title && LANG.last_planet.text);
     assert.equal(playerView.publicCard(null), null);
     console.log('Player view OK');
 }
@@ -530,6 +534,37 @@ function test_random_ship() {
         for (let [stat, v] of Object.entries(Ship.randomStart(variation)))
             assert(Number.isInteger(v) && v >= 90 && v <= 100, stat + ' = ' + v);
     console.log('Random ship OK');
+}
+
+// Alerte « dernière planète » : seule la dernière planète du paquet est marquée
+async function test_last_planet() {
+    console.log('Testing last planet');
+    const {cardPop, planetsLeft} = require('../src/controllers/deck');
+    let deck = await DB.tables.deck.findAll({where: {deck_id: 0}, order: [['id', 'ASC']], raw: true});
+    let cards = await DB.tables.cards.findAll({attributes: ['id', 'type'], raw: true});
+    let typeOf = (id) => cards.find(c => c.id === id).type;
+    let planets = deck.filter(d => typeOf(d.card_id) === TYPE_PLANET);
+    assert(planets.length >= 2);
+    // Paquet joué jusqu'avant une planète donnée : elle sort au prochain tirage
+    const popPlanet = async (row) => {
+        await DB.tables.deck.update({played: 0}, {where: {deck_id: 0}});
+        for (let d of deck.filter(d => d.id < row.id))
+            await DB.tables.deck.update({played: 1}, {where: {id: d.id}});
+        return await cardPop();
+    };
+    try {
+        assert.strictEqual(await planetsLeft(), planets.length);
+        let first = await popPlanet(planets[0]);
+        assert.strictEqual(first.type, TYPE_PLANET);
+        assert.strictEqual(first.lastPlanet, false);
+        let last = await popPlanet(planets[planets.length - 1]);
+        assert.strictEqual(last.lastPlanet, true);
+        assert.strictEqual(await planetsLeft(), 0);
+        console.log('Last planet OK');
+    }
+    finally {
+        await DB.tables.deck.update({played: 0}, {where: {deck_id: 0}});
+    }
 }
 
 async function test_roll(){

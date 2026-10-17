@@ -285,10 +285,13 @@ module.exports = {
         }
 
         switch (current_card.type) {
-            case TYPE_PLANET:
-                await cardPop();
+            case TYPE_PLANET: {
+                let played = await cardPop();
+                // Dernière planète du voyage : alerte « réservoirs presque vides »
+                vars.lastPlanet = played && played.lastPlanet ? LANG.last_planet : null;
                 res.render('template-planet', vars);
                 break;
+            }
             case TYPE_INITIAL:
             case TYPE_NEGATIVE:
             case TYPE_NEUTRAL:
