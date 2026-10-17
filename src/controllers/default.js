@@ -149,8 +149,10 @@ module.exports = {
         res.render('partials/fiche-perso', {player: player, langJS, races: races.list()});
     },
 
-    mjMenu(req, res) {
-        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), loot: combat.getLootList()});
+    async mjMenu(req, res) {
+        let statuses = (await new Statuses().getAllStatuses(false))
+            .map(s => ({slug: s.slug, name: s.name}));
+        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), loot: combat.getLootList(), statuses: statuses});
     },
 
     async persos(req, res) {

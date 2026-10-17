@@ -151,23 +151,35 @@ const cardPop = async function (setPlayed = true){
 
         let card = await new Card(result.card_id).getData();
 
-        let data = JSON.stringify({
-            action: 'card-played',
-            data: card
-        });
-        if (setPlayed) {
-            const wsClient = new ws(WS_URL);
-            wsClient.on('open', () => {
-                wsClient.send(data);
-            });
-        }
+        if (setPlayed)
+            announceCard(card);
 
         return card;
     }
     return false;
 }
 
+// Carte affichée sur la page de jeu, pour le panneau MJ qui s'ouvre ou se
+// recharge en cours de partie. Gardée telle qu'elle a été jouée (variantes
+// de status comprises).
+let currentCard = null;
+
+const announceCard = function (card) {
+    if (!card)
+        return;
+    currentCard = card;
+    const wsClient = new ws(WS_URL);
+    wsClient.on('open', () => {
+        wsClient.send(JSON.stringify({action: 'card-played', data: card}));
+        wsClient.close();
+    });
+    wsClient.on('error', () => {});
+}
+
+const getCurrentCard = () => currentCard;
+
 const destroyDeck = async function (deck_id = 0){
+    currentCard = null;
     await DB.tables.deck.destroy({
         where: {deck_id: deck_id},
         truncate: true,
@@ -356,4 +368,4 @@ const hydrateCardDB = async function (cleanInstall = true) {
     await generatePlanets();
 }
 
-module.exports = {deckGenerator, cardPop, getCardsIds, destroyDeck, getDeck, shuffle, hydrateCardDB, generatePlanet, generatePlanets}
+module.exports = {deckGenerator, cardPop, announceCard, getCurrentCard, getCardsIds, destroyDeck, getDeck, shuffle, hydrateCardDB, generatePlanet, generatePlanets}
