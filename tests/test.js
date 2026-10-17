@@ -255,6 +255,11 @@ async function test_items_editor() {
         let out = await itemsEditor.save({name: 'Clé à molette test', pool: 'Outils test', type: 'Relique sacrée', desc: 'Pour les tests'});
         assert.strictEqual(out.item.slug, 'cle-a-molette-test');
         assert.strictEqual(out.item.type, 'relique_sacree');
+        assert.strictEqual(out.item.rarity, 'commun', 'rareté par défaut');
+        out = await itemsEditor.save({slug: 'cle-a-molette-test', name: 'Clé à molette test', pool: 'Outils test', type: 'Relique sacrée', rarity: 'legendaire'});
+        assert.strictEqual(out.item.rarity, 'legendaire');
+        out = await itemsEditor.save({slug: 'cle-a-molette-test', name: 'Clé à molette test', pool: 'Outils test', type: 'Relique sacrée', rarity: 'divin'});
+        assert.strictEqual(out.item.rarity, 'commun', 'une rareté inconnue redevient commun');
         assert.ok((await itemsEditor.list()).types.includes('relique_sacree'), 'un nouveau type rejoint la liste');
         assert.strictEqual(out.item.pool, 'outils_test');
         assert.ok((await itemsEditor.save({name: 'clé à MOLETTE test', pool: 'electronique'})).error, 'deux objets ne portent pas le même nom');
