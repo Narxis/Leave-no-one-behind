@@ -160,6 +160,11 @@ class DB {
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
+            },
+            outcomes: { // issues tirées au hasard : JSON [{weight, reveal|next, ...}]
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
             }
         });
 
@@ -473,7 +478,7 @@ class DB {
 
         // Colonnes ajoutées après coup : on les crée dans une base existante
         // plutôt que d'incrémenter DB_VERSION (qui repartirait d'une base vide)
-        await this.addMissingColumns('card_modules', ['humans', 'loot', 'roll']);
+        await this.addMissingColumns('card_modules', ['humans', 'loot', 'roll', 'outcomes']);
     }
 
     async addMissingColumns(table, columns) {

@@ -589,6 +589,10 @@
     color: var(--ui-danger);
 }
 
+.cp-issue.is-outcome {
+    color: var(--ui-cyan);
+}
+
 .cp-choice.is-leaving {
     transform: translateY(24px);
     opacity: 0;
