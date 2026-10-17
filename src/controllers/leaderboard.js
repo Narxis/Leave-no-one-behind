@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const allies = require('./allies');
+const gameSettings = require('./gameSettings');
 
 // Classement des équipes. Le MJ nomme l'équipe avant de lancer la partie ;
 // son score est enregistré à l'écran de fin. Gardé dans un fichier (comme les
@@ -41,7 +42,9 @@ const setTeam = function (name) {
     data.current = {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         team: name,
-        startedAt: new Date().toISOString()
+        startedAt: new Date().toISOString(),
+        // Réglages de la partie, pour comparer les scores à réglages égaux
+        settings: gameSettings.get()
     };
     save();
     return data.current;
@@ -121,6 +124,7 @@ const record = async function (result) {
             return m.discord || !old ? m : Object.assign(m, {discord: old.discord});
         }),
         npcs: team.npcs,
+        settings: data.current.settings || (previous && previous.settings) || null,
         date: previous ? previous.date : now.toISOString()
     };
     if (at >= 0)

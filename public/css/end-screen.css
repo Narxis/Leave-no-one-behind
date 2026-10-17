@@ -413,3 +413,12 @@ body.planet-grabbing * {
   cursor: grabbing !important;
   user-select: none;
 }
+
+/* Paramètres de la partie, en haut à droite du cadre */
+.end-settings {
+  position: absolute;
+  top: 26px;
+  right: 34px;
+  max-width: 520px;
+  z-index: 1;
+}

@@ -3,7 +3,8 @@
     cssFiles:[
         "/css/style.css",
         "/css/end-screen.css",
-        "/css/ui-menus.css"
+        "/css/ui-menus.css",
+        "/css/parametres.css"
     ]
 }) %>
 
@@ -11,6 +12,7 @@
     <%- include("partials/nav") %>
     <div class="center">
         <div class="endscreen-container">
+            <div class="end-settings"><%- include("partials/settings-recap", {settings: settings}) %></div>
             <div class="score">
                 <div class="line">
                     <div class="title-score">Score:</div>

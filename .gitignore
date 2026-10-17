@@ -124,6 +124,7 @@ dist
 .idea/
 public/views/index-legacy.ejs
 
-# Données du jeu gardées entre les redémarrages : alliés (PNJ) du MJ, classement des équipes
+# Données du jeu gardées entre les redémarrages : alliés (PNJ) du MJ, classement des équipes, paramètres de partie
 storage/cache/allies.json
 storage/cache/leaderboard.json
+storage/cache/gameSettings.json
