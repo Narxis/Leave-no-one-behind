@@ -30,6 +30,7 @@ async function test() {
     await test_deck_generation();
     await test_place_endings();
     await test_statuses_after_planet();
+    test_random_ship();
     await test_roll();
     test_ship_alerts();
     await test_items_editor();
@@ -478,6 +479,23 @@ async function test_statuses_after_planet() {
         await DB.tables.deck.update({played: 0}, {where: {deck_id: 0}});
         await statuses.hydrateDB();
     }
+}
+
+// Option « Vaisseau aléatoire » : désactivée par défaut, stats à ±10 % sans dépasser 100
+function test_random_ship() {
+    console.log('Testing random ship');
+    const gameSettings = require('../src/controllers/gameSettings');
+    const variation = gameSettings.SHIP_START_VARIATION;
+    assert.strictEqual(gameSettings.OPTIONS.find(o => o.key === 'randomShipStats').default, false);
+    let low = Ship.randomStart(variation, () => 0);
+    let high = Ship.randomStart(variation, () => 0.999999);
+    assert.strictEqual(low.motors, 90);
+    assert.strictEqual(high.motors, 100);
+    assert.strictEqual(low.cryopods, undefined);
+    for (let i = 0; i < 50; i++)
+        for (let [stat, v] of Object.entries(Ship.randomStart(variation)))
+            assert(Number.isInteger(v) && v >= 90 && v <= 100, stat + ' = ' + v);
+    console.log('Random ship OK');
 }
 
 async function test_roll(){
