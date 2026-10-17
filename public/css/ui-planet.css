@@ -247,3 +247,49 @@ body.planet-grabbing * {
     cursor: grabbing !important;
     user-select: none;
 }
+
+/*---Alerte « dernière planète » (plus aucune planète dans le paquet)---*/
+.last-planet-alert {
+    position: fixed;
+    /* Sous les boutons Atterrir / Continuer, au-dessus de la planète */
+    top: 138px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: min(520px, calc(100vw - 220px));
+    padding: 12px 20px;
+    border: 1px solid var(--ui-danger);
+    border-radius: var(--ui-radius);
+    background: var(--ui-surface);
+    box-shadow: 0 0 24px -6px var(--ui-danger);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    text-align: center;
+    pointer-events: none;
+    animation: last-planet-pulse 2.4s ease-in-out infinite;
+}
+
+.last-planet-title {
+    color: var(--ui-danger);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.last-planet-text {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+@keyframes last-planet-pulse {
+    0%, 100% { box-shadow: 0 0 18px -8px var(--ui-danger); }
+    50% { box-shadow: 0 0 30px -2px var(--ui-danger); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .last-planet-alert { animation: none; }
+}

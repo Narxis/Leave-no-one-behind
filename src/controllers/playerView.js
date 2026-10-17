@@ -41,7 +41,7 @@ const publicCard = function (card) {
         return null;
     let kind = cardKind(card);
     if (kind === 'planet')
-        return {id: card.id, kind: kind, desc: '', choices: []};
+        return {id: card.id, kind: kind, desc: '', choices: [], lastPlanet: card.lastPlanet ? LANG.last_planet : null};
     return {
         id: card.id,
         kind: kind,

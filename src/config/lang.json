@@ -1,4 +1,8 @@
 {
+  "last_planet": {
+    "title": "Dernière planète",
+    "text": "Les réservoirs sont presque vides : le vaisseau n'ira pas plus loin. C'est votre dernière chance de trouver un foyer à l'humanité."
+  },
   "card_vars": {
     "module": {
       "cryopods": {

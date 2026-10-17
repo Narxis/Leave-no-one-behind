@@ -487,6 +487,13 @@
         </div>
       </div>
     </div>
+    <% if (locals.lastPlanet) { %>
+    <%# Dernière planète du paquet : texte dans src/config/lang.json (last_planet) %>
+    <div class="last-planet-alert" role="alert">
+      <span class="last-planet-title"><%= lastPlanet.title %></span>
+      <span class="last-planet-text"><%= lastPlanet.text %></span>
+    </div>
+    <% } %>
     <div class="topcenter">
       <button onclick="location.href = '/land' " class="land-button">Atterrir sur la planète.</button>
       <button onclick="location.reload()" class="leave-button">Continuer votre voyage.</button>
