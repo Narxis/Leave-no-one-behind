@@ -19,6 +19,10 @@ L'app utilise le relais en ligne, https://lnob-relay.narxis.workers.dev (`lnob.r
 
 Pour tester une autre adresse sans refaire l'app : variable d'environnement `LNOB_RELAY_URL`.
 
+## Mettre à jour la page joueur
+
+Le relais sert la page joueur (`public/player`) telle qu'elle était au moment du déploiement. Après une modification de cette page (une nouvelle étape fusionnée sur `prod`, par exemple), relancer `npm run deploy` dans ce dossier. Mieux vaut le faire entre deux parties : le déploiement coupe les connexions en cours, même si le MJ et les joueurs se reconnectent tout seuls.
+
 ## Limites
 
 8 joueurs par partie, messages de 64 Ko au plus. Sur l'offre gratuite de Cloudflare : 100 000 requêtes par jour, où les messages WebSocket reçus comptent pour 1/20e de requête chacun ([tarifs](https://developers.cloudflare.com/durable-objects/platform/pricing/)). Une partie en utilise une infime partie.
