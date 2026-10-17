@@ -25,6 +25,11 @@
     <section id="lobby" class="panel" hidden>
         <p class="dim">Partie <strong id="lobby-code"></strong></p>
         <p id="status" class="status" role="status"></p>
+        <div id="character" class="character" hidden>
+            <p id="character-text"></p>
+            <button type="button" id="create" class="primary" hidden>Créer mon personnage</button>
+            <p id="action-error" class="error" role="alert" hidden></p>
+        </div>
         <h2>Équipage</h2>
         <ul id="players" class="players"></ul>
         <button type="button" id="leave" class="secondary">Quitter</button>

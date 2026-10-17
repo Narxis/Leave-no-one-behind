@@ -40,6 +40,7 @@
     let roster = [];
     let me = null;
     let hostOnline = false;
+    let character; // undefined : pas encore reçu du MJ
 
     const show = function (panel) {
         $('join').hidden = panel !== 'join';
@@ -67,11 +68,37 @@
         }));
     };
 
+    // Message au MJ (le relais le transmet si le MJ est là)
+    const sendAction = function (action, data) {
+        if (socket && socket.readyState === WebSocket.OPEN)
+            socket.send(JSON.stringify({type: 'msg', data: {kind: 'action', action: action, data: data || {}}}));
+    };
+
+    const showActionError = function (message) {
+        $('action-error').textContent = message || '';
+        $('action-error').hidden = !message;
+    };
+
+    const renderCharacter = function () {
+        $('character').hidden = character === undefined;
+        if (character === undefined)
+            return;
+        let text = $('character-text');
+        if (character) {
+            text.replaceChildren('Ton personnage : ', Object.assign(document.createElement('strong'), {textContent: character.name}));
+        }
+        else
+            text.textContent = 'Tu n\'as pas encore de personnage dans cette partie.';
+        $('create').hidden = !!character;
+        $('create').disabled = !hostOnline;
+    };
+
     const renderStatus = function () {
         if (hostOnline)
             setStatus('Connecté. En attente que le MJ lance la partie.', 'ok');
         else
             setStatus('Le MJ est déconnecté : la partie reprendra à son retour.', 'wait');
+        renderCharacter();
     };
 
     const connect = function () {
@@ -113,6 +140,15 @@
                 roster = Array.isArray(msg.data.players) ? msg.data.players : [];
                 renderPlayers();
             }
+            else if (msg.type === 'msg' && msg.data && msg.data.kind === 'you') {
+                character = msg.data.character || null;
+                showActionError('');
+                renderCharacter();
+            }
+            else if (msg.type === 'msg' && msg.data && msg.data.kind === 'refused') {
+                $('create').disabled = !hostOnline;
+                showActionError(msg.data.message);
+            }
         };
 
         ws.onclose = () => {
@@ -150,9 +186,16 @@
         store.set('lnob-player-name', name);
         session = {code, name};
         roster = [];
+        character = undefined;
         leaving = false;
         $('submit').disabled = true;
         connect();
+    });
+
+    $('create').addEventListener('click', () => {
+        $('create').disabled = true;
+        showActionError('');
+        sendAction('join');
     });
 
     $('leave').addEventListener('click', () => {
