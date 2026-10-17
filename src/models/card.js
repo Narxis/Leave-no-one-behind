@@ -268,6 +268,10 @@ class Card {
                 return CONFIG[type];
         }
 
+        // Crochets sans « _ » (ex. « [rev B] ») : simple texte, pas une variable
+        if (!type && article !== 'conf')
+            return "[" + variable + "]";
+
         if (!this.cardVars[type]) {
             log("Error with texte variable ["+variable+"]", "#f00");
             // Texte laissé intact (crochets compris) : visible en jeu et détecté par les tests
@@ -299,7 +303,7 @@ class Card {
 
     async delete() {
         await DB.tables.cards.destroy({ where: { id: this.id } });
-        await DB.tables.card_modules.destroy({ where: { id: this.id } });
+        await DB.tables.card_modules.destroy({ where: { card_id: this.id } });
     }
 
     // Issue tirée au hasard : elle devient la suite du choix (résultat ou carte,
