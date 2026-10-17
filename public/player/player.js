@@ -203,7 +203,7 @@
             let li = el('li', p.id === playerId ? 'me' : '');
             li.append(el('span', 'player-name', p.name + (p.id === playerId ? ' (toi)' : '')));
             let c = characters.get(p.id);
-            li.append(el('span', 'dim', c ? c.name + (c.race ? ' · ' + c.race : '') : 'pas de perso'));
+            li.append(el('span', 'dim', c ? c.name + (c.race ? ' · ' + c.race : '') + (c.role ? ' · ' + c.role : '') : 'pas de perso'));
             if (p.online === false)
                 li.append(el('span', 'dim', 'déconnecté'));
             return li;
@@ -337,7 +337,8 @@
 
     const renderSheet = function (character) {
         $('sheet-name').textContent = character.name;
-        $('sheet-race').textContent = character.raceName || '';
+        $('sheet-race').textContent = (character.raceName || '') + (character.role ? ' · ' + character.role.name : '');
+        $('sheet-race').title = character.role ? character.role.name + ' : ' + character.role.effect : '';
         $('sheet-stats').replaceChildren(...Object.keys(STAT_LABELS).map(s => bar(STAT_LABELS[s], character[s] || 0, 100)));
         $('roll-box').hidden = !game || game.phase !== 'gameLive';
     };
@@ -438,7 +439,7 @@
             let r = data.data;
             $('roll-result').hidden = false;
             $('roll-result').className = 'roll-result ' + (r.success ? 'ok' : 'fail');
-            $('roll-result').textContent = '🎲 ' + r.dice_result + ' → ' + r.result + ' : ' + (r.success ? 'réussite !' : 'échec.');
+            $('roll-result').textContent = '🎲 ' + (r.dice ? 'meilleur de ' + r.dice.join(' / ') + ' = ' : '') + r.dice_result + ' → ' + r.result + ' : ' + (r.success ? 'réussite !' : 'échec.');
         }
     };
 

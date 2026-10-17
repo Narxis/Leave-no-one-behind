@@ -15,6 +15,7 @@ const races = require('./races');
 const inventory = require('./inventory');
 const shipAlerts = require('./shipAlerts');
 const statRolls = require('./statRolls');
+const roles = require('./roles');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -66,9 +67,11 @@ const statusList = async function () {
     return list.map(s => ({slug: s.slug, name: s.name, desc: s.desc, duration: s.duration}));
 };
 
+const roleName = (slug) => (roles.find(slug) || {}).name || '';
+
 const team = async function () {
     let players = await DB.tables.players.findAll({raw: true});
-    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race)}));
+    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race), role: roleName(p.role)}));
 };
 
 // Tout ce qui est commun aux joueurs
@@ -93,7 +96,7 @@ const playerState = async function (id) {
     let player = await new Player().getData(id);
     let character = null;
     if (player) {
-        character = {name: player.name, race: player.race, raceName: races.nameOf(player.race)};
+        character = {name: player.name, race: player.race, raceName: races.nameOf(player.race), role: roles.publicRole(player.role)};
         for (let stat of STATS.concat('moral'))
             character[stat] = player[stat];
     }

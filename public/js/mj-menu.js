@@ -129,7 +129,9 @@ async function getAllPlayers () {
         let module = data.module ? moduleSelect.querySelector('option[value="' + data.module + '"]') : null;
         result.className = 'mj-player-roll-result ' + (data.success ? 'success' : 'fail');
         result.textContent = (names[data.discord_id] || 'Joueur') + ' · ' + (stat ? stat.textContent : data.stat)
-            + (module ? ' (' + module.textContent + ')' : '') + ' : dé ' + data.dice_result + ' → ';
+            + (module ? ' (' + module.textContent + ')' : '')
+            // Dé en plus du rôle : on montre tous les dés et celui gardé
+            + (data.dice ? ' : dés ' + data.dice.join(' / ') + ', gardé ' : ' : dé ') + data.dice_result + ' → ';
         let value = document.createElement('strong');
         value.textContent = data.result + (data.success ? ' réussite' : ' échec');
         result.append(value);

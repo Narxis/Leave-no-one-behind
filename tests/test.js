@@ -33,6 +33,7 @@ async function test() {
     test_random_ship();
     await test_last_planet();
     await test_roll();
+    await test_roles();
     test_ship_alerts();
     await test_items_editor();
     test_npcs();
@@ -601,6 +602,56 @@ async function test_roll(){
     console.log('OK');
 
     console.log('Roll OK');
+}
+
+// Rôles des joueurs : config, dés en plus sur la stat du rôle, un seul joueur par rôle
+async function test_roles() {
+    console.log('Testing roles');
+    const roles = require('../src/controllers/roles');
+    const remote = require('../src/controllers/remote');
+    const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
+
+    let list = roles.list();
+    assert.ok(list.length >= 6);
+    assert.ok(roles.find('capitaine'));
+    let slugs = new Set();
+    for (let role of list) {
+        assert.ok(role.slug && role.name && role.effect, JSON.stringify(role));
+        assert.ok(!slugs.has(role.slug), 'rôle en double : ' + role.slug);
+        slugs.add(role.slug);
+        assert.ok(role.stat === null || STATS.includes(role.stat), role.slug + ' : stat ' + role.stat);
+        assert.ok(fs.existsSync(__dirname + '/../public' + role.icon), 'icône manquante : ' + role.icon);
+    }
+
+    // Dés : 1 de base, +bonus sur la stat du rôle ; on garde le meilleur
+    assert.equal(roles.diceCount({role: 'pilote'}, 'pilotage'), 2);
+    assert.equal(roles.diceCount({role: 'pilote'}, 'combat'), 1);
+    assert.equal(roles.diceCount({role: 'capitaine'}, 'pilotage'), 1);
+    assert.equal(roles.diceCount({role: ''}, 'combat'), 1);
+    assert.equal(roles.diceCount({role: 'inconnu'}, 'combat'), 1);
+    let values = [0.10, 0.75];
+    let rolled = roles.rollDice(2, () => values.shift());
+    assert.deepStrictEqual(rolled, {dice: [11, 76], kept: 76});
+    assert.equal(roles.rollDice(1, () => 0.5).dice.length, 1);
+
+    // Attribution : rôle unique, le joueur qui l'avait le perd
+    await new Player().create({discord_id: 'role-a', name: 'A', moral: 100});
+    await new Player().create({discord_id: 'role-b', name: 'B', moral: 100});
+    let changed = await roles.assign('role-a', 'pilote');
+    assert.equal(changed.length, 1);
+    assert.equal((await new Player().getData('role-a')).role, 'pilote');
+    changed = await roles.assign('role-b', 'pilote');
+    assert.deepStrictEqual(changed.map(p => [p.discord_id, p.role]), [['role-a', ''], ['role-b', 'pilote']]);
+    assert.equal(await roles.assign('role-a', 'inconnu'), null);
+    assert.equal(await roles.assign('personne', 'pilote'), null);
+    await roles.assign('role-b', '');
+    assert.equal((await new Player().getData('role-b')).role, '');
+    assert.equal(roles.publicRole('pilote').name, 'Pilote');
+    assert.equal(roles.publicRole(''), null);
+
+    // Seul le MJ donne les rôles
+    assert.ok((await remote.translate({id: 'role-a', name: 'A'}, {kind: 'action', action: 'player-role', data: {role: 'capitaine'}})).refused);
+    console.log('Roles OK');
 }
 
 module.exports = {test};

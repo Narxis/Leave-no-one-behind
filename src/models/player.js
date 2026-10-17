@@ -11,6 +11,7 @@ class Player {
     survival;
     recon;
     moral;
+    role;
     accepted_datas = {
         'name': '',
         'discord_id': '',
@@ -21,6 +22,7 @@ class Player {
         'survival': 0,
         'recon': 0,
         'moral': 0,
+        'role': '',
     }
 
     constructor(id = 0) {
@@ -45,7 +47,8 @@ class Player {
             engineering: this.engineering,
             survival: this.survival,
             recon: this.recon,
-            moral: this.moral
+            moral: this.moral,
+            role: this.role || ''
         }).then(result => {
             this.id = result.id;
         })
@@ -78,7 +81,8 @@ class Player {
             engineering: this.engineering,
             survival: this.survival,
             recon: this.recon,
-            moral: this.moral
+            moral: this.moral,
+            role: this.role || ''
         }, {
             where: whereClause
         });
@@ -112,7 +116,8 @@ class Player {
                 'engineering',
                 'survival',
                 'recon',
-                'moral'
+                'moral',
+                'role'
             ],
             where: whereClause
         })
