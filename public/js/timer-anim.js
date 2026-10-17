@@ -9,7 +9,9 @@ const TimerAnim = (function () {
     // Classes de la séquence, retirées à chaque nouveau compte à rebours
     // (plusieurs cartes à timer peuvent se suivre sans recharger la page)
     const BOX_CLASSES = ['start', 'startnot', 'idle', 'grow', 'float', 'flash', 'overcharge',
-        'critical', 'plop', 'fizzle', 'shot', 'show-plugun', 'hide-plugun', 'hide'];
+        'critical', 'plop', 'fizzle', 'shot', 'hide'];
+    const IDLE_PERIOD = 2000; // durée d'un cycle du bras au repos (gunfloat*)
+    const THROW_AT = 1600;    // lâcher du pistolet dans l'animation shot (CSS)
     const SHIP_CLASSES = ['bonk', 'comeback', 'thrust'];
 
     let run = 0; // invalide une séquence en cours si on recommence ou annule
@@ -43,6 +45,14 @@ const TimerAnim = (function () {
         ship.classList.add('shipflotte');
     }
 
+    // Temps restant avant que le bras au repos repasse par sa pose de départ,
+    // celle où commence le lancer : on y démarre le lancer pour éviter un saut
+    function untilArmRest() {
+        const anim = $('#arm1').getAnimations().find(a => a.animationName === 'gunfloat1');
+        if (!anim || anim.currentTime === null) return 0;
+        return (IDLE_PERIOD - anim.currentTime % IDLE_PERIOD) % IDLE_PERIOD;
+    }
+
     function tick(timeLeft) {
         const box = $('#bigboite');
         setDigits(timeLeft);
@@ -57,8 +67,9 @@ const TimerAnim = (function () {
         }
         if (timeLeft === 10) {
             box.classList.add('flash', 'overcharge');
+            // L'onde de choc dure 2 s : la retirer avant la coupait net
             const r = run;
-            wait(300).then(() => { if (r === run) box.classList.remove('flash'); });
+            wait(2000).then(() => { if (r === run) box.classList.remove('flash'); });
         }
         if (timeLeft === 5)
             box.classList.add('critical');
@@ -104,19 +115,20 @@ const TimerAnim = (function () {
         box.classList.remove('grow', 'overcharge', 'critical', 'beat');
         box.classList.add('fizzle');
         puff();
-        await wait(1100);
+        // Le lancer part quand le bras repasse par sa pose de repos, une fois
+        // la boule presque éteinte
+        let delay = untilArmRest();
+        while (delay < 900) delay += IDLE_PERIOD;
+        await wait(delay);
         if (!alive()) return;
 
+        // Le lâcher du pistolet est géré en CSS (délai de THROW_AT) pour
+        // rester calé à l'image près sur le mouvement du bras
         box.classList.add('shot');
-        await wait(1520);
-        if (!alive()) return;
-
-        box.classList.add('show-plugun', 'hide-plugun');
-        await wait(560);
+        await wait(THROW_AT + 560);
         if (!alive()) return;
 
         impact(ship);
-        ship.classList.remove('shipflotte');
         ship.classList.add('bonk');
         await wait(1000);
         if (!alive()) return;
@@ -133,8 +145,7 @@ const TimerAnim = (function () {
         if (!alive()) return;
 
         ship.classList.remove('comeback');
-        ship.classList.add('shipflotte');
-        box.classList.remove('shot', 'show-plugun', 'hide-plugun', 'fizzle', 'float');
+        box.classList.remove('shot', 'fizzle', 'float');
     }
 
     // Choix fait avant la fin : la boule se dissipe et le bras se replie
