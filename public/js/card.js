@@ -4,6 +4,14 @@ var countDownRunning = false;
 // Pendant un combat (combat.js), le compte à rebours est en pause
 var countDownPaused = false;
 
+// Contre les clics de travers : un choix cliqué ne part qu'après ce délai,
+// avec un bouton « Annuler » ; un autre clic pendant le délai change le choix
+const CHOICE_CONFIRM_DELAY = 2500;
+// Un bouton seul (« Continuer votre chemin »...) part tout de suite
+const CHOICE_CONFIRM_MIN_CHOICES = 2;
+// Choix en attente : {btn, timeout, commit}
+var pendingChoice = null;
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -54,6 +62,11 @@ function startCountDown() {
         if (time_left > 0) {
             TimerAnim.tick(time_left);
             time_left--;
+            return;
+        }
+        // Chrono à 0 pendant le délai : le choix déjà cliqué est gardé
+        if (pendingChoice) {
+            pendingChoice.commit();
             return;
         }
         clearInterval(interval_cd);
@@ -310,6 +323,26 @@ async function showChoices() {
     // qu'ils s'en vont, un double-clic relançait la suite une seconde fois
     // (deux « Continuer votre chemin », deux pioches et une carte sautée)
     let chosen = false;
+    clearPendingChoice();
+    const commit = async function (apply) {
+        if (chosen)
+            return;
+        chosen = true;
+        clearPendingChoice();
+        stopCountdown();
+        await apply();
+    };
+    // Un clic met le choix en attente (re-cliquer le même ne fait rien)
+    const pick = function (btn, apply) {
+        if (chosen || (pendingChoice && pendingChoice.btn === btn))
+            return;
+        if (currentCard.choices.length < CHOICE_CONFIRM_MIN_CHOICES)
+            return commit(apply);
+        clearPendingChoice();
+        pendingChoice = {btn, commit: () => commit(apply)};
+        armPendingChoice();
+        showPendingChoice(btn);
+    };
     for (let i=0; i<currentCard.choices.length; i++) {
         let choice = currentCard.choices[i];
         let choiceBtn = document.createElement('button');
@@ -317,11 +350,8 @@ async function showChoices() {
         choiceBtn.classList.add('move-down');
         choiceBtn.id = 'choice' + i;
         choiceBtn.innerHTML = choice.value;
-        choiceBtn.addEventListener('mouseup', async function() {
-            if (chosen)
-                return;
-            chosen = true;
-            stopCountdown();
+        // Suite du choix, une fois le délai d'annulation passé
+        const apply = async function() {
             if (choice.humans)
                 changeHumans(choice.humans);
             // Statut donné par le choix (toute l'équipe)
@@ -361,11 +391,57 @@ async function showChoices() {
                await CardLoot.collect(loot);
                await initCard(choice.next);
             }
-        });
+        };
+        choiceBtn.addEventListener('mouseup', () => pick(choiceBtn, apply));
         choiceTab.append(choiceBtn);
         await sleep(150);
         choiceBtn.classList.remove('move-down');
     }
+}
+
+// Le délai repart à chaque choix ; pendant un combat il attend la fin
+function armPendingChoice() {
+    let pending = pendingChoice;
+    pending.timeout = setTimeout(function () {
+        if (pendingChoice !== pending)
+            return;
+        if (countDownPaused)
+            return armPendingChoice();
+        pending.commit();
+    }, CHOICE_CONFIRM_DELAY);
+}
+
+// Choix en attente surligné, avec « Annuler » et une barre qui se vide
+function showPendingChoice(btn) {
+    document.getElementById('choicetab').classList.add('has-pending');
+    btn.classList.add('choice-pending');
+    btn.style.setProperty('--choice-delay', CHOICE_CONFIRM_DELAY + 'ms');
+
+    let cancel = document.createElement('span');
+    cancel.className = 'choice-cancel';
+    cancel.setAttribute('role', 'button');
+    cancel.textContent = 'Annuler';
+    // Le clic sur « Annuler » ne doit pas remonter jusqu'au choix
+    cancel.addEventListener('mouseup', function (e) {
+        e.stopPropagation();
+        clearPendingChoice();
+    });
+    let bar = document.createElement('span');
+    bar.className = 'choice-delay-bar';
+    btn.append(cancel, bar);
+}
+
+function clearPendingChoice() {
+    if (!pendingChoice)
+        return;
+    clearTimeout(pendingChoice.timeout);
+    let btn = pendingChoice.btn;
+    btn.classList.remove('choice-pending');
+    btn.querySelectorAll('.choice-cancel, .choice-delay-bar').forEach(e => e.remove());
+    let choiceTab = document.getElementById('choicetab');
+    if (choiceTab)
+        choiceTab.classList.remove('has-pending');
+    pendingChoice = null;
 }
 
 // Clic sur la carte pendant l'écriture : le texte s'accélère fortement
