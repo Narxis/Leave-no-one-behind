@@ -173,6 +173,7 @@ module.exports = {
             lang: langJS,
             settings: gameSettings.get(),
             fields: gameSettings.FIELDS,
+            options: gameSettings.OPTIONS,
             presets: gameSettings.PRESETS,
             available: gameSettings.available()
         });
