@@ -186,7 +186,7 @@ ___
 
 * ```[art_race_0]``` **(toute les races)**
 
-  fnek, omphor, sylv, ygrl, shrymp, aku, york, nek_eau, nek_feu, nek_terre, nek_air.
+  fnek, omphor, sylv, ygrl, shrymp, aku, yorc, nek_eau, nek_feu, nek_terre, nek_air.
 
 ### Stats
 
@@ -195,3 +195,22 @@ ___
 * ```[art_stats_0]``` **(toute les stats)**
 
   combat, pilotage, ingenierie, survie, reconnaissance.
+
+### Autres listes
+
+Toutes les entrées d'une liste ont les mêmes articles (vérifié par `npm test`). Forme courte : ```[objet_1]``` = ```[no_objet_1]```.
+
+| Variable | Articles | Contenu |
+| --- | --- | --- |
+| ```[art_pub_0]``` | no | noms du pub de l'espace |
+| ```[art_objet_0]``` | le, un, votre, no | objets de `items.json` (clé = slug) |
+| ```[art_livre_0]``` | le, no | titres de livres |
+| ```[art_film_0]``` | le, no | films des races (Walt DiFnek, Nek-flix…) |
+| ```[art_boisson_0]``` | le, un, no | boissons servies au pub |
+| ```[art_bouteille_0]``` | le, no | bouteilles |
+| ```[art_lieu_0]``` | le, un, du, au, no | types de lieux (casino, observatoire…) |
+| ```[art_pnj_0]``` | le, les, un, des, du, au, aux, no, nos | personnages par métier (marchand, douanier…) |
+| ```[art_personnage_0]``` | le, du, au, no | personnages connus (préfet Dimalou, Chris Tale…) |
+| ```[art_organisation_0]``` | le, du, au, no | organisations (OLI, Fnak, Galaxyssimo™…) |
+| ```[art_bande_0]``` | le, du, au, no | groupes hostiles (PEACE, AMIS…) |
+| ```[art_systeme_0]``` | le, du, au, no | systèmes stellaires |
