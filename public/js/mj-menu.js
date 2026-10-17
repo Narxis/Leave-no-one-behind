@@ -249,9 +249,66 @@ function setMJCardValue(card) {
         // Butin du choix : distribué sur la page de jeu avant la suite
         let loot = Array.isArray(choice.loot) && choice.loot.length
             ? '<br><br><span class="mj-loot">Butin : ' + choice.loot.map(n => String(n).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]))).join(', ') + '</span>' : '';
-        document.querySelector('#choice' + i + ' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + (choice.reveal || '') + loot;
+        document.querySelector('#choice' + i + ' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + (choice.roll ? rollIssuesHtml(choice.roll) : (choice.reveal || '')) + loot;
     });
 }
+
+const CARD_ROLL_STATS = {combat: 'Combat', pilotage: 'Pilotage', engineering: 'Ingénierie', survival: 'Survie', recon: 'Reconnaissance'};
+const escMj = (t) => String(t).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]));
+
+// Une suite de jet en une ligne : texte (ou carte suivante) et infos MJ
+function rollIssueHtml(issue) {
+    issue = issue || {};
+    let text = issue.reveal ? issue.reveal.trim() : (issue.next ? 'Carte suivante (' + escMj(issue.next) + ')' : '');
+    return text + (issue.mjreveal ? ' <span class="mjreveal">' + issue.mjreveal + '</span>' : '');
+}
+
+function rollIssuesHtml(roll) {
+    let stat = CARD_ROLL_STATS[roll.stat];
+    return '<b>Jet' + (stat ? ' : ' + stat : '') + '</b><br>'
+        + '<b>Si réussite :</b> ' + rollIssueHtml(roll.success) + '<br>'
+        + '<b>Si échec :</b> ' + rollIssueHtml(roll.failure);
+}
+
+// Jet d'un choix demandé par la page de jeu : chrono en pause jusqu'à la réponse
+(function () {
+    const box = document.getElementById('mj-card-roll');
+    const last = document.getElementById('mj-card-roll-last');
+    let pending = null;
+
+    document.addEventListener('card-roll-ask', (e) => {
+        pending = e.detail.data || {};
+        let stat = CARD_ROLL_STATS[pending.stat];
+        document.getElementById('mj-card-roll-stat').textContent = 'Jet' + (stat ? ' : ' + stat : '');
+        document.getElementById('mj-card-roll-choice').innerHTML = (pending.choice || '')
+            + (pending.mjreveal ? ' <span class="mjreveal">' + pending.mjreveal + '</span>' : '');
+        document.getElementById('mj-card-roll-success').innerHTML = rollIssueHtml(pending.success);
+        document.getElementById('mj-card-roll-failure').innerHTML = rollIssueHtml(pending.failure);
+        last.textContent = '';
+        box.querySelectorAll('[data-card-roll]').forEach(b => b.classList.remove('suggested'));
+        box.hidden = false;
+    });
+    document.addEventListener('card-roll-result', () => {
+        pending = null;
+        box.hidden = true;
+    });
+    // Jet reçu pendant l'attente : mis en avant, le MJ garde la main
+    document.addEventListener('roll', (e) => {
+        let data = e.detail.data || {};
+        if (!pending || (pending.stat && data.stat !== pending.stat))
+            return;
+        last.textContent = 'Dernier jet : ' + data.result + (data.success ? ' (réussite)' : ' (échec)');
+        box.querySelectorAll('[data-card-roll]').forEach(b => b.classList.toggle('suggested', b.dataset.cardRoll === (data.success ? 'success' : 'failure')));
+    });
+    box.querySelectorAll('[data-card-roll]').forEach(btn => btn.addEventListener('click', () => {
+        if (pending)
+            wsLNOB.triggerCustomEvent('card-roll-result', {result: btn.dataset.cardRoll});
+    }));
+    // Menu ouvert pendant un jet : la page de jeu renvoie sa demande
+    const query = () => wsLNOB.triggerCustomEvent('card-roll-query', {});
+    document.addEventListener('ws-reconnect', query);
+    query();
+})();
 
 // Carte en cours : chargée à l'ouverture (et après une coupure du serveur),
 // puis suivie par l'événement « card-played »

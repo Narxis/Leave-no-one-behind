@@ -1,8 +1,9 @@
 var currentCard = {};
 var interval_cd;
 var countDownRunning = false;
-// Pendant un combat (combat.js), le compte à rebours est en pause
-var countDownPaused = false;
+// Le compte à rebours est en pause pendant un combat (combat.js) et pendant
+// un jet de choix : une raison par pause, il repart quand il n'y en a plus
+var countDownPauses = new Set();
 
 // Contre les clics de travers : un choix cliqué ne part qu'après ce délai,
 // avec un bouton « Annuler » ; un autre clic pendant le délai change le choix
@@ -57,7 +58,7 @@ function startCountDown() {
     countDownRunning = true;
 
     const tick = async function () {
-        if (countDownPaused)
+        if (countDownPauses.size)
             return;
         if (time_left > 0) {
             TimerAnim.tick(time_left);
@@ -94,9 +95,12 @@ async function stopCountdown() {
 }
 
 // Appelé par combat.js : le chrono s'arrête au début du combat et repart
-// de là où il en était à la fin
-function pauseCountDown(paused) {
-    countDownPaused = !!paused;
+// de là où il en était à la fin (même chose pendant un jet de choix)
+function pauseCountDown(paused, reason = 'combat') {
+    if (paused)
+        countDownPauses.add(reason);
+    else
+        countDownPauses.delete(reason);
 }
 
 async function initialiseModTabs() {
@@ -334,7 +338,7 @@ async function showChoices() {
             return;
         chosen = true;
         clearPendingChoice();
-        stopCountdown();
+        // Le chrono s'arrête dans apply : un choix à jet le met seulement en pause
         await apply();
     };
     // Un clic met le choix en attente (re-cliquer le même ne fait rien)
@@ -359,51 +363,30 @@ async function showChoices() {
         choiceBtn.innerHTML = choice.value;
         // Suite du choix, une fois le délai d'annulation passé
         const apply = async function() {
-            if (choice.other)
+            if (choice.other) {
+                stopCountdown();
                 return askBlankCard();
+            }
+            let next = choice;
+            if (choice.roll) {
+                // Jet nécessaire : chrono en pause, la suite dépend du résultat
+                let issue = await askCardRoll(choice);
+                if (!issue)
+                    return showChoices();   // jet annulé : les choix reviennent, le chrono repart
+                next = rollFollowUp(choice, issue);
+            }
+            stopCountdown();
             if (choice.blank !== undefined) {
                 blankReturn = null;
                 wsLNOB.send({action: 'blank-card-choice', data: {index: choice.blank}});
             }
-            if (choice.humans)
-                changeHumans(choice.humans);
+            if (next.humans)
+                changeHumans(next.humans);
             // Statut donné par le choix (toute l'équipe)
             if (choice.status && choice.status.slug)
                 wsLNOB.setStatus(choice.status.slug, choice.status.duration);
             await hideChoices();
-            let loot = Array.isArray(choice.loot) ? choice.loot : [];
-            if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL
-
-               await writeCardDesc(choice.reveal);
-               await CardLoot.collect(loot);
-               let nextCard = await getNextCard();
-               currentCard.choices = [{
-                       value: 'Continuer votre chemin',
-                       continue: nextCard.value > 0 ? 2 : 1
-                   }];
-               await showChoices();
-            }
-            else if (choice.continue && choice.continue === 1) { // NEXT IS CARD
-               await initCard();
-            }
-            else if (choice.continue && choice.continue === 2) { // NEXT IS PLANET ETAPE 1
-               let textPlanetEncounter = "\n \u00a0 Votre vaisseau s'approche d'une planète. \n \n \u00a0 Pendant la mise en orbite, vous êtes libre de vous déplacer à bord et de profiter des installations telles que la salle de cinéma, la cuisine, la salle d'entraînement, la bibliothèque, etc... \n \n\u00a0 Dirigez-vous vers la salle des scanners pour obtenir davantage d'informations sur cette planète.";
-               await writeCardDesc(textPlanetEncounter);
-               currentCard.choices = [{
-                   value: 'Aller dans la salle des scanners',
-                   continue: 3
-               }];
-               await showChoices();
-            }
-            else if (choice.continue && choice.continue === 3) { // NEXT IS PLANET ETAPE 2
-                fastTravel();
-                await sleep(fastTravelTime);
-                window.location.href = '/next';
-            }
-            else if (choice.next && choice.next !== '') { // NEXT IS FOLLOWUP
-               await CardLoot.collect(loot);
-               await initCard(choice.next);
-            }
+            await followChoice(next);
         };
         choiceBtn.addEventListener('mouseup', () => pick(choiceBtn, apply));
         choiceTab.append(choiceBtn);
@@ -431,6 +414,7 @@ document.addEventListener('blank-card-show', async function (e) {
     if (!blankReturn && !currentCard.blank)
         blankReturn = {desc: currentCard.desc, choices: currentCard.choices};
     clearPendingChoice();
+    dropCardRoll();
     await stopCountdown();
     let choices = card.choices.map((c, i) => ({
         value: c.value,
@@ -470,7 +454,7 @@ function armPendingChoice() {
     pending.timeout = setTimeout(function () {
         if (pendingChoice !== pending)
             return;
-        if (countDownPaused)
+        if (countDownPauses.size)
             return armPendingChoice();
         pending.commit();
     }, CHOICE_CONFIRM_DELAY);
@@ -507,6 +491,137 @@ function clearPendingChoice() {
     if (choiceTab)
         choiceTab.classList.remove('has-pending');
     pendingChoice = null;
+}
+
+/* ---------- Jet d'un choix : réussite ou échec, validé par le MJ ---------- */
+
+const CARD_ROLL_TITLES = {combat: 'Jet de combat', pilotage: 'Jet de pilotage', engineering: 'Jet d\'ingénierie', survival: 'Jet de survie', recon: 'Jet de reconnaissance'};
+var cardRollPending = null;     // {choice, resolve, ask} tant que le MJ n'a pas tranché
+
+// Suite d'un choix à jet : celle du résultat, humains et butin du choix en plus
+function rollFollowUp(choice, issue) {
+    return {
+        reveal: issue.reveal || '',
+        next: issue.next || '',
+        humans: (choice.humans || 0) + (issue.humans || 0),
+        loot: (Array.isArray(choice.loot) ? choice.loot : []).concat(Array.isArray(issue.loot) ? issue.loot : [])
+    };
+}
+
+// Montre le jet à faire et attend « réussi », « raté » (renvoie la suite) ou « annuler » (null).
+// Le MJ répond depuis son menu (card-roll-result) ou avec les boutons de la carte
+async function askCardRoll(choice) {
+    pauseCountDown(true, 'roll');
+    await hideChoices();
+    let roll = choice.roll;
+    let ask = {
+        choice: choice.value,
+        stat: roll.stat,
+        mjreveal: choice.mjreveal || '',
+        success: roll.success,
+        failure: roll.failure
+    };
+    let box = document.createElement('div');
+    box.className = 'choice card-roll move-down';
+    box.innerHTML = '<div class="card-roll-title"><i class="fas fa-dice-d20"></i> ' + (CARD_ROLL_TITLES[roll.stat] || 'Jet') + '</div>'
+        + '<div class="card-roll-choice"></div>'
+        + '<div class="card-roll-hint">Le chrono est en pause : lancez les dés, le MJ valide le résultat.</div>'
+        + '<div class="card-roll-btns">'
+        + '<button type="button" class="card-roll-btn success" data-result="success">Réussi</button>'
+        + '<button type="button" class="card-roll-btn failure" data-result="failure">Raté</button>'
+        + '<button type="button" class="card-roll-btn cancel" data-result="cancel" title="Revenir aux choix">Annuler</button>'
+        + '</div>';
+    box.querySelector('.card-roll-choice').innerHTML = choice.value;
+    let choiceTab = document.getElementById('choicetab');
+    choiceTab.innerHTML = '';
+    choiceTab.append(box);
+    box.querySelectorAll('[data-result]').forEach(btn => btn.addEventListener('mouseup', () => sendCardRollResult(btn.dataset.result)));
+    await sleep(50);
+    box.classList.remove('move-down');
+
+    return new Promise(resolve => {
+        cardRollPending = {choice, resolve, ask, box};
+        wsLNOB.triggerCustomEvent('card-roll-ask', ask);
+    });
+}
+
+// Réglé tout de suite ici, puis envoyé à tous pour fermer le menu MJ
+function sendCardRollResult(result) {
+    if (!cardRollPending)
+        return;
+    settleCardRoll(result);
+    wsLNOB.triggerCustomEvent('card-roll-result', {result: result});
+}
+
+// Carte blanche montrée pendant un jet : le jet est abandonné sans suite
+function dropCardRoll() {
+    if (!cardRollPending)
+        return;
+    cardRollPending = null;
+    pauseCountDown(false, 'roll');
+    wsLNOB.triggerCustomEvent('card-roll-result', {result: 'cancel'});
+}
+
+function settleCardRoll(result) {
+    let pending = cardRollPending;
+    if (!pending || !['success', 'failure', 'cancel'].includes(result))
+        return;
+    cardRollPending = null;
+    pauseCountDown(false, 'roll');
+    pending.resolve(result === 'cancel' ? null : pending.choice.roll[result]);
+}
+
+document.addEventListener('card-roll-result', (e) => settleCardRoll(e.detail.data && e.detail.data.result));
+// Menu MJ ouvert (ou rechargé) pendant un jet : on lui renvoie la demande
+document.addEventListener('card-roll-query', () => {
+    if (cardRollPending)
+        wsLNOB.triggerCustomEvent('card-roll-ask', cardRollPending.ask);
+});
+// Jet reçu pendant l'attente (/roll ou menu MJ) : le bon bouton est mis en avant, le MJ valide
+document.addEventListener('roll', (e) => {
+    let data = e.detail.data || {};
+    if (!cardRollPending || (cardRollPending.choice.roll.stat && data.stat !== cardRollPending.choice.roll.stat))
+        return;
+    let box = cardRollPending.box;
+    box.querySelectorAll('.card-roll-btn').forEach(b => b.classList.toggle('suggested', b.dataset.result === (data.success ? 'success' : 'failure')));
+    box.querySelector('.card-roll-hint').textContent = 'Dernier jet : ' + data.result + (data.success ? ' (réussite)' : ' (échec)') + '. Le MJ valide le résultat.';
+});
+
+// Ce qui suit un choix (ou la suite tirée par un jet) : résultat, carte suivante ou planète
+async function followChoice(choice) {
+    let loot = Array.isArray(choice.loot) ? choice.loot : [];
+    if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL
+
+       await writeCardDesc(choice.reveal);
+       await CardLoot.collect(loot);
+       let nextCard = await getNextCard();
+       currentCard.choices = [{
+               value: 'Continuer votre chemin',
+               continue: nextCard.value > 0 ? 2 : 1
+           }];
+       await showChoices();
+    }
+    else if (choice.continue && choice.continue === 1) { // NEXT IS CARD
+       await initCard();
+    }
+    else if (choice.continue && choice.continue === 2) { // NEXT IS PLANET ETAPE 1
+       let textPlanetEncounter = "\n \u00a0 Votre vaisseau s'approche d'une planète. \n \n \u00a0 Pendant la mise en orbite, vous êtes libre de vous déplacer à bord et de profiter des installations telles que la salle de cinéma, la cuisine, la salle d'entraînement, la bibliothèque, etc... \n \n\u00a0 Dirigez-vous vers la salle des scanners pour obtenir davantage d'informations sur cette planète.";
+       await writeCardDesc(textPlanetEncounter);
+       currentCard.choices = [{
+           value: 'Aller dans la salle des scanners',
+           continue: 3
+       }];
+       await showChoices();
+    }
+    else if (choice.continue && choice.continue === 3) { // NEXT IS PLANET ETAPE 2
+        fastTravel();
+        await sleep(fastTravelTime);
+        window.location.href = '/next';
+    }
+    else if (choice.next && choice.next !== '') { // NEXT IS FOLLOWUP
+       await CardLoot.collect(loot);
+       await initCard(choice.next);
+    }
 }
 
 // Clic sur la carte pendant l'écriture : le texte s'accélère fortement

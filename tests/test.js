@@ -29,6 +29,7 @@ async function test() {
     await test_card_vars();
     await test_deck_generation();
     await test_place_endings();
+    await test_card_rolls();
     await test_statuses_after_planet();
     test_random_ship();
     await test_last_planet();
@@ -363,8 +364,12 @@ async function test_card_vars() {
     let texts = [];
     for (let c of await DB.tables.cards.findAll({raw: true}))
         texts.push(c.desc, c.mjreveal);
-    for (let m of await DB.tables.card_modules.findAll({where: {type: 'choice'}, raw: true}))
+    for (let m of await DB.tables.card_modules.findAll({where: {type: 'choice'}, raw: true})) {
         texts.push(m.value, m.reveal, m.mjreveal);
+        if (m.roll)
+            for (let issue of Object.values(JSON.parse(m.roll)).filter(i => i && typeof i === 'object'))
+                texts.push(issue.reveal, issue.mjreveal);
+    }
     for (let a of await DB.tables.cards_alt.findAll({raw: true}))
         texts.push(a.value, a.reveal, a.mjreveal);
     for (let text of texts) {
@@ -494,8 +499,21 @@ async function test_deck_generation(){
     console.log('Deck generation OK')
 }
 
-// Lieux : chaque choix a une seule suite, un résultat (fin du lieu, suivie
-// d'un seul « Continuer votre chemin ») ou une carte du lieu qui existe
+// Suites d'un choix : la sienne, ou réussite et échec de son jet
+const choiceSuites = (choice) => choice.roll ? [choice.roll.success, choice.roll.failure] : [choice];
+
+// Une suite unique : un résultat ou une carte qui existe
+function assertSuite(suite, names, label) {
+    let hasReveal = !!(suite.reveal && suite.reveal.trim());
+    let hasNext = !!suite.next;
+    assert(hasReveal !== hasNext, 'Choix sans suite unique : ' + label);
+    if (hasNext)
+        assert(names.includes(suite.next), 'Suite inconnue : ' + suite.next);
+}
+
+// Lieux : chaque choix a une seule suite (ou, pour un jet, une suite réussite
+// et une suite échec), un résultat (fin du lieu, suivie d'un seul « Continuer
+// votre chemin ») ou une carte du lieu qui existe
 async function test_place_endings(){
     console.log('Testing place choices');
     let rows = await DB.tables.cards.findAll({where: {type: [TYPE_PLACE, TYPE_FOLLOWUP]}, raw: true});
@@ -505,13 +523,60 @@ async function test_place_endings(){
         let card = await new Card(row.id).getData();
         assert(card.choices.length > 0, 'Carte de lieu sans choix : ' + row.name);
         for (let choice of card.choices) {
-            let hasReveal = !!(choice.reveal && choice.reveal.trim());
-            let hasNext = !!choice.next;
-            assert(hasReveal !== hasNext, 'Choix sans suite unique : ' + row.name + ' / ' + choice.value);
-            if (hasNext)
-                assert(names.includes(choice.next), 'Suite inconnue : ' + choice.next);
+            if (choice.roll)
+                assert(!choice.next && !(choice.reveal || '').trim(), 'Choix à jet avec sa propre suite : ' + row.name + ' / ' + choice.value);
+            for (let suite of choiceSuites(choice))
+                assertSuite(suite, names, row.name + ' / ' + choice.value);
         }
     }
+    console.log('OK');
+}
+
+// Jets des choix : une suite réussite et une suite échec, cartes sans jet inchangées
+async function test_card_rolls() {
+    console.log('Testing card rolls');
+    const {parseRoll} = require('../src/models/card');
+    let names = (await DB.tables.cards.findAll({raw: true})).map(r => r.name).filter(n => n);
+    let rolls = 0;
+    for (let row of await DB.tables.cards.findAll({where: {type: [TYPE_POSITIVE, TYPE_NEGATIVE, TYPE_NEUTRAL, TYPE_INITIAL]}, raw: true})) {
+        let card = await new Card(row.id).getData();
+        for (let choice of card.choices) {
+            if (!choice.roll)
+                continue;
+            rolls++;
+            assert(!choice.next && !(choice.reveal || '').trim(), 'Choix à jet avec sa propre suite : ' + choice.value);
+            for (let suite of choiceSuites(choice))
+                assertSuite(suite, names, choice.value);
+        }
+    }
+    // Exemple de baseCards.json : la manoeuvre d'évitement des débris
+    assert(rolls > 0, 'aucune carte avec un jet');
+    console.log('OK');
+
+    console.log('Roll format and compatibility');
+    assert.strictEqual(parseRoll(''), null);
+    assert.strictEqual(parseRoll('pas du json'), null);
+    assert.strictEqual(parseRoll({stat: 'pilotage', success: {reveal: 'ok'}}), null);
+    assert.deepStrictEqual(parseRoll({stat: 'inconnue', success: {reveal: 'ok'}, failure: {next: 'x', humans: '-5', loot: ['medkit']}}), {
+        stat: '',
+        success: {reveal: 'ok', mjreveal: '', next: '', humans: 0, loot: []},
+        failure: {reveal: '', mjreveal: '', next: 'x', humans: -5, loot: ['medkit']}
+    });
+    let card = await new Card().create({
+        type: TYPE_NEUTRAL, desc: 'Un astéroïde', timer: 1,
+        choices: [
+            {value: 'Esquiver', mjreveal: 'Jet de pilotage', roll: {stat: 'pilotage', success: {reveal: 'Évité [le_race_1]'}, failure: {reveal: 'Touché', humans: -10}}},
+            {value: 'Ne rien faire', reveal: 'Boum'}
+        ]
+    });
+    let [dodge, nothing] = card.choices;
+    assert.strictEqual(dodge.roll.stat, 'pilotage');
+    assert(!dodge.roll.success.reveal.includes('[') && dodge.roll.failure.humans === -10);
+    assert.strictEqual(nothing.roll, undefined);
+    assert.strictEqual(nothing.reveal, 'Boum');
+    // (Card.delete efface les modules par id de module, pas par carte)
+    await DB.tables.card_modules.destroy({where: {card_id: card.id}});
+    await DB.tables.cards.destroy({where: {id: card.id}});
     console.log('OK');
 }
 

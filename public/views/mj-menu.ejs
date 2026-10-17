@@ -23,6 +23,21 @@
                         <div class="desc-mjreveal"></div>
                         <div class="desc-text">Ici serra présenté le texte descriptif de la carte actuelle, certaines informations ne seront visible qu'ici !</div>
                     </div>
+                    <!-- Jet d'un choix en attente sur la page de jeu : le MJ dit s'il est réussi -->
+                    <div class="mj-card-roll" id="mj-card-roll" hidden>
+                        <div class="mj-card-roll-title"><span id="mj-card-roll-stat">Jet</span> en attente</div>
+                        <div class="mj-card-roll-choice" id="mj-card-roll-choice"></div>
+                        <div class="mj-card-roll-issues">
+                            <div class="mj-card-roll-issue success"><b>Si réussite</b><span id="mj-card-roll-success"></span></div>
+                            <div class="mj-card-roll-issue failure"><b>Si échec</b><span id="mj-card-roll-failure"></span></div>
+                        </div>
+                        <div class="mj-card-roll-last" id="mj-card-roll-last"></div>
+                        <div class="mj-card-roll-btns">
+                            <button type="button" class="add-life success" data-card-roll="success">Réussi</button>
+                            <button type="button" class="add-life failure" data-card-roll="failure">Raté</button>
+                            <button type="button" class="add-life" data-card-roll="cancel" title="Revenir aux choix, le chrono repart">Annuler</button>
+                        </div>
+                    </div>
                     <% for(var i=0; i<3; i++) {%>
                     <div class="choice" id="choice<%= i %>">
                         <div class="button-text">Ici serront présentés les choix. <span class="blackout">Les choix pendant un blackout.</span></div>
