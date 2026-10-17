@@ -205,7 +205,7 @@ module.exports = {
             enemies: npcs.getEnemies(),
             companions: npcs.getCompanions(),
             loot: combat.getLootList(),
-            races: races.list().map(r => r.name),
+            races: races.list().map(r => ({name: r.name, stats: r.stats})),
             limits: {enemies: npcs.MAX_ENEMIES, companions: npcs.MAX_COMPANIONS, loot: npcs.LOOT_SIZE}
         });
     },

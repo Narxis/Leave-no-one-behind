@@ -24,6 +24,15 @@
     const enemy = {};       // valeurs du formulaire ennemi
     const companion = {};   // valeurs du formulaire compagnon
 
+    // Fourchettes du bestiaire de départ, par palier de dégâts : un « Roll »
+    // d'ennemi reste dans celle du palier choisi
+    const TIERS = {
+        faible: {hp: [10, 16], offense: [40, 50], defense: [40, 55]},
+        moyen: {hp: [14, 24], offense: [55, 65], defense: [45, 55]},
+        fort: {hp: [28, 40], offense: [68, 78], defense: [58, 68]}
+    };
+    const rand = ([min, max]) => min + Math.floor(Math.random() * (max - min + 1));
+
     let toastTimer;
     function toast(text, error) {
         let t = $('ne-toast');
@@ -201,6 +210,53 @@
         renderCompanion();
     }
 
+    /* ---------- Roll ---------- */
+
+    function showRollInfo(f, text) {
+        let info = $('ne-' + f + '-roll-info');
+        info.textContent = text;
+        info.hidden = false;
+    }
+
+    function setField(key, value) {
+        $('ne-' + key).value = value;
+        $('ne-' + key + '-range').value = value;
+    }
+
+    // Ennemi : PV, attaque et défense tirés dans la fourchette de son palier de dégâts
+    function rollEnemy() {
+        let tier = TIERS[enemy.damage];
+        for (let key of ['hp', 'offense', 'defense']) {
+            enemy[key] = rand(tier[key]);
+            setField(key, enemy[key]);
+        }
+        renderEnemy();
+        showRollInfo('enemy', 'Tiré parmi les ennemis aux dégâts ' + DAMAGE_LABEL[enemy.damage].toLowerCase()
+            + ' : PV ' + tier.hp.join('-') + ', attaque ' + tier.offense.join('-') + ', défense ' + tier.defense.join('-') + '. Change le palier pour un ennemi plus fort ou plus faible.');
+    }
+
+    // Compagnon : tiré comme un personnage joueur (/create sur Discord). Chaque
+    // stat vaut 50 + le meilleur (bonus) ou le pire (malus) de |bonus|+1 dés de 50 ;
+    // les bonus sont ceux de la race écrite dans « Rôle ou race », s'il y en a une
+    function rollCompanion() {
+        let typed = $('ne-companion-race').value.trim().toLowerCase();
+        let race = RACES.find(r => r.name.toLowerCase() === typed);
+        for (let [key] of STATS) {
+            let value = 100;
+            if (key !== 'moral') {
+                let mod = race ? (race.stats[key] || 0) : 0;
+                let dice = Array.from({length: Math.abs(mod) + 1}, () => rand([1, 50]));
+                value = 50 + (mod >= 0 ? Math.max(...dice) : Math.min(...dice));
+            }
+            companion[key] = value;
+            setField(key, value);
+        }
+        renderCompanion();
+        showRollInfo('companion', race
+            ? 'Tiré comme un personnage ' + race.name + ' : bonus et malus de la race, moral 100.'
+            : 'Tiré comme un personnage sans bonus de race (50 + 1 dé de 50), moral 100. Écris une race dans « Rôle ou race » pour appliquer ses bonus.');
+    }
+
     /* ---------- Fiche ouverte ---------- */
 
     const formOf = (k) => k === 'enemies' ? 'enemy' : 'companion';
@@ -221,6 +277,7 @@
         $('ne-' + f + '-delete').hidden = !entry;
         $('ne-' + f + '-copy').hidden = !entry;
         $('ne-' + f + '-error').textContent = '';
+        $('ne-' + f + '-roll-info').hidden = true;
         renderList();
     }
 
@@ -322,6 +379,8 @@
         }
     });
     buildStats();
+    $('ne-enemy-roll').addEventListener('click', rollEnemy);
+    $('ne-companion-roll').addEventListener('click', rollCompanion);
 
     for (let f of ['enemy', 'companion']) {
         $('ne-' + f + '-form').addEventListener('submit', save);
