@@ -1,5 +1,6 @@
 <div class="player" id="p<%= player.discord_id %>" data-race="<%= player.race || '' %>">
     <input type="text" placeholder="Nom du joueur" class="player-name" value="<%= player.name %>">
+    <% let discord = typeof discordOf === 'function' ? discordOf(player.discord_id) : null; if (discord) { %><div class="player-discord" title="Discord : <%= discord.name %>"><img src="<%= discord.avatar %>" alt="" referrerpolicy="no-referrer"><span><%= discord.name %></span></div><% } %>
     <img src="/img/races/<%= player.race %>.png" alt="" onerror="this.src='/img/races/wat.png'" class="race-img">
     <div class="race-selector-container">
         <div class="select-affichage"></div>

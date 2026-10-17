@@ -36,7 +36,7 @@ const get = (url) => new Promise((resolve, reject) => {
     (url.startsWith('https:') ? https : http).get(url, res => {
         let body = '';
         res.on('data', c => body += c);
-        res.on('end', () => resolve({status: res.statusCode, body}));
+        res.on('end', () => resolve({status: res.statusCode, body, headers: res.headers}));
     }).on('error', reject);
 });
 
@@ -155,8 +155,65 @@ async function test() {
 
     for (let ws of [alice2, ...others])
         ws.terminate();
+    // Sans application Discord réglée : connexion désactivée
+    if (!process.env.DISCORD_CLIENT_ID)
+        assert.deepEqual(JSON.parse((await get(httpBase + '/auth/discord/config')).body), {enabled: false});
     server.close();
+    await test_discord();
     console.log('Relay OK');
+}
+
+// Connexion Discord : le relais signe le profil et refuse ceux qu'il n'a pas signés
+async function test_discord() {
+    console.log('Testing Discord login');
+    const auth = require('../relay/discord-auth');
+    const env = {DISCORD_CLIENT_ID: '1234567890', DISCORD_CLIENT_SECRET: 'secret-de-test'};
+    let {server, port} = await relay.start(0, {env: env});
+    let httpBase = 'http://127.0.0.1:' + port;
+    let base = httpBase.replace(/^http/, 'ws');
+
+    assert.deepEqual(JSON.parse((await get(httpBase + '/auth/discord/config')).body), {enabled: true});
+    // Vers Discord : scope identify seulement, retour sur le relais, état signé
+    let login = await get(httpBase + '/auth/discord/login');
+    assert.equal(login.status, 302);
+    let to = new URL(login.headers.location);
+    assert.equal(to.origin + to.pathname, 'https://discord.com/oauth2/authorize');
+    assert.equal(to.searchParams.get('scope'), 'identify');
+    assert.equal(to.searchParams.get('client_id'), '1234567890');
+    assert.equal(to.searchParams.get('redirect_uri'), httpBase + '/auth/discord/callback');
+    assert.ok(!login.headers.location.includes('secret-de-test'));
+    assert.equal((await auth.verify(env.DISCORD_CLIENT_SECRET, to.searchParams.get('state'))).kind, 'state');
+    assert.equal((await get(httpBase + '/auth/discord/callback?code=x&state=faux')).status, 400);
+
+    // Ce que le jeu garde : id, pseudo, URL de l'avatar
+    assert.deepEqual(auth.profileOf({id: '80351110224678912', username: 'nelly', global_name: 'Nelly', avatar: 'abc', email: 'x@y.z'}),
+        {id: '80351110224678912', name: 'Nelly', avatar: 'https://cdn.discordapp.com/avatars/80351110224678912/abc.png?size=64'});
+    assert.match(auth.profileOf({id: '80351110224678912', username: 'nelly', avatar: null}).avatar, /^https:\/\/cdn\.discordapp\.com\/embed\/avatars\/[0-5]\.png$/);
+
+    let profile = Object.assign({kind: 'profile', exp: Date.now() + 60000}, auth.profileOf({id: '80351110224678912', username: 'nelly', avatar: 'abc'}));
+    let good = await auth.sign(env.DISCORD_CLIENT_SECRET, profile);
+    let forged = await auth.sign('autre-secret', profile);
+    let expired = await auth.sign(env.DISCORD_CLIENT_SECRET, Object.assign({}, profile, {exp: Date.now() - 1}));
+    let state = await auth.sign(env.DISCORD_CLIENT_SECRET, {kind: 'state', exp: Date.now() + 60000});
+
+    let host = client(base + '/host');
+    let code = (await host.next('ready')).code;
+    let join = (id, token) => client(`${base}/join/${code}?id=${id}&name=Nelly&v=1&discord=${encodeURIComponent(token)}`);
+    let nelly = join('nelly-0001', good);
+    let expected = {id: '80351110224678912', name: 'nelly', avatar: 'https://cdn.discordapp.com/avatars/80351110224678912/abc.png?size=64'};
+    assert.deepEqual((await nelly.next('welcome')).you.discord, expected);
+    assert.deepEqual((await host.next('join')).player.discord, expected);
+    // Profil d'un autre relais, expiré ou qui n'en est pas un : ignoré
+    for (let [i, token] of [forged, expired, state, 'n.importe.quoi'].entries()) {
+        let ws = join('other-000' + i, token);
+        assert.equal((await ws.next('welcome')).you.discord, undefined);
+        assert.equal((await host.next('join')).player.discord, undefined);
+        ws.terminate();
+    }
+    nelly.terminate();
+    host.terminate();
+    server.close();
+    console.log('Discord login OK');
 }
 
 test().then(() => process.exit(0)).catch(e => {
