@@ -13,6 +13,8 @@ const ENEMY_FILE = path.join(process.cwd(), 'storage/cache/bestiary.json');
 const COMPANION_FILE = path.join(process.cwd(), 'storage/cache/companions.json');
 
 const DAMAGE = ['faible', 'moyen', 'fort'];
+// Catégorie d'un ennemi : sert au tri dans l'éditeur, au Roll et au menu MJ
+const CATEGORIES = ['invocation', 'sbire', 'standard', 'elite', 'boss'];
 const COMPANION_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon', 'moral'];
 const MAX_ENEMIES = 100;
 const MAX_COMPANIONS = 50;
@@ -57,6 +59,7 @@ const cleanEnemy = function (data) {
         offense: clamp(toInt(data.offense, 50), 0, 100),
         defense: clamp(toInt(data.defense, 50), 0, 100),
         damage: DAMAGE.includes(data.damage) ? data.damage : 'moyen',
+        category: CATEGORIES.includes(data.category) ? data.category : 'standard',
         loot: loot
     }};
 }
@@ -119,4 +122,4 @@ const saveCompanion = (data) => upsert(COMPANION_FILE, getCompanions(), data || 
 const removeCompanion = (slug) => removeFrom(COMPANION_FILE, getCompanions(), slug);
 
 module.exports = {getEnemies, getCompanions, saveEnemy, removeEnemy, saveCompanion, removeCompanion,
-    cleanEnemy, cleanCompanion, slugify, DAMAGE, COMPANION_STATS, MAX_ENEMIES, MAX_COMPANIONS, LOOT_SIZE};
+    cleanEnemy, cleanCompanion, slugify, DAMAGE, CATEGORIES, COMPANION_STATS, MAX_ENEMIES, MAX_COMPANIONS, LOOT_SIZE};

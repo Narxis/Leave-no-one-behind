@@ -26,6 +26,7 @@
             <section class="re-list-wrap" aria-label="Fiches">
                 <input type="search" class="ne-search" id="ne-search" placeholder="Rechercher…" aria-label="Rechercher une fiche">
                 <p class="ne-intro" id="ne-intro"></p>
+                <div class="ne-filters" id="ne-filters" role="radiogroup" aria-label="Filtrer par catégorie"></div>
                 <div class="re-list" id="ne-list"></div>
             </section>
 
@@ -33,16 +34,23 @@
             <form class="re-form" id="ne-enemy-form" autocomplete="off" novalidate>
                 <div class="ne-form-head">
                     <h2 class="re-form-title" id="ne-enemy-title">Nouvel ennemi</h2>
-                    <button type="button" class="re-btn ne-roll" id="ne-enemy-roll" title="Tirer des stats au hasard, dans la fourchette des ennemis du même palier de dégâts">🎲 Roll</button>
+                    <button type="button" class="re-btn ne-roll" id="ne-enemy-roll" title="Tirer des stats au hasard, selon la catégorie et le palier de dégâts">🎲 Roll</button>
                 </div>
                 <p class="ne-roll-info" id="ne-enemy-roll-info" hidden></p>
                 <label class="re-field">Nom
-                    <input type="text" id="ne-enemy-name" maxlength="60" placeholder="ex. Pirate de l'espace" required>
+                    <span class="ne-name-row">
+                        <input type="text" id="ne-enemy-name" maxlength="60" placeholder="ex. Pirate de l'espace" required>
+                        <button type="button" class="re-btn ne-name-roll" id="ne-enemy-name-roll" title="Nom aléatoire (selon la catégorie)" aria-label="Nom aléatoire">🎲</button>
+                    </span>
                 </label>
+
+                <div class="re-field">Catégorie
+                    <div class="re-seg ne-category" id="ne-category" role="radiogroup" aria-label="Catégorie"></div>
+                </div>
 
                 <div class="ne-num">
                     <label class="ne-num-label" for="ne-hp">Points de vie</label>
-                    <input type="range" id="ne-hp-range" min="1" max="60" aria-label="Points de vie">
+                    <input type="range" id="ne-hp-range" min="1" max="150" aria-label="Points de vie">
                     <input type="number" id="ne-hp" min="1" max="999" inputmode="numeric">
                     <p class="ne-help" id="ne-hp-help"></p>
                 </div>
@@ -92,7 +100,10 @@
                 <p class="ne-roll-info" id="ne-companion-roll-info" hidden></p>
                 <div class="re-row">
                     <label class="re-field">Nom
-                        <input type="text" id="ne-companion-name" maxlength="20" placeholder="ex. Capitaine Zorg" required>
+                        <span class="ne-name-row">
+                            <input type="text" id="ne-companion-name" maxlength="20" placeholder="ex. Capitaine Zorg" required>
+                            <button type="button" class="re-btn ne-name-roll" id="ne-companion-name-roll" title="Nom aléatoire" aria-label="Nom aléatoire">🎲</button>
+                        </span>
                     </label>
                     <label class="re-field">Rôle ou race
                         <input type="text" id="ne-companion-race" maxlength="30" list="ne-races" placeholder="ex. Mécano, Yorc…">

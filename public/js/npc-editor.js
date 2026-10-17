@@ -32,6 +32,17 @@
         fort: {hp: [28, 40], offense: [68, 78], defense: [58, 68]}
     };
     const rand = ([min, max]) => min + Math.floor(Math.random() * (max - min + 1));
+    // Catégories d'ennemis : le Roll part des fourchettes du palier de dégâts,
+    // puis multiplie les PV et décale l'attaque et la défense
+    const CATEGORIES = {
+        invocation: {label: 'Invocation', plural: 'Invocations', hp: 0.5, shift: -10, help: 'appelée en renfort, fragile'},
+        sbire: {label: 'Sbire', plural: 'Sbires', hp: 0.75, shift: -5, help: 'chair à canon, souvent en groupe'},
+        standard: {label: 'Standard', plural: 'Standards', hp: 1, shift: 0, help: 'adversaire ordinaire'},
+        elite: {label: 'Élite', plural: 'Élites', hp: 1.5, shift: 5, help: 'plus coriace que la moyenne'},
+        boss: {label: 'Boss', plural: 'Boss', hp: 3, shift: 10, help: 'combat de fin de lieu'}
+    };
+    const categoryOf = (e) => CATEGORIES[e.category] ? e.category : 'standard';
+    let filter = 'all';
 
     let toastTimer;
     function toast(text, error) {
@@ -64,7 +75,9 @@
         b.className = 're-card ne-card' + (editing && editing.slug === entry.slug ? ' selected' : '');
         let pills, sub = '';
         if (kind === 'enemies') {
-            pills = pill('PV ' + entry.hp, 'ne-pill-hp') + pill('Att ' + entry.offense, '', 'Attaque')
+            let cat = categoryOf(entry);
+            pills = (cat !== 'standard' ? pill(CATEGORIES[cat].label, 'ne-cat-' + cat) : '')
+                + pill('PV ' + entry.hp, 'ne-pill-hp') + pill('Att ' + entry.offense, '', 'Attaque')
                 + pill('Déf ' + entry.defense, '', 'Défense') + pill('Dégâts ' + (DAMAGE_LABEL[entry.damage] || entry.damage).toLowerCase(), 'ne-pill-' + entry.damage);
             if (entry.loot && entry.loot.length)
                 pills += pill(entry.loot.length + (entry.loot.length > 1 ? ' objets' : ' objet'), 'ne-pill-loot', entry.loot.join(', '));
@@ -73,7 +86,7 @@
             sub = entry.race ? '<span class="ne-card-sub">' + esc(entry.race) + '</span>' : '';
             pills = STATS.map(([key, label]) => pill(label.slice(0, 3) + ' ' + entry[key], '', label)).join('');
         }
-        b.innerHTML = '<span class="ne-card-icon ne-icon-' + kind + '" aria-hidden="true">' + esc(entry.name.charAt(0).toUpperCase()) + '</span>'
+        b.innerHTML = '<span class="ne-card-icon ne-icon-' + kind + (kind === 'enemies' ? ' ne-icon-' + categoryOf(entry) : '') + '" aria-hidden="true">' + esc(entry.name.charAt(0).toUpperCase()) + '</span>'
             + '<span class="re-card-body"><span class="re-card-name">' + esc(entry.name) + sub + '</span>'
             + '<span class="re-card-mods">' + pills + '</span></span>';
         b.addEventListener('click', () => open(entry));
@@ -84,16 +97,44 @@
         let list = data[kind];
         let q = $('ne-search').value.trim().toLowerCase();
         let shown = q ? list.filter(e => (e.name + ' ' + (e.race || '')).toLowerCase().includes(q)) : list;
+        if (kind === 'enemies' && filter !== 'all')
+            shown = shown.filter(e => categoryOf(e) === filter);
+        renderFilters();
         let box = $('ne-list');
         box.innerHTML = '';
         if (!list.length)
             box.innerHTML = '<p class="re-empty">Aucun ' + KINDS[kind].one + ' pour l\'instant. Clique sur « ' + KINDS[kind].new + ' » pour en créer un.</p>';
         else if (!shown.length)
-            box.innerHTML = '<p class="re-empty">Aucune fiche ne correspond à « ' + esc(q) + ' ».</p>';
+            box.innerHTML = '<p class="re-empty">Aucune fiche ne correspond' + (q ? ' à « ' + esc(q) + ' »' : '')
+                + (kind === 'enemies' && filter !== 'all' ? ' dans « ' + CATEGORIES[filter].plural + ' »' : '') + '.</p>';
         shown.forEach(e => box.append(card(e)));
         $('ne-count').textContent = list.length + ' / ' + KINDS[kind].max + (kind === 'enemies' ? ' ennemis' : ' compagnons');
         $('ne-new').disabled = list.length >= KINDS[kind].max;
         $('ne-intro').textContent = KINDS[kind].intro;
+    }
+
+    // Filtres par catégorie (ennemis seulement), avec le nombre de fiches
+    function renderFilters() {
+        let box = $('ne-filters');
+        box.hidden = kind !== 'enemies';
+        if (box.hidden)
+            return;
+        let list = data.enemies;
+        box.innerHTML = '';
+        [['all', 'Tous', list.length]].concat(Object.keys(CATEGORIES).map(c => [c, CATEGORIES[c].plural, list.filter(e => categoryOf(e) === c).length]))
+            .forEach(([key, label, n]) => {
+                let b = document.createElement('button');
+                b.type = 'button';
+                b.setAttribute('role', 'radio');
+                b.setAttribute('aria-checked', filter === key);
+                b.className = 'ne-filter' + (key !== 'all' ? ' ne-filter-' + key : '');
+                b.innerHTML = esc(label) + ' <small>' + n + '</small>';
+                b.addEventListener('click', () => {
+                    filter = key;
+                    renderList();
+                });
+                box.append(b);
+            });
     }
 
     /* ---------- Ennemi ---------- */
@@ -123,6 +164,7 @@
         $('ne-defense-help').textContent = 'Le /roll Combat doit atteindre ' + enemy.defense + '. Avec 100 de moral, un joueur à 50 en Combat touche '
             + chance(50, 100, enemy.defense) + ' % du temps, à 75 : ' + chance(75, 100, enemy.defense) + ' %.';
         $('ne-damage').querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', b.dataset.value === enemy.damage));
+        $('ne-category').querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', b.dataset.value === enemy.category));
         renderLoot();
     }
 
@@ -169,6 +211,8 @@
             offense: src ? src.offense : 50,
             defense: src ? src.defense : 50,
             damage: src && DAMAGE[src.damage] ? src.damage : 'moyen',
+            // Nouvelle fiche : catégorie du filtre affiché, s'il y en a un
+            category: src ? categoryOf(src) : (filter !== 'all' ? filter : 'standard'),
             loot: src && Array.isArray(src.loot) ? src.loot.map(l => typeof l === 'string' ? l : l.name).filter(Boolean) : []
         });
         $('ne-enemy-name').value = src ? src.name : '';
@@ -224,15 +268,22 @@
     }
 
     // Ennemi : PV, attaque et défense tirés dans la fourchette de son palier de dégâts
+    // puis ajusté par sa catégorie (PV multipliés, attaque et défense décalées)
     function rollEnemy() {
-        let tier = TIERS[enemy.damage];
+        let tier = TIERS[enemy.damage], cat = CATEGORIES[enemy.category];
+        let ranges = {
+            hp: tier.hp.map(v => Math.max(1, Math.round(v * cat.hp))),
+            offense: tier.offense.map(v => clamp(v + cat.shift, 5, 95)),
+            defense: tier.defense.map(v => clamp(v + cat.shift, 5, 95))
+        };
         for (let key of ['hp', 'offense', 'defense']) {
-            enemy[key] = rand(tier[key]);
+            enemy[key] = rand(ranges[key]);
             setField(key, enemy[key]);
         }
         renderEnemy();
-        showRollInfo('enemy', 'Tiré parmi les ennemis aux dégâts ' + DAMAGE_LABEL[enemy.damage].toLowerCase()
-            + ' : PV ' + tier.hp.join('-') + ', attaque ' + tier.offense.join('-') + ', défense ' + tier.defense.join('-') + '. Change le palier pour un ennemi plus fort ou plus faible.');
+        showRollInfo('enemy', cat.label + ' aux dégâts ' + DAMAGE_LABEL[enemy.damage].toLowerCase()
+            + ' : PV ' + ranges.hp.join('-') + ', attaque ' + ranges.offense.join('-') + ', défense ' + ranges.defense.join('-')
+            + '. Change la catégorie ou le palier pour un ennemi plus fort ou plus faible.');
     }
 
     // Compagnon : tiré comme un personnage joueur (/create sur Discord). Chaque
@@ -255,6 +306,42 @@
         showRollInfo('companion', race
             ? 'Tiré comme un personnage ' + race.name + ' : bonus et malus de la race, moral 100.'
             : 'Tiré comme un personnage sans bonus de race (50 + 1 dé de 50), moral 100. Écris une race dans « Rôle ou race » pour appliquer ses bonus.');
+    }
+
+    /* ---------- Nom aléatoire ---------- */
+
+    // Noms extraterrestres faits de syllabes ; un ennemi reçoit en plus un
+    // titre qui va avec sa catégorie (Larve, Pillard, Seigneur…)
+    const SYLLABLES = {
+        start: ['Zor', 'Kra', 'Vel', 'Nek', 'Yr', 'Thal', 'Mor', 'Xa', 'Gor', 'Sil', 'Dra', 'Ka', 'Qu', 'Vor', 'Lu', 'Brak', 'Ze', 'Oph', 'Rhu', 'Tsa'],
+        middle: ['a', 'e', 'i', 'o', 'u', 'ra', 'li', 'zo', 'ne', 'ka', 'th', 'ri'],
+        end: ['vak', 'nor', 'rax', 'th', 'lis', 'gul', 'mok', 'zar', 'dra', 'nix', 'ok', 'el', 'ash', 'ur', 'ion', 'ek']
+    };
+    const TITLES = {
+        invocation: ['Larve', 'Spectre', 'Drone', 'Écho', 'Familier', 'Rejeton'],
+        sbire: ['Pillard', 'Recrue', 'Garde', 'Larbin', 'Ferrailleur', 'Éclaireur'],
+        standard: ['Mercenaire', 'Chasseur', 'Pirate', 'Contrebandier', 'Soldat', 'Braconnier'],
+        elite: ['Vétéran', 'Capitaine', 'Lame', 'Traqueur', 'Sergent', 'Gardien'],
+        boss: ['Seigneur', 'Reine', 'Tyran', 'Matriarche', 'Amiral', 'Dévoreur']
+    };
+    const pick = (list) => list[Math.floor(Math.random() * list.length)];
+
+    function alienName() {
+        let name = pick(SYLLABLES.start) + (Math.random() < 0.5 ? pick(SYLLABLES.middle) : '') + pick(SYLLABLES.end);
+        return name.charAt(0) + name.slice(1).toLowerCase();
+    }
+
+    // Nom libre parmi les fiches du même type, quelques essais au plus
+    function randomName(f) {
+        let names = data[kind].map(e => e.name.toLowerCase());
+        let name;
+        for (let i = 0; i < 20; i++) {
+            name = f === 'enemy' ? pick(TITLES[enemy.category]) + ' ' + alienName()
+                : (Math.random() < 0.6 ? alienName() + ' ' + alienName() : alienName());
+            if (name.length <= (f === 'enemy' ? 60 : 20) && !names.includes(name.toLowerCase()))
+                break;
+        }
+        return name.slice(0, f === 'enemy' ? 60 : 20);
     }
 
     /* ---------- Fiche ouverte ---------- */
@@ -367,6 +454,19 @@
     bindNumber('hp', 1, 999, enemy, renderEnemy);
     bindNumber('offense', 0, 100, enemy, renderEnemy);
     bindNumber('defense', 0, 100, enemy, renderEnemy);
+    for (let key in CATEGORIES) {
+        let b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('role', 'radio');
+        b.dataset.value = key;
+        b.title = CATEGORIES[key].help;
+        b.textContent = CATEGORIES[key].label;
+        b.addEventListener('click', () => {
+            enemy.category = key;
+            renderEnemy();
+        });
+        $('ne-category').append(b);
+    }
     $('ne-damage').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
         enemy.damage = b.dataset.value;
         renderEnemy();
@@ -380,6 +480,11 @@
     });
     buildStats();
     $('ne-enemy-roll').addEventListener('click', rollEnemy);
+    for (let f of ['enemy', 'companion'])
+        $('ne-' + f + '-name-roll').addEventListener('click', () => {
+            $('ne-' + f + '-name').value = randomName(f);
+            $('ne-' + f + '-error').textContent = '';
+        });
     $('ne-companion-roll').addEventListener('click', rollCompanion);
 
     for (let f of ['enemy', 'companion']) {
