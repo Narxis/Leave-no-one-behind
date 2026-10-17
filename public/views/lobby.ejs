@@ -10,6 +10,10 @@
     <%- include("partials/nav") %>
     <main class="lobby" id="lobby" data-state="<%= JSON.stringify(lobby) %>">
         <h1 class="lobby-title">Partie en ligne</h1>
+        <p class="lobby-links">
+            <a href="<%= wikiUrl %>" target="_blank" rel="noopener">Wiki des règles ↗</a>
+            · <a href="/codex">Codex</a>
+        </p>
 
         <section class="lobby-closed" id="lobby-closed">
             <p>Ouvre la partie pour obtenir un code à donner aux joueurs. Ils la rejoignent depuis l'app LNOB ou depuis le lien, dans leur navigateur.</p>

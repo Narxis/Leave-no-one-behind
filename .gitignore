@@ -128,6 +128,9 @@ public/views/index-legacy.ejs
 storage/cache/allies.json
 storage/cache/leaderboard.json
 storage/cache/gameSettings.json
+# Races customs autorisées par le MJ, mémoire du Codex de la partie en cours
+storage/cache/raceSettings.json
+storage/cache/codex.json
 
 # Relais Cloudflare : fichiers locaux de wrangler
 relay/.wrangler/

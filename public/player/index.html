@@ -19,6 +19,7 @@
         <input id="name" name="name" maxlength="20" placeholder="Pseudo" required>
         <p id="join-error" class="error" role="alert" hidden></p>
         <button type="submit" id="submit" class="primary">Rejoindre</button>
+        <p class="wiki-line"><a class="wiki-link" target="_blank" rel="noopener">Wiki des règles ↗</a></p>
     </form>
 
     <!-- Dans la partie -->
@@ -38,6 +39,7 @@
             <button type="button" role="tab" data-tab="ship" class="tab">Vaisseau</button>
             <button type="button" role="tab" data-tab="bag" class="tab">Inventaire</button>
             <button type="button" role="tab" data-tab="crew" class="tab">Équipage</button>
+            <button type="button" role="tab" data-tab="codex" class="tab">Codex</button>
         </nav>
 
         <!-- Carte en cours -->
@@ -89,6 +91,7 @@
                     <button type="submit" class="secondary small">Enregistrer</button>
                 </form>
                 <h2>Race</h2>
+                <p class="dim small-text">Touche une race pour la choisir. <a class="wiki-link" data-page="regles/creation-personnage/" target="_blank" rel="noopener">Règles de création sur le wiki ↗</a></p>
                 <div id="race-list" class="race-list"></div>
                 <div id="stat-rolls" hidden>
                     <h2>Tirage des stats</h2>
@@ -130,11 +133,26 @@
         <div class="tab-panel" data-panel="crew">
             <ul id="players" class="players"></ul>
         </div>
+
+        <!-- Codex : ce que l'équipage a rencontré pendant la partie -->
+        <div class="tab-panel" data-panel="codex">
+            <input type="search" id="codex-search" class="codex-search" placeholder="Rechercher dans le Codex…" aria-label="Rechercher dans le Codex" autocomplete="off">
+            <div class="codex-filters" role="group" aria-label="Filtrer">
+                <button type="button" class="codex-filter active" data-filter="all">Tout</button>
+                <button type="button" class="codex-filter" data-filter="races">Races <span data-count="races"></span></button>
+                <button type="button" class="codex-filter" data-filter="items">Objets <span data-count="items"></span></button>
+                <button type="button" class="codex-filter" data-filter="statuses">Statuts <span data-count="statuses"></span></button>
+            </div>
+            <ul id="codex-list" class="codex-list"></ul>
+            <p id="codex-empty" class="dim"></p>
+            <p class="dim small-text">Le Codex se remplit au fil de la partie : races croisées, objets trouvés, statuts subis. Il repart de zéro à chaque nouvelle partie. <a class="wiki-link" target="_blank" rel="noopener">Wiki des règles ↗</a></p>
+        </div>
     </section>
 </main>
 <script src="ship-svg.js"></script>
 <script src="ship-map.js"></script>
 <script src="planet-view.js"></script>
+<script src="status-icons.js"></script>
 <script src="player.js"></script>
 </body>
 </html>

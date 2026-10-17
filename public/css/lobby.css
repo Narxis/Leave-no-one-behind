@@ -38,6 +38,14 @@
     text-align: center;
 }
 
+.lobby-links {
+    text-align: center;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.lobby-links a { color: var(--ui-cyan); }
+
 .lobby-subtitle {
     margin: 8px 0 0;
     font-size: 14px;

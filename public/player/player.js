@@ -13,6 +13,9 @@
     const ROLL_MODULES = [['', 'Sans module'], ['scanner', 'Scanners de surface'], ['proximity', 'Détecteurs de proximité'], ['motors', 'Moteurs'], ['oxygen', 'Module d\'oxygène'], ['energy', 'Électricité'], ['gravity', 'Gravité artificielle']];
     const EMOTES = ['👍', '👎', '😮', '😂', '😱', '❤️', '🤔', '🎉'];
     const CARD_KINDS = {event: 'Événement', place: 'Lieu', planet: 'Planète en approche', blank: 'Carte blanche'};
+    // Site du wiki des règles (même adresse dans src/controllers/codex.js)
+    const WIKI_URL = 'https://narxis.github.io/Leave-no-one-behind-Wiki/';
+    const RARITIES = {commun: 'Commun', peu_commun: 'Peu commun', rare: 'Rare', epique: 'Épique', legendaire: 'Légendaire'};
     const PHASES = {
         init: 'En attente que le MJ lance la partie.',
         creation: 'Création des personnages en cours : va dans l\'onglet Perso.',
@@ -92,6 +95,9 @@
     let game = null;    // dernier état du jeu reçu
     let you;            // dernier état du joueur reçu (undefined : pas encore reçu)
     let tab = store.get('lnob-player-tab') || 'game';
+    let codex = null;       // ce que l'équipage a rencontré (kind 'codex')
+    let codexFilter = 'all';
+    const codexImages = new Map(); // images des fiches envoyées par le MJ (customs, objets)
     let chat = [];          // messages visibles par ce joueur
     let chatChannel = 'room'; // 'room' (salon) ou 'gm' (privé avec le MJ)
     const chatUnread = {room: 0, gm: 0};
@@ -379,16 +385,35 @@
 
     const modText = (mod) => mod > 0 ? '+' + mod : String(mod);
 
+    // Fiche d'une race : image, bonus et malus, description, affinités
+    // (création du perso et Codex)
+    const raceSheet = function (node, r) {
+        node.append(cardImage(r, 'img/races/wat.webp'));
+        let body = el('span', 'race-body');
+        body.append(el('strong', '', r.name));
+        let mods = Object.entries(r.stats || {}).filter(([, v]) => v).map(([k, v]) => (STAT_LABELS[k] || k) + ' ' + modText(v));
+        body.append(el('span', 'dim small-text', mods.length ? mods.join(', ') : 'Aucun bonus ni malus'));
+        if (r.desc)
+            body.append(el('span', 'race-desc', r.desc.replace(/<[^>]*>/g, '')));
+        if (r.affinities && r.affinities.length) {
+            let list = el('ul', 'race-affinities');
+            list.append(...r.affinities.map(a => el('li', '', a)));
+            body.append(list);
+        }
+        if (r.noAffinity)
+            body.append(el('span', 'dim small-text', 'Affinités : ni le jeu ni le wiki n\'en définissent pour cette race.'));
+        else if (r.moreAffinities)
+            body.append(el('span', 'dim small-text', r.moreAffinities > 1 ? r.moreAffinities + ' affinités avec des races pas encore croisées.' : 'Une affinité avec une race pas encore croisée.'));
+        node.append(body);
+        return node;
+    };
+
     const renderRaces = function (character) {
         let races = (game && game.races) || [];
         $('race-list').replaceChildren(...races.map(r => {
-            let b = el('button', 'race' + (character.race === r.slug ? ' selected' : ''));
+            let b = raceSheet(el('button', 'race' + (character.race === r.slug ? ' selected' : '')), r);
             b.type = 'button';
-            b.append(el('strong', '', r.name));
-            let mods = Object.entries(r.stats || {}).filter(([, v]) => v).map(([k, v]) => (STAT_LABELS[k] || k) + ' ' + modText(v));
-            b.append(el('span', 'dim small-text', mods.length ? mods.join(', ') : 'Aucun bonus ni malus'));
-            if (r.desc)
-                b.append(el('span', 'race-desc', r.desc.replace(/<[^>]*>/g, '')));
+            b.setAttribute('aria-pressed', character.race === r.slug);
             b.addEventListener('click', () => sendAction('set-race', {race: r.slug}));
             return b;
         }));
@@ -401,6 +426,90 @@
             random.addEventListener('click', () => sendAction('set-race', {race: others[Math.floor(Math.random() * others.length)].slug}));
             $('race-list').prepend(random);
         }
+    };
+
+    // Image d'une fiche : livrée avec la page (races de base), envoyée par le
+    // MJ (customs, objets), sinon une image par défaut
+    const cardImage = function (entry, fallback) {
+        let src = entry.image || (entry.imageKey && codexImages.get(entry.imageKey)) || fallback;
+        let img = el('img', 'sheet-img' + (entry.imageKey && entry.imageKey.startsWith('item:') ? ' pixel' : ''));
+        img.alt = '';
+        if (src) {
+            img.src = src;
+            if (fallback)
+                img.onerror = () => { img.onerror = null; img.src = fallback; };
+        }
+        else
+            img.classList.add('empty');
+        return img;
+    };
+
+    // ---- Codex ---------------------------------------------------------------
+
+    const statusIcon = function (slug) {
+        let icon = el('span', 'sheet-img status-icon');
+        icon.setAttribute('aria-hidden', 'true');
+        let svg = window.LNOB_STATUS_SVG && window.LNOB_STATUS_SVG[slug];
+        if (svg)
+            icon.innerHTML = svg; // fichier statique de la page, pas du réseau
+        return icon;
+    };
+
+    const renderCodex = function () {
+        let book = codex || {races: [], items: [], statuses: [], totals: {}};
+        let totals = book.totals || {};
+        for (let kind of ['races', 'items', 'statuses']) {
+            let count = document.querySelector('[data-count="' + kind + '"]');
+            count.textContent = (book[kind] || []).length + '/' + (totals[kind] || 0);
+        }
+        document.querySelectorAll('.codex-filter').forEach(b => b.classList.toggle('active', b.dataset.filter === codexFilter));
+
+        let query = $('codex-search').value.trim().toLowerCase();
+        const match = (...texts) => !query || texts.join(' ').toLowerCase().includes(query);
+        const wanted = (kind) => codexFilter === 'all' || codexFilter === kind;
+        let entries = [];
+        if (wanted('races'))
+            for (let r of book.races || [])
+                if (match(r.name, r.desc, (r.affinities || []).join(' ')))
+                    entries.push(raceSheet(el('li', 'codex-entry race'), r));
+        if (wanted('items'))
+            for (let item of book.items || [])
+                if (match(item.name, item.desc, item.type, item.race)) {
+                    let li = el('li', 'codex-entry');
+                    li.append(cardImage(item, null));
+                    let body = el('span', 'race-body');
+                    body.append(el('strong', '', item.name));
+                    let meta = [item.type, RARITIES[item.rarity] || item.rarity, item.race && 'objet de départ ' + item.race].filter(Boolean);
+                    if (meta.length)
+                        body.append(el('span', 'dim small-text', meta.join(' · ')));
+                    if (item.desc)
+                        body.append(el('span', 'race-desc', item.desc));
+                    li.append(body);
+                    entries.push(li);
+                }
+        if (wanted('statuses'))
+            for (let st of book.statuses || [])
+                if (match(st.name, st.desc)) {
+                    let li = el('li', 'codex-entry');
+                    li.append(statusIcon(st.slug));
+                    let body = el('span', 'race-body');
+                    body.append(el('strong', '', st.name), el('span', 'race-desc', st.desc));
+                    if (/^https:\/\//.test(st.link || '')) {
+                        let a = el('a', 'small-text', 'La règle sur le wiki ↗');
+                        a.href = st.link;
+                        a.target = '_blank';
+                        a.rel = 'noopener';
+                        body.append(a);
+                    }
+                    li.append(body);
+                    entries.push(li);
+                }
+        $('codex-list').replaceChildren(...entries);
+        let empty = '';
+        if (!entries.length)
+            empty = query ? 'Rien ne correspond à ta recherche.' : 'Rien pour l\'instant : l\'équipage n\'a encore rien rencontré.';
+        $('codex-empty').textContent = empty;
+        $('codex-empty').hidden = !empty;
     };
 
     const renderRolls = function (creation) {
@@ -510,6 +619,7 @@
         renderShip();
         renderItems();
         renderPlayers();
+        renderCodex();
     };
 
     // ---- Connexion au relais -------------------------------------------------
@@ -528,6 +638,16 @@
             renderGame();
             renderMe();
             renderItems();
+        }
+        else if (data.kind === 'codex') {
+            codex = data;
+            renderCodex();
+        }
+        // Image d'une fiche, en data URL (rien d'autre n'est accepté)
+        else if (data.kind === 'codex-image' && typeof data.key === 'string' && /^data:image\/(png|jpeg|webp);base64,/.test(data.src || '')) {
+            codexImages.set(data.key, data.src);
+            renderCodex();
+            renderMe();
         }
         else if (data.kind === 'chat-history') {
             chat = Array.isArray(data.messages) ? data.messages : [];
@@ -631,6 +751,8 @@
         roster = [];
         game = null;
         you = undefined;
+        codex = null;
+        codexImages.clear();
         chat = [];
         chatUnread.room = chatUnread.gm = 0;
         leaving = false;
@@ -706,6 +828,12 @@
         return b;
     }));
     document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => selectTab(b.dataset.tab)));
+    $('codex-search').addEventListener('input', renderCodex);
+    document.querySelectorAll('.codex-filter').forEach(b => b.addEventListener('click', () => {
+        codexFilter = b.dataset.filter;
+        renderCodex();
+    }));
+    document.querySelectorAll('.wiki-link').forEach(a => { a.href = WIKI_URL + (a.dataset.page || ''); });
     selectTab(document.querySelector('.tab[data-tab="' + tab + '"]') ? tab : 'game');
 
     // Code reçu dans le lien du MJ, sinon le dernier utilisé
