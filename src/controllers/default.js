@@ -11,6 +11,7 @@ const planetGen = require("./planetGen");
 const leaderboard = require("./leaderboard");
 const gameSettings = require("./gameSettings");
 const races = require("./races");
+const itemsEditor = require("./itemsEditor");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
@@ -195,6 +196,11 @@ module.exports = {
     // Éditeur des races customs
     renderRaces(req, res) {
         res.render('races', {lang: langJS, races: races.list(), maxRaces: races.MAX_RACES});
+    },
+
+    // Éditeur d'objets (catalogue src/config/items.json)
+    async renderItemsEditor(req, res) {
+        res.render('items-editor', {lang: langJS, catalog: await itemsEditor.list()});
     },
 
     ficheVaisseau(req, res) {

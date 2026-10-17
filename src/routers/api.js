@@ -35,6 +35,10 @@ module.exports = function(router) {
     router.get(basePath + '/items', controller.getAllItems);
     router.get(basePath + '/items/owned', controller.getOwnedItems);
     router.get(basePath + '/items/owned/:discordId', controller.getPlayerItems);
+    // Éditeur d'objets (/items) : catalogue src/config/items.json
+    router.get(basePath + '/items/catalog', controller.getItemCatalog);
+    router.post(basePath + '/items/catalog', controller.saveCatalogItem);
+    router.delete(basePath + '/items/catalog/:slug', controller.deleteCatalogItem);
 
     router.get(basePath + '/ship', controller.getShip);
     // router.get(basePath + '/ship/upgrade/:module', controller.upgradeShipModule);

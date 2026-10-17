@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<%- include("partials/head", {
+    title: "Éditeur d'objets",
+    cssFiles:[
+        "/css/style.css",
+        "https://use.fontawesome.com/releases/v5.7.2/css/all.css",
+        "/css/items-editor.css"
+    ]
+}) %>
+<body class="items-editor-page">
+<%- include("partials/nav") %>
+
+<div class="ie">
+    <header class="ie-top">
+        <div class="ie-title">
+            <h1>Éditeur d'objets</h1>
+            <span class="ie-current" id="ie-current"></span>
+        </div>
+        <span class="ie-status" id="ie-status" role="status">Tout est enregistré</span>
+        <div class="ie-actions">
+            <button type="button" class="ie-btn" id="ie-help-btn"><i class="fas fa-question-circle"></i> Aide</button>
+            <button type="button" class="ie-btn" id="ie-new"><i class="fas fa-plus"></i> Nouvel objet</button>
+            <button type="button" class="ie-btn ie-btn-primary" id="ie-save" title="Ctrl+S"><i class="fas fa-save"></i> Enregistrer</button>
+        </div>
+    </header>
+
+    <aside class="ie-side">
+        <div class="ie-search">
+            <i class="fas fa-search"></i>
+            <input type="search" id="ie-search" placeholder="Chercher un objet" aria-label="Chercher un objet" autocomplete="off">
+        </div>
+        <div class="ie-filters" id="ie-filters" role="tablist" aria-label="Catégories"></div>
+        <div class="ie-list" id="ie-list"></div>
+    </aside>
+
+    <main class="ie-main">
+        <form class="ie-form" id="ie-form" autocomplete="off" novalidate>
+            <div class="ie-form-head">
+                <h2 id="ie-form-title">Nouvel objet</h2>
+                <span class="ie-slug" id="ie-slug" title="Identifiant de l'objet dans le jeu"></span>
+            </div>
+
+            <div class="ie-top-fields">
+                <div class="ie-image-box">
+                    <label class="ie-image" id="ie-image" title="Choisir une image (ou la glisser ici)">
+                        <img id="ie-image-preview" alt="" hidden>
+                        <span class="ie-image-empty" id="ie-image-empty"><i class="fas fa-image"></i>Ajouter une image</span>
+                        <span class="ie-image-hint">Changer l'image</span>
+                        <input type="file" id="ie-image-input" accept="image/*">
+                    </label>
+                    <button type="button" class="ie-link" id="ie-image-remove" hidden>Retirer l'image</button>
+                </div>
+                <div class="ie-fields">
+                    <label class="ie-field">Nom
+                        <input type="text" id="ie-name" maxlength="60" placeholder="ex. Clé à molette quantique" required>
+                    </label>
+                    <div class="ie-row">
+                        <label class="ie-field">Catégorie
+                            <select id="ie-pool"></select>
+                        </label>
+                        <label class="ie-field" id="ie-new-pool-field" hidden>Nom de la catégorie
+                            <input type="text" id="ie-new-pool" maxlength="30" placeholder="ex. armes">
+                        </label>
+                        <label class="ie-field" id="ie-race-field" hidden>Race
+                            <select id="ie-race"></select>
+                        </label>
+                    </div>
+                    <p class="ie-explain" id="ie-pool-explain"></p>
+                </div>
+            </div>
+
+            <label class="ie-field"><span>Description <small>(lue par les joueurs dans leur inventaire)</small></span>
+                <textarea id="ie-desc" rows="5" maxlength="600" placeholder="À quoi sert-il, d'où vient-il…"></textarea>
+                <span class="ie-counter" id="ie-desc-count"></span>
+            </label>
+
+            <section class="ie-usage" id="ie-usage" hidden></section>
+
+            <p class="ie-error" id="ie-error" role="alert"></p>
+            <div class="ie-form-actions">
+                <button type="button" class="ie-btn ie-btn-danger" id="ie-delete" hidden><i class="fas fa-trash-alt"></i> Supprimer</button>
+                <button type="button" class="ie-btn" id="ie-duplicate" hidden><i class="fas fa-copy"></i> Dupliquer</button>
+                <button type="submit" class="ie-btn ie-btn-primary" id="ie-submit">Créer l'objet</button>
+            </div>
+        </form>
+
+        <aside class="ie-preview" aria-label="Aperçu en jeu">
+            <h2>Aperçu en jeu</h2>
+            <div class="ie-preview-card">
+                <div class="ie-preview-img" id="ie-preview-img"></div>
+                <div class="ie-preview-body">
+                    <b id="ie-preview-name"></b>
+                    <p id="ie-preview-desc"></p>
+                </div>
+            </div>
+            <h3>Butin</h3>
+            <div class="ie-preview-chips">
+                <span class="ie-chip" id="ie-preview-chip"></span>
+            </div>
+        </aside>
+    </main>
+</div>
+
+<dialog class="ie-dialog" id="ie-help" aria-labelledby="ie-help-title">
+    <div class="ie-dialog-head">
+        <h2 id="ie-help-title">Comment fonctionne l'éditeur d'objets</h2>
+        <button type="button" class="ie-close" data-close aria-label="Fermer">×</button>
+    </div>
+    <div class="ie-dialog-body">
+        <ol class="ie-steps">
+            <li><b>Le catalogue.</b> Tous les objets du jeu sont ici, rangés par catégorie. Ils sont enregistrés dans <code>src/config/items.json</code>.</li>
+            <li><b>Objets de départ.</b> La catégorie « Départ » donne l'objet, au lancement de la partie, à chaque joueur de la race choisie.</li>
+            <li><b>Les autres catégories</b> servent au butin : le MJ les propose après un combat, et l'éditeur de lieux les propose dans les choix des cartes.</li>
+            <li><b>Image.</b> Clique sur le cadre ou glisses-y une image : elle est recadrée en carré et enregistrée dans <code>public/img/items</code>.</li>
+            <li><b>Enregistrer</b> (Ctrl+S) met aussi à jour la partie en cours : les joueurs voient tout de suite le nouveau nom, la description et l'image.</li>
+            <li><b>Supprimer</b> retire l'objet du catalogue. Les exemplaires déjà possédés par les joueurs ou rangés dans le vaisseau restent jusqu'à la prochaine partie.</li>
+        </ol>
+    </div>
+</dialog>
+
+<dialog class="ie-dialog" id="ie-confirm" aria-labelledby="ie-confirm-title">
+    <form method="dialog">
+        <div class="ie-dialog-head">
+            <h2 id="ie-confirm-title"></h2>
+        </div>
+        <div class="ie-dialog-body">
+            <p id="ie-confirm-text"></p>
+            <div class="ie-dialog-actions">
+                <button type="submit" class="ie-btn" value="cancel">Annuler</button>
+                <button type="submit" class="ie-btn ie-btn-danger" value="ok" id="ie-confirm-ok"></button>
+            </div>
+        </div>
+    </form>
+</dialog>
+
+<div class="ie-toast" id="ie-toast" role="status" aria-live="polite"></div>
+
+<script>var CATALOG = <%- JSON.stringify(catalog).replace(/</g, '\\u003c') %>;</script>
+<script src="/js/items-editor.js"></script>
+</body>
+</html>

@@ -28,6 +28,7 @@ async function test() {
     await test_deck_generation();
     await test_roll();
     test_ship_alerts();
+    await test_items_editor();
 }
 
 async function setup(){
@@ -235,4 +236,41 @@ function test_ship_alerts() {
     shipAlerts.reset();
     assert.deepStrictEqual(shipAlerts.getState(), {blink: [], showMap: false, alert: null});
     console.log('ship alerts OK');
+}
+
+
+// Éditeur d'objets : création, déplacement de catégorie, suppression. items.json est remis en l'état
+async function test_items_editor() {
+    console.log('Testing items editor');
+    const itemsEditor = require('../src/controllers/itemsEditor');
+    const file = __dirname + '/../src/config/items.json';
+    const backup = fs.readFileSync(file);
+    try {
+        let before = (await itemsEditor.list()).items.length;
+        assert.ok((await itemsEditor.save({name: ''})).error, 'un objet sans nom est refusé');
+        assert.ok((await itemsEditor.save({name: 'Truc', pool: 'starter'})).error, 'un objet de départ sans race est refusé');
+
+        let out = await itemsEditor.save({name: 'Clé à molette test', pool: 'Outils test', desc: 'Pour les tests'});
+        assert.strictEqual(out.item.slug, 'cle-a-molette-test');
+        assert.strictEqual(out.item.pool, 'outils_test');
+        assert.ok((await itemsEditor.save({name: 'clé à MOLETTE test', pool: 'electronique'})).error, 'deux objets ne portent pas le même nom');
+        let row = await DB.tables.items.findOne({raw: true, where: {slug: 'cle-a-molette-test'}});
+        assert.strictEqual(row.name, 'Clé à molette test');
+
+        out = await itemsEditor.save({slug: 'cle-a-molette-test', name: 'Clé à molette', pool: 'starter', race: 'aku', desc: 'Modifiée'});
+        assert.strictEqual(out.item.slug, 'cle-a-molette-test', 'le slug ne change pas avec le nom');
+        let list = await itemsEditor.list();
+        assert.ok(!list.pools.includes('outils_test'), 'la catégorie vidée disparaît');
+        row = await DB.tables.items.findOne({raw: true, where: {slug: 'cle-a-molette-test'}});
+        assert.strictEqual(row.pool, 'starter');
+        assert.strictEqual(row.race, 'aku');
+
+        await itemsEditor.remove('cle-a-molette-test');
+        assert.strictEqual((await itemsEditor.list()).items.length, before);
+        assert.strictEqual(await DB.tables.items.count({where: {slug: 'cle-a-molette-test'}}), 0);
+        console.log('OK');
+    }
+    finally {
+        fs.writeFileSync(file, backup);
+    }
 }
