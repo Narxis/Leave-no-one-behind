@@ -109,6 +109,7 @@ async function test_remote() {
     console.log('Online player actions OK');
 
     await test_chat();
+    await test_votes();
     test_stat_rolls();
     test_player_view();
     test_player_assets();
@@ -155,6 +156,68 @@ async function test_chat() {
     chat.clear();
     assert.equal(chat.historyFor(bob.id).length, 0);
     console.log('Chat OK');
+}
+
+// Votes : sur les choix affichés par la page de jeu, remis à zéro au
+// suivant, fermés quand le MJ a cliqué
+async function test_votes() {
+    console.log('Testing votes');
+    const votes = require('../src/controllers/votes');
+    const remote = require('../src/controllers/remote');
+    const playerView = require('../src/controllers/playerView');
+    let alice = {id: 'a1b2c3d4e5f6a7b8', name: 'Alice'};
+    let bob = {id: 'b0b0b0b0b0b0b0b0', name: 'Bob'};
+    let vote = (player, index) => remote.translate(player, {kind: 'action', action: 'vote', data: {index}});
+    votes.clear();
+    CONFIG.gameState = 'gameLive';
+
+    assert.ok((await vote(alice, 0)).refused); // rien d'affiché
+    let card = {id: 4, type: TYPE_NEGATIVE, desc: 'Une alarme retentit', choices: [{value: 'Fuir', reveal: 'secret'}, {value: 'Combattre'}]};
+    votes.setScreen({cardId: 4, text: card.desc, choices: ['Fuir', 'Combattre']});
+    let sent = await vote(alice, 1);
+    assert.equal(sent.action, 'passThrough');
+    assert.deepEqual(sent.data.data.counts, [0, 1]);
+    assert.deepEqual(sent.data.data.voters, [{id: alice.id, name: 'Alice', index: 1}]); // nom du perso
+    await vote(bob, 1);
+    await vote(alice, 0); // changer d'avis
+    assert.deepEqual(votes.payload().data.counts, [1, 1]);
+    assert.ok((await vote(bob, 2)).refused);
+    assert.ok((await vote(bob, -1)).refused);
+    assert.equal(votes.voteOf(alice.id), 0);
+    await vote(alice, null); // retirer son vote
+    assert.equal(votes.voteOf(alice.id), null);
+    await vote(alice, 0);
+
+    // Les joueurs voient l'affichage de la page de jeu, avec les votes
+    let seen = playerView.publicCard(card);
+    assert.deepEqual(seen.choices, ['Fuir', 'Combattre']);
+    assert.deepEqual(seen.counts, [1, 1]);
+    assert.equal(seen.chosen, null);
+    // ... mais pas celui d'une autre carte
+    assert.equal(playerView.publicCard({id: 5, type: TYPE_NEGATIVE, desc: 'x', choices: []}).counts, undefined);
+
+    // Même affichage annoncé deux fois : votes gardés
+    votes.setScreen({cardId: 4, text: card.desc, choices: ['Fuir', 'Combattre']});
+    assert.deepEqual(votes.payload().data.counts, [1, 1]);
+
+    // Le MJ clique : votes fermés, choix retenu visible
+    votes.setScreen({cardId: 4, text: card.desc, choices: ['Fuir', 'Combattre'], chosen: 1});
+    assert.equal(playerView.publicCard(card).chosen, 1);
+    assert.ok((await vote(bob, 0)).refused);
+
+    // Suite affichée : nouveaux choix, votes remis à zéro, texte révélé public
+    votes.setScreen({cardId: 4, text: 'Vous fuyez{....} de justesse', choices: ['Continuer votre chemin']});
+    seen = playerView.publicCard(card);
+    assert.equal(seen.desc, 'Vous fuyez… de justesse');
+    assert.deepEqual(seen.counts, [0]);
+    assert.equal(votes.voteOf(alice.id), null);
+
+    // Hors partie : pas de vote
+    CONFIG.gameState = 'creation';
+    assert.ok((await vote(alice, 0)).refused);
+    CONFIG.gameState = 'gameLive';
+    votes.clear();
+    console.log('Votes OK');
 }
 
 // Règles du tirage : dés = |bonus| + 1, meilleur dé avec un bonus, pire avec un malus

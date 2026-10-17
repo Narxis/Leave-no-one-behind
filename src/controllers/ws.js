@@ -14,6 +14,7 @@ const lobby = require("./lobby");
 const remote = require("./remote");
 const playerView = require("./playerView");
 const chat = require("./chat");
+const votes = require("./votes");
 const WebSocket = require("ws");
 
 const init = function (){
@@ -141,6 +142,13 @@ const makeAction = async function (raw_response) {
         case 'chat-send':
         case 'chat-history':
             payload = chat.handle(response);
+            break;
+        // Page de jeu : texte et choix affichés (votes des joueurs)
+        case 'card-screen':
+            payload = votes.setScreen(response.data);
+            break;
+        case 'votes':
+            payload = votes.payload();
             break;
         case 'ship-alerts':
             payload = shipAlerts.handle(response);
