@@ -7,6 +7,7 @@ const {Items} = require("../models/items");
 const {Card} = require("../models/card");
 const drawflow = require("../controllers/drawflow");
 const fs = require('fs');
+const paths = require('../config/paths');
 // Nom d'un lieu de l'éditeur : il sert de nom de fichier, rien d'autre que lettres, chiffres, - et _
 const validPlaceName = (name) => typeof name === 'string' && /^[a-z0-9_-]{1,40}$/i.test(name);
 const combat = require("./combat");
@@ -49,7 +50,7 @@ module.exports = {
                 return res.json({success: false, error: 'Nom de lieu invalide'});
             let body = JSON.stringify(req.body);
             // SAVE A COPY IN CACHE (failsafe)
-            fs.writeFileSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME, body);
+            fs.writeFileSync(paths.cache(name + '_' + PLACESDAT_FILEMAME), body);
 
             // SAVE ON PASTEBIN
             // const client = new PasteClient(process.env.PASTEBIN_K);
@@ -95,7 +96,7 @@ module.exports = {
             return res.json({success: false, error: 'Nom de lieu invalide'});
 
         try {
-            fs.unlinkSync(__dirname + '/../../storage/cache/'+name+'_'+PLACESDAT_FILEMAME);
+            fs.unlinkSync(paths.cache(name + '_' + PLACESDAT_FILEMAME));
         }
         catch {
             //

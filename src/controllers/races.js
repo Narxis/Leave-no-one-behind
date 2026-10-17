@@ -8,9 +8,10 @@ const path = require('path');
 // à chaque modification.
 
 const BASE_FILE = path.join(__dirname, '../config/raceStats.json');
-// Chemins relatifs au dossier de lancement du serveur (comme le classement)
-const CUSTOM_FILE = path.join(process.cwd(), 'storage/cache/customRaces.json');
-const IMAGE_DIR = path.join(process.cwd(), 'public/img/races');
+// Dans le dossier de données (voir config/paths.js)
+const paths = require('../config/paths');
+const CUSTOM_FILE = paths.cache('customRaces.json');
+const IMAGE_DIR = paths.raceImages();
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 // Un menu déroulant Discord propose 25 options au plus (choix de la race dans /create)
 const MAX_RACES = 25;

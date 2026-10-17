@@ -3,7 +3,7 @@ const {Player} = require("./../models/player");
 
 
 const DB_VERSION = 13; // increment when structure changes are added
-const DB_FOLDER = 'storage/databases/';
+const paths = require('../config/paths');
 
 class DB {
     sequelize;
@@ -19,7 +19,7 @@ class DB {
                 dialect: 'sqlite',
                 // logging: console.log,
                 logging: false,
-                storage: DB_FOLDER + db_name + '.sqlite',
+                storage: paths.databases(db_name + '.sqlite'),
             });
         }
         else {

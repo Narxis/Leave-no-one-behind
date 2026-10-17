@@ -1,4 +1,5 @@
 var fs = require('fs');
+const paths = require('../config/paths');
 let {generatePlanets, cardPop, deckGenerator,getCardsIds, hydrateCardDB, destroyDeck, getDeck} = require('./deck')
 const {Card} = require("./../models/card");
 const {Player} = require("../models/player");
@@ -138,8 +139,8 @@ module.exports = {
         // if (!data) {
             // data = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
         // Seuls les fichiers des lieux (le cache contient aussi les compagnons, le classement…)
-        fs.readdirSync(__dirname + '/../../storage/cache/').filter(file => file.endsWith('_' + PLACESDAT_FILEMAME)).forEach(file => {
-            let json = JSON.parse(fs.readFileSync(__dirname + '/../../storage/cache/'+file,'utf8'));
+        fs.readdirSync(paths.cache()).filter(file => file.endsWith('_' + PLACESDAT_FILEMAME)).forEach(file => {
+            let json = JSON.parse(fs.readFileSync(paths.cache(file),'utf8'));
             let index = Object.keys(json)[0];
             data.drawflow[index] = json[index];
         });

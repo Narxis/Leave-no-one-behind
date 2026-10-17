@@ -6,7 +6,7 @@ const path = require('path');
 // en base est remise à zéro à chaque démarrage du serveur, les réglages du MJ
 // doivent survivre aux redémarrages. Config.hydrateDB les applique par-dessus
 // baseConf.json, le paquet de cartes est tiré avec au lancement de la partie
-const FILE = path.join(process.cwd(), 'storage/cache/gameSettings.json');
+const FILE = require('../config/paths').cache('gameSettings.json');
 
 // Réglages modifiables, avec leurs bornes
 const FIELDS = [
