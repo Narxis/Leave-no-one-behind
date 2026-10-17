@@ -79,6 +79,13 @@
                 </div>
                 <div class="combat">
                     <!--Un espace pour chaque joueurs pour un boutton join-->
+                    <%# Qui commence (wiki : regles/combat.md) ; l'ordre reste modifiable pendant le combat %>
+                    <select class="add-life combat-initiative" id="combat-initiative" title="Initiative : qui commence le combat">
+                        <option value="hasard" title="Sauf si aucun joueur n'a plus de 75 de moral : les adversaires commencent">Initiative : pile ou face</option>
+                        <option value="joueurs" title="Ils lancent le combat : ils commencent">Les joueurs attaquent</option>
+                        <option value="adversaires">Attaque surprise : adversaires d'abord</option>
+                        <option value="manuel">Ordre fixé à la main</option>
+                    </select>
                     <button class="add-life fight" id="combat-start">Commencer le combat</button>
                     <div class="mj-team" id="mj-team"></div>
                     <div class="mj-status-panel hide" id="mj-status-panel"></div>

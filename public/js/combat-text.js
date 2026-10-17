@@ -8,6 +8,12 @@ function describeHitStatus(entry) {
 function describeCombatEntry(entry, forMJ = false) {
     switch (entry.type) {
         case 'start': return 'Le combat commence !';
+        case 'initiative': {
+            let why = {joueurs: 'ils attaquent', adversaires: 'attaque surprise', moral: 'moral trop bas',
+                hasard: 'pile ou face', manuel: 'ordre du MJ'}[entry.reason] || '';
+            return (entry.first === 'joueurs' ? 'Les joueurs commencent' : 'Les adversaires commencent')
+                + (why ? ' (' + why + ')' : '') + ' : ' + entry.order.join(', ');
+        }
         case 'end': return 'Fin du combat';
         case 'hp': return 'PV de ' + entry.enemy + ' : ' + entry.hp;
         case 'target': return entry.player + ' doit lancer /roll Combat pour attaquer ' + entry.enemy;
