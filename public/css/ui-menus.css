@@ -1427,6 +1427,111 @@ body.mj-page {
     color: var(--ui-accent);
 }
 
+.mj-turn-skip {
+    border-color: var(--ui-border-strong);
+    color: var(--ui-text-dim);
+}
+
+/*---Menu MJ : initiative et ordre de jeu---*/
+.mj-page .combat .combat-initiative {
+    width: 90%;
+    height: auto;
+    margin: 1em 0 -0.4em;
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+.mj-page .combat .combat-initiative option {
+    background: #17181c;
+}
+
+.mj-page .combat .combat-initiative.hide {
+    display: none;
+}
+
+.mj-order {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    margin: 2px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mj-order-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: grab;
+}
+
+.mj-order-row.current {
+    border-color: var(--ui-accent);
+    background: rgb(255 204 0 / 12%);
+}
+
+.mj-order-row.drop {
+    border-style: dashed;
+    border-color: var(--ui-text-dim);
+}
+
+.mj-order-row.ko {
+    opacity: 0.4;
+}
+
+.mj-order-rank {
+    width: 1.6em;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+    text-align: right;
+}
+
+.mj-order-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    padding: 2px 4px;
+    border: none;
+    background: none;
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.mj-order-row.kind-enemy .mj-order-name {
+    color: var(--ui-danger);
+}
+
+.mj-order-row.current .mj-order-name {
+    color: var(--ui-accent);
+}
+
+.mj-order-move {
+    width: 24px;
+    height: 22px;
+    padding: 0;
+    border: 1px solid var(--ui-border);
+    border-radius: 6px;
+    background: var(--ui-fill);
+    color: var(--ui-text-dim);
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.mj-order-move:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
 .mj-statuses-line {
     grid-column: 1 / -1;
     display: flex;

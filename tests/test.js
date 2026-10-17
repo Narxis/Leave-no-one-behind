@@ -807,5 +807,48 @@ async function test_combat() {
     assert.deepStrictEqual(combat.getState().fighters[id]['c-brulure'].damage, [2, 2]);
 
     await run('combat-end', {});
+
+    // Initiative : joueurs puis compagnons du moral le plus haut au plus bas,
+    // à égalité dans l'ordre d'arrivée ; qui commence selon le mode
+    const P = (id, moral) => ({discord_id: id, name: id, moral: moral});
+    const foes = [{id: 9, name: 'Yorc'}];
+    const names = (o) => o.order.map(f => f.name);
+    let o = combat.makeOrder('joueurs', [P('a', 50), P('b', 80), P('c', 80)], [{id: 1, name: 'Zorg', moral: 80}], foes);
+    assert.strictEqual(o.first, 'joueurs');
+    assert.deepStrictEqual(names(o), ['b', 'c', 'Zorg', 'a', 'Yorc']);
+    assert.deepStrictEqual(names(combat.makeOrder('adversaires', [P('a', 90)], [], foes)), ['Yorc', 'a']);
+    assert.deepStrictEqual(names(combat.makeOrder('manuel', [P('a', 10), P('b', 90)], [], foes)), ['a', 'b', 'Yorc']);
+    o = combat.makeOrder('hasard', [P('a', 75)], [], foes, () => 0);
+    assert.strictEqual(o.reason, 'moral', 'aucun joueur au-dessus de 75 : les adversaires commencent');
+    assert.strictEqual(o.first, 'adversaires');
+    assert.strictEqual(combat.makeOrder('hasard', [P('a', 76)], [], foes, () => 0).first, 'joueurs');
+    assert.strictEqual(combat.makeOrder('hasard', [P('a', 76)], [], foes, () => 0.9).first, 'adversaires');
+
+    // Pendant le combat : au suivant, ordre changé à la main, renfort en dernier
+    ({state} = await run('combat-start', {enemies: [{name: 'Yorc', hp: 30}], initiative: 'adversaires'}));
+    assert.strictEqual(state.order[0].kind, 'enemy');
+    assert.strictEqual(state.current, 0);
+    assert.strictEqual(state.log[1].type, 'initiative');
+    let keys = state.order.map(f => f.kind + ':' + f.id);
+    // Les joueurs à 0 de moral (K.O.) des tests précédents sont sautés
+    ({state} = await run('combat-next', {}));
+    let acting = keys[state.current];
+    assert.ok(state.current > 0);
+    ({state} = await run('combat-order', {order: keys.slice().reverse()}));
+    assert.deepStrictEqual(state.order.map(f => f.kind + ':' + f.id), keys.slice().reverse());
+    assert.strictEqual(state.order[state.current].kind + ':' + state.order[state.current].id, acting, 'la main ne change pas');
+    ({state} = await run('combat-order', {current: 'p:' + id}));
+    assert.strictEqual(state.order[state.current].id, id);
+    ({state} = await run('combat-add', {enemy: {name: 'Pirate'}}));
+    assert.strictEqual(state.order[state.order.length - 1].name, 'Pirate');
+    // Un ennemi K.O. passe son tour ; après le dernier, le tour passe
+    await run('combat-hp', {enemy_id: state.enemies[1].id, hp: 0});
+    await run('combat-order', {current: keys[0]});
+    let turn = state.turn;
+    for (let i = 0; i < state.order.length && combat.getState().turn === turn; i++)
+        ({state} = await run('combat-next', {}));
+    assert.strictEqual(state.turn, turn + 1);
+    assert.strictEqual(state.current, 0);
+    await run('combat-end', {});
     console.log('Combat OK');
 }

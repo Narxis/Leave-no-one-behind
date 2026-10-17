@@ -30,13 +30,26 @@ const STATUSES = {
 };
 const MAX_STATUS_TURNS = 9;
 
+// Initiative (wiki : regles/combat.md, « Qui commence ») choisie par le MJ
+// au début du combat :
+// - joueurs : ils lancent le combat, ils commencent ;
+// - adversaires : les joueurs sont attaqués ou surpris ;
+// - hasard : pile ou face, sauf si aucun joueur n'a plus de INITIATIVE_MORAL
+//   de moral (les adversaires commencent alors) ;
+// - manuel : le MJ range lui-même l'ordre (joueurs puis adversaires au départ).
+// Les joueurs, puis les compagnons à égalité, jouent du moral le plus haut
+// au plus bas ; à égalité, dans l'ordre d'arrivée (P2 avant P4)
+const INITIATIVE_MORAL = 75;
+const INITIATIVE_MODES = ['hasard', 'joueurs', 'adversaires', 'manuel'];
+
 // État du combat en cours, gardé en mémoire : il est renvoyé à chaque
 // action pour que l'écran de jeu et le menu MJ restent synchronisés
 // pending : attaque désignée par le MJ, en attente du /roll Combat du joueur
 // lootRevealed : tous les ennemis sont K.O., leur butin est montré aux joueurs
 // turn : numéro du tour, avancé par le MJ (les statuts agissent à chaque tour)
 // fighters : statuts des joueurs et compagnons, par id
-let state = {active: false, enemies: [], log: [], pending: null, lootRevealed: false, turn: 1, fighters: {}};
+// order : ordre de jeu ({kind: player / ally / enemy, id, name}), current : à qui le tour
+let state = {active: false, enemies: [], log: [], pending: null, lootRevealed: false, turn: 1, fighters: {}, order: [], current: 0};
 let nextId = 1;
 
 const rollRange = ([min, max]) => min + Math.floor(Math.random() * (max - min + 1));
@@ -108,10 +121,95 @@ const findEnemy = function (id) {
     return state.enemies.find(e => e.id === toInt(id, -1));
 }
 
-const start = function (data) {
+// Ordre de jeu selon le mode d'initiative (voir INITIATIVE_MODES)
+const makeOrder = function (mode, players, allyList, enemies, random = Math.random) {
+    let team = players.map((p, i) => ({kind: 'player', id: String(p.discord_id), name: p.name, moral: p.moral, rank: i}))
+        .concat(allyList.map((a, i) => ({kind: 'ally', id: 'npc' + a.id, name: a.name, moral: a.moral, rank: players.length + i})));
+    if (mode !== 'manuel')
+        team.sort((a, b) => (b.moral - a.moral) || (a.rank - b.rank));
+    team = team.map(f => ({kind: f.kind, id: f.id, name: f.name}));
+    let foes = enemies.map(e => ({kind: 'enemy', id: e.id, name: e.name}));
+    let reason = mode;
+    if (mode === 'hasard' && !players.some(p => p.moral > INITIATIVE_MORAL))
+        reason = 'moral';
+    let first = ['joueurs', 'manuel'].includes(reason) ? 'joueurs'
+        : (reason === 'hasard' ? (random() < 0.5 ? 'joueurs' : 'adversaires') : 'adversaires');
+    return {first: first, reason: reason, order: first === 'joueurs' ? team.concat(foes) : foes.concat(team)};
+}
+
+const start = async function (data) {
     let enemies = (data.enemies || []).map(makeEnemy);
-    state = {active: true, enemies: enemies, log: [], pending: null, lootRevealed: false, turn: 1, fighters: {}};
-    return addLog({type: 'start'});
+    let mode = INITIATIVE_MODES.includes(data.initiative) ? data.initiative : 'hasard';
+    let players = await DB.tables.players.findAll({raw: true, order: [['id', 'ASC']]});
+    let initiative = makeOrder(mode, players, allies.getAllies(), enemies);
+    state = {active: true, enemies: enemies, log: [], pending: null, lootRevealed: false, turn: 1, fighters: {},
+        order: initiative.order, current: 0};
+    let entry = addLog({type: 'start'});
+    addLog({type: 'initiative', first: initiative.first, reason: initiative.reason, order: initiative.order.map(f => f.name)});
+    return entry;
+}
+
+const orderKey = (f) => f.kind + ':' + f.id;
+
+// Un combattant K.O. (ou parti) passe son tour
+const isDown = async function (f) {
+    if (f.kind === 'enemy') {
+        let enemy = findEnemy(f.id);
+        return !enemy || enemy.hp <= 0;
+    }
+    let fighter = await findFighter(f.kind === 'ally' ? {ally_id: f.id.slice(3)} : {discord_id: f.id});
+    return !fighter || hpOf(fighter) <= 0;
+}
+
+// Premier combattant debout à partir de l'index from (-1 : aucun)
+const livingFrom = async function (from) {
+    for (let i = from; i < state.order.length; i++)
+        if (!(await isDown(state.order[i])))
+            return i;
+    return -1;
+}
+
+// Au suivant dans l'ordre de jeu ; après le dernier, le tour passe
+// (les statuts agissent) et l'ordre reprend au premier debout
+const nextFighter = async function () {
+    if (!state.active || !state.order.length)
+        return null;
+    let i = await livingFrom(state.current + 1);
+    if (i < 0)
+        return nextTurn();
+    state.current = i;
+    // Pas dans le journal : l'ordre de jeu suffit à le montrer
+    return Object.assign({type: 'next', at: Date.now()}, state.order[i]);
+}
+
+// Le MJ change l'ordre de jeu (order : clés « kind:id » dans le nouvel
+// ordre) ou donne la main à un combattant (current : sa clé)
+const setOrder = function (data) {
+    if (!state.active)
+        return null;
+    let acting = state.order[state.current];
+    if (Array.isArray(data.order)) {
+        let rest = new Map(state.order.map(f => [orderKey(f), f]));
+        let order = [];
+        for (let key of data.order) {
+            let f = rest.get(String(key));
+            if (f) {
+                order.push(f);
+                rest.delete(String(key));
+            }
+        }
+        state.order = order.concat([...rest.values()]);
+    }
+    if (data.current !== undefined)
+        acting = state.order.find(f => orderKey(f) === String(data.current)) || acting;
+    state.current = Math.max(0, state.order.indexOf(acting));
+    return {type: 'order', at: Date.now()};
+}
+
+// Un nouveau venu (renfort) joue en dernier
+const joinOrder = function (f) {
+    if (!state.order.some(o => orderKey(o) === orderKey(f)))
+        state.order.push(f);
 }
 
 // Renfort ennemi en plein combat : le butin redevient caché jusqu'à la
@@ -121,16 +219,18 @@ const reinforce = function (data) {
         return null;
     let enemy = makeEnemy(data.enemy);
     state.enemies.push(enemy);
+    joinOrder({kind: 'enemy', id: enemy.id, name: enemy.name});
     state.lootRevealed = false;
     return addLog({type: 'reinforcement', enemy_id: enemy.id, name: enemy.name});
 }
 
 // Un compagnon créé pendant le combat est annoncé comme renfort allié
-const allyJoined = function (name) {
+const allyJoined = function (ally) {
     if (!state.active)
         return null;
+    joinOrder({kind: 'ally', id: 'npc' + ally.id, name: ally.name});
     return {action: 'combat', error: false, data: {state: getState(),
-        event: addLog({type: 'reinforcement', name: name, ally: true})}};
+        event: addLog({type: 'reinforcement', name: ally.name, ally: true})}};
 }
 
 // Statuts d'un combattant : ennemi (dans sa fiche) ou joueur / compagnon
@@ -270,6 +370,7 @@ const nextTurn = async function () {
         }
     }
     state.turn++;
+    state.current = Math.max(0, await livingFrom(0));
     let entry = addLog({type: 'turn', turn: state.turn, ticks: ticks});
     checkVictory();
     return {entry: entry, extra: extra};
@@ -540,7 +641,9 @@ const ACTIONS = {
     'combat-add': reinforce,
     'combat-status': setStatus,
     'combat-turn': nextTurn,
-    'combat-player-hp': setPlayerHp
+    'combat-player-hp': setPlayerHp,
+    'combat-next': nextFighter,
+    'combat-order': setOrder
 };
 
 // Point d'entrée des actions websocket « combat-* » : renvoie l'état
@@ -563,4 +666,4 @@ const handle = async function (response) {
     return extra.length ? extra.concat([payload]) : payload;
 }
 
-module.exports = {handle, getState, getBestiary, getLootList, makeLoot, resolveRoll, allyAttack, allyJoined, takeLoot, ACTIONS, STATUSES, HP_PER_MORAL, MAX_HP};
+module.exports = {handle, getState, getBestiary, getLootList, makeLoot, resolveRoll, allyAttack, allyJoined, takeLoot, makeOrder, ACTIONS, STATUSES, HP_PER_MORAL, MAX_HP};
