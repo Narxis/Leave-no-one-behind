@@ -1454,3 +1454,74 @@ body.mj-page {
 .mj-team-bar-fill[data-level="crit"] {
     background: var(--ui-danger);
 }
+
+/*---Menu MJ : panneau des statuts (ennemis, joueurs, compagnons)---*/
+.mj-status-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-sizing: border-box;
+    width: calc(100% - 32px);
+    margin: 0 16px 12px;
+    padding: 8px 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-status-panel.hide {
+    display: none;
+}
+
+.mj-sp-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.mj-sp-select,
+.mj-sp-name {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 6px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-surface-flat, #1d1733);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 13px;
+}
+
+.mj-sp-left {
+    margin-left: 0;
+}
+
+.mj-sp-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+    cursor: pointer;
+}
+
+.mj-sp-apply {
+    align-self: flex-end;
+}
+
+.mj-sp-apply:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.mj-status-chip.active.custom {
+    border-color: #b98cff;
+    color: #b98cff;
+}
+
+.mj-attacker:disabled {
+    opacity: 0.4;
+    cursor: default;
+}

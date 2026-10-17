@@ -8,11 +8,12 @@
     const startBtn = document.getElementById('combat-start');
     const search = document.getElementById('search-ennemy');
     const teamBox = document.getElementById('mj-team');
+    const statusBox = document.getElementById('mj-status-panel');
     const TIERS = {faible: '1-4', moyen: '5-8', fort: '9-12'};
     const STATUSES = {
-        saignement: {name: 'Saignement', title: 'Perd 1 à 4 PV à chaque tour'},
-        poison: {name: 'Poison', title: 'Perd 3 PV à chaque tour'},
-        etourdi: {name: 'Étourdi', title: 'Ne peut pas attaquer'}
+        saignement: {name: 'Saignement'},
+        poison: {name: 'Poison'},
+        etourdi: {name: 'Étourdi'}
     };
     const HP_PER_MORAL = 10;
     const MAX_HP = 1000;
@@ -30,7 +31,6 @@
     let lootFocus = false; // donner le focus au champ au prochain rendu
     let outcome = 'dice';  // issue de la prochaine attaque ennemie : dé, touché ou raté
     let forcedDamage = ''; // dégâts imposés (vide : tirés selon le palier)
-    let statusTurns = 3;   // durée des statuts posés sur les ennemis, en tours
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -144,11 +144,18 @@
         box.append(el('span', 'mj-attackers-label', 'Qui attaque ' + enemy.name + ' ?'));
         if (!players.length && !allies.length)
             box.append(el('span', 'mj-attackers-label', 'aucun joueur dans la partie'));
-        for (let p of players)
-            box.append(button('mj-attacker', p.name, () => {
+        // Un joueur ou compagnon étourdi ne peut pas attaquer
+        for (let p of players) {
+            let b = button('mj-attacker', p.name, () => {
                 targetId = null;
                 wsLNOB.send({action: 'combat-target', data: {enemy_id: enemy.id, discord_id: p.discord_id}});
-            }));
+            });
+            if (isStunned(fighterStatuses(String(p.discord_id)))) {
+                b.disabled = true;
+                b.title = p.name + ' ne peut pas attaquer (statut)';
+            }
+            box.append(b);
+        }
         for (let a of allies) {
             let b = button('mj-attacker npc', a.name, () => {
                 targetId = null;
@@ -156,6 +163,10 @@
             });
             b.prepend(el('span', 'mj-ally-badge', 'PNJ'));
             b.title = 'Le dé de ' + a.name + ' est lancé tout de suite (Combat ' + a.combat + ')';
+            if (isStunned(fighterStatuses('npc' + a.id))) {
+                b.disabled = true;
+                b.title = a.name + ' ne peut pas attaquer (statut)';
+            }
             box.append(b);
         }
         list.append(box);
@@ -214,46 +225,146 @@
         list.append(box);
     }
 
-    // Tour en cours ; « Tour suivant » fait agir les statuts des ennemis
+    // Tour en cours ; « Tour suivant » fait agir les statuts
     function renderTurn() {
         let bar = el('div', 'mj-turn');
         bar.append(el('span', 'mj-turn-label', 'Tour ' + (state.turn || 1)));
+        let next = button('mj-turn-next', 'Tour suivant', () => wsLNOB.send({action: 'combat-turn', data: {}}));
+        next.title = 'Les statuts qui blessent agissent, puis chaque statut perd un tour';
+        bar.append(next);
+        list.append(bar);
+    }
+
+    const isStunned = (statuses) => Object.values(statuses || {}).some(s => s.stun);
+    const fighterStatuses = (id) => (state.fighters || {})[id] || {};
+
+    // Pastilles des statuts actifs d'un combattant (× pour retirer)
+    function statusChips(statuses, target) {
+        let line = el('div', 'mj-statuses-line');
+        for (let [key, status] of Object.entries(statuses || {})) {
+            let kind = STATUSES[key] ? key : 'custom';
+            let b = button('mj-status-chip active ' + kind, status.name + ' · ' + status.turns + ' ×', () =>
+                wsLNOB.send({action: 'combat-status', data: {target: target, status: key, name: status.name, turns: 0}}));
+            let effects = [];
+            if (status.damage)
+                effects.push(status.damage[0] === status.damage[1] ? status.damage[0] + ' PV par tour' : status.damage[0] + ' à ' + status.damage[1] + ' PV par tour');
+            if (status.stun)
+                effects.push('ne peut pas attaquer');
+            b.title = (effects.join(', ') || 'aucun effet automatique') + ' — cliquer pour retirer';
+            line.append(b);
+        }
+        return line;
+    }
+
+    // Panneau des statuts : cible (ennemi, joueur ou compagnon), statut connu
+    // ou personnalisé (nom, dégâts par tour, empêche d'attaquer), durée
+    let sp = {target: '', kind: 'saignement', turns: 3, name: '', damage: '', stun: false};
+
+    function targetOf(value) {
+        let [type, id] = value.split(':');
+        if (type === 'e') return {enemy_id: parseInt(id)};
+        if (type === 'a') return {ally_id: parseInt(id)};
+        if (type === 'p') return {discord_id: id};
+        return null;
+    }
+
+    function renderStatusPanel() {
+        if (statusBox.contains(document.activeElement) && document.activeElement.tagName === 'INPUT')
+            return;
+        statusBox.innerHTML = '';
+        statusBox.classList.toggle('hide', !state.active);
+        if (!state.active)
+            return;
+        statusBox.append(el('div', 'mj-team-title', 'Statuts'));
+
+        let target = el('select', 'mj-sp-select');
+        const option = (parent, value, text) => {
+            let o = el('option', '', text);
+            o.value = value;
+            parent.append(o);
+        };
+        const group = (label, items) => {
+            if (!items.length)
+                return;
+            let g = el('optgroup');
+            g.label = label;
+            items.forEach(([value, text]) => option(g, value, text));
+            target.append(g);
+        };
+        group('Ennemis', state.enemies.filter(e => e.hp > 0).map(e => ['e:' + e.id, e.name]));
+        group('Joueurs', players.map(p => ['p:' + p.discord_id, p.name]));
+        group('Compagnons', allies.map(a => ['a:' + a.id, a.name + ' (PNJ)']));
+        if (![...target.options].some(o => o.value === sp.target))
+            sp.target = target.options.length ? target.options[0].value : '';
+        target.value = sp.target;
+        target.addEventListener('change', () => { sp.target = target.value; });
+
+        let kind = el('select', 'mj-sp-select');
+        for (let [key, info] of Object.entries(STATUSES))
+            option(kind, key, info.name);
+        option(kind, 'custom', 'Personnalisé…');
+        kind.value = sp.kind;
+        kind.addEventListener('change', () => { sp.kind = kind.value; renderStatusPanel(); });
+
         let turns = el('input', 'mj-turn-duration');
         turns.type = 'number';
         turns.min = 1;
         turns.max = 9;
-        turns.value = statusTurns;
-        turns.title = 'Durée des statuts posés sur les ennemis';
-        turns.addEventListener('input', () => { statusTurns = Math.min(9, Math.max(1, parseInt(turns.value) || 1)); });
-        let group = el('label', 'mj-outcome-group');
-        group.append(el('span', 'mj-outcome-label', 'Statuts'), turns, el('span', 'mj-outcome-label', 'tours'));
-        let next = button('mj-turn-next', 'Tour suivant', () => wsLNOB.send({action: 'combat-turn', data: {}}));
-        next.title = 'Saignement et poison blessent, puis chaque statut perd un tour';
-        bar.append(group, next);
-        list.append(bar);
-    }
+        turns.value = sp.turns;
+        turns.title = 'Durée en tours';
+        turns.addEventListener('input', () => { sp.turns = Math.min(9, Math.max(1, parseInt(turns.value) || 1)); });
 
-    // Statuts d'un ennemi : une pastille par statut actif (× pour le retirer),
-    // et un bouton pour poser chacun des autres
-    function statusLine(row, enemy) {
-        let line = el('div', 'mj-statuses-line');
-        for (let [slug, info] of Object.entries(STATUSES)) {
-            let turns = (enemy.statuses || {})[slug];
-            let b;
-            if (turns) {
-                b = button('mj-status-chip active ' + slug, info.name + ' · ' + turns + ' ×', () =>
-                    wsLNOB.send({action: 'combat-status', data: {enemy_id: enemy.id, status: slug, turns: 0}}));
-                b.title = info.title + ' — cliquer pour retirer';
-            }
-            else {
-                b = button('mj-status-chip ' + slug, '+ ' + info.name, () =>
-                    wsLNOB.send({action: 'combat-status', data: {enemy_id: enemy.id, status: slug, turns: statusTurns}}));
-                b.title = info.title + ' (' + statusTurns + ' tours)';
-            }
-            b.disabled = enemy.hp <= 0;
-            line.append(b);
+        let row1 = el('div', 'mj-sp-row');
+        row1.append(el('span', 'mj-outcome-label', 'Cible'), target);
+        let row2 = el('div', 'mj-sp-row');
+        let turnsGroup = el('label', 'mj-outcome-group');
+        turnsGroup.append(turns, el('span', 'mj-outcome-label', 'tours'));
+        row2.append(el('span', 'mj-outcome-label', 'Statut'), kind, turnsGroup);
+        statusBox.append(row1, row2);
+
+        if (sp.kind === 'custom') {
+            let name = el('input', 'mj-sp-name');
+            name.maxLength = 30;
+            name.placeholder = 'Nom du statut';
+            name.value = sp.name;
+            name.addEventListener('input', () => { sp.name = name.value; });
+            let damage = el('input', 'mj-turn-duration');
+            damage.type = 'number';
+            damage.min = 0;
+            damage.max = 99;
+            damage.placeholder = '0';
+            damage.value = sp.damage;
+            damage.title = 'PV perdus à chaque tour (0 : aucun)';
+            damage.addEventListener('input', () => { sp.damage = damage.value; });
+            let stun = el('input');
+            stun.type = 'checkbox';
+            stun.checked = sp.stun;
+            stun.addEventListener('change', () => { sp.stun = stun.checked; });
+            let stunLabel = el('label', 'mj-sp-check');
+            stunLabel.append(stun, el('span', '', "Empêche d'attaquer"));
+            let row3 = el('div', 'mj-sp-row');
+            row3.append(name);
+            let row4 = el('div', 'mj-sp-row');
+            let dmgGroup = el('label', 'mj-outcome-group mj-sp-left');
+            dmgGroup.append(el('span', 'mj-outcome-label', 'Dégâts'), damage, el('span', 'mj-outcome-label', 'PV / tour'));
+            row4.append(dmgGroup, stunLabel);
+            statusBox.append(row3, row4);
         }
-        row.append(line);
+
+        let apply = button('mj-turn-next mj-sp-apply', 'Appliquer', () => {
+            let t = targetOf(sp.target);
+            if (!t)
+                return;
+            let data = {target: t, status: sp.kind, turns: sp.turns};
+            if (sp.kind === 'custom') {
+                if (!sp.name.trim())
+                    return statusBox.querySelector('.mj-sp-name').focus();
+                Object.assign(data, {status: '', name: sp.name.trim(), damage: parseInt(sp.damage) || 0, stun: sp.stun});
+            }
+            wsLNOB.send({action: 'combat-status', data: data});
+        });
+        apply.disabled = !sp.target;
+        statusBox.append(apply);
     }
 
     function renderActive() {
@@ -282,7 +393,7 @@
                 targetId = null;
                 render();
             });
-            let stunned = !!(enemy.statuses && enemy.statuses.etourdi);
+            let stunned = isStunned(enemy.statuses);
             attack.disabled = enemy.hp <= 0 || stunned;
             attack.title = stunned ? enemy.name + ' est étourdi et ne peut pas attaquer'
                 : 'Offense ' + enemy.offense + ' % — dégâts ' + TIERS[enemy.damage];
@@ -300,8 +411,8 @@
             let actions = el('div', 'mj-enemy-actions');
             actions.append(aim, attack);
             row.append(bar, hp, actions);
-            if (enemy.hp > 0)
-                statusLine(row, enemy);
+            if (enemy.hp > 0 && Object.keys(enemy.statuses || {}).length)
+                row.append(statusChips(enemy.statuses, {enemy_id: enemy.id}));
             lootLine(row, enemy.id, enemy.loot || [], (loot) => {
                 wsLNOB.send({action: 'combat-loot', data: {enemy_id: enemy.id, loot: loot}});
             });
@@ -360,10 +471,14 @@
         let ctrl = el('div', 'mj-team-ctrl');
         ctrl.append(minus, input, el('span', 'mj-enemy-unit', 'PV'), plus);
         row.append(label, ctrl, bar);
+        let statuses = fighterStatuses(id);
+        if (Object.keys(statuses).length)
+            row.append(statusChips(statuses, target));
         return row;
     }
 
     function renderTeam() {
+        renderStatusPanel();
         // Ne pas effacer une valeur en cours de saisie
         if (teamBox.contains(document.activeElement) && document.activeElement.tagName === 'INPUT')
             return;
