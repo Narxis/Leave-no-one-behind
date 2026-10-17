@@ -1,7 +1,7 @@
 [
   {
     "name": "Blackout",
-    "desc": "le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.",
+    "desc": "Le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.",
     "slug": "blackout"
   },
   {
