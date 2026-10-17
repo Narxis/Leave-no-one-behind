@@ -1,0 +1,47 @@
+# Met le relais en ligne sur Cloudflare quand le relais ou la page joueur
+# changent sur prod, ou à la demande depuis l'onglet Actions.
+# Réglage unique : secrets CLOUDFLARE_API_TOKEN et CLOUDFLARE_ACCOUNT_ID
+# (voir relay/README.md). Sans eux, le déploiement est sauté.
+name: Relais
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ prod ]
+    paths:
+      - 'relay/**'
+      - 'public/player/**'
+      - '.github/workflows/relay.yml'
+
+concurrency:
+  group: relay-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - name: Vérifier les secrets Cloudflare
+      id: secrets
+      env:
+        TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      run: |
+        if [ -n "$TOKEN" ] && [ -n "$ACCOUNT" ]; then
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning::Secrets CLOUDFLARE_API_TOKEN et CLOUDFLARE_ACCOUNT_ID absents : déploiement sauté (voir relay/README.md)."
+        fi
+    - name: Déployer le relais
+      if: steps.secrets.outputs.ok == 'true'
+      working-directory: relay
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      run: |
+        npm ci
+        npx wrangler deploy
