@@ -258,3 +258,29 @@
         flex-direction: column;
     }
 }
+
+/* ---------- Roll ---------- */
+
+.ne-form-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.ne-roll {
+    padding: 6px 14px;
+    border-color: var(--ui-cyan);
+    color: var(--ui-cyan);
+}
+
+.ne-roll:active {
+    transform: rotate(-8deg);
+}
+
+.ne-roll-info {
+    margin: -8px 0 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--ui-text-dim);
+}
