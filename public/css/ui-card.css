@@ -367,6 +367,24 @@
     color: var(--ui-text-dim);
 }
 
+/* Votes des joueurs en ligne sous l'intitulé du choix */
+.choice .vote-count {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    text-align: center;
+    color: var(--ui-cyan);
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
+/* Choix en attente : « Annuler » prend la place du compteur de votes */
+.choice.choice-pending .vote-count {
+    display: none;
+}
+
 /*---Volet gauche : bouton menu, objets, modules secondaires---*/
 .consommable-tab {
     border: 1px solid var(--ui-border-strong);

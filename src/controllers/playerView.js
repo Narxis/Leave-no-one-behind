@@ -18,6 +18,9 @@ const shipAlerts = require('./shipAlerts');
 const statRolls = require('./statRolls');
 const roles = require('./roles');
 const blankCard = require('./blankCard');
+const votes = require('./votes');
+const planetScan = require('./planetScan');
+const itemUse = require('./itemUse');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -38,13 +41,34 @@ const cardKind = function (card) {
 
 const cleanText = (text) => String(text || '').replaceAll('{....}', '…');
 
-// La carte telle que les joueurs la voient : le texte et les choix proposés
+// La carte telle que les joueurs la voient : le texte et les choix proposés.
+// Si la page de jeu a annoncé ce qu'elle affiche pour cette carte (suite
+// d'un choix, « Continuer votre chemin »…), c'est ce qui est montré, avec
+// les votes ; sinon la carte telle que piochée, sans votes.
 const publicCard = function (card) {
     if (!card)
         return null;
     let kind = cardKind(card);
-    if (kind === 'planet')
-        return {id: card.id, kind: kind, desc: '', choices: [], lastPlanet: card.lastPlanet ? LANG.last_planet : null};
+    let screen = votes.screenFor(card.id);
+    // Planète : scans faits, points de détection, et vote pour le scan suivant
+    if (kind === 'planet') {
+        let seen = {id: card.id, kind: kind, desc: '', choices: [], lastPlanet: card.lastPlanet ? LANG.last_planet : null,
+            planet: planetScan.forCard(card)};
+        if (screen)
+            Object.assign(seen, {screen: screen.id, choices: screen.choices.map(cleanText), counts: screen.counts, chosen: screen.chosen});
+        return seen;
+    }
+    if (screen)
+        return {
+            id: card.id,
+            kind: kind,
+            desc: cleanText(screen.text),
+            timer: !!card.timer,
+            screen: screen.id,
+            choices: screen.choices.map(cleanText),
+            counts: screen.counts,
+            chosen: screen.chosen
+        };
     return {
         id: card.id,
         kind: kind,
@@ -112,7 +136,10 @@ const playerState = async function (id) {
         inventory: player ? await inventory.getInventory(id) : [],
         // Bourse : « 20 crédits »
         money: player ? money.label(await money.balance({type: 'player', id: id}) || 0) : null,
-        creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null
+        creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null,
+        vote: votes.voteOf(id),
+        // Objets dont l'utilisation attend la réponse du MJ
+        pendingItems: itemUse.pendingFor(id)
     };
 };
 

@@ -1322,6 +1322,9 @@
 
         let last = 0;
         function loop(now) {
+            // Canevas retiré de la page (vue joueur, redessinée à chaque scan) : on s'arrête
+            if (!canvas.isConnected)
+                return;
             // 30 images par seconde suffisent pour une rotation lente
             if (now - last > 32) {
                 last = now;

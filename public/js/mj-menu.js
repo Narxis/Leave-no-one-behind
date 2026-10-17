@@ -347,7 +347,39 @@ document.getElementById('mjroll-button').addEventListener('mouseup',function(){
     },25);
 });
 
+// Votes des joueurs en ligne sur les choix affichés (votes.js). Le MJ
+// choisit toujours lui-même sur la page de jeu.
+function showVotes(data) {
+    let box = document.getElementById('mj-votes');
+    if (!box || !data)
+        return;
+    let choices = data.choices || [];
+    box.hidden = !choices.length || !(data.voters || []).length;
+    let list = document.getElementById('mj-votes-list');
+    list.replaceChildren(...choices.map(function (text, i) {
+        let li = document.createElement('li');
+        if (data.chosen === i)
+            li.className = 'chosen';
+        let label = document.createElement('div');
+        label.className = 'mj-vote-choice';
+        // Intitulé sans sa mise en forme (<s>, <b>…)
+        let tmp = document.createElement('div');
+        tmp.innerHTML = String(text);
+        label.textContent = tmp.textContent;
+        let count = (data.counts || [])[i] || 0;
+        let who = (data.voters || []).filter(v => v.index === i).map(v => v.name);
+        let detail = document.createElement('div');
+        detail.className = 'mj-vote-detail';
+        detail.textContent = count + (count > 1 ? ' votes' : ' vote') + (who.length ? ' : ' + who.join(', ') : '');
+        li.append(label, detail);
+        return li;
+    }));
+}
+
 (function(){
+    document.addEventListener('votes', (e) => showVotes(e.detail.data));
+    document.addEventListener('ws-reconnect', () => wsLNOB.send({action: 'votes'}));
+    wsLNOB.send({action: 'votes'});
     document.addEventListener('card-played', (e) => setMJCardValue(e.detail.data));
     document.addEventListener('ws-reconnect', loadCurrentCard);
     loadCurrentCard();
