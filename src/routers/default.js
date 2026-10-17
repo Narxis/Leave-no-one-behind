@@ -12,6 +12,7 @@ module.exports = function(router) {
     router.get('/score', controller.showScore)
 
     router.get('/deck', controller.deckGenerator);
+    router.get('/parametres', controller.settings);
     router.get('/persos', controller.persos);
 
     router.get('/mj-menu', controller.mjMenu);
