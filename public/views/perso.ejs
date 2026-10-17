@@ -14,6 +14,9 @@
         <div class="legend-stack">
             <%- include("partials/stats-legend") %>
             <button type="button" class="stats-rules-open" id="stats-rules-open">Comment sont tirées les stats ?</button>
+            <% if (customRaces.length) { %>
+                <button type="button" class="stats-rules-open" id="custom-races-open">Races customs de la partie</button>
+            <% } %>
         </div>
     </div>
     <div class="center">
@@ -109,6 +112,25 @@
         </div>
     </dialog>
 
+    <%# Races customs jouables dans cette partie : seules celles cochées sont proposées aux joueurs et visibles dans leur Codex %>
+    <% if (customRaces.length) { %>
+    <dialog class="stats-rules" id="custom-races" aria-labelledby="custom-races-title">
+        <div class="stats-rules-head">
+            <h2 class="stats-rules-title" id="custom-races-title">Races customs de la partie</h2>
+            <button type="button" class="stats-rules-close" id="custom-races-close" aria-label="Fermer">×</button>
+        </div>
+        <div class="stats-rules-body">
+            <p>Les onze races de base sont toujours jouables. Coche les races customs (éditeur <a href="/races">/races</a>) que les joueurs peuvent choisir : seules celles-là sont proposées à la création, citées par les cartes et visibles dans leur Codex.</p>
+            <form class="custom-races-list" id="custom-races-form">
+                <% customRaces.forEach(function (race) { %>
+                    <label class="custom-race"><input type="checkbox" value="<%= race.slug %>"<%= race.allowed ? ' checked' : '' %>> <%= race.name %></label>
+                <% }); %>
+            </form>
+            <p class="stats-rules-note" id="custom-races-status" role="status"></p>
+        </div>
+    </dialog>
+    <% } %>
+
     <script src="/js/perso.js"></script>
     <script>
         (function () {
@@ -117,6 +139,34 @@
             document.getElementById('stats-rules-close').addEventListener('click', () => dialog.close());
             // Clic en dehors de la fenêtre : elle se ferme
             dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+        })();
+
+        // Races customs autorisées : enregistrées à chaque case cochée
+        (function () {
+            const dialog = document.getElementById('custom-races');
+            if (!dialog)
+                return;
+            const form = document.getElementById('custom-races-form');
+            const status = document.getElementById('custom-races-status');
+            document.getElementById('custom-races-open').addEventListener('click', () => dialog.showModal());
+            document.getElementById('custom-races-close').addEventListener('click', () => dialog.close());
+            dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+            form.addEventListener('change', async () => {
+                let allowed = [...form.querySelectorAll('input:checked')].map(i => i.value);
+                try {
+                    let res = await fetch('/api/races/allowed', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({allowed: allowed})
+                    });
+                    if (!res.ok)
+                        throw new Error();
+                    status.textContent = allowed.length ? 'Enregistré : ' + allowed.length + ' race(s) custom jouable(s).' : 'Enregistré : seules les races de base sont jouables.';
+                }
+                catch (err) {
+                    status.textContent = 'Impossible d\'enregistrer, réessaie.';
+                }
+            });
         })();
     </script>
 

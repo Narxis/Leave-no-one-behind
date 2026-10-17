@@ -302,3 +302,37 @@ select {
 }
 .chat-form textarea:focus { outline: none; border-color: var(--accent); }
 .chat-form button { margin: 0; }
+
+/* ---- Fiches : races (création, Codex), objets, statuts ---- */
+.race { flex-direction: row; align-items: flex-start; gap: 10px; }
+.race-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* Race choisie : fiche complète */
+.race.selected .race-desc { -webkit-line-clamp: unset; }
+.race-affinities { margin: 2px 0 0; padding-left: 16px; font-size: 12px; font-weight: 400; color: var(--text); }
+.sheet-img { width: 56px; height: 56px; flex: none; border-radius: 8px; object-fit: contain; background: rgb(0 0 0 / 30%); }
+.sheet-img.pixel { image-rendering: pixelated; padding: 6px; }
+.sheet-img.empty { visibility: hidden; }
+.status-icon { display: grid; place-items: center; padding: 10px; }
+.status-icon svg { width: 100%; height: 100%; fill: var(--text); }
+
+.wiki-line { margin: 4px 0 0; text-align: center; font-size: 14px; }
+a.wiki-link, .codex-entry a { color: var(--ok); }
+
+.codex-search {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgb(255 255 255 / 4%);
+    color: var(--text);
+    font: 500 16px Jura, system-ui, sans-serif;
+}
+.codex-search:focus { outline: none; border-color: var(--accent); }
+.codex-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.codex-filter { margin: 0; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: none; color: var(--dim); font-size: 14px; letter-spacing: 0; }
+.codex-filter.active { border-color: var(--accent); color: var(--accent); }
+.codex-filter span { opacity: .7; font-size: 12px; }
+.codex-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.codex-entry { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
+.codex-entry .race-desc { -webkit-line-clamp: unset; }
+.codex-entry .sheet-img { width: 72px; height: 72px; }

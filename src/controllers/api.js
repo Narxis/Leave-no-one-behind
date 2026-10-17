@@ -14,6 +14,7 @@ const combat = require("./combat");
 const allies = require("./allies");
 const shipAlerts = require("./shipAlerts");
 const races = require("./races");
+const playerView = require("./playerView");
 const itemsEditor = require("./itemsEditor");
 const npcs = require("./npcs");
 const leaderboard = require("./leaderboard");
@@ -31,6 +32,16 @@ module.exports = {
 
     getRaces(req, res) {
         res.json(races.list());
+    },
+
+    getAllowedRaces(req, res) {
+        res.json(races.allowedState());
+    },
+
+    setAllowedRaces(req, res) {
+        races.setAllowed((req.body || {}).allowed);
+        playerView.changed();
+        res.json(races.allowedState());
     },
 
     saveRace(req, res) {
