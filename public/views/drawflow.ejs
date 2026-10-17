@@ -98,6 +98,7 @@
             <li><b>Pas de nom à inventer.</b> Les cartes sont numérotées toutes seules dans l'ordre de l'histoire (n° 1 = départ). À l'export, elles s'appellent « lieu-1 », « lieu-2 »…</li>
             <li><b>Réorganiser</b> écarte et aligne tous les blocs du lieu en un clic, en arbre depuis la carte de départ. « Annuler » dans la notification remet tout comme avant.</li>
             <li><b>Tester</b> joue le lieu comme en partie, tel qu'il est dans l'éditeur, même sans enregistrer. Le bouton <i class="fas fa-play"></i> d'une carte lance le test à partir de cette carte. En mode « Éditer », la carte, ses choix et leurs suites se modifient directement dans le test ; « Marquer » pose un marqueur pour retrouver une carte.</li>
+            <li><b>Variables.</b> Dans un texte, <code>[le_race_1]</code> devient « le Fnek », « le Sylv »… au hasard en jeu (majuscule : <code>[Le_race_1]</code>). Le même numéro donne la même valeur dans un texte. Le bouton « Variable » du test (mode Éditer) les écrit pour toi.</li>
             <li><b>Vérifier</b> liste ce qui manque (choix sans suite, carte sans texte…). Clique sur un problème pour aller au bloc.</li>
             <li><b>Exporter pour le jeu</b> produit le JSON des cartes du lieu, à coller dans la section <code>place</code> de <code>src/config/baseCards.json</code>, à la place des anciennes cartes de ce lieu.</li>
         </ol>
@@ -159,12 +160,23 @@
         <button type="button" class="pe-btn" id="cp-back" title="Carte précédente (←)"><i class="fas fa-arrow-left"></i> Retour</button>
         <button type="button" class="pe-btn" id="cp-forward" title="Carte suivante dans l'historique (→)">Suivant <i class="fas fa-arrow-right"></i></button>
         <select class="cp-jump" id="cp-jump" aria-label="Aller à une carte"></select>
+        <button type="button" class="pe-btn cp-edit-only" id="cp-var-btn" title="Insérer une variable de texte (race, module…) là où se trouve le curseur"><i class="fas fa-dice"></i> Variable</button>
         <button type="button" class="pe-btn cp-mark" id="cp-mark" title="Marquer cette carte pour y revenir (M)"><i class="fas fa-bookmark"></i> <span>Marquer</span></button>
         <span class="cp-nav-gap"></span>
         <label class="cp-switch cp-play-only" title="Afficher les textes d'un coup au lieu de les taper"><input type="checkbox" id="cp-instant"> Texte instantané</label>
         <label class="cp-switch cp-play-only" title="Les cartes avec chrono n'ont plus de compte à rebours"><input type="checkbox" id="cp-no-timer"> Sans chrono</label>
         <button type="button" class="pe-btn" id="cp-restart" title="Rejouer depuis la première carte"><i class="fas fa-redo"></i> Recommencer</button>
         <button type="button" class="pe-btn" id="cp-edit-block" title="Fermer le test et aller à ce bloc dans l'éditeur"><i class="fas fa-project-diagram"></i> Voir le bloc</button>
+    </div>
+    <div class="cp-var" id="cp-var" hidden>
+        <label>Type<select id="cp-var-type"></select></label>
+        <label>Article<select id="cp-var-article"></select></label>
+        <label>N°<select id="cp-var-id"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+        <label class="cp-switch"><input type="checkbox" id="cp-var-upper"> Majuscule</label>
+        <span class="cp-var-preview"><code id="cp-var-code"></code> → <span id="cp-var-example"></span></span>
+        <button type="button" class="pe-btn pe-btn-primary" id="cp-var-insert">Insérer</button>
+        <button type="button" class="pe-close" id="cp-var-close" aria-label="Fermer">×</button>
+        <p class="cp-var-help">Même numéro = même valeur dans un texte, numéros différents = valeurs différentes. La valeur est tirée au hasard à chaque partie.</p>
     </div>
     <div class="cp-body">
         <div class="cp-stage">
