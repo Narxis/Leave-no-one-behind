@@ -52,7 +52,12 @@
                                 <button class="add-life" id="monstre-list">x</button>
                             </div>
                             <div class="ally hide">
-                                <input type="text" id="search-ally" placeholder="Nom du compagnon" maxlength="20">
+                                <input type="text" id="search-ally" list="compagnons" placeholder="Nom du compagnon" maxlength="20">
+                                <datalist id="compagnons">
+                                    <% (locals.companions || []).forEach(function(c) { %>
+                                    <option value="<%= c.name %>"><%= c.race %></option>
+                                    <% }); %>
+                                </datalist>
                                 <button class="add-life" id="add-friend">+</button>
                                 <button class="add-life" id="friend-list">x</button>
                             </div>
@@ -139,6 +144,7 @@
         </div>
     </div>
 <script>var BESTIARY = <%- JSON.stringify(locals.bestiary || []).replace(/</g, '\\u003c') %>;
+var COMPANIONS = <%- JSON.stringify(locals.companions || []).replace(/</g, '\\u003c') %>;
 var STATUSES = <%- JSON.stringify(locals.statuses || []).replace(/</g, '\\u003c') %>;
 var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u003c') %>;</script>
 <datalist id="loot-list">
