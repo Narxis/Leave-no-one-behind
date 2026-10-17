@@ -1,0 +1,188 @@
+/* Panneau MJ : plan du vaisseau et alertes (mj-ship.js) */
+.mj-ship {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 24px;
+    align-items: start;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 24px;
+    padding: 20px 24px;
+    border: 1px solid var(--ui-border);
+    border-radius: 20px;
+    background: var(--ui-surface);
+    box-shadow: var(--ui-shadow);
+}
+
+.mj-ship-map {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1153 / 681;
+}
+
+/* Mêmes positions que sur la page de jeu (plan-du-vaisseau.css) */
+.mj-ship-map img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    filter: invert(1);
+    opacity: .75;
+    pointer-events: none;
+}
+
+.mj-ship-map svg {
+    position: absolute;
+    left: calc(40 / 1153 * 100%);
+    top: calc(49 / 681 * 100%);
+    width: calc(1074 / 1153 * 100%);
+    height: calc(613 / 681 * 100%);
+    overflow: visible;
+}
+
+.mj-ship-map .zone-active {
+    fill: transparent;
+    pointer-events: none;
+}
+
+.mj-ship-room {
+    fill: #b0a6ff;
+    fill-opacity: 0;
+    cursor: pointer;
+    transition: fill-opacity .15s;
+}
+
+.mj-ship-room:hover,
+.mj-ship-room.hover {
+    fill-opacity: .3;
+}
+
+.mj-ship-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+.mj-ship-title {
+    font-size: 1.3em;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.mj-ship-subtitle {
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ui-danger);
+}
+
+.mj-ship-help {
+    margin: 0;
+    font-size: .9em;
+    opacity: .75;
+}
+
+.mj-ship-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.mj-ship-rooms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.mj-ship-chip {
+    padding: 4px 9px;
+    border: 1px solid var(--ui-border);
+    border-radius: 999px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: .85em;
+    cursor: pointer;
+}
+
+.mj-ship-chip:hover {
+    border-color: var(--ui-border-strong);
+}
+
+.mj-ship-chip.active {
+    border-color: #ff8a1f;
+    background: rgb(255 138 31 / 22%);
+    color: #ffc58f;
+    animation: mj-ship-chip 1s ease-in-out infinite;
+}
+
+.mj-ship-chip.alert {
+    border-color: #ff1f3d;
+    background: rgb(255 31 61 / 30%);
+    color: #fff;
+}
+
+@keyframes mj-ship-chip {
+    50% { background: rgb(255 138 31 / 45%); }
+}
+
+.mj-page .mj-ship .add-life {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 1em;
+}
+
+.mj-page .mj-ship select.add-life,
+.mj-page .mj-ship input.add-life {
+    cursor: auto;
+    text-align: left;
+}
+
+.mj-page .mj-ship select.add-life option {
+    background: #17181c;
+}
+
+.mj-ship-alert-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--ui-border);
+}
+
+.mj-ship-alert-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.mj-page .mj-ship .mj-ship-alert-buttons .fight {
+    font-size: 1em;
+}
+
+.mj-page .mj-ship button:disabled {
+    opacity: .4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.mj-ship-alert-status {
+    font-size: .9em;
+    opacity: .7;
+}
+
+.mj-ship-alert-status.active {
+    opacity: 1;
+    color: var(--ui-danger);
+    font-weight: 700;
+}
+
+@media (max-width: 1100px) {
+    .mj-ship {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
