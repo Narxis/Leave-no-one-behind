@@ -173,6 +173,7 @@ async function test_remote() {
     test_stat_rolls();
     test_player_view();
     test_player_assets();
+    await test_codex();
 }
 
 // Chat : salon pour tous, privé entre le MJ et un joueur, historique, anti-flood
@@ -414,6 +415,136 @@ function test_player_assets() {
         assert.equal(current, content.replace(/\r\n/g, '\n'), file + ' n\'est pas à jour : lance node scripts/player-assets.js');
     }
     console.log('Player assets OK');
+}
+
+// Codex des joueurs : seulement ce que l'équipage a rencontré, races customs
+// cochées par le MJ, mémoire vidée à chaque nouvelle partie
+async function test_codex() {
+    console.log('Testing codex');
+    const codex = require('../src/controllers/codex');
+    const races = require('../src/controllers/races');
+    const remote = require('../src/controllers/remote');
+    const playerView = require('../src/controllers/playerView');
+    const paths = require('../src/config/paths');
+    const backups = {};
+    for (let file of ['customRaces.json', 'raceSettings.json'])
+        backups[file] = fs.existsSync(paths.cache(file)) ? fs.readFileSync(paths.cache(file)) : null;
+    codex.reset();
+    CONFIG.gameState = 'gameLive';
+    await new (require('../src/models/items').Items)().hydrateDB();
+    await DB.tables.players.destroy({where: {}});
+    await DB.tables.items.update({owners: '', quantity: 0}, {where: {}});
+    await DB.tables.statuses.update({duration: 0}, {where: {}});
+
+    // Rien de rencontré : le Codex est vide, mais les totaux sont connus
+    let book = await codex.forPlayers();
+    assert.deepEqual([book.races, book.items, book.statuses], [[], [], []]);
+    assert.ok(book.totals.races >= 11 && book.totals.items > 0 && book.totals.statuses > 0);
+    assert.ok(/^https:\/\//.test(book.wiki));
+
+    // Races nommées dans un texte vu par les joueurs, avec leurs formes
+    assert.deepEqual(codex.racesIn('Un Fnek vous salue'), ['fnek']);
+    assert.deepEqual(codex.racesIn('<b>Des Nek-feux</b> arrivent'), ['nek_feu']);
+    assert.deepEqual(codex.racesIn('Le Fnekarium et un Nek'), []);
+
+    // Seul ce que voient les joueurs compte : pas les révélations du MJ
+    let card = {id: 30, type: TYPE_NEGATIVE, desc: 'Un Yorc vous barre la route', mjreveal: 'C\'est un Sylv déguisé',
+        choices: [{value: 'Parler', reveal: 'Le Shrymp caché attaque'}]};
+    let seen = playerView.publicCard(card);
+    assert.ok(await codex.observe([seen.desc].concat(seen.choices)));
+    assert.deepEqual(codex.known().races, ['yorc']);
+    assert.equal(await codex.observe([seen.desc]), false); // déjà connu
+
+    // Objet passé dans un inventaire, statut subi, race de l'équipage
+    let row = await DB.tables.items.findOne({raw: true, where: {slug: 'corde'}});
+    await DB.tables.items.update({owners: 'codex-player-01'}, {where: {id: row.id}});
+    let status = await DB.tables.statuses.findOne({raw: true});
+    await DB.tables.statuses.update({duration: 2}, {where: {id: status.id}});
+    await DB.tables.players.create({discord_id: 'codex-player-01', name: 'Zed', race: 'aku'});
+    CONFIG.gameState = 'creation';
+    await codex.observe([]);
+    assert.ok(!codex.known().races.includes('aku')); // choix en cours : pas encore rencontré
+    CONFIG.gameState = 'gameLive';
+    await codex.observe([]);
+    book = await codex.forPlayers();
+    assert.deepEqual(book.races.map(r => r.slug).sort(), ['aku', 'yorc']);
+    assert.deepEqual(book.items.map(i => i.slug), ['corde']);
+    assert.deepEqual(book.statuses.map(s => s.slug), [status.slug]);
+    // Rendu au joueur : texte brut, image livrée avec la page ou envoyée par le MJ
+    let yorc = book.races.find(r => r.slug === 'yorc');
+    assert.equal(yorc.image, 'img/races/yorc.webp');
+    assert.ok(!/[<>]|&quot;/.test(yorc.desc));
+    assert.equal(book.items[0].imageKey, 'item:corde');
+    assert.ok(/^data:image\/png;base64,/.test(await codex.imageData('item:corde')));
+    assert.equal(await codex.imageData('item:../../package'), null);
+    // Une fois l'objet donné ou utilisé, il reste dans le Codex
+    await DB.tables.items.update({owners: ''}, {where: {id: row.id}});
+    await codex.observe([]);
+    assert.deepEqual(codex.known().items, ['corde']);
+
+    // Affinités du wiki : visibles quand toutes leurs races ont été croisées
+    assert.deepEqual(yorc.affinities, []);
+    assert.equal(yorc.moreAffinities, 1);
+    assert.equal(book.races.find(r => r.slug === 'aku').noAffinity, true); // le wiki n'en donne pas
+    codex.remember({races: ['fnek']});
+    yorc = (await codex.forPlayers()).races.find(r => r.slug === 'yorc');
+    assert.equal(yorc.affinities.length, 1);
+    // À la création, la fiche montre toutes les affinités
+    assert.ok(codex.raceCard(races.list().find(r => r.slug === 'sylv')).affinities.length >= 2);
+
+    // Page du MJ : tout, avec ce qui a été rencontré
+    let gm = await codex.forGm();
+    assert.equal(gm.races.length, races.list().length);
+    assert.ok(gm.races.find(r => r.slug === 'yorc').seen);
+    assert.ok(!gm.races.find(r => r.slug === 'sylv').seen);
+    assert.ok(gm.items.length > book.items.length);
+
+    // Races customs : seules celles que le MJ coche sont jouables et visibles
+    let custom = races.save({name: 'Codexien', stats: {combat: 1}}).race;
+    assert.ok(races.isAllowed(custom.slug)); // jamais réglé : toutes autorisées
+    races.setAllowed([]);
+    assert.ok(!races.isAllowed(custom.slug));
+    assert.ok(races.isAllowed('fnek'));
+    assert.ok(!races.playable().some(r => r.slug === custom.slug));
+    assert.ok(!LANG.card_vars.race[custom.slug]); // plus citée par les cartes
+    assert.deepEqual(codex.racesIn('Un Codexien approche'), []);
+    codex.remember({races: [custom.slug]});
+    assert.ok(!(await codex.forPlayers()).races.some(r => r.slug === custom.slug));
+    CONFIG.gameState = 'creation';
+    let refused = await remote.translate({id: 'codex-player-01', name: 'Zed'}, {kind: 'action', action: 'set-race', data: {race: custom.slug}});
+    assert.ok(refused.refused);
+    assert.ok(!(await playerView.gameState()).races.some(r => r.slug === custom.slug));
+    races.setAllowed([custom.slug, 'inconnue']);
+    assert.deepEqual(races.allowedState().find(r => r.slug === custom.slug).allowed, true);
+    assert.ok(LANG.card_vars.race[custom.slug]);
+    assert.ok((await playerView.gameState()).races.some(r => r.slug === custom.slug && r.imageKey === 'race:' + custom.slug));
+    assert.equal((await remote.translate({id: 'codex-player-01', name: 'Zed'}, {kind: 'action', action: 'set-race', data: {race: custom.slug}})).race, custom.slug);
+    assert.ok((await codex.forPlayers()).races.some(r => r.slug === custom.slug && r.custom && r.noAffinity));
+    CONFIG.gameState = 'gameLive';
+
+    // Chaque race de base a sa vignette dans la page joueur
+    for (let slug of Object.keys(require('../src/config/raceStats.json')))
+        assert.ok(fs.existsSync(paths.ROOT + '/public/player/img/races/' + slug + '.webp'), 'vignette de ' + slug);
+
+    // Nouvelle partie : mémoire vidée, fichier supprimé
+    assert.ok(fs.existsSync(paths.cache('codex.json')));
+    codex.reset();
+    assert.deepEqual(codex.known(), {races: [], items: [], statuses: []});
+    assert.ok(!fs.existsSync(paths.cache('codex.json')));
+    assert.deepEqual((await codex.forPlayers()).races, []);
+
+    // Nettoyage
+    await races.remove(custom.slug).catch(() => {});
+    await DB.tables.players.destroy({where: {discord_id: 'codex-player-01'}});
+    await DB.tables.statuses.update({duration: 0}, {where: {id: status.id}});
+    for (let [file, content] of Object.entries(backups)) {
+        if (content)
+            fs.writeFileSync(paths.cache(file), content);
+        else if (fs.existsSync(paths.cache(file)))
+            fs.unlinkSync(paths.cache(file));
+    }
+    races.applyToLang();
+    console.log('Codex OK');
 }
 
 async function setup(){

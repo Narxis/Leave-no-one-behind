@@ -67,7 +67,8 @@ const RULES = {
             return refuse('Crée d\'abord ton personnage.');
         if (statRolls.isDone(me))
             return refuse('Tes stats sont déjà tirées : demande au MJ pour changer de race.');
-        if (!Object.prototype.hasOwnProperty.call(races.getStats(), data.race))
+        // Races de base et customs cochées par le MJ pour la partie
+        if (!races.isAllowed(String(data.race || '')))
             return refuse('Race inconnue.');
         return {action: 'set-race', uid: player.id, race: data.race};
     },

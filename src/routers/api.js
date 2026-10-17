@@ -23,6 +23,9 @@ module.exports = function(router) {
     router.get(basePath + '/team', controller.getTeam);
     router.get(basePath + '/races', controller.getRaces);
     router.post(basePath + '/races', controller.saveRace);
+    // Races customs autorisées dans la partie (cochées par le MJ sur /persos)
+    router.get(basePath + '/races/allowed', controller.getAllowedRaces);
+    router.post(basePath + '/races/allowed', controller.setAllowedRaces);
     router.delete(basePath + '/races/:slug', controller.deleteRace);
 
     router.get(basePath + '/npcs', controller.getNpcs);
