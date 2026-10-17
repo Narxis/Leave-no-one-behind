@@ -1,9 +1,10 @@
-<%# Récap des paramètres d'une partie : préréglage, planètes et cartes par étape %>
+<%# Récap des paramètres d'une partie : préréglage, planètes, cartes par étape et options %>
 <% if (locals.settings) { const s = locals.settings; %>
 <span class="gs-recap">
     <span class="gs-recap-preset"><%= s.preset ? s.preset.name : 'Personnalisé' %></span>
     <span><%= s.planetCount %> planète<%= s.planetCount > 1 ? 's' : '' %></span>
     <span>Par étape : <%= s.negativeByStep %> nég. · <%= s.positiveByStep %> pos. · <%= s.neutralByStep %> neutre<%= s.neutralByStep > 1 ? 's' : '' %> · <%= s.placeByStep %> lieu<%= s.placeByStep > 1 ? 'x' : '' %></span>
+    <% if (s.clearStatusesAfterPlanet !== undefined) { %><span>Statuts <%= s.clearStatusesAfterPlanet ? 'retirés' : 'gardés' %> après une planète</span><% } %>
     <% if (locals.editLink) { %><a href="/parametres" class="gs-recap-edit">Modifier</a><% } %>
 </span>
 <% } %>

@@ -280,15 +280,27 @@ module.exports = {
 
     async popNextCard(req, res) {
 
-        let next_card = await cardPop();
-
         let statuses = await new Statuses();
         let activeStatuses = await statuses.getAllStatuses();
 
-        for (let i of activeStatuses) {
-            await statuses.remove(i.slug);
+        // Option du MJ : les statuts hors combat s'arrêtent après la visite
+        // d'une planète. La dernière carte jouée est alors cette planète : on
+        // reprend le voyage, la carte piochée est tirée sans eux (variantes)
+        let last = await DB.tables.deck.findOne({where: {deck_id: 0, played: 1}, order: [['id', 'DESC']], raw: true});
+        let lastCard = last && await DB.tables.cards.findOne({attributes: ['type'], where: {id: last.card_id}, raw: true});
+        let clear = !!lastCard && lastCard.type === TYPE_PLANET && gameSettings.get().clearStatusesAfterPlanet;
+        if (clear) {
+            for (let i of activeStatuses)
+                await statuses.updateStatus(i.slug, 0);
         }
-        // Les durées ont baissé : le panneau MJ redessine ses status
+
+        let next_card = await cardPop();
+
+        if (!clear) {
+            for (let i of activeStatuses)
+                await statuses.remove(i.slug);
+        }
+        // Les durées ont baissé (ou sont remises à zéro) : le panneau MJ redessine ses status
         if (activeStatuses.length) {
             const wsClient = new ws(WS_URL);
             wsClient.on('open', () => {
