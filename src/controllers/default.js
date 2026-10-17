@@ -13,6 +13,7 @@ const leaderboard = require("./leaderboard");
 const lobby = require("./lobby");
 const gameSettings = require("./gameSettings");
 const races = require("./races");
+const itemsEditor = require("./itemsEditor");
 const npcs = require("./npcs");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
@@ -198,6 +199,11 @@ module.exports = {
     // Éditeur des races customs
     renderRaces(req, res) {
         res.render('races', {lang: langJS, races: races.list(), maxRaces: races.MAX_RACES});
+    },
+
+    // Éditeur d'objets (catalogue src/config/items.json)
+    async renderItemsEditor(req, res) {
+        res.render('items-editor', {lang: langJS, catalog: await itemsEditor.list()});
     },
 
     // Éditeur d'ennemis et compagnons
