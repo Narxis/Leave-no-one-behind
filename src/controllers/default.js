@@ -451,7 +451,8 @@ module.exports = {
 },
 
     endScreen(req, res) {
-        res.render('end-screen', {lang: langJS});
+        // The end screen needs a landed planet and a score, which /score computes
+        res.redirect('/score');
     },
 
     leaderboard(req, res) {
@@ -500,6 +501,11 @@ module.exports = {
     }
 
     let planet = await lastPlanet();
+
+    // No planet reached yet: nothing to score, go back instead of crashing the server
+    if (!planet) {
+        return res.redirect('/');
+    }
 
     let scoreShip = 30*ship.scanner
         + 30*ship.proximity

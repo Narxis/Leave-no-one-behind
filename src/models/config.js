@@ -28,7 +28,7 @@ class Config {
 
     async hydrateDB(cleanInstall = true) {
         if (cleanInstall) {
-            DB.tables.config.destroy({truncate: true});
+            await DB.tables.config.destroy({truncate: true});
         }
         let baseConfRaw = fs.readFileSync(__dirname + '/../config/baseConf.json');
         let baseConfFull = {...JSON.parse(baseConfRaw), ...this.baseConf};

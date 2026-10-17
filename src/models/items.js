@@ -183,7 +183,7 @@ class Items {
 
     async hydrateDB(cleanInstall = true) {
         if (cleanInstall) {
-            DB.tables.items.destroy({truncate: true});
+            await DB.tables.items.destroy({truncate: true});
         }
         let baseItemsRaw = fs.readFileSync(__dirname + '/../config/items.json');
         let baseItems = JSON.parse(baseItemsRaw);
