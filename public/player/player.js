@@ -46,6 +46,32 @@
         return id;
     })();
 
+    // ---- Connexion Discord ------------------------------------------------
+    // Le relais fait la connexion (OAuth2, scope identify) et renvoie un
+    // profil signé {id, name, avatar}, gardé sur l'appareil et présenté en
+    // rejoignant une partie. Rien ne s'affiche si le relais n'est pas réglé.
+    const relayHttp = relayBase.replace(/^ws/, 'http');
+    const discordPayload = function (token) {
+        try {
+            let body = String(token).split('.')[0].replace(/-/g, '+').replace(/_/g, '/');
+            let json = new TextDecoder().decode(Uint8Array.from(atob(body), c => c.charCodeAt(0)));
+            let p = JSON.parse(json);
+            return p && p.exp > Date.now() && /^https:\/\/cdn\.discordapp\.com\//.test(p.avatar) ? p : null;
+        } catch (e) {
+            return null;
+        }
+    };
+    // Retour de Discord : #discord= (navigateur) ou ?discord= (app de bureau)
+    (function () {
+        let hash = new URLSearchParams(location.hash.slice(1));
+        let token = hash.get('discord') || params.get('discord');
+        if (token && discordPayload(token))
+            store.set('lnob-discord', token);
+        if (hash.has('discord'))
+            history.replaceState(null, '', location.pathname + location.search);
+    })();
+    let discordToken = discordPayload(store.get('lnob-discord')) ? store.get('lnob-discord') : null;
+
     const formatCode = (code) => code.length === 6 ? code.slice(0, 3) + '-' + code.slice(3) : code;
     const cleanCode = (value) => String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 
@@ -203,12 +229,29 @@
 
     // ---- Équipage --------------------------------------------------------
 
+    // Avatar et pseudo Discord d'un joueur, s'il s'est connecté avec
+    const discordTag = function (discord) {
+        if (!discord || !/^https:\/\/cdn\.discordapp\.com\//.test(discord.avatar || ''))
+            return null;
+        let tag = el('span', 'discord-tag');
+        let img = el('img');
+        img.src = discord.avatar;
+        img.alt = '';
+        img.referrerPolicy = 'no-referrer';
+        tag.append(img, el('span', '', discord.name));
+        tag.title = 'Discord : ' + discord.name;
+        return tag;
+    };
+
     const renderPlayers = function () {
         let list = roster.length ? roster : (me ? [me] : []);
         let characters = new Map(((game && game.team) || []).map(c => [c.id, c]));
         $('players').replaceChildren(...list.map(p => {
             let li = el('li', p.id === playerId ? 'me' : '');
             li.append(el('span', 'player-name', p.name + (p.id === playerId ? ' (toi)' : '')));
+            let tag = discordTag(p.discord);
+            if (tag)
+                li.append(tag);
             let c = characters.get(p.id);
             li.append(el('span', 'dim', c ? c.name + (c.race ? ' · ' + c.race : '') : 'pas de perso'));
             if (p.online === false)
@@ -660,6 +703,7 @@
         let url = relayBase + '/join/' + encodeURIComponent(session.code)
             + '?id=' + encodeURIComponent(playerId)
             + '&name=' + encodeURIComponent(session.name)
+            + (discordToken ? '&discord=' + encodeURIComponent(discordToken) : '')
             + '&v=' + PROTOCOL;
         let ws = new WebSocket(url);
         let rejected = false;
@@ -672,6 +716,12 @@
             if (msg.type === 'welcome') {
                 retryDelay = 1000;
                 me = msg.you;
+                // Profil refusé par le relais (expiré, ou relais sans Discord) : on l'oublie
+                if (discordToken && !(me && me.discord)) {
+                    discordToken = null;
+                    store.set('lnob-discord', '');
+                    renderDiscord();
+                }
                 hostOnline = msg.host;
                 $('lobby-code').textContent = formatCode(session.code);
                 store.set('lnob-last-code', session.code);
@@ -715,6 +765,34 @@
             retryDelay = Math.min(retryDelay * 2, 10000);
         };
     };
+
+    // ---- Connexion Discord : bouton ou compte connecté -----------------------
+
+    let discordEnabled = false;
+    const renderDiscord = function () {
+        let profile = discordToken ? discordPayload(discordToken) : null;
+        $('discord-box').hidden = !discordEnabled && !profile;
+        $('discord-login').hidden = !!profile || !discordEnabled;
+        $('discord-me').hidden = !profile;
+        if (profile) {
+            $('discord-avatar').src = profile.avatar;
+            $('discord-name').textContent = profile.name;
+        }
+    };
+    if (/^https?:/.test(relayHttp)) {
+        // L'app de bureau intercepte le retour (?app=1) et rouvre la page
+        $('discord-login').href = relayHttp + '/auth/discord/login' + (location.protocol === 'file:' ? '?app=1' : '');
+        fetch(relayHttp + '/auth/discord/config').then(r => r.json()).then(c => {
+            discordEnabled = !!(c && c.enabled);
+            renderDiscord();
+        }).catch(() => {});
+    }
+    $('discord-logout').addEventListener('click', () => {
+        discordToken = null;
+        store.set('lnob-discord', '');
+        renderDiscord();
+    });
+    renderDiscord();
 
     // ---- Formulaires et boutons ------------------------------------------
 

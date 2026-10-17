@@ -13,6 +13,8 @@ module.exports = function() {
     app.set('view engine', 'ejs');
     // Salles du vaisseau, pour afficher leur nom sur le plan (partials/ship-rooms-svg)
     app.locals.shipRooms = require('../src/config/shipRooms.json');
+    // Compte Discord d'un joueur en ligne (id d'app → {id, name, avatar} ou null)
+    app.locals.discordOf = (id) => require('../src/controllers/lobby').discordOf(id);
 
     app.use(express.urlencoded({ extended: true, limit: '52428800' }));
     app.use(express.json({limit: '52428800'}));

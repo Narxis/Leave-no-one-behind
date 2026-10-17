@@ -336,3 +336,22 @@ a.wiki-link, .codex-entry a { color: var(--ok); }
 .codex-entry { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
 .codex-entry .race-desc { -webkit-line-clamp: unset; }
 .codex-entry .sheet-img { width: 72px; height: 72px; }
+
+/* ---- Connexion Discord ---- */
+.discord-box { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.discord-box p { margin: 0; }
+.discord-login {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #5865f2;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}
+.discord-me { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.discord-me img { width: 32px; height: 32px; border-radius: 50%; }
+.discord-me span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.discord-tag { display: inline-flex; align-items: center; gap: 6px; margin: 0 8px; font-size: 13px; color: #b9bdf8; }
+.discord-tag img { width: 20px; height: 20px; border-radius: 50%; }

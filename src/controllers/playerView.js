@@ -95,7 +95,8 @@ const statusList = async function () {
 
 const team = async function () {
     let players = await DB.tables.players.findAll({raw: true});
-    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race)}));
+    // Compte Discord du joueur, pour se reconnaître malgré les noms de persos
+    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race), discord: lobby.discordOf(p.discord_id)}));
 };
 
 // Tout ce qui est commun aux joueurs

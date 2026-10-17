@@ -115,6 +115,7 @@ async function test_remote() {
     test_player_view();
     test_player_assets();
     await test_codex();
+    await test_discord_profiles();
 }
 
 // Chat : salon pour tous, privé entre le MJ et un joueur, historique, anti-flood
@@ -483,6 +484,33 @@ async function test_codex() {
     }
     races.applyToLang();
     console.log('Codex OK');
+}
+
+// Compte Discord vérifié par le relais : gardé avec le joueur du lobby
+// (id, pseudo, avatar seulement), affiché à côté de son perso
+async function test_discord_profiles() {
+    console.log('Testing Discord profiles');
+    const lobby = require('../src/controllers/lobby');
+    const playerView = require('../src/controllers/playerView');
+    const join = (player) => lobby.onRelayMessage(Buffer.from(JSON.stringify({type: 'join', player: player})));
+    let discord = {id: '80351110224678912', name: 'Nelly', avatar: 'https://cdn.discordapp.com/avatars/80351110224678912/abc.png?size=64'};
+    join({id: 'nelly-app-0001', name: 'Nel', discord: Object.assign({email: 'x@y.z', token: 'secret'}, discord)});
+    assert.deepEqual(lobby.discordOf('nelly-app-0001'), discord);
+    assert.deepEqual(lobby.getState().players.find(p => p.id === 'nelly-app-0001').discord, discord);
+    // Sans connexion Discord, ou avatar hors du cdn de Discord : rien
+    join({id: 'bob-app-0001', name: 'Bob'});
+    join({id: 'eve-app-0001', name: 'Eve', discord: {id: '123456', name: 'Eve', avatar: 'javascript:alert(1)'}});
+    assert.equal(lobby.discordOf('bob-app-0001'), null);
+    assert.equal(lobby.discordOf('eve-app-0001'), null);
+    assert.equal(lobby.discordOf('inconnu'), null);
+    // Vue des autres joueurs : le pseudo Discord à côté du perso
+    await DB.tables.players.create({discord_id: 'nelly-app-0001', name: 'Capitaine Zorg', race: 'fnek'});
+    let team = (await playerView.gameState()).team;
+    assert.deepEqual(team.find(c => c.id === 'nelly-app-0001').discord, discord);
+    for (let id of ['nelly-app-0001', 'bob-app-0001', 'eve-app-0001'])
+        lobby.kick(id);
+    await DB.tables.players.destroy({where: {discord_id: 'nelly-app-0001'}});
+    console.log('Discord profiles OK');
 }
 
 async function setup(){

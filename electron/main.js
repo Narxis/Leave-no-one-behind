@@ -207,13 +207,29 @@ const startJoin = function (launcher) {
         shell.openExternal(url);
         return {action: 'deny'};
     });
+    const page = path.join(__dirname, '../public/player/index.html');
+    // Connexion Discord : faite dans la fenêtre (relais puis discord.com) ;
+    // au retour, le relais passe par /auth/discord/done?profile=… et l'app
+    // rouvre la page joueur avec ce profil
+    const discordDone = function (event, url) {
+        if (!url.startsWith(relay + '/auth/discord/done'))
+            return false;
+        event.preventDefault();
+        let profile = new URL(url).searchParams.get('profile') || '';
+        win.loadFile(page, {query: {relay: relay, discord: profile}});
+        return true;
+    };
+    const discordFlow = (url) => url.startsWith(relay + '/auth/discord/') || /^https:\/\/(\w+\.)?discord(app)?\.com\//.test(url);
+    win.webContents.on('will-redirect', discordDone);
     win.webContents.on('will-navigate', (event, url) => {
-        if (!url.startsWith('file:')) {
+        if (discordDone(event, url))
+            return;
+        if (!url.startsWith('file:') && !discordFlow(url)) {
             event.preventDefault();
             shell.openExternal(url);
         }
     });
-    win.loadFile(path.join(__dirname, '../public/player/index.html'), {query: {relay: relay}});
+    win.loadFile(page, {query: {relay: relay}});
     mainWindow = win;
     launcher.close();
     return {ok: true};

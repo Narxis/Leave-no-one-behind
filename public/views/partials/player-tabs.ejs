@@ -16,6 +16,7 @@
     <div class="player-roll">
         <div class="player-name" title="<%= player.name %>"><span class="player-name-text"><%= player.name %></span>
             <% if (player.race) { %><div class="player-race"><%= player.race.charAt(0).toUpperCase() + player.race.slice(1).replace('_', '-') %></div><% } %>
+            <% let discord = typeof discordOf === 'function' ? discordOf(player.discord_id) : null; if (discord) { %><div class="player-discord" title="Discord : <%= discord.name %>"><img src="<%= discord.avatar %>" alt="" referrerpolicy="no-referrer"><span><%= discord.name %></span></div><% } %>
         </div>
         <div class="modform input-roll">
             <div class="player-stat-value output-roll-boite" id="outputroll-img">
