@@ -105,9 +105,53 @@ async function test_remote() {
     assert.ok((await act('set-race', {race})).refused); // stats déjà tirées
     console.log('Online player actions OK');
 
+    await test_chat();
     test_stat_rolls();
     test_player_view();
     test_player_assets();
+}
+
+// Chat : salon pour tous, privé entre le MJ et un joueur, historique, anti-flood
+async function test_chat() {
+    console.log('Testing chat');
+    const chat = require('../src/controllers/chat');
+    const remote = require('../src/controllers/remote');
+    let gmSeen = [];
+    chat.init(m => gmSeen.push(m));
+    chat.clear();
+    let alice = {id: 'a1b2c3d4e5f6a7b8', name: 'Alice'};
+    let bob = {id: 'b0b0b0b0b0b0b0b0', name: 'Bob'};
+
+    // Un joueur écrit au salon, signé du nom de son perso
+    assert.deepEqual(await remote.translate(alice, {kind: 'action', action: 'chat', data: {text: '  Salut   l\'équipage  '}}), {done: true, action: 'chat'});
+    let last = gmSeen[gmSeen.length - 1].data.message;
+    assert.equal(last.to, null);
+    assert.equal(last.from.name, 'Alice'); // perso créé plus haut
+    assert.equal(last.text, 'Salut   l\'équipage');
+
+    // Privé : seuls le MJ et ce joueur le voient
+    chat.fromPlayer(bob, 'Bob', {text: 'psst', private: true});
+    chat.fromGm({text: 'réponse secrète', to: bob.id});
+    chat.fromGm({text: 'à tous'});
+    assert.deepEqual(chat.historyFor(alice.id).map(m => m.text), ['Salut   l\'équipage', 'à tous']);
+    assert.deepEqual(chat.historyFor(bob.id).map(m => m.text), ['Salut   l\'équipage', 'psst', 'réponse secrète', 'à tous']);
+    assert.equal(chat.handle({action: 'chat-history'}).data.messages.length, 4);
+    assert.ok(chat.historyFor(bob.id)[2].from.gm);
+
+    // Message vide refusé, texte limité, anti-flood
+    assert.ok((await remote.translate(alice, {kind: 'action', action: 'chat', data: {text: '   '}})).refused);
+    chat.fromGm({text: 'x'.repeat(2000)});
+    assert.equal(chat.handle({action: 'chat-history'}).data.messages.pop().text.length, chat.MAX_TEXT);
+    let refused = 0;
+    for (let i = 0; i < 10; i++)
+        if (chat.fromPlayer(bob, 'Bob', {text: 'spam ' + i}).error)
+            refused++;
+    assert.ok(refused >= 4, 'anti-flood');
+
+    // Nouvelle partie : historique vidé
+    chat.clear();
+    assert.equal(chat.historyFor(bob.id).length, 0);
+    console.log('Chat OK');
 }
 
 // Règles du tirage : dés = |bonus| + 1, meilleur dé avec un bonus, pire avec un malus
