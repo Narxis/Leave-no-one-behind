@@ -18,6 +18,7 @@ module.exports = function(router) {
     router.get(basePath + '/players', controller.getAllPlayers);
     router.get(basePath + '/combat', controller.getCombat);
     router.get(basePath + '/allies', controller.getAllies);
+    router.get(basePath + '/ship/alerts', controller.getShipAlerts);
     router.get(basePath + '/team', controller.getTeam);
     router.get(basePath + '/races', controller.getRaces);
     router.post(basePath + '/races', controller.saveRace);

@@ -11,6 +11,7 @@ const fs = require('fs');
 const validPlaceName = (name) => typeof name === 'string' && /^[a-z0-9_-]{1,40}$/i.test(name);
 const combat = require("./combat");
 const allies = require("./allies");
+const shipAlerts = require("./shipAlerts");
 const races = require("./races");
 const leaderboard = require("./leaderboard");
 const gameSettings = require("./gameSettings");
@@ -174,6 +175,11 @@ module.exports = {
 
     getAllies(req, res) {
         res.json(allies.getAllies());
+    },
+
+    // Salles qui clignotent et alerte en cours sur le plan du vaisseau
+    getShipAlerts(req, res) {
+        res.json(shipAlerts.getState());
     },
 
     // Équipe de la partie en cours (nommée par le MJ avant de commencer)

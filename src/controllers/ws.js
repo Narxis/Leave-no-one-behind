@@ -9,6 +9,7 @@ const combat = require("./combat");
 const allies = require("./allies");
 const inventory = require("./inventory");
 const cardLoot = require("./cardLoot");
+const shipAlerts = require("./shipAlerts");
 
 const init = function (){
 
@@ -115,6 +116,9 @@ const makeAction = async function (raw_response) {
             break;
         case 'card-loot-offer':
             payload = cardLoot.handle(response);
+            break;
+        case 'ship-alerts':
+            payload = shipAlerts.handle(response);
             break;
         case 'ally-add': {
             // Compagnon créé en plein combat : annoncé comme renfort

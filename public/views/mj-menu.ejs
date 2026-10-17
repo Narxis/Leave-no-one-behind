@@ -4,7 +4,9 @@
     cssFiles:[
         "/css/style.css",
         "/css/mj-menu.css",
-        "/css/ui-menus.css"
+        "/css/ui-menus.css",
+        "/css/ship-alerts.css",
+        "/css/mj-ship.css"
     ]
 }) %>
 
@@ -103,10 +105,42 @@
                     </div>
                 </div>
             </div>
+            <!-- Plan du vaisseau : salles qui clignotent et alertes chez les joueurs (mj-ship.js) -->
+            <section class="mj-ship" id="mj-ship">
+                <div class="mj-ship-map" id="mj-ship-map">
+                    <img src="/img/plan-plugs-stroke.png" alt="">
+                    <%- include("partials/ship-rooms-svg") %>
+                </div>
+                <div class="mj-ship-controls">
+                    <div class="mj-ship-title">Plan du vaisseau</div>
+                    <p class="mj-ship-help">Cliquez sur une salle (plan ou liste) pour la faire clignoter chez les joueurs.</p>
+                    <label class="mj-ship-toggle">
+                        <input type="checkbox" id="mj-ship-show">
+                        <span>Afficher le plan chez les joueurs</span>
+                    </label>
+                    <div class="mj-ship-rooms" id="mj-ship-rooms"></div>
+                    <button type="button" class="add-life mj-ship-clear" id="mj-ship-clear">Tout éteindre</button>
+                    <div class="mj-ship-alert-box">
+                        <div class="mj-ship-subtitle">Alerte</div>
+                        <select id="mj-ship-alert-room" class="add-life">
+                            <% (locals.shipRooms || []).forEach(function(room) { %>
+                            <option value="<%= room.id %>"><%= room.name %></option>
+                            <% }); %>
+                        </select>
+                        <input type="text" id="mj-ship-alert-message" class="add-life" maxlength="120" placeholder="Message (ex : Brèche dans la coque !)">
+                        <div class="mj-ship-alert-buttons">
+                            <button type="button" class="add-life fight" id="mj-ship-alert-send">Envoyer l'alerte</button>
+                            <button type="button" class="add-life" id="mj-ship-alert-stop" disabled>Arrêter l'alerte</button>
+                        </div>
+                        <div class="mj-ship-alert-status" id="mj-ship-alert-status">Aucune alerte en cours</div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 <script>var BESTIARY = <%- JSON.stringify(locals.bestiary || []).replace(/</g, '\\u003c') %>;
-var STATUSES = <%- JSON.stringify(locals.statuses || []).replace(/</g, '\\u003c') %>;</script>
+var STATUSES = <%- JSON.stringify(locals.statuses || []).replace(/</g, '\\u003c') %>;
+var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u003c') %>;</script>
 <datalist id="loot-list">
     <% (locals.loot || []).forEach(function(item) { %>
     <option value="<%= item.name %>"></option>
@@ -116,5 +150,7 @@ var STATUSES = <%- JSON.stringify(locals.statuses || []).replace(/</g, '\\u003c'
 <script src="js/combat-text.js"></script>
 <script src="js/mj-combat.js"></script>
 <script src="js/mj-allies.js"></script>
+<script src="js/ship-map.js"></script>
+<script src="js/mj-ship.js"></script>
 <%- include("partials/bottom-scripts") %>
 </body>
