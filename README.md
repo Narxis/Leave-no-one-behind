@@ -1,6 +1,7 @@
 # LNOB
 
 - [Setup](#setup)
+- [App de bureau](#app-de-bureau)
 - [Routes](#routes)
 - [Ajouter une page](#ajouter-une-page)
 - [Event Listeners](#event-listeners)
@@ -23,6 +24,24 @@ run `npm i`
 run `npm start`
 
 http://localhost:8080
+
+## APP DE BUREAU
+
+Le jeu peut aussi se lancer dans une app (Electron), sans navigateur ni terminal :
+
+run `npm run app`
+
+L'app démarre le serveur et ouvre l'écran principal. Le menu **Jeu** (touche Alt sous Windows et Linux) ouvre le panneau MJ dans une autre fenêtre, ou affiche l'adresse et le QR code pour l'ouvrir sur un téléphone du même Wi-Fi.
+
+Ce que le jeu écrit (bases SQLite, `storage/cache`, images des races customs) va dans le dossier de données de l'utilisateur (menu **Jeu > Dossier des données**), pas dans le dossier du jeu. Avec `npm start`, rien ne change : tout reste dans le dossier de lancement. La variable `LNOB_DATA_DIR` permet de choisir un autre dossier.
+
+Le bot Discord ne démarre pas dans l'app : son code reste dans le dépôt mais n'est plus utilisé.
+
+Pour fabriquer l'installeur du système en cours (`.exe` sous Windows, `.dmg` sous macOS, `.AppImage` sous Linux) dans `dist/` :
+
+run `npm run dist`
+
+Le workflow GitHub **App de bureau** (onglet Actions, bouton *Run workflow*) fabrique les trois et les met dans les artefacts du run. L'app n'est pas signée : Windows et macOS affichent un avertissement au premier lancement.
 
 ## ROUTES
 

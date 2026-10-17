@@ -1,12 +1,10 @@
 const fs = require('fs');
-const path = require('path');
 
 // Alliés (PNJ) créés par le MJ : ils ont les mêmes stats que les joueurs et
 // s'affichent sous la carte comme eux. Ils ne sont pas en base : on les garde
 // dans un fichier pour qu'ils survivent à un redémarrage du serveur
-// Chemin relatif au dossier du serveur (comme les vues), pour qu'un serveur
-// de test lancé ailleurs avec sa copie de storage n'écrive pas dans celle du jeu
-const FILE = path.join(process.cwd(), 'storage/cache/allies.json');
+// Dans le dossier de données (voir config/paths.js)
+const FILE = require('../config/paths').cache('allies.json');
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon', 'moral'];
 const MAX_ALLIES = 6;
 

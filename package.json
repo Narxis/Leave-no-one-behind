@@ -1,10 +1,12 @@
 {
   "name": "lnob",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "Leave No One Behind",
+  "main": "electron/main.js",
   "scripts": {
     "start": "node server.js",
+    "app": "electron .",
+    "dist": "electron-builder",
     "test": "node tests/test.js"
   },
   "author": "",
@@ -25,7 +27,49 @@
     "sqlite3": "^5.1.5",
     "ws": "^8.10.0"
   },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  },
   "allowScripts": {
     "sqlite3@5.1.6": true
+  },
+  "build": {
+    "appId": "com.narxis.lnob",
+    "productName": "LNOB",
+    "files": [
+      "electron/**",
+      "server.js",
+      "bin/**",
+      "src/**",
+      "public/**",
+      "storage/cache/*_placesDat.json",
+      "package.json",
+      "!**/*.md",
+      "!public/views/index-legacy.ejs"
+    ],
+    "asarUnpack": [
+      "node_modules/sqlite3/**"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "public/img/lnob-icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "public/img/512.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "public/img/512.png",
+      "category": "Game"
+    }
   }
 }
