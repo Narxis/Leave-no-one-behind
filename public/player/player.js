@@ -397,11 +397,9 @@
         return row;
     };
 
+    // Plan : contour du vaisseau, salles et noms (ship-labels.js)
     const shipSvg = function () {
-        let box = $('ship-plan');
-        if (!box.firstElementChild && window.LNOB_SHIP_SVG)
-            box.innerHTML = window.LNOB_SHIP_SVG; // fichier statique de la page, pas du réseau
-        return box.querySelector('svg');
+        return typeof ShipLabels === 'undefined' ? null : ShipLabels.setup($('ship-plan'));
     };
 
     const renderShip = function () {
