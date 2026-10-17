@@ -141,6 +141,20 @@ button.small { margin-top: 0; padding: 6px 12px; font-size: 14px; }
     font-weight: 600;
 }
 
+/* Planète */
+.planet[hidden] { display: none; }
+.planet-frame { display: flex; justify-content: center; margin: -8px 0 4px; }
+.planet-canvas { width: 260px; height: 260px; max-width: 100%; touch-action: none; }
+.planet-points { margin: 0 0 10px; color: var(--accent); font-weight: 600; text-align: center; }
+.planet-scans { margin: 0 0 12px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.planet-scans li { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; }
+.planet-scans li.scanned { border-color: rgb(79 216 224 / 45%); }
+.scan-head { display: flex; justify-content: space-between; gap: 8px; font-weight: 600; }
+.scan-cost { color: var(--dim); font-size: 13px; }
+.scan-text { margin: 4px 0 0; color: var(--dim); font-size: 14px; }
+.planet-scans li.scanned .scan-text { color: var(--text); }
+.planet h2 { margin: 4px 0 8px; }
+
 /* Carte en cours */
 .game-card {
     padding: 16px;
