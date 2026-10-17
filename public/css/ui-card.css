@@ -236,6 +236,86 @@
     box-shadow: 0 0 22px -6px rgb(255 204 0 / 45%);
 }
 
+/*---Jet d'un choix : en attente du résultat (card.js)---*/
+.choice.card-roll {
+    /* Plus haut qu'un choix : il descend sous la carte au lieu de monter dessous */
+    align-self: flex-start;
+    top: 205px;
+    flex-direction: column;
+    gap: 6px;
+    width: 600px;
+    height: auto;
+    min-height: 90px;
+    padding: 10px 16px 12px;
+    box-sizing: border-box;
+    cursor: default;
+}
+
+.choice.card-roll:hover {
+    background: var(--ui-surface);
+    border-color: var(--ui-border-strong);
+    color: var(--ui-text);
+    box-shadow: 0 14px 30px -16px rgb(0 0 0 / 85%);
+}
+
+.card-roll-title {
+    color: var(--ui-accent);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.card-roll-choice {
+    font-size: 14px;
+}
+
+.card-roll-hint {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ui-text-dim);
+}
+
+.card-roll-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.card-roll-btn {
+    padding: 6px 18px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.card-roll-btn:hover {
+    background: var(--ui-fill-hover);
+}
+
+.card-roll-btn.success:hover,
+.card-roll-btn.success.suggested {
+    border-color: #7be26b;
+    color: #7be26b;
+}
+
+.card-roll-btn.failure:hover,
+.card-roll-btn.failure.suggested {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
+.card-roll-btn.suggested {
+    box-shadow: 0 0 14px -4px currentColor;
+}
+
+.card-roll-btn.cancel {
+    color: var(--ui-text-dim);
+}
+
 /*---Volet gauche : bouton menu, objets, modules secondaires---*/
 .consommable-tab {
     border: 1px solid var(--ui-border-strong);

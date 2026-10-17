@@ -139,8 +139,18 @@
         },
         {
           "value": "Tenter une manoeuvre d'evitement",
-          "reveal": "\n\u00a0 Vous essayez d'éviter les débris, mais malheureusement, ils percutent une autre partie de votre vaisseau.",
-          "mjreveal": "  Jet de pilotage\n  Choississez un autre module."
+          "mjreveal": "  Jet de pilotage",
+          "roll": {
+            "stat": "pilotage",
+            "success": {
+              "reveal": "\n\u00a0 D'un coup de manche, vous faites pivoter le vaisseau : les débris frôlent la coque sans la toucher.",
+              "mjreveal": "  Aucun dégât."
+            },
+            "failure": {
+              "reveal": "\n\u00a0 Vous essayez d'éviter les débris, mais malheureusement, ils percutent une autre partie de votre vaisseau.",
+              "mjreveal": "  Choississez un autre module."
+            }
+          }
         },
         {
           "value": "Ne rien faire",

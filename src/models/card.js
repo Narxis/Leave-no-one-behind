@@ -13,6 +13,39 @@ const parseLoot = function (raw) {
     }
 }
 
+// Jet d'un choix (choix « roll » de baseCards.json) : le MJ dit si le jet est
+// réussi, la suite dépend du résultat. Une suite = un résultat (reveal) ou une
+// carte suivante (next), avec infos MJ, humains et butin comme un choix.
+const ROLL_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
+
+const issueOf = function (raw) {
+    raw = raw && typeof raw === 'object' ? raw : {};
+    return {
+        reveal: raw.reveal || '',
+        mjreveal: raw.mjreveal || '',
+        next: raw.next || '',
+        humans: parseInt(raw.humans) || 0,
+        loot: Array.isArray(raw.loot) ? raw.loot : []
+    };
+}
+
+// {stat, success, failure}, ou null sans jet (ou jet mal écrit)
+const parseRoll = function (raw) {
+    try {
+        let roll = typeof raw === 'string' ? (raw ? JSON.parse(raw) : null) : raw;
+        if (!roll || typeof roll !== 'object' || !roll.success || !roll.failure)
+            return null;
+        return {
+            stat: ROLL_STATS.includes(roll.stat) ? roll.stat : '',
+            success: issueOf(roll.success),
+            failure: issueOf(roll.failure)
+        };
+    }
+    catch (e) {
+        return null;
+    }
+}
+
 class Card {
     id;
     type;
@@ -93,6 +126,7 @@ class Card {
                     next: this.choices[choice].next,
                     humans: this.choices[choice].humans || 0,
                     loot: Array.isArray(this.choices[choice].loot) && this.choices[choice].loot.length ? JSON.stringify(this.choices[choice].loot) : '',
+                    roll: this.rollToStore(this.choices[choice].roll),
                 });
             }
             for (let mod in this.modules)
@@ -111,6 +145,18 @@ class Card {
         });
 
         return await this.getData()
+    }
+
+    // Jet enregistré en JSON, variables des textes déjà tirées ('' : pas de jet)
+    rollToStore(raw) {
+        let roll = parseRoll(raw);
+        if (!roll)
+            return '';
+        for (let issue of [roll.success, roll.failure]) {
+            issue.reveal = this.replaceVars(issue.reveal);
+            issue.mjreveal = this.replaceVars(issue.mjreveal);
+        }
+        return JSON.stringify(roll);
     }
 
     replaceVars(text) {
@@ -261,7 +307,8 @@ class Card {
                 'mjreveal',
                 'next',
                 'humans',
-                'loot'
+                'loot',
+                'roll'
             ],
             where: {
                 card_id: this.id
@@ -279,7 +326,7 @@ class Card {
             let type = splitMod[1];
 
             if (name === 'choice') {
-                choices.push({
+                let choice = {
                     id: mod.id,
                     value: mod.value,
                     reveal: mod.reveal,
@@ -287,7 +334,12 @@ class Card {
                     next: mod.next,
                     humans: mod.humans,
                     loot: parseLoot(mod.loot)
-                });
+                };
+                // Seulement sur les choix à jet : les autres restent comme avant
+                let roll = parseRoll(mod.roll);
+                if (roll)
+                    choice.roll = roll;
+                choices.push(choice);
             }
             else {
                 if (typeof this.modules[name] === 'undefined')
@@ -337,4 +389,4 @@ class Card {
     }
 }
 
-module.exports = {Card}
+module.exports = {Card, parseRoll, ROLL_STATS}
