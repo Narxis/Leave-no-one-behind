@@ -176,7 +176,11 @@
 
     function show(active) {
         // La légende et les infobulles des stats passent aux noms de combat
+        // L'interface hors combat est masquée par la CSS (body.combat-mode)
         document.body.classList.toggle('combat-mode', !!active);
+        // Le chrono de la carte attend la fin du combat (card.js)
+        if (typeof pauseCountDown === 'function')
+            pauseCountDown(active);
         if (active) {
             area.classList.remove('combat-none', 'combat-out');
             area.classList.add('combat-in');

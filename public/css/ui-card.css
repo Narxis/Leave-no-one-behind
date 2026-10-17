@@ -611,6 +611,17 @@ body:has(.consommable-tab.open-left) .card-legend {
     display: none;
 }
 
+/* Pendant un combat, l'interface hors combat (choix de la carte, chrono,
+   modules du vaisseau, butin d'un choix) est masquée et ne réagit plus aux
+   clics : elle reste en place, telle quelle, pour la fin du combat */
+body.combat-mode #choicetab,
+body.combat-mode #bigboite,
+body.combat-mode #modtab,
+body.combat-mode #card-loot-area {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .combat-in {
     animation: combat-in .35s var(--ui-ease) both;
 }
@@ -957,6 +968,9 @@ body:has(.consommable-tab.open-left) .card-legend {
     flex-direction: column;
     gap: 3px;
     min-height: 74px;
+    /* Défilement si le journal déborde */
+    max-height: 110px;
+    overflow-y: auto;
     padding-top: 10px;
     border-top: 1px solid var(--ui-border);
     font-size: 13px;

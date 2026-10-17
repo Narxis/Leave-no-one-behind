@@ -1,6 +1,15 @@
 async function initialiseKeyListener() {
+    // Pendant un combat, les raccourcis de l'interface hors combat (modules,
+    // menus, plan...) sont coupés ; restent Échap (menu de navigation) et les
+    // flèches haut / bas des onglets joueurs, utiles en combat
+    const COMBAT_KEYS = ["Escape", "ArrowUp", "ArrowDown"];
+    const inCombat = () => document.body.classList.contains('combat-mode');
     document.addEventListener("keydown", (event) => {
         if (document.activeElement.tagName === 'INPUT') return;
+        if (inCombat()) {
+            if (event.key === "Tab") event.preventDefault();
+            return;
+        }
         switch (event.key) {
             case "F1":
                 event.preventDefault();
@@ -46,6 +55,7 @@ async function initialiseKeyListener() {
     });
     document.addEventListener("keyup", (event) => {
         if (document.activeElement.tagName === 'INPUT') return;
+        if (inCombat() && !COMBAT_KEYS.includes(event.key)) return;
         switch (event.key) {
             case "Escape":
                 document.getElementById("navBtn").click();
