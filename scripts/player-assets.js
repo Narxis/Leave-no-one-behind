@@ -18,12 +18,17 @@ const HEADER = '// Généré par scripts/player-assets.js : ne pas modifier à l
 // Fins de ligne Unix : même résultat sous Windows (git y met des \r\n)
 const read = (file) => fs.readFileSync(path.join(ROOT, file), 'utf8').replace(/\r\n/g, '\n');
 
-// Plan du vaisseau : le même SVG que sur la page de jeu, salles nommées
+// Plan du vaisseau : le même SVG que sur la page de jeu, salles nommées,
+// et le contour du vaisseau
 const shipSvg = function () {
     let template = read('public/views/partials/ship-rooms-svg.ejs');
     let rooms = JSON.parse(read('src/config/shipRooms.json'));
     let svg = ejs.render(template, {shipRooms: rooms}).trim();
-    return HEADER + 'window.LNOB_SHIP_SVG = ' + JSON.stringify(svg) + ';\n';
+    // Contour du vaisseau (murs dessinés), en data: : l'app ouvre la page en
+    // file://, où une image en masque CSS serait bloquée
+    let outline = 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'public/img/plan-plugs-stroke.png')).toString('base64');
+    return HEADER + 'window.LNOB_SHIP_SVG = ' + JSON.stringify(svg) + ';\n'
+        + 'window.LNOB_SHIP_OUTLINE = ' + JSON.stringify(outline) + ';\n';
 };
 
 // Icônes des statuts (Codex de la page joueur), les mêmes que sur les cartes
