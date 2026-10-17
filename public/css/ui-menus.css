@@ -1073,6 +1073,9 @@ body.mj-page {
     padding: 0 16px 12px;
     font-size: 13px;
     color: var(--ui-text-dim);
+    /* Défilement si le journal déborde */
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .mj-combat-log:empty {
