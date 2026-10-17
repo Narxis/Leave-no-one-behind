@@ -45,7 +45,7 @@
                                 <input type="text" id="search-ennemy" list="bestiaire" placeholder="Adversaire">
                                 <datalist id="bestiaire">
                                     <% (locals.bestiary || []).forEach(function(mob) { %>
-                                    <option value="<%= mob.name %>"></option>
+                                    <option value="<%= mob.name %>"><%= {invocation: 'Invocation', sbire: 'Sbire', elite: 'Élite', boss: 'Boss'}[mob.category] || '' %></option>
                                     <% }); %>
                                 </datalist>
                                 <button class="add-life" id="add-monstre">+</button>

@@ -252,6 +252,8 @@ function test_npcs() {
     assert.strictEqual(enemy.offense, 0);
     assert.strictEqual(enemy.defense, 50, 'défense par défaut');
     assert.strictEqual(enemy.damage, 'moyen', 'palier de dégâts inconnu remplacé');
+    assert.strictEqual(enemy.category, 'standard', 'catégorie inconnue remplacée');
+    assert.strictEqual(npcs.cleanEnemy({name: 'Roi', category: 'boss'}).enemy.category, 'boss');
     assert.strictEqual(enemy.loot.length, npcs.LOOT_SIZE, 'butin limité');
     assert.deepStrictEqual(enemy.loot.slice(0, 3), ['Corde', 'Lance', 'Caillou']);
 
