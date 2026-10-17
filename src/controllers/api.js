@@ -13,6 +13,7 @@ const combat = require("./combat");
 const allies = require("./allies");
 const shipAlerts = require("./shipAlerts");
 const races = require("./races");
+const itemsEditor = require("./itemsEditor");
 const leaderboard = require("./leaderboard");
 const gameSettings = require("./gameSettings");
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
@@ -147,6 +148,20 @@ module.exports = {
         items = await items.getAllItems();
 
         res.json(items);
+    },
+
+    async getItemCatalog(req, res) {
+        res.json(await itemsEditor.list());
+    },
+
+    async saveCatalogItem(req, res) {
+        let result = await itemsEditor.save(req.body || {});
+        res.status(result.error ? 400 : 200).json(result);
+    },
+
+    async deleteCatalogItem(req, res) {
+        let result = await itemsEditor.remove(req.params.slug);
+        res.status(result.error ? 400 : 200).json(result);
     },
 
     async getPlayerItems (req, res) {
