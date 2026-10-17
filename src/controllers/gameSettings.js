@@ -28,7 +28,9 @@ const OPTIONS = [
         hint: 'Blackout, Anticipation, Affaibli et Recherché sont remis à zéro en reprenant le voyage. Sinon ils continuent de baisser d\'un à chaque carte.'},
     {key: 'randomShipStats', label: 'Vaisseau aléatoire', default: false,
         hint: 'Les modules du vaisseau démarrent à une valeur tirée au hasard entre ' + Math.round(100 * (1 - SHIP_START_VARIATION))
-            + ' et 100 % (±' + Math.round(SHIP_START_VARIATION * 100) + ' %, plafonné à 100 %) au lieu de 100 %.'}
+            + ' et 100 % (±' + Math.round(SHIP_START_VARIATION * 100) + ' %, plafonné à 100 %) au lieu de 100 %.'},
+    {key: 'otherChoice', label: 'Choix « Autre… » sur les cartes', default: true,
+        hint: 'Les cartes à choix (sans chrono) proposent aussi « Autre… » : les joueurs décrivent une action libre et le MJ écrit la suite dans une carte blanche, depuis son menu.'}
 ];
 
 // Préréglages de difficulté. Normal reprend les valeurs de baseConf.json

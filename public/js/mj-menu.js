@@ -242,7 +242,8 @@ function setMJCardValue(card) {
     document.querySelector('.desc-text').innerHTML = card.desc || '';
     document.querySelector('.desc-mjreveal').innerHTML = '<span class="mjreveal">' + (card.mjreveal || '') + '</span>';
     // Le panneau a 3 emplacements, comme l'éditeur de lieux
-    card.choices.slice(0, 3).forEach(function (choice, i) {
+    // « Autre… » (carte blanche) n'y prend pas de place
+    card.choices.filter(c => !c.other).slice(0, 3).forEach(function (choice, i) {
         document.querySelector('#choice' + i + ' .button-text').innerHTML = choice.value;
         document.querySelector('#choice' + i + ' .mjreveal-text').innerHTML = '<span class="mjreveal">' + (choice.mjreveal || '') + '</span>';
         // Butin du choix : distribué sur la page de jeu avant la suite
