@@ -1171,3 +1171,41 @@ kbd {
     color: var(--ui-accent);
     cursor: pointer;
 }
+
+/* Statut donné par un choix : liste + durée en cartes */
+.pe-node .pe-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}
+
+.pe-node .pe-status > span {
+    flex-basis: 100%;
+}
+
+.pe-node .pe-status select,
+.pe-node .pe-status input {
+    box-sizing: border-box;
+    padding: 5px 6px;
+    border: 1px solid var(--ui-border);
+    border-radius: 7px;
+    background: rgb(0 0 0 / 32%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 12px;
+}
+
+.pe-node .pe-status select {
+    flex: 1;
+    min-width: 0;
+}
+
+.pe-node .pe-status input {
+    width: 56px;
+}
+
+.pe-node .pe-status select option {
+    background: #17181c;
+}
