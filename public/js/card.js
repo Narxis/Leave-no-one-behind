@@ -145,6 +145,16 @@ function quickUpdateModule(el, mod, left=false) {
     let modifier = 1;
     let newValue;
 
+    // « +x » / « -x » dans la case : écart appliqué tel quel, quel que soit le bouton
+    let parsed = parseModuleInput(inputVal);
+    if (parsed && parsed.delta) {
+        input.value = '';
+        newValue = Math.min(Math.max(currentVal + parsed.value, 0), maxVal);
+        if (currentVal !== newValue)
+            setModuleVal(mod, newValue, left);
+        return;
+    }
+
     if (el.classList.contains(left ? 'moins' : 'tab-moins')) {
         modifier = -1;
     }
@@ -173,6 +183,35 @@ function quickUpdateModule(el, mod, left=false) {
 
     setModuleVal(mod, newValue, left);
 }
+
+// Saisie de la case d'un module : « +x » ou « -x » = écart, nombre seul = valeur
+function parseModuleInput(text) {
+    let m = String(text || '').trim().replace(',', '.').match(/^([+-])?\s*(\d+(?:\.\d+)?)$/);
+    if (!m)
+        return null;
+    let value = Math.round(Number(m[2]));
+    return m[1] ? {delta: true, value: m[1] === '-' ? -value : value} : {delta: false, value: value};
+}
+
+// Entrée dans la case d'un module : applique l'écart (+x / -x) ou la valeur saisie
+function submitModuleInput(input, mod) {
+    let parsed = parseModuleInput(input.value);
+    input.value = '';
+    if (!parsed)
+        return;
+    let currentVal = parseInt(document.querySelector('#modtab #dial-'+mod).getAttribute('data-value')) || 0;
+    let newValue = parsed.delta ? currentVal + parsed.value : parsed.value;
+    newValue = Math.min(Math.max(newValue, 0), 100);
+    if (currentVal !== newValue)
+        setModuleVal(mod, newValue, false);
+}
+
+document.querySelectorAll('#modtab .form-input').forEach(input => {
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter')
+            submitModuleInput(input, input.name.replace(/^i-/, ''));
+    });
+});
 
 // Choix qui coûtent (ou rapportent) des humains : appliqué au clic
 function changeHumans(delta) {
