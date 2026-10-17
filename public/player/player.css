@@ -278,12 +278,37 @@ select {
     .ship-blink-fill, .ship-alert-fill, .ship-alert-ring { animation-duration: 3s !important; }
 }
 
-/* Chat */
+/* Chat : toujours visible, hors des onglets */
+.game-layout { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.game-main { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.chat-dock {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #120e33;
+}
+.chat-dock .chat-messages { max-height: 26vh; }
+/* Téléphone : collé en bas de l'écran pendant qu'on fait défiler la partie */
+@media (max-width: 899px) {
+    .chat-dock { position: sticky; bottom: 0; z-index: 5; box-shadow: 0 -12px 30px -12px rgb(0 0 0 / 85%); }
+    .chat-dock .chat-form textarea { resize: none; }
+}
+/* Grand écran : colonne à droite, toujours à hauteur de l'écran */
+@media (min-width: 900px) {
+    .card.wide { width: min(1180px, 100%); }
+    .game-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: start; }
+    .chat-dock { position: sticky; top: 16px; height: calc(100vh - 110px); }
+    .chat-dock .chat-messages { flex: 1; max-height: none; }
+}
 .badge { margin-left: 4px; padding: 0 6px; border-radius: 999px; background: var(--ok); color: #000; font-size: 11px; font-weight: 700; }
 .chat-switch { display: flex; gap: 6px; }
 .chat-channel { margin: 0; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--dim); font-size: 14px; }
 .chat-channel.active { border-color: var(--accent); color: var(--accent); }
-.chat-messages { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; max-height: 55vh; overflow-y: auto; }
+.chat-messages { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; min-height: 0; overflow-y: auto; }
 .chat-message { padding: 8px 12px; border: 1px solid var(--border); border-radius: 10px; }
 .chat-message.gm { border-color: var(--accent); }
 .chat-message.gm .chat-head strong { color: var(--accent); }
