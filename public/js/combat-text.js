@@ -1,3 +1,9 @@
+// Statut posé par une attaque qui touche (« + Saignement, 3 tours »)
+function describeHitStatus(entry) {
+    let s = entry.status;
+    return s && s.name ? ' + ' + s.name + ' (' + s.turns + ' tour' + (s.turns > 1 ? 's' : '') + ')' : '';
+}
+
 // Texte du journal de combat, partagé entre l'écran de jeu et le menu MJ
 function describeCombatEntry(entry, forMJ = false) {
     switch (entry.type) {
@@ -13,7 +19,7 @@ function describeCombatEntry(entry, forMJ = false) {
             if (!entry.hit)
                 return entry.player + ' rate ' + entry.enemy + ' (' + entry.result + ')';
             return entry.player + ' touche ' + entry.enemy + ' (' + entry.result + ') : -' + entry.damage + ' PV'
-                + (entry.ko ? ' — K.O. !' : '');
+                + (entry.ko ? ' — K.O. !' : describeHitStatus(entry));
         case 'enemy-attack': {
             let who = entry.target ? entry.enemy + ' attaque ' + entry.target + (entry.npc_target ? ' (PNJ)' : '')
                 : entry.enemy + ' attaque';
@@ -23,7 +29,8 @@ function describeCombatEntry(entry, forMJ = false) {
                 return who + ' : raté (' + entry.dice + forced + ')';
             // Avec une cible, les dégâts sont déjà retirés de ses PV
             return who + ' : touché (' + entry.dice + forced + ') — ' + entry.damage + ' dégâts'
-                + (entry.target ? (entry.hp !== undefined ? ' (reste ' + entry.hp + ' PV)' : '') : (forMJ ? ' à appliquer' : ''));
+                + (entry.target ? (entry.hp !== undefined ? ' (reste ' + entry.hp + ' PV)' : '') : (forMJ ? ' à appliquer' : ''))
+                + describeHitStatus(entry);
         }
         case 'player-hp':
             return 'PV de ' + entry.target + ' : ' + entry.hp + (entry.change ? ' (' + (entry.change > 0 ? '+' : '') + entry.change + ')' : '');
