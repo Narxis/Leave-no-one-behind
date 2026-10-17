@@ -1,0 +1,66 @@
+# Recopie les tableaux « Dans le jeu » (stats des races, objets, statuts) dans
+# les pages du wiki (Narxis/Leave-no-one-behind-Wiki) quand les fichiers du
+# jeu changent sur prod, ou à la main depuis l'onglet Actions.
+# Le dépôt du jeu est privé : c'est lui qui écrit dans le wiki, avec le secret
+# WIKI_TOKEN (à créer une fois, voir scripts/wiki-tableaux.js). Sans ce secret,
+# l'action donne seulement les pages mises à jour à télécharger (artefact).
+name: Tableaux du wiki
+
+on:
+  push:
+    branches: [ "prod" ]
+    paths:
+      - 'src/config/raceStats.json'
+      - 'src/config/items.json'
+      - 'src/config/statuses.json'
+      - 'src/config/lang.json'
+      - 'scripts/wiki-tableaux.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tableaux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+      with:
+        repository: Narxis/Leave-no-one-behind-Wiki
+        ref: main
+        path: wiki
+        token: ${{ secrets.WIKI_TOKEN || github.token }}
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - run: node scripts/wiki-tableaux.js wiki
+    - name: Envoyer sur le wiki
+      id: envoi
+      working-directory: wiki
+      env:
+        HAS_TOKEN: ${{ secrets.WIKI_TOKEN != '' }}
+      run: |
+        if git diff --quiet; then
+          echo "Tableaux du wiki déjà à jour" >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+        fi
+        echo '```' >> "$GITHUB_STEP_SUMMARY"
+        git diff --stat >> "$GITHUB_STEP_SUMMARY"
+        echo '```' >> "$GITHUB_STEP_SUMMARY"
+        if [ "$HAS_TOKEN" != "true" ]; then
+          echo "::warning::Secret WIKI_TOKEN absent : les pages mises à jour sont dans l'artefact « pages-wiki », à recopier dans le wiki."
+          echo "artefact=1" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git commit -am "Tableaux du jeu mis à jour (Leave-no-one-behind@${GITHUB_SHA::7})"
+        git push origin HEAD:main
+    - if: steps.envoi.outputs.artefact == '1'
+      uses: actions/upload-artifact@v4
+      with:
+        name: pages-wiki
+        path: |
+          wiki/**/*.md
+          !wiki/archives-notion/**
