@@ -3,8 +3,9 @@
 /*---vvv---Theme commun (toutes les pages)---vvv---*/
 
 :root {
-    --ui-surface: linear-gradient(160deg, rgb(34 24 92 / 72%) 0%, rgb(10 8 36 / 82%) 100%);
-    --ui-surface-flat: rgb(16 12 48 / 78%);
+    /* Opaques, comme le menu des options : les étoiles du fond ne passent pas au travers */
+    --ui-surface: linear-gradient(160deg, #1d1650 0%, #0b0922 100%);
+    --ui-surface-flat: #110d2e;
     --ui-fill: rgb(255 255 255 / 4%);
     --ui-fill-hover: rgb(255 255 255 / 8%);
     --ui-border: rgb(176 166 255 / 26%);
