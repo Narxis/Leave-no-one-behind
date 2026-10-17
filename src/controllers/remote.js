@@ -17,6 +17,8 @@ const lobby = require('./lobby');
 const races = require('./races');
 const statRolls = require('./statRolls');
 const chat = require('./chat');
+const votes = require('./votes');
+const itemUse = require('./itemUse');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = ['', 'scanner', 'proximity', 'motors', 'oxygen', 'energy', 'gravity'];
@@ -97,6 +99,30 @@ const RULES = {
         if (!emoji || /[<>&"']/.test(emoji))
             return refuse('Emote invalide.');
         return {action: 'emote', emoji: emoji, type: 'glyph', uid: player.id};
+    },
+    // Vote pour un choix de la carte affichée (null : retirer son vote).
+    // Le MJ voit les votes et choisit lui-même.
+    vote: async (player, data) => {
+        if (CONFIG.gameState !== 'gameLive')
+            return refuse('On vote pendant la partie.');
+        let index = data.index === null ? null : Number(data.index);
+        let character = await characterOf(player.id);
+        let result = votes.vote(player.id, character ? character.name : player.name, index);
+        if (result.error)
+            return refuse(result.error);
+        return {action: 'passThrough', data: result.payload};
+    },
+    // Utiliser un objet de son inventaire : demande au MJ, qui accepte ou non
+    'item-use': async (player, data) => {
+        if (CONFIG.gameState !== 'gameLive')
+            return refuse('Les objets s\'utilisent pendant la partie.');
+        let character = await characterOf(player.id);
+        if (!character)
+            return refuse('Il faut un perso pour utiliser un objet.');
+        let result = await itemUse.request(player, character.name, data.slug);
+        if (result.error)
+            return refuse(result.error);
+        return {action: 'passThrough', data: result.payload};
     },
     // Chat : salon commun, ou privé (seul le MJ le lit). Signé du nom du
     // perso s'il en a un, sinon du pseudo du lobby.

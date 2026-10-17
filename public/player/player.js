@@ -113,8 +113,9 @@
     };
 
     let errorTimer = null;
-    const showActionError = function (message) {
+    const showActionError = function (message, info) {
         clearTimeout(errorTimer);
+        $('action-error').classList.toggle('info', !!info);
         $('action-error').textContent = message || '';
         $('action-error').hidden = !message;
         if (message)
@@ -219,18 +220,51 @@
 
         let card = game && game.card;
         $('game-card').hidden = !card;
+        if (!card || card.kind !== 'planet')
+            renderPlanet(null);
         if (card) {
             $('card-kind').textContent = CARD_KINDS[card.kind] || '';
             richText($('card-desc'), card.desc);
             $('card-desc').hidden = !card.desc;
-            $('card-choices').replaceChildren(...(card.choices || []).map(c => richText(el('li'), c)));
+            // Choix : on vote, le MJ tranche. Votes possibles quand la page
+            // de jeu a annoncé ses choix (card.screen) et que le MJ n'a pas
+            // encore cliqué.
+            let canVote = !!card.screen && card.chosen === null && !!you && !!you.character;
+            let myVote = you ? you.vote : null;
+            $('card-choices').replaceChildren(...(card.choices || []).map((c, i) => {
+                let li = el('li', 'card-choice');
+                let count = (card.counts || [])[i] || 0;
+                li.classList.toggle('voted', myVote === i);
+                li.classList.toggle('chosen', card.chosen === i);
+                let body = richText(el(canVote ? 'button' : 'span', 'choice-text'), c);
+                if (canVote) {
+                    body.type = 'button';
+                    body.title = myVote === i ? 'Retirer mon vote' : 'Voter pour ce choix';
+                    body.addEventListener('click', () => sendAction('vote', {index: myVote === i ? null : i}));
+                }
+                li.append(body);
+                if (count)
+                    li.append(el('span', 'choice-votes', count + (count > 1 ? ' votes' : ' vote')));
+                return li;
+            }));
+            renderPlanet(card.kind === 'planet' ? card.planet : null);
             // Dernière planète du voyage : texte envoyé par le jeu (lang.json)
             let last = card.lastPlanet;
             $('card-last').hidden = !last;
             $('card-last').textContent = last ? last.title + ' : ' + last.text : '';
-            $('card-note').textContent = card.kind === 'planet'
-                ? 'Le MJ scanne la planète sur l\'écran principal.'
-                : (card.choices && card.choices.length ? 'Le MJ choisit pour l\'équipage.' : '');
+            $('planet-vote-title').hidden = !(card.choices && card.choices.length);
+            let note = '';
+            if (card.kind === 'planet' && canVote)
+                note = myVote === null || myVote === undefined ? 'Vote pour la suite, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
+            else if (card.kind === 'planet')
+                note = card.chosen !== null && card.chosen !== undefined ? 'Le MJ a choisi.' : 'Le MJ scanne la planète sur l\'écran principal.';
+            else if (card.chosen !== null && card.chosen !== undefined)
+                note = 'Le MJ a choisi.';
+            else if (canVote)
+                note = myVote === null || myVote === undefined ? 'Vote pour un choix, le MJ tranche.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
+            else if (card.choices && card.choices.length)
+                note = you && you.character ? 'Le MJ choisit pour l\'équipage.' : 'Il faut un perso pour voter.';
+            $('card-note').textContent = note;
         }
 
         let statuses = (game && game.statuses) || [];
@@ -248,6 +282,55 @@
         if (game && game.alerts && (game.alerts.showMap || alert) && !renderGame.mapShown)
             selectTab('ship');
         renderGame.mapShown = !!(game && game.alerts && (game.alerts.showMap || alert));
+    };
+
+    // ---- Planète : dessin couche par couche, points de détection, scans -----
+
+    // Le dessin ne connaît que les stats scannées : à chaque scan il est refait
+    // avec la nouvelle valeur, puis la couche apparaît avec son animation
+    let planetDrawn = null; // {id, keys: [couches affichées]}
+    const renderPlanet = function (planet) {
+        $('planet').hidden = !planet;
+        if (!planet) {
+            if (planetDrawn) {
+                $('planet-frame').replaceChildren();
+                planetDrawn = null;
+            }
+            return;
+        }
+        let scans = planet.scans || [];
+        let keys = scans.filter(s => s.revealed).map(s => s.key);
+        let fresh = !planetDrawn || planetDrawn.id !== planet.id;
+        let added = fresh ? keys : keys.filter(k => !planetDrawn.keys.includes(k));
+        if ((fresh || added.length) && window.PlanetView) {
+            let canvas = el('canvas', 'planet-canvas');
+            canvas.setAttribute('aria-hidden', 'true');
+            $('planet-frame').replaceChildren(canvas);
+            let size = canvas.clientWidth || 260;
+            let view = PlanetView.create(canvas, {
+                size: size,
+                radius: size * .225,
+                modules: planet.modules || {},
+                seed: planet.id,
+                revealed: fresh ? keys : planetDrawn.keys
+            });
+            if (!fresh)
+                view.reveal(added);
+            planetDrawn = {id: planet.id, keys: keys};
+        }
+
+        let points = planet.points === null || planet.points === undefined ? '…' : planet.points;
+        $('planet-points').textContent = 'Points de détection : ' + points + (planet.drones ? ' · Drones : ' + planet.drones : '');
+        $('planet-scans').replaceChildren(...scans.map(s => {
+            let li = el('li', s.revealed ? 'scanned' : '');
+            let head = el('div', 'scan-head');
+            head.append(el('span', 'scan-label', s.label));
+            if (!s.revealed && s.cost !== null && s.cost !== undefined)
+                head.append(el('span', 'scan-cost', s.cost + ' pts'));
+            li.append(head);
+            li.append(el('p', 'scan-text', s.revealed ? s.text : 'Pas encore scanné.'));
+            return li;
+        }));
     };
 
     // ---- Vaisseau ----------------------------------------------------------
@@ -381,6 +464,15 @@
             li.append(el('strong', '', item.name + (item.count > 1 ? ' ×' + item.count : '')));
             if (item.desc)
                 li.append(el('span', 'dim small-text', String(item.desc).replace(/<[^>]*>/g, '')));
+            // Utiliser : demande au MJ, qui accepte ou refuse
+            if (game && game.phase === 'gameLive') {
+                let pending = ((you && you.pendingItems) || []).includes(item.slug);
+                let use = el('button', 'secondary small use-item', pending ? 'Demande envoyée au MJ' : 'Utiliser');
+                use.type = 'button';
+                use.disabled = pending;
+                use.addEventListener('click', () => sendAction('item-use', {slug: item.slug}));
+                li.append(use);
+            }
             if (others.length) {
                 let form = el('form', 'inline-form');
                 let select = el('select');
@@ -424,6 +516,7 @@
         }
         else if (data.kind === 'you') {
             you = data;
+            renderGame();
             renderMe();
             renderItems();
         }
@@ -437,6 +530,10 @@
         else if (data.kind === 'refused') {
             showActionError(data.message);
             renderMe();
+        }
+        // Réponse du MJ à une demande (objet utilisé ou non)
+        else if (data.kind === 'notice' && data.text) {
+            showActionError(String(data.text), true);
         }
         else if (data.kind === 'result' && data.action === 'roll' && data.data) {
             let r = data.data;

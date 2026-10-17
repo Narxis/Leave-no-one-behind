@@ -586,3 +586,11 @@ input::-webkit-inner-spin-button {
     color: var(--ui-accent);
     font-weight: 700;
 }
+
+/* Votes des joueurs en ligne */
+.mj-votes[hidden] { display: none; }
+.mj-votes-list { margin: 0; padding: 4px 16px 12px; list-style: none; text-indent: 0; }
+.mj-votes-list li { padding: 6px 0; border-bottom: 1px solid rgb(255 255 255 / 12%); }
+.mj-votes-list li:last-child { border-bottom: none; }
+.mj-votes-list li.chosen .mj-vote-choice { color: var(--ui-accent, #ffcc00); }
+.mj-vote-detail { color: #4fd8e0; font-size: .9em; }

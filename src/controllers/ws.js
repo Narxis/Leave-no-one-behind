@@ -19,6 +19,9 @@ const remote = require("./remote");
 const playerView = require("./playerView");
 const chat = require("./chat");
 const roles = require("./roles");
+const votes = require("./votes");
+const planetScan = require("./planetScan");
+const itemUse = require("./itemUse");
 const WebSocket = require("ws");
 
 const init = function (){
@@ -171,6 +174,24 @@ const makeAction = async function (raw_response) {
         case 'chat-send':
         case 'chat-history':
             payload = chat.handle(response);
+            break;
+        // Page de jeu : texte et choix affichés (votes des joueurs)
+        case 'card-screen':
+            payload = votes.setScreen(response.data);
+            break;
+        case 'votes':
+            payload = votes.payload();
+            break;
+        // Page planète : points de détection et scans faits
+        case 'planet-screen':
+            payload = planetScan.setScreen(response.data);
+            break;
+        // Objets que les joueurs en ligne demandent à utiliser
+        case 'item-use':
+            payload = itemUse.payload();
+            break;
+        case 'item-use-answer':
+            payload = itemUse.answer(response.data);
             break;
         case 'ship-alerts':
             payload = shipAlerts.handle(response);

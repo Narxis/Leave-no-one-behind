@@ -13,6 +13,9 @@ const leaderboard = require("./leaderboard");
 const lobby = require("./lobby");
 const playerView = require("./playerView");
 const chat = require("./chat");
+const votes = require("./votes");
+const planetScan = require("./planetScan");
+const itemUse = require("./itemUse");
 const gameSettings = require("./gameSettings");
 const races = require("./races");
 const itemsEditor = require("./itemsEditor");
@@ -198,6 +201,9 @@ module.exports = {
             allies.clear();
             shipAlerts.reset();
             chat.clear();
+            votes.clear();
+            planetScan.clear();
+            itemUse.clear();
         }
         await CONFIG.upsert('gameState', 'creation');
         playerView.changed();

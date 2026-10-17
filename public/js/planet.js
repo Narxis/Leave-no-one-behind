@@ -100,7 +100,69 @@ async function initialisePlanet() {
     scanPoints()
     writePoints('.detection-point', detectionPoints);
     writePoints('.drone', dronenbr);
+    announcePlanet();
 }
+
+// Joueurs en ligne : la page annonce son état (points de détection, drones,
+// scans faits, planetScan.js) et les scans pour lesquels voter (votes.js).
+// Le MJ scanne toujours lui-même.
+const PLANET_SCANS = [
+    {key: 'oxy', label: 'Oxygène', button: '#o2-button', cost: () => costo2, text: () => texto2},
+    {key: 'cli', label: 'Climat', button: '#cl-button', cost: () => costcl, text: () => textcl},
+    {key: 'ff', label: 'Faune & flore', button: '#ff-button', cost: () => costff, text: () => textff},
+    {key: 'res', label: 'Ressources & minerais', button: '#re-button', cost: () => costre, text: () => textre},
+    {key: 'wtr', label: 'Présence d\'eau', button: '#eau-button', cost: () => costeau, text: () => texteau},
+    {key: 'grv', label: 'Gravité', button: '#gr-button', cost: () => costgr, text: () => textgr}
+];
+const PLANET_EXITS = [
+    {key: 'land', label: 'Atterrir sur la planète', button: '.land-button'},
+    {key: 'leave', label: 'Continuer votre voyage', button: '.leave-button'}
+];
+const planetRevealed = new Set();
+var planetVoteChoices = [];
+
+function announcePlanet() {
+    if (window.PLANET_LAB || typeof wsLNOB === 'undefined')
+        return;
+    let cardId = window.PLANET_DATA ? PLANET_DATA.id : null;
+    let drones = Number(dronenbr) || 0;
+    wsLNOB.send({action: 'planet-screen', data: {
+        cardId: cardId,
+        points: detectionPoints,
+        drones: drones,
+        done: showbuttons,
+        scans: PLANET_SCANS.map(s => ({key: s.key, cost: Number(s.cost()) || 0, revealed: planetRevealed.has(s.key), text: planetRevealed.has(s.key) ? s.text() : ''}))
+    }});
+    planetVoteChoices = PLANET_SCANS.filter(s => !planetRevealed.has(s.key) && (detectionPoints >= Number(s.cost()) || drones > 0))
+        .concat(showbuttons ? PLANET_EXITS : []);
+    wsLNOB.send({action: 'card-screen', data: {cardId: cardId, text: '', choices: planetVoteChoices.map(c => c.label)}});
+}
+
+// Votes des joueurs affichés sur les boutons (scans, atterrir, repartir)
+document.addEventListener('votes', function (e) {
+    let counts = (e.detail.data && e.detail.data.counts) || [];
+    document.querySelectorAll('[data-votes]').forEach(b => b.removeAttribute('data-votes'));
+    planetVoteChoices.forEach(function (choice, i) {
+        let button = document.querySelector(choice.button);
+        if (button && counts[i])
+            button.setAttribute('data-votes', counts[i] + (counts[i] > 1 ? ' votes' : ' vote'));
+    });
+});
+document.addEventListener('planet-reveal', function (e) {
+    planetRevealed.add(e.detail);
+    announcePlanet();
+});
+document.addEventListener('ws-reconnect', announcePlanet);
+// Le MJ atterrit ou repart : votes fermés
+PLANET_EXITS.forEach(function (exit) {
+    let button = document.querySelector(exit.button);
+    if (button)
+        button.addEventListener('mousedown', function () {
+            let i = planetVoteChoices.indexOf(exit);
+            if (i >= 0 && typeof wsLNOB !== 'undefined')
+                wsLNOB.send({action: 'card-screen', data: {cardId: window.PLANET_DATA ? PLANET_DATA.id : null, text: '', choices: planetVoteChoices.map(c => c.label), chosen: i}});
+        });
+});
 window.addEventListener('load', initialisePlanet, false);
 
 function pointsLeft() {
