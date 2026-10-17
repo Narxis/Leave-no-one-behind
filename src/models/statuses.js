@@ -97,7 +97,7 @@ class Statuses {
 
     async hydrateDB(cleanInstall = true) {
         if (cleanInstall) {
-            DB.tables.statuses.destroy({truncate: true});
+            await DB.tables.statuses.destroy({truncate: true});
         }
         let baseStatusRaw = fs.readFileSync(__dirname + '/../config/statuses.json');
         let baseStatuses = JSON.parse(baseStatusRaw);
