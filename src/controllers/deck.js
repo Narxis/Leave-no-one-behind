@@ -3,6 +3,7 @@ const fs = require("fs")
 const { Op, literal } = require("sequelize");
 const ws = require("ws");
 const {rollPlanet, ARCHETYPES} = require('./planetGen');
+const blankCard = require('./blankCard');
 
 const deckGenerator = async function (){
 
@@ -167,6 +168,9 @@ let currentCard = null;
 const announceCard = function (card) {
     if (!card)
         return;
+    // Choix « Autre… » (carte blanche) ; une carte blanche oubliée est finie
+    blankCard.addOther(card);
+    blankCard.reset();
     currentCard = card;
     const wsClient = new ws(WS_URL);
     wsClient.on('open', () => {
@@ -180,6 +184,7 @@ const getCurrentCard = () => currentCard;
 
 const destroyDeck = async function (deck_id = 0){
     currentCard = null;
+    blankCard.reset();
     await DB.tables.deck.destroy({
         where: {deck_id: deck_id},
         truncate: true,

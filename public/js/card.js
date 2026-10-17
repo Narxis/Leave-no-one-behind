@@ -273,7 +273,12 @@ async function initCard(forceName = null) {
     await showChoices();
 }
 
+// Un nouvel affichage (carte blanche du MJ) arrête celui en cours
+var showChoicesRun = 0;
+
 async function showChoices() {
+    let run = ++showChoicesRun;
+    let choices = currentCard.choices;
     let choiceTab = document.getElementById('choicetab');
     choiceTab.innerHTML = '';
     // Un seul choix par affichage : les boutons restent cliquables pendant
@@ -293,15 +298,17 @@ async function showChoices() {
     const pick = function (btn, apply) {
         if (chosen || (pendingChoice && pendingChoice.btn === btn))
             return;
-        if (currentCard.choices.length < CHOICE_CONFIRM_MIN_CHOICES)
+        if (choices.length < CHOICE_CONFIRM_MIN_CHOICES)
             return commit(apply);
         clearPendingChoice();
         pendingChoice = {btn, commit: () => commit(apply)};
         armPendingChoice();
         showPendingChoice(btn);
     };
-    for (let i=0; i<currentCard.choices.length; i++) {
-        let choice = currentCard.choices[i];
+    for (let i=0; i<choices.length; i++) {
+        if (run !== showChoicesRun)
+            return;
+        let choice = choices[i];
         let choiceBtn = document.createElement('button');
         choiceBtn.classList.add('choice');
         choiceBtn.classList.add('move-down');
@@ -309,6 +316,12 @@ async function showChoices() {
         choiceBtn.innerHTML = choice.value;
         // Suite du choix, une fois le délai d'annulation passé
         const apply = async function() {
+            if (choice.other)
+                return askBlankCard();
+            if (choice.blank !== undefined) {
+                blankReturn = null;
+                wsLNOB.send({action: 'blank-card-choice', data: {index: choice.blank}});
+            }
             if (choice.humans)
                 changeHumans(choice.humans);
             await hideChoices();
@@ -352,6 +365,58 @@ async function showChoices() {
         choiceBtn.classList.remove('move-down');
     }
 }
+
+// Carte blanche (src/controllers/blankCard.js) : « Autre… » laisse le MJ écrire
+// la suite depuis son menu (mj-menu.js). Carte d'avant gardée pour « Annuler »
+const BLANK_WAIT_TEXT = "\n Action libre !\n\n Décrivez au MJ ce que vous tentez : il prépare la suite.";
+const BLANK_NO_REVEAL = "\n Le MJ raconte la suite.";
+var blankReturn = null;
+
+async function askBlankCard() {
+    blankReturn = {desc: currentCard.desc, choices: currentCard.choices};
+    wsLNOB.send({action: 'blank-card-request', data: {desc: currentCard.desc}});
+    await hideChoices();
+    await writeCardDesc(BLANK_WAIT_TEXT);
+}
+
+document.addEventListener('blank-card-show', async function (e) {
+    let card = e.detail.data;
+    // Montrée par le MJ sans « Autre… » : elle remplace la carte en cours
+    if (!blankReturn && !currentCard.blank)
+        blankReturn = {desc: currentCard.desc, choices: currentCard.choices};
+    clearPendingChoice();
+    await stopCountdown();
+    let choices = card.choices.map((c, i) => ({
+        value: c.value,
+        reveal: c.reveal || BLANK_NO_REVEAL,
+        humans: c.humans,
+        loot: c.loot,
+        blank: i
+    }));
+    if (!choices.length) {
+        let nextCard = await getNextCard();
+        choices = [{value: 'Continuer votre chemin', continue: nextCard.value > 0 ? 2 : 1, blank: -1}];
+    }
+    currentCard = {blank: true, desc: card.desc, timer: 0, choices: choices};
+    await hideChoices();
+    document.getElementById('choicetab').innerHTML = '';
+    await writeCardDesc(card.desc || ' ');
+    await showChoices();
+});
+
+// Le MJ renonce : la carte d'avant revient avec ses choix
+document.addEventListener('blank-card-cancel', async function () {
+    if (!blankReturn)
+        return;
+    let back = blankReturn;
+    blankReturn = null;
+    clearPendingChoice();
+    currentCard = Object.assign({}, currentCard, back, {blank: false});
+    await hideChoices();
+    document.getElementById('choicetab').innerHTML = '';
+    await writeCardDesc(back.desc);
+    await showChoices();
+});
 
 // Le délai repart à chaque choix ; pendant un combat il attend la fin
 function armPendingChoice() {

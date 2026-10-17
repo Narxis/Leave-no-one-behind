@@ -21,7 +21,9 @@ const FIELDS = [
 // Absente d'anciens réglages enregistrés : valeur par défaut
 const OPTIONS = [
     {key: 'clearStatusesAfterPlanet', label: 'Retirer les statuts après une planète', default: true,
-        hint: 'Blackout, Anticipation, Affaibli et Recherché sont remis à zéro en reprenant le voyage. Sinon ils continuent de baisser d\'un à chaque carte.'}
+        hint: 'Blackout, Anticipation, Affaibli et Recherché sont remis à zéro en reprenant le voyage. Sinon ils continuent de baisser d\'un à chaque carte.'},
+    {key: 'otherChoice', label: 'Choix « Autre… » sur les cartes', default: true,
+        hint: 'Les cartes à choix (sans chrono) proposent aussi « Autre… » : les joueurs décrivent une action libre et le MJ écrit la suite dans une carte blanche, depuis son menu.'}
 ];
 
 // Préréglages de difficulté. Normal reprend les valeurs de baseConf.json
