@@ -223,10 +223,37 @@
             $('card-kind').textContent = CARD_KINDS[card.kind] || '';
             richText($('card-desc'), card.desc);
             $('card-desc').hidden = !card.desc;
-            $('card-choices').replaceChildren(...(card.choices || []).map(c => richText(el('li'), c)));
-            $('card-note').textContent = card.kind === 'planet'
-                ? 'Le MJ scanne la planète sur l\'écran principal.'
-                : (card.choices && card.choices.length ? 'Le MJ choisit pour l\'équipage.' : '');
+            // Choix : on vote, le MJ tranche. Votes possibles quand la page
+            // de jeu a annoncé ses choix (card.screen) et que le MJ n'a pas
+            // encore cliqué.
+            let canVote = !!card.screen && card.chosen === null && !!you && !!you.character;
+            let myVote = you ? you.vote : null;
+            $('card-choices').replaceChildren(...(card.choices || []).map((c, i) => {
+                let li = el('li', 'card-choice');
+                let count = (card.counts || [])[i] || 0;
+                li.classList.toggle('voted', myVote === i);
+                li.classList.toggle('chosen', card.chosen === i);
+                let body = richText(el(canVote ? 'button' : 'span', 'choice-text'), c);
+                if (canVote) {
+                    body.type = 'button';
+                    body.title = myVote === i ? 'Retirer mon vote' : 'Voter pour ce choix';
+                    body.addEventListener('click', () => sendAction('vote', {index: myVote === i ? null : i}));
+                }
+                li.append(body);
+                if (count)
+                    li.append(el('span', 'choice-votes', count + (count > 1 ? ' votes' : ' vote')));
+                return li;
+            }));
+            let note = '';
+            if (card.kind === 'planet')
+                note = 'Le MJ scanne la planète sur l\'écran principal.';
+            else if (card.chosen !== null && card.chosen !== undefined)
+                note = 'Le MJ a choisi.';
+            else if (canVote)
+                note = myVote === null || myVote === undefined ? 'Vote pour un choix, le MJ tranche.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
+            else if (card.choices && card.choices.length)
+                note = you && you.character ? 'Le MJ choisit pour l\'équipage.' : 'Il faut un perso pour voter.';
+            $('card-note').textContent = note;
         }
 
         let statuses = (game && game.statuses) || [];
@@ -416,6 +443,7 @@
         }
         else if (data.kind === 'you') {
             you = data;
+            renderGame();
             renderMe();
             renderItems();
         }

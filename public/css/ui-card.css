@@ -236,6 +236,19 @@
     box-shadow: 0 0 22px -6px rgb(255 204 0 / 45%);
 }
 
+/* Votes des joueurs en ligne sous l'intitulé du choix */
+.choice .vote-count {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    text-align: center;
+    color: var(--ui-cyan);
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
 /*---Volet gauche : bouton menu, objets, modules secondaires---*/
 .consommable-tab {
     border: 1px solid var(--ui-border-strong);

@@ -15,6 +15,7 @@ const races = require('./races');
 const inventory = require('./inventory');
 const shipAlerts = require('./shipAlerts');
 const statRolls = require('./statRolls');
+const votes = require('./votes');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -35,13 +36,28 @@ const cardKind = function (card) {
 
 const cleanText = (text) => String(text || '').replaceAll('{....}', '…');
 
-// La carte telle que les joueurs la voient : le texte et les choix proposés
+// La carte telle que les joueurs la voient : le texte et les choix proposés.
+// Si la page de jeu a annoncé ce qu'elle affiche pour cette carte (suite
+// d'un choix, « Continuer votre chemin »…), c'est ce qui est montré, avec
+// les votes ; sinon la carte telle que piochée, sans votes.
 const publicCard = function (card) {
     if (!card)
         return null;
     let kind = cardKind(card);
     if (kind === 'planet')
         return {id: card.id, kind: kind, desc: '', choices: []};
+    let screen = votes.screenFor(card.id);
+    if (screen)
+        return {
+            id: card.id,
+            kind: kind,
+            desc: cleanText(screen.text),
+            timer: !!card.timer,
+            screen: screen.id,
+            choices: screen.choices.map(cleanText),
+            counts: screen.counts,
+            chosen: screen.chosen
+        };
     return {
         id: card.id,
         kind: kind,
@@ -102,7 +118,8 @@ const playerState = async function (id) {
         kind: 'you',
         character: character,
         inventory: player ? await inventory.getInventory(id) : [],
-        creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null
+        creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null,
+        vote: votes.voteOf(id)
     };
 };
 
