@@ -33,6 +33,7 @@ async function test() {
     test_random_ship();
     await test_last_planet();
     await test_custom_statuses();
+    await test_blank_card();
     await test_roll();
     await test_roles();
     test_ship_alerts();
@@ -515,6 +516,76 @@ async function test_place_endings(){
 }
 
 // Statuts hors combat au retour d'une planète, selon l'option du MJ
+// Carte blanche : « Autre… » sur les cartes à choix, carte écrite par le MJ
+async function test_blank_card() {
+    console.log('Testing blank card');
+    const blankCard = require('../src/controllers/blankCard');
+    const gameSettings = require('../src/controllers/gameSettings');
+    const playerView = require('../src/controllers/playerView');
+    const get = gameSettings.get;
+    const choices = (n) => Array.from({length: n}, (_, i) => ({value: 'C' + i, reveal: '', next: '', humans: 0, loot: []}));
+    const others = (card) => card.choices.filter(c => c.other).length;
+
+    try {
+        console.log('« Autre… » : cartes RP à choix, sans chrono, une seule fois');
+        assert.strictEqual(get().otherChoice, true);
+        let card = blankCard.addOther(blankCard.addOther({type: TYPE_NEGATIVE, timer: 0, choices: choices(2)}));
+        assert.equal(card.choices.length, 3);
+        assert.equal(card.choices[2].value, blankCard.OTHER_LABEL);
+        assert.equal(others(card), 1);
+        assert.equal(others(blankCard.addOther({type: TYPE_PLACE, timer: 0, choices: choices(3)})), 1);
+        assert.equal(others(blankCard.addOther({type: TYPE_NEGATIVE, timer: 1, choices: choices(2)})), 0);
+        assert.equal(others(blankCard.addOther({type: TYPE_NEUTRAL, timer: 0, choices: choices(1)})), 0);
+        assert.equal(others(blankCard.addOther({type: TYPE_INITIAL, timer: 'false', choices: choices(2)})), 0);
+        assert.deepEqual(playerView.publicCard(card).choices, ['C0', 'C1', blankCard.OTHER_LABEL]);
+        gameSettings.get = () => Object.assign(get(), {otherChoice: false});
+        assert.equal(others(blankCard.addOther({type: TYPE_POSITIVE, timer: 0, choices: choices(2)})), 0);
+        gameSettings.get = get;
+        console.log('OK');
+
+        console.log('Carte du MJ bornée : 4 choix au plus, choix sans texte ignorés');
+        assert.equal(blankCard.clean({desc: '  ', choices: [{value: ''}]}), null);
+        let clean = blankCard.clean({desc: ' Une porte ', choices: [
+            {value: 'A', reveal: 'ra', moral: '-7', humans: 'x', loot: 'Medkit'},
+            {value: ''}, {value: 'B', moral: 500}, {value: 'C'}, {value: 'D'}, {value: 'E'}]});
+        assert.equal(clean.desc, 'Une porte');
+        assert.deepEqual(clean.choices.map(c => c.value), ['A', 'B', 'C', 'D']);
+        assert.deepEqual(clean.choices[0], {value: 'A', reveal: 'ra', moral: -7, humans: 0, loot: ['Medkit']});
+        assert.equal(clean.choices[1].moral, 100);
+        console.log('OK');
+
+        console.log('Demande, affichage, choix : moral de chaque joueur, borné');
+        await new Player().create({discord_id: 'blank1', name: 'B1'});
+        await new Player().create({discord_id: 'blank2', name: 'B2'});
+        await new Player().update({moral: 50}, 'blank1');
+        await new Player().update({moral: 3}, 'blank2');
+        assert.equal((await blankCard.handle({action: 'blank-card-request', data: {desc: 'carte'}})).data.status, 'waiting');
+        assert.equal(blankCard.publicCard().kind, 'blank');
+        assert.ok((await blankCard.handle({action: 'blank-card-show', data: {desc: '', choices: []}})).error);
+        let shown = await blankCard.handle({action: 'blank-card-show', data: {desc: 'Suite', choices: [{value: 'Ouvrir', reveal: 'Ouvert', moral: -5}]}});
+        assert.equal(shown.action, 'blank-card-show');
+        // Les joueurs en ligne voient le texte et les choix, pas les résultats
+        assert.deepEqual(blankCard.publicCard(), {id: 'blank', kind: 'blank', desc: 'Suite', timer: false, choices: ['Ouvrir']});
+        let out = await blankCard.handle({action: 'blank-card-choice', data: {index: 0}});
+        assert.equal(out[0].action, 'blank-card-choice');
+        assert.equal(out.filter(m => m.action === 'playerStat').length, 2);
+        assert.equal((await new Player().getData('blank1')).moral, 45);
+        assert.equal((await new Player().getData('blank2')).moral, 0);
+        assert.equal(blankCard.getState(), null);
+        assert.ok((await blankCard.handle({action: 'blank-card-choice', data: {index: 0}})).error);
+        await blankCard.handle({action: 'blank-card-request', data: {}});
+        await blankCard.handle({action: 'blank-card-cancel', data: {}});
+        assert.equal(blankCard.getState(), null);
+        console.log('OK');
+    }
+    finally {
+        gameSettings.get = get;
+        blankCard.reset();
+        await new Player().delete('blank1');
+        await new Player().delete('blank2');
+    }
+}
+
 async function test_statuses_after_planet() {
     console.log('Testing statuses after planet');
     const api = require('../src/controllers/api');

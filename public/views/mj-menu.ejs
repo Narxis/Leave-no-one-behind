@@ -6,7 +6,8 @@
         "/css/mj-menu.css",
         "/css/ui-menus.css",
         "/css/ship-alerts.css",
-        "/css/mj-ship.css"
+        "/css/mj-ship.css",
+        "/css/mj-blank.css"
     ]
 }) %>
 
@@ -159,6 +160,32 @@
                     </div>
                 </div>
             </div>
+            <!-- Carte blanche : la suite d'une action libre (« Autre… »), écrite sur le moment (mj-blank.js) -->
+            <section class="mj-blank" id="mj-blank">
+                <div class="mj-blank-head">
+                    <div class="mj-ship-title">Carte blanche</div>
+                    <div class="mj-blank-status" id="mj-blank-status">Les joueurs peuvent choisir « Autre… » sur les cartes à choix ; vous pouvez aussi afficher une carte blanche à tout moment.</div>
+                </div>
+                <textarea class="add-life mj-blank-desc" id="mj-blank-desc" maxlength="2000" rows="4" placeholder="Texte de la carte : ce qui arrive suite à l'action des joueurs"></textarea>
+                <div class="mj-blank-choices" id="mj-blank-choices">
+                    <% for (var b = 0; b < 4; b++) { %>
+                    <div class="mj-blank-choice" data-index="<%= b %>">
+                        <input type="text" class="add-life mj-blank-value" maxlength="80" placeholder="Choix <%= b + 1 %><%= b ? ' (facultatif)' : '' %>">
+                        <textarea class="add-life mj-blank-reveal" maxlength="1000" rows="2" placeholder="Résultat affiché après ce choix"></textarea>
+                        <div class="mj-blank-effects">
+                            <label title="Moral de chaque joueur (+ ou −)">Moral <input type="number" class="add-life mj-blank-moral" min="-100" max="100" step="1" placeholder="0"></label>
+                            <label title="Humains gagnés ou perdus (+ ou −)">Humains <input type="number" class="add-life mj-blank-humans" min="-1000" max="1000" step="5" placeholder="0"></label>
+                            <label title="Objet trouvé, à distribuer comme le butin d'une carte">Butin <input type="text" class="add-life mj-blank-loot" list="loot-list" maxlength="60" placeholder="aucun"></label>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="mj-blank-buttons">
+                    <button type="button" class="add-life fight" id="mj-blank-show">Afficher aux joueurs</button>
+                    <button type="button" class="add-life" id="mj-blank-cancel">Annuler (reprendre la carte)</button>
+                    <button type="button" class="add-life" id="mj-blank-clear">Vider</button>
+                </div>
+            </section>
             <!-- Plan du vaisseau : salles qui clignotent et alertes chez les joueurs (mj-ship.js) -->
             <section class="mj-ship" id="mj-ship">
                 <div class="mj-ship-map" id="mj-ship-map">
@@ -207,5 +234,6 @@ var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u00
 <script src="js/mj-allies.js"></script>
 <script src="js/ship-map.js"></script>
 <script src="js/mj-ship.js"></script>
+<script src="js/mj-blank.js"></script>
 <%- include("partials/bottom-scripts") %>
 </body>

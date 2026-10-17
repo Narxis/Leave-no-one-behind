@@ -1,6 +1,7 @@
 const {Player} = require("./../models/player");
 const {Ship} = require("./../models/ship");
 const {hydrateCardDB, getCardsIds, cardPop, announceCard, getCurrentCard} = require("./deck");
+const blankCard = require("./blankCard");
 const ws = require("ws");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
@@ -276,6 +277,11 @@ module.exports = {
     // Carte affichée sur la page de jeu (panneau MJ ouvert en cours de partie)
     getCurrentCard(req, res) {
         res.json(getCurrentCard() || {});
+    },
+
+    // Carte blanche en cours (panneau MJ ouvert ou rechargé pendant l'attente)
+    getBlankCard(req, res) {
+        res.json(blankCard.getState() || {});
     },
 
     async popNextCard(req, res) {

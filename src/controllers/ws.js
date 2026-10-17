@@ -9,6 +9,7 @@ const combat = require("./combat");
 const allies = require("./allies");
 const inventory = require("./inventory");
 const cardLoot = require("./cardLoot");
+const blankCard = require("./blankCard");
 const shipAlerts = require("./shipAlerts");
 const lobby = require("./lobby");
 const remote = require("./remote");
@@ -137,6 +138,12 @@ const makeAction = async function (raw_response) {
             break;
         case 'card-loot-offer':
             payload = cardLoot.handle(response);
+            break;
+        case 'blank-card-request':
+        case 'blank-card-show':
+        case 'blank-card-choice':
+        case 'blank-card-cancel':
+            payload = blankCard.handle(response);
             break;
         case 'lobby-state':
         case 'lobby-open':
