@@ -30,6 +30,7 @@ async function test() {
     await test_deck_generation();
     await test_place_endings();
     await test_card_rolls();
+    await test_card_outcomes();
     await test_statuses_after_planet();
     test_random_ship();
     await test_last_planet();
@@ -369,6 +370,11 @@ async function test_card_vars() {
         if (m.roll)
             for (let issue of Object.values(JSON.parse(m.roll)).filter(i => i && typeof i === 'object'))
                 texts.push(issue.reveal, issue.mjreveal);
+        for (let outcome of m.outcomes ? JSON.parse(m.outcomes) : []) {
+            texts.push(outcome.reveal, outcome.mjreveal);
+            if (outcome.roll)
+                texts.push(outcome.roll.success.reveal, outcome.roll.success.mjreveal, outcome.roll.failure.reveal, outcome.roll.failure.mjreveal);
+        }
     }
     for (let a of await DB.tables.cards_alt.findAll({raw: true}))
         texts.push(a.value, a.reveal, a.mjreveal);
@@ -499,8 +505,10 @@ async function test_deck_generation(){
     console.log('Deck generation OK')
 }
 
-// Suites d'un choix : la sienne, ou réussite et échec de son jet
-const choiceSuites = (choice) => choice.roll ? [choice.roll.success, choice.roll.failure] : [choice];
+// Suites d'un choix : la sienne, ou réussite et échec de son jet ; pour des
+// issues au hasard, celles de chaque issue (et non seulement de celle tirée)
+const issueSuites = (issue) => issue.roll ? [issue.roll.success, issue.roll.failure] : [issue];
+const choiceSuites = (choice) => (choice.outcomes || [choice]).flatMap(issueSuites);
 
 // Une suite unique : un résultat ou une carte qui existe
 function assertSuite(suite, names, label) {
@@ -541,10 +549,11 @@ async function test_card_rolls() {
     for (let row of await DB.tables.cards.findAll({where: {type: [TYPE_POSITIVE, TYPE_NEGATIVE, TYPE_NEUTRAL, TYPE_INITIAL]}, raw: true})) {
         let card = await new Card(row.id).getData();
         for (let choice of card.choices) {
-            if (!choice.roll)
+            if (!choice.roll && !choice.outcomes)
                 continue;
-            rolls++;
-            assert(!choice.next && !(choice.reveal || '').trim(), 'Choix à jet avec sa propre suite : ' + choice.value);
+            rolls += choice.roll ? 1 : 0;
+            if (choice.roll)
+                assert(!choice.next && !(choice.reveal || '').trim(), 'Choix à jet avec sa propre suite : ' + choice.value);
             for (let suite of choiceSuites(choice))
                 assertSuite(suite, names, choice.value);
         }
@@ -575,6 +584,67 @@ async function test_card_rolls() {
     assert.strictEqual(nothing.roll, undefined);
     assert.strictEqual(nothing.reveal, 'Boum');
     // (Card.delete efface les modules par id de module, pas par carte)
+    await DB.tables.card_modules.destroy({where: {card_id: card.id}});
+    await DB.tables.cards.destroy({where: {id: card.id}});
+    console.log('OK');
+}
+
+// Issues tirées au hasard pour un même choix
+async function test_card_outcomes() {
+    console.log('Testing card outcomes');
+    const {parseOutcomes, drawOutcome} = require('../src/models/card');
+
+    // Exemple de baseCards.json : le conteneur ouvert
+    let examples = 0;
+    for (let row of await DB.tables.cards.findAll({where: {type: [TYPE_POSITIVE, TYPE_NEGATIVE, TYPE_NEUTRAL, TYPE_PLACE, TYPE_FOLLOWUP]}, raw: true}))
+        for (let choice of (await new Card(row.id).getData()).choices)
+            if (choice.outcomes) {
+                examples++;
+                assert(choice.outcome >= 0 && choice.outcome < choice.outcomes.length);
+                assert(!!choice.reveal || !!choice.next || !!choice.roll, 'Issue tirée sans suite : ' + choice.value);
+            }
+    assert(examples > 0, 'aucun choix avec des issues au hasard');
+    console.log('OK');
+
+    console.log('Outcomes format and draw');
+    assert.strictEqual(parseOutcomes(''), null);
+    assert.strictEqual(parseOutcomes([{reveal: 'seule'}]), null);   // une seule issue : choix normal
+    let list = parseOutcomes([{reveal: 'a'}, {weight: 3, next: 'b', loot: ['Outils']}, {weight: -2, reveal: 'c', roll: {stat: 'combat', success: {reveal: 'ok'}, failure: {reveal: 'ko'}}}]);
+    assert.deepStrictEqual(list.map(o => o.weight), [1, 3, 1]);
+    assert.strictEqual(list[1].next, 'b');
+    assert.strictEqual(list[2].roll.stat, 'combat');
+    // Poids 1 / 3 / 1 sur 5 : [0, .2[ → 0, [.2, .8[ → 1, [.8, 1[ → 2
+    assert.deepStrictEqual([0, .19, .2, .79, .8, .99].map(r => drawOutcome(list, () => r)), [0, 0, 1, 1, 2, 2]);
+    assert.strictEqual(drawOutcome([{weight: 0}, {weight: 0}], () => .6), 1);
+    console.log('OK');
+
+    console.log('Outcomes in game');
+    let card = await new Card().create({
+        type: TYPE_NEUTRAL, desc: 'Un conteneur',
+        choices: [
+            {value: 'Ouvrir', mjreveal: 'MJ', humans: -5, loot: ['Corde'], outcomes: [
+                {reveal: 'Des araignées [le_race_1]', mjreveal: 'perte de moral'},
+                {reveal: 'Des outils', humans: 10, loot: ['Outils']},
+                {roll: {stat: 'pilotage', success: {reveal: 'esquivé'}, failure: {reveal: 'touché'}}}
+            ]},
+            {value: 'Partir', reveal: 'Rien'}
+        ]
+    });
+    let seen = new Set();
+    for (let i = 0; i < 60 && seen.size < 3; i++) {
+        let open = (await new Card(card.id).getData()).choices.find(c => c.value === 'Ouvrir');
+        seen.add(open.outcome);
+        assert.strictEqual(open.outcomes.length, 3);
+        if (open.outcome === 0)
+            assert(open.reveal.startsWith('Des araignées') && !open.reveal.includes('[') && open.mjreveal === 'MJ\nperte de moral' && !open.roll);
+        if (open.outcome === 1)
+            assert(open.reveal === 'Des outils' && open.humans === 5 && open.loot.join() === 'Corde,Outils');
+        if (open.outcome === 2)
+            assert(open.roll && open.roll.success.reveal === 'esquivé' && open.reveal === '');
+    }
+    assert.strictEqual(seen.size, 3, 'toutes les issues doivent pouvoir sortir');
+    let leave = (await new Card(card.id).getData()).choices.find(c => c.value === 'Partir');
+    assert(leave.outcomes === undefined && leave.outcome === undefined && leave.reveal === 'Rien');
     await DB.tables.card_modules.destroy({where: {card_id: card.id}});
     await DB.tables.cards.destroy({where: {id: card.id}});
     console.log('OK');

@@ -57,6 +57,44 @@ const parseRoll = function (raw) {
     }
 }
 
+// Issues au hasard d'un choix (« outcomes ») : liste de suites, chacune avec
+// un poids (1 par défaut) et, au besoin, son propre jet. Le jeu en tire une
+// à l'affichage de la carte.
+const outcomeOf = function (raw) {
+    raw = raw && typeof raw === 'object' ? raw : {};
+    let weight = Number(raw.weight);
+    let outcome = Object.assign(issueOf(raw), {weight: Number.isFinite(weight) && weight >= 0 ? weight : 1});
+    let roll = parseRoll(raw.roll);
+    if (roll)
+        outcome.roll = roll;
+    return outcome;
+}
+
+// [issue, ...] (au moins 2), ou null sans issues au hasard
+const parseOutcomes = function (raw) {
+    try {
+        let list = typeof raw === 'string' ? (raw ? JSON.parse(raw) : null) : raw;
+        return Array.isArray(list) && list.length >= 2 ? list.map(outcomeOf) : null;
+    }
+    catch (e) {
+        return null;
+    }
+}
+
+// Indice tiré selon les poids (tous à 0 : chacune a la même chance)
+const drawOutcome = function (outcomes, random = Math.random) {
+    let total = outcomes.reduce((sum, o) => sum + o.weight, 0);
+    if (!(total > 0))
+        return Math.floor(random() * outcomes.length);
+    let r = random() * total;
+    for (let i = 0; i < outcomes.length; i++) {
+        r -= outcomes[i].weight;
+        if (r < 0)
+            return i;
+    }
+    return outcomes.length - 1;
+}
+
 class Card {
     id;
     type;
@@ -139,6 +177,7 @@ class Card {
                     loot: Array.isArray(this.choices[choice].loot) && this.choices[choice].loot.length ? JSON.stringify(this.choices[choice].loot) : '',
                     status: this.choices[choice].status && this.choices[choice].status.slug ? JSON.stringify(this.choices[choice].status) : '',
                     roll: this.rollToStore(this.choices[choice].roll),
+                    outcomes: this.outcomesToStore(this.choices[choice].outcomes),
                 });
             }
             for (let mod in this.modules)
@@ -169,6 +208,20 @@ class Card {
             issue.mjreveal = this.replaceVars(issue.mjreveal);
         }
         return JSON.stringify(roll);
+    }
+
+    // Issues au hasard en JSON, variables tirées comme pour le reste de la carte
+    outcomesToStore(raw) {
+        let outcomes = parseOutcomes(raw);
+        if (!outcomes)
+            return '';
+        for (let outcome of outcomes) {
+            outcome.reveal = this.replaceVars(outcome.reveal);
+            outcome.mjreveal = this.replaceVars(outcome.mjreveal);
+            if (outcome.roll)
+                outcome.roll = JSON.parse(this.rollToStore(outcome.roll));
+        }
+        return JSON.stringify(outcomes);
     }
 
     replaceVars(text) {
@@ -249,6 +302,24 @@ class Card {
         await DB.tables.card_modules.destroy({ where: { id: this.id } });
     }
 
+    // Issue tirée au hasard : elle devient la suite du choix (résultat ou carte,
+    // jet éventuel) ; humains, butin et infos MJ s'ajoutent à ceux du choix.
+    // La liste reste dans outcomes, l'indice tiré dans outcome (menu MJ, tests)
+    pickOutcome(choice, outcomes) {
+        let index = drawOutcome(outcomes);
+        let picked = outcomes[index];
+        choice.reveal = picked.reveal;
+        choice.next = picked.next;
+        choice.mjreveal = [choice.mjreveal, picked.mjreveal].filter(t => t && t.trim()).join('\n');
+        choice.humans = (choice.humans || 0) + picked.humans;
+        choice.loot = choice.loot.concat(picked.loot);
+        delete choice.roll;
+        if (picked.roll)
+            choice.roll = picked.roll;
+        choice.outcomes = outcomes;
+        choice.outcome = index;
+    }
+
     async getData() {
 
         let activeStatus = false;
@@ -322,7 +393,8 @@ class Card {
                 'humans',
                 'loot',
                 'status',
-                'roll'
+                'roll',
+                'outcomes'
             ],
             where: {
                 card_id: this.id
@@ -354,6 +426,9 @@ class Card {
                 let roll = parseRoll(mod.roll);
                 if (roll)
                     choice.roll = roll;
+                let outcomes = parseOutcomes(mod.outcomes);
+                if (outcomes)
+                    this.pickOutcome(choice, outcomes);
                 choices.push(choice);
             }
             else {
@@ -405,4 +480,4 @@ class Card {
     }
 }
 
-module.exports = {Card, parseRoll, ROLL_STATS}
+module.exports = {Card, parseRoll, parseOutcomes, drawOutcome, ROLL_STATS}

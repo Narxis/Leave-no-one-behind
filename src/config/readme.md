@@ -70,6 +70,21 @@ Le `humans` et le `loot` du choix lui-même s'appliquent quel que soit le résul
         }
 ```
 
+### Choix avec des issues au hasard
+
+Le jeu tire une issue à l'affichage de la carte (le menu MJ montre laquelle). `weight` est facultatif (1 par défaut) : poids 3 contre 1 = 75 % / 25 %.
+Chaque issue a un `reveal` ou un `next` (ou un `roll`), et peut avoir `mjreveal`, `humans` et `loot`, qui s'ajoutent à ceux du choix.
+
+```json
+        {
+          "value": "Récupérer le cargo et l'ouvrir",
+          "outcomes": [
+            { "weight": 3, "reveal": "\n   ", "mjreveal": "" },
+            { "weight": 1, "reveal": "\n   ", "loot": ["Outils"] }
+          ]
+        }
+```
+
 ### Planet Template
 
 ```json
