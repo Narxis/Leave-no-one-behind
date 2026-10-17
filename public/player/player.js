@@ -92,6 +92,9 @@
     let game = null;    // dernier état du jeu reçu
     let you;            // dernier état du joueur reçu (undefined : pas encore reçu)
     let tab = store.get('lnob-player-tab') || 'game';
+    let chat = [];          // messages visibles par ce joueur
+    let chatChannel = 'room'; // 'room' (salon) ou 'gm' (privé avec le MJ)
+    const chatUnread = {room: 0, gm: 0};
 
     const show = function (panel) {
         $('join').hidden = panel !== 'join';
@@ -130,12 +133,56 @@
 
     const selectTab = function (name) {
         tab = name;
+        if (name === 'chat') {
+            chatUnread[chatChannel] = 0;
+            renderChatBadges();
+        }
         store.set('lnob-player-tab', name);
         document.querySelectorAll('.tab').forEach(b => {
             b.classList.toggle('active', b.dataset.tab === name);
             b.setAttribute('aria-selected', b.dataset.tab === name);
         });
         document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.dataset.panel !== name; });
+    };
+
+    // ---- Chat ------------------------------------------------------------
+
+    const channelOf = (m) => m.to ? 'gm' : 'room';
+    const chatTime = (at) => new Date(at).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
+
+    const renderChatBadges = function () {
+        for (let c of ['room', 'gm']) {
+            let b = document.querySelector('[data-badge="' + c + '"]');
+            b.textContent = chatUnread[c];
+            b.hidden = !chatUnread[c];
+        }
+        let total = chatUnread.room + chatUnread.gm;
+        $('chat-badge').textContent = total;
+        $('chat-badge').hidden = !total;
+    };
+
+    const renderChat = function () {
+        document.querySelectorAll('.chat-channel').forEach(b => b.classList.toggle('active', b.dataset.channel === chatChannel));
+        let list = chat.filter(m => channelOf(m) === chatChannel);
+        $('chat-empty').hidden = list.length > 0;
+        $('chat-messages').replaceChildren(...list.map(m => {
+            let li = el('li', 'chat-message' + (m.from.gm ? ' gm' : '') + (m.from.id === playerId ? ' mine' : ''));
+            let head = el('div', 'chat-head');
+            head.append(el('strong', '', m.from.name), el('span', 'dim', chatTime(m.at)));
+            li.append(head, el('p', 'chat-text', m.text));
+            return li;
+        }));
+        $('chat-messages').scrollTop = $('chat-messages').scrollHeight;
+        $('chat-text').placeholder = chatChannel === 'gm' ? 'Message privé au MJ…' : 'Écrire à l\'équipage…';
+        renderChatBadges();
+    };
+
+    const addChat = function (m) {
+        chat.push(m);
+        let c = channelOf(m);
+        if (m.from.id !== playerId && (tab !== 'chat' || c !== chatChannel))
+            chatUnread[c]++;
+        renderChat();
     };
 
     // ---- Statut de connexion -------------------------------------------
@@ -372,6 +419,13 @@
             renderMe();
             renderItems();
         }
+        else if (data.kind === 'chat-history') {
+            chat = Array.isArray(data.messages) ? data.messages : [];
+            renderChat();
+        }
+        else if (data.kind === 'chat' && data.message) {
+            addChat(data.message);
+        }
         else if (data.kind === 'refused') {
             showActionError(data.message);
             renderMe();
@@ -463,6 +517,8 @@
         roster = [];
         game = null;
         you = undefined;
+        chat = [];
+        chatUnread.room = chatUnread.gm = 0;
         leaving = false;
         $('submit').disabled = true;
         connect();
@@ -488,6 +544,29 @@
         if (nick)
             sendAction('set-name', {nick: nick});
         $('char-name').blur();
+    });
+
+    document.querySelectorAll('.chat-channel').forEach(b => b.addEventListener('click', () => {
+        chatChannel = b.dataset.channel;
+        chatUnread[chatChannel] = 0;
+        renderChat();
+        $('chat-text').focus();
+    }));
+
+    $('chat-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        let text = $('chat-text').value.trim();
+        if (!text)
+            return;
+        sendAction('chat', {text: text, private: chatChannel === 'gm'});
+        $('chat-text').value = '';
+    });
+    // Entrée envoie, Maj+Entrée va à la ligne
+    $('chat-text').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            $('chat-form').requestSubmit();
+        }
     });
 
     $('roll-form').addEventListener('submit', (e) => {

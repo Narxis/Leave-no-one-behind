@@ -21,7 +21,19 @@ Pour tester une autre adresse sans refaire l'app : variable d'environnement `LNO
 
 ## Mettre à jour la page joueur
 
-Le relais sert la page joueur (`public/player`) telle qu'elle était au moment du déploiement. Après une modification de cette page (une nouvelle étape fusionnée sur `prod`, par exemple), relancer `npm run deploy` dans ce dossier. Mieux vaut le faire entre deux parties : le déploiement coupe les connexions en cours, même si le MJ et les joueurs se reconnectent tout seuls.
+Le relais sert la page joueur (`public/player`) telle qu'elle était au moment du déploiement. Il faut donc le redéployer quand cette page change. Mieux vaut le faire entre deux parties : le déploiement coupe les connexions en cours, même si le MJ et les joueurs se reconnectent tout seuls.
+
+### Automatiquement (recommandé)
+
+Le workflow **Relais** (`.github/workflows/relay.yml`) redéploie le relais à chaque fusion sur `prod` qui touche `relay/` ou `public/player/`. On peut aussi le lancer à la main depuis l'onglet Actions. Réglage à faire une seule fois :
+
+1. Sur https://dash.cloudflare.com/profile/api-tokens : **Create Token**, modèle **Edit Cloudflare Workers**. Dans « Account Resources », choisir ton compte ; dans « Zone Resources », **All zones**. Puis **Continue to summary** et **Create Token**. Copier le jeton affiché.
+2. L'identifiant du compte (**Account ID**) est sur https://dash.cloudflare.com, dans le menu « ⋯ » à côté du nom du compte (« Copy account ID »), ou affiché par `npx wrangler whoami` dans ce dossier.
+3. Sur GitHub, dépôt → **Settings** → **Secrets and variables** → **Actions** → **New repository secret** : `CLOUDFLARE_API_TOKEN` avec le jeton, puis `CLOUDFLARE_ACCOUNT_ID` avec l'identifiant.
+
+### À la main
+
+Dans ce dossier, sur `prod` à jour : `npm run deploy`.
 
 ## Limites
 
