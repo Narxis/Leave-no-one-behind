@@ -8,83 +8,23 @@ async function getAllPlayers () {
     });
     return JSON.parse(await rawResponse.text());
 }
-var combat = 0;
-var moral =[] ;
-let consoleContainer = document.getElementById('console-container');
-let consoletext = consoleContainer.innerText
-var mobstats =[]
+// Le combat (adversaires, début/fin, attaques) est géré dans mj-combat.js
 
-
-document.getElementById('add-monstre').addEventListener('mouseup',function(){
-    let mob = document.getElementById("search-ennemy").value
-    let mobId = mobstats.length
-    //la fonction mobstat génère les stats d'un mob dans une liste
-    mobstats.push(mobstat(mob))
-    //mobstats est une liste de liste l'indice dans la première est l'id du mob et cette case contient les 6 stats du mob dans une autre liste
-    let mobhmtl =`
-                <div class="ennemy-container">  
-                    <div class="ennemy-name">${mob}</div>
-                    <div class="offense-container">
-                        <button class="roll-button offense-roll" id="offense-ennemy${mobId}">Offense</button>
-                        <button class="roll-button defence-roll" id="defense-ennemy${mobId}">Défense</button>
-                    </div>
-                    <div class="ennemy-damage output-roll" id="ennemy-damage${mobId}"></div>
-                    <button class="roll-button damage-roll" id="defense-ennemy${mobId}">Dégâts</button>
-                    <div class="ennemy-separateur"></div>
-                </div>`;
-    //faire spawn le mob genre document.getElementById('combat-area').innerHTML += mobhtml; (sauf que ca marcheras pas comme ça puisque c'est pas sur cette page lol)
-})
-
-document.getElementById('add-friend').addEventListener('mouseup',function(){
-    let mob = document.getElementById("search-ally").value
-    //faire spawn le compagnon (surement rajouter un player tab temporairement)
-})
-/*
-document.getElementById('combat-start').addEventListener('mouseup',async function(){
-    if (combat == 0){
-        combat++
-        document.getElementById('combat-start').innerText = 'Terminer le combat';
-        let players = await getAllPlayers();
-        for (let player of players) {
-            moral.push(player.moral)
-        }
-        console.log(moral)
-    }
-    else {
-        combat--
-        document.getElementById('combat-start').innerText = 'Commencer le combat';
-        moral = []
-        mobstats =[]
-    }
-    //le dernier mob qui a fait un jet de défense subit les dégats du roll de dégats du joueur
-    //check à chaque update si les hp d'un mob sont à zero
-        //si oui on l'indique au mj (consoletext.append('mob1 est hors combat \n'))
-        //L'indiquer aussi aux joueurs (exemple changer la couleur du pseudo blanc -> rouge)
-})
-*/
-
-document.addEventListener('playerStat', async function(e){
-    if (combat){
-        let players = await getAllPlayers();
-        for (let i=0;i<players.length;i++) {
-            if (players[i].moral < moral[i]-10){
-                consoleContainer.innerText = consoletext +'Le joueur '+players[i].name +" s'est évanouit.\n"
-                consoletext = consoleContainer.innerText
-                //l'indiquer aussi aux joueurs (exemple changer la couleur du pseudo blanc -> rouge)
-            }
-        }
-    }
-})
+// Les compagnons (PNJ) sont gérés dans mj-allies.js
 function initialiseRadio () {
     document.querySelector('.life-type1').addEventListener('mouseup', function(){
         document.getElementById('life-1').checked = true;
         document.querySelector('.ennemy').classList.remove('hide');
         document.querySelector('.ally').classList.add('hide');  
+        document.getElementById('mj-enemies').classList.remove('hide');
+        document.getElementById('mj-allies').classList.add('hide');
     })
     document.querySelector('.life-type2').addEventListener('mouseup', function(){
         document.getElementById('life-2').checked = true;
         document.querySelector('.ennemy').classList.add('hide');
         document.querySelector('.ally').classList.remove('hide');  
+        document.getElementById('mj-enemies').classList.add('hide');
+        document.getElementById('mj-allies').classList.remove('hide');
     })
 }
 function initialiseStatus () {
@@ -111,7 +51,10 @@ function setMJCardValue(e) {
     for (let choice of card.choices) {
         document.querySelector('#choice'+i+' .button-text').innerHTML = choice.value;
         document.querySelector('#choice'+i+' .mjreveal-text').innerHTML = '<span class="mjreveal">'+choice.mjreveal+'</span>';
-        document.querySelector('#choice'+i+++' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + choice.reveal;
+        // Butin du choix : distribué sur la page de jeu avant la suite
+        let loot = Array.isArray(choice.loot) && choice.loot.length
+            ? '<br><br><span class="mj-loot">Butin : ' + choice.loot.map(n => String(n).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]))).join(', ') + '</span>' : '';
+        document.querySelector('#choice'+i+++' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + choice.reveal + loot;
         console.log(i)
     }
 }

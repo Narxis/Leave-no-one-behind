@@ -2,6 +2,17 @@ const {literal} = require("sequelize");
 const {Statuses} = require("./statuses");
 const chalk = require("chalk");
 
+// Butin d'un choix, enregistré en JSON (vide : aucun butin)
+const parseLoot = function (raw) {
+    try {
+        let list = raw ? JSON.parse(raw) : [];
+        return Array.isArray(list) ? list : [];
+    }
+    catch (e) {
+        return [];
+    }
+}
+
 class Card {
     id;
     type;
@@ -80,7 +91,8 @@ class Card {
                     reveal: this.replaceVars(this.choices[choice].reveal),
                     mjreveal: this.replaceVars(this.choices[choice].mjreveal),
                     next: this.choices[choice].next,
-                    cost: -1,
+                    humans: this.choices[choice].humans || 0,
+                    loot: Array.isArray(this.choices[choice].loot) && this.choices[choice].loot.length ? JSON.stringify(this.choices[choice].loot) : '',
                 });
             }
             for (let mod in this.modules)
@@ -231,7 +243,9 @@ class Card {
                 'value',
                 'reveal',
                 'mjreveal',
-                'next'
+                'next',
+                'humans',
+                'loot'
             ],
             where: {
                 card_id: this.id
@@ -253,7 +267,9 @@ class Card {
                     value: mod.value,
                     reveal: mod.reveal,
                     mjreveal: mod.mjreveal,
-                    next: mod.next
+                    next: mod.next,
+                    humans: mod.humans,
+                    loot: parseLoot(mod.loot)
                 });
             }
             else {

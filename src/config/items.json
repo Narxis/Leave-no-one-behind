@@ -4,175 +4,210 @@
       "name": "Fronde Fnek",
       "slug": "fronde-fnek",
       "desc": "Malgrès leur avancées technologique les Fneks préfèrent utiliser une fronde pour se battre. Généralement ces frondes sont fournies avec des boules puante qui libèrent un puissant concentré d'odeur de Fnek.",
-      "race": "fnek"
+      "race": "fnek",
+      "image": "fronde-fnek.png"
     },
     {
       "name": "Shrips",
       "slug": "shrips",
       "desc": "Les Shrips sont des chips goût crevette qui ont la forme de shrymps, elles peuvent remonter le moral des Omphors",
-      "race": "omphor"
+      "race": "omphor",
+      "image": "shrips.png"
     },
     {
       "name": "Armure en \"Kev-lard\"",
       "slug": "armure-omphor",
       "desc": "L'armure en Kev-lard rend son utilisateur plus résistant mais limite ses déplacement",
-      "race": "omphor"
+      "race": "omphor",
+      "image": "kev-lar.png"
     },
     {
       "name": "Pelotte de laine",
       "slug": "pelotte",
       "desc": "Offir une pelotte de laine à un Nek lui remonte le moral.",
-      "race": "sylv"
+      "race": "sylv",
+      "image": "pelotte.png"
     },
     {
       "name": "Tazer cosmique",
       "slug": "tazer-cosmique",
       "desc": "Un tazer utilisant l'énergie cosmique",
-      "race": "sylv"
+      "race": "sylv",
+      "image": "taser.png"
     },
     {
       "name": "Fouet Ygrl",
       "slug": "fouet-ygrl",
       "desc": "Un fouet",
-      "race": "ygrl"
+      "race": "ygrl",
+      "image": "fouetygrl.png"
     },
     {
       "name": "Shrymp utility Kit",
       "slug": "shrymp-kit",
       "desc": "Le shrymp utility campement kit contient de nombreux ustensiles",
-      "race": "shrymp"
+      "race": "shrymp",
+      "image": ""
     },
     {
       "name": "Corde",
       "slug": "corde",
       "desc": "Une corde dans le Shrymp Kit",
-      "race": "shrymp"
+      "race": "shrymp",
+      "image": "corde.png"
     },
     {
       "name": "Lampe torche",
       "slug": "lampe-torche",
       "desc": "Une lampe torche dans le Shrymp Kit",
-      "race": "shrymp"
+      "race": "shrymp",
+      "image": "flashlight.png"
     },
     {
       "name": "Nourriture déshydraté",
       "slug": "nourriture-deshydrate",
       "desc": "De la nourriture déshydraté",
-      "race": "shrymp"
+      "race": "shrymp",
+      "image": "desfood.png"
     },
     {
       "name": "Dictionnaire Ygrlien",
       "slug": "dictionnaire-ygrl",
       "desc": "Un dictionnaire du langage Ygrl (inutile)",
-      "race": "shrymp"
+      "race": "shrymp",
+      "image": "dictionnaire.png"
     },
     {
       "name": "Mèche Ygrl",
       "slug": "meche-ygrl",
       "desc": "Une mèche de cheveux d'Ygrl",
-      "race": "shrymp"
+      "race": "shrymp",
+      "image": "ygrlhair.png"
     },
     {
       "name": "Lance Shrymp",
       "slug": "lance-shrymp",
       "desc": "Une lance qui fait approximativement la taille d'un cure-dent.",
-      "race": "shrymp"
+      "race": "shrymp",
+      "image": "lance.png"
     },
     {
       "name": "L'aku tosswice",
       "slug": "aku-tosswice",
       "desc": "Une sorte de boite à outil contenant beaucoup d'objet",
-      "race": "aku"
+      "race": "aku",
+      "image": "aku-tosswice.png"
     },
     {
       "name": "Outils",
       "slug": "outil-aku",
       "desc": "Outils de maintenance variés",
-      "race": "aku"
+      "race": "aku",
+      "image": "outils-repa.png"
     },
     {
       "name": "Boule puante Fnek",
       "slug": "boule-fnek",
       "desc": "Une boule puante pour fronde fnek",
-      "race": "aku"
+      "race": "aku",
+      "image": "boule-fnek.png"
     },
     {
       "name": "Paquet de shrips",
       "slug": "paquet-shrimps",
       "desc": "Les Shrips sont des chips goût crevette qui ont la forme de Shrymps, elles peuvent remonter le moral des Omphors",
-      "race": "aku"
+      "race": "aku",
+      "image": "shrips.png"
     },
     {
       "name": "Cure-dent",
       "slug": "cure-dent",
       "desc": "Un cure-dent",
-      "race": "aku"
+      "race": "aku",
+      "image": ""
     },
     {
       "name": "Montre-Boussole",
       "slug": "montre-boussole",
       "desc": "Une montre-boussole (qui montre soit l'heure soit la direction, en fonction de l'heure actuelle)",
-      "race": "aku"
+      "race": "aku",
+      "image": "montre-boussole.png"
     },
     {
       "name": "Passeport",
       "slug": "passeport",
       "desc": "Un passeport",
-      "race": "aku"
+      "race": "aku",
+      "image": "passeport-aku.png"
     },
     {
       "name": "Balle de Nek-k47",
       "slug": "balle-nek-k47",
       "desc": "Un balle de Nek-k47",
-      "race": "aku"
+      "race": "aku",
+      "image": "ball-nekk47.png"
     },
     {
       "name": "Massue Yorc",
       "slug": "massue-yorc",
       "desc": "Une massue seulement utilisable par un Yorc au coeur pur",
-      "race": "yorc"
+      "race": "yorc",
+      "image": "massue-yorc.png"
     },
     {
       "name": "Filet paralysant",
       "slug": "filet-paralysant",
       "desc": "Filet pouvant neutraliser temporairement une cible à distance",
-      "race": "nek_eau"
+      "race": "nek_eau",
+      "image": "fap.png"
     },
     {
       "name": "Projectile à combustion",
       "slug": "projectile-nek-feu",
       "desc": "Dagues de lancée utilisant la chaleur des nek-feux pour accélérer vers sa cible",
-      "race": "nek_feu"
+      "race": "nek_feu",
+      "image": ""
     },
     {
       "name": "Nek'ronomicon",
       "slug": "nek-ronomicon",
       "desc": "Un receuil religieux avec un double fond pour stocker des objets",
-      "race": "nek_terre"
+      "race": "nek_terre",
+      "image": ""
     },
     {
       "name": "Nek-k47",
       "slug": "nek-k47",
       "desc": "Un revolver nektologique pouvant être stocké dans un double fond",
-      "race": "nek_terre"
+      "race": "nek_terre",
+      "image": ""
     },
     {
       "name": "Em-0 Droid",
       "slug": "em-o-droid",
       "desc": "Un drone pouvant prendre des videos en 64k 1440fps",
-      "race": "nek_air"
+      "race": "nek_air",
+      "image": ""
     }
   ],
   "electronique": [
     {
       "name": "Projecteur de bouclier personnel",
       "slug": "personal-shield",
-      "desc": "Le projecteur de bouclier personnel est une dispositif utilisant l'énergie cosmique permettant d'absorber un coup ou un projectile ciblant l'utilisateur. Le projecteur de bouclier personnel doit être rechargé en énergie cosmique avant de pouvoir être réutilisé."
+      "desc": "Le projecteur de bouclier personnel est une dispositif utilisant l'énergie cosmique permettant d'absorber un coup ou un projectile ciblant l'utilisateur. Le projecteur de bouclier personnel doit être rechargé en énergie cosmique avant de pouvoir être réutilisé.",
+      "image": ""
     },
     {
       "name": "Drone",
       "slug": "drone",
-      "desc": "Un drone pour  réveller les stats planètes."
+      "desc": "Un drone pour  réveller les stats planètes.",
+      "image": "drone.gif"
+    },
+    {
+      "name": "Spider-BOMB",
+      "slug": "spider-bomb",
+      "desc": "Une bombe qui permet d’infliger de lourd à sa cible sans causer beaucoup de dégâts collatéraux.",
+      "image": "spider-bomb.gif"
     }
   ],
   "tribal": [

@@ -29,13 +29,21 @@ var planetState = Math.floor(pre_planetState/25);
 
 
 var scoreMultiplier = ["Humain", "Etat du vaisseau", "Etat de la planète"];
-var scoreAdder = ["Bonus carte", "Autres"]
-var bonusCarte = Math.floor(score.scoreCards/100);
+var scoreAdder = ["Bonus carte"]
 var shipState = Math.floor(score.scoreShip/25);
 var humans = ship.cryopods-1;
-var other = 69;
 var valueScoreMultiplier = [humans, shipState-1, planetState-1];
-var valueScoreAdder = [bonusCarte, other];
+
+// Score total : celui du serveur, le même que celui du classement.
+// humains × vaisseau × planète forment la base, les cartes s'y ajoutent
+var totalScore = Math.round(score.scoreTotal);
+var cardsScore = Math.round(score.scoreCards);
+var baseScore = totalScore - cardsScore;
+// Part de la base déjà affichée après les humains, le vaisseau, puis la planète
+var baseSteps = [.15, .45, 1];
+var valueScoreAdder = [cardsScore];
+// Vitesse de frappe du texte de la console (ms par caractère)
+var TYPE_SPEED = 55;
 var currentscore = "0";
 var scoring = false;
 var iswritting = 0
@@ -144,6 +152,24 @@ async function scoreAdd(oldscore, newscore, place, interval) {
         })
 }
 
+// Compteur qui défile jusqu'à une valeur (négative possible, contrairement à scoreUp)
+function countTo(place, from, to, ms) {
+    let el = document.getElementById(place);
+    let start = performance.now();
+    return new Promise(resolve => {
+        let step = (now) => {
+            let t = Math.min(1, (now - start) / ms);
+            let eased = 1 - Math.pow(1 - t, 3);
+            el.innerText = Math.round(from + (to - from) * eased).toLocaleString();
+            if (t < 1)
+                requestAnimationFrame(step);
+            else
+                resolve();
+        };
+        requestAnimationFrame(step);
+    });
+}
+
 async function write(fulltext, place, previoustext, noeffect) {
     iswritting++
     place.classList.remove('aftereffect')
@@ -152,12 +178,12 @@ async function write(fulltext, place, previoustext, noeffect) {
         if (previoustext != '') {
             place.innerText = previoustext + '\n' + currenttext;
             currenttext += fulltext.substring(i, i + 1)
-            await sleep(100)
+            await sleep(TYPE_SPEED)
         }
         else {
             place.innerText = currenttext;
             currenttext += fulltext.substring(i, i + 1)
-            await sleep(100)
+            await sleep(TYPE_SPEED)
         }
 
     }
@@ -280,17 +306,22 @@ async function scoreCalcul() {
             }
         }
         if (i==2){
+            // La planète laisse la place au texte de son bilan
+            document.querySelector('.planet-recap').classList.add('with-text');
+            // Place réservée pour le texte complet de chaque ligne
+            recapText.forEach((text, j) => {
+                let ghost = document.createElement('span');
+                ghost.className = 'reading-ghost';
+                ghost.textContent = text;
+                document.getElementById('reading-' + (j + 1)).after(ghost);
+            });
             for (let j=0; j<recapText.length; j++){
                 let interval = 50 + Math.floor(Math.random()*30)
                 writeNoWait(recapText[j], document.getElementById('reading-'+(j+1)), '', true, interval)
             }
         }
-        score = parseInt(currentscore, 10) + Math.floor((valueScoreMultiplier[i]+1)*90/100) ;
-        if (parseInt(currentscore, 10)==0){
-            currentscore = "1";
-        }
-        score = score + (Math.floor(parseInt(currentscore, 10)/100) * Math.floor((valueScoreMultiplier[i]+1)*(20-(i*5))/100))
-        scoreUp(currentscore, "" + score, 'amountfinal', speed).then(async function () {
+        score = Math.round(baseScore * baseSteps[i]);
+        countTo('amountfinal', parseInt(currentscore, 10), score, 1600).then(async function () {
             await sleep(500)
             scoring = false
             speed = speed - 25;
@@ -313,9 +344,10 @@ async function scoreCalcul() {
         while (iswritting != 0) {
             await sleep(100)
         }
-        scoreUp('0', '' + valueScoreAdder[i], 'amount' + (i + 3), speed)
+        scoring = true;
+        countTo('amount' + (i + 3), 0, valueScoreAdder[i], 1600);
         score = parseInt(currentscore, 10) + valueScoreAdder[i];
-        scoreAdd(currentscore, "" + score, 'amountfinal', speed).then(async function () {
+        countTo('amountfinal', parseInt(currentscore, 10), score, 1600).then(async function () {
             await sleep(1000)
             scoring = false
             currentscore = "" + score;
@@ -332,7 +364,7 @@ async function scoreCalcul() {
         await sleep(100)
     }
     document.getElementById('console').innerText = '';
-    write((parseInt(currentscore)).toLocaleString(), document.querySelector(".consolescore"), "", true )
+    write(totalScore.toLocaleString(), document.querySelector(".consolescore"), "", true )
     while (iswritting != 0) {
         await sleep(100)
     }

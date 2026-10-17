@@ -1,0 +1,1017 @@
+/*---vvv---Rafraîchissement de la page carte (chargé en dernier)---vvv---*/
+/* Pas de transform sur les éléments animés : move-right / open,
+   slide-right / close-left, move-down et choice-hover les déplacent */
+
+/*---Cadre de la carte---*/
+.container-card {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 24px;
+    box-shadow: var(--ui-shadow), inset 0 0 60px rgb(0 0 0 / 50%);
+}
+
+/* Fond illustré à la place de la photo Pexels (trop réaliste pour le
+   style du jeu). Couleurs sourdes et étoiles clairsemées. Étoiles proches
+   et nébuleuses suivent la parallaxe de template-card.js (--bX / --bY),
+   étoiles lointaines fixes */
+.container-card {
+    background-color: #0a0920;
+    background-image:
+        radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 40%) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='280' fill='white'%3E%3Ccircle cx='0' cy='125' r='0.7' fill-opacity='0.86'/%3E%3Ccircle cx='172' cy='145' r='0.8' fill-opacity='0.48'/%3E%3Ccircle cx='92' cy='200' r='1.6' fill-opacity='0.55'/%3E%3Ccircle cx='247' cy='231' r='0.7' fill-opacity='0.44'/%3E%3Ccircle cx='309' cy='166' r='0.8' fill-opacity='0.45'/%3E%3Ccircle cx='129' cy='223' r='1.6' fill-opacity='0.43'/%3E%3Ccircle cx='242' cy='200' r='1.6' fill-opacity='0.55'/%3E%3Ccircle cx='373' cy='146' r='1.6' fill-opacity='0.70'/%3E%3Ccircle cx='403' cy='90' r='0.7' fill-opacity='0.77'/%3E%3Ccircle cx='339' cy='266' r='0.8' fill-opacity='0.82'/%3E%3Ccircle cx='398' cy='205' r='0.9' fill-opacity='0.58'/%3E%3Ccircle cx='107' cy='172' r='1.6' fill-opacity='0.92'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='220' fill='white'%3E%3Ccircle cx='0' cy='179' r='0.5' fill-opacity='0.59'/%3E%3Ccircle cx='105' cy='80' r='0.5' fill-opacity='0.37'/%3E%3Ccircle cx='36' cy='14' r='0.4' fill-opacity='0.66'/%3E%3Ccircle cx='108' cy='102' r='0.4' fill-opacity='0.91'/%3E%3Ccircle cx='32' cy='202' r='0.6' fill-opacity='0.65'/%3E%3Ccircle cx='84' cy='147' r='0.4' fill-opacity='0.52'/%3E%3Ccircle cx='120' cy='23' r='0.5' fill-opacity='0.53'/%3E%3Ccircle cx='156' cy='76' r='0.5' fill-opacity='0.69'/%3E%3Ccircle cx='49' cy='109' r='0.6' fill-opacity='0.88'/%3E%3Ccircle cx='32' cy='70' r='0.6' fill-opacity='0.73'/%3E%3Ccircle cx='69' cy='188' r='0.6' fill-opacity='0.57'/%3E%3Ccircle cx='249' cy='24' r='0.5' fill-opacity='0.79'/%3E%3Ccircle cx='70' cy='139' r='0.5' fill-opacity='0.70'/%3E%3Ccircle cx='98' cy='158' r='0.5' fill-opacity='0.39'/%3E%3C/svg%3E"),
+        radial-gradient(ellipse 32% 36% at 30% 38%, rgb(110 90 200 / 16%), transparent 70%),
+        radial-gradient(ellipse 28% 32% at 72% 68%, rgb(79 180 200 / 8%), transparent 70%),
+        linear-gradient(160deg, #110e2c 0%, #08071a 100%);
+    background-size:
+        100% 100%,
+        420px 280px,
+        300px 220px,
+        1000px 640px, 1000px 640px,
+        100% 100%;
+    background-position:
+        center,
+        var(--bY) var(--bX),
+        0 0,
+        var(--bY) var(--bX), var(--bY) var(--bX),
+        center;
+    background-repeat:
+        no-repeat,
+        repeat,
+        repeat,
+        no-repeat, no-repeat,
+        no-repeat;
+    /* parallaxe lissée (la transition du transform d origine est gardée) */
+    transition: transform .6s 1s, background-position .35s ease-out;
+}
+
+/* Grille de points plus discrète (s'atténue encore au survol, comme avant) */
+.bg-dot {
+    opacity: 0.45;
+}
+
+.wrap:hover .bg-dot {
+    opacity: 0.25;
+}
+
+.container-card:before,
+.container-card:after {
+    border-color: var(--ui-accent);
+    opacity: 0.45;
+}
+
+/*---Onglets des modules (à droite de la carte)---*/
+.tab,
+.tab-moteurs,
+.tab-scan,
+.tab-detect,
+.tab-o2,
+.tab-elec,
+.tab-grav {
+    border: 1px solid var(--ui-border-strong);
+    border-left: none;
+    border-radius: 0 36px 36px 0;
+    background: var(--ui-surface);
+    box-shadow: 0 10px 30px -14px rgb(0 0 0 / 85%);
+}
+
+.tab-txt {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ui-text-dim);
+}
+
+.tab:hover .tab-txt {
+    color: var(--ui-text);
+}
+
+.mod-button {
+    border: none;
+    border-radius: 0 36px 36px 0;
+    background: transparent;
+}
+
+/* L'anneau sert de fond à l'icône : pas de texte ni de filtre de teinte
+   qui fausserait la couleur d'état */
+.mod-button .dial svg.ui-gauge,
+.dial svg.ui-gauge {
+    animation: none;
+    filter: none;
+}
+
+.mod-button .dial svg.ui-gauge .ui-gauge-text,
+.tab .dial svg.ui-gauge .ui-gauge-text {
+    fill: transparent;
+}
+
+/* Anneau et icône centrés tous les deux au milieu du bouton
+   (avant : anneau décalé en dur, icône centrée + petits décalages par id) */
+/* Centre aligné sur celui de l'arrondi de l'onglet (rayon 36px) */
+.mod-button svg.ui-gauge {
+    left: calc(100% - 36px);
+    top: 50%;
+    width: 54px;
+    height: 54px;
+    transform: translate(-50%, -50%);
+}
+
+.mod-button .mod-img {
+    position: absolute;
+    left: calc(100% - 36px);
+    top: 50%;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    transform: translate(-50%, -50%) !important;
+    filter: saturate(0.85) drop-shadow(0 0 4px rgb(0 0 0 / 60%));
+}
+
+/* Icône scanner : le globe est en haut à gauche de l'image (la loupe
+   dépasse en bas à droite), on centre le globe et non l'image */
+.mod-button #img-scan {
+    transform: translate(calc(-50% + 3px), calc(-50% + 3px)) !important;
+}
+
+/* Infobulle "Moteurs 100%" */
+[data-tooltip]:before {
+    padding: 6px 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background-color: var(--ui-surface-flat);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ui-text);
+    box-shadow: 0 8px 24px -10px rgb(0 0 0 / 80%);
+}
+
+[data-tooltip]:after {
+    border-right-color: var(--ui-border-strong);
+}
+
+/* Infobulles des modules : centrées verticalement sur l'anneau, sur une
+   ligne (avant : départ à 30 % de la hauteur et largeur fixe de 122px,
+   donc les libellés longs passaient sur 2 lignes et descendaient) */
+.mod-button[data-tooltip]:before {
+    top: 50%;
+    left: calc(100% + 14px);
+    width: max-content;
+    margin: 0;
+    white-space: nowrap;
+    transform: translateY(-50%);
+}
+
+.mod-button[data-tooltip]:after {
+    top: 50%;
+    left: calc(100% + 4px);
+    margin: 0;
+    transform: translateY(-50%);
+}
+
+/*---Steppers - valeur + (onglets modules et modules secondaires)---*/
+.tab .mod-b,
+.mods-left .mod-b,
+.human .mod-b {
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    box-shadow: none;
+    color: var(--ui-text-dim);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    text-shadow: none;
+    transition: background 150ms var(--ui-ease), color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.tab .mod-b:hover,
+.mods-left .mod-b:hover,
+.human .mod-b:hover {
+    background: var(--ui-accent-soft);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.tab .mod-b:active,
+.mods-left .mod-b:active,
+.human .mod-b:active {
+    box-shadow: inset 0 2px 4px rgb(0 0 0 / 40%);
+}
+
+.tab .form-input,
+.mod-left-value {
+    border: none;
+    border-radius: 8px;
+    background: rgb(0 0 0 / 30%);
+    box-shadow: inset 0 0 0 1px var(--ui-border);
+    color: var(--ui-text);
+    font-weight: 700;
+    text-shadow: none;
+}
+
+.tab .form-input:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--ui-accent), 0 0 0 3px rgb(255 204 0 / 15%);
+}
+
+/*---Choix sous la carte---*/
+.choice {
+    border: 1px solid var(--ui-border-strong);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 14px 30px -16px rgb(0 0 0 / 85%);
+    color: var(--ui-text);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: transform 1s, background 150ms var(--ui-ease), border-color 150ms var(--ui-ease), color 150ms var(--ui-ease), box-shadow 200ms var(--ui-ease);
+}
+
+.choice:hover {
+    background: linear-gradient(180deg, rgb(255 204 0 / 4%), rgb(255 204 0 / 14%)), var(--ui-surface);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    box-shadow: 0 0 22px -6px rgb(255 204 0 / 45%);
+}
+
+/*---Volet gauche : bouton menu, objets, modules secondaires---*/
+.consommable-tab {
+    border: 1px solid var(--ui-border-strong);
+    border-right: none;
+    border-radius: 16px 0 0 16px;
+    background: var(--ui-surface);
+    box-shadow: 0 10px 30px -14px rgb(0 0 0 / 85%);
+}
+
+.line-menu {
+    background-color: var(--ui-text);
+}
+
+.todoList,
+.mods-left {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 16px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+}
+
+.content form {
+    margin: 0 6px 10px;
+    padding: 0 6px 0 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: rgb(0 0 0 / 28%);
+    transition: border-color 150ms var(--ui-ease), box-shadow 150ms var(--ui-ease);
+}
+
+.content form:focus-within {
+    border-color: var(--ui-accent);
+    box-shadow: 0 0 0 3px rgb(255 204 0 / 15%);
+}
+
+.content input[type='text'] {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ui-text);
+    text-shadow: none;
+}
+
+.content .input-buttons i {
+    color: var(--ui-text-dim);
+    transition: color 150ms var(--ui-ease);
+}
+
+.content .input-buttons a:hover i {
+    color: var(--ui-accent);
+}
+
+.content input[type="checkbox"]+label:hover {
+    background-color: var(--ui-fill-hover);
+}
+
+.container-text-mod-left {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-shadow: none;
+    color: var(--ui-text);
+}
+
+.mod-left .plus,
+.mod-left .moins {
+    text-shadow: none;
+}
+
+/*---Encadré Humains / Status (en haut à droite)---*/
+.human-status {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 16px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    box-shadow: var(--ui-shadow);
+}
+
+.human-title {
+    margin-right: 8px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+/*---^^^---Rafraîchissement de la page carte---^^^---*/
+
+/*---vvv---Volet objets : lignes, case "utilisé" et bouton +---vvv---*/
+
+/* Bouton + du champ "Add item..." centré verticalement (marge de 5px avant) */
+.content .input-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.content .input-buttons i {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* Ligne d'objet : case | icône | nom, alignés */
+.content input[type="checkbox"]+label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    padding: 0 10px 0 36px;
+    border-radius: 10px;
+    color: var(--ui-text);
+    text-shadow: none;
+    font-weight: 600;
+}
+
+.content input[type="checkbox"]+label:hover {
+    background-color: var(--ui-fill-hover);
+}
+
+.todos .item-image {
+    position: static;
+    float: none;
+    flex: none;
+    width: 26px;
+    height: 26px;
+    top: auto;
+    left: auto;
+}
+
+.todos .item-noimg {
+    font-size: 12px;
+}
+
+.todos p {
+    position: static;
+    top: auto;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Case "utilisé" : rond aux couleurs du jeu au lieu du rond blanc,
+   coche dessinée en CSS (avant : image chargée depuis un site externe) */
+.content input[type="checkbox"]+label span.check {
+    left: 10px;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    box-sizing: border-box;
+    background: transparent;
+    border: 1.5px solid var(--ui-border-strong);
+    box-shadow: none;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.content input[type="checkbox"]+label:hover span.check {
+    border-color: var(--ui-accent);
+}
+
+.content input[type="checkbox"]+label span.check::before {
+    display: none;
+}
+
+.content input[type="checkbox"]+label span.check::after {
+    width: 4px;
+    height: 8px;
+    left: 4.5px;
+    top: 1.5px;
+    background: none;
+    border: solid #1a1033;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    filter: none;
+}
+
+.content input[type="checkbox"]:checked+label span.check {
+    background: var(--ui-accent);
+    border-color: var(--ui-accent);
+}
+
+.content input[type="checkbox"]:checked+label span.check::after {
+    transform: rotate(45deg) scale(1);
+}
+
+.content input[type="checkbox"]:checked+label {
+    color: var(--ui-text-dim);
+}
+
+.content li i.delete {
+    color: var(--ui-text-dim);
+    transition: color 150ms var(--ui-ease);
+}
+
+.content li i.delete:hover {
+    color: var(--ui-danger);
+}
+
+/*---^^^---Volet objets---^^^---*/
+
+/* ---- Humains gagnés / perdus par un choix ---- */
+.human {
+    position: relative;
+}
+
+.human-delta {
+    position: absolute;
+    right: 34px;
+    top: 50%;
+    font-family: 'Jura', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    pointer-events: none;
+    animation: human-delta 1.8s var(--ui-ease) forwards;
+}
+
+.human-delta.loss {
+    color: var(--ui-danger);
+    text-shadow: 0 0 10px rgb(255 90 110 / 60%);
+}
+
+.human-delta.gain {
+    color: var(--ui-cyan);
+    text-shadow: 0 0 10px rgb(79 216 224 / 60%);
+}
+
+@keyframes human-delta {
+    0% {
+        opacity: 0;
+        transform: translateY(-50%) scale(.6);
+    }
+
+    15% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.15);
+    }
+
+    30% {
+        transform: translateY(-50%) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(calc(-50% + 34px));
+    }
+}
+
+/* ---- Légende des statistiques à gauche de la carte ---- */
+/* Le panneau des objets et modules, ouvert, passe par-dessus : la légende
+   s'efface pour ne pas bloquer ses objets (glisser vers les joueurs) */
+.card-legend {
+    transition: opacity 200ms var(--ui-ease);
+}
+
+body:has(.consommable-tab.open-left) .card-legend {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Pas la place à côté de la carte sur les petits écrans */
+@media (max-width: 1350px) {
+    .card-legend {
+        display: none;
+    }
+}
+
+/* ---- Plan du vaisseau (F1) ----
+   L'ancien style inversait toutes les couleurs (filter: invert) pour obtenir
+   des murs blancs. On se sert maintenant de l'image des murs comme masque,
+   ce qui permet de les teinter comme le reste de l'interface */
+.plan-container {
+    left: 50%;
+    z-index: 50;
+    filter: none;
+    pointer-events: none;
+}
+
+.plan-container.mapshow {
+    pointer-events: auto;
+}
+
+.plan-card {
+    box-sizing: border-box;
+    width: 1250px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 24px;
+    background:
+        radial-gradient(ellipse 60% 70% at 30% 40%, rgb(110 90 200 / 16%), transparent 70%),
+        radial-gradient(ellipse 50% 60% at 75% 65%, rgb(79 180 200 / 8%), transparent 70%),
+        linear-gradient(160deg, #110e2c, #08071a);
+    box-shadow: var(--ui-shadow);
+    filter: none;
+}
+
+/* Le reste de l'écran s'assombrit derrière le plan */
+.mapshow .plan-card {
+    box-shadow: var(--ui-shadow), 0 0 0 100vmax rgb(5 4 15 / 55%);
+}
+
+/* Grille discrète façon plan technique */
+.plan-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image:
+        linear-gradient(rgb(160 150 255 / 5%) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(160 150 255 / 5%) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+.plan-card::after {
+    content: 'Plan du vaisseau';
+    position: absolute;
+    top: 18px;
+    right: 26px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ui-text-dim);
+}
+
+.plan-empty img {
+    opacity: 0;
+}
+
+/* Plan recentré dans le cadre (il était décalé de 25px vers la gauche) */
+.plan-empty {
+    left: -575px;
+    background: linear-gradient(160deg, rgb(205 198 255 / 90%), rgb(140 200 230 / 80%));
+    -webkit-mask: url(/img/plan-plugs-stroke.png) 0 0 / 1153px 681px no-repeat;
+    mask: url(/img/plan-plugs-stroke.png) 0 0 / 1153px 681px no-repeat;
+    filter: drop-shadow(0 0 6px rgb(130 110 255 / 45%));
+}
+
+.plan-room {
+    left: -535px;
+    filter: none;
+    fill: var(--ui-danger);
+}
+
+.plan-room label {
+    display: none;
+}
+
+/* ---- Écran de combat (par-dessus la carte) ---- */
+.combat-container {
+    box-sizing: border-box;
+    width: 752px;
+    height: 502px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 22px 26px 18px;
+    border: 1px solid rgb(255 90 110 / 45%);
+    border-radius: 24px;
+    background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgb(255 90 110 / 14%), transparent 70%),
+        linear-gradient(160deg, #180e28, #0a081a);
+    box-shadow: var(--ui-shadow), inset 0 0 60px rgb(0 0 0 / 50%), 0 0 40px rgb(255 90 110 / 15%);
+    text-shadow: none;
+    z-index: 4;
+}
+
+/* display: flex ci-dessus écrase .combat-none de template-card.css */
+.combat-container.combat-none {
+    display: none;
+}
+
+.combat-in {
+    animation: combat-in .35s var(--ui-ease) both;
+}
+
+.combat-out {
+    animation: combat-in .35s var(--ui-ease) reverse both;
+}
+
+@keyframes combat-in {
+    from {
+        opacity: 0;
+        transform: scale(.96);
+    }
+}
+
+.combat-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ui-border);
+}
+
+.combat-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ui-danger);
+}
+
+.combat-hint {
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.combat-enemies {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-content: center;
+    gap: 12px;
+    overflow: auto;
+}
+
+.combat-enemies[data-count="1"] {
+    grid-template-columns: minmax(0, 260px);
+    justify-content: center;
+}
+
+.combat-enemies[data-count="2"],
+.combat-enemies[data-count="4"] {
+    grid-template-columns: repeat(2, minmax(0, 260px));
+    justify-content: center;
+}
+
+.combat-enemy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 14px 12px;
+    border: 1px solid var(--ui-border);
+    border-radius: 14px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    text-align: left;
+    transition: border-color 150ms var(--ui-ease), background 150ms var(--ui-ease), opacity 300ms;
+}
+
+.combat-enemy.ko {
+    opacity: 0.4;
+    filter: grayscale(1);
+}
+
+.combat-enemy-name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.combat-enemy-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 8%);
+    overflow: hidden;
+}
+
+.combat-enemy-bar-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: #5ee08a;
+    transition: width 400ms var(--ui-ease), background 400ms;
+}
+
+.combat-enemy-bar-fill[data-level="warn"] {
+    background: var(--ui-accent);
+}
+
+.combat-enemy-bar-fill[data-level="crit"] {
+    background: var(--ui-danger);
+}
+
+.combat-enemy-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.combat-enemy-hp {
+    font-weight: 700;
+    color: var(--ui-text);
+}
+
+/* Animations des attaques */
+.combat-enemy.hit {
+    animation: combat-shake .4s;
+}
+
+.combat-enemy.attacking {
+    animation: combat-lunge .45s;
+}
+
+@keyframes combat-shake {
+    20% { transform: translateX(-6px); background: rgb(255 90 110 / 25%); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(2px); }
+}
+
+@keyframes combat-lunge {
+    40% { transform: scale(1.06); box-shadow: 0 0 26px rgb(255 90 110 / 55%); }
+}
+
+.combat-float {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    pointer-events: none;
+    animation: combat-float 1.2s var(--ui-ease) forwards;
+}
+
+.combat-float.dmg {
+    color: var(--ui-danger);
+    text-shadow: 0 0 10px rgb(255 90 110 / 60%);
+}
+
+.combat-float.enemy-hit {
+    color: var(--ui-accent);
+    font-size: 15px;
+}
+
+.combat-float.miss {
+    color: var(--ui-text-dim);
+    font-size: 15px;
+}
+
+@keyframes combat-float {
+    0% { opacity: 0; transform: translateY(6px) scale(.8); }
+    20% { opacity: 1; transform: translateY(0) scale(1.1); }
+    100% { opacity: 0; transform: translateY(-26px); }
+}
+
+/* Victoire : les ennemis laissent place au butin */
+.combat-loot {
+    display: none;
+}
+
+.combat-won .combat-enemies {
+    display: none;
+}
+
+.combat-won .combat-loot {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    overflow: auto;
+}
+
+.combat-loot-title {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ui-accent);
+    text-shadow: 0 0 18px rgb(255 204 0 / 45%);
+    animation: combat-loot-in .5s var(--ui-ease) both;
+}
+
+.combat-loot-sub {
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+    animation: combat-loot-in .5s var(--ui-ease) .15s both;
+}
+
+.combat-loot-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    max-width: 100%;
+}
+
+.combat-loot-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 120px;
+    padding: 12px 8px 10px;
+    border: 1px solid rgb(255 204 0 / 40%);
+    border-radius: 14px;
+    background: radial-gradient(circle at 50% 30%, rgb(255 204 0 / 14%), var(--ui-fill) 70%);
+    box-shadow: 0 0 22px -8px rgb(255 204 0 / 45%);
+    animation: combat-loot-pop .45s var(--ui-ease) both;
+}
+
+.combat-loot-img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+
+.combat-loot-noimg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-accent);
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.combat-loot-name {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+}
+
+@keyframes combat-loot-in {
+    from { opacity: 0; transform: translateY(8px); }
+}
+
+@keyframes combat-loot-pop {
+    0% { opacity: 0; transform: scale(.6) rotate(-6deg); }
+    70% { opacity: 1; transform: scale(1.06); }
+}
+
+/* Onglet du joueur / compagnon attaqué par un ennemi */
+.player-tab.under-attack {
+    animation: tab-hit .6s var(--ui-ease);
+}
+
+.player-tab.dodged {
+    animation: tab-dodge .5s var(--ui-ease);
+}
+
+@keyframes tab-hit {
+    15% { border-color: var(--ui-danger); box-shadow: 0 0 30px rgb(255 90 110 / 60%); margin-left: -6px; }
+    35% { margin-left: 5px; }
+    55% { margin-left: -3px; }
+    75% { margin-left: 2px; }
+}
+
+@keyframes tab-dodge {
+    40% { margin-left: 10px; }
+}
+
+.combat-float.tab-float {
+    top: 34px;
+    right: 62px;
+    z-index: 2;
+    font-size: 24px;
+}
+
+/* Attaque désignée par le MJ : le joueur doit lancer /roll Combat */
+.combat-pending {
+    display: none;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0 6px;
+    padding: 10px 14px;
+    border: 1px solid rgb(255 204 0 / 45%);
+    border-radius: 12px;
+    background: rgb(255 204 0 / 7%);
+    font-size: 15px;
+    text-align: center;
+}
+
+.combat-pending.is-open {
+    display: flex;
+    animation: combat-pending 1.6s ease-in-out infinite;
+}
+
+@keyframes combat-pending {
+    50% { border-color: rgb(255 204 0 / 15%); }
+}
+
+.combat-pending-player,
+.combat-pending-enemy {
+    font-weight: 700;
+}
+
+.combat-pending-player {
+    color: var(--ui-accent);
+}
+
+.combat-pending-enemy {
+    color: var(--ui-danger);
+}
+
+.combat-pending-cmd {
+    padding: 1px 7px;
+    border-radius: 6px;
+    background: rgb(255 255 255 / 10%);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+}
+
+.combat-enemy.targeted {
+    border-color: var(--ui-danger);
+    background: rgb(255 90 110 / 12%);
+    box-shadow: 0 0 0 1px var(--ui-danger), 0 0 22px rgb(255 90 110 / 30%);
+}
+
+/* Journal */
+.combat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-height: 74px;
+    padding-top: 10px;
+    border-top: 1px solid var(--ui-border);
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.combat-log-line:first-child {
+    color: var(--ui-text);
+}
+
+.combat-log-line.player-attack.hit:first-child {
+    color: #5ee08a;
+}
+
+.combat-log-line.enemy-attack.hit:first-child {
+    color: var(--ui-danger);
+}
+
+/* Butin d'un choix de carte (card-loot.js) : le cadre du combat, aux couleurs du butin */
+.card-loot-area {
+    border-color: rgb(255 204 0 / 45%);
+    background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgb(255 204 0 / 12%), transparent 70%),
+        linear-gradient(160deg, #1a1430, #0a081a);
+    box-shadow: var(--ui-shadow), inset 0 0 60px rgb(0 0 0 / 50%), 0 0 40px rgb(255 204 0 / 12%);
+    z-index: 5;
+}
+
+.card-loot-all {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid var(--ui-accent);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 150ms var(--ui-ease), box-shadow 150ms var(--ui-ease);
+}
+
+.card-loot-all:hover:not(:disabled) {
+    background: rgb(255 204 0 / 18%);
+    box-shadow: var(--ui-glow-accent);
+}
+
+.card-loot-all:disabled {
+    opacity: .5;
+    cursor: wait;
+}
+
+.card-loot-all[hidden] {
+    display: none;
+}

@@ -14,6 +14,11 @@ async function getShip() {
 }
 var detectionPoints;
 function scanPoints() { //calcul points de detec
+    // Labo de planètes (/planet-lab) : scans illimités
+    if (window.PLANET_LAB) {
+        detectionPoints = Infinity;
+        return;
+    }
     let scan = parseInt(document.getElementById('dial-scanner').getAttribute('data-value'))
     console.log(scan)
     detectionPoints = Math.floor(scan / 16) * 2;
@@ -72,7 +77,7 @@ var iswritting = 0;
 var droneUse = false;
 
 function writePoints(place, number) {
-    document.querySelector(place).innerText = String(number);
+    document.querySelector(place).innerText = number === Infinity ? '∞' : String(number);
 };
 
 function getPlanetText(name,value,valueList,isgrav = false){
@@ -180,6 +185,7 @@ async function write(fulltext, place) {
             document.querySelector('#reading-1').classList.remove('scanning');
             document.querySelector('#pointso2').classList.add('display-off');
             write(texto2, '#reading-1');
+            document.dispatchEvent(new CustomEvent('planet-reveal', {detail: 'oxy'}));
             showbuttons_fun();
         }
     })
@@ -217,6 +223,7 @@ async function write(fulltext, place) {
             document.querySelector('#reading-3').classList.remove('scanning')
             document.querySelector('#pointsff').classList.add('display-off');
             write(textff, '#reading-3')
+            document.dispatchEvent(new CustomEvent('planet-reveal', {detail: 'ff'}));
             showbuttons_fun();
         }
     })
@@ -257,6 +264,7 @@ async function write(fulltext, place) {
             document.querySelector('#reading-2').classList.remove('scanning')
             document.querySelector('#pointscl').classList.add('display-off');
             write(textcl, '#reading-2')
+            document.dispatchEvent(new CustomEvent('planet-reveal', {detail: 'cli'}));
             showbuttons_fun();
         }
     })
@@ -294,6 +302,7 @@ async function write(fulltext, place) {
             document.querySelector('#reading-5').classList.remove('scanning')
             document.querySelector('#pointseau').classList.add('display-off');
             write(texteau, '#reading-5')
+            document.dispatchEvent(new CustomEvent('planet-reveal', {detail: 'wtr'}));
             showbuttons_fun();
         }
     })
@@ -334,6 +343,7 @@ async function write(fulltext, place) {
             document.querySelector('#reading-4').classList.remove('scanning')
             document.querySelector('#pointsre').classList.add('display-off');
             write(textre, '#reading-4')
+            document.dispatchEvent(new CustomEvent('planet-reveal', {detail: 'res'}));
             showbuttons_fun();
         }
     })
@@ -369,6 +379,7 @@ async function write(fulltext, place) {
             document.querySelector('#reading-6').classList.remove('scanning')
             document.querySelector('#pointsgr').classList.add('display-off');
             write(textgr, '#reading-6')
+            document.dispatchEvent(new CustomEvent('planet-reveal', {detail: 'grv'}));
             showbuttons_fun();
         }
     })

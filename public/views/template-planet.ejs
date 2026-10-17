@@ -2,7 +2,8 @@
     title: "Planète",
     cssFiles:[
         "/css/style.css",
-        "/css/template-planet.css"
+        "/css/template-planet.css",
+        "/css/ui-planet.css"
     ]
 }) %>
 
@@ -10,6 +11,8 @@
   <%- include("partials/nav") %>
     <div class="center">
       <div class="planet">
+        <canvas class="moons-canvas" data-planet-moons aria-hidden="true"></canvas>
+        <canvas class="planet-canvas" data-planet-view data-planet-radius="108" aria-hidden="true"></canvas>
         <div class="crat1"></div>
         <div class="crat2"></div>
         <div class="orbit">
@@ -507,8 +510,163 @@
       </svg>
     </div>
     <div class="transparent"></div>
+  <% if (typeof planetLab !== 'undefined' && planetLab) { %>
+  <script>var PLANET_LAB = true;</script>
+  <style>
+    /* Labo : pas de drones (ils retireraient ceux du vrai vaisseau), pas d'atterrissage
+       (il changerait l'état de la partie) ni d'onglets joueurs */
+    #planet-line-2, #planet-line-2 + .separateur-horizontal, .land-button, .leave-button, .player-tabs, .npc-tab { display: none !important; }
+    .planet-lab {
+      position: fixed; top: 16px; left: 50%; z-index: 1000; transform: translateX(-50%);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px;
+      max-width: calc(100vw - 32px); padding: 10px 14px;
+      border: 1px solid rgb(176 166 255 / 30%); border-radius: 14px;
+      background: rgb(26 20 48 / 88%); box-shadow: 0 8px 28px rgb(0 0 0 / 40%);
+      color: #e2deff; font-size: 13px;
+    }
+    .planet-lab-title { color: var(--jaune, #ffcc00); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; }
+    .planet-lab select, .planet-lab button {
+      padding: 6px 12px; border: 1px solid rgb(255 204 0 / 55%); border-radius: 10px;
+      background: rgb(255 204 0 / 8%); color: #ffe27a; font: inherit; cursor: pointer;
+    }
+    .planet-lab select option { background: #1a1430; color: #e2deff; }
+    .planet-lab button:hover { background: rgb(255 204 0 / 18%); }
+    .planet-lab-info { color: rgb(226 222 255 / 75%); }
+    .planet-lab-info b { color: #fff; }
+    .planet-lab-seed { display: flex; align-items: center; gap: 6px; }
+    .planet-lab-seed input {
+      width: 110px; padding: 6px 8px; border: 1px solid rgb(176 166 255 / 35%); border-radius: 10px;
+      background: rgb(0 0 0 / 25%); color: #fff; font: inherit; font-variant-numeric: tabular-nums;
+    }
+    .planet-lab-values { flex-basis: 100%; display: none; justify-content: center; flex-wrap: wrap; gap: 6px 14px; font-variant-numeric: tabular-nums; }
+    .planet-lab.show-values .planet-lab-values { display: flex; }
+  </style>
+  <div class="planet-lab">
+    <span class="planet-lab-title">Labo planètes</span>
+    <select id="lab-band" aria-label="Tranche de score">
+      <option value="" <%= planetLab.band === '' ? 'selected' : '' %>>Toutes les tranches</option>
+      <option value="1" <%= planetLab.band === '1' ? 'selected' : '' %>>Score 1 à 500</option>
+      <option value="2" <%= planetLab.band === '2' ? 'selected' : '' %>>Score 501 à 800</option>
+      <option value="3" <%= planetLab.band === '3' ? 'selected' : '' %>>Score 801 à 1000</option>
+    </select>
+    <button type="button" id="lab-new">Nouvelle planète</button>
+    <button type="button" id="lab-reveal">Tout révéler</button>
+    <button type="button" id="lab-values">Valeurs</button>
+    <span class="planet-lab-info"><b><%= planetLab.archetype %></b> · score <b><%= planetLab.score %></b></span>
+    <% if (!planetLab.seed) { %>
+    <span class="planet-lab-info">Graines indisponibles : redémarrez le serveur (npm start)</span>
+    <% } else { %>
+    <span class="planet-lab-seed">
+      <label for="lab-seed">Graine</label>
+      <input id="lab-seed" type="text" inputmode="numeric" value="<%= planetLab.seed %>" aria-label="Graine de la planète">
+      <button type="button" id="lab-load">Charger</button>
+      <button type="button" id="lab-copy">Copier le lien</button>
+    </span>
+    <% } %>
+    <div class="planet-lab-values">
+      <% [['oxy', 'Oxygène'], ['cli', 'Climat'], ['fau', 'Faune'], ['flo', 'Flore'], ['civ', 'Civilisation'], ['res', 'Ressources'], ['wtr', 'Eau'], ['grv', 'Gravité']].forEach(function (s) { %>
+        <span><%= s[1] %> <b><%= planetLab.values[s[0]] %></b></span>
+      <% }); %>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const band = document.getElementById('lab-band');
+      const seedInput = document.getElementById('lab-seed') || {value: ''};
+      const SEED = <%= planetLab.seed || 0 %>;
+      const url = (seed) => '/planet-lab?' + new URLSearchParams(Object.assign(seed ? {seed: seed} : {}, band.value ? {tranche: band.value} : {}));
+      const next = () => { location.href = url(''); };
+      // L'adresse garde la graine : un rechargement ou un lien copié redonne la même planète
+      if (SEED)
+        history.replaceState(null, '', url(SEED));
+      document.getElementById('lab-new').addEventListener('click', next);
+      band.addEventListener('change', () => { location.href = url(seedInput.value.trim()); });
+      const load = () => { let s = seedInput.value.trim(); if (/^\d+$/.test(s)) location.href = url(s); };
+      if (SEED) {
+      document.getElementById('lab-load').addEventListener('click', load);
+      seedInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') load(); });
+      document.getElementById('lab-copy').addEventListener('click', (e) => {
+        let button = e.currentTarget;
+        navigator.clipboard.writeText(location.origin + url(SEED)).then(() => {
+          button.textContent = 'Lien copié';
+          setTimeout(() => { button.textContent = 'Copier le lien'; }, 1500);
+        }).catch(() => {});
+      });
+      }
+      document.addEventListener('keydown', (e) => { if (e.key === 'n' && e.target.tagName !== 'INPUT') next(); });
+      document.getElementById('lab-values').addEventListener('click', () => document.querySelector('.planet-lab').classList.toggle('show-values'));
+      // Re-cliquer sur une stat déjà dévoilée l'annule : trait, texte, coût et
+      // couche du visuel reviennent à l'état d'avant le scan
+      const STATS = {
+        o2: {key: 'oxy', reading: 1, extra: '#rond1, #rond2, .o2-blur'},
+        cl: {key: 'cli', reading: 2, extra: '.cl-cloud, .cloudshadow'},
+        ff: {key: 'ff', reading: 3, extra: '.ff-tree'},
+        re: {key: 'res', reading: 4, extra: '.re-mountain, .re-background'},
+        eau: {key: 'wtr', reading: 5, extra: '.eau-fill, .eau-border'},
+        gr: {key: 'grv', reading: 6, extra: '.gr-circle'}
+      };
+      const revealed = new Set();
+      const initialText = {};
+      for (let p in STATS) {
+        let reading = document.getElementById('reading-' + STATS[p].reading);
+        initialText[p] = reading.innerText;
+        // planet.js désactive le bouton après le scan : on le garde cliquable
+        let button = document.getElementById(p + '-button');
+        new MutationObserver(() => { if (button.disabled) button.disabled = false; })
+          .observe(button, {attributes: true, attributeFilter: ['disabled']});
+      }
+
+      function undo(p) {
+        let st = STATS[p];
+        document.querySelectorAll('.' + p + '-line, .' + p + '-line2, .' + p + '-linedot, ' + st.extra).forEach(el => {
+          [...el.classList].filter(c => c.startsWith('trace-') || ['rond1', 'rond2', 'blurring'].includes(c))
+            .forEach(c => el.classList.remove(c));
+        });
+        document.querySelector('.' + p + '-pulsebox').classList.remove('pulse');
+        document.getElementById('points' + p).classList.remove('display-off');
+        let reading = document.getElementById('reading-' + st.reading);
+        reading.innerText = initialText[p];
+        reading.classList.add('scanning');
+        costList.push(window['cost' + p]);
+        revealed.delete(p);
+        document.dispatchEvent(new CustomEvent('planet-hide', {detail: st.key}));
+      }
+
+      // Avant planet.js (phase de capture) : un 2e clic annule au lieu de rescanner
+      document.addEventListener('mouseup', (e) => {
+        let button = e.target.closest && e.target.closest('.p-txt');
+        let p = button && button.id.replace('-button', '');
+        if (!p || !STATS[p])
+          return;
+        if (!revealed.has(p)) {
+          revealed.add(p);
+          return;
+        }
+        e.stopImmediatePropagation();
+        // Le texte du scan est encore en train de s'écrire : on attend qu'il ait fini
+        if (window.iswritting)
+          return;
+        undo(p);
+      }, true);
+
+      // Les scans pas encore faits, un par un, comme des clics
+      document.getElementById('lab-reveal').addEventListener('click', async () => {
+        for (let p in STATS) {
+          if (revealed.has(p))
+            continue;
+          document.getElementById(p + '-button').dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+          await new Promise(r => setTimeout(r, 700));
+        }
+      });
+    })();
+  </script>
+  <% } %>
+  <script>var PLANET_DATA = <%- JSON.stringify({id: card.id || 0, modules: card.modules}).replace(/</g, '\\u003c') %>;</script>
+  <script src="/js/planet-view.js"></script>
   <script src="/js/planet.js"></script>
   <script src="/js/players.js"></script>
+  <script src="/js/inventory.js"></script>
+  <%- include("partials/npc-tabs") %>
 
   <script>
     var observer = new MutationObserver(function (mutations) {

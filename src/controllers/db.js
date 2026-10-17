@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const {Player} = require("./../models/player");
 
 
-const DB_VERSION = 10; // increment when structure changes are added
+const DB_VERSION = 13; // increment when structure changes are added
 const DB_FOLDER = 'storage/databases/';
 
 class DB {
@@ -142,6 +142,16 @@ class DB {
                 allowNull: false
             },
             mjreveal: {
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
+            },
+            humans: { // humains gagnés (+) ou perdus (-) en cliquant sur le choix
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            loot: { // butin du choix : liste JSON de noms d'objets
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
@@ -389,7 +399,12 @@ class DB {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
-            }
+            },
+            image: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
         })
 
         let statuses = this.sequelize.define('statuses', {
@@ -449,6 +464,21 @@ class DB {
         for (let table in this.tables) {
             await this.tables[table].sync();
             log('synchro ' + table, '#666666')
+        }
+
+        // Colonnes ajoutées après coup : on les crée dans une base existante
+        // plutôt que d'incrémenter DB_VERSION (qui repartirait d'une base vide)
+        await this.addMissingColumns('card_modules', ['humans', 'loot']);
+    }
+
+    async addMissingColumns(table, columns) {
+        let model = this.tables[table];
+        let existing = await this.sequelize.getQueryInterface().describeTable(model.getTableName());
+        for (let column of columns) {
+            if (existing[column])
+                continue;
+            await this.sequelize.getQueryInterface().addColumn(model.getTableName(), column, model.rawAttributes[column]);
+            log('colonne ' + table + '.' + column + ' ajoutée', '#666666');
         }
     }
 

@@ -1,0 +1,249 @@
+/*---vvv---Rafraîchissement de la page planète (chargé après template-planet.css)---vvv---*/
+
+/*---Panneaux latéraux---*/
+/* Largeur réduite sur écrans moyens pour ne pas recouvrir les libellés
+   de scan placés autour de la planète */
+.planet-summary,
+.ship-summary {
+    width: clamp(290px, calc(50vw - 490px), 370px);
+    border: 1px solid var(--ui-border);
+    border-radius: 20px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(12px) saturate(130%);
+    -webkit-backdrop-filter: blur(12px) saturate(130%);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+}
+
+.ship-summary-line {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.separateur-horizontal {
+    box-shadow: none;
+    width: calc(100% - 32px);
+    height: 1px;
+    margin: 0 16px;
+    background: var(--ui-border);
+}
+
+.separateur-vertical {
+    box-shadow: none;
+    width: 1px;
+    height: 48px;
+    background: var(--ui-border);
+}
+
+/* Titres de section ("Modules principaux", "Points de detections"...) */
+.title,
+.detection-point::before,
+.drone::before {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
+.title {
+    color: var(--ui-text);
+}
+
+.detection-point {
+    color: var(--ui-accent);
+    font-weight: 700;
+}
+
+.detection-point::before {
+    color: var(--ui-text);
+}
+
+.mod-text,
+.mod-value {
+    font-size: 14px;
+}
+
+.mod-text {
+    color: var(--ui-text-dim);
+}
+
+.mod-value {
+    width: auto;
+    font-weight: 600;
+    color: var(--ui-text);
+}
+
+.module {
+    width: calc(50% - 20px);
+    gap: 8px;
+}
+
+.mod-text {
+    white-space: nowrap;
+}
+
+/*---Panneau planète (gauche)---*/
+.planet-reading {
+    box-sizing: border-box;
+    width: calc(100% - 24px);
+    margin: 4px 12px;
+    padding: 8px 12px;
+    text-indent: 0;
+    font-size: 14px;
+    border-left: 2px solid rgb(176 166 255 / 45%);
+    border-radius: 0 var(--ui-radius-sm) var(--ui-radius-sm) 0;
+    background: rgb(40 0 76 / 35%);
+}
+
+/* Bouton "Utiliser" (drone) */
+.use-drone {
+    width: auto;
+    margin: 0 0 0 20px;
+    padding: 6px 18px;
+    border: 1px solid rgb(255 204 0 / 55%);
+    border-radius: 10px;
+    background: var(--ui-fill);
+    color: var(--ui-accent);
+    font-family: 'Jura', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    transition: background 150ms var(--ui-ease), box-shadow 200ms var(--ui-ease), transform 150ms var(--ui-ease);
+}
+
+.use-drone::before {
+    font-size: 16px;
+}
+
+.use-drone:hover {
+    background: var(--ui-accent-soft);
+    box-shadow: var(--ui-glow-accent);
+    transform: translateY(-1px);
+}
+
+.use-drone:active {
+    transform: translateY(0);
+}
+
+/*---Libellés de scan autour de la planète---*/
+.p-txt {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--ui-text);
+    text-shadow: 0 0 12px rgb(0 0 0 / 80%);
+    transition: color 150ms var(--ui-ease), text-shadow 150ms var(--ui-ease);
+}
+
+.p-txt:hover {
+    color: var(--ui-accent);
+    text-shadow: 0 0 14px rgb(255 204 0 / 45%);
+}
+
+.points-required {
+    color: var(--ui-text-dim);
+    letter-spacing: 0.04em;
+}
+
+.orbit {
+    border-color: rgb(176 166 255 / 18%);
+}
+
+/*---Boutons Atterrir / Continuer (opacité gérée par planet.js)---*/
+.land-button,
+.leave-button {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 12px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    box-shadow: var(--ui-shadow);
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease), color 150ms var(--ui-ease), box-shadow 200ms var(--ui-ease), transform 150ms var(--ui-ease);
+}
+
+.land-button {
+    border-color: rgb(255 204 0 / 60%);
+    color: var(--ui-accent);
+}
+
+.land-button:hover,
+.leave-button:hover {
+    background: var(--ui-accent-soft);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    box-shadow: var(--ui-glow-accent);
+    transform: translateY(-1px);
+}
+
+/*---^^^---Rafraîchissement de la page planète---^^^---*/
+
+/*---Planète générée (planet-view.js) à la place du disque vert---*/
+.planet {
+    background: none;
+    box-shadow: none;
+    /* La planète et ses scans étaient décalés de +100px / -130px par rapport
+       au centre de l'écran : on recentre tout le groupe entre les panneaux */
+    transform: translate(-100px, 130px);
+}
+
+.planet .crat1,
+.planet .crat2 {
+    display: none;
+}
+
+/* Même repère que les illustrations des scans (.gr-circle…) : le point
+   .center, la planète étant à +100px / -130px de ce point */
+.planet-canvas {
+    position: absolute;
+    top: -270px;
+    left: -140px;
+    width: 480px;
+    height: 480px;
+    pointer-events: none;
+}
+
+/* Les anciennes illustrations posées sur le disque (forme de l'eau, arbres,
+   nuages, montagnes, cercles) cacheraient la planète générée, qui montre
+   désormais ces stats elle-même : on garde seulement les traits et libellés */
+.planet .o2-circle,
+.planet .o2-blur,
+.planet .eau-fill,
+.planet .eau-border,
+.planet .ff-tree,
+.planet .cl-cloud,
+.planet .cloudshadow,
+.planet .re-mountain,
+.planet .re-background,
+.planet .gr-circle {
+    display: none;
+}
+
+/* Lunes générées (planet-view.js) à la place de l'ancienne lune CSS :
+   même centre que la planète (+100px / -130px du point .center) */
+.planet .orbit {
+    display: none;
+}
+
+.moons-canvas {
+    position: absolute;
+    top: -450px;
+    left: -320px;
+    width: 840px;
+    height: 840px;
+    pointer-events: none;
+}
+
+/* Planète qu'on peut faire tourner à la souris (planet-view.js) */
+body.planet-hover {
+    cursor: grab;
+}
+
+body.planet-grabbing,
+body.planet-grabbing * {
+    cursor: grabbing !important;
+    user-select: none;
+}

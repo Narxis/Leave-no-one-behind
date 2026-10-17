@@ -1,486 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Drawflow | Simple Flow program libray</title>
-    <meta name="description" content="Simple library for flow programming. Drawflow allows you to create data flows easily and quickly.">
-</head>
-<body>
-<script src="/js/drawflow/drawflow.min.js"></script>
-<script src="/js/drawflow/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/css/drawflow/drawflow.min.css">
-<link rel="stylesheet" href="/css/drawflow/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
-<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-<script src="/js/drawflow/sweetalert2@9.js"></script>
-<script src="/js/drawflow/micromodal.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/css/drawflow/drawflow.css" />
+<html lang="fr">
+<%- include("partials/head", {
+    title: "Éditeur de lieux",
+    cssFiles:[
+        "/css/style.css",
+        "/css/drawflow/drawflow.min.css",
+        "https://use.fontawesome.com/releases/v5.7.2/css/all.css",
+        "/css/place-editor.css"
+    ]
+}) %>
+<body class="place-editor-page">
+<%- include("partials/nav") %>
 
+<div class="pe">
+    <header class="pe-top">
+        <div class="pe-title">
+            <h1>Éditeur de lieux</h1>
+            <span class="pe-current" id="pe-current"></span>
+        </div>
+        <span class="pe-status" id="pe-status" role="status">Tout est enregistré</span>
+        <div class="pe-actions">
+            <button type="button" class="pe-btn" id="pe-help-btn"><i class="fas fa-question-circle"></i> Aide</button>
+            <button type="button" class="pe-btn" id="pe-arrange" title="Écarter et aligner les blocs en arbre, depuis la carte de départ"><i class="fas fa-sitemap"></i> Réorganiser</button>
+            <button type="button" class="pe-btn" id="pe-check"><i class="fas fa-check-double"></i> Vérifier</button>
+            <button type="button" class="pe-btn" id="pe-export"><i class="fas fa-file-export"></i> Exporter pour le jeu</button>
+            <button type="button" class="pe-btn pe-btn-primary" id="pe-save" title="Ctrl+S"><i class="fas fa-save"></i> Enregistrer</button>
+        </div>
+    </header>
 
-<header>
-    <h2>LNOB</h2>
-    <div class="github-link"><a href="https://github.com/jerosoler/Drawflow" target="_blank"><i class="fab fa-github fa-3x"></i></a></div>
-</header>
-<div class="wrapper">
-    <div class="col">
-        <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="card">
-            <i class="fas fa-money-check"></i><span> Card</span>
-        </div>
-        <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="choice">
-            <i class="fas fa-sign-out-alt"></i><span> Choice</span>
-        </div>
-        <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="reveal">
-            <i class="fas fa-sign-in-alt"></i><span> Reveal</span>
-        </div>
-    </div>
-    <div class="col-right">
-        <div class="menu">
-            <ul>
-                <li><input id="add-module-btn" type="text" placeholder="nouveau lieu"><button onclick="addPlaceTemplate()">ADD</button></li>
-            </ul>
-        </div>
-        <form action="/" id="drawflow-form" style="height: 100vh">
-            <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <aside class="pe-side">
+        <section class="pe-panel">
+            <h2>Lieux</h2>
+            <ul class="pe-places" id="pe-places"></ul>
+            <form class="pe-new" id="pe-new-place" autocomplete="off">
+                <input id="pe-new-name" type="text" maxlength="40" placeholder="Nouveau lieu (ex. hangar)" aria-label="Nom du nouveau lieu">
+                <button type="submit" class="pe-btn" title="Créer le lieu"><i class="fas fa-plus"></i></button>
+            </form>
+            <p class="pe-error" id="pe-new-error" role="alert"></p>
+        </section>
 
-
-                <div class="btn-save" onclick="saveDataSet(editor.export());">Save</div>
-                <div class="btn-export" onclick="parseEditorData()">Export</div>
-                <div class="btn-clear" onclick="removeSelected()">Delete</div>
-                <div class="btn-lock">
-                    <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
-                    <i id="unlock" class="fas fa-lock-open" onclick="editor.editor_mode='edit'; changeMode('unlock');" style="display:none;"></i>
-                </div>
-                <div class="bar-zoom">
-                    <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
-                    <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
-                    <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
-                </div>
+        <section class="pe-panel">
+            <h2>Ajouter un bloc</h2>
+            <div class="pe-palette">
+                <button type="button" class="pe-tool type-card" draggable="true" data-node="card">
+                    <i class="fas fa-money-check"></i>
+                    <span><b>Carte</b><small>Un texte lu aux joueurs, avec jusqu'à 3 choix</small></span>
+                </button>
+                <button type="button" class="pe-tool type-choice" draggable="true" data-node="choice">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span><b>Choix</b><small>Une option proposée par une carte</small></span>
+                </button>
+                <button type="button" class="pe-tool type-reveal" draggable="true" data-node="reveal">
+                    <i class="fas fa-flag-checkered"></i>
+                    <span><b>Résultat</b><small>Ce qui arrive à la fin d'un choix</small></span>
+                </button>
             </div>
-        </form>
-    </div>
+            <p class="pe-hint">Clique pour poser le bloc au centre, ou fais-le glisser sur le plan.
+                Le plus simple : utilise les boutons « + » directement dans les blocs.</p>
+        </section>
+    </aside>
+
+    <main class="pe-board">
+        <div id="drawflow"></div>
+        <div class="pe-empty" id="pe-empty" hidden>
+            <i class="fas fa-map-marked-alt"></i>
+            <p>Choisis un lieu dans la liste, ou crée-en un nouveau pour commencer.</p>
+        </div>
+        <div class="pe-zoom">
+            <button type="button" id="pe-zoom-out" title="Dézoomer"><i class="fas fa-search-minus"></i></button>
+            <button type="button" id="pe-fit" title="Voir tout le lieu"><i class="fas fa-expand"></i> Tout voir</button>
+            <button type="button" id="pe-zoom-in" title="Zoomer"><i class="fas fa-search-plus"></i></button>
+        </div>
+        <section class="pe-problems" id="pe-problems" hidden>
+            <div class="pe-problems-head">
+                <h2 id="pe-problems-title"></h2>
+                <button type="button" class="pe-close" id="pe-problems-close" aria-label="Fermer">×</button>
+            </div>
+            <ul id="pe-problems-list"></ul>
+        </section>
+    </main>
 </div>
 
-<script>
-    var id = document.getElementById("drawflow");
-    const editor = new Drawflow(id);
-    editor.reroute = true;
+<dialog class="pe-dialog" id="pe-help" aria-labelledby="pe-help-title">
+    <div class="pe-dialog-head">
+        <h2 id="pe-help-title">Comment construire un lieu</h2>
+        <button type="button" class="pe-close" data-close aria-label="Fermer">×</button>
+    </div>
+    <div class="pe-dialog-body">
+        <ol class="pe-steps">
+            <li><b>Une carte de départ.</b> Le lieu commence par la carte qui n'a aucun lien entrant (badge « Départ »).</li>
+            <li><b>Des choix.</b> Dans une carte, clique sur « + Ajouter un choix » (3 au plus). Chaque choix est relié à une sortie de la carte.</li>
+            <li><b>Du butin.</b> Un choix peut rapporter des objets (section « Butin » du choix). En jeu, ils s'affichent comme après un combat : le MJ les glisse sur les joueurs ou clique sur « Tout récupérer » pour les ranger dans le vaisseau, puis l'histoire continue.</li>
+            <li><b>La suite.</b> Dans un choix, clique sur « + Carte suivante » pour continuer l'histoire, ou sur « + Résultat » pour la terminer.</li>
+            <li><b>Enregistrer</b> (Ctrl+S) garde ton travail dans l'éditeur. Un point jaune signale un lieu modifié non enregistré.</li>
+            <li><b>Pas de nom à inventer.</b> Les cartes sont numérotées toutes seules dans l'ordre de l'histoire (n° 1 = départ). À l'export, elles s'appellent « lieu-1 », « lieu-2 »…</li>
+            <li><b>Réorganiser</b> écarte et aligne tous les blocs du lieu en un clic, en arbre depuis la carte de départ. « Annuler » dans la notification remet tout comme avant.</li>
+            <li><b>Vérifier</b> liste ce qui manque (choix sans suite, carte sans texte…). Clique sur un problème pour aller au bloc.</li>
+            <li><b>Exporter pour le jeu</b> produit le JSON des cartes du lieu, à coller dans la section <code>place</code> de <code>src/config/baseCards.json</code>, à la place des anciennes cartes de ce lieu.</li>
+        </ol>
+        <h3>Raccourcis</h3>
+        <ul class="pe-keys">
+            <li><kbd>Glisser</kbd> sur le fond : se déplacer sur le plan</li>
+            <li><kbd>Ctrl</kbd> + <kbd>molette</kbd> : zoomer</li>
+            <li>Relier deux blocs : glisse d'une pastille de sortie (à droite) vers une pastille d'entrée (à gauche)</li>
+            <li>Supprimer un lien : clique dessus puis <kbd>Suppr</kbd></li>
+            <li>Supprimer un bloc : bouton <kbd>×</kbd> du bloc, ou sélection puis <kbd>Suppr</kbd></li>
+            <li><kbd>Échap</kbd> : menu du jeu</li>
+        </ul>
+    </div>
+</dialog>
 
-    var dataToImport = <%- vars.dat %>;
+<dialog class="pe-dialog pe-dialog-wide" id="pe-export-dialog" aria-labelledby="pe-export-title">
+    <div class="pe-dialog-head">
+        <h2 id="pe-export-title">Export pour le jeu</h2>
+        <button type="button" class="pe-close" data-close aria-label="Fermer">×</button>
+    </div>
+    <div class="pe-dialog-body">
+        <p>Remplace les anciennes cartes de ce lieu par celles-ci dans la section <code>place</code> de <code>src/config/baseCards.json</code>, puis recharge la base des cartes. Les noms ont changé : ne garde pas un mélange des deux.</p>
+        <textarea class="pe-export-text" id="pe-export-text" readonly spellcheck="false"></textarea>
+        <div class="pe-dialog-actions">
+            <button type="button" class="pe-btn" id="pe-export-download"><i class="fas fa-download"></i> Télécharger le fichier</button>
+            <button type="button" class="pe-btn pe-btn-primary" id="pe-export-copy"><i class="fas fa-copy"></i> Copier</button>
+        </div>
+    </div>
+</dialog>
 
-    for (let name in dataToImport.drawflow)
-        addPlaceTemplate(name);
-
-    editor.start();
-    editor.import(dataToImport);
-
-    // Events!
-    editor.on('nodeCreated', function(id) {
-        // console.log("Node created " + id);
-    })
-
-    editor.on('nodeRemoved', function(id) {
-        // console.log("Node removed " + id);
-    })
-
-    editor.on('nodeSelected', function(id) {
-        // console.log("Node selected " + id);
-    })
-
-    editor.on('moduleCreated', function(name) {
-        // console.log("Module Created " + name);
-    })
-
-    editor.on('moduleChanged', function(name) {
-        // console.log("Module Changed " + name);
-    })
-
-    editor.on('connectionCreated', function(connection) {
-        // console.log('Connection created');
-        console.log(connection);
-        // console.log(connection);
-    })
-
-    editor.on('connectionRemoved', function(connection) {
-        // console.log('Connection removed');
-        // console.log(connection);
-    })
-
-    editor.on('mouseMove', function(position) {
-        // console.log('Position mouse x:' + position.x + ' y:'+ position.y);
-    })
-
-    editor.on('nodeMoved', function(id) {
-        // console.log("Node moved " + id);
-    })
-
-    editor.on('zoom', function(zoom) {
-        // console.log('Zoom level ' + zoom);
-    })
-
-    editor.on('translate', function(position) {
-        // console.log('Translate x:' + position.x + ' y:'+ position.y);
-    })
-
-    editor.on('addReroute', function(id) {
-        // console.log("Reroute added " + id);
-    })
-
-    editor.on('removeReroute', function(id) {
-        // console.log("Reroute removed " + id);
-    })
-
-    /* DRAG EVENT */
-
-    /* Mouse and Touch Actions */
-
-    var elements = document.getElementsByClassName('drag-drawflow');
-    for (var i = 0; i < elements.length; i++) {
-        elements[i].addEventListener('touchend', drop, false);
-        elements[i].addEventListener('touchmove', positionMobile, false);
-        elements[i].addEventListener('touchstart', drag, false );
-    }
-
-    var mobile_item_selec = '';
-    var mobile_last_move = null;
-    function positionMobile(ev) {
-        mobile_last_move = ev;
-    }
-
-    function allowDrop(ev) {
-        ev.preventDefault();
-    }
-
-    function drag(ev) {
-        if (ev.type === "touchstart") {
-            mobile_item_selec = ev.target.closest(".drag-drawflow").getAttribute('data-node');
-        } else {
-            ev.dataTransfer.setData("node", ev.target.getAttribute('data-node'));
-        }
-    }
-
-    function drop(ev) {
-        if (ev.type === "touchend") {
-            var parentdrawflow = document.elementFromPoint( mobile_last_move.touches[0].clientX, mobile_last_move.touches[0].clientY).closest("#drawflow");
-            if(parentdrawflow != null) {
-                addNodeToDrawFlow(mobile_item_selec, mobile_last_move.touches[0].clientX, mobile_last_move.touches[0].clientY);
-            }
-            mobile_item_selec = '';
-        } else {
-            ev.preventDefault();
-            var data = ev.dataTransfer.getData("node");
-            addNodeToDrawFlow(data, ev.clientX, ev.clientY);
-        }
-
-    }
-
-    function addNodeToDrawFlow(name, pos_x, pos_y) {
-        if(editor.editor_mode === 'fixed') {
-            return false;
-        }
-        pos_x = pos_x * ( editor.precanvas.clientWidth / (editor.precanvas.clientWidth * editor.zoom)) - (editor.precanvas.getBoundingClientRect().x * ( editor.precanvas.clientWidth / (editor.precanvas.clientWidth * editor.zoom)));
-        pos_y = pos_y * ( editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)) - (editor.precanvas.getBoundingClientRect().y * ( editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)));
-
-
-        switch (name) {
-            case 'card':
-                var card = `
-        <div>
-            <div class="title-box"><i class="fas fa-money-check"></i> Card</div>
-            <div class="box">
-                <p>Name</p>
-                <input type="text" df-name>
-                <p>Desc</p>
-                <textarea df-desc></textarea>
-                <p>mjreveal</p>
-                <input type="text" df-mjreveal>
-                <p>Timer</p>
-                <input type="checkbox" df-timer>
-                <p>Shuffle</p>
-                <input type="checkbox" df-shuffle>
+<dialog class="pe-dialog" id="pe-confirm" aria-labelledby="pe-confirm-title">
+    <form method="dialog">
+        <div class="pe-dialog-head">
+            <h2 id="pe-confirm-title"></h2>
+        </div>
+        <div class="pe-dialog-body">
+            <p id="pe-confirm-text"></p>
+            <div class="pe-dialog-actions">
+                <button type="submit" class="pe-btn" value="cancel">Annuler</button>
+                <button type="submit" class="pe-btn pe-btn-danger" value="ok" id="pe-confirm-ok"></button>
             </div>
         </div>
-                `;
-                editor.addNode('card', 1,  3, pos_x, pos_y, 'card', {}, card );
-                break;
-            case 'choice':
-                var choice = `
-                <div>
-                    <div class="title-box"><i class="fas fa-sign-out-alt"></i> Choice</div>
-                    <div class="box">
-                        <p>choice</p>
-                        <textarea df-choice></textarea>
-                        <p>mjreveal</p>
-                        <input type="text" df-mjreveal>
-                    </div>
-                </div>
-                        `;
-                editor.addNode('choice', 1,  1, pos_x, pos_y, 'choice', {}, choice );
-                break;
+    </form>
+</dialog>
 
-            case 'reveal':
-                var reveal = `
-                <div>
-                    <div class="title-box"><i class="fas fa-sign-in-alt"></i> Reveal</div>
-                    <div class="box">
-                        <p>reveal</p>
-                        <textarea df-reveal></textarea>
-                    </div>
-                </div>
-                        `;
-                editor.addNode('reveal', 1,  0, pos_x, pos_y, 'reveal', {}, reveal );
-                break;
+<div class="pe-toast" id="pe-toast" role="status" aria-live="polite"></div>
 
-            default:
-        }
-    }
-
-    var transform = '';
-    function showpopup(e) {
-        e.target.closest(".drawflow-node").style.zIndex = "9999";
-        e.target.children[0].style.display = "block";
-        //document.getElementById("modalfix").style.display = "block";
-
-        //e.target.children[0].style.transform = 'translate('+translate.x+'px, '+translate.y+'px)';
-        transform = editor.precanvas.style.transform;
-        editor.precanvas.style.transform = '';
-        editor.precanvas.style.left = editor.canvas_x +'px';
-        editor.precanvas.style.top = editor.canvas_y +'px';
-        console.log(transform);
-
-        //e.target.children[0].style.top  =  -editor.canvas_y - editor.container.offsetTop +'px';
-        //e.target.children[0].style.left  =  -editor.canvas_x  - editor.container.offsetLeft +'px';
-        editor.editor_mode = "fixed";
-
-    }
-
-    function closemodal(e) {
-        e.target.closest(".drawflow-node").style.zIndex = "2";
-        e.target.parentElement.parentElement.style.display  ="none";
-        //document.getElementById("modalfix").style.display = "none";
-        editor.precanvas.style.transform = transform;
-        editor.precanvas.style.left = '0px';
-        editor.precanvas.style.top = '0px';
-        editor.editor_mode = "edit";
-    }
-
-    function changeModule(event) {
-        var all = document.querySelectorAll(".menu ul li");
-        for (var i = 0; i < all.length; i++) {
-            all[i].classList.remove('selected');
-        }
-        event.target.classList.add('selected');
-    }
-
-    function changeMode(option) {
-
-        //console.log(lock.id);
-        if(option == 'lock') {
-            lock.style.display = 'none';
-            unlock.style.display = 'block';
-        } else {
-            lock.style.display = 'block';
-            unlock.style.display = 'none';
-        }
-
-    }
-
-    function parseEditorData(all=false) {
-        let exportFull = editor.export();
-        let exp = exportFull.drawflow;
-        const parser = new DOMParser();
-        let exportBuild = [];
-        let exportName = "placeCards";
-
-        for (let place in exp) {
-
-            if (!all) {
-                let selected = document.querySelector('.selected').innerText;
-                if (place !== selected)
-                    continue;
-                exportName = place + "_" + exportName;
-            }
-            else {
-                if (Object.keys(exp[place].data).length === 0) {
-                    delete exp[place];
-                    continue;
-                }
-            }
-            if (place === 'Home') continue;
-            let placeDat = exp[place].data;
-            let asArray = Object.values(placeDat);
-
-            let cards = asArray.filter(v => v.name === 'card');
-            let choices = asArray.filter(v => v.name === 'choice');
-            let reveals = asArray.filter(v => v.name === 'reveal');
-
-            let buildChoices = {};
-            for (let choice of choices) {
-
-                const choiceDoc = parser.parseFromString(choice.html, 'text/html');
-
-                let prevId = choice.inputs.input_1.connections[0].node;
-                let prevNode = choice.inputs.input_1.connections[0].input.split('_')[1] - 1;
-
-                // let reveal = reveals.find(el => el.inputs.input_1.connections[0].node === choice.id.toString());
-                let reveal = reveals.find(el => {
-                    let len = el.inputs.input_1.connections.length;
-
-                    for (let i=0; i<len; i++) {
-                        if (el.inputs.input_1.connections[i].node === choice.id.toString())
-                            return true;
-                    }
-                    return false;
-                });
-
-                if (!buildChoices[prevId]) {
-                    buildChoices[prevId] = []
-                }
-                buildChoices[prevId][prevNode] = {
-                    'value': choiceDoc.querySelector('textarea[df-choice]').value || choice.data.choice,
-                    'mjreveal': choiceDoc.querySelector('input[df-mjreveal]').value || choice.data.mjreveal,
-                }
-
-                if (reveal) {
-                    const revealDoc = parser.parseFromString(reveal.html, 'text/html');
-                    buildChoices[prevId][prevNode]['reveal'] = reveal.data.reveal || revealDoc.querySelector('textarea[df-reveal]').value;
-                }
-                else {
-                    let next = cards.find(el => el.id.toString() === choice.outputs.output_1.connections[0].node);
-                    buildChoices[prevId][prevNode]['next'] = next.data.name || next.id;
-                }
-            }
-
-            let startItem = cards.find(el => el.inputs.input_1.connections.length === 0);
-
-            for (let card of cards) {
-                let cardExport = {}
-                if (card === startItem)
-                    cardExport['start'] = true;
-
-                const htmlDoc = parser.parseFromString(card.html, 'text/html');
-
-                let name = card.data.name || htmlDoc.querySelector('input[df-name]').value;
-
-                let nameExists = exportBuild.find(el => el.name === name);
-                if (nameExists) {
-                    alert(name + " is used more than once !\nCancelling Export");
-                    console.error(name + " is used more than once !\nCancelling Export");
-                    getInputsByValue(name).forEach(function (el) {
-                        el.parentElement.style.background = "#cd0000"
-                    })
-                    return;
-                }
-
-                cardExport['desc'] = card.data.desc || htmlDoc.querySelector('textarea[df-desc]').value;
-                cardExport['mjreveal'] = card.data.mjreveal || htmlDoc.querySelector('input[df-mjreveal]').value
-                cardExport['timer'] = card.data.timer === 'on';
-                cardExport['shuffle'] = card.data.shuffle === 'on';
-                cardExport['name'] = name;
-                cardExport['choices'] = buildChoices[card.id];
-
-                exportBuild.push(cardExport);
-            }
-        }
-
-        exportBuild.sort((a,b) => a.length - b.length || a.name.localeCompare(b.name));
-        downloadObjectAsJson(exportBuild, exportName);
-    }
-
-    function getInputsByValue(value)
-    {
-        let allInputs = document.getElementsByTagName("input");
-        let results = [];
-        for(let x=0;x<allInputs.length;x++)
-            if(allInputs[x].value == value)
-                results.push(allInputs[x]);
-        return results;
-    }
-
-    function removeSelected() {
-
-        let text = "La carte lieu va être supprimée, confirmer ?";
-        if (confirm(text) !== true)
-            return;
-
-        editor.clearModuleSelected();
-        let el = document.querySelector('.selected');
-        try {
-            editor.removeModule(el.innerText);
-        }
-        catch (e) {
-            console.log(e);
-        }
-        let dataStr = JSON.stringify({name: el.innerText});
-        fetch('/api/deletePlace', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: dataStr
-        });
-        document.querySelector('.selected').remove();
-
-        selectFirstModule();
-    }
-
-    function selectFirstModule() {
-        let first = document.querySelectorAll('.menu ul li')[1];
-        first.classList.add('selected');
-        editor.changeModule(first.innerText);
-    }
-
-    function addPlaceTemplate(name = null) {
-
-        let newHtmlLi = document.createElement("li");
-        if (!name) {
-            name = document.getElementById('add-module-btn').value;
-            editor.addModule(name);
-        }
-        else if (name === "bibli") {
-            newHtmlLi.classList.add("selected");
-        }
-        newHtmlLi.innerText = name;
-        newHtmlLi.setAttribute('onclick', "editor.changeModule('"+name+"'); changeModule(event);");
-        document.querySelector('.menu ul').append(newHtmlLi);
-    }
-
-    // SAVE SINGLE ELEMENT
-    async function saveDataSet(exp) {
-
-        let el = document.querySelector('.selected').innerText;
-        // for (let place in exp.drawflow) {
-        //     if (Object.keys(exp.drawflow[place].data).length === 0)
-        //         delete exp.drawflow[place];
-        // }
-
-        let data = {};
-        data[el] = exp.drawflow[el];
-        let dataStr = JSON.stringify(data);
-
-        const rawResponse = await fetch('/api/savePlaces', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: dataStr
-        });
-
-        return JSON.parse(await rawResponse.text());
-    }
-
-    function downloadObjectAsJson(exportObj, exportName){
-        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj,null,2));
-        var downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href",     dataStr);
-        downloadAnchorNode.setAttribute("download", exportName + ".json");
-        document.body.appendChild(downloadAnchorNode); // required for firefox
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-    }
-
-</script>
+<script src="/js/drawflow/drawflow.min.js"></script>
+<script>var PLACES_DATA = <%- vars.dat %>;</script>
+<script>var LOOT_ITEMS = <%- JSON.stringify(lootItems).replace(/</g, '\\u003c') %>;</script>
+<datalist id="pe-loot-items">
+    <% lootItems.forEach(function (item) { %><option value="<%= item.name %>"></option><% }); %>
+</datalist>
+<script src="/js/place-editor.js"></script>
 </body>
 </html>

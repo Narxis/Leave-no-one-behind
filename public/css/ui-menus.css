@@ -1,0 +1,1199 @@
+/*---vvv---Rafraîchissement des menus (chargé après le CSS de chaque page)---vvv---*/
+
+/*---Panneaux---*/
+.flex-container,
+.endscreen-container,
+.lecadre,
+.player,
+.form-container,
+.synopsis-page .card,
+.fiche-page .card {
+    border: 1px solid var(--ui-border);
+    border-radius: 20px;
+    background: var(--ui-surface);
+    backdrop-filter: blur(12px) saturate(130%);
+    -webkit-backdrop-filter: blur(12px) saturate(130%);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+}
+
+/* Pas de flou ici : backdrop-filter changerait le repère des
+   blocs .ennemy/.ally/.status-box positionnés en absolu */
+.flex-container {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+/* Cadre du vaisseau : rentré dans le panneau (il débordait de 53px à
+   gauche), largeur calée sur la colonne des modules, et fond spatial en
+   CSS à la place de l'image Discord qui a expiré */
+.fiche-page .vaisseau {
+    left: 37px;
+    width: 353px;
+    height: 215px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: var(--ui-radius);
+    box-shadow: var(--ui-shadow), inset 0 0 40px rgb(0 0 0 / 55%);
+    background-color: #05031a;
+    background-image:
+        /* champ d'étoiles (SVG intégré, positions fixes) */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='220' fill='white'%3E%3Ccircle cx='0' cy='203' r='0.7' fill-opacity='0.79'/%3E%3Ccircle cx='192' cy='72' r='0.9' fill-opacity='0.68'/%3E%3Ccircle cx='246' cy='140' r='0.7' fill-opacity='0.57'/%3E%3Ccircle cx='255' cy='154' r='1.3' fill-opacity='0.76'/%3E%3Ccircle cx='168' cy='203' r='0.6' fill-opacity='0.66'/%3E%3Ccircle cx='332' cy='151' r='0.8' fill-opacity='0.90'/%3E%3Ccircle cx='327' cy='82' r='0.9' fill-opacity='0.55'/%3E%3Ccircle cx='55' cy='65' r='0.7' fill-opacity='0.91'/%3E%3Ccircle cx='201' cy='160' r='0.6' fill-opacity='0.51'/%3E%3Ccircle cx='202' cy='112' r='0.7' fill-opacity='0.90'/%3E%3Ccircle cx='20' cy='80' r='0.9' fill-opacity='0.90'/%3E%3Ccircle cx='185' cy='36' r='0.7' fill-opacity='0.57'/%3E%3Ccircle cx='153' cy='73' r='0.8' fill-opacity='0.49'/%3E%3Ccircle cx='326' cy='101' r='0.9' fill-opacity='0.73'/%3E%3Ccircle cx='186' cy='111' r='1.0' fill-opacity='0.59'/%3E%3Ccircle cx='255' cy='55' r='0.7' fill-opacity='0.55'/%3E%3Ccircle cx='141' cy='175' r='0.6' fill-opacity='0.84'/%3E%3Ccircle cx='28' cy='89' r='0.6' fill-opacity='0.95'/%3E%3Ccircle cx='79' cy='139' r='1.3' fill-opacity='0.62'/%3E%3Ccircle cx='213' cy='30' r='1.0' fill-opacity='0.88'/%3E%3Ccircle cx='319' cy='200' r='0.7' fill-opacity='0.36'/%3E%3Ccircle cx='89' cy='17' r='1.3' fill-opacity='0.72'/%3E%3Ccircle cx='83' cy='163' r='0.9' fill-opacity='0.49'/%3E%3Ccircle cx='318' cy='52' r='1.0' fill-opacity='0.42'/%3E%3Ccircle cx='176' cy='1' r='0.9' fill-opacity='0.90'/%3E%3Ccircle cx='8' cy='198' r='1.0' fill-opacity='0.69'/%3E%3Ccircle cx='245' cy='59' r='0.7' fill-opacity='0.69'/%3E%3Ccircle cx='19' cy='169' r='0.9' fill-opacity='0.65'/%3E%3Ccircle cx='12' cy='24' r='0.7' fill-opacity='0.76'/%3E%3Ccircle cx='321' cy='8' r='0.9' fill-opacity='0.95'/%3E%3Ccircle cx='344' cy='168' r='0.7' fill-opacity='0.79'/%3E%3Ccircle cx='318' cy='88' r='0.8' fill-opacity='0.88'/%3E%3Ccircle cx='201' cy='77' r='0.9' fill-opacity='0.55'/%3E%3Ccircle cx='261' cy='93' r='0.7' fill-opacity='0.94'/%3E%3Ccircle cx='358' cy='139' r='1.0' fill-opacity='0.47'/%3E%3Ccircle cx='232' cy='30' r='0.8' fill-opacity='0.81'/%3E%3Ccircle cx='340' cy='106' r='0.8' fill-opacity='0.45'/%3E%3Ccircle cx='239' cy='115' r='0.8' fill-opacity='0.80'/%3E%3Ccircle cx='130' cy='165' r='1.3' fill-opacity='0.53'/%3E%3Ccircle cx='195' cy='45' r='0.7' fill-opacity='0.49'/%3E%3Ccircle cx='237' cy='94' r='1.3' fill-opacity='0.81'/%3E%3Ccircle cx='296' cy='201' r='0.9' fill-opacity='0.93'/%3E%3Ccircle cx='9' cy='168' r='0.9' fill-opacity='0.89'/%3E%3Ccircle cx='13' cy='30' r='1.3' fill-opacity='0.41'/%3E%3Ccircle cx='31' cy='2' r='1.0' fill-opacity='0.47'/%3E%3Ccircle cx='48' cy='44' r='0.7' fill-opacity='0.62'/%3E%3C/svg%3E"),
+        radial-gradient(ellipse 60% 70% at 28% 35%, rgb(118 78 255 / 38%), transparent 70%),
+        radial-gradient(ellipse 50% 60% at 78% 72%, rgb(79 216 224 / 22%), transparent 70%),
+        radial-gradient(ellipse 40% 50% at 85% 18%, rgb(255 90 180 / 14%), transparent 70%),
+        linear-gradient(160deg, #0d0838 0%, #05031a 100%);
+    background-size:
+        360px 220px,
+        100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+
+.fiche-page .cadre {
+    background: none;
+}
+
+/* Image d'origine hébergée sur Discord, expirée : n'affichait plus
+   qu'une icône cassée et un trait vertical */
+.fiche-page .vsaut {
+    display: none;
+}
+
+.fiche-page .vaisseau svg#vaisseau {
+    left: 59px;
+    filter: drop-shadow(0 10px 18px rgb(0 0 0 / 60%)) drop-shadow(0 0 22px rgb(118 78 255 / 35%));
+}
+
+/*---Boutons---*/
+.next,
+.bouton-suivant,
+.mj-button,
+.add-life,
+.player-create,
+.player-delete,
+.game-start,
+.combat .player-stat-value {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 12px;
+    background: var(--ui-fill);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), 0 8px 24px -12px rgb(0 0 0 / 80%);
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease), color 150ms var(--ui-ease), box-shadow 200ms var(--ui-ease), transform 150ms var(--ui-ease);
+}
+
+.next:hover,
+.bouton-suivant:hover,
+.mj-button:hover,
+.add-life:hover,
+.player-create:hover,
+.player-delete:hover,
+.game-start:hover,
+.combat .player-stat-value:hover {
+    background: var(--ui-accent-soft);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    box-shadow: var(--ui-glow-accent);
+    transform: translateY(-1px);
+}
+
+.next:active,
+.bouton-suivant:active,
+.mj-button:active,
+.add-life:active,
+.player-create:active,
+.player-delete:active,
+.game-start:active,
+.combat .player-stat-value:active {
+    transform: translateY(0);
+    box-shadow: inset 0 2px 6px rgb(0 0 0 / 40%);
+}
+
+/* Boutons d'action principale : accent jaune permanent */
+.next,
+.bouton-suivant,
+.mj-button {
+    border-color: rgb(255 204 0 / 55%);
+    color: var(--ui-accent);
+    text-transform: uppercase;
+    font-size: 1.1em;
+    letter-spacing: 0.12em;
+    text-align: center;
+}
+
+/* Accès au menu MJ depuis un téléphone (bouton visible sur mobile seulement) */
+.mj-button {
+    box-sizing: border-box;
+    border-radius: 14px;
+    text-decoration: none;
+}
+
+.bouton-suivant {
+    width: auto;
+    padding: 0 28px;
+    white-space: nowrap;
+    font-size: 0.95em;
+}
+
+/* Couleurs de sens conservées, en version plus sobre */
+.player-create {
+    background: rgb(79 216 224 / 12%);
+    border-color: rgb(79 216 224 / 55%);
+}
+
+.player-delete {
+    background: rgb(255 90 110 / 12%);
+    border-color: rgb(255 90 110 / 55%);
+}
+
+.game-start {
+    background: rgb(92 220 120 / 14%);
+    border-color: rgb(92 220 120 / 60%);
+}
+
+/*---Champs de saisie---*/
+#search-ally,
+#search-ennemy,
+#search-status,
+input.add-life,
+.player .player-name {
+    border: 1px solid var(--ui-border);
+    border-radius: 12px;
+    background: rgb(0 0 0 / 28%);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 500;
+    box-shadow: inset 0 2px 8px rgb(0 0 0 / 35%);
+    transition: border-color 150ms var(--ui-ease), box-shadow 150ms var(--ui-ease), background 150ms var(--ui-ease);
+}
+
+input.add-life {
+    cursor: text;
+}
+
+input.add-life:hover {
+    transform: none;
+    color: var(--ui-text);
+    background: rgb(0 0 0 / 28%);
+}
+
+#search-ally:focus,
+#search-ennemy:focus,
+#search-status:focus,
+input.add-life:focus,
+.player .player-name:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+    background: rgb(0 0 0 / 38%);
+    box-shadow: inset 0 2px 8px rgb(0 0 0 / 35%), 0 0 0 3px rgb(255 204 0 / 18%);
+}
+
+::placeholder {
+    color: var(--ui-text-dim);
+    opacity: 1;
+}
+
+/*---Menu principal---*/
+.pas-title {
+    width: max-content;
+    white-space: nowrap;
+    padding: 0.6em 1.4em;
+    font-size: clamp(14px, 1.4vw, 22px);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ui-text-dim);
+    text-shadow: none;
+    border: 1px solid var(--ui-border);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 3%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: ui-pulse 2.8s ease-in-out infinite;
+    transition: color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.pas-title:hover {
+    color: var(--ui-accent);
+    border-color: var(--ui-accent);
+    animation-play-state: paused;
+}
+
+@keyframes ui-pulse {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+}
+
+/*---Menu MJ---*/
+.choice-reveal,
+.combat {
+    border-color: var(--ui-border) !important;
+}
+
+.desc-title {
+    padding: 4px 18px 10px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-indent: 0;
+}
+
+.desc-text,
+.reveal-text {
+    margin: 0 12px;
+    padding: 12px 14px;
+    border-top: none;
+    border-left: 2px solid rgb(176 166 255 / 45%);
+    border-radius: 0 var(--ui-radius-sm) var(--ui-radius-sm) 0;
+    background: rgb(40 0 76 / 45%);
+    text-indent: 0;
+    line-height: 1.45;
+    text-shadow: none;
+}
+
+.button-text {
+    margin: 4px 12px 8px;
+    padding-left: 2px;
+    font-weight: 600;
+    text-indent: 0;
+    text-shadow: none;
+}
+
+.ennemy,
+.ally {
+    border-color: var(--ui-border);
+}
+
+.fight {
+    border-color: rgb(255 90 110 / 60%);
+    color: var(--ui-danger);
+    background: rgb(255 90 110 / 10%);
+    text-shadow: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 1.5em;
+}
+
+.fight:hover {
+    color: #fff;
+    border-color: var(--ui-danger);
+    background: rgb(255 90 110 / 25%);
+    box-shadow: 0 0 0 1px rgb(255 90 110 / 40%), 0 0 22px -4px rgb(255 90 110 / 55%);
+}
+
+#console-container {
+    border-color: var(--ui-border);
+}
+
+.combat .output-roll {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 12px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-accent);
+    text-shadow: 0 0 10px rgb(255 204 0 / 45%);
+}
+
+.mjroll-label {
+    transition: color 150ms var(--ui-ease);
+}
+
+.mjroll-label:hover {
+    color: var(--ui-accent);
+}
+
+/* Colonne adversaires / compagnons / status : grille alignée au lieu
+   des blocs positionnés en absolu, à toutes les tailles d'écran */
+@media all {
+    .life-container {
+        box-sizing: border-box;
+        padding: 20px 24px;
+        gap: 20px;
+    }
+
+    .life-change,
+    .combat .life-change {
+        height: auto;
+        width: 100%;
+    }
+
+    .life-container .life-change {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px 24px;
+    }
+
+    .life-type1,
+    .life-type2 {
+        padding: 0 0 8px;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .life-selector {
+        height: auto;
+        width: 100%;
+    }
+
+    .ennemy:not(.hide),
+    .ally:not(.hide),
+    .status-box {
+        position: static;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        width: 100%;
+        height: auto;
+        margin: 0;
+        padding: 20px 0 0;
+        border-top: 1px solid var(--ui-border);
+        border-bottom: none;
+    }
+
+    #search-ennemy,
+    #search-ally,
+    #search-status {
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        width: 100%;
+        height: 2.4em;
+        margin: 0;
+        padding: 0 0.6em;
+        font-size: 1.5em;
+        text-align: left;
+    }
+
+    .life-container .add-life {
+        box-sizing: border-box;
+        width: 100%;
+        height: 2.4em;
+        margin: 0;
+        padding: 0;
+        font-size: 1.5em;
+        text-align: center;
+    }
+}
+
+/* Mise en page responsive : 3 colonnes, puis 2, puis 1. Le cadre n'est
+   plus centré sur un point fixe (.center 0x0) mais dans le flux, pour que
+   la page défile quand il ne tient pas à l'écran */
+.mj-page .center {
+    position: relative;
+    z-index: 1;
+    top: auto;
+    left: auto;
+    transform: none;
+    box-sizing: border-box;
+    width: auto !important;
+    height: auto;
+    min-height: 100vh;
+    padding: 96px 16px 32px;
+}
+
+.mj-page .overflownt {
+    display: block;
+    width: 100%;
+    max-width: 1450px;
+    height: auto;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.mj-page .flex-container {
+    display: grid;
+    grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr) minmax(0, 1fr);
+    box-sizing: border-box;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+}
+
+.mj-page .choice-reveal,
+.mj-page .life-container,
+.mj-page .combat {
+    box-sizing: border-box;
+    width: auto;
+    min-width: 0;
+    height: 100%;
+}
+
+/* 3 colonnes de hauteur fixe : chaque colonne défile si son contenu
+   dépasse (liste d'adversaires, compagnons, butin) */
+.mj-page .life-container,
+.mj-page .combat {
+    overflow: hidden auto;
+}
+
+.mj-page .life-container > * {
+    flex: none;
+}
+
+.mj-page #console-container {
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+}
+
+/* Neutralise les hauteurs fixes et le débordement des anciennes règles
+   « téléphone » de mj-menu.css (media queries sur la densité de pixels) */
+.mj-page .choice-reveal {
+    overflow: hidden auto;
+}
+
+.mj-page .life-change,
+.mj-page .combat .life-change,
+.mj-page .ennemy,
+.mj-page .ally,
+.mj-page .status-box {
+    height: auto;
+}
+
+.mj-page .ennemy,
+.mj-page .ally,
+.mj-page .status-box {
+    margin: 0;
+}
+
+.mj-page .life-change {
+    border-top: none;
+}
+
+.mj-page #add-monstre,
+.mj-page #monstre-list,
+.mj-page #add-friend,
+.mj-page #friend-list {
+    margin: 0;
+}
+
+@media (max-width: 1100px) {
+    .mj-page .flex-container {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        height: auto;
+    }
+
+    .mj-page .choice-reveal {
+        grid-column: 1 / -1;
+        height: auto;
+        max-height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid var(--ui-border);
+    }
+
+    .mj-page .life-container,
+    .mj-page .combat {
+        height: auto;
+    }
+}
+
+@media (max-width: 680px) {
+    .mj-page .center {
+        padding-top: 84px;
+    }
+
+    .mj-page .flex-container {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mj-page .combat {
+        border-left: none;
+        border-top: 1px solid var(--ui-border);
+    }
+
+    .mj-page .button-text {
+        display: block;
+    }
+}
+
+/* C'est la page elle-même qui défile, pas un bloc intérieur : sur
+   téléphone, Safari ne masque ses barres (adresse, navigation) que lorsque
+   la page défile. style.css bloque le défilement du body sur tout le site */
+body.mj-page {
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+@media (max-width: 1100px) {
+    .mj-page .choice-reveal {
+        max-height: none;
+        overflow: visible;
+    }
+}
+
+/* Écrans tactiles (téléphones, tablettes) : pas de menu ☰ (masqué sur
+   mobile), marges sur les zones sûres (encoche, barre d'accueil), y compris
+   en mode plein écran depuis l'écran d'accueil */
+@media (hover: none) and (pointer: coarse) {
+    .mj-page .center {
+        padding:
+            max(16px, env(safe-area-inset-top))
+            max(12px, env(safe-area-inset-right))
+            max(24px, env(safe-area-inset-bottom))
+            max(12px, env(safe-area-inset-left));
+    }
+
+    .mj-page #search-ennemy,
+    .mj-page #search-ally,
+    .mj-page #search-status,
+    .mj-page .life-container .add-life {
+        font-size: 1.15em;
+    }
+}
+
+/*---Menu MJ : combat---*/
+.mj-enemies {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mj-enemies-empty {
+    padding: 10px 0;
+    font-size: 13px;
+    text-align: center;
+    color: var(--ui-text-dim);
+}
+
+.mj-enemy {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-enemies.active .mj-enemy {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "name actions"
+        "bar  bar"
+        "hp   hp"
+        "loot loot";
+}
+
+.mj-enemy.ko {
+    opacity: 0.45;
+}
+
+.mj-enemy-name {
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mj-enemy-hp-input {
+    width: 4em;
+    padding: 4px 6px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 14px;
+    text-align: center;
+}
+
+.mj-enemy-unit {
+    margin-left: -4px;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.mj-enemy-remove,
+.mj-hp-btn,
+.mj-enemy-attack {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mj-enemy-remove {
+    width: 28px;
+    height: 28px;
+    color: var(--ui-text-dim);
+}
+
+.mj-enemies.active .mj-enemy-name {
+    grid-area: name;
+}
+
+.mj-enemy-bar {
+    grid-area: bar;
+    height: 6px;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 8%);
+    overflow: hidden;
+}
+
+.mj-enemy-bar-fill {
+    height: 100%;
+    background: var(--ui-danger);
+    transition: width 300ms var(--ui-ease);
+}
+
+.mj-enemy-hp {
+    grid-area: hp;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.mj-hp-btn {
+    width: 32px;
+    height: 28px;
+}
+
+.mj-enemy-hp-value {
+    min-width: 5em;
+    font-size: 14px;
+    text-align: center;
+}
+
+.mj-enemy-actions {
+    grid-area: actions;
+    display: flex;
+    gap: 6px;
+}
+
+.mj-enemy-target {
+    padding: 5px 12px;
+    border: 1px solid rgb(255 204 0 / 55%);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-accent);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mj-enemy-target:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.mj-enemy.selecting {
+    border-color: var(--ui-accent);
+}
+
+.mj-enemy.targeted {
+    border-color: var(--ui-danger);
+    box-shadow: 0 0 0 1px var(--ui-danger);
+}
+
+.mj-attackers {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: -2px 0 4px;
+    padding: 10px;
+    border: 1px dashed rgb(255 204 0 / 45%);
+    border-radius: 10px;
+}
+
+.mj-attackers-label {
+    width: 100%;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.mj-attacker {
+    padding: 7px 14px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mj-attacker:hover {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.mj-waiting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid rgb(255 90 110 / 50%);
+    border-radius: 10px;
+    background: rgb(255 90 110 / 10%);
+    font-size: 13px;
+    animation: mj-waiting 1.6s ease-in-out infinite;
+}
+
+@keyframes mj-waiting {
+    50% { border-color: rgb(255 90 110 / 20%); }
+}
+
+.mj-waiting-cancel {
+    flex: none;
+    padding: 5px 10px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    cursor: pointer;
+}
+
+.mj-enemy-attack {
+    padding: 5px 12px;
+    border-color: rgb(255 90 110 / 55%);
+    color: var(--ui-danger);
+}
+
+.mj-enemy-attack.selecting {
+    background: rgb(255 90 110 / 18%);
+}
+
+/* Choix de la cible d'un ennemi : même boîte que le choix de l'attaquant, en rouge */
+.mj-victims {
+    border-color: rgb(255 90 110 / 50%);
+}
+
+.mj-victims .mj-attacker:hover {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
+.mj-enemy-attack:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/*---Menu MJ : butin des ennemis---*/
+.mj-loot-toggle {
+    grid-column: 1 / -1;
+    overflow: hidden;
+    padding: 2px 0;
+    border: none;
+    background: none;
+    color: var(--ui-text-dim);
+    font-family: 'Jura', sans-serif;
+    font-size: 12px;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.mj-loot-toggle:hover,
+.mj-loot-toggle.open {
+    color: var(--ui-accent);
+}
+
+.mj-loot {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    border: 1px dashed rgb(255 204 0 / 45%);
+    border-radius: 8px;
+}
+
+.mj-loot-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.mj-loot-items:empty {
+    display: none;
+}
+
+.mj-loot-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px 2px 8px;
+    border: 1px solid rgb(255 204 0 / 45%);
+    border-radius: 999px;
+    background: rgb(255 204 0 / 8%);
+    font-size: 12px;
+}
+
+/* Objet saisi à la main, absent de items.json */
+.mj-loot-item.custom {
+    border-style: dashed;
+}
+
+.mj-loot-remove {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--ui-text-dim);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.mj-loot-remove:hover {
+    color: var(--ui-danger);
+}
+
+.mj-loot-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+}
+
+.mj-loot-input {
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 5px 8px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 14px;
+}
+
+.mj-loot-input:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+}
+
+.mj-loot-add {
+    width: 32px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/*---Menu MJ : compagnons (PNJ)---*/
+/* Onglets Adversaires / Compagnons : une seule liste visible */
+.mj-enemies.hide,
+.mj-allies.hide {
+    display: none;
+}
+
+.mj-allies {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mj-ally {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid rgb(79 216 224 / 45%);
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-ally-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1.3fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+}
+
+.mj-ally-badge {
+    padding: 0 5px;
+    border-radius: 4px;
+    background: var(--ui-cyan);
+    color: #0b1220;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 16px;
+}
+
+.mj-ally input {
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 4px 6px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 14px;
+}
+
+.mj-ally input:focus {
+    outline: none;
+    border-color: var(--ui-cyan);
+}
+
+.mj-ally .mj-ally-name {
+    font-weight: 700;
+}
+
+.mj-ally-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.mj-ally-stat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    min-width: 0;
+}
+
+.mj-ally-stat-label {
+    overflow: hidden;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mj-ally .mj-ally-stat-input {
+    flex: none;
+    width: 3.6em;
+    text-align: center;
+}
+
+.mj-attacker.npc {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-color: rgb(79 216 224 / 55%);
+}
+
+.fight.running {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.fight.shake {
+    animation: mj-shake .35s;
+}
+
+@keyframes mj-shake {
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-2px); }
+}
+
+.mj-combat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 16px 12px;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.mj-combat-log:empty {
+    display: none;
+}
+
+.mj-log-line:first-child {
+    color: var(--ui-text);
+}
+
+.mj-log-line.faint {
+    color: var(--ui-danger);
+}
+
+/*---Fiches personnages---*/
+.player .player-stats,
+.race-img {
+    border-color: var(--ui-border);
+}
+
+.race-img {
+    border-radius: 12px;
+}
+
+.player-stat-value {
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 1px var(--ui-border);
+}
+
+/* Menu des races : 2 colonnes, hauteur selon le contenu (avant : 300px
+   fixes, la dernière race était coupée) */
+.display-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    width: 230px;
+    height: auto;
+    margin-left: -65px;
+    padding: 8px;
+    box-sizing: border-box;
+    background: var(--ui-surface-flat);
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 14px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: var(--ui-shadow);
+    z-index: 5;
+}
+
+.options-affichage li {
+    width: auto;
+    padding: 7px 10px;
+    text-indent: 0;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 150ms var(--ui-ease), color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.options-affichage li:hover {
+    background: var(--ui-fill-hover);
+    color: var(--ui-accent);
+}
+
+.options-affichage li.selected {
+    border-color: rgb(255 204 0 / 55%);
+    color: var(--ui-accent);
+    background: var(--ui-accent-soft);
+}
+
+.select-affichage {
+    cursor: pointer;
+}
+
+/* Légende des stats (colonne de gauche de /persos) */
+/* Description de la race */
+.player .race-desc {
+    box-sizing: border-box;
+    width: calc(100% - 24px);
+    height: auto;
+    max-height: 300px;
+    margin: 14px 12px 12px;
+    padding: 0;
+    overflow: auto;
+    backdrop-filter: none;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ui-text-dim);
+}
+
+.player .race-desc:not(:empty) {
+    padding: 12px 14px;
+    border-left: 2px solid rgb(255 204 0 / 55%);
+    border-radius: 0 var(--ui-radius-sm) var(--ui-radius-sm) 0;
+    background: rgb(40 0 76 / 35%);
+}
+
+.race-desc-title {
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ui-accent);
+}
+
+.race-desc p {
+    margin: 0;
+}
+
+.lecadre {
+    line-height: 1.5;
+    padding: 0 2em;
+    box-sizing: border-box;
+    justify-content: center;
+}
+
+.form-stats {
+    border-color: var(--ui-border);
+}
+
+/*---Écran de fin---*/
+.ship-recap,
+.planet-recap {
+    border-color: var(--ui-border) !important;
+    border-width: 1px !important;
+}
+
+/*---Fiche vaisseau : libellés des modules---*/
+.fiche-page .modtxt {
+    box-shadow: none;
+    padding: 0 0 0 24px;
+    color: var(--ui-text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/*---Synopsis---*/
+/* Hauteur fixe à la taille du texte complet : 185px d'origine ne suffisaient
+   plus avec l'interligne, et une hauteur automatique ferait grandir le
+   cadre pendant l'écriture */
+.synopsis-page .card {
+    height: auto;
+    min-height: 232px;
+    line-height: 1.5;
+    padding: 24px 28px;
+    text-indent: 0;
+}
+
+/* « Suivant » sous le coin droit du cadre (il dépassait de 160px à droite) */
+.synopsis-page .next {
+    top: 172px;
+    left: 419px;
+}
+
+/*---^^^---Rafraîchissement des menus---^^^---*/
+
+@media (max-width: 480px) {
+    .mj-ally-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Description du vaisseau : texte un peu resserré, et la colonne défile
+   au lieu de déborder du panneau (zoom ou police plus large) */
+.fiche-page .descriptif {
+    box-sizing: border-box;
+    max-height: calc(100% - 64px);
+    padding-right: 8px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.fiche-page .descriptif .text {
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.fiche-page .descriptif hr {
+    margin: 6px 0;
+}

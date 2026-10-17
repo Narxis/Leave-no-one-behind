@@ -2,14 +2,157 @@
     title: "Classement",
     cssFiles:[
         "/css/style.css",
-        "/css/leaderboard.css"
+        "/css/leaderboard.css",
+        "/css/ui-menus.css"
     ]
 }) %>
 <body>
     <%- include("partials/nav") %>
-    <div class="center">
-        <a href="/" class="next">Retour au menu principal</a>
-    </div>
-    <script src="js/leaderboard.js"></script>
+    <main class="leaderboard">
+        <h1 class="leaderboard-title">Classement des équipes</h1>
+        <% if (!entries.length) { %>
+            <p class="leaderboard-empty">Aucune partie terminée pour l'instant. Le score d'une équipe s'ajoute ici à la fin de sa partie.</p>
+        <% } else { %>
+            <div class="leaderboard-scroll">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Équipe</th>
+                            <th scope="col" class="num">Score</th>
+                            <th scope="col" class="num">Survivants</th>
+                            <th scope="col">Planète</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% entries.forEach(function (entry, i) { %>
+                            <tr class="<%= entry.id === highlight ? 'is-current' : '' %><%= i < 3 ? ' podium podium-' + (i + 1) : '' %>"
+                                data-id="<%= entry.id %>" tabindex="0" role="button" aria-label="Détail de l'équipe <%= entry.team %>">
+                                <td class="rank"><%= i + 1 %></td>
+                                <td class="team"><%= entry.team %></td>
+                                <td class="num score"><%= entry.score.toLocaleString('fr-FR') %></td>
+                                <td class="num"><%= entry.cryopods.toLocaleString('fr-FR') %></td>
+                                <td><%= entry.planet || '—' %></td>
+                                <td class="date"><%= new Date(entry.date).toLocaleDateString('fr-FR') %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+        <p class="leaderboard-hint"><% if (entries.length) { %>Cliquez sur une équipe pour voir son détail.<% } %></p>
+        <a href="/" class="leaderboard-back">Retour au menu principal</a>
+    </main>
+
+    <dialog class="team-detail" id="team-detail" aria-labelledby="team-detail-title">
+        <div class="team-detail-head">
+            <h2 class="team-detail-title" id="team-detail-title"></h2>
+            <button type="button" class="team-detail-close" id="team-detail-close" aria-label="Fermer">×</button>
+        </div>
+        <div class="team-detail-body" id="team-detail-body"></div>
+    </dialog>
+    <script>var LEADERBOARD = <%- JSON.stringify(entries).replace(/</g, '\\u003c') %>;</script>
+    <script>
+        // La ligne de la partie qui vient de se terminer est amenée à l'écran
+        let current = document.querySelector('.leaderboard-table .is-current');
+        if (current)
+            current.scrollIntoView({block: 'center'});
+
+        // Détail d'une équipe : score, durée, personnages et compagnons
+        (function () {
+            const dialog = document.getElementById('team-detail');
+            const body = document.getElementById('team-detail-body');
+            const STATS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'],
+                ['survival', 'Survie'], ['recon', 'Recon.', 'Reconnaissance'], ['moral', 'Moral']];
+            const el = (tag, cls, text) => {
+                let e = document.createElement(tag);
+                if (cls) e.className = cls;
+                if (text !== undefined) e.textContent = text;
+                return e;
+            };
+            const num = (v) => Number(v || 0).toLocaleString('fr-FR');
+            const race = (r) => r ? r.charAt(0).toUpperCase() + r.slice(1).replace('_', '-') : '';
+            const duration = (ms) => {
+                if (!ms || ms < 0)
+                    return '—';
+                let min = Math.round(ms / 60000), h = Math.floor(min / 60);
+                if (!min)
+                    return 'moins d\'1 min';
+                return h ? h + ' h ' + String(min % 60).padStart(2, '0') : min + ' min';
+            };
+            const fact = (label, value) => {
+                let f = el('div', 'team-fact');
+                f.append(el('span', 'team-fact-label', label), el('span', 'team-fact-value', value));
+                return f;
+            };
+
+            function open(entry) {
+                document.getElementById('team-detail-title').textContent = entry.team;
+                body.innerHTML = '';
+                let facts = el('div', 'team-facts');
+                facts.append(
+                    fact('Score', num(entry.score)),
+                    fact('Durée de la partie', duration(entry.duration)),
+                    fact('Survivants', num(entry.cryopods)),
+                    fact('Planète', entry.planet || '—'),
+                    fact('Date', new Date(entry.date).toLocaleString('fr-FR', {dateStyle: 'short', timeStyle: 'short'}))
+                );
+                if (entry.breakdown)
+                    facts.append(fact('Score vaisseau', num(entry.breakdown.ship)),
+                        fact('Score planète', num(entry.breakdown.planet)),
+                        fact('Score cartes', num(entry.breakdown.cards)));
+                body.append(facts);
+
+                if (!entry.members) {
+                    body.append(el('p', 'team-detail-empty', 'La composition de l\'équipe n\'était pas encore enregistrée pour cette partie.'));
+                }
+                else {
+                    body.append(el('h3', 'team-detail-sub', 'Personnages'));
+                    let list = el('div', 'team-members');
+                    for (let m of entry.members) {
+                        let card = el('div', 'team-member');
+                        let head = el('div', 'team-member-head');
+                        head.append(el('span', 'team-member-name', m.name || '—'));
+                        if (m.race)
+                            head.append(el('span', 'team-member-race', race(m.race)));
+                        card.append(head, el('div', 'team-member-discord', m.discord || 'Pseudo Discord inconnu'));
+                        let stats = el('div', 'team-member-stats');
+                        for (let [key, label, full] of STATS) {
+                            let s = el('span', 'team-stat');
+                            s.title = full || label;
+                            s.append(el('span', 'team-stat-label', label), el('b', '', String(m.stats ? m.stats[key] : '—')));
+                            stats.append(s);
+                        }
+                        card.append(stats);
+                        list.append(card);
+                    }
+                    body.append(list);
+                    if (entry.npcs && entry.npcs.length) {
+                        body.append(el('h3', 'team-detail-sub', 'Compagnons'));
+                        let npcs = el('div', 'team-npcs');
+                        for (let n of entry.npcs)
+                            npcs.append(el('span', 'team-npc', n.name + (n.race ? ' · ' + race(n.race) : '')));
+                        body.append(npcs);
+                    }
+                }
+                dialog.showModal();
+            }
+
+            document.querySelectorAll('.leaderboard-table tbody tr[data-id]').forEach(row => {
+                let entry = LEADERBOARD.find(e => e.id === row.dataset.id);
+                row.addEventListener('click', () => open(entry));
+                row.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        open(entry);
+                    }
+                });
+            });
+            document.getElementById('team-detail-close').addEventListener('click', () => dialog.close());
+            // Clic en dehors de la fiche : elle se ferme
+            dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+        })();
+    </script>
     <%- include("partials/bottom-scripts") %>
 </body>

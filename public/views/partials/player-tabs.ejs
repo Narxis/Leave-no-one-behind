@@ -5,8 +5,8 @@
         <div class="itemlist" id="item<%= player.discord_id %>">
         <% if(player.items){ %>
             <% player.items.forEach(function(item) { %>
-                <div class="itemlist-line <%= item.slug %>">
-                    <p><%= item.name %></p>
+                <div class="itemlist-line <%= item.slug %>" data-slug="<%= item.slug %>" data-owner="<%= player.discord_id %>">
+                    <p><% if (item.image) { %><img src="<%= item.image %>" class="item-image"><% } else { %><span class="item-image item-noimg"><%= item.name.charAt(0) %></span><% } %><%= item.name %><% if (item.count > 1) { %> <span class="item-count">×<%= item.count %></span><% } %></p>
                     <i onclick="removeStarterItem('<%= player.discord_id %>', '<%= item.slug %>')" class="far fa-trash-alt item-trash"></i>
                 </div>
             <% }); %>
@@ -14,8 +14,8 @@
         </div>
     </div>
     <div class="player-roll">
-        <div class="player-name"><%= player.name %>
-            <div class="player-race">(<%= player.race %>)</div>
+        <div class="player-name" title="<%= player.name %>"><span class="player-name-text"><%= player.name %></span>
+            <% if (player.race) { %><div class="player-race"><%= player.race.charAt(0).toUpperCase() + player.race.slice(1).replace('_', '-') %></div><% } %>
         </div>
         <div class="modform input-roll">
             <div class="player-stat-value output-roll-boite" id="outputroll-img">

@@ -2,6 +2,7 @@ const {Card} = require('./../models/card')
 const fs = require("fs")
 const { Op, literal } = require("sequelize");
 const ws = require("ws");
+const {rollPlanet, ARCHETYPES} = require('./planetGen');
 
 const deckGenerator = async function (){
 
@@ -82,6 +83,9 @@ const deckGenerator = async function (){
 
     let bulkDeck = [];
     for (let card of deck){
+        // Plus assez de cartes d'un type : on saute la carte au lieu de crasher
+        if (!card)
+            continue;
         bulkDeck.push({
             deck_id: 0,
             card_id: card.id,
@@ -241,18 +245,13 @@ const generatePlanet = async function (min,max) {
     ];
 
     let totalCost = 0;
-    let score = 0;
+    // Archétype (océan, désert, glacée…) puis stats cohérentes avec lui,
+    // dans la tranche de score demandée (src/controllers/planetGen.js)
+    let planet = rollPlanet(min, max);
+    let score = planet.score;
     let modules = {};
-    do {
-        score = 0;
-        modules = {};
-        for (let el of planetStatsModifiers) {
-            let roll = Math.floor(Math.random() * (100 - 1 + 1) + 1);
-            score = score + (roll * el.mod);
-            modules[el.stat] = {value: roll}
-        }
-        score = Math.round(score / 50);
-    } while (score > max || score < min);
+    for (let el of planetStatsModifiers)
+        modules[el.stat] = {value: planet.values[el.stat]};
 
     do {
         totalCost = 0;
@@ -271,6 +270,8 @@ const generatePlanet = async function (min,max) {
     let data = {
         type: TYPE_PLANET,
         value: score,
+        // Nom de l'archétype, visible côté MJ seulement
+        name: planet.archetype ? ARCHETYPES.archetypes[planet.archetype].name : '',
         modules: modules
     }
 

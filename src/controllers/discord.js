@@ -5,11 +5,23 @@ const { REST } = require('@discordjs/rest');
 const chalk = require("chalk");
 const token = process.env.DS_TOKEN;
 
+// Client connecté, pour retrouver un pseudo Discord hors d'une commande
+let activeClient = null;
+const getClient = () => activeClient;
+
+// Commande refusée parce que la partie n'en est pas à la bonne étape : on dit pourquoi
+const STEP_HINTS = {
+    creation: 'La création des personnages n\'est pas ouverte : le MJ doit d\'abord ouvrir la page « Fiche Personnages ».',
+    gameLive: 'La partie n\'a pas encore commencé : attends que le MJ lance la partie.'
+};
+const blockedMessage = (command) => STEP_HINTS[command && command.step] || 'Tu ne peux pas faire ça maintenant !';
+
 const start = function () {
 
     if (!process.env.DS_TOKEN) return false;
 
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    activeClient = client;
 
     const commandsType = [
         'selectMenus',
@@ -47,6 +59,13 @@ const start = function () {
             '  Bot Ready !\n', '#7289DA');
     });
 
+    // Invité sur un nouveau serveur pendant qu'il tourne : ses commandes y sont
+    // enregistrées tout de suite (sinon il fallait redémarrer)
+    client.on('guildCreate', async guild => {
+        log('[DS] Nouveau serveur : ' + guild.name, '#7289DA');
+        await deployCommands(guild);
+    });
+
     /* SLASH COMMANDS */
     client.on('interactionCreate', async interaction => {
         if (!interaction.isChatInputCommand()) return;
@@ -56,7 +75,7 @@ const start = function () {
 
         if (!slash) return;
         if (slash.step !== '' && slash.step !== CONFIG.gameState) {
-            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            await interaction.reply({ content: blockedMessage(slash), ephemeral: true });
             log("[Blocked]", "#dd0000");
             return
         }
@@ -66,6 +85,20 @@ const start = function () {
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
+    });
+
+    /* AUTOCOMPLETE : propositions pendant la saisie d'une option */
+    client.on('interactionCreate', async interaction => {
+        if (!interaction.isAutocomplete()) return;
+
+        const slash = client.slash.get(interaction.commandName);
+        if (!slash || !slash.autocomplete) return;
+
+        try {
+            await slash.autocomplete(interaction);
+        } catch (error) {
+            console.error(error);
         }
     });
 
@@ -79,7 +112,7 @@ const start = function () {
 
         if (!selectMenu) return;
         if (selectMenu.step !== '' && selectMenu.step !== CONFIG.gameState) {
-            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            await interaction.reply({ content: blockedMessage(selectMenu), ephemeral: true });
             return
         }
 
@@ -101,7 +134,7 @@ const start = function () {
 
         if (!modal) return;
         if (modal.step !== '' && modal.step !== CONFIG.gameState) {
-            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            await interaction.reply({ content: blockedMessage(modal), ephemeral: true });
             return
         }
 
@@ -130,7 +163,7 @@ const start = function () {
 
         if (!button) return;
         if (button.step !== '' && button.step !== CONFIG.gameState) {
-            await interaction.reply({ content: 'Tu ne peux pas faire ça maintenant !', ephemeral: true });
+            await interaction.reply({ content: blockedMessage(button), ephemeral: true });
             return
         }
 
@@ -170,4 +203,4 @@ const deployCommands = async function (guild) {
         .catch(console.error);
 }
 
-module.exports = {start, deployCommands}
+module.exports = {start, deployCommands, getClient}

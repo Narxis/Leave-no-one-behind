@@ -1,20 +1,12 @@
-<div class="player" id="p<%= player.discord_id %>">
+<div class="player" id="p<%= player.discord_id %>" data-race="<%= player.race || '' %>">
     <input type="text" placeholder="Nom du joueur" class="player-name" value="<%= player.name %>">
     <img src="/img/races/<%= player.race %>.png" alt="" onerror="this.src='/img/races/wat.png'" class="race-img">
     <div class="race-selector-container">
         <div class="select-affichage"></div>
         <div class="options-affichage">
-            <li class="race-possible" data-name="fnek">Fnek</li>
-            <li class="race-possible" data-name="omphor">Omphor</li>
-            <li class="race-possible" data-name="sylv">Sylv</li>
-            <li class="race-possible" data-name="ygrl">Ygrl</li>
-            <li class="race-possible" data-name="shrymp">Shrymp</li>
-            <li class="race-possible" data-name="aku">Aku</li>
-            <li class="race-possible" data-name="yorc">Yorc</li>
-            <li class="race-possible" data-name="nek-eau">Nek-eau</li>
-            <li class="race-possible" data-name="nek-feu">Nek-feu</li>
-            <li class="race-possible" data-name="nek-terre">Nek-terre</li>
-            <li class="race-possible" data-name="nek-air">Nek-air</li>
+            <% races.forEach(function (race) { %>
+                <li class="race-possible" data-name="<%= race.slug %>"><%= race.name %></li>
+            <% }); %>
         </div>
     </div>
     <div class="player-stats">
@@ -86,13 +78,6 @@
                 value="<%= player.moral > 0 ? player.moral : '' %>">
         </div>
     </div>
-    <div class="race-desc">
-    </div>
+    <div class="race-desc"></div>
 </div>
-
-<script> (function (){
-    let desc = document.querySelector('#p' + <%= player.discord_id %> + ' .race-desc');
-    desc.innerHTML = lang[<%= player.race %>].desc
-})()
-</script>
 

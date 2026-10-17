@@ -320,3 +320,96 @@
   color: #fff;
   justify-content: center;
 }
+
+/* Planète atteinte, à droite du bilan de la planète */
+.planet-recap {
+  position: relative;
+}
+
+/* Bilan de la planète : colonne de 300px à gauche de la planète. Chaque
+   ligne réserve d'avance la hauteur de son texte complet (.reading-ghost,
+   invisible) : les textes ne se chevauchent pas et rien ne saute à l'écriture */
+.planet-recap {
+  gap: 8px;
+  padding-top: 22px;
+}
+
+.planet-recap .planet-recap-line {
+  height: auto;
+  width: 300px;
+}
+
+.planet-recap .planet-reading,
+.planet-recap .reading-ghost {
+  max-width: 300px;
+  font-size: 12.5px;
+  line-height: 1.3;
+}
+
+.planet-recap .planet-reading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 85%);
+}
+
+.planet-recap .reading-ghost {
+  display: block;
+  visibility: hidden;
+}
+
+/* Planète et lunes centrées dans la case ; quand le bilan de la planète
+   s'écrit (.with-text, end-screen.js), elles glissent à droite du texte */
+.end-planet,
+.end-moons {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+.end-planet,
+.end-moons {
+  transition: left 1s cubic-bezier(.4, 0, .2, 1), transform 1s cubic-bezier(.4, 0, .2, 1), opacity 1s;
+}
+
+/* Pendant le bilan : plus petite, à droite, lunes en retrait */
+.with-text .end-planet,
+.with-text .end-moons {
+  left: calc(100% - 92px);
+  transform: translate(-50%, -50%) scale(.72);
+}
+
+.with-text .end-moons {
+  opacity: .45;
+}
+
+.end-planet {
+  width: 300px;
+  height: 300px;
+}
+
+/* Lunes autour de la planète atteinte (même centre que .end-planet) */
+.end-moons {
+  width: 400px;
+  height: 400px;
+  pointer-events: none;
+}
+
+/* Textes du bilan au-dessus des lunes */
+.planet-recap .planet-recap-line {
+  position: relative;
+  z-index: 1;
+}
+
+/* Planète qu'on peut faire tourner à la souris (planet-view.js) */
+body.planet-hover {
+  cursor: grab;
+}
+
+body.planet-grabbing,
+body.planet-grabbing * {
+  cursor: grabbing !important;
+  user-select: none;
+}

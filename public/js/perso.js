@@ -24,10 +24,39 @@ function setRaceSelect(e=null, race=null, discord_id=null) {
         if (!discord_id) {
             discord_id = this.closest('.player').id.substring(1);
         }
+        this.closest('.options-affichage').classList.remove('display-options');
     }
 
+    // Même message que le menu Discord (set-race.js) : le serveur enregistre
+    // la race puis la renvoie à toutes les pages, qui l'affichent via setRace
+    wsLNOB.send({
+        action: 'set-race',
+        uid: discord_id,
+        race: race
+    });
+}
+
+// Image + description de la race sur la fiche du joueur
+function showRace(discord_id, race) {
     let img = document.querySelector('#p' + discord_id + ' .race-img');
-    img.src = '/img/races/' + race + '.png';
+    let desc = document.querySelector('#p' + discord_id + ' .race-desc');
+    if (img)
+        img.onerror = () => { img.onerror = null; img.src = '/img/races/wat.png'; };
+        img.src = '/img/races/' + race + '.png';
+
+    // Race active surlignée dans le menu, et son nom en titre de description
+    let label = '';
+    document.querySelectorAll('#p' + discord_id + ' .race-possible').forEach(li => {
+        let active = li.getAttribute('data-name') === race;
+        li.classList.toggle('selected', active);
+        if (active)
+            label = li.textContent;
+    });
+
+    if (desc) {
+        let text = lang.card_vars[race] ? lang.card_vars[race].desc : '';
+        desc.innerHTML = text ? '<div class="race-desc-title">' + label + '</div><p>' + text + '</p>' : '';
+    }
 }
 
 async function addPlayerSheet (discord_id) {
@@ -35,8 +64,11 @@ async function addPlayerSheet (discord_id) {
     getPlayerSheet(discord_id).then(sheet => {
         let div = document.createElement('div');
         div.innerHTML = sheet.trim();
-        container.append(div.firstChild);
+        let playerSheet = div.firstChild;
+        container.append(playerSheet);
         setPlayerRaceListeners(discord_id);
+        if (playerSheet.dataset.race)
+            showRace(discord_id, playerSheet.dataset.race);
     });
 }
 
@@ -69,10 +101,7 @@ function setName(e) {
 }
 
 function setRace(e) {
-    let img = document.querySelector('#p' + e.detail.data.uid + ' .race-img');
-    img.src = '/img/races/' + e.detail.data.race + '.png';
-    let desc = document.querySelector('#p' + e.detail.data.uid + ' .race-desc');
-    desc.innerHTML = lang.card_vars[e.detail.data.race].desc
+    showRace(e.detail.data.uid, e.detail.data.race);
 }
 
 async function join(e) {

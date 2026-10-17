@@ -1,0 +1,96 @@
+<%- include("partials/head", {
+    title: "Éditeur de races",
+    cssFiles:[
+        "/css/style.css",
+        "/css/ui-menus.css",
+        "/css/races.css"
+    ]
+}) %>
+<body class="races-page">
+    <%- include("partials/nav") %>
+    <main class="re">
+        <header class="re-head">
+            <h1>Éditeur de races</h1>
+            <p class="re-count" id="re-count"></p>
+            <button type="button" class="re-btn re-btn-primary" id="re-new"><span aria-hidden="true">+</span> Nouvelle race</button>
+        </header>
+
+        <div class="re-body">
+            <section class="re-list-wrap" aria-label="Races">
+                <h2 class="re-sub">Races customs</h2>
+                <div class="re-list" id="re-custom"></div>
+                <h2 class="re-sub">Races de base <small>(non modifiables)</small></h2>
+                <div class="re-list" id="re-base"></div>
+            </section>
+
+            <form class="re-form" id="re-form" autocomplete="off" novalidate>
+                <h2 class="re-form-title" id="re-form-title">Nouvelle race</h2>
+                <p class="re-readonly" id="re-readonly" hidden>
+                    Les races de base ne se modifient pas.
+                    <button type="button" class="re-link" id="re-copy">Créer une race custom à partir de celle-ci</button>
+                </p>
+
+                <div class="re-top">
+                    <label class="re-image" id="re-image" title="Choisir une image">
+                        <img id="re-image-preview" src="/img/races/wat.png" alt="">
+                        <span class="re-image-hint">Changer l'image</span>
+                        <input type="file" id="re-image-input" accept="image/*">
+                    </label>
+                    <div class="re-names">
+                        <label class="re-field">Nom
+                            <input type="text" id="re-name" maxlength="30" placeholder="ex. Zorglub" required>
+                        </label>
+                        <div class="re-row">
+                            <label class="re-field">Pluriel
+                                <input type="text" id="re-plural" maxlength="32" placeholder="Zorglubs">
+                            </label>
+                            <div class="re-field">Genre
+                                <div class="re-seg" id="re-gender" role="radiogroup" aria-label="Genre">
+                                    <button type="button" role="radio" data-value="m">Il</button>
+                                    <button type="button" role="radio" data-value="f">Elle</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="re-grammar" id="re-grammar"></p>
+                    </div>
+                </div>
+
+                <div class="re-field">Bonus et malus
+                    <div class="re-stats" id="re-stats"></div>
+                    <p class="re-balance" id="re-balance"></p>
+                </div>
+
+                <label class="re-field">Description <small>(affichée sur la fiche du personnage)</small>
+                    <textarea id="re-desc" rows="4" maxlength="600" placeholder="Qui sont-ils, d'où viennent-ils, leurs travers…"></textarea>
+                    <span class="re-counter" id="re-desc-count"></span>
+                </label>
+
+                <label class="re-check">
+                    <input type="checkbox" id="re-incards" checked>
+                    <span>Peut apparaître dans les textes des cartes (« vous croisez un Zorglub… »)</span>
+                </label>
+
+                <p class="re-error" id="re-error" role="alert"></p>
+                <div class="re-actions">
+                    <button type="button" class="re-btn re-btn-danger" id="re-delete" hidden>Supprimer</button>
+                    <button type="submit" class="re-btn re-btn-primary" id="re-save">Créer la race</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <dialog class="re-dialog" id="re-confirm" aria-labelledby="re-confirm-title">
+        <form method="dialog">
+            <h2 id="re-confirm-title"></h2>
+            <p id="re-confirm-text"></p>
+            <div class="re-actions">
+                <button type="submit" class="re-btn" value="cancel">Annuler</button>
+                <button type="submit" class="re-btn re-btn-danger" value="ok">Supprimer</button>
+            </div>
+        </form>
+    </dialog>
+    <div class="re-toast" id="re-toast" role="status" aria-live="polite"></div>
+
+    <script>var RACES = <%- JSON.stringify(races).replace(/</g, '\\u003c') %>, MAX_RACES = <%= maxRaces %>;</script>
+    <script src="/js/races-editor.js"></script>
+</body>

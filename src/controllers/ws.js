@@ -5,6 +5,10 @@ const {Ship} = require("../models/ship");
 const {Statuses} = require("../models/statuses");
 const shipId = 1;
 const chalk = require("chalk")
+const combat = require("./combat");
+const allies = require("./allies");
+const inventory = require("./inventory");
+const cardLoot = require("./cardLoot");
 
 const init = function (){
 
@@ -15,7 +19,12 @@ const init = function (){
             let data = isBinary ? message : message.toString();
             let data_json = JSON.parse(data);
             log('[WS] '+ chalk.hex('#aaaaaa')(data_json.action), '#ffcc00');
-            makeAction(data).then(data => {broadcastData(data, ws)})
+            // Une action peut produire plusieurs messages (un /roll qui règle
+            // aussi une attaque de combat)
+            makeAction(data).then(data => {
+                for (let payload of (Array.isArray(data) ? data : [data]))
+                    broadcastData(payload, ws);
+            })
         });
 
         //send immediatly a feedback to the incoming connection
@@ -41,7 +50,10 @@ const makeAction = async function (raw_response) {
             payload = actionSetPlayerStat(response);
             break;
         case 'roll':
-            payload = actionRoll(response);
+            payload = actionRoll(response).then(roll => {
+                let attack = combat.resolveRoll(roll);
+                return attack ? [roll, attack] : roll;
+            });
             break;
         case 'setModule':
             payload = actionSetModule(response);
@@ -79,6 +91,31 @@ const makeAction = async function (raw_response) {
             break;
         case 'passThrough':
             payload = response.data;
+            break;
+        case 'combat-start':
+        case 'combat-end':
+        case 'combat-hp':
+        case 'combat-target':
+        case 'combat-cancel':
+        case 'combat-enemy-attack':
+        case 'combat-loot':
+            payload = combat.handle(response);
+            break;
+        case 'combat-ally-attack':
+            payload = combat.allyAttack(response.data || {}) || combat.handle(response);
+            break;
+        case 'inventory-move':
+        case 'inventory-sync':
+        case 'card-loot-all':
+            payload = inventory.handle(response);
+            break;
+        case 'card-loot-offer':
+            payload = cardLoot.handle(response);
+            break;
+        case 'ally-add':
+        case 'ally-update':
+        case 'ally-remove':
+            payload = allies.handle(response);
             break;
         default:
             payload = {
@@ -254,17 +291,20 @@ const actionItem = async function (response) {
     if (remove) {
         if (discord_id !== '') {
             await items.removeItemFromPlayer(slug, discord_id);
+            // Les onglets des joueurs se mettent à jour partout
+            return inventory.payload(null);
         }
         else {
             await items.remove(slug);
         }
     }
     else {
-        await items.add(slug);
+        response.data = await items.add(slug);
     }
 
     return {
         action: response.action,
+        remove: remove,
         error: false,
         data: response.data
     }
