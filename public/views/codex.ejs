@@ -1,0 +1,106 @@
+<%- include("partials/head", {
+    title: "Codex",
+    cssFiles:[
+        "/css/style.css",
+        "/css/ui-menus.css",
+        "/css/codex.css"
+    ]
+}) %>
+<%
+    const STAT_COLS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'], ['survival', 'Survie'], ['recon', 'Recon.']];
+    const signed = (mod) => mod > 0 ? '+' + mod : String(mod);
+    const count = (list) => list.filter(e => e.seen).length + ' / ' + list.length;
+%>
+<body class="codex-page">
+    <%- include("partials/nav") %>
+    <main class="cx">
+        <header class="cx-head">
+            <h1>Codex</h1>
+            <p class="cx-intro">Tout le contenu du jeu. Les joueurs ne voient dans leur app que ce que l'équipage a rencontré (<span class="cx-seen-tag">rencontré</span>) : races de l'équipage et des cartes vues, objets passés dans un inventaire, statuts subis. Cette mémoire repart de zéro à chaque nouvelle partie.</p>
+            <a class="cx-wiki" href="<%= codex.wiki %>" target="_blank" rel="noopener">Wiki des règles ↗</a>
+        </header>
+
+        <div class="cx-tools">
+            <input type="search" id="cx-search" class="cx-search" placeholder="Rechercher…" aria-label="Rechercher dans le Codex">
+            <label class="cx-only"><input type="checkbox" id="cx-only-seen"> Seulement ce que l'équipage a rencontré</label>
+        </div>
+
+        <section class="cx-section">
+            <h2 class="cx-sub">Races <small><%= count(codex.races) %> rencontrées</small></h2>
+            <div class="cx-grid">
+                <% codex.races.forEach(function (race) { %>
+                    <article class="cx-card<%= race.seen ? ' seen' : '' %><%= race.allowed ? '' : ' off' %>" data-seen="<%= race.seen ? 1 : 0 %>" data-search="<%= (race.name + ' ' + race.desc).toLowerCase() %>">
+                        <img src="<%= race.image %>" alt="" loading="lazy" onerror="this.onerror=null;this.src='/img/races/wat.png'">
+                        <div class="cx-card-body">
+                            <h3><%= race.name %>
+                                <% if (race.custom) { %><span class="cx-tag">custom</span><% } %>
+                                <% if (!race.allowed) { %><span class="cx-tag off">pas dans cette partie</span><% } %>
+                                <% if (race.seen) { %><span class="cx-seen-tag">rencontré</span><% } %>
+                            </h3>
+                            <div class="cx-mods">
+                                <% STAT_COLS.forEach(function (col) { let mod = parseInt(race.stats[col[0]]) || 0; %>
+                                    <span class="cx-mod mod-<%= mod < 0 ? 'm' + -mod : mod %>"><%= col[1] %> <%= signed(mod) %></span>
+                                <% }); %>
+                            </div>
+                            <% if (race.desc) { %><p><%= race.desc %></p><% } %>
+                            <% if (race.affinities.length) { %>
+                                <ul class="cx-aff"><% race.affinities.forEach(function (a) { %><li><%= a %></li><% }); %></ul>
+                            <% } else { %>
+                                <p class="cx-dim">Aucune affinité définie par le jeu ni par le wiki.</p>
+                            <% } %>
+                        </div>
+                    </article>
+                <% }); %>
+            </div>
+            <p class="cx-dim small">Affinités : <%= codex.affinitySource %> (src/config/raceAffinities.json). Les joueurs ne voient une affinité qu'une fois toutes ses races rencontrées.</p>
+        </section>
+
+        <section class="cx-section">
+            <h2 class="cx-sub">Objets <small><%= count(codex.items) %> rencontrés</small></h2>
+            <div class="cx-grid items">
+                <% codex.items.forEach(function (item) { %>
+                    <article class="cx-card<%= item.seen ? ' seen' : '' %>" data-seen="<%= item.seen ? 1 : 0 %>" data-search="<%= (item.name + ' ' + item.desc + ' ' + item.type + ' ' + item.race).toLowerCase() %>">
+                        <% if (item.image) { %><img class="pixel" src="<%= item.image %>" alt="" loading="lazy"><% } else { %><span class="cx-noimg" aria-hidden="true">?</span><% } %>
+                        <div class="cx-card-body">
+                            <h3><%= item.name %><% if (item.seen) { %> <span class="cx-seen-tag">rencontré</span><% } %></h3>
+                            <p class="cx-dim"><%= [item.type, item.rarity && item.rarity.replace('_', ' '), item.race && 'objet de départ ' + item.race, item.pool].filter(Boolean).join(' · ') %></p>
+                            <% if (item.desc) { %><p><%= item.desc %></p><% } %>
+                        </div>
+                    </article>
+                <% }); %>
+            </div>
+        </section>
+
+        <section class="cx-section">
+            <h2 class="cx-sub">Statuts <small><%= count(codex.statuses) %> rencontrés</small></h2>
+            <div class="cx-grid">
+                <% codex.statuses.forEach(function (status) { %>
+                    <article class="cx-card<%= status.seen ? ' seen' : '' %>" data-seen="<%= status.seen ? 1 : 0 %>" data-search="<%= (status.name + ' ' + status.desc).toLowerCase() %>">
+                        <span class="cx-icon" aria-hidden="true"><% if (status.icon) { %><%- include('svg/' + status.slug) %><% } %></span>
+                        <div class="cx-card-body">
+                            <h3><%= status.name %><% if (status.seen) { %> <span class="cx-seen-tag">rencontré</span><% } %></h3>
+                            <p><%= status.desc %></p>
+                            <a class="cx-link" href="<%= status.link %>" target="_blank" rel="noopener">Règle sur le wiki ↗</a>
+                        </div>
+                    </article>
+                <% }); %>
+            </div>
+        </section>
+    </main>
+    <script>
+        // Recherche et filtre « rencontré », sans recharger la page
+        (function () {
+            const search = document.getElementById('cx-search');
+            const only = document.getElementById('cx-only-seen');
+            const apply = () => {
+                let q = search.value.trim().toLowerCase();
+                document.querySelectorAll('.cx-card').forEach(card => {
+                    card.hidden = (q && !card.dataset.search.includes(q)) || (only.checked && card.dataset.seen !== '1');
+                });
+            };
+            search.addEventListener('input', apply);
+            only.addEventListener('change', apply);
+        })();
+    </script>
+    <%- include("partials/bottom-scripts") %>
+</body>

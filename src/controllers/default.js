@@ -13,6 +13,10 @@ const leaderboard = require("./leaderboard");
 const lobby = require("./lobby");
 const playerView = require("./playerView");
 const chat = require("./chat");
+const votes = require("./votes");
+const planetScan = require("./planetScan");
+const itemUse = require("./itemUse");
+const codex = require("./codex");
 const gameSettings = require("./gameSettings");
 const races = require("./races");
 const itemsEditor = require("./itemsEditor");
@@ -28,6 +32,12 @@ const ws = require("ws");
 // races customs créées depuis le démarrage
 var langJS = {get lang() { return 'var lang=' + JSON.stringify(LANG).replace(/</g, '\\u003c') + ';'; }};
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
+
+// Textes de la carte en cours tels que les joueurs les voient (Codex)
+const playerViewTexts = function () {
+    let card = CONFIG.gameState === 'gameLive' ? playerView.publicCard(require('./deck').getCurrentCard()) : null;
+    return card ? [card.desc].concat(card.choices || []) : [];
+};
 
 // Calcule le score final et affiche l'écran de fin (partie réelle et démo)
 // record : vraie fin de partie, le score de l'équipe entre au classement
@@ -198,11 +208,22 @@ module.exports = {
             allies.clear();
             shipAlerts.reset();
             chat.clear();
+            votes.clear();
+            planetScan.clear();
+            itemUse.clear();
+            // Codex des joueurs : rien de rencontré dans la nouvelle partie
+            codex.reset();
         }
         await CONFIG.upsert('gameState', 'creation');
         playerView.changed();
         // Bonus et malus des races (customs comprises), pour l'explication de la répartition des stats
-        res.render('perso', {lang: langJS, races: races.list(), settings: gameSettings.get()});
+        res.render('perso', {lang: langJS, races: races.list(), customRaces: races.allowedState(), settings: gameSettings.get()});
+    },
+
+    // Codex complet du MJ : tout le contenu du jeu, et ce que l'équipage a déjà rencontré
+    async renderCodex(req, res) {
+        await codex.observe(playerViewTexts());
+        res.render('codex', {lang: langJS, codex: await codex.forGm()});
     },
 
     // Éditeur des races customs
@@ -684,7 +705,7 @@ module.exports = {
 
     // Partie en ligne : code à donner aux joueurs et joueurs connectés
     lobby(req, res) {
-        res.render('lobby', {lobby: lobby.getState(), lang: langJS});
+        res.render('lobby', {lobby: lobby.getState(), lang: langJS, wikiUrl: codex.WIKI_URL});
     },
 
     indexLegacy(req, res) {

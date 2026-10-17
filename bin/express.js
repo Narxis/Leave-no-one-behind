@@ -15,6 +15,8 @@ module.exports = function() {
     app.locals.shipRooms = require('../src/config/shipRooms.json');
     // Rôles des joueurs, pour leur logo sur les onglets (partials/player-tabs)
     app.locals.playerRoles = require('../src/controllers/roles');
+    // Compte Discord d'un joueur en ligne (id d'app → {id, name, avatar} ou null)
+    app.locals.discordOf = (id) => require('../src/controllers/lobby').discordOf(id);
 
     app.use(express.urlencoded({ extended: true, limit: '52428800' }));
     app.use(express.json({limit: '52428800'}));

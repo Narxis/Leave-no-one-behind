@@ -18,6 +18,7 @@
         <% let role = player.role && typeof playerRoles !== 'undefined' ? playerRoles.find(player.role) : null; %>
         <div class="player-name" title="<%= player.name %>"><span class="player-role" data-role="<%= role ? role.slug : '' %>"<% if (role) { %> title="<%= role.name %> : <%= role.effect %>"<% } %>><% if (role) { %><img src="<%= role.icon %>" alt="<%= role.name %>"><% } %></span><span class="player-name-text"><%= player.name %></span>
             <% if (player.race) { %><div class="player-race"><%= player.race.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-') %></div><% } %>
+            <% let discord = typeof discordOf === 'function' ? discordOf(player.discord_id) : null; if (discord) { %><div class="player-discord" title="Discord : <%= discord.name %>"><img src="<%= discord.avatar %>" alt="" referrerpolicy="no-referrer"><span><%= discord.name %></span></div><% } %>
         </div>
         <div class="modform input-roll">
             <div class="player-stat-value output-roll-boite" id="outputroll-img">

@@ -323,11 +323,47 @@ async function initCard(forceName = null) {
 // Un nouvel affichage (carte blanche du MJ) arrête celui en cours
 var showChoicesRun = 0;
 
+// Ce qu'affiche la page, annoncé au serveur pour les joueurs en ligne : ils
+// voient le même texte et votent sur les mêmes choix (votes.js)
+var cardScreenText = '';
+function announceScreen(chosen) {
+    if (typeof wsLNOB === 'undefined')
+        return;
+    let data = {cardId: currentCard.id, text: cardScreenText, choices: (currentCard.choices || []).map(c => c.value)};
+    if (chosen !== undefined)
+        data.chosen = chosen;
+    wsLNOB.send({action: 'card-screen', data: data});
+}
+
+// Votes des joueurs : nombre de voix sous chaque bouton
+function showVotes(data) {
+    if (!data)
+        return;
+    // (pas la case d'un jet en attente)
+    document.querySelectorAll('#choicetab .choice:not(.card-roll)').forEach(function (btn, i) {
+        let count = (data.counts || [])[i] || 0;
+        let badge = btn.querySelector('.vote-count');
+        if (!count) {
+            if (badge)
+                badge.remove();
+            return;
+        }
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'vote-count';
+            btn.append(badge);
+        }
+        badge.textContent = count + (count > 1 ? ' votes' : ' vote');
+    });
+}
+document.addEventListener('votes', (e) => showVotes(e.detail.data));
+
 async function showChoices() {
     let run = ++showChoicesRun;
     let choices = currentCard.choices;
     let choiceTab = document.getElementById('choicetab');
     choiceTab.innerHTML = '';
+    announceScreen();
     // Un seul choix par affichage : les boutons restent cliquables pendant
     // qu'ils s'en vont, un double-clic relançait la suite une seconde fois
     // (deux « Continuer votre chemin », deux pioches et une carte sautée)
@@ -375,6 +411,8 @@ async function showChoices() {
                     return showChoices();   // jet annulé : les choix reviennent, le chrono repart
                 next = rollFollowUp(choice, issue);
             }
+            // Choix retenu (après un éventuel jet) : les votes se ferment
+            announceScreen(i);
             stopCountdown();
             if (choice.blank !== undefined) {
                 blankReturn = null;
@@ -642,6 +680,7 @@ async function writeCardDesc(text = null) {
     let stopToken = '‡';
     let textDiv = document.querySelector('.card-text');
     text = text || currentCard.desc;
+    cardScreenText = text;
     text = text.replaceAll(stopTokenToReplace, stopToken);
     cardTextFast = false;
     cardTextWriting = true;

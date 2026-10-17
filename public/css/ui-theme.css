@@ -910,3 +910,72 @@ body.combat-mode .stats-legend-title {
     height: 100%;
     filter: drop-shadow(0 0 4px rgb(255 204 0 / 35%));
 }
+
+/*---Objets demandés par les joueurs en ligne (item-requests.js)---*/
+.item-requests {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1000;
+    width: min(320px, calc(100vw - 32px));
+    padding: 12px 14px;
+    border: 1px solid var(--ui-accent);
+    border-radius: var(--ui-radius);
+    background: var(--ui-surface);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+    font-family: Jura, sans-serif;
+}
+.item-requests[hidden] { display: none; }
+.item-requests-title { margin: 0 0 8px; color: var(--ui-accent); font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.item-request { padding: 8px 0; border-top: 1px solid var(--ui-border); }
+.item-request p { margin: 0 0 8px; font-size: 15px; }
+.item-request-actions { display: flex; gap: 8px; }
+.item-request-actions button {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: 600 14px Jura, sans-serif;
+    cursor: pointer;
+}
+.item-request-actions .accept { border-color: var(--ui-cyan); color: var(--ui-cyan); }
+.item-request-actions button:hover { background: var(--ui-fill-hover); }
+
+/* Compte Discord du joueur (connexion Discord de l'app joueur) : avatar et
+   pseudo à côté du perso, pour se reconnaître malgré les noms en jeu */
+.player-discord {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 100%;
+    font-size: 11px;
+    font-weight: 600;
+    color: #b9bdf8;
+}
+
+.player-discord img {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    border-radius: 50%;
+}
+
+.player-discord span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.player-tab .player-name .player-discord {
+    flex: 0 1 auto;
+    max-width: 90px;
+}
+
+.player > .player-discord {
+    justify-content: center;
+    margin: 0 12px;
+}
