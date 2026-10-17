@@ -782,6 +782,94 @@ body.mj-page {
     color: var(--ui-danger);
 }
 
+/* Attaque en préparation : choix sélectionné, puis « Valider » (mj-combat.js) */
+.mj-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+}
+
+.mj-attacker.selected,
+.mj-attacker.selected:hover {
+    border-color: var(--ui-accent);
+    background: rgb(255 204 0 / 16%);
+    color: var(--ui-accent);
+}
+
+.mj-victims .mj-attacker.selected,
+.mj-victims .mj-attacker.selected:hover {
+    border-color: var(--ui-danger);
+    background: rgb(255 90 110 / 18%);
+    color: var(--ui-danger);
+}
+
+.mj-hit-status .mj-sp-select {
+    flex: 0 1 auto;
+}
+
+.mj-hit-status .mj-turn-duration:disabled {
+    opacity: 0.4;
+}
+
+.mj-draft-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+}
+
+.mj-validate {
+    padding: 6px 16px;
+}
+
+.mj-validate:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Appui long pour confirmer (ui-hold.js) : le bouton se remplit pendant le
+   maintien ; un simple clic affiche le rappel de data-hold dessous */
+[data-hold] {
+    position: relative;
+}
+
+[data-hold].holding,
+[data-hold].holding:hover {
+    background-image: linear-gradient(rgb(255 255 255 / 22%), rgb(255 255 255 / 22%));
+    background-repeat: no-repeat;
+    animation: hold-fill var(--hold-ms, 800ms) linear forwards;
+}
+
+@keyframes hold-fill {
+    from { background-size: 0% 100%; }
+    to { background-size: 100% 100%; }
+}
+
+[data-hold].hold-hint::after {
+    content: attr(data-hold);
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    z-index: 5;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: rgb(0 0 0 / 85%);
+    color: var(--ui-text);
+    font-size: 12px;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translateX(-50%);
+    animation: hold-hint 1.8s forwards;
+}
+
+@keyframes hold-hint {
+    0%, 75% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
 /* Issue imposée par le MJ pour l'attaque d'un ennemi (mj-combat.js) */
 .mj-outcome {
     display: flex;

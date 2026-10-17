@@ -37,6 +37,7 @@ async function test() {
     test_ship_alerts();
     await test_items_editor();
     test_npcs();
+    await test_combat();
     await test_remote();
 }
 
@@ -758,4 +759,53 @@ function test_npcs() {
     // Sans fichier modifié, les ennemis de départ viennent de config/bestiary.json
     assert.ok(npcs.getEnemies().length > 0);
     console.log('npcs OK');
+}
+
+// Combat : une attaque validée par le MJ peut poser un statut si elle touche
+async function test_combat() {
+    console.log('Testing combat');
+    const combat = require('../src/controllers/combat');
+    const run = async (action, data) => [].concat(await combat.handle({action, data})).pop().data;
+    let hero = await new Player().create({discord_id: 'combat-hero', name: 'Héro', combat: 50, moral: 50});
+    let id = String(hero.discord_id);
+
+    let {state} = await run('combat-start', {enemies: [{name: 'Yorc', hp: 30, offense: 100, defense: 50, damage: 'faible'}]});
+    let yorc = state.enemies[0];
+
+    // Touché, dégâts imposés et saignement posé sur la cible
+    let {event} = await run('combat-enemy-attack', {enemy_id: yorc.id, discord_id: id, outcome: 'hit', damage: 5,
+        status: {status: 'saignement', turns: 2}});
+    assert.ok(event.hit);
+    assert.strictEqual(event.hp, 495);
+    assert.deepStrictEqual(event.status, {key: 'saignement', name: 'Saignement', turns: 2});
+    assert.strictEqual(combat.getState().fighters[id].saignement.turns, 2);
+
+    // Raté : pas de statut
+    ({event} = await run('combat-enemy-attack', {enemy_id: yorc.id, discord_id: id, outcome: 'miss', status: {status: 'poison'}}));
+    assert.ok(!event.hit && !event.status);
+    assert.ok(!combat.getState().fighters[id].poison);
+
+    // Attaque d'un joueur : le statut attend son jet, posé s'il touche
+    ({state} = await run('combat-target', {enemy_id: yorc.id, discord_id: id, status: {status: 'poison', turns: 4}}));
+    assert.strictEqual(state.pending.status.status, 'poison');
+    const roll = (result) => ({error: false, data: {discord_id: id, stat: 'combat', module: '', result: result, dice_result: result}});
+    let attack = combat.resolveRoll(roll(60));
+    assert.ok(attack.data.event.hit && !attack.data.event.ko);
+    assert.strictEqual(attack.data.event.status.name, 'Poison');
+    assert.strictEqual(attack.data.state.enemies[0].statuses.poison.turns, 4);
+    assert.strictEqual(attack.data.state.pending, null);
+
+    // Un jet raté ne pose rien
+    await run('combat-status', {target: {enemy_id: yorc.id}, status: 'poison', turns: 0});
+    await run('combat-target', {enemy_id: yorc.id, discord_id: id, status: {status: 'etourdi'}});
+    attack = combat.resolveRoll(roll(10));
+    assert.ok(!attack.data.event.hit && !attack.data.state.enemies[0].statuses.etourdi);
+
+    // Statut personnalisé, toujours posé depuis le panneau des statuts
+    ({event} = await run('combat-status', {target: {discord_id: id}, name: 'Brûlure', damage: 2, turns: 3}));
+    assert.strictEqual(event.name, 'Brûlure');
+    assert.deepStrictEqual(combat.getState().fighters[id]['c-brulure'].damage, [2, 2]);
+
+    await run('combat-end', {});
+    console.log('Combat OK');
 }

@@ -154,13 +154,41 @@ const isStunned = (statuses) => Object.values(statuses || {}).some(s => s.stun);
 const slugify = (name) => name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+// Statut décrit par le MJ : connu (data.status) ou personnalisé (nom,
+// dégâts par tour, empêche d'attaquer). Renvoie {key, status} ou null
+const makeStatus = function (data, statuses) {
+    if (STATUSES[data.status]) {
+        let base = STATUSES[data.status];
+        return {key: data.status, status: {name: base.name, damage: base.damage || null, stun: !!base.stun}};
+    }
+    let label = String(data.name || '').trim().slice(0, 30);
+    if (!label)
+        return null;
+    let damage = clamp(toInt(data.damage, 0), 0, 99);
+    return {
+        key: data.status && statuses[data.status] ? data.status : 'c-' + slugify(label),
+        status: {name: label, damage: damage > 0 ? [damage, damage] : null, stun: !!data.stun, custom: true}
+    };
+}
+
+// Statut posé par une attaque qui touche (réglé par le MJ avant de valider
+// l'attaque) : renvoie {key, name, turns} pour le journal, ou undefined
+const applyHitStatus = function (spec, statuses) {
+    let made = spec && statuses && makeStatus(spec, statuses);
+    if (!made)
+        return undefined;
+    let turns = clamp(toInt(spec.turns, 3), 1, MAX_STATUS_TURNS);
+    statuses[made.key] = Object.assign(made.status, {turns: turns});
+    return {key: made.key, name: made.status.name, turns: turns};
+}
+
 // Le MJ pose un statut (connu ou personnalisé) sur un ennemi, un joueur ou
 // un compagnon, ou le retire avec 0 tour
 const setStatus = async function (data) {
     if (!state.active)
         return null;
     let target = data.target || {};
-    let name, label;
+    let name;
     if (target.enemy_id !== undefined) {
         let enemy = findEnemy(target.enemy_id);
         if (!enemy || enemy.hp <= 0)
@@ -175,20 +203,10 @@ const setStatus = async function (data) {
     }
     let statuses = statusesOf(target, true);
     let turns = clamp(toInt(data.turns, 3), 0, MAX_STATUS_TURNS);
-    let key, status;
-    if (STATUSES[data.status]) {
-        key = data.status;
-        let base = STATUSES[key];
-        status = {name: base.name, damage: base.damage || null, stun: !!base.stun};
-    }
-    else {
-        label = String(data.name || '').trim().slice(0, 30);
-        if (!label)
-            return null;
-        key = data.status && statuses[data.status] ? data.status : 'c-' + slugify(label);
-        let damage = clamp(toInt(data.damage, 0), 0, 99);
-        status = {name: label, damage: damage > 0 ? [damage, damage] : null, stun: !!data.stun, custom: true};
-    }
+    let made = makeStatus(data, statuses);
+    if (!made)
+        return null;
+    let {key, status} = made;
     if (turns > 0)
         statuses[key] = Object.assign(status, {turns: turns});
     else {
@@ -322,7 +340,13 @@ const target = async function (data) {
     if (!player || isStunned(state.fighters[String(player.discord_id)]))
         return null;
     state.pending = {enemy_id: enemy.id, enemy: enemy.name, discord_id: player.discord_id, player: player.name};
-    return addLog(Object.assign({type: 'target'}, state.pending));
+    let entry = addLog(Object.assign({type: 'target'}, state.pending));
+    // Statut à poser si l'attaque touche, réglé par le MJ avec la cible
+    let s = data.status;
+    if (s && typeof s === 'object')
+        state.pending.status = {status: String(s.status || ''), name: String(s.name || '').slice(0, 30),
+            damage: toInt(s.damage, 0), stun: !!s.stun, turns: toInt(s.turns, 3)};
+    return entry;
 }
 
 const cancelTarget = function () {
@@ -335,7 +359,7 @@ const cancelTarget = function () {
 
 // Règle une attaque sur un ennemi : le jet doit atteindre sa défense ;
 // plus la marge est grande, plus le palier de dégâts est élevé
-const applyAttack = function (attacker, enemy, data) {
+const applyAttack = function (attacker, enemy, data, status) {
     let entry = Object.assign({
         type: 'player-attack',
         enemy_id: enemy.id,
@@ -350,6 +374,8 @@ const applyAttack = function (attacker, enemy, data) {
         entry.damage = rollRange(DAMAGE[entry.tier]);
         enemy.hp = Math.max(0, enemy.hp - entry.damage);
         entry.ko = enemy.hp === 0;
+        if (!entry.ko)
+            entry.status = applyHitStatus(status, enemy.statuses);
     }
     addLog(entry);
     checkVictory();
@@ -373,7 +399,7 @@ const resolveRoll = function (roll) {
     let enemy = findEnemy(pending.enemy_id);
     if (!enemy || enemy.hp <= 0)
         return null;
-    return applyAttack({discord_id: pending.discord_id, player: pending.player}, enemy, data);
+    return applyAttack({discord_id: pending.discord_id, player: pending.player}, enemy, data, pending.status);
 }
 
 // Un allié (PNJ) n'a pas de Discord : quand le MJ le désigne, le serveur
@@ -387,7 +413,7 @@ const allyAttack = function (data) {
     let roll = Object.assign({discord_id: 'npc' + ally.id, stat: 'combat', module: ''}, allies.roll(ally, 'combat'));
     return [
         {action: 'roll', error: false, data: roll},
-        applyAttack({discord_id: roll.discord_id, player: ally.name, npc: true}, enemy, roll)
+        applyAttack({discord_id: roll.discord_id, player: ally.name, npc: true}, enemy, roll, data.status)
     ];
 }
 
@@ -443,13 +469,16 @@ const enemyAttack = async function (data) {
         entry.forced = true;
     // Les dégâts sont retirés tout de suite des PV de la cible
     let extra = [];
-    if (entry.hit && entry.damage > 0 && entry.target_id) {
+    if (entry.hit && entry.target_id) {
         let fighter = await findFighter(data);
-        if (fighter) {
-            let hp = hpOf(fighter) - entry.damage;
+        let hp = fighter ? hpOf(fighter) - entry.damage : 0;
+        if (fighter && entry.damage > 0) {
             extra = await setFighterHp(fighter, hp);
             entry.hp = Math.max(0, hp);
         }
+        // Statut réglé par le MJ avec l'attaque, posé si la cible tient debout
+        if (fighter && hp > 0 && state.active)
+            entry.status = applyHitStatus(data.status, statusesOf(fighter.ally ? {ally_id: fighter.ally.id} : {discord_id: fighter.id}, true));
     }
     return {entry: addLog(entry), extra: extra};
 }
