@@ -7,7 +7,15 @@
     const logBox = document.getElementById('mj-combat-log');
     const startBtn = document.getElementById('combat-start');
     const search = document.getElementById('search-ennemy');
+    const teamBox = document.getElementById('mj-team');
     const TIERS = {faible: '1-4', moyen: '5-8', fort: '9-12'};
+    const STATUSES = {
+        saignement: {name: 'Saignement', title: 'Perd 1 à 4 PV à chaque tour'},
+        poison: {name: 'Poison', title: 'Perd 3 PV à chaque tour'},
+        etourdi: {name: 'Étourdi', title: 'Ne peut pas attaquer'}
+    };
+    const HP_PER_MORAL = 10;
+    const MAX_HP = 1000;
 
     let state = {active: false, enemies: [], log: []};
     let pending = [];      // adversaires préparés avant le combat
@@ -22,6 +30,7 @@
     let lootFocus = false; // donner le focus au champ au prochain rendu
     let outcome = 'dice';  // issue de la prochaine attaque ennemie : dé, touché ou raté
     let forcedDamage = ''; // dégâts imposés (vide : tirés selon le palier)
+    let statusTurns = 3;   // durée des statuts posés sur les ennemis, en tours
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -205,7 +214,50 @@
         list.append(box);
     }
 
+    // Tour en cours ; « Tour suivant » fait agir les statuts des ennemis
+    function renderTurn() {
+        let bar = el('div', 'mj-turn');
+        bar.append(el('span', 'mj-turn-label', 'Tour ' + (state.turn || 1)));
+        let turns = el('input', 'mj-turn-duration');
+        turns.type = 'number';
+        turns.min = 1;
+        turns.max = 9;
+        turns.value = statusTurns;
+        turns.title = 'Durée des statuts posés sur les ennemis';
+        turns.addEventListener('input', () => { statusTurns = Math.min(9, Math.max(1, parseInt(turns.value) || 1)); });
+        let group = el('label', 'mj-outcome-group');
+        group.append(el('span', 'mj-outcome-label', 'Statuts'), turns, el('span', 'mj-outcome-label', 'tours'));
+        let next = button('mj-turn-next', 'Tour suivant', () => wsLNOB.send({action: 'combat-turn', data: {}}));
+        next.title = 'Saignement et poison blessent, puis chaque statut perd un tour';
+        bar.append(group, next);
+        list.append(bar);
+    }
+
+    // Statuts d'un ennemi : une pastille par statut actif (× pour le retirer),
+    // et un bouton pour poser chacun des autres
+    function statusLine(row, enemy) {
+        let line = el('div', 'mj-statuses-line');
+        for (let [slug, info] of Object.entries(STATUSES)) {
+            let turns = (enemy.statuses || {})[slug];
+            let b;
+            if (turns) {
+                b = button('mj-status-chip active ' + slug, info.name + ' · ' + turns + ' ×', () =>
+                    wsLNOB.send({action: 'combat-status', data: {enemy_id: enemy.id, status: slug, turns: 0}}));
+                b.title = info.title + ' — cliquer pour retirer';
+            }
+            else {
+                b = button('mj-status-chip ' + slug, '+ ' + info.name, () =>
+                    wsLNOB.send({action: 'combat-status', data: {enemy_id: enemy.id, status: slug, turns: statusTurns}}));
+                b.title = info.title + ' (' + statusTurns + ' tours)';
+            }
+            b.disabled = enemy.hp <= 0;
+            line.append(b);
+        }
+        row.append(line);
+    }
+
     function renderActive() {
+        renderTurn();
         renderWaiting();
         for (let enemy of state.enemies) {
             let targeted = state.pending && state.pending.enemy_id === enemy.id;
@@ -230,8 +282,12 @@
                 targetId = null;
                 render();
             });
-            attack.disabled = enemy.hp <= 0;
-            attack.title = 'Offense ' + enemy.offense + ' % — dégâts ' + TIERS[enemy.damage];
+            let stunned = !!(enemy.statuses && enemy.statuses.etourdi);
+            attack.disabled = enemy.hp <= 0 || stunned;
+            attack.title = stunned ? enemy.name + ' est étourdi et ne peut pas attaquer'
+                : 'Offense ' + enemy.offense + ' % — dégâts ' + TIERS[enemy.damage];
+            if (stunned && victimFor === enemy.id)
+                victimFor = null;
 
             let aim = button('mj-enemy-target', 'Cibler', () => {
                 targetId = targetId === enemy.id ? null : enemy.id;
@@ -244,6 +300,8 @@
             let actions = el('div', 'mj-enemy-actions');
             actions.append(aim, attack);
             row.append(bar, hp, actions);
+            if (enemy.hp > 0)
+                statusLine(row, enemy);
             lootLine(row, enemy.id, enemy.loot || [], (loot) => {
                 wsLNOB.send({action: 'combat-loot', data: {enemy_id: enemy.id, loot: loot}});
             });
@@ -265,6 +323,58 @@
         startBtn.textContent = state.active ? 'Terminer le combat' : 'Commencer le combat';
         startBtn.classList.toggle('running', state.active);
         renderLog();
+        renderTeam();
+    }
+
+    // PV des joueurs et compagnons (1 moral = 10 PV), modifiables à tout
+    // moment. Le serveur met à jour leur moral et les onglets sous la carte
+    function hpOf(id, moral) {
+        return Math.max(0, moral * HP_PER_MORAL - ((state.wounds || {})[id] || 0));
+    }
+
+    function teamRow(name, id, moral, target, npc) {
+        let hp = hpOf(id, moral);
+        let row = el('div', 'mj-team-row' + (hp <= 0 ? ' ko' : ''));
+        let label = el('div', 'mj-team-name', name);
+        if (npc)
+            label.prepend(el('span', 'mj-ally-badge', 'PNJ'));
+        let bar = el('div', 'mj-team-bar');
+        let fill = el('div', 'mj-team-bar-fill');
+        fill.style.width = (100 * hp / MAX_HP) + '%';
+        fill.dataset.level = hp / MAX_HP > 0.5 ? 'ok' : (hp / MAX_HP > 0.25 ? 'warn' : 'crit');
+        bar.append(fill);
+
+        const send = (value) => wsLNOB.send({action: 'combat-player-hp', data: Object.assign({hp: value}, target)});
+        const step = (e, sign) => sign * (e.shiftKey ? 100 : (e.ctrlKey ? 50 : 10));
+        let input = el('input', 'mj-team-input');
+        input.type = 'number';
+        input.min = 0;
+        input.max = MAX_HP;
+        input.value = hp;
+        input.title = 'PV de ' + name + ' (moral ' + moral + ')';
+        input.addEventListener('change', () => send(parseInt(input.value) || 0));
+        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
+        let minus = button('mj-hp-btn', '-', (e) => send(hp + step(e, -1)));
+        let plus = button('mj-hp-btn', '+', (e) => send(hp + step(e, 1)));
+        minus.title = plus.title = '10 PV (Maj : 100, Ctrl : 50)';
+        let ctrl = el('div', 'mj-team-ctrl');
+        ctrl.append(minus, input, el('span', 'mj-enemy-unit', 'PV'), plus);
+        row.append(label, ctrl, bar);
+        return row;
+    }
+
+    function renderTeam() {
+        // Ne pas effacer une valeur en cours de saisie
+        if (teamBox.contains(document.activeElement) && document.activeElement.tagName === 'INPUT')
+            return;
+        teamBox.innerHTML = '';
+        if (!players.length && !allies.length)
+            return;
+        teamBox.append(el('div', 'mj-team-title', 'Points de vie (1 moral = 10 PV)'));
+        for (let p of players)
+            teamBox.append(teamRow(p.name, String(p.discord_id), p.moral, {discord_id: p.discord_id}, false));
+        for (let a of allies)
+            teamBox.append(teamRow(a.name, 'npc' + a.id, a.moral, {ally_id: a.id}, true));
     }
 
     function setHp(enemy, hp) {
@@ -276,8 +386,13 @@
         if (!name)
             return;
         let mob = BESTIARY.find(b => b.name.toLowerCase() === name.toLowerCase());
-        pending.push(mob ? Object.assign({}, mob) : {name: name, hp: 10});
         search.value = '';
+        // En plein combat, l'adversaire arrive tout de suite en renfort
+        if (state.active) {
+            wsLNOB.send({action: 'combat-add', data: {enemy: mob ? Object.assign({}, mob) : {name: name, hp: 10}}});
+            return;
+        }
+        pending.push(mob ? Object.assign({}, mob) : {name: name, hp: 10});
         render();
     }
 
@@ -334,15 +449,27 @@
         }
         render();
     });
-    document.addEventListener('playerStat', checkFaint);
+    document.addEventListener('playerStat', (e) => {
+        let data = e.detail.data;
+        let p = data && players.find(p => String(p.discord_id) === String(data.discord_id));
+        if (p) {
+            p.moral = data.moral;
+            renderTeam();
+        }
+        checkFaint();
+    });
     document.addEventListener('allies', (e) => {
         allies = e.detail.data.allies;
         if (targetId !== null || victimFor !== null)
             render();
+        else
+            renderTeam();
     });
 
     function load() {
-        fetch('/api/allies').then(r => r.json()).then(list => { allies = list; }).catch(() => {});
+        fetch('/api/allies').then(r => r.json()).then(list => { allies = list; renderTeam(); }).catch(() => {});
+        // Joueurs chargés tout de suite, pour leurs PV même hors combat
+        getAllPlayers().then(list => { players = list; renderTeam(); }).catch(() => {});
         fetch('/api/combat').then(r => r.json()).then(s => {
             state = s;
             if (state.active)
