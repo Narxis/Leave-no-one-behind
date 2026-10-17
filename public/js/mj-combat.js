@@ -20,6 +20,8 @@
     let lootOpen = null;   // butin en cours d'édition : 'p<index>' (préparation) ou id de l'ennemi
     let lootDraft = '';    // texte en cours de saisie, gardé quand la liste se redessine
     let lootFocus = false; // donner le focus au champ au prochain rendu
+    let outcome = 'dice';  // issue de la prochaine attaque ennemie : dé, touché ou raté
+    let forcedDamage = ''; // dégâts imposés (vide : tirés selon le palier)
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -156,8 +158,41 @@
         box.append(el('span', 'mj-attackers-label', 'Qui ' + enemy.name + ' attaque ?'));
         const attack = (data) => {
             victimFor = null;
-            wsLNOB.send({action: 'combat-enemy-attack', data: Object.assign({enemy_id: enemy.id}, data)});
+            let damage = parseInt(forcedDamage);
+            wsLNOB.send({action: 'combat-enemy-attack', data: Object.assign({
+                enemy_id: enemy.id,
+                outcome: outcome === 'dice' ? undefined : outcome,
+                damage: outcome !== 'miss' && Number.isFinite(damage) ? damage : undefined
+            }, data)});
+            outcome = 'dice';
+            forcedDamage = '';
         };
+
+        // Issue de l'attaque, choisie par le MJ s'il le veut (pour épargner un
+        // joueur, ou rendre un coup plus dur) : les joueurs ne voient que le résultat
+        let control = el('div', 'mj-outcome');
+        for (let [key, label] of [['dice', 'Dé'], ['hit', 'Touché'], ['miss', 'Raté']]) {
+            let b = button('mj-outcome-btn' + (outcome === key ? ' active' : ''), label, () => {
+                outcome = key;
+                render();
+            });
+            b.title = key === 'dice' ? 'Offense ' + enemy.offense + ' % : le dé décide'
+                : (key === 'hit' ? "L'attaque touche à coup sûr" : "L'attaque rate à coup sûr");
+            control.append(b);
+        }
+        let dmg = el('input', 'mj-outcome-damage');
+        dmg.type = 'number';
+        dmg.min = 0;
+        dmg.max = 99;
+        dmg.placeholder = TIERS[enemy.damage] || 'dégâts';
+        dmg.title = 'Dégâts imposés si l\'attaque touche (vide : tirés entre ' + TIERS[enemy.damage] + ')';
+        dmg.value = forcedDamage;
+        dmg.disabled = outcome === 'miss';
+        dmg.addEventListener('input', () => { forcedDamage = dmg.value; });
+        let group = el('label', 'mj-outcome-group');
+        group.append(el('span', 'mj-outcome-label', 'Dégâts'), dmg);
+        control.append(group);
+        box.append(control);
         for (let p of players)
             box.append(button('mj-attacker', p.name, () => attack({discord_id: p.discord_id})));
         for (let a of allies) {
@@ -302,7 +337,7 @@
     document.addEventListener('playerStat', checkFaint);
     document.addEventListener('allies', (e) => {
         allies = e.detail.data.allies;
-        if (targetId !== null)
+        if (targetId !== null || victimFor !== null)
             render();
     });
 

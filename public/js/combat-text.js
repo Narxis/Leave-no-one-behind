@@ -17,9 +17,11 @@ function describeCombatEntry(entry, forMJ = false) {
         case 'enemy-attack': {
             let who = entry.target ? entry.enemy + ' attaque ' + entry.target + (entry.npc_target ? ' (PNJ)' : '')
                 : entry.enemy + ' attaque';
+            // « imposé » : issue ou dégâts choisis par le MJ, visible par lui seul
+            let forced = forMJ && entry.forced ? ', imposé' : '';
             if (!entry.hit)
-                return who + ' : raté (' + entry.dice + ')';
-            return who + ' : touché (' + entry.dice + ') — ' + entry.damage + ' dégâts'
+                return who + ' : raté (' + entry.dice + forced + ')';
+            return who + ' : touché (' + entry.dice + forced + ') — ' + entry.damage + ' dégâts'
                 + (forMJ ? ' à appliquer' : '');
         }
     }
