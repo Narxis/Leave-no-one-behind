@@ -17,6 +17,13 @@ const FIELDS = [
     {key: 'placeByStep', label: 'Lieux par étape', min: 0, max: 3}
 ];
 
+// Options à cocher, hors difficulté (les préréglages n'y touchent pas).
+// Absente d'anciens réglages enregistrés : valeur par défaut
+const OPTIONS = [
+    {key: 'clearStatusesAfterPlanet', label: 'Retirer les statuts après une planète', default: true,
+        hint: 'Blackout, Anticipation, Affaibli et Recherché sont remis à zéro en reprenant le voyage. Sinon ils continuent de baisser d\'un à chaque carte.'}
+];
+
 // Préréglages de difficulté. Normal reprend les valeurs de baseConf.json
 const PRESETS = [
     {slug: 'facile', name: 'Facile', values: {planetCount: 3, negativeByStep: 1, positiveByStep: 2, neutralByStep: 2, placeByStep: 1}},
@@ -58,6 +65,10 @@ const clean = function (input) {
             return null;
         values[field.key] = clamp(v, field);
     }
+    for (let option of OPTIONS) {
+        let v = input[option.key];
+        values[option.key] = (v === undefined || v === null) ? option.default : (v === true || v === 'true' || v === 'on' || v === 1);
+    }
     return values;
 }
 
@@ -69,7 +80,7 @@ const presetOf = function (values) {
 
 // Réglages en cours : ceux du MJ, sinon le préréglage Normal
 const get = function () {
-    let values = Object.assign({}, saved || PRESETS.find(p => p.slug === DEFAULT).values);
+    let values = Object.assign({}, saved || clean(PRESETS.find(p => p.slug === DEFAULT).values));
     return Object.assign(values, {preset: presetOf(values)});
 }
 
@@ -115,4 +126,4 @@ const available = function () {
 
 load();
 
-module.exports = {FIELDS, PRESETS, get, set, asConfig, available, presetOf};
+module.exports = {FIELDS, OPTIONS, PRESETS, get, set, asConfig, available, presetOf};

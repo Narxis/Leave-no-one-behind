@@ -40,6 +40,19 @@
                 <% }); %>
             </div>
 
+            <fieldset class="gs-options">
+                <legend class="gs-sub">Options</legend>
+                <% options.forEach(function (option) { %>
+                    <label class="gs-option">
+                        <input type="checkbox" id="gs-<%= option.key %>" name="<%= option.key %>"<%= settings[option.key] ? ' checked' : '' %>>
+                        <span class="gs-option-text">
+                            <span class="gs-label"><%= option.label %></span>
+                            <span class="gs-note"><%= option.hint %></span>
+                        </span>
+                    </label>
+                <% }); %>
+            </fieldset>
+
             <p class="gs-total" id="gs-total"></p>
             <p class="gs-error" id="gs-error" role="alert"></p>
 
@@ -52,6 +65,7 @@
 
     <script>
         var GS_FIELDS = <%- JSON.stringify(fields).replace(/</g, '\\u003c') %>;
+        var GS_OPTIONS = <%- JSON.stringify(options).replace(/</g, '\\u003c') %>;
         var GS_PRESETS = <%- JSON.stringify(presets).replace(/</g, '\\u003c') %>;
         var GS_AVAILABLE = <%- JSON.stringify(available).replace(/</g, '\\u003c') %>;
     </script>
@@ -131,7 +145,9 @@
                 fetch('/api/settings', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(values())
+                    // Options cochées envoyées avec les valeurs
+                    body: JSON.stringify(Object.assign(values(),
+                        Object.fromEntries(GS_OPTIONS.map(o => [o.key, input(o.key).checked]))))
                 }).then(r => r.json().then(body => ({ok: r.ok, body})))
                     .then(({ok, body}) => {
                         if (!ok)

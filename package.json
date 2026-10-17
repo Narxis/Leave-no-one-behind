@@ -82,6 +82,6 @@
     }
   },
   "lnob": {
-    "relayUrl": "http://127.0.0.1:8787"
+    "relayUrl": "https://lnob-relay.narxis.workers.dev"
   }
 }

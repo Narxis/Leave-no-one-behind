@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="player.css">
 </head>
 <body>
-<main class="card">
+<main class="card" id="main">
     <h1 class="logo">LEAVE <span>NO</span> ONE BEHIND</h1>
 
     <!-- Saisie du code et du pseudo -->
@@ -21,15 +21,96 @@
         <button type="submit" id="submit" class="primary">Rejoindre</button>
     </form>
 
-    <!-- En attente du MJ -->
-    <section id="lobby" class="panel" hidden>
-        <p class="dim">Partie <strong id="lobby-code"></strong></p>
+    <!-- Dans la partie -->
+    <section id="lobby" class="panel game" hidden>
+        <header class="game-head">
+            <p class="dim">Partie <strong id="lobby-code"></strong></p>
+            <button type="button" id="leave" class="secondary small">Quitter</button>
+        </header>
         <p id="status" class="status" role="status"></p>
-        <h2>Équipage</h2>
-        <ul id="players" class="players"></ul>
-        <button type="button" id="leave" class="secondary">Quitter</button>
+        <div id="ship-alert" class="alert-banner" role="alert" hidden></div>
+        <p id="action-error" class="error" role="alert" hidden></p>
+
+        <nav class="tabs" role="tablist">
+            <button type="button" role="tab" data-tab="game" class="tab">Partie</button>
+            <button type="button" role="tab" data-tab="me" class="tab">Perso</button>
+            <button type="button" role="tab" data-tab="ship" class="tab">Vaisseau</button>
+            <button type="button" role="tab" data-tab="bag" class="tab">Inventaire</button>
+            <button type="button" role="tab" data-tab="crew" class="tab">Équipage</button>
+        </nav>
+
+        <!-- Carte en cours -->
+        <div class="tab-panel" data-panel="game">
+            <p id="phase" class="dim"></p>
+            <article id="game-card" class="game-card" hidden>
+                <p id="card-kind" class="card-kind"></p>
+                <p id="card-desc" class="card-desc"></p>
+                <ul id="card-choices" class="card-choices"></ul>
+                <p id="card-note" class="dim small-text"></p>
+            </article>
+            <div id="statuses" class="chips"></div>
+            <h2>Emotes</h2>
+            <div id="emotes" class="emotes"></div>
+        </div>
+
+        <!-- Perso : création, fiche, dés -->
+        <div class="tab-panel" data-panel="me">
+            <div id="no-character" hidden>
+                <p id="no-character-text"></p>
+                <button type="button" id="create" class="primary">Créer mon personnage</button>
+            </div>
+
+            <div id="creation" hidden>
+                <h2>Nom du personnage</h2>
+                <form id="name-form" class="inline-form" autocomplete="off">
+                    <input id="char-name" maxlength="30" placeholder="Nom">
+                    <button type="submit" class="secondary small">Enregistrer</button>
+                </form>
+                <h2>Race</h2>
+                <div id="race-list" class="race-list"></div>
+                <div id="stat-rolls" hidden>
+                    <h2>Tirage des stats</h2>
+                    <p class="dim small-text">Chaque stat a un dé de plus par point de bonus ou de malus de ta race. Avec un bonus on garde le meilleur dé, avec un malus le pire. La stat vaut ce dé + 50.</p>
+                    <div id="stat-table" class="stat-table"></div>
+                </div>
+            </div>
+
+            <div id="sheet" hidden>
+                <p class="sheet-name"><strong id="sheet-name"></strong> <span id="sheet-race" class="dim"></span></p>
+                <div id="sheet-stats" class="bars"></div>
+                <div id="roll-box" hidden>
+                    <h2>Lancer les dés</h2>
+                    <form id="roll-form" class="roll-form">
+                        <select id="roll-stat" aria-label="Stat"></select>
+                        <select id="roll-module" aria-label="Module"></select>
+                        <button type="submit" class="primary">Lancer</button>
+                    </form>
+                    <p id="roll-result" class="roll-result" hidden></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vaisseau : plan, modules, status -->
+        <div class="tab-panel" data-panel="ship">
+            <div id="ship-plan" class="ship-plan"></div>
+            <p id="cryopods" class="dim"></p>
+            <div id="ship-modules" class="bars"></div>
+        </div>
+
+        <!-- Inventaire -->
+        <div class="tab-panel" data-panel="bag">
+            <ul id="items" class="items"></ul>
+            <p id="items-empty" class="dim">Ton inventaire est vide.</p>
+        </div>
+
+        <!-- Équipage -->
+        <div class="tab-panel" data-panel="crew">
+            <ul id="players" class="players"></ul>
+        </div>
     </section>
 </main>
+<script src="ship-svg.js"></script>
+<script src="ship-map.js"></script>
 <script src="player.js"></script>
 </body>
 </html>

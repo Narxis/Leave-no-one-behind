@@ -11,6 +11,7 @@ const inventory = require("./inventory");
 const planetGen = require("./planetGen");
 const leaderboard = require("./leaderboard");
 const lobby = require("./lobby");
+const playerView = require("./playerView");
 const gameSettings = require("./gameSettings");
 const races = require("./races");
 const itemsEditor = require("./itemsEditor");
@@ -172,6 +173,7 @@ module.exports = {
             lang: langJS,
             settings: gameSettings.get(),
             fields: gameSettings.FIELDS,
+            options: gameSettings.OPTIONS,
             presets: gameSettings.PRESETS,
             available: gameSettings.available()
         });
@@ -192,6 +194,7 @@ module.exports = {
             shipAlerts.reset();
         }
         await CONFIG.upsert('gameState', 'creation');
+        playerView.changed();
         // Bonus et malus des races (customs comprises), pour l'explication de la répartition des stats
         res.render('perso', {lang: langJS, races: races.list(), settings: gameSettings.get()});
     },
@@ -252,6 +255,7 @@ module.exports = {
 
         if (CONFIG.gameState !== 'gameLive')
             await CONFIG.upsert('gameState', 'gameLive');
+        playerView.changed();
         //
         // for (let i of activeStatuses) {
         //     await statuses.remove(i.slug);
@@ -264,6 +268,7 @@ module.exports = {
 
         if (!current_card) {
             await CONFIG.upsert('gameState', 'postGame');
+            playerView.changed();
             return res.redirect('/land');
         }
 
@@ -748,6 +753,7 @@ module.exports = {
     await items.giveAllStarters();
 
     await CONFIG.upsert('gameState', 'gameLive')
+    playerView.changed();
 
     let data = JSON.stringify({
         action: 'game-ready'
