@@ -18,5 +18,10 @@
     "name": "Recherché",
     "desc": "Vous êtes recherchés pas les autorités",
     "slug": "wanted"
+  },
+  {
+    "name": "Diverti",
+    "desc": "L'équipage a le moral : les pertes de moral sont divisées par deux (arrondi vers le bas).",
+    "slug": "diverti"
   }
 ]

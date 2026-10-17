@@ -645,7 +645,8 @@
         {
           "value": "Entrer en contact",
           "reveal": "\n\u00a0 Les Sylvs vous parlent des recherches de \"Dimalou\". Vous ne comprenez pas un mot de ce qu'ils racontent, mais ils vous ont bien diverti",
-          "mjreveal": "  Gain de moral."
+          "mjreveal": "  Gain de moral. Donne le statut \"Diverti\" (3 cartes).",
+          "status": {"slug": "diverti", "duration": 3}
         },
         {
           "value": "Les inviter à bord",
