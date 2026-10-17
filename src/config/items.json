@@ -5,7 +5,7 @@
       "slug": "fronde-fnek",
       "type": "arme",
       "rarity": "commun",
-      "desc": "Malgrès leur avancées technologique les Fneks préfèrent utiliser une fronde pour se battre. Généralement ces frondes sont fournies avec des boules puante qui libèrent un puissant concentré d'odeur de Fnek.",
+      "desc": "Malgré leurs avancées technologiques, les Fneks préfèrent utiliser une fronde pour se battre. Généralement, ces frondes sont fournies avec des boules puantes qui libèrent un puissant concentré d'odeur de Fnek.",
       "race": "fnek",
       "image": "fronde-fnek.png"
     },
@@ -14,7 +14,7 @@
       "slug": "shrips",
       "type": "consommable",
       "rarity": "commun",
-      "desc": "Les Shrips sont des chips goût crevette qui ont la forme de shrymps, elles peuvent remonter le moral des Omphors",
+      "desc": "Les Shrips sont des chips goût crevette qui ont la forme de Shrymps, elles peuvent remonter le moral des Omphors",
       "race": "omphor",
       "image": "shrips.png"
     },
@@ -23,16 +23,16 @@
       "slug": "armure-omphor",
       "type": "armure",
       "rarity": "commun",
-      "desc": "L'armure en Kev-lard rend son utilisateur plus résistant mais limite ses déplacement",
+      "desc": "L'armure en Kev-lard rend son utilisateur plus résistant mais limite ses déplacements",
       "race": "omphor",
       "image": "kev-lar.png"
     },
     {
-      "name": "Pelotte de laine",
+      "name": "Pelote de laine",
       "slug": "pelotte",
       "type": "consommable",
       "rarity": "commun",
-      "desc": "Offir une pelotte de laine à un Nek lui remonte le moral.",
+      "desc": "Offrir une pelote de laine à un Nek lui remonte le moral.",
       "race": "sylv",
       "image": "pelotte.png"
     },
@@ -55,11 +55,11 @@
       "image": "fouetygrl.png"
     },
     {
-      "name": "Shrymp utility Kit",
+      "name": "Shrymp Utility Kit",
       "slug": "shrymp-kit",
       "type": "outil",
       "rarity": "commun",
-      "desc": "Le shrymp utility campement kit contient de nombreux ustensiles",
+      "desc": "Le Shrymp Utility Kit (kit de campement) contient de nombreux ustensiles",
       "race": "shrymp",
       "image": ""
     },
@@ -68,7 +68,7 @@
       "slug": "corde",
       "type": "outil",
       "rarity": "commun",
-      "desc": "Une corde dans le Shrymp Kit",
+      "desc": "Une corde dans le Shrymp Utility Kit",
       "race": "shrymp",
       "image": "corde.png"
     },
@@ -77,16 +77,16 @@
       "slug": "lampe-torche",
       "type": "outil",
       "rarity": "commun",
-      "desc": "Une lampe torche dans le Shrymp Kit",
+      "desc": "Une lampe torche dans le Shrymp Utility Kit",
       "race": "shrymp",
       "image": "flashlight.png"
     },
     {
-      "name": "Nourriture déshydraté",
+      "name": "Nourriture déshydratée",
       "slug": "nourriture-deshydrate",
       "type": "consommable",
       "rarity": "commun",
-      "desc": "De la nourriture déshydraté",
+      "desc": "De la nourriture déshydratée",
       "race": "shrymp",
       "image": "desfood.png"
     },
@@ -100,7 +100,7 @@
       "image": "dictionnaire.png"
     },
     {
-      "name": "Mèche Ygrl",
+      "name": "Mèche d'Ygrl",
       "slug": "meche-ygrl",
       "type": "divers",
       "rarity": "commun",
@@ -118,11 +118,11 @@
       "image": "lance.png"
     },
     {
-      "name": "L'aku tosswice",
+      "name": "L'Aku tosswice",
       "slug": "aku-tosswice",
       "type": "outil",
       "rarity": "commun",
-      "desc": "Une sorte de boite à outil contenant beaucoup d'objet",
+      "desc": "Une sorte de boîte à outils contenant beaucoup d'objets",
       "race": "aku",
       "image": "aku-tosswice.png"
     },
@@ -140,12 +140,12 @@
       "slug": "boule-fnek",
       "type": "munition",
       "rarity": "commun",
-      "desc": "Une boule puante pour fronde fnek",
+      "desc": "Une boule puante pour fronde Fnek",
       "race": "aku",
       "image": "boule-fnek.png"
     },
     {
-      "name": "Paquet de shrips",
+      "name": "Paquet de Shrips",
       "slug": "paquet-shrimps",
       "type": "consommable",
       "rarity": "commun",
@@ -185,7 +185,7 @@
       "slug": "balle-nek-k47",
       "type": "munition",
       "rarity": "commun",
-      "desc": "Un balle de Nek-k47",
+      "desc": "Une balle de Nek-k47",
       "race": "aku",
       "image": "ball-nekk47.png"
     },
@@ -194,7 +194,7 @@
       "slug": "massue-yorc",
       "type": "arme",
       "rarity": "commun",
-      "desc": "Une massue seulement utilisable par un Yorc au coeur pur",
+      "desc": "Une massue seulement utilisable par un Yorc au cœur pur",
       "race": "yorc",
       "image": "massue-yorc.png"
     },
@@ -212,16 +212,16 @@
       "slug": "projectile-nek-feu",
       "type": "arme",
       "rarity": "commun",
-      "desc": "Dagues de lancée utilisant la chaleur des nek-feux pour accélérer vers sa cible",
+      "desc": "Dagues de lancer utilisant la chaleur des Nek-Feux pour accélérer vers sa cible",
       "race": "nek_feu",
       "image": ""
     },
     {
-      "name": "Nek'ronomicon",
+      "name": "Nek'Ronomicon",
       "slug": "nek-ronomicon",
       "type": "divers",
       "rarity": "commun",
-      "desc": "Un receuil religieux avec un double fond pour stocker des objets",
+      "desc": "Un recueil religieux avec un double fond pour stocker des objets",
       "race": "nek_terre",
       "image": ""
     },
@@ -239,7 +239,7 @@
       "slug": "em-o-droid",
       "type": "gadget",
       "rarity": "commun",
-      "desc": "Un drone pouvant prendre des videos en 64k 1440fps",
+      "desc": "Un drone pouvant prendre des vidéos en 64k 1440fps",
       "race": "nek_air",
       "image": ""
     }
@@ -250,7 +250,7 @@
       "slug": "personal-shield",
       "type": "armure",
       "rarity": "commun",
-      "desc": "Le projecteur de bouclier personnel est une dispositif utilisant l'énergie cosmique permettant d'absorber un coup ou un projectile ciblant l'utilisateur. Le projecteur de bouclier personnel doit être rechargé en énergie cosmique avant de pouvoir être réutilisé.",
+      "desc": "Le projecteur de bouclier personnel est un dispositif utilisant l'énergie cosmique permettant d'absorber un coup ou un projectile ciblant l'utilisateur. Le projecteur de bouclier personnel doit être rechargé en énergie cosmique avant de pouvoir être réutilisé.",
       "image": ""
     },
     {
@@ -258,15 +258,15 @@
       "slug": "drone",
       "type": "gadget",
       "rarity": "commun",
-      "desc": "Un drone pour  réveller les stats planètes.",
+      "desc": "Un drone pour révéler les stats des planètes.",
       "image": "drone.gif"
     },
     {
-      "name": "Spider-BOMB",
+      "name": "SPIDER bomb",
       "slug": "spider-bomb",
       "type": "arme",
       "rarity": "commun",
-      "desc": "Une bombe qui permet d’infliger de lourd à sa cible sans causer beaucoup de dégâts collatéraux.",
+      "desc": "Une bombe qui permet d’infliger de lourds dégâts à sa cible sans causer beaucoup de dégâts collatéraux.",
       "image": "spider-bomb.gif"
     }
   ],

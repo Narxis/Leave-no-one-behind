@@ -31,8 +31,8 @@ const readCustom = function () {
     }
 }
 
-// Nom affiché d'une race de base, à partir de son identifiant (nek_eau → Nek-eau)
-const baseLabel = (slug) => slug.charAt(0).toUpperCase() + slug.slice(1).replace('_', '-');
+// Nom affiché d'une race de base, à partir de son identifiant (nek_eau → Nek-Eau)
+const baseLabel = (slug) => slug.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-');
 
 // Identifiant d'une race custom : sert de nom d'image et de clé partout
 const slugify = (name) => String(name).toLowerCase()

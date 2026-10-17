@@ -357,48 +357,48 @@
         "nos": "Yorcs"
       },
       "nek_eau": {
-        "le": "la Nek-eau",
-        "les": "les Nek-eaux",
-        "des": "des Nek-eaux",
-        "un": "une Nek-eau",
-        "du": "de la Nek-eau",
-        "au": "à la Nek-eau",
-        "aux": "aux Nek-eaux",
-        "no": "Nek-eau",
-        "nos": "Nek-eaux"
+        "le": "la Nek-Eau",
+        "les": "les Nek-Eaux",
+        "des": "des Nek-Eaux",
+        "un": "une Nek-Eau",
+        "du": "de la Nek-Eau",
+        "au": "à la Nek-Eau",
+        "aux": "aux Nek-Eaux",
+        "no": "Nek-Eau",
+        "nos": "Nek-Eaux"
       },
       "nek_feu": {
-        "le": "le Nek-feu",
-        "les": "les Nek-feux",
-        "des": "des Nek-feux",
-        "un": "un Nek-feu",
-        "du": "du Nek-feu",
-        "au": "au Nek-feu",
-        "aux": "aux Nek-feux",
-        "no": "Nek-feu",
-        "nos": "Nek-feux"
+        "le": "le Nek-Feu",
+        "les": "les Nek-Feux",
+        "des": "des Nek-Feux",
+        "un": "un Nek-Feu",
+        "du": "du Nek-Feu",
+        "au": "au Nek-Feu",
+        "aux": "aux Nek-Feux",
+        "no": "Nek-Feu",
+        "nos": "Nek-Feux"
       },
       "nek_terre": {
-        "le": "le Nek-terre",
-        "les": "les Nek-terres",
-        "des": "des Nek-terres",
-        "un": "un Nek-terre",
-        "du": "du Nek-terre",
-        "au": "au Nek-terre",
-        "aux": "aux Nek-terres",
-        "no": "Nek-terre",
-        "nos": "Nek-terres"
+        "le": "le Nek-Terre",
+        "les": "les Nek-Terres",
+        "des": "des Nek-Terres",
+        "un": "un Nek-Terre",
+        "du": "du Nek-Terre",
+        "au": "au Nek-Terre",
+        "aux": "aux Nek-Terres",
+        "no": "Nek-Terre",
+        "nos": "Nek-Terres"
       },
       "nek_air": {
-        "le": "la Nek-air",
-        "les": "les Nek-airs",
-        "des": "des Nek-airs",
-        "un": "une Nek-air",
-        "du": "de la Nek-air",
-        "au": "à la Nek-air",
-        "aux": "aux Nek-airs",
-        "no": "Nek-air",
-        "nos": "Nek-airs"
+        "le": "la Nek-Air",
+        "les": "les Nek-Airs",
+        "des": "des Nek-Airs",
+        "un": "une Nek-Air",
+        "du": "de la Nek-Air",
+        "au": "à la Nek-Air",
+        "aux": "aux Nek-Airs",
+        "no": "Nek-Air",
+        "nos": "Nek-Airs"
       }
     },
     "stats": {
@@ -434,31 +434,31 @@
       }
     },
     "fnek": {
-      "desc": "Les Fnek sont des êtres humanoïdes intelligents et avancés technologiquement, mesurant en moyenne 1,80 m et parlant très vite. Ils n'ont pas de nez et ont une odeur corporelle forte à l'origine des expressions &quot;sentir de la fnek&quot; ou &quot;sentir le fnek&quot;, il est cependant tabou de parler d'odeurs avec eux. Ils possèdent le plus grand réseau de distribution d'armes nucléaires de l'univers connu sous le nom de &quot;La Fnak&quot;."
+      "desc": "Les Fneks sont des êtres humanoïdes intelligents et avancés technologiquement, mesurant en moyenne 1,80 m et parlant très vite. Ils n'ont pas de nez et ont une odeur corporelle forte à l'origine des expressions &quot;sentir de la fnek&quot; ou &quot;sentir le fnek&quot;, il est cependant tabou de parler d'odeurs avec eux. Ils possèdent le plus grand réseau de distribution d'armes nucléaires de l'univers connu sous le nom de &quot;La Fnak&quot;."
     },
     "omphor": {
-      "desc": "Les Omphors sont de petits êtres obèses qui sont persuadés d'avoir raison dans toutes les situations. Ils sont dépourvus de toute compétence physique, mais pensent pouvoir vaincre n'importe qui grâce à leur intelligence et leur capacité à argumenter en ligne. Ils ont tendance à citer des sources fausses pour soutenir leur point de vue et pensent qu'ils ont le potentiel de gouverner l'univers entier. Leur seul point faible sont les araignées. Ils ne peuvent pas s'empecher de faire des blagues du type &quot;Non-Bril&quot; ou &quot;Quoi-Feur&quot;."
+      "desc": "Les Omphors sont de petits êtres obèses qui sont persuadés d'avoir raison dans toutes les situations. Ils sont dépourvus de toute compétence physique, mais pensent pouvoir vaincre n'importe qui grâce à leur intelligence et leur capacité à argumenter en ligne. Ils ont tendance à citer des sources fausses pour soutenir leur point de vue et pensent qu'ils ont le potentiel de gouverner l'univers entier. Leur seul point faible sont les araignées. Ils ne peuvent pas s'empêcher de faire des blagues du type &quot;Non-Bril&quot; ou &quot;Quoi-Feur&quot;."
     },
     "sylv": {
-      "desc": "Les Sylvs sont des êtres à l'apparence végétale, généralement de grande taille et à la peau recouverte d'écorce. Ils ont de longues feuilles comme cheveux et une pilosité dense et feuillue. Cette apparence les rends très appréciés par les Nek-eaux. Ils sont connus pour leur intelligence exceptionnelle et leur sagesse, mais ils sont également reconnus pour leur lenteur dans leurs actions et leur écriture illisible."
+      "desc": "Les Sylvs sont des êtres à l'apparence végétale, généralement de grande taille et à la peau recouverte d'écorce. Ils ont de longues feuilles comme cheveux et une pilosité dense et feuillue. Cette apparence les rend très appréciés par les Nek-Eaux. Ils sont connus pour leur intelligence exceptionnelle et leur sagesse, mais ils sont également reconnus pour leur lenteur dans leurs actions et leur écriture illisible."
     },
     "ygrl": {
       "desc": "Les Ygrls sont une espèce de champignons humanoïdes, elles sont liées entre elles par un mycélium cosmique et parlent un dialecte composé de sons gutturaux. Elles ont peur des araignées mycophiles. Les Ygrls se reproduisent par le procédé de &quot;mycose&quot; en libérant des spores qui peuvent germer et donner naissance à de nouvelles Ygrls."
     },
     "shrymp": {
-      "desc": "Les Shrymps sont une race de fourmis cyborgs qui idolâtrent les Ygrl et construisent leurs cités autour d'elles. Ils ont développé un alphabet Ygrl pour mieux comprendre leur divinité, bien que cet alphabet soit peu efficace. Les Shrymps sont équipés d'implants cybernétiques qui leur permettent de mieux s'adapter à leur environnement et de mieux exécuter leurs tâches. Ils sont très travailleurs et organisés, mais ils sont également très loyaux envers leur Ygrl divine et feront tout pour la protéger."
+      "desc": "Les Shrymps sont une race de fourmis cyborgs qui idolâtrent les Ygrls et construisent leurs cités autour d'elles. Ils ont développé un alphabet Ygrl pour mieux comprendre leur divinité, bien que cet alphabet soit peu efficace. Les Shrymps sont équipés d'implants cybernétiques qui leur permettent de mieux s'adapter à leur environnement et de mieux exécuter leurs tâches. Ils sont très travailleurs et organisés, mais ils sont également très loyaux envers leur Ygrl divine et feront tout pour la protéger."
     },
     "aku": {
-      "desc": "Les Aku sont une race de créatures humanoïdes ressemblant à des lézards. Ils sont connus pour leur nature pacifique et leur amour de la philosophie. Ils sont également réputés pour être de mauvais pilotes et de mauvais passagers. Ils n'ont pas de prénom et se font appeler par leur premier métier suivit de &quot;Aku&quot;. Dans leur tribu, le chef est appelé le &quot;Namatata&quot; et les enfants sont appelés les &quot;Iku&quot;."
+      "desc": "Les Akus sont une race de créatures humanoïdes ressemblant à des lézards. Ils sont connus pour leur nature pacifique et leur amour de la philosophie. Ils sont également réputés pour être de mauvais pilotes et de mauvais passagers. Ils n'ont pas de prénom et se font appeler par leur premier métier suivi de &quot;Aku&quot;. Dans leur tribu, le chef est appelé le &quot;Namatata&quot; et les enfants sont appelés les &quot;Iku&quot;."
     },
     "yorc": {
       "desc": "Les Yorcs sont une race d'êtres humanoïdes à l'apparence de canidés. Ils sont généralement de petite taille et ont des oreilles pointues. Leur peau est couverte de poils et leur couleur peut varier en fonction de leur exposition aux ultra-violets. Ils sont généralement de bons utilisateurs d'armes, mais sont faibles à &quot;mains nues&quot;. Ils ont un odorat très développé mais bizarrement ils aiment bien l'odeur de fnek."
     },
     "nek_eau": {
-      "desc": "Les Nek-Eau sont une race pacifique et gentille. Elles apprécient la simplicité et sont amies avec les Sylvs. Elles sont souvent calmes et réfléchies, préférant éviter les conflits et chercher des solutions pacifiques aux problèmes."
+      "desc": "Les Nek-Eaux sont une race pacifique et gentille. Elles apprécient la simplicité et sont amies avec les Sylvs. Elles sont souvent calmes et réfléchies, préférant éviter les conflits et chercher des solutions pacifiques aux problèmes."
     },
     "nek_feu": {
-      "desc": "Les Nek-Feux ont un fort instinct de survie et sont prêts à tout pour protéger leur tribu et leur territoire. Ils sont jaloux des Sylvs en raison de leur relation pacifique avec les Nek-eau."
+      "desc": "Les Nek-Feux ont un fort instinct de survie et sont prêts à tout pour protéger leur tribu et leur territoire. Ils sont jaloux des Sylvs en raison de leur relation pacifique avec les Nek-Eaux."
     },
     "nek_terre": {
       "desc": "Les Nek-Terres passent beaucoup de temps à toquer aux portes de vaisseaux spatiaux et à distribuer des prospectus pour partager leur message avec le reste de l'univers. Ils croient en un Messie nommé le &quot;Saint Nek-Terre&quot; qui guidera leur peuple vers la lumière. Ils sont généralement pacifiques et bienveillants, mais peuvent être très têtus dans leur croyance en leur religion."
@@ -570,7 +570,7 @@
       "drone":{"le":"le drone","un":"un drone","votre":"votre drone","no":"Drone"},
       "lampe-torche":{"le":"la lampe torche","un":"une lampe torche","votre":"votre lampe torche","no":"Lampe torche"},
       "montre-boussole":{"le":"la montre-boussole","un":"une montre-boussole","votre":"votre montre-boussole","no":"Montre-Boussole"},
-      "spider-bomb":{"le":"la Spider-BOMB","un":"une Spider-BOMB","votre":"votre Spider-BOMB","no":"Spider-BOMB"},
+      "spider-bomb":{"le":"la SPIDER bomb","un":"une SPIDER bomb","votre":"votre SPIDER bomb","no":"SPIDER bomb"},
       "personal-shield":{"le":"le projecteur de bouclier personnel","un":"un projecteur de bouclier personnel","votre":"votre projecteur de bouclier personnel","no":"Projecteur de bouclier personnel"},
       "em-o-droid":{"le":"l'Em-0 Droid","un":"un Em-0 Droid","votre":"votre Em-0 Droid","no":"Em-0 Droid"},
       "filet-paralysant":{"le":"le filet paralysant","un":"un filet paralysant","votre":"votre filet paralysant","no":"Filet paralysant"},

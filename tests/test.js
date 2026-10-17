@@ -38,7 +38,30 @@ async function test() {
     await test_items_editor();
     test_npcs();
     await test_combat();
+    test_spelling();
     await test_remote();
+}
+
+// Orthographe des noms affichés : les identifiants (slugs) ne changent pas
+function test_spelling() {
+    console.log('Testing spelling');
+    const races = require('../src/controllers/races');
+    assert.strictEqual(races.nameOf('nek_eau'), 'Nek-Eau');
+    assert.strictEqual(races.nameOf('nek_terre'), 'Nek-Terre');
+    assert.strictEqual(races.nameOf('fnek'), 'Fnek');
+    assert.strictEqual(LANG.card_vars.race.nek_feu.nos, 'Nek-Feux');
+    const items = JSON.parse(fs.readFileSync(__dirname + '/../src/config/items.json', 'utf8'));
+    const bySlug = {};
+    for (let pool in items) for (let item of items[pool]) bySlug[item.slug] = item.name;
+    assert.strictEqual(bySlug['pelotte'], 'Pelote de laine');
+    assert.strictEqual(bySlug['nourriture-deshydrate'], 'Nourriture déshydratée');
+    assert.strictEqual(bySlug['shrymp-kit'], 'Shrymp Utility Kit');
+    assert.strictEqual(bySlug['meche-ygrl'], "Mèche d'Ygrl");
+    assert.strictEqual(bySlug['nek-ronomicon'], "Nek'Ronomicon");
+    assert.strictEqual(bySlug['spider-bomb'], 'SPIDER bomb');
+    const statuses = JSON.parse(fs.readFileSync(__dirname + '/../src/config/statuses.json', 'utf8'));
+    assert.strictEqual(statuses.find(s => s.slug === 'weak').name, 'Affaibli');
+    console.log('OK');
 }
 
 // Joueurs en ligne : seules quelques actions passent, toujours en leur nom
