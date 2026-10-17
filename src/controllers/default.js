@@ -676,7 +676,7 @@ module.exports = {
     if (!planet)
         return res.redirect('/');
 
-    let scoreCards = Math.min(6000*cardNegPlayed + 3500*cardNeuPlayed + Math.min(CONFIG.planetCount,10) * Math.min((cardPlanetPlayed-1),9), 500000) - 4500*cardPosPlayed;
+    let scoreCards = Math.min(6000*cardNegPlayed + 3500*cardNeuPlayed + 3500*Math.min(CONFIG.planetCount,10)*Math.min((cardPlanetPlayed-1),9), 500000) - 4500*cardPosPlayed;
 
     await renderEndScreen(res, ship, planet, scoreCards, true);
 },
