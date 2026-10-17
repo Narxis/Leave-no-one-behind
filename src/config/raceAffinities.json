@@ -1,0 +1,11 @@
+{
+  "source": "Wiki des règles, lore/races/README.md, section « Qui s'entend avec qui »",
+  "list": [
+    {"races": ["nek_eau", "sylv", "nek_feu"], "text": "Les Nek-Eaux et les Sylvs s'apprécient beaucoup, ce qui rend les Nek-Feux jaloux."},
+    {"races": ["nek_terre", "sylv"], "text": "Les Nek-Terres sont en guerre religieuse contre les Sylvs."},
+    {"races": ["nek_air", "nek_terre"], "text": "Les Nek-Airs apprécient l'humour des Nek-Terres, sans se rendre compte qu'ils sont sérieux."},
+    {"races": ["shrymp", "ygrl"], "text": "Les Shrymps vénèrent les Ygrls."},
+    {"races": ["yorc", "fnek"], "text": "Les Yorcs adorent l'odeur des Fneks."},
+    {"races": ["omphor", "ygrl"], "text": "Les Omphors et les Ygrls ont peur des araignées (mycophiles, pour les Ygrls)."}
+  ]
+}

@@ -40,6 +40,10 @@
                             <button type="button" class="add-life" data-card-roll="cancel" title="Revenir aux choix, le chrono repart">Annuler</button>
                         </div>
                     </div>
+                    <div class="desc-container choice mj-votes" id="mj-votes" hidden>
+                        <div class="desc-title">&nbsp;&nbsp;Votes des joueurs en ligne :</div>
+                        <ul class="mj-votes-list" id="mj-votes-list"></ul>
+                    </div>
                     <% for(var i=0; i<3; i++) {%>
                     <div class="choice" id="choice<%= i %>">
                         <div class="button-text">Ici serront présentés les choix. <span class="blackout">Les choix pendant un blackout.</span></div>
@@ -332,5 +336,6 @@ var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u00
 <script src="js/mj-blank.js"></script>
 <script src="js/mj-shop.js"></script>
 <script src="js/mj-craft.js"></script>
+<script src="/js/item-requests.js"></script>
 <%- include("partials/bottom-scripts") %>
 </body>

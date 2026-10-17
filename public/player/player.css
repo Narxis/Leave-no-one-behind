@@ -85,6 +85,9 @@ button {
 .secondary { border: 1px solid var(--border); background: transparent; color: var(--dim); }
 
 .error { margin: 0; color: var(--danger); font-size: 14px; }
+.error.info { color: var(--ok); }
+.use-item { align-self: flex-start; }
+.use-item:disabled { opacity: .6; cursor: default; }
 .dim { margin: 0; color: var(--dim); }
 .dim strong { color: var(--accent); letter-spacing: 0.15em; }
 
@@ -141,6 +144,20 @@ button.small { margin-top: 0; padding: 6px 12px; font-size: 14px; }
     font-weight: 600;
 }
 
+/* Planète */
+.planet[hidden] { display: none; }
+.planet-frame { display: flex; justify-content: center; margin: -8px 0 4px; }
+.planet-canvas { width: 260px; height: 260px; max-width: 100%; touch-action: none; }
+.planet-points { margin: 0 0 10px; color: var(--accent); font-weight: 600; text-align: center; }
+.planet-scans { margin: 0 0 12px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.planet-scans li { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; }
+.planet-scans li.scanned { border-color: rgb(79 216 224 / 45%); }
+.scan-head { display: flex; justify-content: space-between; gap: 8px; font-weight: 600; }
+.scan-cost { color: var(--dim); font-size: 13px; }
+.scan-text { margin: 4px 0 0; color: var(--dim); font-size: 14px; }
+.planet-scans li.scanned .scan-text { color: var(--text); }
+.planet h2 { margin: 4px 0 8px; }
+
 /* Carte en cours */
 .game-card {
     padding: 16px;
@@ -152,7 +169,15 @@ button.small { margin-top: 0; padding: 6px 12px; font-size: 14px; }
 .card-last { margin: 0 0 12px; }
 .card-desc { margin: 0 0 12px; font-size: 17px; line-height: 1.5; white-space: pre-line; }
 .card-choices { margin: 0 0 8px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
-.card-choices li { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; }
+.card-choices li { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; }
+.card-choices .choice-text { flex: 1; min-width: 0; }
+.card-choices button.choice-text {
+    margin: -10px 0 -10px -12px; padding: 10px 0 10px 12px; border: none; background: transparent;
+    color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+.card-choices li.voted { border-color: var(--ok); background: rgb(79 216 224 / 8%); }
+.card-choices li.chosen { border-color: var(--accent); color: var(--accent); }
+.choice-votes { flex: none; color: var(--ok); font-size: 13px; font-weight: 600; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { padding: 4px 10px; border: 1px solid var(--accent); border-radius: 999px; color: var(--accent); font-size: 13px; cursor: help; }
@@ -279,3 +304,56 @@ select {
 }
 .chat-form textarea:focus { outline: none; border-color: var(--accent); }
 .chat-form button { margin: 0; }
+
+/* ---- Fiches : races (création, Codex), objets, statuts ---- */
+.race { flex-direction: row; align-items: flex-start; gap: 10px; }
+.race-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* Race choisie : fiche complète */
+.race.selected .race-desc { -webkit-line-clamp: unset; }
+.race-affinities { margin: 2px 0 0; padding-left: 16px; font-size: 12px; font-weight: 400; color: var(--text); }
+.sheet-img { width: 56px; height: 56px; flex: none; border-radius: 8px; object-fit: contain; background: rgb(0 0 0 / 30%); }
+.sheet-img.pixel { image-rendering: pixelated; padding: 6px; }
+.sheet-img.empty { visibility: hidden; }
+.status-icon { display: grid; place-items: center; padding: 10px; }
+.status-icon svg { width: 100%; height: 100%; fill: var(--text); }
+
+.wiki-line { margin: 4px 0 0; text-align: center; font-size: 14px; }
+a.wiki-link, .codex-entry a { color: var(--ok); }
+
+.codex-search {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgb(255 255 255 / 4%);
+    color: var(--text);
+    font: 500 16px Jura, system-ui, sans-serif;
+}
+.codex-search:focus { outline: none; border-color: var(--accent); }
+.codex-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.codex-filter { margin: 0; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: none; color: var(--dim); font-size: 14px; letter-spacing: 0; }
+.codex-filter.active { border-color: var(--accent); color: var(--accent); }
+.codex-filter span { opacity: .7; font-size: 12px; }
+.codex-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.codex-entry { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
+.codex-entry .race-desc { -webkit-line-clamp: unset; }
+.codex-entry .sheet-img { width: 72px; height: 72px; }
+
+/* ---- Connexion Discord ---- */
+.discord-box { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.discord-box p { margin: 0; }
+.discord-login {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #5865f2;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}
+.discord-me { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.discord-me img { width: 32px; height: 32px; border-radius: 50%; }
+.discord-me span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.discord-tag { display: inline-flex; align-items: center; gap: 6px; margin: 0 8px; font-size: 13px; color: #b9bdf8; }
+.discord-tag img { width: 20px; height: 20px; border-radius: 50%; }

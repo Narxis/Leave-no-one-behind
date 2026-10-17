@@ -4,6 +4,9 @@
 // recalculé ; seul ce qui a changé repart vers les joueurs :
 //   {kind: 'game', phase, card, ship, statuses, alerts, team, races}  à tous
 //   {kind: 'you', character, inventory, money, creation}              à chacun
+//   {kind: 'codex', races, items, statuses, totals, wiki}              à tous
+//   {kind: 'codex-image', key, src}   images des fiches (customs, objets),
+//                                     une fois par joueur
 // Les secrets du MJ (révélations, suites des choix, butin, valeurs des
 // planètes) ne sortent jamais d'ici.
 const {Player} = require('../models/player');
@@ -18,6 +21,10 @@ const shipAlerts = require('./shipAlerts');
 const statRolls = require('./statRolls');
 const roles = require('./roles');
 const blankCard = require('./blankCard');
+const votes = require('./votes');
+const planetScan = require('./planetScan');
+const itemUse = require('./itemUse');
+const codex = require('./codex');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -38,13 +45,34 @@ const cardKind = function (card) {
 
 const cleanText = (text) => String(text || '').replaceAll('{....}', '…');
 
-// La carte telle que les joueurs la voient : le texte et les choix proposés
+// La carte telle que les joueurs la voient : le texte et les choix proposés.
+// Si la page de jeu a annoncé ce qu'elle affiche pour cette carte (suite
+// d'un choix, « Continuer votre chemin »…), c'est ce qui est montré, avec
+// les votes ; sinon la carte telle que piochée, sans votes.
 const publicCard = function (card) {
     if (!card)
         return null;
     let kind = cardKind(card);
-    if (kind === 'planet')
-        return {id: card.id, kind: kind, desc: '', choices: [], lastPlanet: card.lastPlanet ? LANG.last_planet : null};
+    let screen = votes.screenFor(card.id);
+    // Planète : scans faits, points de détection, et vote pour le scan suivant
+    if (kind === 'planet') {
+        let seen = {id: card.id, kind: kind, desc: '', choices: [], lastPlanet: card.lastPlanet ? LANG.last_planet : null,
+            planet: planetScan.forCard(card)};
+        if (screen)
+            Object.assign(seen, {screen: screen.id, choices: screen.choices.map(cleanText), counts: screen.counts, chosen: screen.chosen});
+        return seen;
+    }
+    if (screen)
+        return {
+            id: card.id,
+            kind: kind,
+            desc: cleanText(screen.text),
+            timer: !!card.timer,
+            screen: screen.id,
+            choices: screen.choices.map(cleanText),
+            counts: screen.counts,
+            chosen: screen.chosen
+        };
     return {
         id: card.id,
         kind: kind,
@@ -75,7 +103,9 @@ const roleName = (slug) => (roles.find(slug) || {}).name || '';
 
 const team = async function () {
     let players = await DB.tables.players.findAll({raw: true});
-    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race), role: roleName(p.role)}));
+    // Compte Discord du joueur, pour se reconnaître malgré les noms de persos
+    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race), role: roleName(p.role),
+        discord: lobby.discordOf(p.discord_id)}));
 };
 
 // Tout ce qui est commun aux joueurs
@@ -91,8 +121,8 @@ const gameState = async function () {
         statuses: await statusList(),
         alerts: {blink: alerts.blink || [], showMap: !!alerts.showMap, alert: alerts.alert ? {room: alerts.alert.room, name: alerts.alert.name, message: alerts.alert.message} : null},
         team: await team(),
-        // Pour la création du perso : races avec leurs bonus et malus
-        races: phase === 'creation' ? races.list().map(r => ({slug: r.slug, name: r.name, desc: r.desc, stats: r.stats})) : []
+        // Pour la création du perso : fiches des races de la partie (bonus et malus, affinités)
+        races: phase === 'creation' ? races.playable().map(r => codex.raceCard(r)) : []
     };
 };
 
@@ -112,12 +142,43 @@ const playerState = async function (id) {
         inventory: player ? await inventory.getInventory(id) : [],
         // Bourse : « 20 crédits »
         money: player ? money.label(await money.balance({type: 'player', id: id}) || 0) : null,
-        creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null
+        creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null,
+        vote: votes.voteOf(id),
+        // Objets dont l'utilisation attend la réponse du MJ
+        pendingItems: itemUse.pendingFor(id)
     };
+};
+
+// Codex : relève ce que l'équipage voit (carte affichée comprise), puis la
+// liste de ce qu'il a rencontré
+const codexState = async function (game) {
+    let card = game.card;
+    await codex.observe(card ? [card.desc].concat(card.choices || []) : []);
+    return codex.forPlayers();
+};
+
+// Images des fiches (Codex et création) pas encore envoyées à ce joueur
+const imagesSent = new Map();
+const sendImages = async function (id, game, codexMessage) {
+    let keys = new Set();
+    for (let card of [...game.races, ...codexMessage.races, ...codexMessage.items])
+        if (card.imageKey)
+            keys.add(card.imageKey);
+    let sent = imagesSent.get(id) || new Set();
+    imagesSent.set(id, sent);
+    for (let key of keys) {
+        if (sent.has(key))
+            continue;
+        sent.add(key);
+        let src = await codex.imageData(key);
+        if (src)
+            lobby.sendTo(id, {kind: 'codex-image', key: key, src: src});
+    }
 };
 
 // Derniers états envoyés, pour n'envoyer que ce qui change
 let lastGame = null;
+let lastCodex = null;
 const lastYou = new Map();
 let timer = null;
 let running = false;
@@ -130,9 +191,16 @@ const send = async function (force) {
         lastGame = json;
         lobby.sendTo('*', game);
     }
+    let book = await codexState(game);
+    let bookJson = JSON.stringify(book);
+    if (force === true || bookJson !== lastCodex) {
+        lastCodex = bookJson;
+        lobby.sendTo('*', book);
+    }
     for (let p of lobby.getState().players) {
         if (!p.online)
             continue;
+        await sendImages(p.id, game, book);
         let you = JSON.stringify(await playerState(p.id));
         if (force === p.id || force === true || lastYou.get(p.id) !== you) {
             lastYou.set(p.id, you);
@@ -173,6 +241,14 @@ const welcome = async function (player) {
     let game = await gameState();
     lastGame = JSON.stringify(game);
     lobby.sendTo(player.id, game);
+    let book = await codexState(game);
+    lobby.sendTo(player.id, book);
+    // Quelque chose de nouveau rencontré : les autres aussi
+    if (JSON.stringify(book) !== lastCodex)
+        changed();
+    // Page rechargée : les images sont à renvoyer
+    imagesSent.delete(player.id);
+    await sendImages(player.id, game, book);
     let you = await playerState(player.id);
     lastYou.set(player.id, JSON.stringify(you));
     lobby.sendTo(player.id, you);

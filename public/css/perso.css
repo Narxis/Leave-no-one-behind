@@ -476,6 +476,9 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Légende des stats + bouton d'explication du tirage */
 .legend-stack {
+  /* Au-dessus de la grille des fiches (très large), qui sinon capte les clics */
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -695,3 +698,21 @@ input[type=number]::-webkit-outer-spin-button {
 .role-select option {
   background: var(--ui-surface-flat);
 }
+
+/* Races customs de la partie (fenêtre de /persos) */
+.custom-races-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px 0 6px;
+}
+
+.custom-race {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.stats-rules-body a { color: var(--ui-cyan); }

@@ -25,6 +25,7 @@ module.exports = function(router) {
     router.get('/template-planet', controller.templatePlanet);
     router.get('/planet-lab', controller.renderPlanetLab);
     router.get('/races', controller.renderRaces);
+    router.get('/codex', controller.renderCodex);
     router.get('/items', controller.renderItemsEditor);
     router.get('/bestiaire', controller.renderNpcEditor);
     router.get('/leaderboard', controller.leaderboard);

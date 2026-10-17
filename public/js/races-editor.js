@@ -19,6 +19,7 @@
     let stats = {};
     let feminine = false;
     let image = null;       // nouvelle image (data URL PNG) à envoyer
+    let thumb = null;       // sa vignette JPEG, pour le Codex de l'app des joueurs
 
     // Valeur moyenne de la stat finale : 50 + meilleur/pire de |mod|+1 dés de 50 (comme /persos)
     function average(mod) {
@@ -124,6 +125,7 @@
         stats = Object.fromEntries(STATS.map(([key]) => [key, src ? (src.stats[key] || 0) : 0]));
         feminine = !!(src && src.feminine);
         image = null;
+        thumb = null;
         $('re-name').value = race ? race.name : '';
         $('re-plural').value = race && race.custom ? (race.plural || '') : '';
         $('re-desc').value = src ? unescape(src.desc) : '';
@@ -174,6 +176,13 @@
             let w = img.width * k, h = img.height * k;
             c.getContext('2d').drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
             image = c.toDataURL('image/png');
+            let t = document.createElement('canvas');
+            t.width = t.height = 128;
+            let tc = t.getContext('2d');
+            tc.fillStyle = '#10141c'; // le JPEG n'a pas de transparence
+            tc.fillRect(0, 0, 128, 128);
+            tc.drawImage(c, 0, 0, 128, 128);
+            thumb = t.toDataURL('image/jpeg', .8);
             $('re-image-preview').src = image;
             URL.revokeObjectURL(img.src);
         };
@@ -207,7 +216,8 @@
                     inCards: $('re-incards').checked,
                     stats: stats,
                     desc: $('re-desc').value,
-                    image: image || undefined
+                    image: image || undefined,
+                    thumb: image ? thumb : undefined
                 })
             });
             let out = await res.json();
