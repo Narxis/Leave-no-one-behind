@@ -9,6 +9,8 @@
     const lootBox = document.getElementById('combat-loot');
 
     let state = {active: false, enemies: [], log: []};
+    const HP_PER_MORAL = 10;
+    const MAX_HP = 1000;
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -35,6 +37,15 @@
         meta.append(el('span', 'combat-enemy-hp', ko ? 'K.O.' : enemy.hp + ' / ' + enemy.maxHp + ' PV'),
             el('span', 'combat-enemy-def', 'Défense ' + enemy.defense));
         card.append(meta);
+
+        // Statuts posés par le MJ, avec les tours restants
+        let statuses = Object.entries(enemy.statuses || {});
+        if (statuses.length && !ko) {
+            let row = el('div', 'combat-statuses');
+            for (let [slug, turns] of statuses)
+                row.append(el('span', 'combat-status ' + slug, statusName(slug) + ' · ' + turns));
+            card.append(row);
+        }
         return card;
     }
 
@@ -103,6 +114,38 @@
         lootBox.append(grid);
     }
 
+    function statusName(slug) {
+        return {saignement: 'Saignement', poison: 'Poison', etourdi: 'Étourdi'}[slug] || slug;
+    }
+
+    // Barre de vie sous le nom de chaque joueur et compagnon, visible pendant
+    // le combat : 1 point de moral = 10 PV, moins les PV perdus sous la dizaine
+    function renderHealth() {
+        let wounds = state.wounds || {};
+        document.querySelectorAll('#playertabs_container .player-tab').forEach(tab => {
+            let moralEl = tab.querySelector('.moral .player-stat-value');
+            let roll = tab.querySelector('.player-roll');
+            if (!moralEl || !roll)
+                return;
+            let id = tab.id.slice('player-tab'.length);
+            let moral = parseInt(moralEl.textContent) || 0;
+            let hp = Math.max(0, moral * HP_PER_MORAL - (wounds[id] || 0));
+            let box = tab.querySelector('.tab-hp');
+            if (!box) {
+                box = el('div', 'tab-hp');
+                box.append(el('div', 'tab-hp-fill'), el('span', 'tab-hp-text'));
+                tab.append(box);
+            }
+            let ratio = hp / MAX_HP;
+            let fill = box.querySelector('.tab-hp-fill');
+            fill.style.width = (100 * ratio) + '%';
+            fill.dataset.level = ratio > 0.5 ? 'ok' : (ratio > 0.25 ? 'warn' : 'crit');
+            box.querySelector('.tab-hp-text').textContent = hp > 0 ? hp + ' PV' : 'K.O.';
+            box.classList.toggle('ko', hp <= 0);
+            box.title = hp + ' / ' + MAX_HP + ' PV (moral ' + moral + ')';
+        });
+    }
+
     function renderLog() {
         logBox.innerHTML = '';
         for (let entry of state.log.slice(-4).reverse())
@@ -116,6 +159,7 @@
         renderPending();
         renderLoot(delay);
         renderLog();
+        renderHealth();
     }
 
     function show(active) {
@@ -153,6 +197,17 @@
                 floatText(card, event.hit ? '-' + event.damage : 'Raté', event.hit ? 'dmg' : 'miss');
             }
         }
+        // Tour suivant : saignement et poison blessent les ennemis
+        if (event.type === 'turn')
+            for (let tick of event.ticks || []) {
+                let c = enemiesBox.querySelector('[data-id="' + tick.enemy_id + '"]');
+                if (c) {
+                    c.classList.add('hit');
+                    floatText(c, '-' + tick.damage, 'dmg status-' + tick.status);
+                }
+            }
+        if (event.type === 'reinforcement' && card)
+            card.classList.add('arriving');
         if (event.type === 'enemy-attack' && card) {
             card.classList.add('attacking');
             floatText(card, event.hit ? 'Touché ! ' + event.damage : 'Raté', event.hit ? 'enemy-hit' : 'miss');
@@ -190,4 +245,7 @@
     }
     load();
     document.addEventListener('ws-reconnect', load);
+    // Le moral d'un joueur ou d'un compagnon a changé : sa barre suit
+    document.addEventListener('playerStat', renderHealth);
+    document.addEventListener('allies', renderHealth);
 })();
