@@ -318,6 +318,40 @@ async function test_card_vars() {
     }
     console.log('OK');
 
+    // Listes de variables : toutes les entrées d'une liste ont les mêmes articles
+    // (sinon un tirage au hasard peut donner « undefined »)
+    const lists = Object.keys(LANG.card_vars).filter(type => !['planet_text', 'end_screen'].includes(type)
+        && Object.values(LANG.card_vars[type]).every(e => e && typeof e === 'object'));
+    for (let type of lists) {
+        assert(!type.includes('_'), 'Nom de liste avec « _ » : ' + type);
+        let entries = Object.entries(LANG.card_vars[type]);
+        let articles = Object.keys(entries[0][1]).sort().join(',');
+        for (let [key, forms] of entries) {
+            assert.strictEqual(Object.keys(forms).sort().join(','), articles, 'Articles différents dans ' + type + '.' + key);
+            assert(Object.values(forms).every(v => typeof v === 'string' && v.trim()), 'Forme vide dans ' + type + '.' + key);
+        }
+    }
+
+    // Chaque variable des cartes a une liste qui connaît son article
+    let raw = fs.readFileSync(__dirname + '/../src/config/baseCards.json', 'utf8');
+    for (let token of new Set(raw.match(/\[[^\]\s"]+_[^\]\s"]+\]/g))) {
+        let parts = token.slice(1, -1).split('_');
+        if (parts.length === 2 && LANG.card_vars[parts[0].toLowerCase()])
+            parts = ['no', parts[0].toLowerCase(), parts[1]];
+        let article = parts[0].toLowerCase(), type = parts[1];
+        if (article === 'conf') {
+            assert(CONFIG[parts[1]] !== undefined, 'Paramètre inconnu : ' + token);
+            continue;
+        }
+        assert(lists.includes(type), 'Pas de liste pour ' + token);
+        assert(article in Object.values(LANG.card_vars[type])[0], 'Article inconnu pour ' + token);
+    }
+
+    // Les nouvelles listes se résolvent sans trou
+    let sample = new Card().replaceVars('[Le_lieu_1] [du_pnj_1] [au_organisation_1] [le_bande_1] [du_personnage_1] [le_systeme_1] [le_film_1]');
+    assert(!/\[|undefined/.test(sample), sample);
+    console.log('OK');
+
     // Même variable = même valeur dans tous les textes d'une carte (et de ses suites)
     let card = new Card();
     let first = card.replaceVars('[le_race_1]|[No_objet_1]|[no_boisson_1]|[no_bouteille_1]');
