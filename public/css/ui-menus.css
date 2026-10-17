@@ -1136,6 +1136,13 @@ body.mj-page {
     transition: background 150ms var(--ui-ease), color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
 }
 
+/* Race aléatoire : toute la largeur, au-dessus des races */
+.options-affichage li.race-random {
+    grid-column: 1 / -1;
+    border-color: var(--ui-border);
+    text-align: center;
+}
+
 .options-affichage li:hover {
     background: var(--ui-fill-hover);
     color: var(--ui-accent);
