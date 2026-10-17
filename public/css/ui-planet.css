@@ -247,3 +247,16 @@ body.planet-grabbing * {
     cursor: grabbing !important;
     user-select: none;
 }
+
+/* Votes des joueurs en ligne sur les scans, l'atterrissage et le départ */
+.p-txt[data-votes]::after,
+.land-button[data-votes]::after,
+.leave-button[data-votes]::after {
+    content: attr(data-votes);
+    display: block;
+    margin-top: 2px;
+    color: var(--ui-cyan);
+    font-size: 0.7em;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}

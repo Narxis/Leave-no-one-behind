@@ -12,7 +12,7 @@
     const STAT_LABELS = {combat: 'Combat', pilotage: 'Pilotage', engineering: 'Ingénierie', survival: 'Survie', recon: 'Reconnaissance', moral: 'Moral'};
     const ROLL_MODULES = [['', 'Sans module'], ['scanner', 'Scanners de surface'], ['proximity', 'Détecteurs de proximité'], ['motors', 'Moteurs'], ['oxygen', 'Module d\'oxygène'], ['energy', 'Électricité'], ['gravity', 'Gravité artificielle']];
     const EMOTES = ['👍', '👎', '😮', '😂', '😱', '❤️', '🤔', '🎉'];
-    const CARD_KINDS = {event: 'Événement', place: 'Lieu', planet: 'Planète en approche'};
+    const CARD_KINDS = {event: 'Événement', place: 'Lieu', planet: 'Planète'};
     const PHASES = {
         init: 'En attente que le MJ lance la partie.',
         creation: 'Création des personnages en cours : va dans l\'onglet Perso.',
@@ -219,6 +219,8 @@
 
         let card = game && game.card;
         $('game-card').hidden = !card;
+        if (!card || card.kind !== 'planet')
+            renderPlanet(null);
         if (card) {
             $('card-kind').textContent = CARD_KINDS[card.kind] || '';
             richText($('card-desc'), card.desc);
@@ -244,9 +246,13 @@
                     li.append(el('span', 'choice-votes', count + (count > 1 ? ' votes' : ' vote')));
                 return li;
             }));
+            renderPlanet(card.kind === 'planet' ? card.planet : null);
+            $('planet-vote-title').hidden = !(card.choices && card.choices.length);
             let note = '';
-            if (card.kind === 'planet')
-                note = 'Le MJ scanne la planète sur l\'écran principal.';
+            if (card.kind === 'planet' && canVote)
+                note = myVote === null || myVote === undefined ? 'Vote pour la suite, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
+            else if (card.kind === 'planet')
+                note = card.chosen !== null && card.chosen !== undefined ? 'Le MJ a choisi.' : 'Le MJ scanne la planète sur l\'écran principal.';
             else if (card.chosen !== null && card.chosen !== undefined)
                 note = 'Le MJ a choisi.';
             else if (canVote)
@@ -271,6 +277,55 @@
         if (game && game.alerts && (game.alerts.showMap || alert) && !renderGame.mapShown)
             selectTab('ship');
         renderGame.mapShown = !!(game && game.alerts && (game.alerts.showMap || alert));
+    };
+
+    // ---- Planète : dessin couche par couche, points de détection, scans -----
+
+    // Le dessin ne connaît que les stats scannées : à chaque scan il est refait
+    // avec la nouvelle valeur, puis la couche apparaît avec son animation
+    let planetDrawn = null; // {id, keys: [couches affichées]}
+    const renderPlanet = function (planet) {
+        $('planet').hidden = !planet;
+        if (!planet) {
+            if (planetDrawn) {
+                $('planet-frame').replaceChildren();
+                planetDrawn = null;
+            }
+            return;
+        }
+        let scans = planet.scans || [];
+        let keys = scans.filter(s => s.revealed).map(s => s.key);
+        let fresh = !planetDrawn || planetDrawn.id !== planet.id;
+        let added = fresh ? keys : keys.filter(k => !planetDrawn.keys.includes(k));
+        if ((fresh || added.length) && window.PlanetView) {
+            let canvas = el('canvas', 'planet-canvas');
+            canvas.setAttribute('aria-hidden', 'true');
+            $('planet-frame').replaceChildren(canvas);
+            let size = canvas.clientWidth || 260;
+            let view = PlanetView.create(canvas, {
+                size: size,
+                radius: size * .225,
+                modules: planet.modules || {},
+                seed: planet.id,
+                revealed: fresh ? keys : planetDrawn.keys
+            });
+            if (!fresh)
+                view.reveal(added);
+            planetDrawn = {id: planet.id, keys: keys};
+        }
+
+        let points = planet.points === null || planet.points === undefined ? '…' : planet.points;
+        $('planet-points').textContent = 'Points de détection : ' + points + (planet.drones ? ' · Drones : ' + planet.drones : '');
+        $('planet-scans').replaceChildren(...scans.map(s => {
+            let li = el('li', s.revealed ? 'scanned' : '');
+            let head = el('div', 'scan-head');
+            head.append(el('span', 'scan-label', s.label));
+            if (!s.revealed && s.cost !== null && s.cost !== undefined)
+                head.append(el('span', 'scan-cost', s.cost + ' pts'));
+            li.append(head);
+            li.append(el('p', 'scan-text', s.revealed ? s.text : 'Pas encore scanné.'));
+            return li;
+        }));
     };
 
     // ---- Vaisseau ----------------------------------------------------------

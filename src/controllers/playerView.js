@@ -16,6 +16,7 @@ const inventory = require('./inventory');
 const shipAlerts = require('./shipAlerts');
 const statRolls = require('./statRolls');
 const votes = require('./votes');
+const planetScan = require('./planetScan');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -44,9 +45,14 @@ const publicCard = function (card) {
     if (!card)
         return null;
     let kind = cardKind(card);
-    if (kind === 'planet')
-        return {id: card.id, kind: kind, desc: '', choices: []};
     let screen = votes.screenFor(card.id);
+    // Planète : scans faits, points de détection, et vote pour le scan suivant
+    if (kind === 'planet') {
+        let seen = {id: card.id, kind: kind, desc: '', choices: [], planet: planetScan.forCard(card)};
+        if (screen)
+            Object.assign(seen, {screen: screen.id, choices: screen.choices.map(cleanText), counts: screen.counts, chosen: screen.chosen});
+        return seen;
+    }
     if (screen)
         return {
             id: card.id,

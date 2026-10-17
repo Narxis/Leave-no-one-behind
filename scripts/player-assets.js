@@ -1,7 +1,8 @@
 // Fichiers de la page joueur (public/player) tirés des vues du jeu : la page
 // est servie telle quelle par le relais, sans EJS.
 //   node scripts/player-assets.js   régénère public/player/ship-svg.js
-//                                   et public/player/ship-map.js
+//                                   public/player/ship-map.js
+//                                   et public/player/planet-view.js
 // (un script et non un .svg : l'app ouvre la page en file://, où fetch est bloqué)
 // Les tests vérifient que le fichier est à jour.
 const fs = require('fs');
@@ -24,7 +25,8 @@ const shipSvg = function () {
 // Fichier généré → contenu attendu
 const files = () => ({
     'public/player/ship-svg.js': shipSvg(),
-    'public/player/ship-map.js': HEADER + read('public/js/ship-map.js')
+    'public/player/ship-map.js': HEADER + read('public/js/ship-map.js'),
+    'public/player/planet-view.js': HEADER + read('public/js/planet-view.js')
 });
 
 module.exports = {files, ROOT};

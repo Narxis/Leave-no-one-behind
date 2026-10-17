@@ -258,9 +258,42 @@ function test_player_view() {
     let seen = playerView.publicCard(card);
     assert.deepEqual(seen, {id: 4, kind: 'event', desc: 'Une alarme… retentit', timer: true, choices: ['Fuir', 'Combattre']});
     let planet = playerView.publicCard({id: 9, type: TYPE_PLANET, name: 'archetype', desc: '', modules: {oxy: {val: 80, cost: 2}}});
-    assert.deepEqual(planet, {id: 9, kind: 'planet', desc: '', choices: []});
+    assert.deepEqual([planet.id, planet.kind, planet.desc, planet.choices], [9, 'planet', '', []]);
+    assert.deepEqual(planet.planet.modules, {}); // rien de scanné : aucune valeur
+    test_planet_scan();
     assert.equal(playerView.publicCard(null), null);
     console.log('Player view OK');
+}
+
+// Planète : les joueurs ne reçoivent que les valeurs des stats scannées
+function test_planet_scan() {
+    console.log('Testing planet scans');
+    const planetScan = require('../src/controllers/planetScan');
+    const playerView = require('../src/controllers/playerView');
+    const votes = require('../src/controllers/votes');
+    let card = {id: 12, type: TYPE_PLANET, modules: {oxy: {val: 80, cost: 2}, cli: {val: 30, cost: 3}, fau: {val: 50, cost: 4}, flo: {val: 20, cost: 4}, civ: {val: 5, cost: 4}, res: {val: 70}, wtr: {val: 10}, grv: {val: 41}}};
+    planetScan.setScreen({cardId: 12, points: 6, drones: 1, scans: [
+        {key: 'oxy', cost: 2, revealed: true, text: 'Air respirable'},
+        {key: 'ff', cost: 4, revealed: true, text: 'Forêts'},
+        {key: 'cli', cost: 3, revealed: false, text: 'secret'},
+        {key: '__proto__', cost: 1, revealed: true}
+    ]});
+    let seen = playerView.publicCard(card).planet;
+    assert.deepEqual(seen.modules, {oxy: {val: 80}, fau: {val: 50}, flo: {val: 20}, civ: {val: 5}});
+    assert.equal(seen.points, 6);
+    assert.equal(seen.drones, 1);
+    let cli = seen.scans.find(s => s.key === 'cli');
+    assert.deepEqual([cli.revealed, cli.text, cli.cost], [false, '', 3]);
+    assert.equal(seen.scans.find(s => s.key === 'oxy').text, 'Air respirable');
+    assert.equal(seen.scans.length, 6);
+    // Autre planète : rien de celle-ci
+    assert.deepEqual(playerView.publicCard({id: 13, type: TYPE_PLANET, modules: card.modules}).planet.modules, {});
+    // Vote pour le scan suivant
+    votes.setScreen({cardId: 12, text: '', choices: ['Climat', 'Gravité']});
+    assert.deepEqual(playerView.publicCard(card).choices, ['Climat', 'Gravité']);
+    votes.clear();
+    planetScan.clear();
+    console.log('Planet scans OK');
 }
 
 // Fichiers générés de la page joueur : à jour avec leurs sources

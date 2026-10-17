@@ -15,6 +15,7 @@ const remote = require("./remote");
 const playerView = require("./playerView");
 const chat = require("./chat");
 const votes = require("./votes");
+const planetScan = require("./planetScan");
 const WebSocket = require("ws");
 
 const init = function (){
@@ -149,6 +150,10 @@ const makeAction = async function (raw_response) {
             break;
         case 'votes':
             payload = votes.payload();
+            break;
+        // Page planète : points de détection et scans faits
+        case 'planet-screen':
+            payload = planetScan.setScreen(response.data);
             break;
         case 'ship-alerts':
             payload = shipAlerts.handle(response);
