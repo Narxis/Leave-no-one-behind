@@ -1,6 +1,8 @@
 var currentCard = {};
 var interval_cd;
 var countDownRunning = false;
+// Pendant un combat (combat.js), le compte à rebours est en pause
+var countDownPaused = false;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -47,6 +49,8 @@ function startCountDown() {
     countDownRunning = true;
 
     const tick = async function () {
+        if (countDownPaused)
+            return;
         if (time_left > 0) {
             TimerAnim.tick(time_left);
             time_left--;
@@ -74,6 +78,12 @@ async function stopCountdown() {
         countDownRunning = false;
         await TimerAnim.cancel();
     }
+}
+
+// Appelé par combat.js : le chrono s'arrête au début du combat et repart
+// de là où il en était à la fin
+function pauseCountDown(paused) {
+    countDownPaused = !!paused;
 }
 
 async function initialiseModTabs() {
