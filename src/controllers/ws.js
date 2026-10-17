@@ -99,6 +99,10 @@ const makeAction = async function (raw_response) {
         case 'combat-cancel':
         case 'combat-enemy-attack':
         case 'combat-loot':
+        case 'combat-add':
+        case 'combat-status':
+        case 'combat-turn':
+        case 'combat-player-hp':
             payload = combat.handle(response);
             break;
         case 'combat-ally-attack':
@@ -112,7 +116,13 @@ const makeAction = async function (raw_response) {
         case 'card-loot-offer':
             payload = cardLoot.handle(response);
             break;
-        case 'ally-add':
+        case 'ally-add': {
+            // Compagnon créé en plein combat : annoncé comme renfort
+            let added = allies.handle(response);
+            let joined = added.data.event && combat.allyJoined(added.data.allies.find(a => a.id === added.data.event.id).name);
+            payload = joined ? [added, joined] : added;
+            break;
+        }
         case 'ally-update':
         case 'ally-remove':
             payload = allies.handle(response);

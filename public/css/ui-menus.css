@@ -1290,3 +1290,167 @@ body.mj-page {
     font-size: 13px;
     color: var(--ui-text-dim);
 }
+
+/*---Menu MJ : tour en cours et statuts des ennemis---*/
+.mj-turn {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-turn-label {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.mj-turn-duration {
+    width: 3em;
+    padding: 4px 6px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    text-align: center;
+}
+
+.mj-turn-next,
+.mj-status-chip {
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mj-turn-next {
+    padding: 5px 10px;
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.mj-statuses-line {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.mj-status-chip {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.mj-status-chip.active.saignement {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
+.mj-status-chip.active.poison {
+    border-color: #7be26b;
+    color: #7be26b;
+}
+
+.mj-status-chip.active.etourdi {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.mj-status-chip:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/*---Menu MJ : points de vie des joueurs et compagnons---*/
+.mj-team {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 16px 12px;
+}
+
+.mj-team:empty {
+    display: none;
+}
+
+.mj-team-title {
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.mj-team-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 4px 8px;
+    padding: 6px 10px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-team-row.ko .mj-team-name {
+    color: var(--ui-danger);
+}
+
+.mj-team-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mj-team-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mj-team-input {
+    width: 4.5em;
+    padding: 4px 6px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 14px;
+    text-align: center;
+}
+
+.mj-team-bar {
+    grid-column: 1 / -1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 8%);
+    overflow: hidden;
+}
+
+.mj-team-bar-fill {
+    height: 100%;
+    background: #5ee08a;
+    transition: width 300ms var(--ui-ease);
+}
+
+.mj-team-bar-fill[data-level="warn"] {
+    background: var(--ui-accent);
+}
+
+.mj-team-bar-fill[data-level="crit"] {
+    background: var(--ui-danger);
+}

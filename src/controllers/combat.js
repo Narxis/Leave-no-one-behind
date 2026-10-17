@@ -11,11 +11,29 @@ const DAMAGE = {
 const LOG_SIZE = 20;
 const LOOT_SIZE = 12;
 
+// Points de vie des joueurs et compagnons : 1 point de moral = 10 PV.
+// Le moral (en base, ou dans le fichier des compagnons) fait foi ; on garde
+// seulement à part les PV perdus sous la dizaine (wounds, de 0 à 9), pour
+// que 3 dégâts ne fassent pas perdre un point de moral entier
+const HP_PER_MORAL = 10;
+const MAX_HP = 100 * HP_PER_MORAL;
+let wounds = {};
+
+// Statuts que le MJ peut poser sur un ennemi, pour un nombre de tours.
+// Ils agissent quand le MJ passe au tour suivant
+const STATUSES = {
+    saignement: {name: 'Saignement', damage: [1, 4]},
+    poison: {name: 'Poison', damage: [3, 3]},
+    etourdi: {name: 'Étourdi'}
+};
+const MAX_STATUS_TURNS = 9;
+
 // État du combat en cours, gardé en mémoire : il est renvoyé à chaque
 // action pour que l'écran de jeu et le menu MJ restent synchronisés
 // pending : attaque désignée par le MJ, en attente du /roll Combat du joueur
 // lootRevealed : tous les ennemis sont K.O., leur butin est montré aux joueurs
-let state = {active: false, enemies: [], log: [], pending: null, lootRevealed: false};
+// turn : numéro du tour, avancé par le MJ (les statuts agissent à chaque tour)
+let state = {active: false, enemies: [], log: [], pending: null, lootRevealed: false, turn: 1};
 let nextId = 1;
 
 const rollRange = ([min, max]) => min + Math.floor(Math.random() * (max - min + 1));
@@ -55,7 +73,7 @@ const makeLoot = function (raw) {
 }
 
 const getState = function () {
-    return JSON.parse(JSON.stringify(state));
+    return JSON.parse(JSON.stringify(Object.assign({}, state, {wounds: wounds})));
 }
 
 const addLog = function (entry) {
@@ -77,7 +95,8 @@ const makeEnemy = function (raw) {
         offense: clamp(toInt(raw.offense, base.offense || 50), 0, 100),
         defense: clamp(toInt(raw.defense, base.defense || 50), 0, 100),
         damage: DAMAGE[raw.damage] ? raw.damage : (base.damage || 'moyen'),
-        loot: makeLoot(raw.loot)
+        loot: makeLoot(raw.loot),
+        statuses: {}
     };
 }
 
@@ -87,8 +106,70 @@ const findEnemy = function (id) {
 
 const start = function (data) {
     let enemies = (data.enemies || []).map(makeEnemy);
-    state = {active: true, enemies: enemies, log: [], pending: null, lootRevealed: false};
+    state = {active: true, enemies: enemies, log: [], pending: null, lootRevealed: false, turn: 1};
     return addLog({type: 'start'});
+}
+
+// Renfort ennemi en plein combat : le butin redevient caché jusqu'à la
+// nouvelle victoire (ce qui n'a pas été distribué reste dedans)
+const reinforce = function (data) {
+    if (!state.active || !data.enemy)
+        return null;
+    let enemy = makeEnemy(data.enemy);
+    state.enemies.push(enemy);
+    state.lootRevealed = false;
+    return addLog({type: 'reinforcement', enemy_id: enemy.id, name: enemy.name});
+}
+
+// Un compagnon créé pendant le combat est annoncé comme renfort allié
+const allyJoined = function (name) {
+    if (!state.active)
+        return null;
+    return {action: 'combat', error: false, data: {state: getState(),
+        event: addLog({type: 'reinforcement', name: name, ally: true})}};
+}
+
+// Le MJ pose (ou retire, avec 0 tour) un statut sur un ennemi
+const setStatus = function (data) {
+    let enemy = findEnemy(data.enemy_id);
+    let status = STATUSES[data.status];
+    if (!state.active || !enemy || !status || enemy.hp <= 0)
+        return null;
+    let turns = clamp(toInt(data.turns, 3), 0, MAX_STATUS_TURNS);
+    if (turns > 0)
+        enemy.statuses[data.status] = turns;
+    else
+        delete enemy.statuses[data.status];
+    return addLog({type: 'status', enemy_id: enemy.id, enemy: enemy.name, status: data.status, name: status.name, turns: turns});
+}
+
+// Tour suivant : saignement et poison blessent, puis chaque statut perd un tour
+const nextTurn = function () {
+    if (!state.active)
+        return null;
+    let ticks = [];
+    for (let enemy of state.enemies) {
+        if (enemy.hp <= 0) {
+            enemy.statuses = {};
+            continue;
+        }
+        for (let slug of Object.keys(enemy.statuses)) {
+            let status = STATUSES[slug];
+            if (status.damage && enemy.hp > 0) {
+                let damage = Math.min(enemy.hp, rollRange(status.damage));
+                enemy.hp -= damage;
+                ticks.push({enemy_id: enemy.id, enemy: enemy.name, status: slug, name: status.name, damage: damage, ko: enemy.hp === 0});
+            }
+            if (--enemy.statuses[slug] <= 0)
+                delete enemy.statuses[slug];
+        }
+        if (enemy.hp <= 0)
+            enemy.statuses = {};
+    }
+    state.turn++;
+    let entry = addLog({type: 'turn', turn: state.turn, ticks: ticks});
+    checkVictory();
+    return entry;
 }
 
 const end = function () {
@@ -229,7 +310,8 @@ const allyAttack = function (data) {
 // La cible est un joueur (discord_id) ou un compagnon (ally_id) choisi par le MJ
 const enemyAttack = async function (data) {
     let enemy = findEnemy(data.enemy_id);
-    if (!enemy || enemy.hp <= 0)
+    // Un ennemi étourdi ne peut pas attaquer
+    if (!enemy || enemy.hp <= 0 || (enemy.statuses && enemy.statuses.etourdi))
         return null;
     let target = {};
     if (data.ally_id !== undefined) {
@@ -273,7 +355,63 @@ const enemyAttack = async function (data) {
     }
     if (forced)
         entry.forced = true;
-    return addLog(entry);
+    // Les dégâts sont retirés tout de suite des PV de la cible
+    let extra = [];
+    if (entry.hit && entry.damage > 0 && entry.target_id) {
+        let fighter = await findFighter(data);
+        if (fighter) {
+            let hp = hpOf(fighter) - entry.damage;
+            extra = await setFighterHp(fighter, hp);
+            entry.hp = Math.max(0, hp);
+        }
+    }
+    return {entry: addLog(entry), extra: extra};
+}
+
+// Joueur (discord_id) ou compagnon (ally_id) dont on gère les PV
+const findFighter = async function (data) {
+    if (data.ally_id !== undefined) {
+        let ally = allies.findAlly(data.ally_id);
+        return ally ? {id: 'npc' + ally.id, name: ally.name, moral: ally.moral, ally: ally} : null;
+    }
+    if (!data.discord_id)
+        return null;
+    let player = await new Player().getData(data.discord_id);
+    return player ? {id: String(player.discord_id), name: player.name, moral: player.moral} : null;
+}
+
+const hpOf = function (fighter) {
+    return Math.max(0, fighter.moral * HP_PER_MORAL - (wounds[fighter.id] || 0));
+}
+
+// Fixe les PV : le moral devient le nombre de dizaines entamées. Renvoie
+// les messages qui mettent à jour les onglets (stat du joueur ou compagnons)
+const setFighterHp = async function (fighter, hp) {
+    hp = clamp(Math.round(hp), 0, MAX_HP);
+    let moral = Math.ceil(hp / HP_PER_MORAL);
+    wounds[fighter.id] = moral * HP_PER_MORAL - hp;
+    if (!wounds[fighter.id])
+        delete wounds[fighter.id];
+    fighter.moral = moral;
+    if (fighter.ally)
+        return [allies.handle({action: 'ally-update', data: {id: fighter.ally.id, field: 'moral', value: moral}})];
+    let player = await new Player().update({moral: moral}, fighter.id);
+    if (player)
+        delete player['accepted_datas'];
+    return [{action: 'playerStat', error: false, data: player}];
+}
+
+// Le MJ fixe les PV d'un joueur ou d'un compagnon, à tout moment
+const setPlayerHp = async function (data) {
+    let fighter = await findFighter(data);
+    if (!fighter)
+        return null;
+    let before = hpOf(fighter);
+    let extra = await setFighterHp(fighter, toInt(data.hp, before));
+    let entry = {type: 'player-hp', target_id: fighter.id, target: fighter.name, npc_target: !!fighter.ally,
+        hp: hpOf(fighter), change: hpOf(fighter) - before};
+    // Hors combat, pas de journal : seuls les onglets se mettent à jour
+    return {entry: state.active ? addLog(entry) : Object.assign({at: Date.now()}, entry), extra: extra};
 }
 
 const ACTIONS = {
@@ -283,19 +421,31 @@ const ACTIONS = {
     'combat-target': target,
     'combat-cancel': cancelTarget,
     'combat-enemy-attack': enemyAttack,
-    'combat-loot': setLoot
+    'combat-loot': setLoot,
+    'combat-add': reinforce,
+    'combat-status': setStatus,
+    'combat-turn': nextTurn,
+    'combat-player-hp': setPlayerHp
 };
 
 // Point d'entrée des actions websocket « combat-* » : renvoie l'état
 // complet et l'événement qui vient de se produire
+// Une action peut aussi produire d'autres messages ({entry, extra}) : les
+// PV d'un joueur ou d'un compagnon touché, à mettre à jour sous la carte
 const handle = async function (response) {
     let action = ACTIONS[response.action];
     let event = action ? await action(response.data || {}) : null;
-    return {
+    let extra = [];
+    if (event && event.entry) {
+        extra = event.extra || [];
+        event = event.entry;
+    }
+    let payload = {
         action: 'combat',
         error: false,
         data: {state: getState(), event: event}
     };
+    return extra.length ? extra.concat([payload]) : payload;
 }
 
-module.exports = {handle, getState, getBestiary, getLootList, makeLoot, resolveRoll, allyAttack, takeLoot, ACTIONS};
+module.exports = {handle, getState, getBestiary, getLootList, makeLoot, resolveRoll, allyAttack, allyJoined, takeLoot, ACTIONS, STATUSES, HP_PER_MORAL, MAX_HP};
