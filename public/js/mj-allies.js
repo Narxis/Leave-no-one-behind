@@ -88,7 +88,9 @@
         let name = search.value.trim();
         if (!name)
             return;
-        send('ally-add', {name: name});
+        // Compagnon préparé dans l'éditeur (/bestiaire) : il arrive avec son rôle et ses stats
+        let model = (window.COMPANIONS || []).find(c => c.name.toLowerCase() === name.toLowerCase());
+        send('ally-add', model ? Object.assign({}, model) : {name: name});
         search.value = '';
     }
 
