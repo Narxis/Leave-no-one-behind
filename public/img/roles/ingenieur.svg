@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffcc00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Ingénieur : engrenage -->
+  <circle cx="12" cy="12" r="6"/>
+  <circle cx="12" cy="12" r="2.2"/>
+  <path d="M12 2.5V6M12 18v3.5M2.5 12H6M18 12h3.5M5.3 5.3l2.5 2.5M16.2 16.2l2.5 2.5M5.3 18.7l2.5-2.5M16.2 7.8l2.5-2.5" stroke-width="2.6"/>
+</svg>
