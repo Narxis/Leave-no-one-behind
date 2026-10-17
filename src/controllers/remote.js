@@ -18,6 +18,7 @@ const races = require('./races');
 const statRolls = require('./statRolls');
 const chat = require('./chat');
 const votes = require('./votes');
+const itemUse = require('./itemUse');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = ['', 'scanner', 'proximity', 'motors', 'oxygen', 'energy', 'gravity'];
@@ -107,6 +108,18 @@ const RULES = {
         let index = data.index === null ? null : Number(data.index);
         let character = await characterOf(player.id);
         let result = votes.vote(player.id, character ? character.name : player.name, index);
+        if (result.error)
+            return refuse(result.error);
+        return {action: 'passThrough', data: result.payload};
+    },
+    // Utiliser un objet de son inventaire : demande au MJ, qui accepte ou non
+    'item-use': async (player, data) => {
+        if (CONFIG.gameState !== 'gameLive')
+            return refuse('Les objets s\'utilisent pendant la partie.');
+        let character = await characterOf(player.id);
+        if (!character)
+            return refuse('Il faut un perso pour utiliser un objet.');
+        let result = await itemUse.request(player, character.name, data.slug);
         if (result.error)
             return refuse(result.error);
         return {action: 'passThrough', data: result.payload};
