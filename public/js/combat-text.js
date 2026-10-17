@@ -29,11 +29,13 @@ function describeCombatEntry(entry, forMJ = false) {
             return 'PV de ' + entry.target + ' : ' + entry.hp + (entry.change ? ' (' + (entry.change > 0 ? '+' : '') + entry.change + ')' : '');
         case 'reinforcement':
             return (entry.ally ? 'Renfort allié : ' : 'Renfort ennemi : ') + entry.name + ' rejoint le combat';
-        case 'status':
-            return entry.turns > 0 ? entry.enemy + ' : ' + entry.name + ' (' + entry.turns + ' tour' + (entry.turns > 1 ? 's' : '') + ')'
-                : entry.enemy + ' : plus de ' + entry.name.toLowerCase();
+        case 'status-change': {
+            let who = entry.target + (entry.npc_target ? ' (PNJ)' : '');
+            return entry.turns > 0 ? who + ' : ' + entry.name + ' (' + entry.turns + ' tour' + (entry.turns > 1 ? 's' : '') + ')'
+                : who + ' : plus de ' + entry.name.toLowerCase();
+        }
         case 'turn': {
-            let ticks = (entry.ticks || []).map(t => t.enemy + ' -' + t.damage + ' (' + t.name.toLowerCase() + ')' + (t.ko ? ' K.O. !' : ''));
+            let ticks = (entry.ticks || []).map(t => t.target + ' -' + t.damage + ' (' + t.name.toLowerCase() + ')' + (t.ko ? ' K.O. !' : ''));
             return 'Tour ' + entry.turn + (ticks.length ? ' — ' + ticks.join(', ') : '');
         }
     }

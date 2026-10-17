@@ -39,13 +39,8 @@
         card.append(meta);
 
         // Statuts posés par le MJ, avec les tours restants
-        let statuses = Object.entries(enemy.statuses || {});
-        if (statuses.length && !ko) {
-            let row = el('div', 'combat-statuses');
-            for (let [slug, turns] of statuses)
-                row.append(el('span', 'combat-status ' + slug, statusName(slug) + ' · ' + turns));
-            card.append(row);
-        }
+        if (!ko && Object.keys(enemy.statuses || {}).length)
+            card.append(statusBadges(enemy.statuses));
         return card;
     }
 
@@ -114,8 +109,14 @@
         lootBox.append(grid);
     }
 
-    function statusName(slug) {
-        return {saignement: 'Saignement', poison: 'Poison', etourdi: 'Étourdi'}[slug] || slug;
+    // Pastilles des statuts (connus ou inventés par le MJ) et tours restants
+    function statusBadges(statuses) {
+        let row = el('div', 'combat-statuses');
+        for (let [key, status] of Object.entries(statuses || {})) {
+            let kind = ['saignement', 'poison', 'etourdi'].includes(key) ? key : 'custom';
+            row.append(el('span', 'combat-status ' + kind, status.name + ' · ' + status.turns));
+        }
+        return row;
     }
 
     // Barre de vie sous le nom de chaque joueur et compagnon, visible pendant
@@ -143,6 +144,17 @@
             box.querySelector('.tab-hp-text').textContent = hp > 0 ? hp + ' PV' : 'K.O.';
             box.classList.toggle('ko', hp <= 0);
             box.title = hp + ' / ' + MAX_HP + ' PV (moral ' + moral + ')';
+
+            // Statuts du joueur ou du compagnon, sous sa barre de vie
+            let old = tab.querySelector('.tab-statuses');
+            if (old)
+                old.remove();
+            let statuses = state.active && (state.fighters || {})[id];
+            if (statuses && Object.keys(statuses).length) {
+                let badges = statusBadges(statuses);
+                badges.classList.add('tab-statuses');
+                tab.append(badges);
+            }
         });
     }
 
@@ -197,13 +209,24 @@
                 floatText(card, event.hit ? '-' + event.damage : 'Raté', event.hit ? 'dmg' : 'miss');
             }
         }
-        // Tour suivant : saignement et poison blessent les ennemis
+        // Tour suivant : les statuts qui blessent agissent (ennemis, joueurs, compagnons)
         if (event.type === 'turn')
             for (let tick of event.ticks || []) {
-                let c = enemiesBox.querySelector('[data-id="' + tick.enemy_id + '"]');
-                if (c) {
-                    c.classList.add('hit');
-                    floatText(c, '-' + tick.damage, 'dmg status-' + tick.status);
+                if (tick.enemy_id !== undefined) {
+                    let c = enemiesBox.querySelector('[data-id="' + tick.enemy_id + '"]');
+                    if (c) {
+                        c.classList.add('hit');
+                        floatText(c, '-' + tick.damage, 'dmg status-' + tick.status);
+                    }
+                    continue;
+                }
+                let tab = document.getElementById('player-tab' + tick.target_id);
+                if (tab) {
+                    tab.classList.remove('under-attack');
+                    void tab.offsetWidth;
+                    tab.classList.add('under-attack');
+                    floatText(tab, '-' + tick.damage, 'dmg tab-float status-' + tick.status);
+                    setTimeout(() => tab.classList.remove('under-attack'), 900);
                 }
             }
         if (event.type === 'reinforcement' && card)
