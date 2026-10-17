@@ -837,7 +837,7 @@ async function test_combat() {
     ({state} = await run('combat-order', {order: keys.slice().reverse()}));
     assert.deepStrictEqual(state.order.map(f => f.kind + ':' + f.id), keys.slice().reverse());
     assert.strictEqual(state.order[state.current].kind + ':' + state.order[state.current].id, acting, 'la main ne change pas');
-    ({state} = await run('combat-order', {current: 'p:' + id}));
+    ({state} = await run('combat-order', {current: 'player:' + id}));
     assert.strictEqual(state.order[state.current].id, id);
     ({state} = await run('combat-add', {enemy: {name: 'Pirate'}}));
     assert.strictEqual(state.order[state.order.length - 1].name, 'Pirate');
