@@ -211,3 +211,26 @@
         animation-duration: 3s !important;
     }
 }
+
+/* Noms des salles sur le plan (partials/ship-rooms-svg) */
+.ship-room-label {
+    fill: #e9e5ff;
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-anchor: middle;
+    dominant-baseline: central;
+    text-transform: uppercase;
+    stroke: #0b0630;
+    stroke-width: 3px;
+    stroke-linejoin: round;
+    paint-order: stroke;
+    opacity: .85;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* La salle en alerte a déjà son nom en grand sous le repère */
+.ship-room-label.is-alert {
+    display: none;
+}
