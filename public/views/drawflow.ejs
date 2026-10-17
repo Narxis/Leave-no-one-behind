@@ -6,7 +6,8 @@
         "/css/style.css",
         "/css/drawflow/drawflow.min.css",
         "https://use.fontawesome.com/releases/v5.7.2/css/all.css",
-        "/css/place-editor.css"
+        "/css/place-editor.css",
+        "/css/card-preview.css"
     ]
 }) %>
 <body class="place-editor-page">
@@ -22,6 +23,7 @@
         <div class="pe-actions">
             <button type="button" class="pe-btn" id="pe-help-btn"><i class="fas fa-question-circle"></i> Aide</button>
             <button type="button" class="pe-btn" id="pe-arrange" title="Écarter et aligner les blocs en arbre, depuis la carte de départ"><i class="fas fa-sitemap"></i> Réorganiser</button>
+            <button type="button" class="pe-btn" id="pe-preview" title="Jouer le lieu comme en partie, depuis la carte de départ, même sans enregistrer"><i class="fas fa-play"></i> Tester</button>
             <button type="button" class="pe-btn" id="pe-check"><i class="fas fa-check-double"></i> Vérifier</button>
             <button type="button" class="pe-btn" id="pe-export"><i class="fas fa-file-export"></i> Exporter pour le jeu</button>
             <button type="button" class="pe-btn pe-btn-primary" id="pe-save" title="Ctrl+S"><i class="fas fa-save"></i> Enregistrer</button>
@@ -95,6 +97,7 @@
             <li><b>Enregistrer</b> (Ctrl+S) garde ton travail dans l'éditeur. Un point jaune signale un lieu modifié non enregistré.</li>
             <li><b>Pas de nom à inventer.</b> Les cartes sont numérotées toutes seules dans l'ordre de l'histoire (n° 1 = départ). À l'export, elles s'appellent « lieu-1 », « lieu-2 »…</li>
             <li><b>Réorganiser</b> écarte et aligne tous les blocs du lieu en un clic, en arbre depuis la carte de départ. « Annuler » dans la notification remet tout comme avant.</li>
+            <li><b>Tester</b> joue le lieu comme en partie, tel qu'il est dans l'éditeur, même sans enregistrer. Le bouton <i class="fas fa-play"></i> d'une carte lance le test à partir de cette carte.</li>
             <li><b>Vérifier</b> liste ce qui manque (choix sans suite, carte sans texte…). Clique sur un problème pour aller au bloc.</li>
             <li><b>Exporter pour le jeu</b> produit le JSON des cartes du lieu, à coller dans la section <code>place</code> de <code>src/config/baseCards.json</code>, à la place des anciennes cartes de ce lieu.</li>
         </ol>
@@ -140,6 +143,39 @@
     </form>
 </dialog>
 
+<dialog class="cp-dialog" id="cp-dialog" aria-labelledby="cp-title">
+    <div class="cp-head">
+        <div class="cp-head-title">
+            <h2><i class="fas fa-play"></i> Test du lieu « <span id="cp-title"></span> »</h2>
+            <div class="cp-path" id="cp-path" role="navigation" aria-label="Cartes jouées"></div>
+        </div>
+        <div class="cp-tools">
+            <label class="cp-switch" title="Afficher les textes d'un coup au lieu de les taper"><input type="checkbox" id="cp-instant"> Texte instantané</label>
+            <label class="cp-switch" title="Les cartes avec chrono n'ont plus de compte à rebours"><input type="checkbox" id="cp-no-timer"> Sans chrono</label>
+            <button type="button" class="pe-btn" id="cp-back" title="Revenir à la carte précédente"><i class="fas fa-undo"></i> Retour</button>
+            <button type="button" class="pe-btn" id="cp-restart" title="Rejouer avec la dernière version des cartes"><i class="fas fa-redo"></i> Recommencer</button>
+            <button type="button" class="pe-btn" id="cp-edit" title="Fermer le test et aller à cette carte dans l'éditeur"><i class="fas fa-pen"></i> Modifier cette carte</button>
+            <button type="button" class="pe-close" id="cp-close" aria-label="Fermer le test">×</button>
+        </div>
+    </div>
+    <div class="cp-body">
+        <div class="cp-stage">
+            <div class="cp-card" id="cp-card">
+                <span class="cp-card-num" id="cp-card-num"></span>
+                <div class="cp-timer" id="cp-timer" hidden><i class="fas fa-stopwatch"></i> <span></span></div>
+                <div class="cp-text" id="cp-text"></div>
+            </div>
+            <div class="cp-loot" id="cp-loot" hidden></div>
+            <div class="cp-choices" id="cp-choices"></div>
+            <div class="cp-end" id="cp-end" hidden></div>
+        </div>
+        <aside class="cp-mj-panel">
+            <h3><i class="fas fa-user-secret"></i> Vue MJ</h3>
+            <div id="cp-mj"></div>
+        </aside>
+    </div>
+</dialog>
+
 <div class="pe-toast" id="pe-toast" role="status" aria-live="polite"></div>
 
 <script src="/js/drawflow/drawflow.min.js"></script>
@@ -148,6 +184,7 @@
 <datalist id="pe-loot-items">
     <% lootItems.forEach(function (item) { %><option value="<%= item.name %>"></option><% }); %>
 </datalist>
+<script src="/js/card-preview.js"></script>
 <script src="/js/place-editor.js"></script>
 </body>
 </html>

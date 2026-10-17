@@ -12,6 +12,7 @@
 <div class="pe-node">
     <div class="pe-node-head"><i class="fas fa-money-check"></i><span>Carte <span class="pe-card-num"></span></span>
         <span class="pe-start-badge">Départ</span>
+        <button type="button" class="pe-node-play" data-action="preview" title="Tester le lieu à partir de cette carte"><i class="fas fa-play"></i></button>
         <button type="button" class="pe-node-del" data-action="delete" title="Supprimer ce bloc">×</button></div>
     <label>Texte lu aux joueurs<textarea df-desc rows="4" placeholder="Ce que découvrent les joueurs…"></textarea></label>
     <label>Infos MJ <small>(visibles seulement par le MJ)</small><input type="text" df-mjreveal placeholder="facultatif"></label>
@@ -572,6 +573,9 @@
             case 'add-reveal':
                 addLinked(id, 'output_1', 'reveal', 0);
                 break;
+            case 'preview':
+                openPreview(id);
+                break;
             case 'loot-add':
                 addLoot(btn.closest('.drawflow-node'), node);
                 break;
@@ -751,6 +755,66 @@
         a.click();
         setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     });
+
+    /* ---------- Prévisualisation (card-preview.js) ---------- */
+
+    // Histoire du lieu telle qu'elle est dans l'éditeur, même non enregistrée
+    function previewStory(place) {
+        let nodes = nodesOf(place);
+        let byId = new Map(nodes.map(n => [String(n.id), n]));
+        let numbers = cardNumbers(place);
+        let cards = new Map();
+        for (let card of nodes.filter(n => n.name === 'card')) {
+            let choices = [];
+            for (let k = 1; k <= MAX_CHOICES; k++) {
+                let link = card.outputs['output_' + k] && card.outputs['output_' + k].connections[0];
+                let choice = link && byId.get(String(link.node));
+                if (!choice)
+                    continue;
+                let out = choice.outputs.output_1.connections[0];
+                let next = out && byId.get(String(out.node));
+                choices.push({
+                    id: String(choice.id),
+                    value: choice.data.choice || '',
+                    mjreveal: (choice.data.mjreveal || '').trim(),
+                    loot: lootOf(choice),
+                    reveal: next && next.name === 'reveal' ? (next.data.reveal || '') : null,
+                    next: next && next.name === 'card' ? String(next.id) : null
+                });
+            }
+            cards.set(String(card.id), {
+                id: String(card.id),
+                num: numbers.get(card.id),
+                desc: card.data.desc || '',
+                mjreveal: (card.data.mjreveal || '').trim(),
+                timer: card.data.timer === 'on',
+                shuffle: card.data.shuffle === 'on',
+                choices: choices
+            });
+        }
+        let first = [...cards.values()].sort((a, b) => a.num - b.num)[0];
+        return {
+            title: place,
+            startId: first ? first.id : null,
+            cards: cards,
+            goTo: (id) => {
+                if (current() !== place)
+                    selectPlace(place);
+                focusNode(id);
+            }
+        };
+    }
+
+    function openPreview(fromId) {
+        let place = current();
+        if (!place)
+            return toast('Choisis d\'abord un lieu', 'error');
+        if (!nodesOf(place).some(n => n.name === 'card'))
+            return toast('Le lieu n\'a aucune carte à tester', 'error');
+        CardPreview.open(() => previewStory(place), fromId);
+    }
+
+    $('pe-preview').addEventListener('click', () => openPreview());
 
     /* ---------- Enregistrement ---------- */
 
