@@ -224,6 +224,10 @@
             richText($('card-desc'), card.desc);
             $('card-desc').hidden = !card.desc;
             $('card-choices').replaceChildren(...(card.choices || []).map(c => richText(el('li'), c)));
+            // Dernière planète du voyage : texte envoyé par le jeu (lang.json)
+            let last = card.lastPlanet;
+            $('card-last').hidden = !last;
+            $('card-last').textContent = last ? last.title + ' : ' + last.text : '';
             $('card-note').textContent = card.kind === 'planet'
                 ? 'Le MJ scanne la planète sur l\'écran principal.'
                 : (card.choices && card.choices.length ? 'Le MJ choisit pour l\'équipage.' : '');
