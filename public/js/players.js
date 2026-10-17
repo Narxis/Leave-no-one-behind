@@ -81,6 +81,19 @@ function setPlayerStat(id, stat, newValue) {
     wsLNOB.setStatistic(id, stat, newValue);
 }
 
+// Une stat a changé côté serveur (menu MJ, dégâts en combat) : l'onglet suit
+function syncPlayerStats(e) {
+    let player = e.detail && e.detail.data;
+    if (!player || !player.discord_id)
+        return;
+    for (let stat of ['combat', 'pilotage', 'engineering', 'survival', 'recon', 'moral']) {
+        let value = document.querySelector('#player-tab' + player.discord_id + ' .' + stat + ' .player-stat-value');
+        if (value && player[stat] !== undefined)
+            value.innerText = player[stat];
+    }
+}
+
+document.addEventListener('playerStat', syncPlayerStats);
 document.addEventListener('emote', doPlayerEmote);
 document.addEventListener('roll', doPlayerRoll);
 

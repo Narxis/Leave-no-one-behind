@@ -21,8 +21,20 @@ function describeCombatEntry(entry, forMJ = false) {
             let forced = forMJ && entry.forced ? ', imposé' : '';
             if (!entry.hit)
                 return who + ' : raté (' + entry.dice + forced + ')';
+            // Avec une cible, les dégâts sont déjà retirés de ses PV
             return who + ' : touché (' + entry.dice + forced + ') — ' + entry.damage + ' dégâts'
-                + (forMJ ? ' à appliquer' : '');
+                + (entry.target ? (entry.hp !== undefined ? ' (reste ' + entry.hp + ' PV)' : '') : (forMJ ? ' à appliquer' : ''));
+        }
+        case 'player-hp':
+            return 'PV de ' + entry.target + ' : ' + entry.hp + (entry.change ? ' (' + (entry.change > 0 ? '+' : '') + entry.change + ')' : '');
+        case 'reinforcement':
+            return (entry.ally ? 'Renfort allié : ' : 'Renfort ennemi : ') + entry.name + ' rejoint le combat';
+        case 'status':
+            return entry.turns > 0 ? entry.enemy + ' : ' + entry.name + ' (' + entry.turns + ' tour' + (entry.turns > 1 ? 's' : '') + ')'
+                : entry.enemy + ' : plus de ' + entry.name.toLowerCase();
+        case 'turn': {
+            let ticks = (entry.ticks || []).map(t => t.enemy + ' -' + t.damage + ' (' + t.name.toLowerCase() + ')' + (t.ko ? ' K.O. !' : ''));
+            return 'Tour ' + entry.turn + (ticks.length ? ' — ' + ticks.join(', ') : '');
         }
     }
     return '';

@@ -1015,3 +1015,102 @@ body:has(.consommable-tab.open-left) .card-legend {
 .card-loot-all[hidden] {
     display: none;
 }
+
+/* Statuts posés par le MJ sur un ennemi */
+.combat-statuses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.combat-status {
+    padding: 1px 7px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.combat-status.saignement {
+    color: var(--ui-danger);
+}
+
+.combat-status.poison {
+    color: #7be26b;
+}
+
+.combat-status.etourdi {
+    color: var(--ui-accent);
+}
+
+.combat-float.status-poison {
+    color: #7be26b;
+    text-shadow: 0 0 10px rgb(123 226 107 / 60%);
+}
+
+/* Renfort ennemi qui entre en combat */
+.combat-enemy.arriving {
+    animation: combat-arrive .5s var(--ui-ease);
+}
+
+@keyframes combat-arrive {
+    0% { opacity: 0; transform: translateY(-14px) scale(.9); }
+}
+
+/* Barre de vie des joueurs et compagnons (1 moral = 10 PV), sous leur nom,
+   visible seulement pendant un combat. L'onglet replié remonte un peu et
+   les stats descendent d'autant pour lui faire de la place */
+.tab-hp {
+    display: none;
+    position: absolute;
+    top: 90px;
+    left: 14px;
+    right: 14px;
+    height: 14px;
+    border-radius: 7px;
+    background: rgb(255 255 255 / 10%);
+    overflow: hidden;
+    pointer-events: auto;
+}
+
+body.combat-mode .tab-hp {
+    display: block;
+}
+
+body.combat-mode .player-tab.move-up {
+    transform: translateY(363px);
+}
+
+body.combat-mode .player-tab .player-stats {
+    margin-top: 22px;
+}
+
+.tab-hp-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: #5ee08a;
+    transition: width 500ms var(--ui-ease), background 500ms;
+}
+
+.tab-hp-fill[data-level="warn"] {
+    background: var(--ui-accent);
+}
+
+.tab-hp-fill[data-level="crit"] {
+    background: var(--ui-danger);
+}
+
+.tab-hp-text {
+    position: absolute;
+    inset: 0;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 14px;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 0 3px rgb(0 0 0 / 90%);
+}
+
+.tab-hp.ko .tab-hp-text {
+    color: var(--ui-danger);
+}
