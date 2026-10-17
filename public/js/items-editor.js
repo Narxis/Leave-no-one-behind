@@ -6,12 +6,22 @@
     const POOL_NAMES = {starter: 'Départ', electronique: 'Électronique'};
     const $ = (id) => document.getElementById(id);
     const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+    const NEW_TYPE = '__new__';
+    const TYPE_INFO = {
+        arme: ['Arme', 'fa-crosshairs'], armure: ['Armure', 'fa-shield-alt'], munition: ['Munition', 'fa-bullseye'],
+        consommable: ['Consommable', 'fa-utensils'], ressource: ['Ressource', 'fa-cubes'], outil: ['Outil', 'fa-wrench'],
+        gadget: ['Gadget', 'fa-microchip'], divers: ['Divers', 'fa-box']
+    };
+    const typeName = (t) => TYPE_INFO[t] ? TYPE_INFO[t][0] : (t.charAt(0).toUpperCase() + t.slice(1)).replace(/_/g, ' ');
+    const typeIcon = (t) => '<i class="fas ' + (TYPE_INFO[t] ? TYPE_INFO[t][1] : 'fa-tag') + '" aria-hidden="true"></i>';
     const poolName = (p) => POOL_NAMES[p] || (p.charAt(0).toUpperCase() + p.slice(1)).replace(/_/g, ' ');
     const slugify = (t) => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
         .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
     let catalog = CATALOG;
     let filter = 'all';
+    let typeFilter = 'all';
+    let type = '';            // type choisi dans le formulaire ('' : aucun, NEW_TYPE : nouveau)
     let editing = null;       // objet affiché (null : nouvel objet)
     let image = null;         // nouvelle image (data URL PNG) à envoyer
     let removeImage = false;
@@ -57,18 +67,27 @@
         $('ie-filters').innerHTML = tabs.map(([key, label, n]) =>
             '<button type="button" role="tab" data-pool="' + esc(key) + '" aria-selected="' + (filter === key) + '">'
             + esc(label) + ' <small>' + n + '</small></button>').join('');
+        let byType = {};
+        catalog.items.forEach(i => byType[i.type] = (byType[i.type] || 0) + 1);
+        let types = [['all', 'Tous', catalog.items.length]].concat(catalog.types.map(t => [t, typeName(t), byType[t] || 0]));
+        if (byType[''])
+            types.push(['', 'Sans type', byType['']]);
+        $('ie-type-filters').innerHTML = types.map(([key, label, n]) =>
+            '<button type="button" role="tab" data-type="' + esc(key) + '" aria-selected="' + (typeFilter === key) + '">'
+            + (key !== 'all' && key !== '' ? typeIcon(key) + ' ' : '') + esc(label) + ' <small>' + n + '</small></button>').join('');
     }
 
     function renderList() {
         let q = slugify($('ie-search').value);
         let shown = catalog.items.filter(i => (filter === 'all' || i.pool === filter)
-            && (!q || slugify(i.name + ' ' + i.desc + ' ' + raceName(i.race)).includes(q)));
+            && (typeFilter === 'all' || i.type === typeFilter)
+            && (!q || slugify(i.name + ' ' + i.desc + ' ' + raceName(i.race) + ' ' + (i.type ? typeName(i.type) : '')).includes(q)));
         let box = $('ie-list');
         box.innerHTML = '';
         let pools = filter === 'all' ? catalog.pools : [filter];
         for (let pool of pools) {
             let items = shown.filter(i => i.pool === pool);
-            if (!items.length && (q || filter === 'all'))
+            if (!items.length && (q || filter === 'all' || typeFilter !== 'all'))
                 continue;
             let group = document.createElement('section');
             group.className = 'ie-group';
@@ -82,8 +101,10 @@
                 b.dataset.slug = item.slug;
                 b.innerHTML = '<span class="ie-thumb">' + thumb(imgSrc(item), item.name) + '</span>'
                     + '<span class="ie-item-body"><span class="ie-item-name">' + esc(item.name) + '</span>'
+                    + '<span class="ie-tags">'
+                    + (item.type ? '<span class="ie-tag ie-tag-type">' + typeIcon(item.type) + ' ' + esc(typeName(item.type)) + '</span>' : '')
                     + (item.pool === STARTER ? '<span class="ie-tag">' + esc(raceName(item.race)) + '</span>' : '')
-                    + '</span>'
+                    + '</span></span>'
                     + (editing && editing.slug === item.slug && isDirty() ? '<span class="ie-dot" title="Modifications non enregistrées"></span>' : '');
                 b.addEventListener('click', () => tryOpen(item));
                 group.append(b);
@@ -114,13 +135,28 @@
         $('ie-race').value = selected || '';
     }
 
+    function renderTypes() {
+        let types = catalog.types.slice();
+        if (type && type !== NEW_TYPE && !types.includes(type))
+            types.push(type);
+        $('ie-type').innerHTML = types.map(t => '<button type="button" role="radio" data-type="' + esc(t) + '" aria-checked="' + (type === t) + '">'
+            + typeIcon(t) + ' ' + esc(typeName(t)) + '</button>').join('')
+            + '<button type="button" role="radio" class="ie-type-new" data-type="' + NEW_TYPE + '" aria-checked="' + (type === NEW_TYPE) + '">'
+            + '<i class="fas fa-plus" aria-hidden="true"></i> Nouveau type</button>';
+        $('ie-new-type-box').hidden = type !== NEW_TYPE;
+    }
+
+    function currentType() {
+        return type === NEW_TYPE ? slugify($('ie-new-type').value).replace(/-/g, '_') : type;
+    }
+
     function currentPool() {
         let p = $('ie-pool').value;
         return p === NEW_POOL ? slugify($('ie-new-pool').value).replace(/-/g, '_') : p;
     }
 
     function formState() {
-        return JSON.stringify([$('ie-name').value.trim(), currentPool(), $('ie-race').value, $('ie-desc').value.trim(), image, removeImage]);
+        return JSON.stringify([$('ie-name').value.trim(), currentPool(), currentType(), $('ie-race').value, $('ie-desc').value.trim(), image, removeImage]);
     }
 
     const isDirty = () => formState() !== saved;
@@ -168,6 +204,9 @@
         let src = currentImage();
         $('ie-preview-img').innerHTML = thumb(src, name);
         $('ie-preview-name').textContent = name;
+        let t = currentType();
+        $('ie-preview-type').hidden = !t;
+        $('ie-preview-type').innerHTML = t ? typeIcon(t) + ' ' + esc(typeName(t)) : '';
         $('ie-preview-desc').textContent = $('ie-desc').value.trim() || 'Pas encore de description.';
         $('ie-preview-desc').classList.toggle('is-empty', !$('ie-desc').value.trim());
         $('ie-preview-chip').innerHTML = (src ? '<img src="' + esc(src) + '" alt="">' : '<b>' + esc(name.charAt(0)) + '</b>') + esc(name);
@@ -195,6 +234,7 @@
 
     function refresh() {
         renderPool();
+        renderTypes();
         renderImage();
         renderPreview();
         renderStatus();
@@ -212,6 +252,8 @@
         fillPools(pool);
         fillRaces(src.race || '');
         $('ie-new-pool').value = '';
+        type = src.type || (!item && !prefill && typeFilter !== 'all' ? typeFilter : '');
+        $('ie-new-type').value = '';
         if (prefill && prefill.imageData)
             image = prefill.imageData;
         $('ie-form-title').textContent = item ? 'Modifier l\'objet' : 'Nouvel objet';
@@ -255,6 +297,10 @@
             $('ie-error').textContent = 'Donne un nom à la nouvelle catégorie.';
             return $('ie-new-pool').focus();
         }
+        if (type === NEW_TYPE && !currentType()) {
+            $('ie-error').textContent = 'Donne un nom au nouveau type, ou choisis-en un.';
+            return $('ie-new-type').focus();
+        }
         if (currentPool() === STARTER && !$('ie-race').value) {
             $('ie-error').textContent = 'Un objet de départ appartient à une race : choisis-la.';
             return $('ie-race').focus();
@@ -269,6 +315,7 @@
                     slug: editing ? editing.slug : undefined,
                     name: name,
                     pool: currentPool(),
+                    type: currentType(),
                     race: $('ie-race').value,
                     desc: $('ie-desc').value,
                     image: image || undefined,
@@ -285,6 +332,7 @@
             let created = !editing;
             await reload();
             filter = filter === 'all' || filter === out.item.pool ? filter : out.item.pool;
+            typeFilter = typeFilter === 'all' || typeFilter === out.item.type ? typeFilter : 'all';
             renderFilters();
             open(catalog.items.find(i => i.slug === out.item.slug));
             toast(created ? 'Objet « ' + out.item.name + ' » créé' : 'Objet « ' + out.item.name + ' » enregistré');
@@ -352,8 +400,26 @@
         renderFilters();
         renderList();
     });
+    $('ie-type-filters').addEventListener('click', (e) => {
+        let b = e.target.closest('[data-type]');
+        if (!b)
+            return;
+        typeFilter = b.dataset.type;
+        renderFilters();
+        renderList();
+    });
+    $('ie-type').addEventListener('click', (e) => {
+        let b = e.target.closest('[data-type]');
+        if (!b)
+            return;
+        // Un second clic sur le type choisi le retire
+        type = type === b.dataset.type ? '' : b.dataset.type;
+        refresh();
+        if (type === NEW_TYPE)
+            $('ie-new-type').focus();
+    });
     $('ie-search').addEventListener('input', renderList);
-    ['ie-name', 'ie-desc', 'ie-new-pool'].forEach(id => $(id).addEventListener('input', refresh));
+    ['ie-name', 'ie-desc', 'ie-new-pool', 'ie-new-type'].forEach(id => $(id).addEventListener('input', refresh));
     ['ie-pool', 'ie-race'].forEach(id => $(id).addEventListener('change', () => {
         refresh();
         if (id === 'ie-pool' && $('ie-pool').value === NEW_POOL)
@@ -373,7 +439,7 @@
     });
     $('ie-duplicate').addEventListener('click', () => {
         let src = editing;
-        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, race: $('ie-race').value});
+        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, type: currentType(), race: $('ie-race').value});
         $('ie-name').focus();
         $('ie-name').select();
     });
@@ -393,6 +459,8 @@
         await reload();
         if (filter !== 'all' && !catalog.pools.includes(filter))
             filter = 'all';
+        if (typeFilter !== 'all' && typeFilter !== '' && !catalog.types.includes(typeFilter))
+            typeFilter = 'all';
         renderFilters();
         open(null);
         toast('Objet « ' + item.name + ' » supprimé');
