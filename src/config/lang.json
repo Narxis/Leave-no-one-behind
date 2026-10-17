@@ -22,19 +22,19 @@
       "proximity": {
         "le": "le module de détection",
         "votre": "vos modules de détection",
-        "du": "de vos module de détection",
-        "no": "détécteur de proximité"
+        "du": "de vos modules de détection",
+        "no": "détecteur de proximité"
       },
       "energy": {
-        "le": "la centrale éléctrique",
-        "votre": "vos générateurs électrique",
-        "du": "de vos générateurs éléctrique",
-        "no": "générateur éléctrique"
+        "le": "la centrale électrique",
+        "votre": "vos générateurs électriques",
+        "du": "de vos générateurs électriques",
+        "no": "générateur électrique"
       },
       "oxygen": {
         "le": "le module d'oxygène",
         "votre": "vos modules d'oxygène",
-        "du": "de vos module d'oxygène",
+        "du": "de vos modules d'oxygène",
         "no": "module d'oxygène"
       },
       "gravity": {
@@ -45,7 +45,7 @@
       },
       "landing": {
         "le": "le module d'atterrissage",
-        "votre": "vos trains d'atterrisage",
+        "votre": "vos trains d'atterrissage",
         "du": "des trains d'atterrissage",
         "no": "train d'atterrissage"
       },
@@ -56,13 +56,13 @@
         "no": "module de construction"
       },
       "dbscience": {
-        "le": "la base de donnée scientifique",
+        "le": "la base de données scientifique",
         "votre": "vos données scientifiques",
         "du": "des données scientifiques",
         "no": "donnée scientifique"
       },
       "dbhistory": {
-        "le": "la base de donnée historique",
+        "le": "la base de données historique",
         "votre": "vos données historiques",
         "du": "des données historiques",
         "no": "donnée historique"
@@ -90,19 +90,19 @@
       "proximity": {
         "le": "le module de détection",
         "votre": "vos modules de détection",
-        "du": "de vos module de détection",
-        "no": "détécteur de proximité"
+        "du": "de vos modules de détection",
+        "no": "détecteur de proximité"
       },
       "energy": {
-        "le": "la centrale éléctrique",
-        "votre": "vos générateurs électrique",
-        "du": "de vos générateurs éléctrique",
-        "no": "générateur éléctrique"
+        "le": "la centrale électrique",
+        "votre": "vos générateurs électriques",
+        "du": "de vos générateurs électriques",
+        "no": "générateur électrique"
       },
       "oxygen": {
         "le": "le module d'oxygène",
         "votre": "vos modules d'oxygène",
-        "du": "de vos module d'oxygène",
+        "du": "de vos modules d'oxygène",
         "no": "module d'oxygène"
       },
       "gravity": {
@@ -113,7 +113,7 @@
       },
       "landing": {
         "le": "le module d'atterrissage",
-        "votre": "vos trains d'atterrisage",
+        "votre": "vos trains d'atterrissage",
         "du": "des trains d'atterrissage",
         "no": "train d'atterrissage"
       },
@@ -140,19 +140,19 @@
       "proximity": {
         "le": "le module de détection",
         "votre": "vos modules de détection",
-        "du": "de vos module de détection",
-        "no": "détécteur de proximité"
+        "du": "de vos modules de détection",
+        "no": "détecteur de proximité"
       },
       "energy": {
-        "le": "la centrale éléctrique",
-        "votre": "vos générateurs électrique",
-        "du": "de vos générateurs éléctrique",
-        "no": "générateur éléctrique"
+        "le": "la centrale électrique",
+        "votre": "vos générateurs électriques",
+        "du": "de vos générateurs électriques",
+        "no": "générateur électrique"
       },
       "oxygen": {
         "le": "le module d'oxygène",
         "votre": "vos modules d'oxygène",
-        "du": "de vos module d'oxygène",
+        "du": "de vos modules d'oxygène",
         "no": "module d'oxygène"
       },
       "gravity": {
@@ -163,7 +163,7 @@
       },
       "landing": {
         "le": "le module d'atterrissage",
-        "votre": "vos trains d'atterrisage",
+        "votre": "vos trains d'atterrissage",
         "du": "des trains d'atterrissage",
         "no": "train d'atterrissage"
       },
@@ -174,13 +174,13 @@
         "no": "module de construction"
       },
       "dbscience": {
-        "le": "la base de donnée scientifique",
+        "le": "la base de données scientifique",
         "votre": "vos données scientifiques",
         "du": "des données scientifiques",
         "no": "donnée scientifique"
       },
       "dbhistory": {
-        "le": "la base de donnée historique",
+        "le": "la base de données historique",
         "votre": "vos données historiques",
         "du": "des données historiques",
         "no": "donnée historique"
@@ -202,19 +202,19 @@
       "proximity": {
         "le": "le module de détection",
         "votre": "vos modules de détection",
-        "du": "de vos module de détection",
-        "no": "détécteur de proximité"
+        "du": "de vos modules de détection",
+        "no": "détecteur de proximité"
       },
       "energy": {
-        "le": "la centrale éléctrique",
-        "votre": "vos générateurs électrique",
-        "du": "de vos générateurs éléctrique",
-        "no": "générateur éléctrique"
+        "le": "la centrale électrique",
+        "votre": "vos générateurs électriques",
+        "du": "de vos générateurs électriques",
+        "no": "générateur électrique"
       },
       "oxygen": {
         "le": "le module d'oxygène",
         "votre": "vos modules d'oxygène",
-        "du": "de vos module d'oxygène",
+        "du": "de vos modules d'oxygène",
         "no": "module d'oxygène"
       },
       "gravity": {
@@ -225,7 +225,7 @@
       },
       "landing": {
         "le": "le module d'atterrissage",
-        "votre": "vos trains d'atterrisage",
+        "votre": "vos trains d'atterrissage",
         "du": "des trains d'atterrissage",
         "no": "train d'atterrissage"
       },
@@ -252,19 +252,19 @@
       "proximity": {
         "le": "le module de détection",
         "votre": "vos modules de détection",
-        "du": "de vos module de détection",
-        "no": "détécteur de proximité"
+        "du": "de vos modules de détection",
+        "no": "détecteur de proximité"
       },
       "energy": {
-        "le": "la centrale éléctrique",
-        "votre": "vos générateurs électrique",
-        "du": "de vos générateurs éléctrique",
-        "no": "générateur éléctrique"
+        "le": "la centrale électrique",
+        "votre": "vos générateurs électriques",
+        "du": "de vos générateurs électriques",
+        "no": "générateur électrique"
       },
       "oxygen": {
         "le": "le module d'oxygène",
         "votre": "vos modules d'oxygène",
-        "du": "de vos module d'oxygène",
+        "du": "de vos modules d'oxygène",
         "no": "module d'oxygène"
       },
       "gravity": {
@@ -400,9 +400,9 @@
     "stats": {
       "combat": {
         "la": "la force",
-        "votre": "vos capacités physique",
+        "votre": "vos capacités physiques",
         "de": "de combat",
-        "ses": "ses compétences physique"
+        "ses": "ses compétences physiques"
       },
       "pilotage": {
         "la": "le pilotage",
@@ -412,15 +412,15 @@
       },
       "ingenierie": {
         "la": "l'ingénierie",
-        "votre": "vos connaisances en ingénierie",
+        "votre": "vos connaissances en ingénierie",
         "de": "d'ingénierie",
         "ses": "ses connaissances en ingénierie"
       },
       "survie": {
         "la": "la survie",
-        "votre": "vos capacités défensive",
+        "votre": "vos capacités défensives",
         "de": "de survie",
-        "ses": "ses capacités défensive"
+        "ses": "ses capacités défensives"
       },
       "reconnaissance": {
         "la": "la reconnaissance",
@@ -569,25 +569,169 @@
       "spider-bomb":{"le":"la Spider-BOMB","un":"une Spider-BOMB","votre":"votre Spider-BOMB","no":"Spider-BOMB"},
       "personal-shield":{"le":"le projecteur de bouclier personnel","un":"un projecteur de bouclier personnel","votre":"votre projecteur de bouclier personnel","no":"Projecteur de bouclier personnel"},
       "em-o-droid":{"le":"l'Em-0 Droid","un":"un Em-0 Droid","votre":"votre Em-0 Droid","no":"Em-0 Droid"},
-      "filet-paralysant":{"le":"le filet paralysant","un":"un filet paralysant","votre":"votre filet paralysant","no":"Filet paralysant"}
+      "filet-paralysant":{"le":"le filet paralysant","un":"un filet paralysant","votre":"votre filet paralysant","no":"Filet paralysant"},
+      "fronde-fnek":{"le":"la fronde Fnek","un":"une fronde Fnek","votre":"votre fronde Fnek","no":"Fronde Fnek"},
+      "fouet-ygrl":{"le":"le fouet Ygrl","un":"un fouet Ygrl","votre":"votre fouet Ygrl","no":"Fouet Ygrl"},
+      "massue-yorc":{"le":"la massue Yorc","un":"une massue Yorc","votre":"votre massue Yorc","no":"Massue Yorc"},
+      "lance-shrymp":{"le":"la lance Shrymp","un":"une lance Shrymp","votre":"votre lance Shrymp","no":"Lance Shrymp"},
+      "armure-omphor":{"le":"l'armure en Kev-lard","un":"une armure en Kev-lard","votre":"votre armure en Kev-lard","no":"Armure en Kev-lard"},
+      "pelotte":{"le":"la pelote de laine","un":"une pelote de laine","votre":"votre pelote de laine","no":"Pelote de laine"},
+      "corde":{"le":"la corde","un":"une corde","votre":"votre corde","no":"Corde"},
+      "dictionnaire-ygrl":{"le":"le dictionnaire ygrlien","un":"un dictionnaire ygrlien","votre":"votre dictionnaire ygrlien","no":"Dictionnaire ygrlien"},
+      "nek-ronomicon":{"le":"le Nek'ronomicon","un":"un Nek'ronomicon","votre":"votre Nek'ronomicon","no":"Nek'ronomicon"},
+      "nek-k47":{"le":"le Nek-k47","un":"un Nek-k47","votre":"votre Nek-k47","no":"Nek-k47"},
+      "passeport":{"le":"le passeport","un":"un passeport","votre":"votre passeport","no":"Passeport"},
+      "boule-fnek":{"le":"la boule puante Fnek","un":"une boule puante Fnek","votre":"votre boule puante Fnek","no":"Boule puante Fnek"},
+      "projectile-nek-feu":{"le":"le projectile à combustion","un":"un projectile à combustion","votre":"votre projectile à combustion","no":"Projectile à combustion"}
     },
     "livre":{
       "livre1":{"le":"le livre « Sentir le Fnek sans vexer un Fnek »","no":"« Sentir le Fnek sans vexer un Fnek »"},
       "livre2":{"le":"le livre « J'avais raison : mémoires d'un Omphor, tome 47 »","no":"« J'avais raison : mémoires d'un Omphor, tome 47 »"},
       "livre3":{"le":"le livre « Piloter comme un Aku (et survivre) »","no":"« Piloter comme un Aku (et survivre) »"},
-      "livre4":{"le":"le livre « La mycose pour les nuls »","no":"« La mycose pour les nuls »"}
+      "livre4":{"le":"le livre « La mycose pour les nuls »","no":"« La mycose pour les nuls »"},
+      "livre5":{"le":"le livre « Man VS Space »","no":"« Man VS Space »"},
+      "livre6":{"le":"le livre « Apprendre à dire non pour les nuls »","no":"« Apprendre à dire non pour les nuls »"},
+      "livre7":{"le":"le livre « Fnekanique quantique »","no":"« Fnekanique quantique »"},
+      "livre8":{"le":"le livre « L'alphabet ygrlien en 3000 leçons »","no":"« L'alphabet ygrlien en 3000 leçons »"},
+      "livre9":{"le":"le livre « Recherches du préfet Dimalou, volume 12 »","no":"« Recherches du préfet Dimalou, volume 12 »"},
+      "livre10":{"le":"le livre « Ouvrir un pot de cornichons sans perdre la face »","no":"« Ouvrir un pot de cornichons sans perdre la face »"},
+      "livre11":{"le":"le livre « Le Saint Nek-Terre et moi »","no":"« Le Saint Nek-Terre et moi »"}
     },
     "boisson":{
       "boisson1":{"le":"le Nek-tar","un":"un Nek-tar","no":"Nek-tar"},
       "boisson2":{"le":"le Spore-Spritz","un":"un Spore-Spritz","no":"Spore-Spritz"},
       "boisson3":{"le":"le Jus de Fnek (sans odeur, promis)","un":"un Jus de Fnek (sans odeur, promis)","no":"Jus de Fnek (sans odeur, promis)"},
       "boisson4":{"le":"le Trou Noir on the rocks","un":"un Trou Noir on the rocks","no":"Trou Noir on the rocks"},
-      "boisson5":{"le":"la Bière de Shrymp","un":"une Bière de Shrymp","no":"Bière de Shrymp"}
+      "boisson5":{"le":"la Bière de Shrymp","un":"une Bière de Shrymp","no":"Bière de Shrymp"},
+      "boisson6":{"le":"le café Neksafé","un":"un café Neksafé","no":"Café Neksafé"},
+      "boisson7":{"le":"la Cocaféine","un":"une Cocaféine","no":"Cocaféine"},
+      "boisson8":{"le":"le Mycélium tonic","un":"un Mycélium tonic","no":"Mycélium tonic"},
+      "boisson9":{"le":"le Shrips-shake","un":"un Shrips-shake","no":"Shrips-shake"},
+      "boisson10":{"le":"la Sève de Sylv pressée","un":"une Sève de Sylv pressée","no":"Sève de Sylv pressée"},
+      "boisson11":{"le":"le Nek-groni","un":"un Nek-groni","no":"Nek-groni"}
     },
     "bouteille":{
       "bouteille1":{"le":"la bouteille de Vieux Sylv 12 ans d'âge","no":"Vieux Sylv 12 ans d'âge"},
       "bouteille2":{"le":"la bouteille de Rhum de comète","no":"Rhum de comète"},
-      "bouteille3":{"le":"la bouteille de Liqueur d'Ygrl fermentée","no":"Liqueur d'Ygrl fermentée"}
+      "bouteille3":{"le":"la bouteille de Liqueur d'Ygrl fermentée","no":"Liqueur d'Ygrl fermentée"},
+      "bouteille4":{"le":"la bouteille de Jaks Dimalou's","no":"Jaks Dimalou's"},
+      "bouteille5":{"le":"la bouteille de Nek-tar millésimé","no":"Nek-tar millésimé"},
+      "bouteille6":{"le":"la bouteille de Champagne de spores","no":"Champagne de spores"}
+    },
+    "lieu":{
+      "centre-commercial":{"le":"le centre commercial","un":"un centre commercial","du":"du centre commercial","au":"au centre commercial","no":"Centre commercial"},
+      "casse":{"le":"la casse de vaisseaux","un":"une casse de vaisseaux","du":"de la casse de vaisseaux","au":"à la casse de vaisseaux","no":"Casse de vaisseaux"},
+      "camp-refugies":{"le":"le camp de réfugiés","un":"un camp de réfugiés","du":"du camp de réfugiés","au":"au camp de réfugiés","no":"Camp de réfugiés"},
+      "marche":{"le":"le marché galactique","un":"un marché galactique","du":"du marché galactique","au":"au marché galactique","no":"Marché galactique"},
+      "casino":{"le":"le casino","un":"un casino","du":"du casino","au":"au casino","no":"Casino"},
+      "observatoire":{"le":"l'observatoire","un":"un observatoire","du":"de l'observatoire","au":"à l'observatoire","no":"Observatoire"},
+      "musee":{"le":"le musée","un":"un musée","du":"du musée","au":"au musée","no":"Musée"},
+      "station-service":{"le":"la station-service","un":"une station-service","du":"de la station-service","au":"à la station-service","no":"Station-service"},
+      "station-coriolis":{"le":"la station Coriolis™","un":"une station Coriolis™","du":"de la station Coriolis™","au":"à la station Coriolis™","no":"Station Coriolis™"},
+      "forge":{"le":"la forge spatiale","un":"une forge spatiale","du":"de la forge spatiale","au":"à la forge spatiale","no":"Forge spatiale"},
+      "bowling":{"le":"le bowling","un":"un bowling","du":"du bowling","au":"au bowling","no":"Bowling"},
+      "stand-tir":{"le":"le stand de tir","un":"un stand de tir","du":"du stand de tir","au":"au stand de tir","no":"Stand de tir"},
+      "zoo":{"le":"le zoo","un":"un zoo","du":"du zoo","au":"au zoo","no":"Zoo"},
+      "cimetiere":{"le":"le cimetière spatial","un":"un cimetière spatial","du":"du cimetière spatial","au":"au cimetière spatial","no":"Cimetière spatial"},
+      "hotel":{"le":"l'hôtel orbital","un":"un hôtel orbital","du":"de l'hôtel orbital","au":"à l'hôtel orbital","no":"Hôtel orbital"},
+      "spa":{"le":"le spa","un":"un spa","du":"du spa","au":"au spa","no":"Spa"},
+      "monastere":{"le":"le monastère","un":"un monastère","du":"du monastère","au":"au monastère","no":"Monastère"},
+      "banque":{"le":"la banque galactique","un":"une banque galactique","du":"de la banque galactique","au":"à la banque galactique","no":"Banque galactique"},
+      "chantier-naval":{"le":"le chantier naval","un":"un chantier naval","du":"du chantier naval","au":"au chantier naval","no":"Chantier naval"},
+      "mine":{"le":"la mine d'astéroïde","un":"une mine d'astéroïde","du":"de la mine d'astéroïde","au":"à la mine d'astéroïde","no":"Mine d'astéroïde"},
+      "laboratoire":{"le":"le laboratoire","un":"un laboratoire","du":"du laboratoire","au":"au laboratoire","no":"Laboratoire"},
+      "boite-nuit":{"le":"la boîte de nuit","un":"une boîte de nuit","du":"de la boîte de nuit","au":"à la boîte de nuit","no":"Boîte de nuit"},
+      "restaurant":{"le":"le restaurant","un":"un restaurant","du":"du restaurant","au":"au restaurant","no":"Restaurant"},
+      "hopital":{"le":"l'hôpital","un":"un hôpital","du":"de l'hôpital","au":"à l'hôpital","no":"Hôpital"},
+      "usine":{"le":"l'usine","un":"une usine","du":"de l'usine","au":"à l'usine","no":"Usine"},
+      "aire-repos":{"le":"l'aire de repos","un":"une aire de repos","du":"de l'aire de repos","au":"à l'aire de repos","no":"Aire de repos"},
+      "cinema":{"le":"le cinéma","un":"un cinéma","du":"du cinéma","au":"au cinéma","no":"Cinéma"}
+    },
+    "pnj":{
+      "marchand":{"le":"le marchand","les":"les marchands","un":"un marchand","des":"des marchands","du":"du marchand","au":"au marchand","aux":"aux marchands","no":"Marchand","nos":"Marchands"},
+      "mecanicien":{"le":"le mécanicien","les":"les mécaniciens","un":"un mécanicien","des":"des mécaniciens","du":"du mécanicien","au":"au mécanicien","aux":"aux mécaniciens","no":"Mécanicien","nos":"Mécaniciens"},
+      "contrebandier":{"le":"le contrebandier","les":"les contrebandiers","un":"un contrebandier","des":"des contrebandiers","du":"du contrebandier","au":"au contrebandier","aux":"aux contrebandiers","no":"Contrebandier","nos":"Contrebandiers"},
+      "douanier":{"le":"le douanier","les":"les douaniers","un":"un douanier","des":"des douaniers","du":"du douanier","au":"au douanier","aux":"aux douaniers","no":"Douanier","nos":"Douaniers"},
+      "livreur":{"le":"le livreur Galaxyssimo™","les":"les livreurs Galaxyssimo™","un":"un livreur Galaxyssimo™","des":"des livreurs Galaxyssimo™","du":"du livreur Galaxyssimo™","au":"au livreur Galaxyssimo™","aux":"aux livreurs Galaxyssimo™","no":"Livreur Galaxyssimo™","nos":"Livreurs Galaxyssimo™"},
+      "agent-securite":{"le":"l'agent de sécurité","les":"les agents de sécurité","un":"un agent de sécurité","des":"des agents de sécurité","du":"de l'agent de sécurité","au":"à l'agent de sécurité","aux":"aux agents de sécurité","no":"Agent de sécurité","nos":"Agents de sécurité"},
+      "chasseur-primes":{"le":"le chasseur de primes","les":"les chasseurs de primes","un":"un chasseur de primes","des":"des chasseurs de primes","du":"du chasseur de primes","au":"au chasseur de primes","aux":"aux chasseurs de primes","no":"Chasseur de primes","nos":"Chasseurs de primes"},
+      "scientifique":{"le":"le scientifique","les":"les scientifiques","un":"un scientifique","des":"des scientifiques","du":"du scientifique","au":"au scientifique","aux":"aux scientifiques","no":"Scientifique","nos":"Scientifiques"},
+      "refugie":{"le":"le réfugié","les":"les réfugiés","un":"un réfugié","des":"des réfugiés","du":"du réfugié","au":"au réfugié","aux":"aux réfugiés","no":"Réfugié","nos":"Réfugiés"},
+      "pirate":{"le":"le pirate","les":"les pirates","un":"un pirate","des":"des pirates","du":"du pirate","au":"au pirate","aux":"aux pirates","no":"Pirate","nos":"Pirates"},
+      "mercenaire":{"le":"le mercenaire","les":"les mercenaires","un":"un mercenaire","des":"des mercenaires","du":"du mercenaire","au":"au mercenaire","aux":"aux mercenaires","no":"Mercenaire","nos":"Mercenaires"},
+      "bibliothecaire":{"le":"le bibliothécaire","les":"les bibliothécaires","un":"un bibliothécaire","des":"des bibliothécaires","du":"du bibliothécaire","au":"au bibliothécaire","aux":"aux bibliothécaires","no":"Bibliothécaire","nos":"Bibliothécaires"},
+      "barman":{"le":"le barman","les":"les barmans","un":"un barman","des":"des barmans","du":"du barman","au":"au barman","aux":"aux barmans","no":"Barman","nos":"Barmans"},
+      "touriste":{"le":"le touriste","les":"les touristes","un":"un touriste","des":"des touristes","du":"du touriste","au":"au touriste","aux":"aux touristes","no":"Touriste","nos":"Touristes"},
+      "prospecteur":{"le":"le prospecteur","les":"les prospecteurs","un":"un prospecteur","des":"des prospecteurs","du":"du prospecteur","au":"au prospecteur","aux":"aux prospecteurs","no":"Prospecteur","nos":"Prospecteurs"},
+      "predicateur":{"le":"le prédicateur","les":"les prédicateurs","un":"un prédicateur","des":"des prédicateurs","du":"du prédicateur","au":"au prédicateur","aux":"aux prédicateurs","no":"Prédicateur","nos":"Prédicateurs"},
+      "croupier":{"le":"le croupier","les":"les croupiers","un":"un croupier","des":"des croupiers","du":"du croupier","au":"au croupier","aux":"aux croupiers","no":"Croupier","nos":"Croupiers"},
+      "ferrailleur":{"le":"le ferrailleur","les":"les ferrailleurs","un":"un ferrailleur","des":"des ferrailleurs","du":"du ferrailleur","au":"au ferrailleur","aux":"aux ferrailleurs","no":"Ferrailleur","nos":"Ferrailleurs"},
+      "uwu":{"le":"l'UWU","les":"les UWU","un":"un UWU","des":"des UWU","du":"de l'UWU","au":"à l'UWU","aux":"aux UWU","no":"UWU","nos":"UWU"},
+      "avocate":{"le":"l'avo-cat-e","les":"les avo-cat-es","un":"une avo-cat-e","des":"des avo-cat-es","du":"de l'avo-cat-e","au":"à l'avo-cat-e","aux":"aux avo-cat-es","no":"Avo-cat-e","nos":"Avo-cat-es"}
+    },
+    "organisation":{
+      "oli":{"le":"l'OLI","du":"de l'OLI","au":"à l'OLI","no":"OLI"},
+      "fnak":{"le":"la Fnak","du":"de la Fnak","au":"à la Fnak","no":"Fnak"},
+      "galaxyssimo":{"le":"Galaxyssimo™","du":"de Galaxyssimo™","au":"à Galaxyssimo™","no":"Galaxyssimo™"},
+      "owo":{"le":"l'OWO","du":"de l'OWO","au":"à l'OWO","no":"OWO"},
+      "chiant":{"le":"le CHIANT","du":"du CHIANT","au":"au CHIANT","no":"CHIANT"},
+      "douane":{"le":"la première douane galactique","du":"de la première douane galactique","au":"à la première douane galactique","no":"Première douane galactique"},
+      "pute":{"le":"la PUTE","du":"de la PUTE","au":"à la PUTE","no":"PUTE"},
+      "gign":{"le":"le GIGN","du":"du GIGN","au":"au GIGN","no":"GIGN"},
+      "plateforme":{"le":"la Plateforme d'échange","du":"de la Plateforme d'échange","au":"à la Plateforme d'échange","no":"Plateforme d'échange"},
+      "walt-difnek":{"le":"les studios Walt DiFnek","du":"des studios Walt DiFnek","au":"aux studios Walt DiFnek","no":"Studios Walt DiFnek"},
+      "nek-flix":{"le":"Nek-flix","du":"de Nek-flix","au":"à Nek-flix","no":"Nek-flix"}
+    },
+    "bande":{
+      "peace":{"le":"le PEACE","du":"du PEACE","au":"au PEACE","no":"PEACE"},
+      "amis":{"le":"les AMIS","du":"des AMIS","au":"aux AMIS","no":"AMIS"},
+      "yorcs-salvateurs":{"le":"le Groupuscule Armé des Yorcs Salvateurs","du":"du Groupuscule Armé des Yorcs Salvateurs","au":"au Groupuscule Armé des Yorcs Salvateurs","no":"Groupuscule Armé des Yorcs Salvateurs"},
+      "shrymps-hackers":{"le":"les Shrymps Hackers d'Informations Antifongiques Sécurisés","du":"des Shrymps Hackers d'Informations Antifongiques Sécurisés","au":"aux Shrymps Hackers d'Informations Antifongiques Sécurisés","no":"Shrymps Hackers d'Informations Antifongiques Sécurisés"}
+    },
+    "personnage":{
+      "neant-xvi":{"le":"Néant-XVI","du":"de Néant-XVI","au":"à Néant-XVI","no":"Néant-XVI"},
+      "sylv-1-dur-if":{"le":"Sylv 1 dur-If","du":"de Sylv 1 dur-If","au":"à Sylv 1 dur-If","no":"Sylv 1 dur-If"},
+      "dimalou":{"le":"le préfet Dimalou","du":"du préfet Dimalou","au":"au préfet Dimalou","no":"Préfet Dimalou"},
+      "chris-tale":{"le":"Chris Tale","du":"de Chris Tale","au":"à Chris Tale","no":"Chris Tale"},
+      "fnek-scecrable":{"le":"Fnek Scécrable","du":"de Fnek Scécrable","au":"à Fnek Scécrable","no":"Fnek Scécrable"},
+      "qi-zine":{"le":"la QI-zine d'Ygrl","du":"de la QI-zine d'Ygrl","au":"à la QI-zine d'Ygrl","no":"QI-zine d'Ygrl"},
+      "namatata":{"le":"le Namatata","du":"du Namatata","au":"au Namatata","no":"Namatata"},
+      "saint-nek-terre":{"le":"le Saint Nek-Terre","du":"du Saint Nek-Terre","au":"au Saint Nek-Terre","no":"Saint Nek-Terre"},
+      "chene":{"le":"Chêne","du":"de Chêne","au":"à Chêne","no":"Chêne"}
+    },
+    "systeme":{
+      "5-h34(d)":{"le":"le système 5-h34(d)","du":"du système 5-h34(d)","au":"au système 5-h34(d)","no":"5-h34(d)"},
+      "W33-BZ(1)":{"le":"le système W33-BZ(1)","du":"du système W33-BZ(1)","au":"au système W33-BZ(1)","no":"W33-BZ(1)"},
+      "ZZ-00":{"le":"le système ZZ-00","du":"du système ZZ-00","au":"au système ZZ-00","no":"ZZ-00"}
+    },
+    "film":{
+      "film1":{"le":"le film « Fullmetal Akumist »","no":"« Fullmetal Akumist »"},
+      "film2":{"le":"le film « My Hero Akudemia »","no":"« My Hero Akudemia »"},
+      "film3":{"le":"le film « Aku x Family »","no":"« Aku x Family »"},
+      "film4":{"le":"le film « La Fnek et la bête »","no":"« La Fnek et la bête »"},
+      "film5":{"le":"le film « Fnek-E »","no":"« Fnek-E »"},
+      "film6":{"le":"le film « Blanche Fnek et les 7 Yorcs »","no":"« Blanche Fnek et les 7 Yorcs »"},
+      "film7":{"le":"le film « Le monde de Neknia »","no":"« Le monde de Neknia »"},
+      "film8":{"le":"le film « Charlie et la nekolaterie »","no":"« Charlie et la nekolaterie »"},
+      "film9":{"le":"le film « Jackie-phor »","no":"« Jackie-phor »"},
+      "film10":{"le":"le film « Omphortal Kombat »","no":"« Omphortal Kombat »"},
+      "film11":{"le":"le film « Phor-Club »","no":"« Phor-Club »"},
+      "film12":{"le":"le film « Omphor Panda »","no":"« Omphor Panda »"},
+      "film13":{"le":"le film « 50 nuances de Shrymps »","no":"« 50 nuances de Shrymps »"},
+      "film14":{"le":"le film « Shrymps & the City »","no":"« Shrymps & the City »"},
+      "film15":{"le":"le film « Shrympside Out »","no":"« Shrympside Out »"},
+      "film16":{"le":"le film « Sylvcario »","no":"« Sylvcario »"},
+      "film17":{"le":"le film « Le sylvence des agneaux »","no":"« Le sylvence des agneaux »"},
+      "film18":{"le":"le film « Le sylvième sens »","no":"« Le sylvième sens »"},
+      "film19":{"le":"le film « Basylv instinct »","no":"« Basylv instinct »"},
+      "film20":{"le":"le film « High school musygrl »","no":"« High school musygrl »"},
+      "film21":{"le":"le film « Mean Ygrl »","no":"« Mean Ygrl »"},
+      "film22":{"le":"le film « Gossip Ygrl »","no":"« Gossip Ygrl »"},
+      "film23":{"le":"le film « The Ygrl Next Door »","no":"« The Ygrl Next Door »"},
+      "film24":{"le":"le film « Yorcminator »","no":"« Yorcminator »"},
+      "film25":{"le":"le film « Yorcbocop »","no":"« Yorcbocop »"},
+      "film26":{"le":"le film « Iron Yorc »","no":"« Iron Yorc »"},
+      "film27":{"le":"le film « Yorki Balboa »","no":"« Yorki Balboa »"}
     }
   }
 }
