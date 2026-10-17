@@ -174,7 +174,7 @@ var STATUSES = <%- JSON.stringify(locals.statuses || []).replace(/</g, '\\u003c'
 var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u003c') %>;</script>
 <datalist id="loot-list">
     <% (locals.loot || []).forEach(function(item) { %>
-    <option value="<%= item.name %>"></option>
+    <option value="<%= item.name %>" data-qty="<%= item.qty || 1 %>"></option>
     <% }); %>
 </datalist>
 <script src="js/mj-menu.js"></script>

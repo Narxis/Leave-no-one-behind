@@ -919,6 +919,18 @@ kbd {
     border-style: dashed;
 }
 
+.pe-loot-count {
+    flex: none;
+    color: var(--ui-accent);
+    font-size: 11px;
+}
+
+.pe-node .pe-loot-add input.pe-loot-qty {
+    flex: none;
+    width: 52px;
+    text-align: center;
+}
+
 .pe-loot-chip img,
 .pe-loot-initial {
     width: 18px;

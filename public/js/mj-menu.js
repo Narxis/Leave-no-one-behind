@@ -156,7 +156,7 @@ function setMJCardValue(card) {
         document.querySelector('#choice' + i + ' .mjreveal-text').innerHTML = '<span class="mjreveal">' + (choice.mjreveal || '') + '</span>';
         // Butin du choix : distribué sur la page de jeu avant la suite
         let loot = Array.isArray(choice.loot) && choice.loot.length
-            ? '<br><br><span class="mj-loot">Butin : ' + choice.loot.map(n => String(n).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]))).join(', ') + '</span>' : '';
+            ? '<br><br><span class="mj-loot">Butin : ' + choice.loot.map(n => (n && typeof n === 'object' ? n.name + (n.qty > 1 ? ' ×' + n.qty : '') : String(n)).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]))).join(', ') + '</span>' : '';
         document.querySelector('#choice' + i + ' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + (choice.reveal || '') + loot;
     });
 }

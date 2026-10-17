@@ -91,8 +91,9 @@ class Items {
         return this.getItemBySlug(slug);
     }
 
+    // Jamais en dessous de zéro
     async remove(slug, quantity=1) {
-        await DB.tables.items.decrement({quantity: quantity}, { where: { slug: slug } });
+        await DB.tables.items.decrement({quantity: quantity}, { where: { slug: slug, quantity: {[Op.gte]: quantity} } });
     }
 
     async getItemBySlug(slug) {
@@ -103,24 +104,31 @@ class Items {
         let allStarters = await DB.tables.items.findAll({raw:true, where : {pool: 'starter'}});
         let players = await DB.tables.players.findAll({raw:true});
 
+        // Quantité donnée à chaque joueur : « qty » de l'objet dans items.json
+        let qty = {};
+        try {
+            let pools = JSON.parse(fs.readFileSync(__dirname + '/../config/items.json', 'utf8'));
+            for (let item of (pools.starter || []))
+                qty[item.slug] = parseInt(item.qty) > 1 ? parseInt(item.qty) : 1;
+        } catch (e) {}
+
         for (let player of players) {
             for (let starterItem of allStarters) {
-                if (player.race.startsWith(starterItem.race)) {
-                    await this.giveItemToPlayer(starterItem.slug, player.discord_id)
+                if ((player.race || '').startsWith(starterItem.race)) {
+                    await this.giveItemToPlayer(starterItem.slug, player.discord_id, qty[starterItem.slug] || 1)
                 }
             }
         }
     }
 
-    // No notion of quantity on player item (starters)
-    async giveItemToPlayer(slug, discord_id) {
+    // Objet de départ : le joueur en a exactement count exemplaires
+    async giveItemToPlayer(slug, discord_id, count = 1) {
         let item = await DB.tables.items.findOne({where: {slug:slug}, raw:true});
 
         let new_owners = [];
         if (item.owners && item.owners !== '')
            new_owners = item.owners.split(',');
-        new_owners.push(discord_id);
-        new_owners = [...new Set(new_owners)];
+        new_owners = new_owners.filter(id => id !== discord_id).concat(Array(count).fill(discord_id));
         new_owners = new_owners.join(',');
 
         await DB.tables.items.update({owners:new_owners}, {where:{ slug:slug }})

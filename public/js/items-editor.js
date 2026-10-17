@@ -172,8 +172,14 @@
         return p === NEW_POOL ? slugify($('ie-new-pool').value).replace(/-/g, '_') : p;
     }
 
+    // Quantité saisie, bornée de 1 à 99
+    function currentQty() {
+        let n = parseInt($('ie-qty').value);
+        return Number.isFinite(n) ? Math.min(Math.max(n, 1), 99) : 1;
+    }
+
     function formState() {
-        return JSON.stringify([$('ie-name').value.trim(), currentPool(), currentType(), rarity, $('ie-race').value, $('ie-desc').value.trim(), image, removeImage]);
+        return JSON.stringify([$('ie-name').value.trim(), currentPool(), currentType(), rarity, $('ie-race').value, $('ie-desc').value.trim(), image, removeImage, currentQty()]);
     }
 
     const isDirty = () => formState() !== saved;
@@ -214,6 +220,7 @@
         $('ie-pool-explain').textContent = pool === STARTER
             ? ($('ie-race').value ? 'Donné au début de la partie à chaque joueur ' + raceName($('ie-race').value) + '.' : 'Donné au début de la partie aux joueurs de la race choisie.')
             : 'Peut être trouvé en butin : après un combat, ou dans les choix des cartes de lieu.';
+        $('ie-qty-hint').textContent = pool === STARTER ? '(exemplaires donnés à chaque joueur)' : '(proposée d\'office dans un butin)';
     }
 
     function renderPreview() {
@@ -228,7 +235,8 @@
         $('ie-preview-type').innerHTML = t ? typeIcon(t) + ' ' + esc(typeName(t)) : '';
         $('ie-preview-desc').textContent = $('ie-desc').value.trim() || 'Pas encore de description.';
         $('ie-preview-desc').classList.toggle('is-empty', !$('ie-desc').value.trim());
-        $('ie-preview-chip').innerHTML = (src ? '<img src="' + esc(src) + '" alt="">' : '<b>' + esc(name.charAt(0)) + '</b>') + esc(name);
+        $('ie-preview-chip').innerHTML = (src ? '<img src="' + esc(src) + '" alt="">' : '<b>' + esc(name.charAt(0)) + '</b>') + esc(name)
+            + (currentQty() > 1 ? ' <small class="ie-qty-badge">×' + currentQty() + '</small>' : '');
         $('ie-desc-count').textContent = $('ie-desc').value.length + ' / 600';
         let slug = editing ? editing.slug : slugify($('ie-name').value);
         $('ie-slug').textContent = slug ? 'id : ' + slug : '';
@@ -268,6 +276,7 @@
         let src = item || prefill || {};
         $('ie-name').value = src.name || '';
         $('ie-desc').value = src.desc || '';
+        $('ie-qty').value = src.qty || 1;
         let pool = src.pool || (filter !== 'all' ? filter : catalog.pools.find(p => p !== STARTER) || STARTER);
         fillPools(pool);
         fillRaces(src.race || '');
@@ -340,6 +349,7 @@
                     rarity: rarity,
                     race: $('ie-race').value,
                     desc: $('ie-desc').value,
+                    qty: currentQty(),
                     image: image || undefined,
                     removeImage: removeImage
                 })
@@ -457,7 +467,7 @@
             $('ie-new-type').focus();
     });
     $('ie-search').addEventListener('input', renderList);
-    ['ie-name', 'ie-desc', 'ie-new-pool', 'ie-new-type'].forEach(id => $(id).addEventListener('input', refresh));
+    ['ie-name', 'ie-desc', 'ie-new-pool', 'ie-new-type', 'ie-qty'].forEach(id => $(id).addEventListener('input', refresh));
     ['ie-pool', 'ie-race'].forEach(id => $(id).addEventListener('change', () => {
         refresh();
         if (id === 'ie-pool' && $('ie-pool').value === NEW_POOL)
@@ -477,7 +487,7 @@
     });
     $('ie-duplicate').addEventListener('click', () => {
         let src = editing;
-        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, type: currentType(), rarity: rarity, race: $('ie-race').value});
+        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, type: currentType(), rarity: rarity, race: $('ie-race').value, qty: currentQty()});
         $('ie-name').focus();
         $('ie-name').select();
     });

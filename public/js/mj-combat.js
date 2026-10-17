@@ -59,8 +59,14 @@
     // Butin d'un ennemi : résumé cliquable, et sous lui l'éditeur (suggestions
     // de items.json via la datalist, ou saisie libre). Révélé aux joueurs
     // quand tous les ennemis sont K.O.
+    // Quantité habituelle d'un objet de la liste (éditeur d'objets)
+    function knownQty(name) {
+        let option = [...document.querySelectorAll('#loot-list option')].find(o => o.value.toLowerCase() === name.toLowerCase());
+        return option ? parseInt(option.dataset.qty) || 1 : 1;
+    }
+
     function lootLine(row, key, loot, onChange) {
-        let names = loot.map(i => i.name);
+        let names = loot.map(i => i.qty > 1 ? i.name + ' ×' + i.qty : i.name);
         let open = lootOpen === key;
         let toggle = button('mj-loot-toggle' + (open ? ' open' : ''),
             names.length ? 'Butin : ' + names.join(', ') : '+ Ajouter un butin', () => {
@@ -77,7 +83,7 @@
         let box = el('div', 'mj-loot');
         let chips = el('div', 'mj-loot-items');
         loot.forEach((item, i) => {
-            let chip = el('span', 'mj-loot-item' + (item.custom ? ' custom' : ''), item.name);
+            let chip = el('span', 'mj-loot-item' + (item.custom ? ' custom' : ''), item.qty > 1 ? item.name + ' ×' + item.qty : item.name);
             chip.append(button('mj-loot-remove', '×', () => onChange(loot.filter((_, j) => j !== i))));
             chips.append(chip);
         });
@@ -86,18 +92,34 @@
         input.placeholder = 'Objet (liste ou texte libre)';
         input.maxLength = 60;
         input.value = lootDraft;
-        input.addEventListener('input', () => { lootDraft = input.value; });
+        let qty = el('input', 'mj-loot-input mj-loot-qty');
+        qty.type = 'number';
+        qty.min = 1;
+        qty.max = 999;
+        qty.value = lootDraft ? knownQty(lootDraft) : 1;
+        qty.title = 'Quantité';
+        input.addEventListener('input', () => {
+            lootDraft = input.value;
+            qty.value = knownQty(input.value.trim());
+        });
         const add = () => {
             let name = input.value.trim();
             if (!name)
                 return;
+            let n = Math.min(Math.max(parseInt(qty.value) || 1, 1), 999);
             lootDraft = '';
             lootFocus = true;
-            onChange(loot.concat([{name: name}]));
+            // Déjà dans le butin : la quantité s'ajoute
+            let at = loot.findIndex(i => i.name.toLowerCase() === name.toLowerCase());
+            if (at >= 0)
+                onChange(loot.map((i, j) => j === at ? Object.assign({}, i, {qty: (i.qty || 1) + n}) : i));
+            else
+                onChange(loot.concat([{name: name, qty: n}]));
         };
         input.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
+        qty.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
         let form = el('div', 'mj-loot-form');
-        form.append(input, button('mj-loot-add', '+', add));
+        form.append(input, qty, button('mj-loot-add', '+', add));
         box.append(chips, form);
         row.append(box);
         if (lootFocus) {
@@ -507,7 +529,9 @@
             wsLNOB.send({action: 'combat-add', data: {enemy: mob ? Object.assign({}, mob) : {name: name, hp: 10}}});
             return;
         }
-        pending.push(mob ? Object.assign({}, mob) : {name: name, hp: 10});
+        // Butin du bestiaire (noms, ou {name, qty}) au format du combat
+        let loot = mob && Array.isArray(mob.loot) ? mob.loot.map(l => typeof l === 'string' ? {name: l} : l) : [];
+        pending.push(mob ? Object.assign({}, mob, {loot: loot}) : {name: name, hp: 10});
         render();
     }
 
