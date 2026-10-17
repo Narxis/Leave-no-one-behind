@@ -1,0 +1,19 @@
+# Relais LNOB sur Cloudflare Workers (offre gratuite).
+# Mise en ligne : voir relay/README.md
+name = "lnob-relay"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+# Page joueur, servie sur / (le lien partagé par le MJ)
+[assets]
+directory = "../public/player"
+binding = "ASSETS"
+
+[[durable_objects.bindings]]
+name = "LOBBY"
+class_name = "LobbyRoom"
+
+# Durable Objects avec stockage SQLite : les seuls disponibles sur l'offre gratuite
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["LobbyRoom"]

@@ -1,0 +1,40 @@
+<%- include("partials/head", {
+    title: "Partie en ligne",
+    cssFiles:[
+        "/css/style.css",
+        "/css/ui-menus.css",
+        "/css/lobby.css"
+    ]
+}) %>
+<body>
+    <%- include("partials/nav") %>
+    <main class="lobby" id="lobby" data-state="<%= JSON.stringify(lobby) %>">
+        <h1 class="lobby-title">Partie en ligne</h1>
+
+        <section class="lobby-closed" id="lobby-closed">
+            <p>Ouvre la partie pour obtenir un code à donner aux joueurs. Ils la rejoignent depuis l'app LNOB ou depuis le lien, dans leur navigateur.</p>
+            <button type="button" class="lobby-btn primary" id="lobby-open">Ouvrir la partie</button>
+        </section>
+
+        <section class="lobby-open" id="lobby-opened" hidden>
+            <p class="lobby-status" id="lobby-status" role="status"></p>
+            <div class="lobby-code-box">
+                <span class="lobby-label">Code de la partie</span>
+                <span class="lobby-code" id="lobby-code">———</span>
+            </div>
+            <div class="lobby-link-row">
+                <input class="lobby-link" id="lobby-link" readonly aria-label="Lien de la partie">
+                <button type="button" class="lobby-btn" id="lobby-copy">Copier le lien</button>
+            </div>
+
+            <h2 class="lobby-subtitle">Joueurs <span id="lobby-count"></span></h2>
+            <p class="lobby-empty" id="lobby-empty">Personne pour l'instant.</p>
+            <ul class="lobby-players" id="lobby-players"></ul>
+
+            <button type="button" class="lobby-btn danger" id="lobby-close">Fermer la partie</button>
+        </section>
+        <p class="lobby-error" id="lobby-error" role="alert" hidden></p>
+    </main>
+    <script src="/js/lobby.js"></script>
+    <%- include("partials/bottom-scripts") %>
+</body>

@@ -10,6 +10,7 @@ const shipAlerts = require("./shipAlerts");
 const inventory = require("./inventory");
 const planetGen = require("./planetGen");
 const leaderboard = require("./leaderboard");
+const lobby = require("./lobby");
 const gameSettings = require("./gameSettings");
 const races = require("./races");
 const {Statuses} = require("../models/statuses");
@@ -646,6 +647,11 @@ module.exports = {
             highlight: String(req.query.highlight || ''),
             lang: langJS
         });
+    },
+
+    // Partie en ligne : code à donner aux joueurs et joueurs connectés
+    lobby(req, res) {
+        res.render('lobby', {lobby: lobby.getState(), lang: langJS});
     },
 
     indexLegacy(req, res) {

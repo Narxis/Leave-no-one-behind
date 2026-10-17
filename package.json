@@ -7,7 +7,8 @@
     "start": "node server.js",
     "app": "electron .",
     "dist": "electron-builder",
-    "test": "node tests/test.js"
+    "relay": "node relay/dev-server.js",
+    "test": "node tests/test.js && node tests/relay.js"
   },
   "author": "",
   "license": "ISC",
@@ -71,5 +72,8 @@
       "icon": "public/img/512.png",
       "category": "Game"
     }
+  },
+  "lnob": {
+    "relayUrl": "http://127.0.0.1:8787"
   }
 }

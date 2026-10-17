@@ -10,6 +10,7 @@ const allies = require("./allies");
 const inventory = require("./inventory");
 const cardLoot = require("./cardLoot");
 const shipAlerts = require("./shipAlerts");
+const lobby = require("./lobby");
 
 const init = function (){
 
@@ -116,6 +117,12 @@ const makeAction = async function (raw_response) {
             break;
         case 'card-loot-offer':
             payload = cardLoot.handle(response);
+            break;
+        case 'lobby-state':
+        case 'lobby-open':
+        case 'lobby-close':
+        case 'lobby-kick':
+            payload = lobby.handle(response);
             break;
         case 'ship-alerts':
             payload = shipAlerts.handle(response);

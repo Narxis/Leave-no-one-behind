@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LNOB · Rejoindre une partie</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="player.css">
+</head>
+<body>
+<main class="card">
+    <h1 class="logo">LEAVE <span>NO</span> ONE BEHIND</h1>
+
+    <!-- Saisie du code et du pseudo -->
+    <form id="join" class="panel" autocomplete="off">
+        <label for="code">Code de la partie</label>
+        <input id="code" name="code" inputmode="text" maxlength="7" placeholder="K7Q-2MX" required spellcheck="false">
+        <label for="name">Ton pseudo</label>
+        <input id="name" name="name" maxlength="20" placeholder="Pseudo" required>
+        <p id="join-error" class="error" role="alert" hidden></p>
+        <button type="submit" id="submit" class="primary">Rejoindre</button>
+    </form>
+
+    <!-- En attente du MJ -->
+    <section id="lobby" class="panel" hidden>
+        <p class="dim">Partie <strong id="lobby-code"></strong></p>
+        <p id="status" class="status" role="status"></p>
+        <h2>Équipage</h2>
+        <ul id="players" class="players"></ul>
+        <button type="button" id="leave" class="secondary">Quitter</button>
+    </section>
+</main>
+<script src="player.js"></script>
+</body>
+</html>
