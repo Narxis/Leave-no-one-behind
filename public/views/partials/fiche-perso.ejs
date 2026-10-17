@@ -1,5 +1,17 @@
 <div class="player" id="p<%= player.discord_id %>" data-race="<%= player.race || '' %>">
     <input type="text" placeholder="Nom du joueur" class="player-name" value="<%= player.name %>">
+    <%# Rôle du joueur (src/config/roles.json), choisi par le MJ : perso.js %>
+    <% let roleList = typeof playerRoles !== 'undefined' ? playerRoles.list() : [];
+       let role = roleList.find(r => r.slug === player.role); %>
+    <div class="role-picker">
+        <span class="role-picker-icon"><% if (role) { %><img src="<%= role.icon %>" alt=""><% } %></span>
+        <select class="role-select" aria-label="Rôle du joueur" title="<%= role ? role.effect : 'Aucun rôle' %>">
+            <option value="">Sans rôle</option>
+            <% roleList.forEach(function (r) { %>
+                <option value="<%= r.slug %>" data-icon="<%= r.icon %>" data-effect="<%= r.effect %>"<%= role && role.slug === r.slug ? ' selected' : '' %>><%= r.name %></option>
+            <% }); %>
+        </select>
+    </div>
     <img src="/img/races/<%= player.race %>.png" alt="" onerror="this.src='/img/races/wat.png'" class="race-img">
     <div class="race-selector-container">
         <div class="select-affichage"></div>
