@@ -1,0 +1,119 @@
+/* Fenêtre Options (menu Échap) */
+.options-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgb(5 4 15 / 60%);
+    font-family: 'Jura', sans-serif;
+}
+
+.options-modal[hidden] {
+    display: none;
+}
+
+.options-panel {
+    box-sizing: border-box;
+    width: min(440px, 100%);
+    padding: 22px 26px 26px;
+    border: 1px solid var(--ui-border-strong, rgb(204 196 255 / 55%));
+    border-radius: 20px;
+    background: linear-gradient(160deg, #15123a, #0a0820);
+    box-shadow: 0 20px 60px rgb(0 0 0 / 60%);
+    color: var(--ui-text, #eeecfb);
+}
+
+.options-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.options-title {
+    font-size: 1.4em;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.options-close {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--ui-border, rgb(176 166 255 / 26%));
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    font-size: 1.4em;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.options-close:hover {
+    border-color: var(--ui-accent, #ffcc00);
+    color: var(--ui-accent, #ffcc00);
+}
+
+.options-section {
+    padding-top: 12px;
+    border-top: 1px solid var(--ui-border, rgb(176 166 255 / 26%));
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ui-accent, #ffcc00);
+}
+
+.options-help {
+    margin: 4px 0 14px;
+    font-size: .85em;
+    opacity: .7;
+}
+
+.options-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 48px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.options-row input {
+    width: 100%;
+    accent-color: var(--ui-accent, #ffcc00);
+    cursor: pointer;
+}
+
+.options-row input:disabled {
+    opacity: .4;
+    cursor: default;
+}
+
+.options-row output {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.options-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+    cursor: pointer;
+}
+
+.options-check input {
+    accent-color: var(--ui-accent, #ffcc00);
+}
+
+@media (max-width: 420px) {
+    .options-row {
+        grid-template-columns: 1fr 48px;
+    }
+
+    .options-row span {
+        grid-column: 1 / -1;
+    }
+}
