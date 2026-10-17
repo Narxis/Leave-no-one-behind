@@ -107,6 +107,8 @@
     document.querySelectorAll('.life-type1, .life-type2').forEach(t => t.addEventListener('mouseup', () => setTimeout(showTab, 0)));
 
     document.getElementById('add-friend').addEventListener('click', addAlly);
+    // 🎲 : compagnon créé à la volée, race, nom et stats tirés par le serveur
+    document.getElementById('random-friend').addEventListener('click', () => send('ally-random', {}));
     search.addEventListener('keydown', (e) => { if (e.key === 'Enter') addAlly(); });
     // « x » : retire tous les compagnons, après confirmation
     document.getElementById('friend-list').addEventListener('click', () => {
