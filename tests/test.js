@@ -34,7 +34,30 @@ async function test() {
     test_ship_alerts();
     await test_items_editor();
     test_npcs();
+    test_wiki_tables();
     await test_remote();
+}
+
+// Tableaux du wiki : seul le texte entre les marqueurs est remplacé
+function test_wiki_tables() {
+    console.log('Testing wiki tables');
+    const wiki = require('../scripts/wiki-tableaux');
+    let page = 'Avant\n<!-- jeu:debut stats-races fnek -->\nvieux\n<!-- jeu:fin -->\nAprès\n';
+    let out = wiki.render(page);
+    assert.ok(out.startsWith('Avant\n<!-- jeu:debut stats-races fnek -->\n'));
+    assert.ok(out.endsWith('<!-- jeu:fin -->\nAprès\n'));
+    assert.ok(!out.includes('vieux'));
+    let fnek = require('../src/config/raceStats.json').fnek;
+    assert.ok(out.includes('| ' + (fnek.combat > 0 ? '+' : '') + fnek.combat + ' |'), 'stats de la race');
+    assert.strictEqual(wiki.render(out), out, 'deux passages donnent le même texte');
+    out = wiki.render('<!-- jeu:debut stats-races nek_eau,nek_air -->\n<!-- jeu:fin -->');
+    assert.ok(out.includes('| Race | Combat'));
+    assert.strictEqual(out.split('\n').filter(l => l.startsWith('| Nek-')).length, 2);
+    assert.ok(wiki.render('<!-- jeu:debut statuts -->\n<!-- jeu:fin -->').includes('Blackout'));
+    assert.ok(wiki.render('<!-- jeu:debut objets-depart -->\n<!-- jeu:fin -->').includes('Fronde Fnek'));
+    assert.throws(() => wiki.render('<!-- jeu:debut inconnu -->\n<!-- jeu:fin -->'));
+    assert.strictEqual(wiki.render('Sans marqueur'), 'Sans marqueur');
+    console.log('OK');
 }
 
 // Joueurs en ligne : seules quelques actions passent, toujours en leur nom
