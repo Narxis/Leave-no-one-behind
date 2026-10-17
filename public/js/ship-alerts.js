@@ -48,6 +48,7 @@
             p.classList.toggle('mj-blink', blink.includes(p.id) || !!(alert && alert.room === p.id));
         });
         let g = ShipMap.layer(svg, 'ship-alert-layer');
+        ShipMap.markAlertLabel(svg, alert && alert.room);
         blink.filter(id => !alert || id !== alert.room)
             .forEach(id => ShipMap.roomFill(svg, id, 'ship-blink-fill', g));
         if (alert) {

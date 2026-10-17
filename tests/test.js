@@ -234,5 +234,7 @@ function test_ship_alerts() {
 
     shipAlerts.reset();
     assert.deepStrictEqual(shipAlerts.getState(), {blink: [], showMap: false, alert: null});
+    for (let room of shipAlerts.ROOMS)
+        assert.ok(room.label && Number.isFinite(room.label.x) && Number.isFinite(room.label.y), 'nom placé sur le plan : ' + room.id);
     console.log('ship alerts OK');
 }
