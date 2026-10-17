@@ -10,11 +10,13 @@ const ejs = require('ejs');
 
 const ROOT = path.join(__dirname, '..');
 const HEADER = '// Généré par scripts/player-assets.js : ne pas modifier à la main\n';
+// Fins de ligne Unix : même résultat sous Windows (git y met des \r\n)
+const read = (file) => fs.readFileSync(path.join(ROOT, file), 'utf8').replace(/\r\n/g, '\n');
 
 // Plan du vaisseau : le même SVG que sur la page de jeu, salles nommées
 const shipSvg = function () {
-    let template = fs.readFileSync(path.join(ROOT, 'public/views/partials/ship-rooms-svg.ejs'), 'utf8');
-    let rooms = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/config/shipRooms.json'), 'utf8'));
+    let template = read('public/views/partials/ship-rooms-svg.ejs');
+    let rooms = JSON.parse(read('src/config/shipRooms.json'));
     let svg = ejs.render(template, {shipRooms: rooms}).trim();
     return HEADER + 'window.LNOB_SHIP_SVG = ' + JSON.stringify(svg) + ';\n';
 };
@@ -22,7 +24,7 @@ const shipSvg = function () {
 // Fichier généré → contenu attendu
 const files = () => ({
     'public/player/ship-svg.js': shipSvg(),
-    'public/player/ship-map.js': HEADER + fs.readFileSync(path.join(ROOT, 'public/js/ship-map.js'), 'utf8')
+    'public/player/ship-map.js': HEADER + read('public/js/ship-map.js')
 });
 
 module.exports = {files, ROOT};
