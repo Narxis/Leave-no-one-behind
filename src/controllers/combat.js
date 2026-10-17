@@ -242,18 +242,37 @@ const enemyAttack = async function (data) {
         if (player)
             target = {target_id: String(player.discord_id), target: player.name};
     }
+    // Le MJ peut imposer l'issue (touché / raté) et les dégâts, par exemple
+    // pour épargner un joueur. Le dé affiché reste cohérent avec l'issue
     let dice = Math.floor(Math.random() * 100) + 1;
+    let forced = false;
+    if (data.outcome === 'hit' && dice > enemy.offense) {
+        dice = enemy.offense > 0 ? rollRange([1, enemy.offense]) : 1;
+        forced = true;
+    }
+    else if (data.outcome === 'miss' && dice <= enemy.offense) {
+        dice = enemy.offense < 100 ? rollRange([enemy.offense + 1, 100]) : 100;
+        forced = true;
+    }
     let entry = Object.assign({
         type: 'enemy-attack',
         enemy_id: enemy.id,
         enemy: enemy.name,
         dice: dice,
-        hit: dice <= enemy.offense
+        hit: data.outcome === 'hit' || (data.outcome !== 'miss' && dice <= enemy.offense)
     }, target);
     if (entry.hit) {
         entry.tier = enemy.damage;
-        entry.damage = rollRange(DAMAGE[enemy.damage]);
+        let damage = parseInt(data.damage);
+        if (Number.isFinite(damage)) {
+            entry.damage = clamp(damage, 0, 99);
+            forced = true;
+        }
+        else
+            entry.damage = rollRange(DAMAGE[enemy.damage]);
     }
+    if (forced)
+        entry.forced = true;
     return addLog(entry);
 }
 
