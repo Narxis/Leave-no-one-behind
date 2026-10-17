@@ -560,7 +560,74 @@
 
 .pe-node-adds {
     display: flex;
+    flex-wrap: wrap;
     gap: 6px;
+}
+
+.pe-node-adds[hidden] {
+    display: none;
+}
+
+/* Jet d'un choix : une suite par résultat, sorties étiquetées */
+.pe-node .pe-roll select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px 6px;
+    border: 1px solid var(--ui-border);
+    border-radius: 7px;
+    background: rgb(0 0 0 / 32%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 12px;
+}
+
+.pe-node .pe-roll select option {
+    background: #17181c;
+}
+
+.pe-adds-label {
+    display: none;
+    flex-basis: 100%;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.drawflow-node.is-roll .pe-adds-label {
+    display: block;
+}
+
+.pe-adds-label.is-success {
+    color: #7be26b;
+}
+
+.pe-adds-label.is-failure {
+    color: var(--ui-danger);
+}
+
+.place-editor-page .drawflow .drawflow-node.is-roll .outputs .output {
+    position: relative;
+}
+
+.place-editor-page .drawflow .drawflow-node.is-roll .outputs .output::after {
+    position: absolute;
+    left: 20px;
+    top: -1px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.place-editor-page .drawflow .drawflow-node.is-roll .outputs .output_1::after {
+    content: 'Réussite';
+    color: #7be26b;
+}
+
+.place-editor-page .drawflow .drawflow-node.is-roll .outputs .output_2::after {
+    content: 'Échec';
+    color: var(--ui-danger);
 }
 
 .pe-node-add {

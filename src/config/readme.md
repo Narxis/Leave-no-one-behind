@@ -52,6 +52,24 @@ ___
     }
 ```
 
+### Choix avec un jet
+
+La suite dépend d'un jet : en jeu, le chrono se met en pause et le MJ dit si le jet est réussi ou raté (menu MJ ou boutons sous la carte).
+`stat` : combat, pilotage, engineering, survival ou recon. Chaque suite a un `reveal` (résultat) ou un `next` (carte suivante d'un lieu), et peut avoir `mjreveal`, `humans` et `loot` comme un choix.
+Le `humans` et le `loot` du choix lui-même s'appliquent quel que soit le résultat. Les variantes (`alts`) n'ont pas de jet.
+
+```json
+        {
+          "value": "Tenter une manoeuvre d'evitement",
+          "mjreveal": "Jet de pilotage",
+          "roll": {
+            "stat": "pilotage",
+            "success": { "reveal": "\n   ", "mjreveal": "" },
+            "failure": { "reveal": "\n   ", "mjreveal": "" }
+          }
+        }
+```
+
 ### Planet Template
 
 ```json
