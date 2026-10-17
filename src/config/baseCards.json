@@ -359,8 +359,8 @@
         },
         {
           "value": "Menacer de les attaquer en justice grâce a votre avo-cat-e\n(Nek-Air présente)",
-          "reveal": "\n\u00a0 La douane est terrifiée à l'idée de devoir aller au tribunal contre une Nek-air et vous laisse passer.",
-          "mjreveal": "  Une Nek-air doit faire partie de l'équipage."
+          "reveal": "\n\u00a0 La douane est terrifiée à l'idée de devoir aller au tribunal contre une Nek-Air et vous laisse passer.",
+          "mjreveal": "  Une Nek-Air doit faire partie de l'équipage."
         },
         {
           "value": "Donnez vos consommables à la douane",
@@ -444,17 +444,17 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Vous êtes touché par un projectile qui a percé la coque du vaisseau. \n \u00a0 Les systèmes de réparation ont rapidement colmaté la brèche, mais vous découvrez que ce projectile est une Spider-bomb. \n \n \u00a0 Il faut la désamorcer rapidement.",
+      "desc": "\n\u00a0 Vous êtes touché par un projectile qui a percé la coque du vaisseau. \n \u00a0 Les systèmes de réparation ont rapidement colmaté la brèche, mais vous découvrez que ce projectile est une SPIDER bomb. \n \n \u00a0 Il faut la désamorcer rapidement.",
       "timer": true,
       "choices": [
         {
           "value": "Envoyer un membre de l'équipage",
-          "reveal": "\n\u00a0 Vous recevez une alerte indiquant qu'une spider-bomb a atterri dans la salle de cinéma à bord de votre vaisseau. \n \u00a0 Vous dépêchez un membre de l'équipe pour la désamorcer. \n \u00a0 Les portes sont verrouillées une fois qu'il se retrouve seul avec le dispositif, mais malheureusement, la bombe explose, libérant des araignées mycophiles qui se dirigent rapidement vers les conduits d'aération.",
+          "reveal": "\n\u00a0 Vous recevez une alerte indiquant qu'une SPIDER bomb a atterri dans la salle de cinéma à bord de votre vaisseau. \n \u00a0 Vous dépêchez un membre de l'équipe pour la désamorcer. \n \u00a0 Les portes sont verrouillées une fois qu'il se retrouve seul avec le dispositif, mais malheureusement, la bombe explose, libérant des araignées mycophiles qui se dirigent rapidement vers les conduits d'aération.",
           "mjreveal": "  Forte perte de moral pour le membre désigné."
         },
         {
           "value": "Envoyer un Sylv désamorcer la bombe\n (Sylv présent)",
-          "reveal": "\n\u00a0 Le Sylv découvre une étiquette sur la spider-bomb, il la lit et réalise qu'il s'agit du manuel de désamorçage. \n \n \u00a0 Les instructions sont claires et la bombe est rapidement désamorcée avec succès.",
+          "reveal": "\n\u00a0 Le Sylv découvre une étiquette sur la SPIDER bomb, il la lit et réalise qu'il s'agit du manuel de désamorçage. \n \n \u00a0 Les instructions sont claires et la bombe est rapidement désamorcée avec succès.",
           "mjreveal": "  Un sylv doit faire partie de l'équipage.\n  Donne une \"SPIDER bomb\"."
         },
         {
@@ -1034,7 +1034,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\n \n \u00a0 Elle vous tend [le_livre_1] en pensant que c'est le votre",
+      "desc": "\n\u00a0 La Nek-Air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\n \n \u00a0 Elle vous tend [le_livre_1] en pensant que c'est le votre",
       "name": "bibli3-2",
       "timer": false,
       "choices": [
@@ -1487,7 +1487,7 @@
       ]
     },
     {
-      "desc": "\u00a0 \"Confirmation de la transaction, \"Formule_Premium\" , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n \u00a0 Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n \u00a0 Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-air s'assurent que tout est conforme aux normes intergalactiques. \n \n \u00a0 Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. ",
+      "desc": "\u00a0 \"Confirmation de la transaction, \"Formule_Premium\" , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n \u00a0 Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n \u00a0 Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-Airs s'assurent que tout est conforme aux normes intergalactiques. \n \n \u00a0 Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. ",
       "mjreveal": "  Fort gain de moral et fortes réparations de vaisseau.",
       "name":"station2-2",
       "timer": false,

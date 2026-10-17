@@ -56,7 +56,7 @@
             return Math.round(50 + sum);
         };
         const signed = (mod) => mod > 0 ? '+' + mod : String(mod);
-        const raceName = (r) => r.charAt(0).toUpperCase() + r.slice(1).replace('_', '-');
+        const raceName = (r) => r.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-');
     %>
     <dialog class="stats-rules" id="stats-rules" aria-labelledby="stats-rules-title">
         <div class="stats-rules-head">

@@ -10,13 +10,13 @@
     "slug": "anticipation"
   },
   {
-    "name": "Affaiblit",
-    "desc": "Une ou plusieurs statistiques des joueurs sont diminuée",
+    "name": "Affaibli",
+    "desc": "Une ou plusieurs statistiques des joueurs sont diminuées",
     "slug": "weak"
   },
   {
     "name": "Recherché",
-    "desc": "Vous êtes recherchés pas les autorités",
+    "desc": "Vous êtes recherchés par les autorités",
     "slug": "wanted"
   }
 ]
