@@ -23,6 +23,10 @@ module.exports = function(router) {
     router.get(basePath + '/races', controller.getRaces);
     router.post(basePath + '/races', controller.saveRace);
     router.delete(basePath + '/races/:slug', controller.deleteRace);
+
+    router.get(basePath + '/npcs', controller.getNpcs);
+    router.post(basePath + '/npcs/:kind', controller.saveNpc);
+    router.delete(basePath + '/npcs/:kind/:slug', controller.deleteNpc);
     router.post(basePath + '/team', controller.setTeam);
     router.get(basePath + '/settings', controller.getSettings);
     router.post(basePath + '/settings', controller.setSettings);

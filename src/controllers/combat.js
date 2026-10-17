@@ -1,6 +1,7 @@
 const fs = require('fs');
 const {Player} = require("../models/player");
 const allies = require("./allies");
+const npcs = require("./npcs");
 
 // Paliers de dégâts, les mêmes que les jets du menu MJ
 const DAMAGE = {
@@ -42,8 +43,9 @@ const rollRange = ([min, max]) => min + Math.floor(Math.random() * (max - min + 
 const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
 const toInt = (v, def) => Number.isFinite(parseInt(v)) ? parseInt(v) : def;
 
+// Ennemis préparés dans l'éditeur (/bestiaire)
 const getBestiary = function () {
-    return JSON.parse(fs.readFileSync(__dirname + '/../config/bestiary.json', 'utf8'));
+    return npcs.getEnemies();
 }
 
 // Objets proposés au MJ pour le butin : tous ceux de items.json
@@ -97,7 +99,7 @@ const makeEnemy = function (raw) {
         offense: clamp(toInt(raw.offense, base.offense || 50), 0, 100),
         defense: clamp(toInt(raw.defense, base.defense || 50), 0, 100),
         damage: DAMAGE[raw.damage] ? raw.damage : (base.damage || 'moyen'),
-        loot: makeLoot(raw.loot),
+        loot: makeLoot(raw.loot !== undefined ? raw.loot : base.loot),
         statuses: {}
     };
 }
