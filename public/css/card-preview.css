@@ -1,0 +1,504 @@
+/* Prévisualisation des cartes dans l'éditeur de lieux (card-preview.js).
+   La carte reprend le cadre et le fond étoilé de la carte en jeu (ui-card.css) */
+
+.cp-dialog {
+    width: min(1180px, calc(100vw - 32px));
+    max-width: none;
+    height: min(760px, calc(100vh - 32px));
+    max-height: none;
+    padding: 0;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: var(--ui-radius);
+    background: rgb(10 8 32 / 98%);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    overflow: hidden;
+}
+
+.cp-dialog [hidden] {
+    display: none !important;
+}
+
+.cp-dialog[open] {
+    display: flex;
+    flex-direction: column;
+}
+
+.cp-dialog::backdrop {
+    background: rgb(4 2 16 / 75%);
+    backdrop-filter: blur(3px);
+}
+
+/* ---------- Barre du haut ---------- */
+
+.cp-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    padding: 12px 16px 12px 20px;
+    border-bottom: 1px solid var(--ui-border);
+}
+
+.cp-head-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    margin-right: auto;
+}
+
+.cp-head h2 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--ui-accent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cp-path {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px 4px;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.cp-path button {
+    padding: 1px 6px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: none;
+    color: var(--ui-text-dim);
+    font: inherit;
+    cursor: pointer;
+}
+
+.cp-path button:hover {
+    border-color: var(--ui-border);
+    color: var(--ui-text);
+}
+
+.cp-path button[aria-current] {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    font-weight: 700;
+}
+
+.cp-tools {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.cp-tools .pe-btn {
+    padding: 6px 11px;
+    font-size: 13px;
+}
+
+.cp-tools .pe-btn:disabled {
+    opacity: .4;
+    cursor: default;
+}
+
+.cp-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.cp-switch input {
+    accent-color: var(--ui-accent);
+}
+
+/* ---------- Scène : carte, butin, choix ---------- */
+
+.cp-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    min-height: 0;
+}
+
+.cp-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.cp-card {
+    --bX: 88%;
+    --bY: 79%;
+    position: relative;
+    flex: none;
+    width: min(100%, 700px);
+    aspect-ratio: 778 / 498;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 24px;
+    box-shadow: var(--ui-shadow), inset 0 0 60px rgb(0 0 0 / 50%);
+    background-color: #0a0920;
+    background-image:
+        radial-gradient(rgba(255, 255, 255, 0.07) 9%, transparent 9%),
+        radial-gradient(ellipse 32% 36% at 30% 38%, rgb(110 90 200 / 16%), transparent 70%),
+        radial-gradient(ellipse 28% 32% at 72% 68%, rgb(79 180 200 / 8%), transparent 70%),
+        linear-gradient(160deg, #110e2c 0%, #08071a 100%);
+    background-size: 20px 20px, 100% 100%, 100% 100%, 100% 100%;
+    cursor: default;
+}
+
+.cp-card::before,
+.cp-card::after {
+    content: "";
+    position: absolute;
+    width: 33px;
+    height: 33px;
+    border: 1px solid var(--ui-accent);
+    opacity: .45;
+}
+
+.cp-card::before {
+    top: 22px;
+    right: 22px;
+    border-bottom-width: 0;
+    border-left-width: 0;
+}
+
+.cp-card::after {
+    bottom: 22px;
+    left: 22px;
+    border-top-width: 0;
+    border-right-width: 0;
+}
+
+.cp-card-num {
+    position: absolute;
+    top: 14px;
+    left: 26px;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ui-text-dim);
+}
+
+.cp-text {
+    position: absolute;
+    inset: 38px 40px 40px;
+    overflow-y: auto;
+    font-size: 19px;
+    line-height: 1.32;
+    color: #fff;
+    text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px;
+    white-space: pre-wrap;
+}
+
+.cp-card:has(.cp-text.is-writing) {
+    cursor: pointer;
+}
+
+.cp-timer {
+    position: absolute;
+    top: 10px;
+    right: 64px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 999px;
+    background: rgb(0 0 0 / 45%);
+    font-size: 15px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--ui-cyan);
+}
+
+.cp-timer.is-low {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
+.cp-choices {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: min(100%, 700px);
+}
+
+/* Même allure que les choix sous la carte en jeu */
+.cp-choice {
+    flex: 1 1 180px;
+    max-width: 320px;
+    min-height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 10px 16px;
+    border: 1px solid var(--ui-border-strong);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    background: var(--ui-surface);
+    box-shadow: 0 14px 30px -16px rgb(0 0 0 / 85%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    cursor: pointer;
+    animation: cp-choice-in .45s var(--ui-ease) both;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease), color 150ms var(--ui-ease), box-shadow 200ms var(--ui-ease), transform .3s var(--ui-ease), opacity .3s;
+}
+
+.cp-choice:hover,
+.cp-choice:focus-visible {
+    background: linear-gradient(180deg, rgb(255 204 0 / 4%), rgb(255 204 0 / 14%)), var(--ui-surface);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    box-shadow: 0 0 22px -6px rgb(255 204 0 / 45%);
+}
+
+.cp-choice small {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ui-danger);
+}
+
+.cp-choice.is-missing {
+    border-style: dashed;
+}
+
+.cp-choice.is-leaving {
+    transform: translateY(24px);
+    opacity: 0;
+}
+
+@keyframes cp-choice-in {
+    from {
+        transform: translateY(-18px);
+        opacity: 0;
+    }
+}
+
+.cp-loot {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: min(100%, 700px);
+    padding: 10px 14px;
+    border: 1px solid rgb(255 204 0 / 35%);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-accent-soft);
+}
+
+.cp-loot-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ui-accent);
+}
+
+.cp-loot-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px 3px 4px;
+    border: 1px solid var(--ui-border);
+    border-radius: 999px;
+    background: rgb(0 0 0 / 30%);
+    font-size: 13px;
+}
+
+.cp-loot-chip img,
+.cp-loot-chip b {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: contain;
+}
+
+.cp-loot-chip b {
+    display: grid;
+    place-items: center;
+    background: var(--ui-fill-hover);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.cp-loot-chip.is-custom {
+    border-style: dashed;
+}
+
+.cp-end {
+    width: min(100%, 700px);
+    padding: 10px 14px;
+    border-radius: var(--ui-radius-sm);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.cp-end.is-warn {
+    border: 1px solid rgb(255 90 110 / 55%);
+    background: rgb(255 90 110 / 10%);
+}
+
+.cp-end.is-done {
+    border: 1px solid rgb(111 220 140 / 55%);
+    background: rgb(111 220 140 / 10%);
+}
+
+.cp-end i {
+    margin-right: 4px;
+}
+
+.cp-link {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--ui-accent);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* ---------- Panneau MJ ---------- */
+
+.cp-mj-panel {
+    padding: 18px;
+    border-left: 1px solid var(--ui-border);
+    background: rgb(255 255 255 / 2%);
+    overflow-y: auto;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.cp-mj-panel h3 {
+    margin: 0 0 12px;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ui-text-dim);
+}
+
+.cp-mj-panel p {
+    margin: 0 0 8px;
+}
+
+.cp-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 4px;
+    padding: 1px 7px;
+    border: 1px solid var(--ui-border);
+    border-radius: 999px;
+    font-size: 11px;
+    color: var(--ui-cyan);
+    white-space: nowrap;
+}
+
+.cp-mj-note {
+    display: block;
+    padding: 6px 9px;
+    border-left: 2px solid var(--ui-accent);
+    border-radius: 0 6px 6px 0;
+    background: var(--ui-accent-soft);
+}
+
+.cp-mj-empty,
+.cp-mj-hint {
+    color: var(--ui-text-dim);
+    font-style: italic;
+}
+
+.cp-mj-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 14px 0 0;
+    padding-left: 18px;
+}
+
+.cp-mj-choices li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cp-mj-choice {
+    font-weight: 700;
+}
+
+.cp-mj-after {
+    color: var(--ui-text-dim);
+}
+
+.cp-mj-after.is-missing {
+    color: var(--ui-danger);
+}
+
+.cp-mj-loot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+/* ---------- Bouton « Tester » d'une carte dans l'éditeur ---------- */
+
+.pe-node-play {
+    margin-left: auto;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: var(--ui-text-dim);
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.pe-node-play + .pe-node-del {
+    margin-left: 0;
+}
+
+.pe-node-play:hover {
+    background: rgb(255 204 0 / 14%);
+    color: var(--ui-accent);
+}
+
+@media (max-width: 860px) {
+    .cp-body {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+    }
+
+    .cp-stage {
+        overflow: visible;
+    }
+
+    .cp-mj-panel {
+        border-left: none;
+        border-top: 1px solid var(--ui-border);
+    }
+
+    .cp-text {
+        inset: 32px 22px 26px;
+        font-size: 16px;
+    }
+}
