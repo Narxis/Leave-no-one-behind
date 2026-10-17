@@ -253,6 +253,10 @@ async function initCard(forceName = null) {
 async function showChoices() {
     let choiceTab = document.getElementById('choicetab');
     choiceTab.innerHTML = '';
+    // Un seul choix par affichage : les boutons restent cliquables pendant
+    // qu'ils s'en vont, un double-clic relançait la suite une seconde fois
+    // (deux « Continuer votre chemin », deux pioches et une carte sautée)
+    let chosen = false;
     for (let i=0; i<currentCard.choices.length; i++) {
         let choice = currentCard.choices[i];
         let choiceBtn = document.createElement('button');
@@ -261,6 +265,9 @@ async function showChoices() {
         choiceBtn.id = 'choice' + i;
         choiceBtn.innerHTML = choice.value;
         choiceBtn.addEventListener('mouseup', async function() {
+            if (chosen)
+                return;
+            chosen = true;
             stopCountdown();
             if (choice.humans)
                 changeHumans(choice.humans);

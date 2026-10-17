@@ -5,6 +5,7 @@ const {getCardsIds, deckGenerator, hydrateCardDB} = require("../src/controllers/
 const {Player} = require("../src/models/player");
 const {Ship} = require("../src/models/ship");
 const {Config} = require("../src/models/config");
+const {Card} = require("../src/models/card");
 const assert = require("assert");
 
 process.env.DB_URL = '';
@@ -26,6 +27,7 @@ async function test() {
     await setup();
     await test_cards_setup();
     await test_deck_generation();
+    await test_place_endings();
     await test_statuses_after_planet();
     await test_roll();
     test_ship_alerts();
@@ -363,6 +365,27 @@ async function test_deck_generation(){
     console.log('OK');
 
     console.log('Deck generation OK')
+}
+
+// Lieux : chaque choix a une seule suite, un résultat (fin du lieu, suivie
+// d'un seul « Continuer votre chemin ») ou une carte du lieu qui existe
+async function test_place_endings(){
+    console.log('Testing place choices');
+    let rows = await DB.tables.cards.findAll({where: {type: [TYPE_PLACE, TYPE_FOLLOWUP]}, raw: true});
+    let names = rows.map(r => r.name).filter(n => n);
+    assert(rows.length > 0);
+    for (let row of rows) {
+        let card = await new Card(row.id).getData();
+        assert(card.choices.length > 0, 'Carte de lieu sans choix : ' + row.name);
+        for (let choice of card.choices) {
+            let hasReveal = !!(choice.reveal && choice.reveal.trim());
+            let hasNext = !!choice.next;
+            assert(hasReveal !== hasNext, 'Choix sans suite unique : ' + row.name + ' / ' + choice.value);
+            if (hasNext)
+                assert(names.includes(choice.next), 'Suite inconnue : ' + choice.next);
+        }
+    }
+    console.log('OK');
 }
 
 // Statuts hors combat au retour d'une planète, selon l'option du MJ
