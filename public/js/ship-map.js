@@ -19,13 +19,32 @@ const ShipMap = (function () {
         return el;
     }
 
-    // Calque dessiné au-dessus des salles, vidé à chaque mise à jour
+    // Calque dessiné au-dessus des salles (mais sous leurs noms), vidé à
+    // chaque mise à jour
     function layer(svg, id) {
         let g = svg.querySelector('#' + id);
-        if (!g)
-            g = svgEl('g', {id: id}, svg);
+        if (!g) {
+            g = svgEl('g', {id: id});
+            svg.insertBefore(g, svg.querySelector('.ship-room-labels'));
+        }
         g.innerHTML = '';
         return g;
+    }
+
+    // Masque le nom de la salle en alerte (le repère l'affiche déjà en grand)
+    // et ceux qui tomberaient sous les cercles du repère
+    function markAlertLabel(svg, roomId) {
+        let room = roomId ? svg.querySelector('#' + CSS.escape(roomId)) : null;
+        let box = room ? room.getBBox() : null;
+        svg.querySelectorAll('.ship-room-label').forEach(t => {
+            let hide = false;
+            if (box) {
+                let dx = parseFloat(t.getAttribute('x')) - (box.x + box.width / 2);
+                let dy = parseFloat(t.getAttribute('y')) - (box.y + box.height / 2);
+                hide = t.dataset.room === roomId || Math.hypot(dx, dy) < 50;
+            }
+            t.classList.toggle('is-alert', hide);
+        });
     }
 
     // Salle pleine (forme extérieure de la salle)
@@ -59,5 +78,5 @@ const ShipMap = (function () {
         return g;
     }
 
-    return {outerPath, svgEl, layer, roomFill, alertMarker};
+    return {outerPath, svgEl, layer, roomFill, alertMarker, markAlertLabel};
 })();
