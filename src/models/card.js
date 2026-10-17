@@ -239,6 +239,7 @@ class Card {
 
         let raw_modules = await DB.tables.card_modules.findAll({
             attributes: [
+                'id',
                 'type',
                 'value',
                 'reveal',
@@ -264,6 +265,7 @@ class Card {
 
             if (name === 'choice') {
                 choices.push({
+                    id: mod.id,
                     value: mod.value,
                     reveal: mod.reveal,
                     mjreveal: mod.mjreveal,
@@ -294,15 +296,27 @@ class Card {
                     card_id:this.id,
                     type:activeStatus,
                     elem:'choice'
-                }
+                },
+                order: [['id', 'ASC']]
             });
 
-            for (let foundChoice of foundChoices) {
-                alt_choices.push(foundChoice);
-            }
+            // Une variante ne décrit que le texte : elle reprend la suite, les
+            // humains et le butin du choix normal à la même place (ordre de
+            // création, même si la carte mélange ses choix)
+            let byOrder = choices.slice().sort((a, b) => a.id - b.id);
+            foundChoices.forEach((foundChoice, i) => {
+                let base = byOrder[i] || {};
+                alt_choices.push(Object.assign({
+                    next: base.next || '',
+                    humans: base.humans || 0,
+                    loot: base.loot || []
+                }, foundChoice));
+            });
             if (alt_choices.length > 0)
                 this.choices = alt_choices;
         }
+        for (let choice of this.choices)
+            delete choice.id;
 
         return this;
     }

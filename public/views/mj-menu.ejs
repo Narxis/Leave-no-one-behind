@@ -61,14 +61,14 @@
                     <div class="status-box">
                         <input class="add-life status-search" type="text" id="search-status" list="status" placeholder="Status">
                         <datalist id="status">
-                            <option value="blackout"></option>
-                            <option value="anticipation"></option>
-                            <option value="wanted"></option>
-                            <option value="weak"></option>
+                            <% (locals.statuses || []).forEach(function(status) { %>
+                            <option value="<%= status.slug %>"><%= status.name %></option>
+                            <% }); %>
                         </datalist>
-                        <input type="number" min="0" max="10" class="add-life status-duration-text" id="duration-status" placeholder="0"></input>
+                        <input type="number" min="1" max="10" class="add-life status-duration-text" id="duration-status" placeholder="1">
                         <button class="add-life" id="add-status">+</button>
                     </div>
+                    <div class="mj-statuses" id="mj-statuses"></div>
                 </div>
                 <div class="combat">
                     <!--Un espace pour chaque joueurs pour un boutton join-->
@@ -103,9 +103,8 @@
             </div>
         </div>
     </div>
-</div>
-<script src="js/socketLNOB.js"></script>
-<script>var BESTIARY = <%- JSON.stringify(locals.bestiary || []).replace(/</g, '\\u003c') %>;</script>
+<script>var BESTIARY = <%- JSON.stringify(locals.bestiary || []).replace(/</g, '\\u003c') %>;
+var STATUSES = <%- JSON.stringify(locals.statuses || []).replace(/</g, '\\u003c') %>;</script>
 <datalist id="loot-list">
     <% (locals.loot || []).forEach(function(item) { %>
     <option value="<%= item.name %>"></option>

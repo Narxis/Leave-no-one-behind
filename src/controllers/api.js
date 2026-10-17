@@ -1,6 +1,7 @@
 const {Player} = require("./../models/player");
 const {Ship} = require("./../models/ship");
-const {hydrateCardDB, getCardsIds, cardPop} = require("./deck");
+const {hydrateCardDB, getCardsIds, cardPop, announceCard, getCurrentCard} = require("./deck");
+const ws = require("ws");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const {Card} = require("../models/card");
@@ -209,8 +210,15 @@ module.exports = {
         });
 
         let card = await new Card(cardRaw.id).getData();
+        // Carte de suite d'un choix : elle devient la carte affichée
+        announceCard(card);
 
         res.json(card);
+    },
+
+    // Carte affichée sur la page de jeu (panneau MJ ouvert en cours de partie)
+    getCurrentCard(req, res) {
+        res.json(getCurrentCard() || {});
     },
 
     async popNextCard(req, res) {
@@ -222,6 +230,15 @@ module.exports = {
 
         for (let i of activeStatuses) {
             await statuses.remove(i.slug);
+        }
+        // Les durées ont baissé : le panneau MJ redessine ses status
+        if (activeStatuses.length) {
+            const wsClient = new ws(WS_URL);
+            wsClient.on('open', () => {
+                wsClient.send(JSON.stringify({action: 'passThrough', data: {action: 'status', data: {}}}));
+                wsClient.close();
+            });
+            wsClient.on('error', () => {});
         }
 
         res.json(next_card);
