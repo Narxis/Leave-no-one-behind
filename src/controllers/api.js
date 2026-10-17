@@ -13,6 +13,7 @@ const combat = require("./combat");
 const allies = require("./allies");
 const races = require("./races");
 const leaderboard = require("./leaderboard");
+const gameSettings = require("./gameSettings");
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 // TODO replace shipId with current game ship ID
@@ -185,6 +186,18 @@ module.exports = {
         if (!team)
             return res.status(400).json({error: 'Nom d\'équipe vide'});
         res.json(team);
+    },
+
+    // Paramètres de la partie (nombre de planètes, cartes par étape)
+    getSettings(req, res) {
+        res.json(gameSettings.get());
+    },
+
+    async setSettings(req, res) {
+        let result = await gameSettings.set(req.body);
+        if (result.error)
+            return res.status(400).json(result);
+        res.json(result);
     },
 
     async getAllPlayers(req, res) {

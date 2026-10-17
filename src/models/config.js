@@ -31,7 +31,9 @@ class Config {
             await DB.tables.config.destroy({truncate: true});
         }
         let baseConfRaw = fs.readFileSync(__dirname + '/../config/baseConf.json');
-        let baseConfFull = {...JSON.parse(baseConfRaw), ...this.baseConf};
+        // Réglages de partie choisis par le MJ (/parametres) par-dessus ceux de base
+        let gameSettings = require('../controllers/gameSettings').asConfig();
+        let baseConfFull = {...JSON.parse(baseConfRaw), ...gameSettings, ...this.baseConf};
 
         let bulkConf = [];
         for (let key in baseConfFull) {

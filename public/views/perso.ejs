@@ -3,7 +3,8 @@
     cssFiles:[
         "/css/style.css",
         "/css/perso.css",
-        "/css/ui-menus.css"
+        "/css/ui-menus.css",
+        "/css/parametres.css"
     ]
 }) %>
 
@@ -32,6 +33,7 @@
             <input class="team-input" id="team-name" type="text" maxlength="40" autocomplete="off" required
                    placeholder="Les Explorateurs de Kepler…" aria-label="Nom de l'équipe">
             <p class="team-error" id="team-error" role="alert"></p>
+            <div class="team-settings"><%- include("partials/settings-recap", {settings: settings, editLink: true}) %></div>
             <div class="team-actions">
                 <button type="button" class="team-cancel" id="team-cancel">Annuler</button>
                 <button type="submit" class="team-submit">Commencer la partie</button>
