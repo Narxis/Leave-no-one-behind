@@ -42,6 +42,74 @@ window.CardPreview = (function () {
     const cardOf = (s) => s && story.cards.get(s.type === 'card' ? s.id : s.cardId);
     const choiceOf = (s) => { let card = cardOf(s); return card && card.choices.find(c => c.id === s.choiceId); };
 
+    /* ---------- Variables de texte : [article_type_numéro] ---------- */
+
+    // Même règle que le jeu (src/models/card.js, getRandomVar) : [le_race_1] devient
+    // « le Fnek », une majuscule au début donne une majuscule, le même numéro donne
+    // la même valeur dans un même texte, deux numéros différents des valeurs différentes
+    const VAR_RE = /\[[^\]]+\]/g;
+    const VAR_TYPES = {
+        'race': 'Race',
+        'module': 'Module (tous)',
+        'module-main': 'Module principal',
+        'module-h': 'Module sans cryopods',
+        'module-bdd': 'Module sans bases de données',
+        'module-h-bdd': 'Module sans cryopods ni bases de données',
+        'stats': 'Compétence',
+        'pub': 'Nom de pub'
+    };
+    const varsOf = () => (window.lang && window.lang.card_vars) || {};
+    const parseVar = (token) => {
+        let parts = token.slice(1, -1).split('_');
+        let article = parts[0] || '';
+        return {article: article.toLowerCase(), upper: article.charAt(0) !== article.charAt(0).toLowerCase(), type: parts[1], id: parts[2]};
+    };
+    const articlesOf = (type) => { let first = Object.values(varsOf()[type] || {})[0]; return first && typeof first === 'object' ? Object.keys(first) : []; };
+
+    // Pourquoi une variable ne marchera pas en jeu ('' si elle est bonne)
+    function varProblem(token) {
+        let v = parseVar(token);
+        if (v.article === 'conf')
+            return '';
+        if (!v.type || !varsOf()[v.type])
+            return 'type « ' + (v.type || '?') + ' » inconnu';
+        if (!articlesOf(v.type).includes(v.article))
+            return 'article « ' + v.article + ' » inconnu pour ce type';
+        return '';
+    }
+
+    function resolveVars(text, picks) {
+        let vars = varsOf(), picked = {};
+        return String(text || '').replace(VAR_RE, (token) => {
+            let v = parseVar(token);
+            if (v.article === 'conf')
+                return '‹' + v.type + '›';      // réglage de la partie, connu seulement en jeu
+            if (varProblem(token))
+                return token;
+            let mine = picked[v.type] = picked[v.type] || {};
+            if (mine[v.id] == null) {
+                let taken = Object.values(mine);
+                let pool = Object.keys(vars[v.type]).filter(k => !taken.includes(k));
+                if (!pool.length)
+                    pool = Object.keys(vars[v.type]);
+                mine[v.id] = pool[Math.floor(Math.random() * pool.length)];
+            }
+            let out = vars[v.type][mine[v.id]][v.article];
+            out = v.upper ? out.charAt(0).toUpperCase() + out.slice(1) : out;
+            if (picks && !(token in picks))
+                picks[token] = out;
+            return out;
+        });
+    }
+
+    // Tirage gardé par étape : revenir sur une carte ne relance pas ses variables
+    function shown(s, text) {
+        s.cache = s.cache || {};
+        if (!(text in s.cache))
+            s.cache[text] = resolveVars(text, s.picks = s.picks || {});
+        return s.cache[text];
+    }
+
     /* ---------- Texte tapé comme en jeu ---------- */
 
     async function write(text, token) {
@@ -187,7 +255,7 @@ window.CardPreview = (function () {
                     + '<label class="cp-switch"><input type="checkbox" data-flag="shuffle"' + (card.shuffle ? ' checked' : '') + '> Choix mélangés</label></div>';
             }
             else {
-                html += card.mjreveal ? '<p class="cp-mj-note">' + esc(card.mjreveal) + '</p>' : '<p class="cp-mj-empty">Pas d\'infos MJ sur cette carte.</p>';
+                html += card.mjreveal ? '<p class="cp-mj-note">' + esc(shown(s, card.mjreveal)) + '</p>' : '<p class="cp-mj-empty">Pas d\'infos MJ sur cette carte.</p>';
                 if (card.timer)
                     html += '<p class="cp-mj-hint">Au bout du chrono, seul le dernier choix de la carte reste proposé.</p>';
             }
@@ -196,10 +264,10 @@ window.CardPreview = (function () {
                     + '<input type="text" maxlength="80" data-edit="' + esc(card.id) + '" data-field="marker" value="' + esc(card.marker) + '"></label>';
             html += '<ol class="cp-mj-choices">';
             for (let c of order) {
-                html += '<li><span class="cp-mj-choice">' + esc(c.value || '(sans texte)') + '</span>'
+                html += '<li><span class="cp-mj-choice">' + esc((edit ? c.value : shown(s, c.value)) || '(sans texte)') + '</span>'
                     + '<span class="cp-mj-after' + (hasNext(c) ? '' : ' is-missing') + '"><i class="fas fa-long-arrow-alt-right"></i> ' + afterLabel(c) + '</span>'
                     + (edit ? '<input type="text" class="cp-mj-input" data-edit="' + esc(c.id) + '" data-field="mjreveal" placeholder="Infos MJ du choix (facultatif)" value="' + esc(c.mjreveal) + '">'
-                        : (c.mjreveal ? '<span class="cp-mj-note">' + esc(c.mjreveal) + '</span>' : ''))
+                        : (c.mjreveal ? '<span class="cp-mj-note">' + esc(shown(s, c.mjreveal)) + '</span>' : ''))
                     + (c.loot.length ? '<span class="cp-mj-loot">' + lootHtml(c.loot) + '</span>' : '')
                     + '</li>';
             }
@@ -212,8 +280,27 @@ window.CardPreview = (function () {
             html += '<p class="cp-mj-line"><b>Résultat</b> du choix « ' + esc(short(choice && choice.value, 40)) + ' »</p>'
                 + '<p class="cp-mj-hint">En jeu, la partie reprend ensuite avec la carte suivante du deck.</p>';
         }
+        html += varsHtml(card, order);
         html += '<h3 class="cp-mj-sub"><i class="fas fa-bookmark"></i> Marqueurs</h3><div id="cp-markers">' + markersHtml() + '</div>';
         $('cp-mj').innerHTML = html;
+    }
+
+    // Variables de l'étape : exemple de valeur (mode Éditer) ou valeur tirée (mode Jouer)
+    function varsHtml(card, order) {
+        let s = step();
+        let texts = s.type === 'reveal' ? [(choiceOf(s) || {}).reveal]
+            : [card.desc, card.mjreveal].concat(order.flatMap(c => [c.value, c.mjreveal]));
+        let found = [...new Set(texts.join(' ').match(VAR_RE) || [])];
+        if (mode === 'play')
+            texts.forEach(t => shown(s, t || ''));     // valeurs tirées dans les textes eux-mêmes
+        if (!found.length)
+            return mode === 'edit' ? '<h3 class="cp-mj-sub"><i class="fas fa-dice"></i> Variables</h3><p class="cp-mj-empty">Aucune variable. Le bouton « Variable » en insère une là où se trouve le curseur.</p>' : '';
+        return '<h3 class="cp-mj-sub"><i class="fas fa-dice"></i> Variables</h3><ul class="cp-vars">' + found.map(token => {
+            let problem = varProblem(token);
+            let value = problem ? '' : (mode === 'play' ? (s.picks || {})[token] : resolveVars(token));
+            return '<li' + (problem ? ' class="is-bad"' : '') + '><code>' + esc(token) + '</code> '
+                + (problem ? '<span>' + esc(problem) + ', restera tel quel en jeu</span>' : '<span>→ ' + esc(value) + (mode === 'edit' ? ' <small>(exemple)</small>' : '') + '</span>') + '</li>';
+        }).join('') + '</ul>';
     }
 
     function markersHtml() {
@@ -227,6 +314,7 @@ window.CardPreview = (function () {
 
     async function render(animate) {
         let token = ++run;
+        $('cp-var').hidden = true;
         story = provider();
         stopTimer();
         setEnd(null);
@@ -259,11 +347,11 @@ window.CardPreview = (function () {
         $('cp-edit').hidden = true;
         $('cp-text').hidden = false;
         if (animate) {
-            if (!(await write(card.desc || '(carte sans texte)', token)))
+            if (!(await write(shown(s, card.desc) || '(carte sans texte)', token)))
                 return;
         }
         else
-            $('cp-text').innerText = lastPart(card.desc || '(carte sans texte)');
+            $('cp-text').innerText = lastPart(shown(s, card.desc) || '(carte sans texte)');
         if (!order.length)
             return setEnd('is-warn', '<i class="fas fa-exclamation-triangle"></i> Cette carte ne propose aucun choix : en jeu, l\'histoire resterait bloquée ici.'
                 + ' <button type="button" class="cp-link" data-mode-switch="edit">Ajouter un choix</button>');
@@ -287,7 +375,7 @@ window.CardPreview = (function () {
             btn.type = 'button';
             btn.className = 'cp-choice' + (hasNext(c) ? '' : ' is-missing');
             btn.dataset.key = i + 1;
-            btn.innerHTML = '<kbd>' + (i + 1) + '</kbd><span>' + esc(c.value || '(choix sans texte)') + '</span>'
+            btn.innerHTML = '<kbd>' + (i + 1) + '</kbd><span>' + esc(shown(step(), c.value) || '(choix sans texte)') + '</span>'
                 + (hasNext(c) ? '' : '<small>pas encore de suite</small>');
             btn.style.animationDelay = (i * 90) + 'ms';
             btn.addEventListener('click', () => choose(card, c, token));
@@ -305,11 +393,11 @@ window.CardPreview = (function () {
         $('cp-edit').hidden = true;
         $('cp-text').hidden = false;
         if (animate) {
-            if (!(await write(choice.reveal || '(résultat sans texte)', token)))
+            if (!(await write(shown(step(), choice.reveal) || '(résultat sans texte)', token)))
                 return;
         }
         else
-            $('cp-text').innerText = lastPart(choice.reveal || '(résultat sans texte)');
+            $('cp-text').innerText = lastPart(shown(step(), choice.reveal) || '(résultat sans texte)');
         showLoot(choice.loot);
         let btn = document.createElement('button');
         btn.type = 'button';
@@ -448,6 +536,67 @@ window.CardPreview = (function () {
         return list;
     }
 
+    /* ---------- Insertion d'une variable (mode Éditer) ---------- */
+
+    let lastField = null;       // dernier champ de texte utilisé : la variable y est insérée
+
+    function varToken() {
+        let type = $('cp-var-type').value, article = $('cp-var-article').value;
+        if ($('cp-var-upper').checked)
+            article = article.charAt(0).toUpperCase() + article.slice(1);
+        return '[' + article + '_' + type + '_' + $('cp-var-id').value + ']';
+    }
+
+    function refreshVarForm(typeChanged) {
+        let type = $('cp-var-type').value;
+        if (typeChanged) {
+            let first = Object.values(varsOf()[type] || {})[0] || {};
+            let current = $('cp-var-article').value;
+            $('cp-var-article').innerHTML = articlesOf(type).map(a =>
+                '<option value="' + esc(a) + '"' + (a === current ? ' selected' : '') + '>' + esc(a) + ' — ' + esc(first[a]) + '</option>').join('');
+        }
+        let token = varToken();
+        $('cp-var-code').textContent = token;
+        $('cp-var-example').textContent = resolveVars(token);
+    }
+
+    function openVarForm() {
+        let box = $('cp-var');
+        if (!box.hidden)
+            return (box.hidden = true);
+        if (!$('cp-var-type').options.length)
+            $('cp-var-type').innerHTML = Object.keys(VAR_TYPES).filter(t => varsOf()[t]).map(t =>
+                '<option value="' + t + '">' + VAR_TYPES[t] + ' (' + Object.keys(varsOf()[t]).length + ' au choix)</option>').join('');
+        refreshVarForm(true);
+        box.hidden = false;
+        $('cp-var-type').focus();
+    }
+
+    function insertVar() {
+        let field = lastField && lastField.isConnected && !lastField.hidden ? lastField : $('cp-edit');
+        if (field.hidden)
+            return;
+        let token = varToken();
+        let start = field.selectionStart != null ? field.selectionStart : field.value.length;
+        let end = field.selectionEnd != null ? field.selectionEnd : start;
+        field.value = field.value.slice(0, start) + token + field.value.slice(end);
+        field.dispatchEvent(new Event('input', {bubbles: true}));
+        $('cp-var').hidden = true;
+        field.focus();
+        field.setSelectionRange(start + token.length, start + token.length);
+        // Met à jour la liste des variables du panneau MJ sans toucher aux champs
+        let s = step(), card = cardOf(s);
+        let box = $('cp-mj').querySelector('.cp-vars');
+        let html = card ? varsHtml(card, s.type === 'card' ? card.choices : []) : '';
+        let tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        let list = tmp.querySelector('.cp-vars');
+        if (box && list)
+            box.replaceWith(list);
+        else if (!box)
+            render(false);
+    }
+
     /* ---------- Ouverture et commandes ---------- */
 
     function open(getStory, from) {
@@ -486,6 +635,15 @@ window.CardPreview = (function () {
                 jumpTo(id);
         });
         document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+        $('cp-var-btn').addEventListener('click', openVarForm);
+        $('cp-var-type').addEventListener('change', () => refreshVarForm(true));
+        ['cp-var-article', 'cp-var-id', 'cp-var-upper'].forEach(id => $(id).addEventListener('change', () => refreshVarForm(false)));
+        $('cp-var-insert').addEventListener('click', insertVar);
+        $('cp-var-close').addEventListener('click', () => { $('cp-var').hidden = true; });
+        d.addEventListener('focusin', (e) => {
+            if (e.target.matches('textarea[data-edit], input[type="text"][data-edit]') && e.target.dataset.field !== 'marker')
+                lastField = e.target;
+        });
         $('cp-edit-block').addEventListener('click', () => {
             let s = step();
             let choice = s && s.type === 'reveal' && choiceOf(s);

@@ -166,8 +166,85 @@
     color: var(--ui-accent);
 }
 
-.cp-dialog.is-editing .cp-play-only {
+.cp-dialog.is-editing .cp-play-only,
+.cp-dialog:not(.is-editing) .cp-edit-only {
     display: none;
+}
+
+/* Formulaire « Variable » */
+.cp-var {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 10px 16px 10px 20px;
+    border-bottom: 1px solid var(--ui-border);
+    background: rgb(255 204 0 / 5%);
+}
+
+.cp-var label:not(.cp-switch) {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 11px;
+    color: var(--ui-text-dim);
+}
+
+.cp-var select {
+    padding: 5px 7px;
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    background: rgb(16 12 48);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 13px;
+}
+
+.cp-var .cp-switch {
+    padding-bottom: 6px;
+}
+
+.cp-var-preview {
+    padding-bottom: 6px;
+    font-size: 13px;
+}
+
+.cp-var-preview code,
+.cp-vars code {
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgb(0 0 0 / 35%);
+    color: var(--ui-accent);
+    font-size: 12px;
+}
+
+.cp-var .pe-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+.cp-var-help {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: 11px;
+    color: var(--ui-text-dim);
+}
+
+.cp-vars {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cp-vars li.is-bad span {
+    color: var(--ui-danger);
+}
+
+.cp-vars small {
+    color: var(--ui-text-dim);
 }
 
 .cp-switch {
