@@ -1,11 +1,14 @@
 // Relais LNOB en Node, pour jouer et tester sans Cloudflare (npm run relay).
 // Même comportement que le relais Cloudflare (worker.js) : il sert la page
 // joueur sur / et les connexions WebSocket sur /host, /host/CODE et /join/CODE.
+// Connexion Discord : DISCORD_CLIENT_ID et DISCORD_CLIENT_SECRET dans
+// l'environnement (voir relay/README.md).
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const {WebSocketServer} = require('ws');
 const {Lobby, EXPIRY_MS, newCode, normalizeCode} = require('./lobby-core');
+const discordAuth = require('./discord-auth');
 
 const PLAYER_DIR = path.join(__dirname, '../public/player');
 const TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon'};
@@ -13,6 +16,7 @@ const TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; cha
 // Lobbies en mémoire, par code
 const createStore = function (options) {
     const expiryMs = (options && options.expiryMs) || EXPIRY_MS;
+    const env = (options && options.env) || process.env;
     const lobbies = new Map();
 
     const get = function (code) {
@@ -43,7 +47,8 @@ const createStore = function (options) {
                 if (entry.timer.unref)
                     entry.timer.unref();
             },
-            cancelExpiry: async () => clearTimeout(entry.timer)
+            cancelExpiry: async () => clearTimeout(entry.timer),
+            checkProfile: (token) => discordAuth.checkProfile(env, token)
         });
         lobbies.set(code, entry);
         return entry;
@@ -90,7 +95,7 @@ const createStore = function (options) {
         if (parts[0] === 'join' && parts.length === 2) {
             entry = entry || get(code || 'XXXXXX');
             attach(entry, ws);
-            return entry.lobby.playerConnect(ws, {id: q.get('id'), name: q.get('name'), protocol: q.get('v')});
+            return entry.lobby.playerConnect(ws, {id: q.get('id'), name: q.get('name'), protocol: q.get('v'), discord: q.get('discord')});
         }
         ws.close(1008, 'unknown route');
     };
@@ -112,9 +117,20 @@ const serveStatic = function (req, res) {
     fs.createReadStream(file).pipe(res);
 };
 
+// Routes /auth/discord/* (discord-auth.js), sinon la page joueur
+const serve = (env) => async function (req, res) {
+    let response = req.url.startsWith('/auth/discord/')
+        ? await discordAuth.handle(new Request('http://' + (req.headers.host || '127.0.0.1') + req.url), env).catch(() => null)
+        : null;
+    if (!response)
+        return serveStatic(req, res);
+    res.writeHead(response.status, Object.fromEntries(response.headers));
+    res.end(Buffer.from(await response.arrayBuffer()));
+};
+
 const start = function (port, options) {
     const store = createStore(options);
-    const server = http.createServer(serveStatic);
+    const server = http.createServer(serve((options && options.env) || process.env));
     const wss = new WebSocketServer({noServer: true, maxPayload: 256 * 1024});
     server.on('upgrade', (req, socket, head) => {
         wss.handleUpgrade(req, socket, head, ws => store.connect(ws, new URL(req.url, 'http://x')));

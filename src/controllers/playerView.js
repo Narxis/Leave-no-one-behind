@@ -103,7 +103,9 @@ const roleName = (slug) => (roles.find(slug) || {}).name || '';
 
 const team = async function () {
     let players = await DB.tables.players.findAll({raw: true});
-    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race), role: roleName(p.role)}));
+    // Compte Discord du joueur, pour se reconnaître malgré les noms de persos
+    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race), role: roleName(p.role),
+        discord: lobby.discordOf(p.discord_id)}));
 };
 
 // Tout ce qui est commun aux joueurs

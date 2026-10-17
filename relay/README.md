@@ -5,6 +5,7 @@ Le relais met en relation le MJ et les joueurs d'une partie en ligne. Le jeu tou
 - `lobby-core.js` : la logique (codes de partie, arrivées, départs, reconnexion du MJ, partie oubliée après 12 h sans MJ).
 - `worker.js` + `wrangler.toml` : le relais en ligne, sur Cloudflare Workers (offre gratuite).
 - `dev-server.js` : le même relais en Node, pour jouer ou tester en local (`npm run relay` à la racine du dépôt).
+- `discord-auth.js` : la connexion Discord des joueurs (facultative, voir plus bas).
 
 ## Jouer en local
 
@@ -34,6 +35,24 @@ Le workflow **Relais** (`.github/workflows/relay.yml`) redéploie le relais à c
 ### À la main
 
 Dans ce dossier, sur `prod` à jour : `npm run deploy`.
+
+## Connexion Discord (facultative)
+
+Les joueurs peuvent se connecter avec Discord dans l'app : leur pseudo et leur avatar Discord s'affichent à côté de leur perso (écrans du MJ, lobby, onglet Équipage des autres joueurs), pour se reconnaître même avec des noms de persos différents. Sans réglage, rien ne change : le bouton n'apparaît pas et le nom saisi dans le lobby sert comme avant. Le bot Discord n'est pas utilisé.
+
+**Pourquoi le relais.** Discord renvoie le joueur sur une adresse fixe, déclarée dans l'application Discord, et l'échange du code contre un jeton demande le secret de l'application. Le relais est la seule adresse fixe et publique de la partie en ligne (le serveur du MJ tourne sur son PC, souvent injoignable depuis Internet), et le secret y reste dans les variables de Cloudflare : il n'est jamais dans la page joueur, l'app ni chez le MJ. Le relais ne garde rien : après la connexion, il renvoie à la page joueur un profil signé (id, pseudo, URL de l'avatar ; scope `identify` seulement, ni e-mail ni jeton Discord), valable 30 jours. La page le présente en rejoignant une partie ; le relais vérifie la signature, donc un joueur ne peut pas prendre le compte Discord d'un autre.
+
+Réglage, une seule fois :
+
+1. Sur https://discord.com/developers/applications : **New Application** (nom : LNOB par exemple).
+2. Onglet **OAuth2** : copier le **Client ID**, puis **Reset Secret** et copier le **Client Secret**.
+3. Toujours dans **OAuth2**, **Redirects** → **Add Redirect** : `https://lnob-relay.narxis.workers.dev/auth/discord/callback` (l'adresse du relais suivie de `/auth/discord/callback`), puis **Save Changes**. Pour le relais local, ajouter aussi `http://127.0.0.1:8787/auth/discord/callback`.
+4. Dans ce dossier : `npx wrangler secret put DISCORD_CLIENT_ID` puis `npx wrangler secret put DISCORD_CLIENT_SECRET` (chacun demande la valeur). On peut aussi les saisir sur le tableau de bord Cloudflare : Workers → lnob-relay → Settings → Variables and Secrets.
+5. Rien à redéployer pour les secrets ; la page joueur doit seulement être à jour (voir plus bas).
+
+Relais local : `DISCORD_CLIENT_ID=… DISCORD_CLIENT_SECRET=… npm run relay`.
+
+Pour tout désactiver : supprimer les deux secrets (`npx wrangler secret delete DISCORD_CLIENT_SECRET`). Changer le secret sur Discord déconnecte tous les joueurs (les profils signés avec l'ancien ne sont plus acceptés).
 
 ## Limites
 

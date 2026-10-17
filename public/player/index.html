@@ -17,6 +17,17 @@
         <input id="code" name="code" inputmode="text" maxlength="7" placeholder="K7Q-2MX" required spellcheck="false">
         <label for="name">Ton pseudo</label>
         <input id="name" name="name" maxlength="20" placeholder="Pseudo" required>
+        <!-- Connexion Discord (si le relais est configuré) : pseudo et avatar
+             Discord affichés à côté du perso, pour se reconnaître -->
+        <div id="discord-box" class="discord-box" hidden>
+            <a id="discord-login" class="discord-login">Se connecter avec Discord</a>
+            <p id="discord-me" class="discord-me" hidden>
+                <img id="discord-avatar" alt="" referrerpolicy="no-referrer">
+                <span>Discord : <strong id="discord-name"></strong></span>
+                <button type="button" id="discord-logout" class="secondary small">Se déconnecter</button>
+            </p>
+            <p class="dim small-text">Facultatif : les autres joueurs et le MJ verront ton pseudo et ton avatar Discord à côté de ton perso.</p>
+        </div>
         <p id="join-error" class="error" role="alert" hidden></p>
         <button type="submit" id="submit" class="primary">Rejoindre</button>
         <p class="wiki-line"><a class="wiki-link" target="_blank" rel="noopener">Wiki des règles ↗</a></p>

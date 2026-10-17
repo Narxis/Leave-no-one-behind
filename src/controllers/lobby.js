@@ -36,10 +36,18 @@ const notifyJoin = function (player) {
     }
 };
 
+// Compte Discord vérifié par le relais : seulement l'id, le pseudo et l'URL
+// de l'avatar (cdn de Discord), sinon null
+const cleanDiscord = function (d) {
+    if (!d || typeof d !== 'object' || !/^\d{5,25}$/.test(String(d.id)) || !/^https:\/\/cdn\.discordapp\.com\/[\w./?=-]+$/.test(String(d.avatar)))
+        return null;
+    return {id: String(d.id), name: String(d.name || '').slice(0, 32), avatar: String(d.avatar)};
+};
+
 // Un joueur arrive ou revient : on garde le nom de son perso, s'il en a un
 const addPlayer = function (p) {
     let known = state.players.get(p.id);
-    let player = {id: p.id, name: p.name, online: true, character: known ? known.character : null};
+    let player = {id: p.id, name: p.name, online: true, character: known ? known.character : null, discord: cleanDiscord(p.discord)};
     state.players.set(p.id, player);
     return player;
 };
@@ -204,6 +212,12 @@ const setCharacter = function (id, name) {
     changed();
 };
 
+// Compte Discord d'un joueur (écrans du MJ), null s'il ne s'est pas connecté avec
+const discordOf = function (id) {
+    let p = state.players.get(String(id));
+    return p ? p.discord : null;
+};
+
 const kick = function (id) {
     relaySend({type: 'kick', id: String(id)});
     state.players.delete(String(id));
@@ -225,4 +239,4 @@ const handle = function (response) {
     }
 };
 
-module.exports = {RELAY_URL, open, close, kick, handle, getState, sendTo, setCharacter, onPlayerMessage, onPlayerJoin};
+module.exports = {RELAY_URL, open, close, kick, handle, getState, sendTo, setCharacter, discordOf, onPlayerMessage, onPlayerJoin, onRelayMessage};
