@@ -29,6 +29,7 @@ async function test() {
     await test_roll();
     test_ship_alerts();
     await test_items_editor();
+    test_npcs();
 }
 
 async function setup(){
@@ -282,4 +283,34 @@ async function test_items_editor() {
     finally {
         fs.writeFileSync(file, backup);
     }
+}
+
+// Fiches de l'éditeur d'ennemis et compagnons : valeurs nettoyées et bornées
+function test_npcs() {
+    const npcs = require("../src/controllers/npcs");
+
+    assert.ok(npcs.cleanEnemy({name: '   '}).error, 'un ennemi sans nom est refusé');
+    let {enemy} = npcs.cleanEnemy({name: '  Pirate   rouge ', hp: '5000', offense: -3, defense: 'abc', damage: 'enorme',
+        loot: ['Corde', {name: 'Lance'}, '', ...Array(20).fill('Caillou')]});
+    assert.strictEqual(enemy.name, 'Pirate rouge');
+    assert.strictEqual(enemy.hp, 999, 'PV bornés à 999');
+    assert.strictEqual(enemy.offense, 0);
+    assert.strictEqual(enemy.defense, 50, 'défense par défaut');
+    assert.strictEqual(enemy.damage, 'moyen', 'palier de dégâts inconnu remplacé');
+    assert.strictEqual(enemy.category, 'standard', 'catégorie inconnue remplacée');
+    assert.strictEqual(npcs.cleanEnemy({name: 'Roi', category: 'boss'}).enemy.category, 'boss');
+    assert.strictEqual(enemy.loot.length, npcs.LOOT_SIZE, 'butin limité');
+    assert.deepStrictEqual(enemy.loot.slice(0, 3), ['Corde', 'Lance', 'Caillou']);
+
+    assert.ok(npcs.cleanCompanion({}).error, 'un compagnon sans nom est refusé');
+    let {companion} = npcs.cleanCompanion({name: 'Zorg', race: 'Mécano', combat: 120, moral: '30'});
+    assert.strictEqual(companion.combat, 100);
+    assert.strictEqual(companion.moral, 30);
+    assert.strictEqual(companion.pilotage, 50, 'stat absente : 50');
+    assert.strictEqual(companion.race, 'Mécano');
+
+    assert.strictEqual(npcs.slugify('Nek-réant  géant !'), 'nek-reant-geant');
+    // Sans fichier modifié, les ennemis de départ viennent de config/bestiary.json
+    assert.ok(npcs.getEnemies().length > 0);
+    console.log('npcs OK');
 }

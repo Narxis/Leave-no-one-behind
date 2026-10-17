@@ -15,6 +15,7 @@ const allies = require("./allies");
 const shipAlerts = require("./shipAlerts");
 const races = require("./races");
 const itemsEditor = require("./itemsEditor");
+const npcs = require("./npcs");
 const leaderboard = require("./leaderboard");
 const gameSettings = require("./gameSettings");
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
@@ -39,6 +40,27 @@ module.exports = {
 
     async deleteRace(req, res) {
         let result = await races.remove(req.params.slug);
+        res.status(result.error ? 400 : 200).json(result);
+    },
+
+    // Éditeur d'ennemis et compagnons (/bestiaire) : kind vaut enemies ou companions
+    getNpcs(req, res) {
+        res.json({enemies: npcs.getEnemies(), companions: npcs.getCompanions()});
+    },
+
+    saveNpc(req, res) {
+        let save = {enemies: npcs.saveEnemy, companions: npcs.saveCompanion}[req.params.kind];
+        if (!save)
+            return res.status(404).json({error: 'Type de fiche inconnu.'});
+        let result = save(req.body || {});
+        res.status(result.error ? 400 : 200).json(result);
+    },
+
+    deleteNpc(req, res) {
+        let remove = {enemies: npcs.removeEnemy, companions: npcs.removeCompanion}[req.params.kind];
+        if (!remove)
+            return res.status(404).json({error: 'Type de fiche inconnu.'});
+        let result = remove(req.params.slug);
         res.status(result.error ? 400 : 200).json(result);
     },
 
