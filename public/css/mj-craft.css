@@ -1,0 +1,219 @@
+/* Panneau MJ : atelier d'artisanat (mj-craft.js), même cadre que le marchand */
+.mj-craft {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr);
+    gap: 24px;
+    align-items: start;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 24px;
+    padding: 20px 24px;
+    border: 1px solid var(--ui-border);
+    border-radius: 20px;
+    background: var(--ui-surface);
+    box-shadow: var(--ui-shadow);
+}
+
+.mj-craft-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.mj-craft-state {
+    font-size: .9em;
+    color: #8fd18f;
+}
+
+.mj-craft.is-combat .mj-craft-state {
+    color: var(--ui-danger);
+}
+
+.mj-page .mj-craft .add-life {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    margin: 0;
+    padding: 7px 12px;
+    font-size: .95em;
+}
+
+.mj-page .mj-craft select.add-life,
+.mj-page .mj-craft input.add-life {
+    cursor: auto;
+    text-align: left;
+}
+
+.mj-page .mj-craft select.add-life option {
+    background: #17181c;
+}
+
+.mj-page .mj-craft button:disabled {
+    opacity: .4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.mj-craft-settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.mj-craft-settings label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: .85em;
+    opacity: .9;
+}
+
+.mj-craft-dice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mj-craft-chance {
+    color: var(--ui-accent);
+    white-space: nowrap;
+}
+
+.mj-craft-fail {
+    margin-top: -6px;
+    font-size: .8em;
+    opacity: .6;
+}
+
+.mj-craft-recipes {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Une recette : résultat | ingrédients | bouton */
+.mj-craft-recipe {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) minmax(0, 2fr) 110px;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-craft-result {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-weight: 700;
+}
+
+.mj-craft-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mj-craft-ings,
+.mj-craft-free-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.mj-craft-ing {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px 2px 3px;
+    border: 1px solid rgb(143 209 143 / 45%);
+    border-radius: 999px;
+    font-size: .85em;
+}
+
+.mj-craft-ing small {
+    opacity: .65;
+}
+
+.mj-craft-ing.missing {
+    border-color: rgb(255 90 90 / 55%);
+    color: var(--ui-danger);
+}
+
+.mj-craft-ing .mj-craft-img {
+    width: 20px;
+    height: 20px;
+    font-size: .8em;
+}
+
+.mj-craft-img {
+    width: 26px;
+    height: 26px;
+    flex: none;
+    object-fit: contain;
+}
+
+.mj-craft-noimg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 35%);
+    color: var(--ui-accent);
+    font-weight: 700;
+}
+
+.mj-page .mj-craft .mj-craft-make {
+    padding: 6px 8px;
+    font-size: .85em;
+}
+
+.mj-craft-remove {
+    padding: 0 0 0 2px;
+    border: none;
+    background: none;
+    color: var(--ui-text-dim);
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+.mj-craft-remove:hover {
+    color: var(--ui-danger);
+}
+
+.mj-craft-empty {
+    margin: 2px 0;
+    font-size: .9em;
+    opacity: .6;
+}
+
+.mj-craft-free-add {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 64px 44px;
+    gap: 8px;
+}
+
+.mj-craft-free-result {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 64px;
+    gap: 8px;
+}
+
+.mj-craft-log-line.failed {
+    color: var(--ui-danger);
+}
+
+@media (max-width: 1100px) {
+    .mj-craft {
+        grid-template-columns: 1fr;
+    }
+
+    .mj-craft-recipe {
+        grid-template-columns: 1fr;
+    }
+}
