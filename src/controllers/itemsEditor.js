@@ -4,7 +4,8 @@ const races = require('./races');
 
 // Catalogue des objets (éditeur /items) : src/config/items.json, rangé par
 // catégorie (« pool »). Chaque objet a aussi un type facultatif (arme,
-// consommable, ressource…), propre au catalogue pour l'instant. Les objets « starter » sont donnés au début de la
+// consommable, ressource…) et une rareté (commun → légendaire), propres au
+// catalogue pour l'instant. Les objets « starter » sont donnés au début de la
 // partie aux joueurs de leur race. Chaque modification met aussi à jour la
 // table items de la partie en cours, sans toucher aux exemplaires que les
 // joueurs ou le vaisseau possèdent déjà.
@@ -16,6 +17,8 @@ const STARTER = 'starter';
 const MAX_NAME = 60;
 const MAX_DESC = 600;
 // Types proposés d'office dans l'éditeur ; on peut en créer d'autres
+// Raretés, de la plus courante à la plus rare
+const RARITIES = ['commun', 'peu_commun', 'rare', 'epique', 'legendaire'];
 const TYPES = ['arme', 'armure', 'munition', 'consommable', 'ressource', 'outil', 'gadget', 'divers'];
 
 const read = () => JSON.parse(fs.readFileSync(ITEMS_FILE, 'utf8'));
@@ -49,6 +52,7 @@ const list = async function () {
                 desc: item.desc || '',
                 pool: pool,
                 type: item.type || '',
+                rarity: RARITIES.includes(item.rarity) ? item.rarity : RARITIES[0],
                 race: item.race || '',
                 image: imageUrl(item.image),
                 used: used[item.slug] || {players: 0, ship: 0}
@@ -96,6 +100,7 @@ const save = async function (data) {
     if (!pool)
         return {error: 'Choisis une catégorie.'};
     let type = slugify(data.type || '', '_').slice(0, 30);
+    let rarity = RARITIES.includes(data.rarity) ? data.rarity : RARITIES[0];
     let race = pool === STARTER ? String(data.race || '') : '';
     if (pool === STARTER && !race)
         return {error: 'Un objet de départ appartient à une race : choisis-la.'};
@@ -118,6 +123,7 @@ const save = async function (data) {
     };
     if (type)
         item.type = type;
+    item.rarity = rarity;
     item.desc = String(data.desc || '').replace(/\r/g, '').trim().slice(0, MAX_DESC);
     if (race)
         item.race = race;
@@ -169,4 +175,4 @@ const remove = async function (slug) {
     return {ok: true, kept: !!kept};
 }
 
-module.exports = {list, save, remove, STARTER, TYPES};
+module.exports = {list, save, remove, STARTER, TYPES, RARITIES};

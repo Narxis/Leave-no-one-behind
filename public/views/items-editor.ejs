@@ -32,6 +32,8 @@
         </div>
         <div class="ie-filter-label">Catégorie</div>
         <div class="ie-filters" id="ie-filters" role="tablist" aria-label="Catégories"></div>
+        <div class="ie-filter-label">Rareté</div>
+        <div class="ie-filters ie-rarity-filters" id="ie-rarity-filters" role="tablist" aria-label="Raretés"></div>
         <div class="ie-filter-label">Type</div>
         <div class="ie-filters" id="ie-type-filters" role="tablist" aria-label="Types"></div>
         <div class="ie-list" id="ie-list"></div>
@@ -73,6 +75,10 @@
                 </div>
             </div>
 
+            <div class="ie-field">Rareté
+                <div class="ie-rarities" id="ie-rarity" role="radiogroup" aria-label="Rareté"></div>
+            </div>
+
             <div class="ie-field">Type
                 <div class="ie-types" id="ie-type" role="radiogroup" aria-label="Type"></div>
                 <div class="ie-new-type" id="ie-new-type-box" hidden>
@@ -100,6 +106,7 @@
             <div class="ie-preview-card">
                 <div class="ie-preview-img" id="ie-preview-img"></div>
                 <div class="ie-preview-body">
+                    <span class="ie-preview-rarity" id="ie-preview-rarity"></span>
                     <b id="ie-preview-name"></b>
                     <span class="ie-tag ie-tag-type" id="ie-preview-type" hidden></span>
                     <p id="ie-preview-desc"></p>
@@ -121,6 +128,7 @@
     <div class="ie-dialog-body">
         <ol class="ie-steps">
             <li><b>Le catalogue.</b> Tous les objets du jeu sont ici, rangés par catégorie. Ils sont enregistrés dans <code>src/config/items.json</code>.</li>
+            <li><b>Rareté.</b> Commun (gris), peu commun (vert), rare (bleu), épique (violet) ou légendaire (orange). La couleur se retrouve sur le nom et le cadre de l'objet.</li>
             <li><b>Types.</b> Arme, armure, consommable, ressource… Clique sur un type pour le choisir, ou sur « Nouveau type » pour en créer un. Les filtres « Type » à gauche servent à les retrouver.</li>
             <li><b>Objets de départ.</b> La catégorie « Départ » donne l'objet, au lancement de la partie, à chaque joueur de la race choisie.</li>
             <li><b>Les autres catégories</b> servent au butin : le MJ les propose après un combat, et l'éditeur de lieux les propose dans les choix des cartes.</li>

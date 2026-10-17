@@ -7,6 +7,8 @@
     const $ = (id) => document.getElementById(id);
     const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
     const NEW_TYPE = '__new__';
+    const RARITIES = [['commun', 'Commun'], ['peu_commun', 'Peu commun'], ['rare', 'Rare'], ['epique', 'Épique'], ['legendaire', 'Légendaire']];
+    const rarityName = (r) => (RARITIES.find(([k]) => k === r) || RARITIES[0])[1];
     const TYPE_INFO = {
         arme: ['Arme', 'fa-crosshairs'], armure: ['Armure', 'fa-shield-alt'], munition: ['Munition', 'fa-bullseye'],
         consommable: ['Consommable', 'fa-utensils'], ressource: ['Ressource', 'fa-cubes'], outil: ['Outil', 'fa-wrench'],
@@ -21,6 +23,8 @@
     let catalog = CATALOG;
     let filter = 'all';
     let typeFilter = 'all';
+    let rarityFilter = 'all';
+    let rarity = 'commun';
     let type = '';            // type choisi dans le formulaire ('' : aucun, NEW_TYPE : nouveau)
     let editing = null;       // objet affiché (null : nouvel objet)
     let image = null;         // nouvelle image (data URL PNG) à envoyer
@@ -67,6 +71,12 @@
         $('ie-filters').innerHTML = tabs.map(([key, label, n]) =>
             '<button type="button" role="tab" data-pool="' + esc(key) + '" aria-selected="' + (filter === key) + '">'
             + esc(label) + ' <small>' + n + '</small></button>').join('');
+        let byRarity = {};
+        catalog.items.forEach(i => byRarity[i.rarity] = (byRarity[i.rarity] || 0) + 1);
+        $('ie-rarity-filters').innerHTML = [['all', 'Toutes']].concat(RARITIES).map(([key, label]) =>
+            '<button type="button" role="tab" data-rarity="' + key + '" class="rarity-' + key + '" aria-selected="' + (rarityFilter === key) + '">'
+            + (key !== 'all' ? '<span class="ie-rdot"></span>' : '') + esc(label)
+            + ' <small>' + (key === 'all' ? catalog.items.length : byRarity[key] || 0) + '</small></button>').join('');
         let byType = {};
         catalog.items.forEach(i => byType[i.type] = (byType[i.type] || 0) + 1);
         let types = [['all', 'Tous', catalog.items.length]].concat(catalog.types.map(t => [t, typeName(t), byType[t] || 0]));
@@ -81,13 +91,14 @@
         let q = slugify($('ie-search').value);
         let shown = catalog.items.filter(i => (filter === 'all' || i.pool === filter)
             && (typeFilter === 'all' || i.type === typeFilter)
+            && (rarityFilter === 'all' || i.rarity === rarityFilter)
             && (!q || slugify(i.name + ' ' + i.desc + ' ' + raceName(i.race) + ' ' + (i.type ? typeName(i.type) : '')).includes(q)));
         let box = $('ie-list');
         box.innerHTML = '';
         let pools = filter === 'all' ? catalog.pools : [filter];
         for (let pool of pools) {
             let items = shown.filter(i => i.pool === pool);
-            if (!items.length && (q || filter === 'all' || typeFilter !== 'all'))
+            if (!items.length && (q || filter === 'all' || typeFilter !== 'all' || rarityFilter !== 'all'))
                 continue;
             let group = document.createElement('section');
             group.className = 'ie-group';
@@ -97,8 +108,9 @@
             for (let item of items) {
                 let b = document.createElement('button');
                 b.type = 'button';
-                b.className = 'ie-item' + (editing && editing.slug === item.slug ? ' selected' : '');
+                b.className = 'ie-item rarity-' + item.rarity + (editing && editing.slug === item.slug ? ' selected' : '');
                 b.dataset.slug = item.slug;
+                b.title = rarityName(item.rarity);
                 b.innerHTML = '<span class="ie-thumb">' + thumb(imgSrc(item), item.name) + '</span>'
                     + '<span class="ie-item-body"><span class="ie-item-name">' + esc(item.name) + '</span>'
                     + '<span class="ie-tags">'
@@ -146,6 +158,11 @@
         $('ie-new-type-box').hidden = type !== NEW_TYPE;
     }
 
+    function renderRarities() {
+        $('ie-rarity').innerHTML = RARITIES.map(([key, label]) => '<button type="button" role="radio" data-rarity="' + key + '" class="rarity-' + key + '" aria-checked="' + (rarity === key) + '">'
+            + '<span class="ie-rdot"></span>' + esc(label) + '</button>').join('');
+    }
+
     function currentType() {
         return type === NEW_TYPE ? slugify($('ie-new-type').value).replace(/-/g, '_') : type;
     }
@@ -156,7 +173,7 @@
     }
 
     function formState() {
-        return JSON.stringify([$('ie-name').value.trim(), currentPool(), currentType(), $('ie-race').value, $('ie-desc').value.trim(), image, removeImage]);
+        return JSON.stringify([$('ie-name').value.trim(), currentPool(), currentType(), rarity, $('ie-race').value, $('ie-desc').value.trim(), image, removeImage]);
     }
 
     const isDirty = () => formState() !== saved;
@@ -204,6 +221,8 @@
         let src = currentImage();
         $('ie-preview-img').innerHTML = thumb(src, name);
         $('ie-preview-name').textContent = name;
+        document.querySelector('.ie-preview').className = 'ie-preview rarity-' + rarity;
+        $('ie-preview-rarity').textContent = rarityName(rarity);
         let t = currentType();
         $('ie-preview-type').hidden = !t;
         $('ie-preview-type').innerHTML = t ? typeIcon(t) + ' ' + esc(typeName(t)) : '';
@@ -234,6 +253,7 @@
 
     function refresh() {
         renderPool();
+        renderRarities();
         renderTypes();
         renderImage();
         renderPreview();
@@ -254,6 +274,7 @@
         $('ie-new-pool').value = '';
         type = src.type || (!item && !prefill && typeFilter !== 'all' ? typeFilter : '');
         $('ie-new-type').value = '';
+        rarity = src.rarity || (!item && !prefill && rarityFilter !== 'all' ? rarityFilter : 'commun');
         if (prefill && prefill.imageData)
             image = prefill.imageData;
         $('ie-form-title').textContent = item ? 'Modifier l\'objet' : 'Nouvel objet';
@@ -316,6 +337,7 @@
                     name: name,
                     pool: currentPool(),
                     type: currentType(),
+                    rarity: rarity,
                     race: $('ie-race').value,
                     desc: $('ie-desc').value,
                     image: image || undefined,
@@ -333,6 +355,7 @@
             await reload();
             filter = filter === 'all' || filter === out.item.pool ? filter : out.item.pool;
             typeFilter = typeFilter === 'all' || typeFilter === out.item.type ? typeFilter : 'all';
+            rarityFilter = rarityFilter === 'all' || rarityFilter === out.item.rarity ? rarityFilter : 'all';
             renderFilters();
             open(catalog.items.find(i => i.slug === out.item.slug));
             toast(created ? 'Objet « ' + out.item.name + ' » créé' : 'Objet « ' + out.item.name + ' » enregistré');
@@ -408,6 +431,21 @@
         renderFilters();
         renderList();
     });
+    $('ie-rarity-filters').addEventListener('click', (e) => {
+        let b = e.target.closest('[data-rarity]');
+        if (!b)
+            return;
+        rarityFilter = b.dataset.rarity;
+        renderFilters();
+        renderList();
+    });
+    $('ie-rarity').addEventListener('click', (e) => {
+        let b = e.target.closest('[data-rarity]');
+        if (!b)
+            return;
+        rarity = b.dataset.rarity;
+        refresh();
+    });
     $('ie-type').addEventListener('click', (e) => {
         let b = e.target.closest('[data-type]');
         if (!b)
@@ -439,7 +477,7 @@
     });
     $('ie-duplicate').addEventListener('click', () => {
         let src = editing;
-        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, type: currentType(), race: $('ie-race').value});
+        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, type: currentType(), rarity: rarity, race: $('ie-race').value});
         $('ie-name').focus();
         $('ie-name').select();
     });

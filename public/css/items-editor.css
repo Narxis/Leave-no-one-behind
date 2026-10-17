@@ -9,6 +9,23 @@
     display: none !important;
 }
 
+/* Raretés : couleurs habituelles des RPG */
+.rarity-commun { --rarity: #c4c4c4; }
+.rarity-peu_commun { --rarity: #1eff00; }
+.rarity-rare { --rarity: #2f8cff; }
+.rarity-epique { --rarity: #b04dff; }
+.rarity-legendaire { --rarity: #ff8000; }
+
+.ie-rdot {
+    flex: none;
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--rarity);
+    box-shadow: 0 0 6px var(--rarity);
+}
+
 /* Le menu du jeu passe au-dessus de l'éditeur */
 .items-editor-page #menuToggle {
     z-index: 60;
@@ -349,6 +366,80 @@
     border-radius: 999px;
     font-size: 11px;
     color: var(--ui-cyan);
+}
+
+.ie-item .ie-thumb {
+    box-shadow: inset 0 0 0 1px var(--rarity), 0 0 8px -2px var(--rarity);
+}
+
+.ie-item:not(.rarity-commun) .ie-item-name {
+    color: var(--rarity);
+}
+
+.ie-rarity-filters button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.ie-rarities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.ie-rarities button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border: 1px solid var(--ui-border);
+    border-radius: 999px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.ie-rarities button:hover {
+    background: var(--ui-fill-hover);
+}
+
+.ie-rarities button[aria-checked="true"] {
+    border-color: var(--rarity);
+    background: color-mix(in srgb, var(--rarity) 14%, transparent);
+    color: var(--rarity);
+}
+
+.ie-preview-card {
+    border-color: var(--rarity, var(--ui-border-strong));
+    box-shadow: 0 0 24px -10px var(--rarity, transparent);
+}
+
+.ie-preview-img {
+    box-shadow: inset 0 0 0 1px var(--rarity, transparent);
+}
+
+.ie-preview-rarity {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--rarity);
+}
+
+.ie-preview:not(.rarity-commun) .ie-preview-body b {
+    color: var(--rarity);
+}
+
+.ie-preview .ie-chip {
+    border-color: var(--rarity);
+    background: color-mix(in srgb, var(--rarity) 12%, transparent);
 }
 
 .ie-tags {
