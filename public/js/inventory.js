@@ -1,7 +1,8 @@
 // Inventaires sur la page de jeu : coffre de chaque joueur, objets du vaisseau
 // et glisser-déposer du MJ. On attrape un objet (butin du combat gagné, coffre
 // d'un joueur, liste du vaisseau) et on le lâche sur l'onglet d'un joueur ou
-// sur la liste du vaisseau (src/controllers/inventory.js)
+// sur la liste du vaisseau (src/controllers/inventory.js). Un objet en
+// plusieurs exemplaires part un par un ; Maj enfoncée, toute la pile part
 (function () {
     const DRAG_START = 6;   // px avant que l'appui devienne un glisser
 
@@ -34,8 +35,10 @@
             line.dataset.owner = discord_id;
             let p = el('p');
             p.append(itemIcon(item), document.createTextNode(item.name));
-            if (item.count > 1)
+            if (item.count > 1) {
                 p.append(document.createTextNode(' '), el('span', 'item-count', '×' + item.count));
+                line.title = STACK_HINT(item.count);
+            }
             let trash = el('i', 'far fa-trash-alt item-trash');
             if (typeof removeStarterItem === 'function')
                 trash.addEventListener('click', () => removeStarterItem(discord_id, item.slug));
@@ -44,29 +47,34 @@
         }
     }
 
-    // Même rendu que la liste .todos de template-card.ejs
+    const STACK_HINT = (n) => 'Glisser : un exemplaire. Maj + glisser : les ' + n;
+
+    // Même rendu que la liste .todos de template-card.ejs : une ligne par
+    // objet, avec sa quantité
     function renderShip(items) {
         let list = document.querySelector('.todos');
         if (!list)
             return;
         list.innerHTML = '';
-        let n = 0;
-        for (let item of items) {
-            for (let i = 0; i < item.count; i++, n++) {
-                let li = el('li', 'item-' + item.slug);
-                li.dataset.slug = item.slug;
-                let box = el('input');
-                box.type = 'checkbox';
-                box.id = 'todo_ship_' + n;
-                let label = el('label');
-                label.htmlFor = box.id;
-                label.append(itemIcon(item), el('span', 'check'), el('p', '', item.name));
-                let trash = el('i', 'far fa-trash-alt delete');
-                trash.dataset.slug = item.slug;
-                li.append(box, label, trash);
-                list.append(li);
+        items.forEach((item, n) => {
+            let li = el('li', 'item-' + item.slug);
+            li.dataset.slug = item.slug;
+            let box = el('input');
+            box.type = 'checkbox';
+            box.id = 'todo_ship_' + n;
+            let label = el('label');
+            label.htmlFor = box.id;
+            label.append(itemIcon(item), el('span', 'check'), el('p', '', item.name));
+            if (item.count > 1) {
+                label.append(el('span', 'item-count', '×' + item.count));
+                li.title = STACK_HINT(item.count);
             }
-        }
+            let trash = el('i', 'far fa-trash-alt delete');
+            trash.dataset.slug = item.slug;
+            trash.title = 'Retirer un exemplaire';
+            li.append(box, label, trash);
+            list.append(li);
+        });
     }
 
     document.addEventListener('inventory', (e) => {
@@ -78,7 +86,7 @@
         renderShip(data.ship || []);
         let ev = data.event;
         if (ev && ev.to && ev.to.type === 'player')
-            flash(document.getElementById('player-tab' + ev.to.id), '+ ' + ev.item.name);
+            flash(document.getElementById('player-tab' + ev.to.id), '+ ' + (ev.item.count > 1 ? ev.item.count + ' ' : '') + ev.item.name);
     });
 
     document.addEventListener('inventory-error', (e) => {
@@ -152,7 +160,7 @@
         let src = sourceOf(e.target);
         if (!src)
             return;
-        drag = Object.assign(src, {x: e.clientX, y: e.clientY, ghost: null, pointer: e.pointerId});
+        drag = Object.assign(src, {x: e.clientX, y: e.clientY, ghost: null, pointer: e.pointerId, all: e.shiftKey});
     });
 
     document.addEventListener('pointermove', (e) => {
@@ -206,8 +214,14 @@
         let drop = dropOf(e.clientX, e.clientY);
         if (!drop || sameInventory(d.from, drop.to))
             return;
-        wsLNOB.send({action: 'inventory-move', data: {slug: d.slug, name: d.name, from: d.from, to: drop.to}});
+        wsLNOB.send({action: 'inventory-move', data: {slug: d.slug, name: d.name, from: d.from, to: drop.to, all: d.all || e.shiftKey}});
     }
+
+    // Pas de glisser natif du navigateur (image) : il annulerait le nôtre
+    document.addEventListener('dragstart', (e) => {
+        if (sourceOf(e.target))
+            e.preventDefault();
+    });
 
     document.addEventListener('pointerup', (e) => endDrag(e, false));
     document.addEventListener('pointercancel', (e) => endDrag(e, true));

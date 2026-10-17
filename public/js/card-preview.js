@@ -229,12 +229,15 @@ window.CardPreview = (function () {
 
     /* ---------- Petits morceaux d'affichage ---------- */
 
+    // Entrées du butin : un nom, ou {name, qty} pour plusieurs exemplaires
     function lootHtml(names) {
-        return names.map(name => {
-            let known = (window.LOOT_ITEMS || []).find(it => it.name.toLowerCase() === String(name).toLowerCase());
+        return names.map(entry => {
+            let obj = entry && typeof entry === 'object';
+            let name = String(obj ? entry.name : entry), qty = obj && entry.qty > 1 ? entry.qty : 1;
+            let known = (window.LOOT_ITEMS || []).find(it => it.name.toLowerCase() === name.toLowerCase());
             return '<span class="cp-loot-chip' + (known ? '' : ' is-custom') + '">'
-                + (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<b>' + esc(String(name).charAt(0)) + '</b>')
-                + esc(name) + '</span>';
+                + (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<b>' + esc(name.charAt(0)) + '</b>')
+                + esc(name) + (qty > 1 ? ' ×' + qty : '') + '</span>';
         }).join('');
     }
 

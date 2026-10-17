@@ -134,6 +134,8 @@
             else
                 card.append(el('span', 'combat-loot-img combat-loot-noimg', item.name.charAt(0)));
             card.append(el('span', 'combat-loot-name', item.name));
+            if (item.qty > 1)
+                card.append(el('span', 'combat-loot-qty', '×' + item.qty));
             grid.append(card);
         });
         lootBox.append(grid);

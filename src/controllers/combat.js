@@ -2,6 +2,7 @@ const fs = require('fs');
 const {Player} = require("../models/player");
 const allies = require("./allies");
 const npcs = require("./npcs");
+const loot = require("./loot");
 
 // Paliers de dégâts, les mêmes que les jets du menu MJ
 const DAMAGE = {
@@ -61,7 +62,8 @@ const getBestiary = function () {
     return npcs.getEnemies();
 }
 
-// Objets proposés au MJ pour le butin : tous ceux de items.json
+// Objets proposés au MJ pour le butin : tous ceux de items.json (qty : la
+// quantité proposée d'office quand on l'ajoute à un butin)
 const getLootList = function () {
     let pools = JSON.parse(fs.readFileSync(__dirname + '/../config/items.json', 'utf8'));
     let seen = new Set();
@@ -70,24 +72,26 @@ const getLootList = function () {
         if (seen.has(item.name.toLowerCase()))
             continue;
         seen.add(item.name.toLowerCase());
-        list.push({name: item.name, slug: item.slug, image: item.image ? '/img/items/' + item.image : ''});
+        list.push({name: item.name, slug: item.slug, image: item.image ? '/img/items/' + item.image : '', qty: loot.qtyOf(item.qty)});
     }
     return list;
 }
 
-// Butin d'un ennemi : un objet connu (avec son image) ou une saisie libre du MJ
+// Butin d'un ennemi ou d'un choix : un objet connu (avec son image) ou une
+// saisie libre du MJ, en un ou plusieurs exemplaires (qty)
 const makeLoot = function (raw) {
     let known = getLootList();
     let items = [];
-    for (let entry of (Array.isArray(raw) ? raw : []).slice(0, LOOT_SIZE)) {
-        let name = String((entry && entry.name) || entry || '').trim().slice(0, 60);
-        if (!name)
+    for (let e of (Array.isArray(raw) ? raw : []).slice(0, LOOT_SIZE).map(loot.entry)) {
+        if (!e)
             continue;
-        let item = known.find(k => k.name.toLowerCase() === name.toLowerCase());
-        items.push(item ? Object.assign({}, item) : {name: name, slug: '', image: '', custom: true});
+        let item = known.find(k => k.name.toLowerCase() === e.name.toLowerCase());
+        items.push(Object.assign(item ? Object.assign({}, item) : {name: e.name, slug: '', image: '', custom: true}, {qty: e.qty}));
     }
     return items;
 }
+
+const lootLabel = (item) => item.qty > 1 ? item.name + ' ×' + item.qty : item.name;
 
 const getState = function () {
     return JSON.parse(JSON.stringify(Object.assign({}, state, {wounds: wounds})));
@@ -388,7 +392,7 @@ const checkVictory = function () {
         return;
     state.lootRevealed = true;
     let items = state.enemies.flatMap(e => e.loot);
-    addLog({type: 'loot', items: items.map(i => i.name)});
+    addLog({type: 'loot', items: items.map(lootLabel)});
 }
 
 // Le MJ choisit le butin d'un ennemi (avant ou pendant le combat)
