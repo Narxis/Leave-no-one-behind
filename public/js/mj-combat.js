@@ -26,6 +26,8 @@
     let allies = [];       // compagnons (PNJ) : le serveur lance leur dé directement
     let targetId = null;   // ennemi choisi, en attente du choix de l'attaquant
     let victimFor = null;  // ennemi qui attaque, en attente du choix de sa cible
+    let pick = null;       // attaquant ou cible choisi, envoyé avec « Valider » ('p:<id>' ou 'a:<id>')
+    let hitStatus = {kind: '', turns: 3}; // statut posé si l'attaque en préparation touche
     let lootOpen = null;   // butin en cours d'édition : 'p<index>' (préparation) ou id de l'ennemi
     let lootDraft = '';    // texte en cours de saisie, gardé quand la liste se redessine
     let lootFocus = false; // donner le focus au champ au prochain rendu
@@ -133,9 +135,98 @@
         if (!p)
             return;
         let box = el('div', 'mj-waiting');
-        box.append(el('span', 'mj-waiting-text', 'En attente du /roll Combat de ' + p.player + ' sur ' + p.enemy),
+        let status = p.status && (STATUSES[p.status.status] || p.status);
+        box.append(el('span', 'mj-waiting-text', 'En attente du /roll Combat de ' + p.player + ' sur ' + p.enemy
+            + (status && status.name ? ' (+ ' + status.name + ' si touché)' : '')),
             button('mj-waiting-cancel', 'Annuler', () => wsLNOB.send({action: 'combat-cancel', data: {}})));
         list.append(box);
+    }
+
+    // Attaque en préparation : le MJ choisit l'attaquant ou la cible, l'issue,
+    // les dégâts et un statut éventuel, puis envoie tout d'un coup avec
+    // « Valider ». Rien ne part tant qu'il n'a pas validé
+    const resetDraft = () => {
+        pick = null;
+        outcome = 'dice';
+        forcedDamage = '';
+        hitStatus = {kind: '', turns: 3};
+    };
+
+    // Joueurs et compagnons à choisir (un seul à la fois) ; stunnedOff : un
+    // combattant étourdi ne peut pas être choisi comme attaquant
+    function fighterChoices(box, stunnedOff) {
+        let choices = el('div', 'mj-choices');
+        const choice = (key, name, npc, statuses) => {
+            let b = button('mj-attacker' + (npc ? ' npc' : '') + (pick === key ? ' selected' : ''), name, () => {
+                pick = pick === key ? null : key;
+                render();
+            });
+            if (npc)
+                b.prepend(el('span', 'mj-ally-badge', 'PNJ'));
+            b.setAttribute('aria-pressed', pick === key);
+            if (stunnedOff && isStunned(statuses)) {
+                b.disabled = true;
+                b.title = name + ' ne peut pas attaquer (statut)';
+                if (pick === key)
+                    pick = null;
+            }
+            choices.append(b);
+        };
+        for (let p of players)
+            choice('p:' + p.discord_id, p.name, false, fighterStatuses(String(p.discord_id)));
+        for (let a of allies)
+            choice('a:' + a.id, a.name, true, fighterStatuses('npc' + a.id));
+        box.append(choices);
+    }
+
+    // Statut posé si l'attaque touche (facultatif)
+    function hitStatusControl(box) {
+        let row = el('div', 'mj-outcome mj-hit-status');
+        let kind = el('select', 'mj-sp-select');
+        let none = el('option', '', 'Aucun statut');
+        none.value = '';
+        kind.append(none);
+        for (let [key, info] of Object.entries(STATUSES)) {
+            let o = el('option', '', info.name);
+            o.value = key;
+            kind.append(o);
+        }
+        kind.value = hitStatus.kind;
+        kind.addEventListener('change', () => { hitStatus.kind = kind.value; render(); });
+        let turns = el('input', 'mj-turn-duration');
+        turns.type = 'number';
+        turns.min = 1;
+        turns.max = 9;
+        turns.value = hitStatus.turns;
+        turns.title = 'Durée en tours';
+        turns.disabled = !hitStatus.kind;
+        turns.addEventListener('input', () => { hitStatus.turns = Math.min(9, Math.max(1, parseInt(turns.value) || 1)); });
+        let group = el('label', 'mj-outcome-group');
+        group.append(turns, el('span', 'mj-outcome-label', 'tours'));
+        row.append(el('span', 'mj-outcome-label', 'Si touché'), kind, group);
+        row.title = 'Statut posé sur la cible si l\'attaque touche (et ne la met pas K.O.)';
+        box.append(row);
+    }
+
+    const hitStatusData = () => hitStatus.kind ? {status: hitStatus.kind, turns: hitStatus.turns} : undefined;
+
+    // Bas du panneau : Annuler (ferme sans rien envoyer) et Valider
+    function draftFooter(box, label, ready, onValidate) {
+        let foot = el('div', 'mj-draft-foot');
+        foot.append(button('mj-waiting-cancel', 'Annuler', () => {
+            targetId = victimFor = null;
+            resetDraft();
+            render();
+        }));
+        let ok = button('mj-turn-next mj-validate', label, () => {
+            onValidate();
+            targetId = victimFor = null;
+            resetDraft();
+            render();
+        });
+        ok.disabled = !ready;
+        foot.append(ok);
+        box.append(foot);
     }
 
     // Choix du joueur qui attaque l'ennemi ciblé
@@ -144,31 +235,18 @@
         box.append(el('span', 'mj-attackers-label', 'Qui attaque ' + enemy.name + ' ?'));
         if (!players.length && !allies.length)
             box.append(el('span', 'mj-attackers-label', 'aucun joueur dans la partie'));
-        // Un joueur ou compagnon étourdi ne peut pas attaquer
-        for (let p of players) {
-            let b = button('mj-attacker', p.name, () => {
-                targetId = null;
-                wsLNOB.send({action: 'combat-target', data: {enemy_id: enemy.id, discord_id: p.discord_id}});
-            });
-            if (isStunned(fighterStatuses(String(p.discord_id)))) {
-                b.disabled = true;
-                b.title = p.name + ' ne peut pas attaquer (statut)';
-            }
-            box.append(b);
-        }
-        for (let a of allies) {
-            let b = button('mj-attacker npc', a.name, () => {
-                targetId = null;
-                wsLNOB.send({action: 'combat-ally-attack', data: {enemy_id: enemy.id, ally_id: a.id}});
-            });
-            b.prepend(el('span', 'mj-ally-badge', 'PNJ'));
-            b.title = 'Le dé de ' + a.name + ' est lancé tout de suite (Combat ' + a.combat + ')';
-            if (isStunned(fighterStatuses('npc' + a.id))) {
-                b.disabled = true;
-                b.title = a.name + ' ne peut pas attaquer (statut)';
-            }
-            box.append(b);
-        }
+        fighterChoices(box, true);
+        hitStatusControl(box);
+        let ally = pick && pick.startsWith('a:') && allies.find(a => 'a:' + a.id === pick);
+        // Un compagnon lance son dé tout de suite ; un joueur doit lancer Combat
+        draftFooter(box, ally ? 'Valider (dé de ' + ally.name + ')' : 'Valider', !!pick, () => {
+            let [type, id] = pick.split(':');
+            let data = {enemy_id: enemy.id, status: hitStatusData()};
+            if (type === 'a')
+                wsLNOB.send({action: 'combat-ally-attack', data: Object.assign(data, {ally_id: parseInt(id)})});
+            else
+                wsLNOB.send({action: 'combat-target', data: Object.assign(data, {discord_id: id})});
+        });
         list.append(box);
     }
 
@@ -176,17 +254,7 @@
     function renderVictims(enemy) {
         let box = el('div', 'mj-attackers mj-victims');
         box.append(el('span', 'mj-attackers-label', 'Qui ' + enemy.name + ' attaque ?'));
-        const attack = (data) => {
-            victimFor = null;
-            let damage = parseInt(forcedDamage);
-            wsLNOB.send({action: 'combat-enemy-attack', data: Object.assign({
-                enemy_id: enemy.id,
-                outcome: outcome === 'dice' ? undefined : outcome,
-                damage: outcome !== 'miss' && Number.isFinite(damage) ? damage : undefined
-            }, data)});
-            outcome = 'dice';
-            forcedDamage = '';
-        };
+        fighterChoices(box, false);
 
         // Issue de l'attaque, choisie par le MJ s'il le veut (pour épargner un
         // joueur, ou rendre un coup plus dur) : les joueurs ne voient que le résultat
@@ -213,15 +281,22 @@
         group.append(el('span', 'mj-outcome-label', 'Dégâts'), dmg);
         control.append(group);
         box.append(control);
-        for (let p of players)
-            box.append(button('mj-attacker', p.name, () => attack({discord_id: p.discord_id})));
-        for (let a of allies) {
-            let b = button('mj-attacker npc', a.name, () => attack({ally_id: a.id}));
-            b.prepend(el('span', 'mj-ally-badge', 'PNJ'));
-            box.append(b);
-        }
-        if (!players.length && !allies.length)
-            box.append(button('mj-attacker', 'Attaquer sans cible', () => attack({})));
+        if (outcome !== 'miss')
+            hitStatusControl(box);
+
+        let alone = !players.length && !allies.length;
+        draftFooter(box, alone ? 'Valider sans cible' : 'Valider', alone || !!pick, () => {
+            let damage = parseInt(forcedDamage);
+            let data = {
+                enemy_id: enemy.id,
+                outcome: outcome === 'dice' ? undefined : outcome,
+                damage: outcome !== 'miss' && Number.isFinite(damage) ? damage : undefined,
+                status: outcome !== 'miss' ? hitStatusData() : undefined
+            };
+            if (pick)
+                Object.assign(data, targetOf(pick));
+            wsLNOB.send({action: 'combat-enemy-attack', data: data});
+        });
         list.append(box);
     }
 
@@ -391,6 +466,7 @@
             let attack = button('mj-enemy-attack' + (victimFor === enemy.id ? ' selecting' : ''), 'Attaque', () => {
                 victimFor = victimFor === enemy.id ? null : enemy.id;
                 targetId = null;
+                resetDraft();
                 render();
             });
             let stunned = isStunned(enemy.statuses);
@@ -403,6 +479,7 @@
             let aim = button('mj-enemy-target', 'Cibler', () => {
                 targetId = targetId === enemy.id ? null : enemy.id;
                 victimFor = null;
+                resetDraft();
                 render();
             });
             aim.disabled = enemy.hp <= 0;
@@ -428,11 +505,22 @@
         // Un événement de combat ne doit pas faire perdre la saisie du butin en cours
         if (document.activeElement && document.activeElement.classList.contains('mj-loot-input'))
             lootFocus = true;
+        // …ni celle d'une attaque en préparation (dégâts, durée du statut)
+        let active = document.activeElement;
+        let refocus = active && list.contains(active) && active.closest('.mj-attackers') && active.tagName === 'INPUT'
+            ? '.mj-attackers input.' + active.className.trim().split(/\s+/).join('.') : null;
         list.innerHTML = '';
         list.classList.toggle('active', state.active);
         state.active ? renderActive() : renderPending();
+        if (refocus && list.querySelector(refocus))
+            list.querySelector(refocus).focus();
         startBtn.textContent = state.active ? 'Terminer le combat' : 'Commencer le combat';
         startBtn.classList.toggle('running', state.active);
+        // Fin du combat : rare et irréversible, elle demande un appui long (ui-hold.js)
+        if (state.active)
+            startBtn.dataset.hold = 'Maintenir pour terminer le combat';
+        else
+            delete startBtn.dataset.hold;
         renderLog();
         renderTeam();
     }
@@ -538,11 +626,13 @@
     search.addEventListener('keydown', (e) => { if (e.key === 'Enter') addPending(); });
     document.getElementById('monstre-list').addEventListener('click', () => { pending = []; render(); });
 
-    startBtn.addEventListener('click', () => {
-        if (state.active) {
+    startBtn.addEventListener('hold-confirm', () => {
+        if (state.active)
             wsLNOB.send({action: 'combat-end', data: {}});
+    });
+    startBtn.addEventListener('click', () => {
+        if (state.active)
             return;
-        }
         if (!pending.length) {
             search.focus();
             startBtn.classList.remove('shake');
