@@ -1,0 +1,15 @@
+{
+  "_comment": "Noms des compagnons tirés au hasard par le MJ (menu MJ, onglet Compagnons). Une liste par race (identifiant de raceStats.json ou d'une race custom) ; « default » sert aux races sans liste. 20 caractères au plus.",
+  "default": ["Zorvak", "Kralis", "Velnor", "Thalrax", "Morgul", "Xanix", "Silash", "Drakion", "Vorel", "Lurek", "Brakzar", "Ophur", "Rhulis", "Tsamok"],
+  "fnek": ["Fnekolas", "Fnekia", "Fnektor", "Fnekoline", "Néant-XVII", "Scécrable Jr", "Fnekarl", "Fnekette", "Fnekristo", "Fnekmatic"],
+  "omphor": ["Nonbril", "Quoifeur", "Omphorian", "Lardon", "Phorgus", "Kev-Lardo", "Omphorbe", "Gros-Pouce", "Argumentus", "Sourcifaux"],
+  "sylv": ["Chêne", "Bouleau", "Érable", "Saule", "Charme", "Tilleul", "Sylv 2 mou-If", "Mélèze", "Noisetier", "Frêne", "Sylvestre"],
+  "ygrl": ["Grlrlg", "Rlgrl", "Morilla", "Girolle", "Grlgrla", "Trompette", "Pleurotte", "Lrgrlrl", "Vesse-Grl", "Shiitaka"],
+  "shrymp": ["Ouvrier 7", "SH-RMP 42", "Shrympy", "Antenne", "Matricule 314", "Kevin-9000", "Fourmo", "Shrymp-B", "Loyal 12", "Mandibule"],
+  "aku": ["Cuisinier Aku", "Barbier Aku", "Facteur Aku", "Potier Aku", "Jardinier Aku", "Libraire Aku", "Plombier Aku", "Conteur Aku", "Tisserand Aku", "Guide Aku"],
+  "yorc": ["Yorki", "Rexorc", "Médorc", "Croc-Vert", "Flairo", "Lumio", "Pifou", "Yorcky", "Truffe", "Gromorc"],
+  "nek_eau": ["Ondine", "Perle", "Minette", "Nekolina", "Rosée", "Marée", "Nekoula", "Brume"],
+  "nek_feu": ["Braise", "Tison", "Nekflamme", "Cendre", "Fumerolle", "Ardent", "Pyrnek", "Étincelle"],
+  "nek_terre": ["Frère Nekolas", "Frère Caillou", "Saint Galet", "Nekphas", "Frère Glaise", "Humus", "Prospectus", "Frère Silex"],
+  "nek_air": ["Maître Nekolle", "Plume", "Brise", "Me Nekaya", "Zéphyr", "Nekavocate", "Nuée", "Maître Mistral"]
+}

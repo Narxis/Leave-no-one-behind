@@ -352,6 +352,11 @@ input.add-life:focus,
         border-bottom: none;
     }
 
+    /* Compagnons : +, compagnon au hasard et x sur une ligne */
+    .ally:not(.hide) {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
     #search-ennemy,
     #search-ally,
     #search-status {
@@ -469,6 +474,7 @@ input.add-life:focus,
 .mj-page #add-monstre,
 .mj-page #monstre-list,
 .mj-page #add-friend,
+.mj-page #random-friend,
 .mj-page #friend-list {
     margin: 0;
 }
