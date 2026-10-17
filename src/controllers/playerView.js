@@ -15,6 +15,7 @@ const races = require('./races');
 const inventory = require('./inventory');
 const shipAlerts = require('./shipAlerts');
 const statRolls = require('./statRolls');
+const blankCard = require('./blankCard');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -78,7 +79,8 @@ const gameState = async function () {
     return {
         kind: 'game',
         phase: phase,
-        card: phase === 'gameLive' ? publicCard(deck.getCurrentCard()) : null,
+        // Une carte blanche en cours passe devant la carte du paquet
+        card: phase === 'gameLive' ? (blankCard.publicCard() || publicCard(deck.getCurrentCard())) : null,
         ship: await shipState(),
         statuses: await statusList(),
         alerts: {blink: alerts.blink || [], showMap: !!alerts.showMap, alert: alerts.alert ? {room: alerts.alert.room, name: alerts.alert.name, message: alerts.alert.message} : null},
