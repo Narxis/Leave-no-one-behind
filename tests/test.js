@@ -35,6 +35,7 @@ async function test() {
     test_ship_alerts();
     await test_items_editor();
     test_npcs();
+    test_random_companion();
     await test_remote();
 }
 
@@ -712,4 +713,49 @@ function test_npcs() {
     // Sans fichier modifié, les ennemis de départ viennent de config/bestiary.json
     assert.ok(npcs.getEnemies().length > 0);
     console.log('npcs OK');
+}
+
+// Compagnon tiré au hasard depuis le menu MJ, et ses jets hors combat
+function test_random_companion() {
+    const allies = require("../src/controllers/allies");
+    const names = require("../src/config/companionNames.json");
+    const saved = allies.getAllies();
+    allies.clear();
+    try {
+        // Dés toujours à 50 : bonus ou malus, la stat vaut 100
+        let ally = allies.randomCompanion({race: 'sylv'}, () => 0.99);
+        assert.strictEqual(ally.race, 'Sylv');
+        assert.ok(names.sylv.includes(ally.name), 'nom pris dans la liste de la race');
+        assert.deepStrictEqual([ally.combat, ally.recon, ally.moral], [100, 100, 100]);
+        // Dés à 1 : 51 partout
+        assert.strictEqual(allies.randomCompanion({race: 'aku'}, () => 0).pilotage, 51);
+        // Race tirée au hasard, nom de sa liste ou de la liste par défaut
+        for (let i = 0; i < 20; i++) {
+            let any = allies.randomCompanion();
+            assert.ok(any.race && any.name.length <= 20);
+            for (let stat of ['combat', 'pilotage', 'engineering', 'survival', 'recon'])
+                assert.ok(any[stat] >= 51 && any[stat] <= 100);
+        }
+
+        // Ajouté par l'action du menu, sans reprendre un nom déjà pris
+        let first = allies.handle({action: 'ally-random', data: {race: 'yorc'}}).data.allies[0];
+        assert.ok(names.yorc.includes(first.name));
+        let second = allies.randomCompanion({race: 'yorc'});
+        assert.notStrictEqual(second.name, first.name);
+
+        // Jet hors combat : affiché comme celui d'un joueur (id « npc<id> »)
+        let roll = allies.rollAction({id: first.id, stat: 'recon'});
+        assert.strictEqual(roll.action, 'roll');
+        assert.strictEqual(roll.data.discord_id, 'npc' + first.id);
+        assert.strictEqual(roll.data.stat, 'recon');
+        assert.strictEqual(roll.data.success, roll.data.result >= 50);
+        assert.ok(allies.rollAction({id: first.id, stat: 'moral'}).error);
+        assert.ok(allies.rollAction({id: 999, stat: 'recon'}).error);
+    }
+    finally {
+        allies.clear();
+        for (let ally of saved)
+            allies.handle({action: 'ally-add', data: ally});
+    }
+    console.log('Random companion OK');
 }

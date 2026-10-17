@@ -160,25 +160,43 @@ async function getAllPlayers () {
     let names = {};
     let waiting = null;
 
+    // Joueurs puis compagnons (PNJ, valeur « npc<id> ») : un compagnon peut
+    // aussi faire ses jets hors combat
     function load() {
-        getAllPlayers().then(list => {
+        Promise.all([getAllPlayers(), fetch('/api/allies').then(r => r.json()).catch(() => [])]).then(([list, allies]) => {
             let current = playerSelect.value;
             names = {};
             playerSelect.innerHTML = '';
-            for (let p of list) {
-                names[p.discord_id] = p.name;
-                let option = document.createElement('option');
-                option.value = p.discord_id;
-                option.textContent = p.name;
-                playerSelect.append(option);
-            }
+            const group = (label, items) => {
+                if (!items.length)
+                    return;
+                let g = document.createElement('optgroup');
+                g.label = label;
+                for (let [value, text] of items) {
+                    names[value] = text;
+                    g.append(new Option(text, value));
+                }
+                playerSelect.append(g);
+            };
+            group('Joueurs', list.map(p => [String(p.discord_id), p.name]));
+            group('Compagnons', allies.map(a => ['npc' + a.id, a.name]));
             if (names[current] !== undefined)
                 playerSelect.value = current;
-            sendBtn.disabled = !list.length;
-            if (!list.length)
+            sendBtn.disabled = !list.length && !allies.length;
+            if (!list.length && !allies.length)
                 playerSelect.append(new Option('Aucun joueur', ''));
+            syncModule();
         }).catch(() => {});
     }
+
+    // Un compagnon lance sans module
+    const isAlly = () => playerSelect.value.startsWith('npc');
+    function syncModule() {
+        moduleSelect.disabled = isAlly();
+        if (isAlly())
+            moduleSelect.value = '';
+    }
+    playerSelect.addEventListener('change', syncModule);
 
     sendBtn.addEventListener('click', () => {
         if (!playerSelect.value)
@@ -186,7 +204,10 @@ async function getAllPlayers () {
         sendBtn.disabled = true;
         // Le bouton revient même si le serveur ne répond pas (joueur supprimé…)
         waiting = setTimeout(() => { sendBtn.disabled = false; }, 3000);
-        wsLNOB.rollDice(playerSelect.value, statSelect.value, moduleSelect.value);
+        if (isAlly())
+            wsLNOB.send({action: 'ally-roll', data: {id: playerSelect.value.slice(3), stat: statSelect.value}});
+        else
+            wsLNOB.rollDice(playerSelect.value, statSelect.value, moduleSelect.value);
     });
 
     // Dernier jet reçu, qu'il vienne du MJ ou d'un joueur
@@ -195,7 +216,7 @@ async function getAllPlayers () {
         let stat = statSelect.querySelector('option[value="' + data.stat + '"]');
         let module = data.module ? moduleSelect.querySelector('option[value="' + data.module + '"]') : null;
         result.className = 'mj-player-roll-result ' + (data.success ? 'success' : 'fail');
-        result.textContent = (names[data.discord_id] || 'Joueur') + ' · ' + (stat ? stat.textContent : data.stat)
+        result.textContent = (names[data.discord_id] || data.name || 'Joueur') + ' · ' + (stat ? stat.textContent : data.stat)
             + (module ? ' (' + module.textContent + ')' : '') + ' : dé ' + data.dice_result + ' → ';
         let value = document.createElement('strong');
         value.textContent = data.result + (data.success ? ' réussite' : ' échec');
@@ -205,6 +226,7 @@ async function getAllPlayers () {
     });
 
     document.addEventListener('join', load);
+    document.addEventListener('allies', load);
     document.addEventListener('ws-reconnect', load);
     load();
 })();
