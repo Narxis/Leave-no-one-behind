@@ -50,16 +50,11 @@
             <option value="recon">Jet de reconnaissance</option>
         </select>
     </label>
-    <div class="pe-node-adds" data-output="output_1">
-        <span class="pe-adds-label is-success">Si réussite</span>
-        <button type="button" class="pe-node-add" data-action="add-next"><i class="fas fa-plus"></i> Carte suivante</button>
-        <button type="button" class="pe-node-add" data-action="add-reveal"><i class="fas fa-plus"></i> Résultat</button>
+    <div class="pe-random">
+        <button type="button" class="pe-random-btn" data-action="random-toggle" title="Plusieurs issues possibles pour ce choix : le jeu en tire une au hasard, selon leurs poids"><i class="fas fa-random"></i> Issues au hasard</button>
+        <input type="hidden" df-random>
     </div>
-    <div class="pe-node-adds" data-output="output_2">
-        <span class="pe-adds-label is-failure">Si échec</span>
-        <button type="button" class="pe-node-add" data-action="add-next"><i class="fas fa-plus"></i> Carte suivante</button>
-        <button type="button" class="pe-node-add" data-action="add-reveal"><i class="fas fa-plus"></i> Résultat</button>
-    </div>
+    <div class="pe-suites"></div>
 </div>`,
         reveal: `
 <div class="pe-node">
@@ -71,10 +66,29 @@
     const PORTS = {card: [1, MAX_CHOICES], choice: [1, 1], reveal: [1, 0]};
     const LABELS = {card: 'Carte', choice: 'Choix', reveal: 'Résultat'};
 
-    // Choix à jet (champ df-roll = la stat) : deux sorties, réussite puis échec
-    const isRoll = (node) => node.name === 'choice' && !!node.data.roll;
-    const choiceOutputs = (node) => isRoll(node) ? ['output_1', 'output_2'] : ['output_1'];
-    const OUTPUT_LABELS = {output_1: 'en cas de réussite', output_2: 'en cas d\'échec'};
+    // Choix à jet (champ df-roll = la stat) : deux sorties, réussite puis échec.
+    // Choix à issues au hasard (champ df-random = poids en JSON) : une sortie par issue
+    const MAX_OUTCOMES = 4;
+    function weightsOf(node) {
+        try {
+            let list = JSON.parse(node.data.random || '[]');
+            return Array.isArray(list) ? list.map(w => Number.isFinite(Number(w)) && Number(w) >= 0 ? Number(w) : 1) : [];
+        }
+        catch (e) {
+            return [];
+        }
+    }
+    const isRandom = (node) => node.name === 'choice' && weightsOf(node).length >= 2;
+    const isRoll = (node) => node.name === 'choice' && !!node.data.roll && !isRandom(node);
+    const choiceOutputs = (node) => isRandom(node) ? weightsOf(node).map((w, k) => 'output_' + (k + 1))
+        : isRoll(node) ? ['output_1', 'output_2'] : ['output_1'];
+    const outputLabel = (node, out) => isRandom(node) ? 'pour l\'issue ' + out.slice(7)
+        : isRoll(node) ? (out === 'output_1' ? 'en cas de réussite' : 'en cas d\'échec') : '';
+    // Chance de chaque issue, en %
+    const chances = (weights) => {
+        let total = weights.reduce((a, b) => a + b, 0);
+        return weights.map(w => total > 0 ? Math.round(100 * w / total) : Math.round(100 / weights.length));
+    };
 
     const $ = (id) => document.getElementById(id);
     const board = $('drawflow');
@@ -234,16 +248,77 @@
             }
             if (node.name === 'choice') {
                 el.classList.toggle('is-roll', isRoll(node));
-                el.querySelectorAll('.pe-node-adds').forEach(box => {
-                    let out = node.outputs[box.dataset.output];
-                    box.hidden = !out;
-                    let taken = !!out && out.connections.length > 0;
-                    box.querySelectorAll('button').forEach(btn => btn.disabled = taken);
-                });
+                el.classList.toggle('is-random', isRandom(node));
+                // Jet et issues au hasard ne vont pas ensemble dans l'éditeur
+                let rollField = el.querySelector('select[df-roll]');
+                if (rollField)
+                    rollField.disabled = isRandom(node);
+                let randomBtn = el.querySelector('[data-action="random-toggle"]');
+                if (randomBtn) {
+                    randomBtn.disabled = isRoll(node);
+                    randomBtn.setAttribute('aria-pressed', isRandom(node));
+                }
+                renderSuites(el, node);
                 renderLoot(el, lootOf(node));
             }
         }
     }
+
+    // Boutons « + Carte suivante / + Résultat » de chaque sortie d'un choix,
+    // avec « Si réussite / Si échec » ou le poids de chaque issue au hasard
+    function renderSuites(el, node) {
+        let box = el.querySelector('.pe-suites');
+        if (!box)
+            return;
+        let outs = choiceOutputs(node), weights = weightsOf(node), pct = chances(weights);
+        // Poids en cours de saisie : on ne touche qu'aux pourcentages
+        if (box.contains(document.activeElement) && document.activeElement.matches('[data-weight]')) {
+            box.querySelectorAll('.pe-chance').forEach((c, k) => c.textContent = (pct[k] != null ? pct[k] : '?') + ' %');
+            return;
+        }
+        let html = outs.map((out, k) => {
+            let label = '';
+            if (isRoll(node))
+                label = k ? '<span class="pe-adds-label is-failure">Si échec</span>' : '<span class="pe-adds-label is-success">Si réussite</span>';
+            else if (isRandom(node))
+                label = '<span class="pe-adds-label is-random">Issue ' + (k + 1)
+                    + '<label title="Poids : chances relatives de cette issue">poids <input type="number" min="0" max="99" step="1" data-weight="' + k + '" value="' + weights[k] + '"></label>'
+                    + '<span class="pe-chance">' + pct[k] + ' %</span>'
+                    + (outs.length > 2 ? '<button type="button" class="pe-outcome-del" data-action="random-remove" data-index="' + k + '" title="Retirer cette issue">×</button>' : '')
+                    + '</span>';
+            let taken = !!node.outputs[out] && node.outputs[out].connections.length > 0;
+            let dis = taken ? ' disabled' : '';
+            return '<div class="pe-node-adds" data-output="' + out + '">' + label
+                + '<button type="button" class="pe-node-add" data-action="add-next"' + dis + '><i class="fas fa-plus"></i> Carte suivante</button>'
+                + '<button type="button" class="pe-node-add" data-action="add-reveal"' + dis + '><i class="fas fa-plus"></i> Résultat</button></div>';
+        }).join('');
+        if (isRandom(node) && outs.length < MAX_OUTCOMES)
+            html += '<button type="button" class="pe-node-add pe-outcome-add" data-action="random-add"><i class="fas fa-plus"></i> Issue</button>';
+        box.innerHTML = html;
+    }
+
+    // Poids des issues : passent par le champ caché df-random, comme une saisie
+    function setRandom(el, weights) {
+        let field = el.querySelector('[df-random]');
+        field.value = weights.length >= 2 ? JSON.stringify(weights) : '';
+        field.dispatchEvent(new Event('input', {bubbles: true}));
+    }
+
+    board.addEventListener('input', (e) => {
+        let input = e.target.closest('[data-weight]');
+        if (!input)
+            return;
+        let el = input.closest('.drawflow-node');
+        let weights = weightsOf(editor.getNodeFromId(el.id.slice(5)));
+        let w = parseFloat(input.value);
+        weights[parseInt(input.dataset.weight)] = Number.isFinite(w) && w >= 0 ? w : 1;
+        setRandom(el, weights);
+    });
+    // Champ quitté : les blocs sont redessinés avec le poids gardé
+    board.addEventListener('focusout', (e) => {
+        if (e.target.matches('[data-weight]'))
+            setTimeout(refreshNodes, 0);
+    });
 
     function refresh() {
         renderPlaces();
@@ -461,7 +536,7 @@
             return null;
         }
         let defaults = type === 'card' ? {desc: '', mjreveal: '', timer: 'off', shuffle: 'off', marker: ''}
-            : type === 'choice' ? {choice: '', mjreveal: '', roll: ''} : {reveal: ''};
+            : type === 'choice' ? {choice: '', mjreveal: '', roll: '', random: ''} : {reveal: ''};
         let id = editor.addNode(type, PORTS[type][0], PORTS[type][1], x, y, type, Object.assign(defaults, values || {}), TEMPLATES[type]);
         refreshNodes();
         return id;
@@ -606,9 +681,41 @@
             }
             case 'add-next':
             case 'add-reveal': {
-                // Choix à jet : la suite part de la sortie réussite ou échec
+                // Choix à jet ou à issues : la suite part de la sortie de son bouton
                 let output = btn.closest('.pe-node-adds').dataset.output || 'output_1';
-                addLinked(id, output, btn.dataset.action === 'add-next' ? 'card' : 'reveal', output === 'output_2' ? 4 : 0);
+                addLinked(id, output, btn.dataset.action === 'add-next' ? 'card' : 'reveal', (parseInt(output.slice(7)) - 1) * 4);
+                break;
+            }
+            case 'random-toggle': {
+                let el = btn.closest('.drawflow-node');
+                if (isRandom(node)) {
+                    setRandom(el, []);
+                    break;
+                }
+                let roll = el.querySelector('select[df-roll]');
+                if (roll.value) {
+                    roll.value = '';
+                    roll.dispatchEvent(new Event('input', {bubbles: true}));
+                }
+                setRandom(el, [1, 1]);
+                break;
+            }
+            case 'random-add': {
+                let weights = weightsOf(node);
+                if (weights.length < MAX_OUTCOMES)
+                    setRandom(btn.closest('.drawflow-node'), weights.concat(1));
+                break;
+            }
+            case 'random-remove': {
+                // La sortie part avec sa suite ; les suivantes sont renumérotées par Drawflow
+                let k = parseInt(btn.dataset.index);
+                let weights = weightsOf(node);
+                if (weights.length <= 2)
+                    break;
+                let el = btn.closest('.drawflow-node');
+                editor.removeNodeOutput(id, 'output_' + (k + 1));
+                weights.splice(k, 1);
+                setRandom(el, weights);
                 break;
             }
             case 'preview':
@@ -646,24 +753,25 @@
         focusField(addBlock(type, p.x - 40, p.y - 20));
     });
 
-    // Jet ajouté ou retiré : le choix gagne ou perd sa sortie « échec »
-    function syncRollPorts(id) {
+    // Jet ou issues ajoutés / retirés : le choix gagne ou perd des sorties (les dernières)
+    function syncChoicePorts(id) {
         let node = editor.getNodeFromId(id);
         if (!node || node.name !== 'choice')
             return;
         let want = choiceOutputs(node).length;
         let have = Object.keys(node.outputs).length;
-        if (have < want)
+        let detached = false;
+        for (; have < want; have++)
             editor.addNodeOutput(id);
-        else if (have > want) {
-            let detached = node.outputs.output_2.connections.length > 0;
-            editor.removeNodeOutput(id, 'output_2');
-            if (detached)
-                toast('Plus de jet : la suite « Si échec » est détachée du choix');
+        for (; have > want; have--) {
+            detached = detached || node.outputs['output_' + have].connections.length > 0;
+            editor.removeNodeOutput(id, 'output_' + have);
         }
+        if (detached)
+            toast('Des suites ont été détachées du choix (les blocs restent sur le plan)');
         refreshNodes();
     }
-    editor.on('nodeDataChanged', syncRollPorts);
+    editor.on('nodeDataChanged', syncChoicePorts);
 
     ['nodeCreated', 'nodeRemoved', 'connectionCreated', 'connectionRemoved', 'nodeMoved', 'nodeDataChanged']
         .forEach(ev => editor.on(ev, markDirty));
@@ -699,7 +807,7 @@
                 add('error', n, 'Le choix ' + short + ' n\'est relié à aucune carte.');
             for (let out of choiceOutputs(n))
                 if (!n.outputs[out] || !n.outputs[out].connections.length)
-                    add('error', n, 'Le choix ' + short + ' n\'a pas de suite' + (isRoll(n) ? ' ' + OUTPUT_LABELS[out] : '') + ' (carte suivante ou résultat).');
+                    add('error', n, 'Le choix ' + short + ' n\'a pas de suite' + (outputLabel(n, out) ? ' ' + outputLabel(n, out) : '') + ' (carte suivante ou résultat).');
             if (!label)
                 add('warn', n, 'Un choix n\'a pas de texte.');
         }
@@ -775,7 +883,10 @@
                     let next = byId(choice.outputs[out].connections[0].node);
                     return next.name === 'reveal' ? {reveal: next.data.reveal || ''} : {next: nameOf(next)};
                 };
-                if (isRoll(choice))
+                let weights = weightsOf(choice);
+                if (isRandom(choice))
+                    c.outcomes = choiceOutputs(choice).map((out, k) => Object.assign(weights[k] !== 1 ? {weight: weights[k]} : {}, suiteOf(out)));
+                else if (isRoll(choice))
                     c.roll = {stat: choice.data.roll, success: suiteOf('output_1'), failure: suiteOf('output_2')};
                 else
                     Object.assign(c, suiteOf('output_1'));
@@ -841,14 +952,15 @@
                         next: next && next.name === 'card' ? String(next.id) : null
                     };
                 };
-                let roll = isRoll(choice);
+                let roll = isRoll(choice), random = isRandom(choice), weights = weightsOf(choice);
                 choices.push(Object.assign({
                     id: String(choice.id),
                     value: choice.data.choice || '',
                     mjreveal: (choice.data.mjreveal || '').trim(),
                     loot: lootOf(choice),
-                    roll: roll ? {stat: choice.data.roll, success: suiteOf('output_1'), failure: suiteOf('output_2')} : null
-                }, roll ? {reveal: null, revealId: null, next: null} : suiteOf('output_1')));
+                    roll: roll ? {stat: choice.data.roll, success: suiteOf('output_1'), failure: suiteOf('output_2')} : null,
+                    outcomes: random ? choiceOutputs(choice).map((out, k) => Object.assign({weight: weights[k]}, suiteOf(out))) : null
+                }, roll || random ? {reveal: null, revealId: null, next: null} : suiteOf('output_1')));
             }
             cards.set(String(card.id), {
                 id: String(card.id),
@@ -892,8 +1004,8 @@
             let k = node ? Object.keys(node.outputs).findIndex(key => !node.outputs[key].connections.length) : -1;
             return k < 0 ? null : addLinked(cardId, 'output_' + (k + 1), 'choice', k, true);
         },
-        addNext: (choiceId, output = 'output_1') => addLinked(choiceId, output, 'card', output === 'output_2' ? 4 : 0, true),
-        addReveal: (choiceId, output = 'output_1') => addLinked(choiceId, output, 'reveal', output === 'output_2' ? 4 : 0, true)
+        addNext: (choiceId, output = 'output_1') => addLinked(choiceId, output, 'card', (parseInt(output.slice(7)) - 1) * 4, true),
+        addReveal: (choiceId, output = 'output_1') => addLinked(choiceId, output, 'reveal', (parseInt(output.slice(7)) - 1) * 4, true)
     };
 
     function openPreview(fromId) {
