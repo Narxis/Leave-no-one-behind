@@ -114,10 +114,14 @@ class Card {
     }
 
     replaceVars(text) {
-        this.langVars = structuredClone(LANG).card_vars;
-        let keys = Object.keys(this.langVars);
-        for (let key of keys) {
-            this.cardVars[key] = {}
+        // Tirage fait une seule fois par objet Card : la même variable garde sa
+        // valeur dans desc, mjreveal, choix, reveal et variantes. hydrateCardDB
+        // réutilise le même objet pour les suites d'un lieu, qui partagent donc
+        // aussi les valeurs tirées.
+        if (!Object.keys(this.cardVars).length) {
+            this.langVars = structuredClone(LANG).card_vars;
+            for (let key of Object.keys(this.langVars))
+                this.cardVars[key] = {};
         }
         if (text) {
             const varFound = [...text.matchAll(/\[[^\]]+\]/g)].map(e => e[0]);
@@ -133,6 +137,11 @@ class Card {
 
         variable = variable.replace('[','').replace(']','')
         let parsedVar = variable.split("_");
+        // Forme courte [type_id] (ex. [objet_1]) : article par défaut « no »
+        if (parsedVar.length === 2 && LANG.card_vars[parsedVar[0].toLowerCase()]) {
+            let ucType = parsedVar[0].charAt(0) === parsedVar[0].charAt(0).toUpperCase();
+            parsedVar = [ucType ? 'No' : 'no', parsedVar[0].toLowerCase(), parsedVar[1]];
+        }
         let article = parsedVar[0] || null;
         let type = parsedVar[1] || null;
         let id = parsedVar[2] || null;
@@ -150,7 +159,8 @@ class Card {
 
         if (!this.cardVars[type]) {
             log("Error with texte variable ["+variable+"]", "#f00");
-            return variable;
+            // Texte laissé intact (crochets compris) : visible en jeu et détecté par les tests
+            return "[" + variable + "]";
         }
 
         if (this.cardVars[type][id] && this.cardVars[type][id] !== null){
@@ -158,6 +168,11 @@ class Card {
         }
         else {
             let obj_keys = Object.keys(this.langVars[type]);
+            // Liste épuisée (plus d'ids que de valeurs) : on accepte les doublons
+            if (!obj_keys.length) {
+                this.langVars[type] = structuredClone(LANG.card_vars[type]);
+                obj_keys = Object.keys(this.langVars[type]);
+            }
             randomItem = obj_keys[Math.floor(Math.random() *obj_keys.length)];
             this.cardVars[type][id] = randomItem;
             delete this.langVars[type][randomItem];

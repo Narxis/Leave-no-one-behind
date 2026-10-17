@@ -961,43 +961,43 @@
       "shuffle":true,
       "choices": [
         {
-          "value": "[objet_1]",
+          "value": "[No_objet_1]",
           "next": "bibli2-1"
         },
         {
-          "value": "[objet_2]",
+          "value": "[No_objet_2]",
           "next": "bibli2-2"
         },
         {
-          "value": "[objet_3]",
+          "value": "[No_objet_3]",
           "next": "bibli2-3"
         }
       ]
     },
     {
-      "desc": "\n\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet le [objet_1]",
+      "desc": "\n\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet [le_objet_1]",
       "name":"bibli2-1",
       "timer": false,
       "choices": [
         {
-          "value": "Prendre l'[objet_1] et quitter la bibliothèque",
-          "reveal": "\n\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet_1]"
+          "value": "Prendre [le_objet_1] et quitter la bibliothèque",
+          "reveal": "\n\u00a0 Vous retournez dans le vaisseau avec [votre_objet_1] sous le bras"
         }
       ]
     },
     {
-      "desc": "\n\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet le [objet_2]",
+      "desc": "\n\u00a0 \"C'est exactement ce dont je parlais !\" s'éxclame [le_race_2] et vous remet [le_objet_2]",
       "name":"bibli2-2",
       "timer": false,
       "choices": [
         {
-          "value": "Prendre l'[objet_2] et quitter la bibliothèque",
-          "reveal": "\n\u00a0 Vous retournez dans le vaisseau. avec votre nouvel [objet_2]"
+          "value": "Prendre [le_objet_2] et quitter la bibliothèque",
+          "reveal": "\n\u00a0 Vous retournez dans le vaisseau avec [votre_objet_2] sous le bras"
         }
       ]
     },
     {
-      "desc": "\n\u00a0 \"Perdu c'était un [objet_1] j'allais pas vous le donner de toute manière.\" \n \n \u00a0[Le_race_2] se replonge dans son livre et vous ignore.",
+      "desc": "\n\u00a0 \"Perdu c'était [un_objet_1] j'allais pas vous le donner de toute manière.\" \n \n \u00a0[Le_race_2] se replonge dans son livre et vous ignore.",
       "name":"bibli2-3",
       "timer": false,
       "choices": [
@@ -1008,7 +1008,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Vous entrez dans la pièce et appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\n \n \u00a0 Le livre est usé, vous pouvez difficillement lire [livre] écrit sur la couverture.",
+      "desc": "\n\u00a0 Vous entrez dans la pièce et appercevez un livre sans étiquette n'appartenant pas à la Belle Bibliothèque Cosmique par terre.\n \n \u00a0 Le livre est usé, vous pouvez difficillement lire [no_livre_1] écrit sur la couverture.",
       "name": "bibli3",
       "timer": false,
       "choices": [
@@ -1034,7 +1034,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\n \n \u00a0 Elle vous tend le [livre] en pensant que c'est le votre",
+      "desc": "\n\u00a0 La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\n \n \u00a0 Elle vous tend [le_livre_1] en pensant que c'est le votre",
       "name": "bibli3-2",
       "timer": false,
       "choices": [
