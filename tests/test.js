@@ -26,6 +26,7 @@ async function test() {
     await setup();
     await test_cards_setup();
     await test_deck_generation();
+    await test_statuses_after_planet();
     await test_roll();
     test_ship_alerts();
     await test_items_editor();
@@ -318,6 +319,61 @@ async function test_deck_generation(){
     console.log('OK');
 
     console.log('Deck generation OK')
+}
+
+// Statuts hors combat au retour d'une planète, selon l'option du MJ
+async function test_statuses_after_planet() {
+    console.log('Testing statuses after planet');
+    const api = require('../src/controllers/api');
+    const gameSettings = require('../src/controllers/gameSettings');
+    const {Statuses} = require('../src/models/statuses');
+    const get = gameSettings.get;
+    const statuses = new Statuses();
+    await statuses.hydrateDB();
+    const blackout = async () => (await DB.tables.statuses.findOne({where: {slug: 'blackout'}, raw: true})).duration;
+    const res = {json() {}};
+
+    // Joue le paquet jusqu'à la n-ième planète comprise (visitée)
+    const visitPlanet = async (n) => {
+        let deck = await DB.tables.deck.findAll({where: {deck_id: 0}, order: [['id', 'ASC']], raw: true});
+        let seen = 0;
+        for (let elt of deck) {
+            await DB.tables.deck.update({played: 1}, {where: {id: elt.id}});
+            let card = await DB.tables.cards.findOne({where: {id: elt.card_id}, raw: true});
+            if (card.type === TYPE_PLANET && ++seen === n)
+                return;
+        }
+        throw new Error('pas assez de planètes dans le paquet');
+    };
+
+    try {
+        console.log('Option active (par défaut) : statuts remis à 0 après la planète');
+        assert.strictEqual(get().clearStatusesAfterPlanet, true);
+        await statuses.updateStatus('blackout', 3);
+        await visitPlanet(1);
+        await api.popNextCard({}, res);
+        assert.strictEqual(await blackout(), 0);
+        console.log('OK');
+
+        console.log('Hors planète : -1 par carte');
+        await statuses.updateStatus('blackout', 3);
+        await api.popNextCard({}, res);
+        assert.strictEqual(await blackout(), 2);
+        console.log('OK');
+
+        console.log('Option désactivée : statut gardé, -1 comme une carte');
+        gameSettings.get = () => Object.assign(get(), {clearStatusesAfterPlanet: false});
+        await statuses.updateStatus('blackout', 3);
+        await visitPlanet(2);
+        await api.popNextCard({}, res);
+        assert.strictEqual(await blackout(), 2);
+        console.log('OK');
+    }
+    finally {
+        gameSettings.get = get;
+        await DB.tables.deck.update({played: 0}, {where: {deck_id: 0}});
+        await statuses.hydrateDB();
+    }
 }
 
 async function test_roll(){
