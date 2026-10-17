@@ -168,6 +168,37 @@ button.gs-preset:hover {
     color: var(--ui-accent);
 }
 
+/* Options à cocher (hors difficulté) */
+.gs-options {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.gs-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    cursor: pointer;
+}
+
+.gs-option input {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+}
+
+.gs-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .gs-total {
     margin: 0;
     text-align: center;
