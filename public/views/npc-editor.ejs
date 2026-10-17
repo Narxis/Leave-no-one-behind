@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<%- include("partials/head", {
+    title: "Ennemis et compagnons",
+    cssFiles:[
+        "/css/style.css",
+        "/css/ui-menus.css",
+        "/css/races.css",
+        "/css/npc-editor.css"
+    ]
+}) %>
+<body class="races-page npc-page">
+    <%- include("partials/nav") %>
+    <main class="re">
+        <header class="re-head">
+            <h1>Ennemis et compagnons</h1>
+            <div class="re-seg ne-tabs" role="tablist" aria-label="Type de fiche">
+                <button type="button" role="tab" id="ne-tab-enemies" data-kind="enemies" aria-selected="true">Ennemis</button>
+                <button type="button" role="tab" id="ne-tab-companions" data-kind="companions" aria-selected="false">Compagnons</button>
+            </div>
+            <p class="re-count" id="ne-count"></p>
+            <button type="button" class="re-btn re-btn-primary" id="ne-new"><span aria-hidden="true">+</span> <span id="ne-new-label">Nouvel ennemi</span></button>
+        </header>
+
+        <div class="re-body">
+            <section class="re-list-wrap" aria-label="Fiches">
+                <input type="search" class="ne-search" id="ne-search" placeholder="Rechercher…" aria-label="Rechercher une fiche">
+                <p class="ne-intro" id="ne-intro"></p>
+                <div class="re-list" id="ne-list"></div>
+            </section>
+
+            <!-- Ennemi : mêmes champs que le bestiaire du menu MJ -->
+            <form class="re-form" id="ne-enemy-form" autocomplete="off" novalidate>
+                <h2 class="re-form-title" id="ne-enemy-title">Nouvel ennemi</h2>
+                <label class="re-field">Nom
+                    <input type="text" id="ne-enemy-name" maxlength="60" placeholder="ex. Pirate de l'espace" required>
+                </label>
+
+                <div class="ne-num">
+                    <label class="ne-num-label" for="ne-hp">Points de vie</label>
+                    <input type="range" id="ne-hp-range" min="1" max="60" aria-label="Points de vie">
+                    <input type="number" id="ne-hp" min="1" max="999" inputmode="numeric">
+                    <p class="ne-help" id="ne-hp-help"></p>
+                </div>
+                <div class="ne-num">
+                    <label class="ne-num-label" for="ne-offense">Attaque</label>
+                    <input type="range" id="ne-offense-range" min="0" max="100" aria-label="Attaque">
+                    <input type="number" id="ne-offense" min="0" max="100" inputmode="numeric">
+                    <p class="ne-help" id="ne-offense-help"></p>
+                </div>
+                <div class="ne-num">
+                    <label class="ne-num-label" for="ne-defense">Défense</label>
+                    <input type="range" id="ne-defense-range" min="0" max="100" aria-label="Défense">
+                    <input type="number" id="ne-defense" min="0" max="100" inputmode="numeric">
+                    <p class="ne-help" id="ne-defense-help"></p>
+                </div>
+
+                <div class="re-field">Dégâts quand il touche
+                    <div class="re-seg ne-damage" id="ne-damage" role="radiogroup" aria-label="Dégâts">
+                        <button type="button" role="radio" data-value="faible">Faibles <small>1-4</small></button>
+                        <button type="button" role="radio" data-value="moyen">Moyens <small>5-8</small></button>
+                        <button type="button" role="radio" data-value="fort">Forts <small>9-12</small></button>
+                    </div>
+                </div>
+
+                <div class="re-field">Butin <small>(révélé aux joueurs quand tous les ennemis sont K.O. ; le MJ peut encore le changer en combat)</small>
+                    <div class="ne-loot" id="ne-loot"></div>
+                    <div class="ne-loot-add">
+                        <input type="text" id="ne-loot-input" list="ne-loot-items" maxlength="60" placeholder="Ajouter un objet…" aria-label="Objet à ajouter au butin">
+                        <button type="button" class="re-btn" id="ne-loot-btn" title="Ajouter au butin">+</button>
+                    </div>
+                </div>
+
+                <p class="re-error" id="ne-enemy-error" role="alert"></p>
+                <div class="re-actions">
+                    <button type="button" class="re-btn re-btn-danger" id="ne-enemy-delete" hidden>Supprimer</button>
+                    <button type="button" class="re-btn" id="ne-enemy-copy" hidden>Dupliquer</button>
+                    <button type="submit" class="re-btn re-btn-primary" id="ne-enemy-save">Créer l'ennemi</button>
+                </div>
+            </form>
+
+            <!-- Compagnon : un modèle que le MJ ajoute en un clic (nom, rôle, stats) -->
+            <form class="re-form" id="ne-companion-form" autocomplete="off" novalidate hidden>
+                <h2 class="re-form-title" id="ne-companion-title">Nouveau compagnon</h2>
+                <div class="re-row">
+                    <label class="re-field">Nom
+                        <input type="text" id="ne-companion-name" maxlength="20" placeholder="ex. Capitaine Zorg" required>
+                    </label>
+                    <label class="re-field">Rôle ou race
+                        <input type="text" id="ne-companion-race" maxlength="30" list="ne-races" placeholder="ex. Mécano, Yorc…">
+                    </label>
+                </div>
+                <div class="re-field">Stats
+                    <div class="ne-stats" id="ne-stats"></div>
+                    <p class="ne-help" id="ne-companion-help"></p>
+                </div>
+
+                <p class="re-error" id="ne-companion-error" role="alert"></p>
+                <div class="re-actions">
+                    <button type="button" class="re-btn re-btn-danger" id="ne-companion-delete" hidden>Supprimer</button>
+                    <button type="button" class="re-btn" id="ne-companion-copy" hidden>Dupliquer</button>
+                    <button type="submit" class="re-btn re-btn-primary" id="ne-companion-save">Créer le compagnon</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <datalist id="ne-loot-items">
+        <% loot.forEach(function(item) { %>
+        <option value="<%= item.name %>"></option>
+        <% }); %>
+    </datalist>
+    <datalist id="ne-races">
+        <% races.forEach(function(name) { %>
+        <option value="<%= name %>"></option>
+        <% }); %>
+    </datalist>
+
+    <dialog class="re-dialog" id="ne-confirm" aria-labelledby="ne-confirm-title">
+        <form method="dialog">
+            <h2 id="ne-confirm-title"></h2>
+            <p id="ne-confirm-text"></p>
+            <div class="re-actions">
+                <button type="submit" class="re-btn" value="cancel">Annuler</button>
+                <button type="submit" class="re-btn re-btn-danger" value="ok">Supprimer</button>
+            </div>
+        </form>
+    </dialog>
+    <div class="re-toast" id="ne-toast" role="status" aria-live="polite"></div>
+
+    <script>var NPCS = <%- JSON.stringify({enemies: enemies, companions: companions}).replace(/</g, '\\u003c') %>,
+        LOOT_ITEMS = <%- JSON.stringify(loot).replace(/</g, '\\u003c') %>,
+        NPC_LIMITS = <%- JSON.stringify(limits) %>;</script>
+    <script src="/js/npc-editor.js"></script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+/* Éditeur d'ennemis et compagnons (npc-editor.ejs + npc-editor.js),
+   sur la base de l'éditeur de races (races.css) */
+
+.npc-page .re-head {
+    flex-wrap: wrap;
+}
+
+.ne-tabs button[aria-selected="true"] {
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+    box-shadow: inset 0 0 0 1px var(--ui-accent);
+}
+
+.ne-search {
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 9px 11px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 14px;
+}
+
+.ne-search:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+}
+
+.ne-intro {
+    margin: 0 0 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ui-text-dim);
+}
+
+.npc-page .re-list {
+    max-height: calc(100vh - 260px);
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* ---------- Cartes de la liste ---------- */
+
+.ne-card-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.ne-icon-enemies {
+    background: rgb(240 90 90 / 18%);
+    color: #ff8f8f;
+}
+
+.ne-icon-companions {
+    background: rgb(80 210 120 / 16%);
+    color: #8ff0ae;
+}
+
+.ne-card-sub {
+    margin-left: 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ui-text-dim);
+}
+
+.ne-pill-hp     { background: rgb(80 210 120 / 14%); color: #b9f2c9; }
+.ne-pill-faible { background: rgb(240 90 90 / 10%); color: #f5c9c9; }
+.ne-pill-moyen  { background: rgb(240 90 90 / 18%); color: #f5b4b4; }
+.ne-pill-fort   { background: rgb(240 90 90 / 30%); color: #ff8f8f; }
+.ne-pill-loot   { background: var(--ui-accent-soft); color: var(--ui-accent); }
+
+/* ---------- Champs nombre + curseur ---------- */
+
+.ne-num {
+    display: grid;
+    grid-template-columns: 120px 1fr 72px;
+    align-items: center;
+    gap: 6px 12px;
+    font-size: 14px;
+}
+
+.ne-num-label {
+    color: var(--ui-text);
+}
+
+.ne-num input[type="range"] {
+    width: 100%;
+    accent-color: var(--ui-accent);
+}
+
+.ne-num input[type="number"] {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 7px 8px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.ne-num input[type="number"]:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+}
+
+.ne-help {
+    grid-column: 2 / -1;
+    margin: -2px 0 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--ui-cyan);
+}
+
+.ne-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ne-stats + .ne-help {
+    margin-top: 4px;
+}
+
+.ne-damage button small {
+    margin-left: 4px;
+    font-weight: 400;
+    opacity: .75;
+}
+
+/* ---------- Butin ---------- */
+
+.ne-loot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.ne-loot-empty {
+    font-size: 13px;
+    font-style: italic;
+}
+
+.ne-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 4px 3px 4px;
+    border: 1px solid var(--ui-border);
+    border-radius: 999px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-size: 13px;
+}
+
+.ne-chip.is-custom {
+    border-style: dashed;
+}
+
+.ne-chip img,
+.ne-chip-initial {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: contain;
+    background: rgb(0 0 0 / 30%);
+}
+
+.ne-chip-initial {
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ne-chip button {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--ui-text-dim);
+    font: inherit;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.ne-chip button:hover {
+    background: rgb(255 90 110 / 18%);
+    color: var(--ui-danger);
+}
+
+.ne-loot-add {
+    display: flex;
+    gap: 6px;
+}
+
+.ne-loot-add input {
+    flex: 1;
+    box-sizing: border-box;
+    padding: 8px 11px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: rgb(0 0 0 / 30%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 14px;
+}
+
+.ne-loot-add input:focus {
+    outline: none;
+    border-color: var(--ui-accent);
+}
+
+.ne-loot-add .re-btn {
+    padding: 6px 14px;
+}
+
+.re-form[hidden] {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .npc-page .re-list {
+        max-height: none;
+    }
+}
+
+@media (max-width: 560px) {
+    .ne-num {
+        grid-template-columns: 1fr 72px;
+    }
+
+    .ne-num input[type="range"] {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+
+    .ne-help {
+        grid-column: 1 / -1;
+    }
+
+    .npc-page .re-row {
+        flex-direction: column;
+    }
+}

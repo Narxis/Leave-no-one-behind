@@ -11,6 +11,7 @@ const planetGen = require("./planetGen");
 const leaderboard = require("./leaderboard");
 const gameSettings = require("./gameSettings");
 const races = require("./races");
+const npcs = require("./npcs");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
@@ -159,7 +160,7 @@ module.exports = {
     async mjMenu(req, res) {
         let statuses = (await new Statuses().getAllStatuses(false))
             .map(s => ({slug: s.slug, name: s.name}));
-        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), loot: combat.getLootList(), statuses: statuses, shipRooms: shipAlerts.ROOMS});
+        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), companions: npcs.getCompanions(), loot: combat.getLootList(), statuses: statuses, shipRooms: shipAlerts.ROOMS});
     },
 
     // Paramètres de la partie, choisis par le MJ avant la création des persos
@@ -195,6 +196,18 @@ module.exports = {
     // Éditeur des races customs
     renderRaces(req, res) {
         res.render('races', {lang: langJS, races: races.list(), maxRaces: races.MAX_RACES});
+    },
+
+    // Éditeur d'ennemis et compagnons
+    renderNpcEditor(req, res) {
+        res.render('npc-editor', {
+            lang: langJS,
+            enemies: npcs.getEnemies(),
+            companions: npcs.getCompanions(),
+            loot: combat.getLootList(),
+            races: races.list().map(r => r.name),
+            limits: {enemies: npcs.MAX_ENEMIES, companions: npcs.MAX_COMPANIONS, loot: npcs.LOOT_SIZE}
+        });
     },
 
     ficheVaisseau(req, res) {
