@@ -155,6 +155,11 @@ class DB {
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
+            },
+            status: { // statut donné par le choix : JSON {slug, duration}
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
             }
         });
 
@@ -432,6 +437,21 @@ class DB {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
+            },
+            player_id: { // '' : toute l'équipe, sinon le discord_id du joueur concerné
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            custom: { // créé à la volée par le MJ
+                type: Sequelize.BOOLEAN,
+                defaultValue: false,
+                allowNull: false
+            },
+            clear_after_planet: { // null : suit l'option de partie
+                type: Sequelize.BOOLEAN,
+                defaultValue: null,
+                allowNull: true
             }
         })
 
@@ -468,7 +488,8 @@ class DB {
 
         // Colonnes ajoutées après coup : on les crée dans une base existante
         // plutôt que d'incrémenter DB_VERSION (qui repartirait d'une base vide)
-        await this.addMissingColumns('card_modules', ['humans', 'loot']);
+        await this.addMissingColumns('card_modules', ['humans', 'loot', 'status']);
+        await this.addMissingColumns('statuses', ['player_id', 'custom', 'clear_after_planet']);
     }
 
     async addMissingColumns(table, columns) {

@@ -30,6 +30,7 @@ async function test() {
     await test_deck_generation();
     await test_place_endings();
     await test_statuses_after_planet();
+    await test_custom_statuses();
     await test_roll();
     test_ship_alerts();
     await test_items_editor();
@@ -476,6 +477,97 @@ async function test_statuses_after_planet() {
     finally {
         gameSettings.get = get;
         await DB.tables.deck.update({played: 0}, {where: {deck_id: 0}});
+        await statuses.hydrateDB();
+    }
+}
+
+// Statuts créés à la volée, statuts d'un seul joueur et Diverti
+async function test_custom_statuses() {
+    console.log('Testing custom statuses');
+    const api = require('../src/controllers/api');
+    const gameSettings = require('../src/controllers/gameSettings');
+    const {Statuses} = require('../src/models/statuses');
+    const get = gameSettings.get;
+    const statuses = new Statuses();
+    await statuses.hydrateDB();
+    const res = {json() {}};
+    const row = (slug, player = '') => DB.tables.statuses.findOne({where: {slug: slug, player_id: player}, raw: true});
+    let bob = await new Player().create({discord_id: 'status-bob', name: 'Bob', moral: 100});
+    let eve = await new Player().create({discord_id: 'status-eve', name: 'Eve', moral: 100});
+
+    try {
+        console.log('Diverti fait partie des statuts de base');
+        assert.ok(await row('diverti'));
+        console.log('OK');
+
+        console.log('Création à la volée');
+        assert.strictEqual(await statuses.createCustom({name: '  '}), false);
+        assert.strictEqual(await statuses.createCustom({name: 'Blackout'}), false);
+        let slug = await statuses.createCustom({name: 'Sous le charme', desc: 'Les joueurs rêvassent.', clearAfterPlanet: false});
+        assert.strictEqual(slug, 'c-sous-le-charme');
+        assert.strictEqual((await row(slug)).desc, 'Les joueurs rêvassent.');
+        assert.strictEqual(await statuses.createCustom({name: 'Sous le charme', desc: 'Autre texte', clearAfterPlanet: true}), slug);
+        assert.strictEqual((await row(slug)).desc, 'Autre texte');
+        assert.ok((await statuses.getAllStatuses(false)).some(s => s.slug === slug));
+        console.log('OK');
+
+        console.log('Statut d\'un seul joueur');
+        await statuses.updateStatus(slug, 2, bob.discord_id);
+        assert.strictEqual((await row(slug)).duration, 0);
+        let active = await statuses.getAllStatuses();
+        assert.deepStrictEqual(active.map(s => [s.slug, s.player_name, s.desc]), [[slug, 'Bob', 'Autre texte']]);
+        assert.strictEqual((await statuses.getAllStatuses(false)).filter(s => s.slug === slug).length, 1);
+        await statuses.updateStatus(slug, 0, bob.discord_id);
+        assert.strictEqual(await row(slug, bob.discord_id), null);
+        console.log('OK');
+
+        console.log('Diverti : pertes de moral divisées par deux, arrondi vers le bas');
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 100, 90), 90);
+        await statuses.updateStatus('diverti', 3, bob.discord_id);
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 100, 90), 95);
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 100, 93), 97);
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 100, 99), 100);
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 50, 60), 60);
+        assert.strictEqual(await statuses.moralAfterLoss(eve.discord_id, 100, 90), 90);
+        await statuses.updateStatus('diverti', 3);
+        assert.strictEqual(await statuses.moralAfterLoss(eve.discord_id, 100, 90), 95);
+        await statuses.updateStatus('diverti', 0);
+        await statuses.updateStatus('diverti', 0, bob.discord_id);
+        console.log('OK');
+
+        console.log('Carte du vaisseau Sylv : le choix donne Diverti');
+        let sylv = await DB.tables.card_modules.findOne({where: {status: {[require('sequelize').Op.ne]: ''}}, raw: true});
+        assert.deepStrictEqual(JSON.parse(sylv.status), {slug: 'diverti', duration: 3});
+        let card = await new Card(sylv.card_id).getData();
+        assert.deepStrictEqual(card.choices.find(c => c.status).status, {slug: 'diverti', duration: 3});
+        console.log('OK');
+
+        console.log('Après une planète : la case du statut créé l\'emporte sur l\'option');
+        let kept = await statuses.createCustom({name: 'Tenace', clearAfterPlanet: false});
+        let gone = await statuses.createCustom({name: 'Fragile', clearAfterPlanet: true});
+        gameSettings.get = () => Object.assign(get(), {clearStatusesAfterPlanet: false});
+        await statuses.updateStatus(kept, 3);
+        await statuses.updateStatus(gone, 3);
+        await statuses.updateStatus('blackout', 3);
+        await statuses.updateStatus(kept, 1, eve.discord_id);
+        let deck = await DB.tables.deck.findAll({where: {deck_id: 0}, order: [['id', 'ASC']], raw: true});
+        for (let elt of deck) {
+            await DB.tables.deck.update({played: 1}, {where: {id: elt.id}});
+            if ((await DB.tables.cards.findOne({where: {id: elt.card_id}, raw: true})).type === TYPE_PLANET)
+                break;
+        }
+        await api.popNextCard({}, res);
+        assert.strictEqual((await row(kept)).duration, 2);
+        assert.strictEqual((await row(gone)).duration, 0);
+        assert.strictEqual((await row('blackout')).duration, 2);
+        // Le statut du joueur arrivé à 0 disparaît
+        assert.strictEqual(await row(kept, eve.discord_id), null);
+        console.log('OK');
+    }
+    finally {
+        gameSettings.get = get;
+        await DB.tables.deck.update({played: 0}, {where: {deck_id: 0}});
+        await DB.tables.players.destroy({where: {discord_id: [bob.discord_id, eve.discord_id]}});
         await statuses.hydrateDB();
     }
 }

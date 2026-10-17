@@ -77,6 +77,9 @@ const makeAction = async function (raw_response) {
         case 'status':
             payload = actionSetStatus(response);
             break;
+        case 'status-create':
+            payload = actionCreateStatus(response);
+            break;
         case 'detection':
             payload = actionSetDetection(response);
             break;
@@ -243,6 +246,9 @@ const actionSetPlayerStat = async function(response) {
 
     player = await player.getData(response.data.player_id);
     if (player) {
+        // Diverti : la perte de moral est réduite
+        if (stat === 'moral' && !isNaN(val))
+            val = await new Statuses().moralAfterLoss(player.discord_id, player.moral, val);
         let data = {};
         data[stat] = val;
         await player.update(data, response.data.player_id);
@@ -287,8 +293,14 @@ const actionSetStatus = async function(response) {
     let status = String(response.data.name || '').trim().toLowerCase();
     // Durée en tours de carte : un champ vide vaut 1, 0 retire le status
     let val = response.data.value === '' || response.data.value === undefined ? 1 : parseInt(response.data.value);
-    let known = await DB.tables.statuses.findOne({where: {slug: status}});
-    if (!known || isNaN(val))
+    // Sans joueur : le statut touche toute l'équipe
+    let playerId = String(response.data.player_id || '');
+    let statuses = new Statuses();
+    const known = () => DB.tables.statuses.findOne({where: {slug: status, player_id: ''}});
+    // Statut de base ajouté au jeu après le début de la partie
+    if (!await known())
+        await statuses.hydrateDB(false);
+    if (!await known() || isNaN(val) || (playerId && !await DB.tables.players.findOne({where: {discord_id: playerId}})))
         return {
             action: response.action,
             error: true,
@@ -296,16 +308,36 @@ const actionSetStatus = async function(response) {
             data: {}
         };
     val = Math.max(0, Math.min(99, val));
-    response.data = {name: status, value: val};
-    let statuses = new Statuses();
+    response.data = {name: status, value: val, player_id: playerId};
 
-    await statuses.updateStatus(status, val);
+    await statuses.updateStatus(status, val, playerId);
 
     return {
         action: response.action,
         error: false,
         data: response.data
     }
+}
+
+/**
+ * Statut créé à la volée par le MJ (nom, description, retiré ou non après
+ * une planète), appliqué aussitôt à l'équipe ou à un joueur
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
+const actionCreateStatus = async function(response) {
+    let data = response.data || {};
+    let slug = await new Statuses().createCustom(data);
+    if (!slug)
+        return {
+            action: 'status',
+            error: true,
+            error_msg: 'nom de statut vide ou déjà pris par un statut du jeu',
+            data: {}
+        };
+    let applied = await actionSetStatus({action: 'status', data: {name: slug, value: data.value, player_id: data.player_id}});
+    applied.data.created = slug;
+    return applied;
 }
 
 /**

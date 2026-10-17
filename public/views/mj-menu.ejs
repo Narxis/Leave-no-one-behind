@@ -75,6 +75,22 @@
                         <input type="number" min="1" max="10" class="add-life status-duration-text" id="duration-status" placeholder="1">
                         <button class="add-life" id="add-status">+</button>
                     </div>
+                    <div class="mj-status-form">
+                        <label class="mj-sp-row">
+                            <span class="mj-outcome-label">Pour</span>
+                            <select class="mj-sp-select" id="target-status"><option value="">Toute l'équipe</option></select>
+                        </label>
+                        <details class="mj-status-new">
+                            <summary>Créer un statut</summary>
+                            <input class="mj-sp-name" type="text" id="new-status-name" maxlength="30" placeholder="Nom du statut">
+                            <input class="mj-sp-name" type="text" id="new-status-desc" maxlength="160" placeholder="Description courte (affichée au survol)">
+                            <label class="mj-sp-check mj-sp-left">
+                                <input type="checkbox" id="new-status-planet" <%= locals.clearStatusesAfterPlanet ? 'checked' : '' %>>
+                                <span>Retiré après une planète</span>
+                            </label>
+                            <button type="button" class="mj-turn-next mj-sp-apply" id="new-status-create">Créer et appliquer</button>
+                        </details>
+                    </div>
                     <div class="mj-statuses" id="mj-statuses"></div>
                 </div>
                 <div class="combat">

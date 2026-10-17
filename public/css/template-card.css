@@ -1069,6 +1069,12 @@ textarea {
   justify-content: center;
 }
 
+.status-player {
+  margin-left: 4px;
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
 .status-duration {
   height: 25px;
   width: 25px;
