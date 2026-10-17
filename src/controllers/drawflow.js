@@ -24,7 +24,18 @@ module.exports = {
         var i, result = [];
 
         for (i in card.choices) {
-            if (card.choices[i].reveal !== '') {
+            // Choix à jet ou à issues au hasard : on suit les cartes de toutes ses suites
+            if (card.choices[i].roll || card.choices[i].outcomes) {
+                let issues = this.suitesOf(card.choices[i]).flatMap(s => s.issue.roll ? [s.issue.roll.success, s.issue.roll.failure] : [s.issue]);
+                for (let issue of issues) {
+                    let nextCard = issue.next && await DB.tables.cards.findOne({attributes: ['id'], where: { name:issue.next }});
+                    if (nextCard)
+                        result = result.concat(await this.searchAll(await new Card(nextCard.id).getData()));
+                }
+                if (result.includes(card) === false)
+                    result.push(card);
+            }
+            else if (card.choices[i].reveal !== '') {
                 if (result.includes(card) === false) {
                     result.push(card);
                 }
@@ -47,8 +58,10 @@ module.exports = {
         let i = 0;
         for (let choice of card.choices) {
             cardSet.push(this.buildChoiceModule(card, i));
-            if (choice.reveal !== '')
-                cardSet.push(this.buildRevealModule(card, i));
+            this.suitesOf(choice).forEach(suite => {
+                if (suite.issue.reveal !== '')
+                    cardSet.push(this.buildRevealModule(card, i, suite.suffix));
+            });
             i++;
         }
 
@@ -144,34 +157,48 @@ module.exports = {
             "pos_y":639 // TODO get a row for display
         }
     },
+    // Suites d'un choix : la sienne, ou réussite (output_1) et échec (output_2) d'un jet
+    suitesOf (choice) {
+        // Issues au hasard : une sortie chacune (le jet d'une issue n'est pas représenté)
+        if (choice.outcomes)
+            return choice.outcomes.map((o, k) => ({issue: o, suffix: '_o' + k}));
+        if (choice.roll)
+            return [{issue: choice.roll.success, suffix: '_s'}, {issue: choice.roll.failure, suffix: '_f'}];
+        return [{issue: choice, suffix: ''}];
+    },
     buildChoiceModule (dat, index) {
         let outputs = {};
         // Output of choice can either be a card or a reveal
         // Output are obvious, inputs will be done on second pass
-        outputs['output_1'] = {connections: []};
-        if (dat.choices[index]) {
+        let suites = this.suitesOf(dat.choices[index]);
+        suites.forEach((suite, k) => {
+            let output = outputs['output_' + (k + 1)] = {connections: []};
             // NEXT IS REVEAL
-            if (dat.choices[index].reveal !== '') {
-                outputs['output_1'].connections.push({
-                    "node": "reveal_"+index+"_"+dat.name,
+            if (suite.issue.reveal !== '') {
+                output.connections.push({
+                    "node": "reveal_"+index+suite.suffix+"_"+dat.name,
                     "output":"input_1"
                 })
             }
             // NEXT IS CARD
-            else if (dat.choices[index].next !== '') {
-                outputs['output_1'].connections.push({
-                    "node": dat.choices[index].next,
+            else if (suite.issue.next !== '') {
+                output.connections.push({
+                    "node": suite.issue.next,
                     "output":"input_1"
                 })
             }
-        }
+        });
+
+        let data = {"choice": dat.choices[index].value};
+        if (dat.choices[index].outcomes)
+            data.random = JSON.stringify(dat.choices[index].outcomes.map(o => o.weight));
+        else if (dat.choices[index].roll)
+            data.roll = dat.choices[index].roll.stat || 'pilotage';
 
         return {
             "id":"choice_"+(index)+"_"+dat.name,
             "name":'choice',
-            "data":{
-                "choice": dat.choices[index].value
-            },
+            "data":data,
             "class":'choice',
             "html": this.fillHTMLModule('choice'),
             "typenode":false,
@@ -185,14 +212,15 @@ module.exports = {
             "pos_y":639 // TODO get a row for display
         }
     },
-    buildRevealModule (dat, index) {
+    buildRevealModule (dat, index, suffix = '') {
         let outputs = {};
+        let suite = this.suitesOf(dat.choices[index]).find(s => s.suffix === suffix);
 
         return {
-            "id": "reveal_"+index+"_"+dat.name,
+            "id": "reveal_"+index+suffix+"_"+dat.name,
             "name":'reveal',
             "data":{
-                "reveal": dat.choices[index].reveal
+                "reveal": suite.issue.reveal
             },
             "class":'reveal',
             "html": this.fillHTMLModule('reveal'),

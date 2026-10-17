@@ -3,6 +3,7 @@ const fs = require("fs")
 const { Op, literal } = require("sequelize");
 const ws = require("ws");
 const {rollPlanet, ARCHETYPES} = require('./planetGen');
+const blankCard = require('./blankCard');
 
 const deckGenerator = async function (){
 
@@ -151,12 +152,26 @@ const cardPop = async function (setPlayed = true){
 
         let card = await new Card(result.card_id).getData();
 
+        // Plus aucune planète après celle-ci : c'est la dernière chance de s'installer
+        if (setPlayed && card && card.type === TYPE_PLANET)
+            card.lastPlanet = (await planetsLeft()) === 0;
+
         if (setPlayed)
             announceCard(card);
 
         return card;
     }
     return false;
+}
+
+// Planètes du paquet pas encore jouées
+const planetsLeft = async function () {
+    let rows = await DB.tables.deck.findAll({attributes: ['card_id'], where: {deck_id: 0, played: 0}, raw: true});
+    if (!rows.length)
+        return 0;
+    let planets = await DB.tables.cards.findAll({attributes: ['id'], where: {id: rows.map(r => r.card_id), type: TYPE_PLANET}, raw: true});
+    let ids = new Set(planets.map(c => c.id));
+    return rows.filter(r => ids.has(r.card_id)).length;
 }
 
 // Carte affichée sur la page de jeu, pour le panneau MJ qui s'ouvre ou se
@@ -167,6 +182,9 @@ let currentCard = null;
 const announceCard = function (card) {
     if (!card)
         return;
+    // Choix « Autre… » (carte blanche) ; une carte blanche oubliée est finie
+    blankCard.addOther(card);
+    blankCard.reset();
     currentCard = card;
     const wsClient = new ws(WS_URL);
     wsClient.on('open', () => {
@@ -180,6 +198,7 @@ const getCurrentCard = () => currentCard;
 
 const destroyDeck = async function (deck_id = 0){
     currentCard = null;
+    blankCard.reset();
     await DB.tables.deck.destroy({
         where: {deck_id: deck_id},
         truncate: true,
@@ -368,4 +387,4 @@ const hydrateCardDB = async function (cleanInstall = true) {
     await generatePlanets();
 }
 
-module.exports = {deckGenerator, cardPop, announceCard, getCurrentCard, getCardsIds, destroyDeck, getDeck, shuffle, hydrateCardDB, generatePlanet, generatePlanets}
+module.exports = {deckGenerator, cardPop, planetsLeft, announceCard, getCurrentCard, getCardsIds, destroyDeck, getDeck, shuffle, hydrateCardDB, generatePlanet, generatePlanets}

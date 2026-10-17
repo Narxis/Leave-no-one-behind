@@ -149,6 +149,7 @@ button.small { margin-top: 0; padding: 6px 12px; font-size: 14px; }
     background: rgb(255 255 255 / 3%);
 }
 .card-kind { margin: 0 0 8px; color: var(--accent); font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; }
+.card-last { margin: 0 0 12px; }
 .card-desc { margin: 0 0 12px; font-size: 17px; line-height: 1.5; white-space: pre-line; }
 .card-choices { margin: 0 0 8px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .card-choices li { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; }
@@ -241,6 +242,7 @@ select {
 /* Inventaire */
 .items { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .item { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
+.money { margin: 0 0 10px; font-weight: 600; }
 .item .inline-form button { margin: 0; }
 
 /* Équipage */

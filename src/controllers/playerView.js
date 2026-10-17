@@ -3,7 +3,7 @@
 // Après chaque action du jeu (tout passe par le WebSocket du MJ), l'état est
 // recalculé ; seul ce qui a changé repart vers les joueurs :
 //   {kind: 'game', phase, card, ship, statuses, alerts, team, races}  à tous
-//   {kind: 'you', character, inventory, creation}                     à chacun
+//   {kind: 'you', character, inventory, money, creation}              à chacun
 // Les secrets du MJ (révélations, suites des choix, butin, valeurs des
 // planètes) ne sortent jamais d'ici.
 const {Player} = require('../models/player');
@@ -13,8 +13,11 @@ const deck = require('./deck');
 const lobby = require('./lobby');
 const races = require('./races');
 const inventory = require('./inventory');
+const money = require('./money');
 const shipAlerts = require('./shipAlerts');
 const statRolls = require('./statRolls');
+const roles = require('./roles');
+const blankCard = require('./blankCard');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -41,7 +44,7 @@ const publicCard = function (card) {
         return null;
     let kind = cardKind(card);
     if (kind === 'planet')
-        return {id: card.id, kind: kind, desc: '', choices: []};
+        return {id: card.id, kind: kind, desc: '', choices: [], lastPlanet: card.lastPlanet ? LANG.last_planet : null};
     return {
         id: card.id,
         kind: kind,
@@ -63,12 +66,16 @@ const shipState = async function () {
 
 const statusList = async function () {
     let list = await new Statuses().getAllStatuses(true);
-    return list.map(s => ({slug: s.slug, name: s.name, desc: s.desc, duration: s.duration}));
+    // Statut d'un seul joueur : son nom à côté de celui du statut
+    return list.map(s => ({slug: s.slug, name: s.name + (s.player_id ? ' (' + (s.player_name || '?') + ')' : ''),
+        desc: s.desc, duration: s.duration, player: s.player_id || ''}));
 };
+
+const roleName = (slug) => (roles.find(slug) || {}).name || '';
 
 const team = async function () {
     let players = await DB.tables.players.findAll({raw: true});
-    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race)}));
+    return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race), role: roleName(p.role)}));
 };
 
 // Tout ce qui est commun aux joueurs
@@ -78,7 +85,8 @@ const gameState = async function () {
     return {
         kind: 'game',
         phase: phase,
-        card: phase === 'gameLive' ? publicCard(deck.getCurrentCard()) : null,
+        // Une carte blanche en cours passe devant la carte du paquet
+        card: phase === 'gameLive' ? (blankCard.publicCard() || publicCard(deck.getCurrentCard())) : null,
         ship: await shipState(),
         statuses: await statusList(),
         alerts: {blink: alerts.blink || [], showMap: !!alerts.showMap, alert: alerts.alert ? {room: alerts.alert.room, name: alerts.alert.name, message: alerts.alert.message} : null},
@@ -93,7 +101,7 @@ const playerState = async function (id) {
     let player = await new Player().getData(id);
     let character = null;
     if (player) {
-        character = {name: player.name, race: player.race, raceName: races.nameOf(player.race)};
+        character = {name: player.name, race: player.race, raceName: races.nameOf(player.race), role: roles.publicRole(player.role)};
         for (let stat of STATS.concat('moral'))
             character[stat] = player[stat];
     }
@@ -102,6 +110,8 @@ const playerState = async function (id) {
         kind: 'you',
         character: character,
         inventory: player ? await inventory.getInventory(id) : [],
+        // Bourse : « 20 crédits »
+        money: player ? money.label(await money.balance({type: 'player', id: id}) || 0) : null,
         creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null
     };
 };

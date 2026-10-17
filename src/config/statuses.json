@@ -1,7 +1,7 @@
 [
   {
     "name": "Blackout",
-    "desc": "le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.",
+    "desc": "Le vaisseau ne peut plus rien détecter, il est impossible pour les joueurs d’agir.",
     "slug": "blackout"
   },
   {
@@ -10,13 +10,18 @@
     "slug": "anticipation"
   },
   {
-    "name": "Affaiblit",
-    "desc": "Une ou plusieurs statistiques des joueurs sont diminuée",
+    "name": "Affaibli",
+    "desc": "Une ou plusieurs statistiques des joueurs sont diminuées",
     "slug": "weak"
   },
   {
     "name": "Recherché",
-    "desc": "Vous êtes recherchés pas les autorités",
+    "desc": "Vous êtes recherchés par les autorités",
     "slug": "wanted"
+  },
+  {
+    "name": "Diverti",
+    "desc": "L'équipage a le moral : les pertes de moral sont divisées par deux (arrondi vers le bas).",
+    "slug": "diverti"
   }
 ]

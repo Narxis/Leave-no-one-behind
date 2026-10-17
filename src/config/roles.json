@@ -1,0 +1,54 @@
+{
+  "_comment": "Rôles des joueurs. stat : la stat du rôle (combat, pilotage, engineering, survival, recon, ou null) ; bonus : dés en plus sur les jets de cette stat (on garde le meilleur) ; effect : texte montré au MJ et aux joueurs ; icon : image dans public/. unique : un seul joueur par rôle.",
+  "unique": true,
+  "roles": [
+    {
+      "slug": "capitaine",
+      "name": "Capitaine",
+      "stat": null,
+      "bonus": 0,
+      "effect": "Une fois par planète, peut faire relancer un jet raté (le sien ou celui d'un équipier).",
+      "icon": "/img/roles/capitaine.svg"
+    },
+    {
+      "slug": "pilote",
+      "name": "Pilote",
+      "stat": "pilotage",
+      "bonus": 1,
+      "effect": "+1 dé sur ses jets de Pilotage (on garde le meilleur).",
+      "icon": "/img/roles/pilote.svg"
+    },
+    {
+      "slug": "armurier",
+      "name": "Armurier",
+      "stat": "combat",
+      "bonus": 1,
+      "effect": "+1 dé sur ses jets de Combat (on garde le meilleur).",
+      "icon": "/img/roles/armurier.svg"
+    },
+    {
+      "slug": "ingenieur",
+      "name": "Ingénieur",
+      "stat": "engineering",
+      "bonus": 1,
+      "effect": "+1 dé sur ses jets d'Ingénierie (on garde le meilleur).",
+      "icon": "/img/roles/ingenieur.svg"
+    },
+    {
+      "slug": "eclaireur",
+      "name": "Éclaireur",
+      "stat": "recon",
+      "bonus": 1,
+      "effect": "+1 dé sur ses jets de Reconnaissance (on garde le meilleur).",
+      "icon": "/img/roles/eclaireur.svg"
+    },
+    {
+      "slug": "infirmier",
+      "name": "Infirmier",
+      "stat": "survival",
+      "bonus": 1,
+      "effect": "+1 dé sur ses jets de Survie, soins compris (on garde le meilleur).",
+      "icon": "/img/roles/infirmier.svg"
+    }
+  ]
+}

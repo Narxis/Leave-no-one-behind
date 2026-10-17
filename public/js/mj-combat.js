@@ -6,6 +6,7 @@
     const list = document.getElementById('mj-enemies');
     const logBox = document.getElementById('mj-combat-log');
     const startBtn = document.getElementById('combat-start');
+    const initSelect = document.getElementById('combat-initiative');
     const search = document.getElementById('search-ennemy');
     const teamBox = document.getElementById('mj-team');
     const statusBox = document.getElementById('mj-status-panel');
@@ -26,6 +27,8 @@
     let allies = [];       // compagnons (PNJ) : le serveur lance leur dé directement
     let targetId = null;   // ennemi choisi, en attente du choix de l'attaquant
     let victimFor = null;  // ennemi qui attaque, en attente du choix de sa cible
+    let pick = null;       // attaquant ou cible choisi, envoyé avec « Valider » ('p:<id>' ou 'a:<id>')
+    let hitStatus = {kind: '', turns: 3}; // statut posé si l'attaque en préparation touche
     let lootOpen = null;   // butin en cours d'édition : 'p<index>' (préparation) ou id de l'ennemi
     let lootDraft = '';    // texte en cours de saisie, gardé quand la liste se redessine
     let lootFocus = false; // donner le focus au champ au prochain rendu
@@ -59,8 +62,14 @@
     // Butin d'un ennemi : résumé cliquable, et sous lui l'éditeur (suggestions
     // de items.json via la datalist, ou saisie libre). Révélé aux joueurs
     // quand tous les ennemis sont K.O.
+    // Quantité habituelle d'un objet de la liste (éditeur d'objets)
+    function knownQty(name) {
+        let option = [...document.querySelectorAll('#loot-list option')].find(o => o.value.toLowerCase() === name.toLowerCase());
+        return option ? parseInt(option.dataset.qty) || 1 : 1;
+    }
+
     function lootLine(row, key, loot, onChange) {
-        let names = loot.map(i => i.name);
+        let names = loot.map(i => i.qty > 1 ? i.name + ' ×' + i.qty : i.name);
         let open = lootOpen === key;
         let toggle = button('mj-loot-toggle' + (open ? ' open' : ''),
             names.length ? 'Butin : ' + names.join(', ') : '+ Ajouter un butin', () => {
@@ -77,7 +86,7 @@
         let box = el('div', 'mj-loot');
         let chips = el('div', 'mj-loot-items');
         loot.forEach((item, i) => {
-            let chip = el('span', 'mj-loot-item' + (item.custom ? ' custom' : ''), item.name);
+            let chip = el('span', 'mj-loot-item' + (item.custom ? ' custom' : ''), item.qty > 1 ? item.name + ' ×' + item.qty : item.name);
             chip.append(button('mj-loot-remove', '×', () => onChange(loot.filter((_, j) => j !== i))));
             chips.append(chip);
         });
@@ -86,18 +95,34 @@
         input.placeholder = 'Objet (liste ou texte libre)';
         input.maxLength = 60;
         input.value = lootDraft;
-        input.addEventListener('input', () => { lootDraft = input.value; });
+        let qty = el('input', 'mj-loot-input mj-loot-qty');
+        qty.type = 'number';
+        qty.min = 1;
+        qty.max = 999;
+        qty.value = lootDraft ? knownQty(lootDraft) : 1;
+        qty.title = 'Quantité';
+        input.addEventListener('input', () => {
+            lootDraft = input.value;
+            qty.value = knownQty(input.value.trim());
+        });
         const add = () => {
             let name = input.value.trim();
             if (!name)
                 return;
+            let n = Math.min(Math.max(parseInt(qty.value) || 1, 1), 999);
             lootDraft = '';
             lootFocus = true;
-            onChange(loot.concat([{name: name}]));
+            // Déjà dans le butin : la quantité s'ajoute
+            let at = loot.findIndex(i => i.name.toLowerCase() === name.toLowerCase());
+            if (at >= 0)
+                onChange(loot.map((i, j) => j === at ? Object.assign({}, i, {qty: (i.qty || 1) + n}) : i));
+            else
+                onChange(loot.concat([{name: name, qty: n}]));
         };
         input.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
+        qty.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
         let form = el('div', 'mj-loot-form');
-        form.append(input, button('mj-loot-add', '+', add));
+        form.append(input, qty, button('mj-loot-add', '+', add));
         box.append(chips, form);
         row.append(box);
         if (lootFocus) {
@@ -133,9 +158,98 @@
         if (!p)
             return;
         let box = el('div', 'mj-waiting');
-        box.append(el('span', 'mj-waiting-text', 'En attente du /roll Combat de ' + p.player + ' sur ' + p.enemy),
+        let status = p.status && (STATUSES[p.status.status] || p.status);
+        box.append(el('span', 'mj-waiting-text', 'En attente du /roll Combat de ' + p.player + ' sur ' + p.enemy
+            + (status && status.name ? ' (+ ' + status.name + ' si touché)' : '')),
             button('mj-waiting-cancel', 'Annuler', () => wsLNOB.send({action: 'combat-cancel', data: {}})));
         list.append(box);
+    }
+
+    // Attaque en préparation : le MJ choisit l'attaquant ou la cible, l'issue,
+    // les dégâts et un statut éventuel, puis envoie tout d'un coup avec
+    // « Valider ». Rien ne part tant qu'il n'a pas validé
+    const resetDraft = () => {
+        pick = null;
+        outcome = 'dice';
+        forcedDamage = '';
+        hitStatus = {kind: '', turns: 3};
+    };
+
+    // Joueurs et compagnons à choisir (un seul à la fois) ; stunnedOff : un
+    // combattant étourdi ne peut pas être choisi comme attaquant
+    function fighterChoices(box, stunnedOff) {
+        let choices = el('div', 'mj-choices');
+        const choice = (key, name, npc, statuses) => {
+            let b = button('mj-attacker' + (npc ? ' npc' : '') + (pick === key ? ' selected' : ''), name, () => {
+                pick = pick === key ? null : key;
+                render();
+            });
+            if (npc)
+                b.prepend(el('span', 'mj-ally-badge', 'PNJ'));
+            b.setAttribute('aria-pressed', pick === key);
+            if (stunnedOff && isStunned(statuses)) {
+                b.disabled = true;
+                b.title = name + ' ne peut pas attaquer (statut)';
+                if (pick === key)
+                    pick = null;
+            }
+            choices.append(b);
+        };
+        for (let p of players)
+            choice('p:' + p.discord_id, p.name, false, fighterStatuses(String(p.discord_id)));
+        for (let a of allies)
+            choice('a:' + a.id, a.name, true, fighterStatuses('npc' + a.id));
+        box.append(choices);
+    }
+
+    // Statut posé si l'attaque touche (facultatif)
+    function hitStatusControl(box) {
+        let row = el('div', 'mj-outcome mj-hit-status');
+        let kind = el('select', 'mj-sp-select');
+        let none = el('option', '', 'Aucun statut');
+        none.value = '';
+        kind.append(none);
+        for (let [key, info] of Object.entries(STATUSES)) {
+            let o = el('option', '', info.name);
+            o.value = key;
+            kind.append(o);
+        }
+        kind.value = hitStatus.kind;
+        kind.addEventListener('change', () => { hitStatus.kind = kind.value; render(); });
+        let turns = el('input', 'mj-turn-duration');
+        turns.type = 'number';
+        turns.min = 1;
+        turns.max = 9;
+        turns.value = hitStatus.turns;
+        turns.title = 'Durée en tours';
+        turns.disabled = !hitStatus.kind;
+        turns.addEventListener('input', () => { hitStatus.turns = Math.min(9, Math.max(1, parseInt(turns.value) || 1)); });
+        let group = el('label', 'mj-outcome-group');
+        group.append(turns, el('span', 'mj-outcome-label', 'tours'));
+        row.append(el('span', 'mj-outcome-label', 'Si touché'), kind, group);
+        row.title = 'Statut posé sur la cible si l\'attaque touche (et ne la met pas K.O.)';
+        box.append(row);
+    }
+
+    const hitStatusData = () => hitStatus.kind ? {status: hitStatus.kind, turns: hitStatus.turns} : undefined;
+
+    // Bas du panneau : Annuler (ferme sans rien envoyer) et Valider
+    function draftFooter(box, label, ready, onValidate) {
+        let foot = el('div', 'mj-draft-foot');
+        foot.append(button('mj-waiting-cancel', 'Annuler', () => {
+            targetId = victimFor = null;
+            resetDraft();
+            render();
+        }));
+        let ok = button('mj-turn-next mj-validate', label, () => {
+            onValidate();
+            targetId = victimFor = null;
+            resetDraft();
+            render();
+        });
+        ok.disabled = !ready;
+        foot.append(ok);
+        box.append(foot);
     }
 
     // Choix du joueur qui attaque l'ennemi ciblé
@@ -144,31 +258,18 @@
         box.append(el('span', 'mj-attackers-label', 'Qui attaque ' + enemy.name + ' ?'));
         if (!players.length && !allies.length)
             box.append(el('span', 'mj-attackers-label', 'aucun joueur dans la partie'));
-        // Un joueur ou compagnon étourdi ne peut pas attaquer
-        for (let p of players) {
-            let b = button('mj-attacker', p.name, () => {
-                targetId = null;
-                wsLNOB.send({action: 'combat-target', data: {enemy_id: enemy.id, discord_id: p.discord_id}});
-            });
-            if (isStunned(fighterStatuses(String(p.discord_id)))) {
-                b.disabled = true;
-                b.title = p.name + ' ne peut pas attaquer (statut)';
-            }
-            box.append(b);
-        }
-        for (let a of allies) {
-            let b = button('mj-attacker npc', a.name, () => {
-                targetId = null;
-                wsLNOB.send({action: 'combat-ally-attack', data: {enemy_id: enemy.id, ally_id: a.id}});
-            });
-            b.prepend(el('span', 'mj-ally-badge', 'PNJ'));
-            b.title = 'Le dé de ' + a.name + ' est lancé tout de suite (Combat ' + a.combat + ')';
-            if (isStunned(fighterStatuses('npc' + a.id))) {
-                b.disabled = true;
-                b.title = a.name + ' ne peut pas attaquer (statut)';
-            }
-            box.append(b);
-        }
+        fighterChoices(box, true);
+        hitStatusControl(box);
+        let ally = pick && pick.startsWith('a:') && allies.find(a => 'a:' + a.id === pick);
+        // Un compagnon lance son dé tout de suite ; un joueur doit lancer Combat
+        draftFooter(box, ally ? 'Valider (dé de ' + ally.name + ')' : 'Valider', !!pick, () => {
+            let [type, id] = pick.split(':');
+            let data = {enemy_id: enemy.id, status: hitStatusData()};
+            if (type === 'a')
+                wsLNOB.send({action: 'combat-ally-attack', data: Object.assign(data, {ally_id: parseInt(id)})});
+            else
+                wsLNOB.send({action: 'combat-target', data: Object.assign(data, {discord_id: id})});
+        });
         list.append(box);
     }
 
@@ -176,17 +277,7 @@
     function renderVictims(enemy) {
         let box = el('div', 'mj-attackers mj-victims');
         box.append(el('span', 'mj-attackers-label', 'Qui ' + enemy.name + ' attaque ?'));
-        const attack = (data) => {
-            victimFor = null;
-            let damage = parseInt(forcedDamage);
-            wsLNOB.send({action: 'combat-enemy-attack', data: Object.assign({
-                enemy_id: enemy.id,
-                outcome: outcome === 'dice' ? undefined : outcome,
-                damage: outcome !== 'miss' && Number.isFinite(damage) ? damage : undefined
-            }, data)});
-            outcome = 'dice';
-            forcedDamage = '';
-        };
+        fighterChoices(box, false);
 
         // Issue de l'attaque, choisie par le MJ s'il le veut (pour épargner un
         // joueur, ou rendre un coup plus dur) : les joueurs ne voient que le résultat
@@ -213,26 +304,102 @@
         group.append(el('span', 'mj-outcome-label', 'Dégâts'), dmg);
         control.append(group);
         box.append(control);
-        for (let p of players)
-            box.append(button('mj-attacker', p.name, () => attack({discord_id: p.discord_id})));
-        for (let a of allies) {
-            let b = button('mj-attacker npc', a.name, () => attack({ally_id: a.id}));
-            b.prepend(el('span', 'mj-ally-badge', 'PNJ'));
-            box.append(b);
-        }
-        if (!players.length && !allies.length)
-            box.append(button('mj-attacker', 'Attaquer sans cible', () => attack({})));
+        if (outcome !== 'miss')
+            hitStatusControl(box);
+
+        let alone = !players.length && !allies.length;
+        draftFooter(box, alone ? 'Valider sans cible' : 'Valider', alone || !!pick, () => {
+            let damage = parseInt(forcedDamage);
+            let data = {
+                enemy_id: enemy.id,
+                outcome: outcome === 'dice' ? undefined : outcome,
+                damage: outcome !== 'miss' && Number.isFinite(damage) ? damage : undefined,
+                status: outcome !== 'miss' ? hitStatusData() : undefined
+            };
+            if (pick)
+                Object.assign(data, targetOf(pick));
+            wsLNOB.send({action: 'combat-enemy-attack', data: data});
+        });
         list.append(box);
     }
 
-    // Tour en cours ; « Tour suivant » fait agir les statuts
+    // Tour en cours et ordre de jeu ; « Tour suivant » fait agir les statuts
     function renderTurn() {
         let bar = el('div', 'mj-turn');
         bar.append(el('span', 'mj-turn-label', 'Tour ' + (state.turn || 1)));
-        let next = button('mj-turn-next', 'Tour suivant', () => wsLNOB.send({action: 'combat-turn', data: {}}));
-        next.title = 'Les statuts qui blessent agissent, puis chaque statut perd un tour';
-        bar.append(next);
+        let order = state.order || [];
+        if (order.length) {
+            let next = button('mj-turn-next', 'Au suivant', () => wsLNOB.send({action: 'combat-next', data: {}}));
+            next.title = 'Passe la main au combattant suivant ; après le dernier, le tour passe';
+            bar.append(next);
+        }
+        let turn = button('mj-turn-next mj-turn-skip', 'Tour suivant', () => wsLNOB.send({action: 'combat-turn', data: {}}));
+        turn.title = 'Les statuts qui blessent agissent, puis chaque statut perd un tour ; la main revient au premier';
+        bar.append(turn);
+        if (order.length)
+            bar.append(renderOrder(order));
         list.append(bar);
+    }
+
+    // Combattant K.O. : il passe son tour
+    function isDownLocal(f) {
+        if (f.kind === 'enemy') {
+            let enemy = state.enemies.find(e => e.id === f.id);
+            return !enemy || enemy.hp <= 0;
+        }
+        let who = f.kind === 'ally' ? allies.find(a => 'npc' + a.id === f.id) : players.find(p => String(p.discord_id) === f.id);
+        return !!who && hpOf(f.id, who.moral) <= 0;
+    }
+
+    // Ordre de jeu, fixé par l'initiative : le MJ le change avec les flèches
+    // ou en glissant un nom, et donne la main à quelqu'un en cliquant son nom
+    let dragFrom = null;
+    function renderOrder(order) {
+        let box = el('ol', 'mj-order');
+        let keys = order.map(f => f.kind + ':' + f.id);
+        const send = (data) => wsLNOB.send({action: 'combat-order', data: data});
+        const move = (from, to) => {
+            let k = keys.slice();
+            k.splice(to, 0, k.splice(from, 1)[0]);
+            send({order: k});
+        };
+        order.forEach((f, i) => {
+            let row = el('li', 'mj-order-row kind-' + f.kind + (i === state.current ? ' current' : '') + (isDownLocal(f) ? ' ko' : ''));
+            let name = button('mj-order-name', f.name, () => send({current: keys[i]}));
+            name.title = i === state.current ? 'À ' + f.name + ' de jouer' : 'Donner la main à ' + f.name;
+            if (f.kind === 'ally')
+                name.prepend(el('span', 'mj-ally-badge', 'PNJ'));
+            let up = button('mj-order-move', '▲', () => move(i, i - 1));
+            up.disabled = i === 0;
+            up.title = 'Jouer plus tôt';
+            let down = button('mj-order-move', '▼', () => move(i, i + 1));
+            down.disabled = i === order.length - 1;
+            down.title = 'Jouer plus tard';
+            row.append(el('span', 'mj-order-rank', (i + 1) + '.'), name, up, down);
+
+            row.draggable = true;
+            row.addEventListener('dragstart', (e) => {
+                dragFrom = i;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', keys[i]);
+            });
+            row.addEventListener('dragover', (e) => {
+                if (dragFrom === null)
+                    return;
+                e.preventDefault();
+                row.classList.add('drop');
+            });
+            row.addEventListener('dragleave', () => row.classList.remove('drop'));
+            row.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (dragFrom !== null && dragFrom !== i)
+                    move(dragFrom, i);
+                dragFrom = null;
+            });
+            row.addEventListener('dragend', () => { dragFrom = null; });
+            box.append(row);
+        });
+        return box;
     }
 
     const isStunned = (statuses) => Object.values(statuses || {}).some(s => s.stun);
@@ -391,6 +558,7 @@
             let attack = button('mj-enemy-attack' + (victimFor === enemy.id ? ' selecting' : ''), 'Attaque', () => {
                 victimFor = victimFor === enemy.id ? null : enemy.id;
                 targetId = null;
+                resetDraft();
                 render();
             });
             let stunned = isStunned(enemy.statuses);
@@ -403,6 +571,7 @@
             let aim = button('mj-enemy-target', 'Cibler', () => {
                 targetId = targetId === enemy.id ? null : enemy.id;
                 victimFor = null;
+                resetDraft();
                 render();
             });
             aim.disabled = enemy.hp <= 0;
@@ -428,11 +597,23 @@
         // Un événement de combat ne doit pas faire perdre la saisie du butin en cours
         if (document.activeElement && document.activeElement.classList.contains('mj-loot-input'))
             lootFocus = true;
+        // …ni celle d'une attaque en préparation (dégâts, durée du statut)
+        let active = document.activeElement;
+        let refocus = active && list.contains(active) && active.closest('.mj-attackers') && active.tagName === 'INPUT'
+            ? '.mj-attackers input.' + active.className.trim().split(/\s+/).join('.') : null;
         list.innerHTML = '';
         list.classList.toggle('active', state.active);
         state.active ? renderActive() : renderPending();
+        if (refocus && list.querySelector(refocus))
+            list.querySelector(refocus).focus();
         startBtn.textContent = state.active ? 'Terminer le combat' : 'Commencer le combat';
+        initSelect.classList.toggle('hide', state.active);
         startBtn.classList.toggle('running', state.active);
+        // Fin du combat : rare et irréversible, elle demande un appui long (ui-hold.js)
+        if (state.active)
+            startBtn.dataset.hold = 'Maintenir pour terminer le combat';
+        else
+            delete startBtn.dataset.hold;
         renderLog();
         renderTeam();
     }
@@ -507,7 +688,9 @@
             wsLNOB.send({action: 'combat-add', data: {enemy: mob ? Object.assign({}, mob) : {name: name, hp: 10}}});
             return;
         }
-        pending.push(mob ? Object.assign({}, mob) : {name: name, hp: 10});
+        // Butin du bestiaire (noms, ou {name, qty}) au format du combat
+        let loot = mob && Array.isArray(mob.loot) ? mob.loot.map(l => typeof l === 'string' ? {name: l} : l) : [];
+        pending.push(mob ? Object.assign({}, mob, {loot: loot}) : {name: name, hp: 10});
         render();
     }
 
@@ -538,11 +721,13 @@
     search.addEventListener('keydown', (e) => { if (e.key === 'Enter') addPending(); });
     document.getElementById('monstre-list').addEventListener('click', () => { pending = []; render(); });
 
-    startBtn.addEventListener('click', () => {
-        if (state.active) {
+    startBtn.addEventListener('hold-confirm', () => {
+        if (state.active)
             wsLNOB.send({action: 'combat-end', data: {}});
+    });
+    startBtn.addEventListener('click', () => {
+        if (state.active)
             return;
-        }
         if (!pending.length) {
             search.focus();
             startBtn.classList.remove('shake');
@@ -550,7 +735,7 @@
             startBtn.classList.add('shake');
             return;
         }
-        wsLNOB.send({action: 'combat-start', data: {enemies: pending}});
+        wsLNOB.send({action: 'combat-start', data: {enemies: pending, initiative: initSelect.value}});
     });
 
     document.addEventListener('combat', (e) => {

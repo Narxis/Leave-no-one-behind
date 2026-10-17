@@ -7,6 +7,9 @@
     const pendingBox = document.getElementById('combat-pending');
     const logBox = document.getElementById('combat-log');
     const lootBox = document.getElementById('combat-loot');
+    const orderBox = document.getElementById('combat-order');
+    const hint = area.querySelector('.combat-hint');
+    const HINT = hint.textContent;
 
     let state = {active: false, enemies: [], log: []};
     const HP_PER_MORAL = 10;
@@ -22,7 +25,9 @@
     function enemyCard(enemy) {
         let ko = enemy.hp <= 0;
         let targeted = state.pending && state.pending.enemy_id === enemy.id;
-        let card = el('div', 'combat-enemy' + (ko ? ' ko' : '') + (targeted ? ' targeted' : ''));
+        let acting = actingFighter();
+        acting = acting && acting.kind === 'enemy' && acting.id === enemy.id;
+        let card = el('div', 'combat-enemy' + (ko ? ' ko' : '') + (targeted ? ' targeted' : '') + (acting ? ' acting' : ''));
         card.dataset.id = enemy.id;
         card.append(el('div', 'combat-enemy-name', enemy.name));
 
@@ -42,6 +47,31 @@
         if (!ko && Object.keys(enemy.statuses || {}).length)
             card.append(statusBadges(enemy.statuses));
         return card;
+    }
+
+    // Combattant dont c'est le tour, selon l'ordre de jeu (initiative)
+    const actingFighter = () => state.active && (state.order || [])[state.current];
+
+    // Ordre de jeu : le combattant dont c'est le tour est mis en avant, ici,
+    // sur sa carte d'ennemi ou sur son onglet sous la carte
+    function renderOrder() {
+        orderBox.innerHTML = '';
+        let order = state.active ? state.order || [] : [];
+        let acting = actingFighter();
+        orderBox.classList.toggle('is-open', order.length > 0);
+        hint.textContent = acting ? 'À ' + acting.name + ' de jouer' : HINT;
+        document.querySelectorAll('.player-tab.combat-acting').forEach(t => t.classList.remove('combat-acting'));
+        if (!order.length)
+            return;
+        orderBox.append(el('span', 'combat-order-label', 'Ordre'));
+        order.forEach((f, i) => {
+            let enemy = f.kind === 'enemy' && state.enemies.find(e => e.id === f.id);
+            let ko = f.kind === 'enemy' && (!enemy || enemy.hp <= 0);
+            orderBox.append(el('span', 'combat-order-chip kind-' + f.kind + (i === state.current ? ' current' : '') + (ko ? ' ko' : ''), f.name));
+        });
+        let tab = acting && acting.kind !== 'enemy' && document.getElementById('player-tab' + acting.id);
+        if (tab)
+            tab.classList.add('combat-acting');
     }
 
     // Bandeau « à toi de jouer » pour le joueur désigné par le MJ
@@ -104,6 +134,8 @@
             else
                 card.append(el('span', 'combat-loot-img combat-loot-noimg', item.name.charAt(0)));
             card.append(el('span', 'combat-loot-name', item.name));
+            if (item.qty > 1)
+                card.append(el('span', 'combat-loot-qty', '×' + item.qty));
             grid.append(card);
         });
         lootBox.append(grid);
@@ -168,6 +200,7 @@
         enemiesBox.innerHTML = '';
         enemiesBox.dataset.count = state.enemies.length;
         state.enemies.forEach(e => enemiesBox.append(enemyCard(e)));
+        renderOrder();
         renderPending();
         renderLoot(delay);
         renderLog();

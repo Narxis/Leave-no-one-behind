@@ -9,11 +9,16 @@ const combat = require("./combat");
 const allies = require("./allies");
 const inventory = require("./inventory");
 const cardLoot = require("./cardLoot");
+const blankCard = require("./blankCard");
+const loot = require("./loot");
+const merchant = require("./merchant");
+const craft = require("./craft");
 const shipAlerts = require("./shipAlerts");
 const lobby = require("./lobby");
 const remote = require("./remote");
 const playerView = require("./playerView");
 const chat = require("./chat");
+const roles = require("./roles");
 const WebSocket = require("ws");
 
 const init = function (){
@@ -77,6 +82,9 @@ const makeAction = async function (raw_response) {
         case 'status':
             payload = actionSetStatus(response);
             break;
+        case 'status-create':
+            payload = actionCreateStatus(response);
+            break;
         case 'detection':
             payload = actionSetDetection(response);
             break;
@@ -118,6 +126,8 @@ const makeAction = async function (raw_response) {
         case 'combat-add':
         case 'combat-status':
         case 'combat-turn':
+        case 'combat-next':
+        case 'combat-order':
         case 'combat-player-hp':
             payload = combat.handle(response);
             break;
@@ -132,6 +142,26 @@ const makeAction = async function (raw_response) {
         case 'card-loot-offer':
             payload = cardLoot.handle(response);
             break;
+        case 'blank-card-request':
+        case 'blank-card-show':
+        case 'blank-card-choice':
+        case 'blank-card-cancel':
+            payload = blankCard.handle(response);
+            break;
+        case 'merchant-state':
+        case 'merchant-open':
+        case 'merchant-close':
+        case 'merchant-buy':
+        case 'merchant-sell':
+        case 'money-add':
+        case 'money-transfer':
+            payload = merchant.handle(response);
+            break;
+        case 'craft-state':
+        case 'craft-make':
+        case 'craft-armory':
+            payload = craft.handle(response);
+            break;
         case 'lobby-state':
         case 'lobby-open':
         case 'lobby-close':
@@ -145,16 +175,23 @@ const makeAction = async function (raw_response) {
         case 'ship-alerts':
             payload = shipAlerts.handle(response);
             break;
+        case 'ally-roll':
+            payload = allies.rollAction(response.data);
+            break;
+        case 'ally-random':
         case 'ally-add': {
             // Compagnon créé en plein combat : annoncé comme renfort
             let added = allies.handle(response);
-            let joined = added.data.event && combat.allyJoined(added.data.allies.find(a => a.id === added.data.event.id).name);
+            let joined = added.data.event && combat.allyJoined(added.data.allies.find(a => a.id === added.data.event.id));
             payload = joined ? [added, joined] : added;
             break;
         }
         case 'ally-update':
         case 'ally-remove':
             payload = allies.handle(response);
+            break;
+        case 'player-role':
+            payload = actionSetRole(response);
             break;
         default:
             payload = {
@@ -243,6 +280,9 @@ const actionSetPlayerStat = async function(response) {
 
     player = await player.getData(response.data.player_id);
     if (player) {
+        // Diverti : la perte de moral est réduite
+        if (stat === 'moral' && !isNaN(val))
+            val = await new Statuses().moralAfterLoss(player.discord_id, player.moral, val);
         let data = {};
         data[stat] = val;
         await player.update(data, response.data.player_id);
@@ -253,6 +293,20 @@ const actionSetPlayerStat = async function(response) {
         error: false,
         data: player
     }
+}
+
+// Le MJ donne un rôle à un joueur ; celui qui l'avait le perd (rôle unique).
+// Un message par joueur modifié, pour que chaque page mette son onglet à jour
+const actionSetRole = async function (response) {
+    let data = response.data || {};
+    let changed = await roles.assign(data.discord_id, data.role);
+    if (!changed)
+        return {action: response.action, error: true, error_msg: 'Rôle inconnu ou joueur absent.'};
+    return changed.map(player => ({
+        action: response.action,
+        error: false,
+        data: {discord_id: player.discord_id, role: roles.publicRole(player.role)}
+    }));
 }
 
 /**
@@ -287,8 +341,14 @@ const actionSetStatus = async function(response) {
     let status = String(response.data.name || '').trim().toLowerCase();
     // Durée en tours de carte : un champ vide vaut 1, 0 retire le status
     let val = response.data.value === '' || response.data.value === undefined ? 1 : parseInt(response.data.value);
-    let known = await DB.tables.statuses.findOne({where: {slug: status}});
-    if (!known || isNaN(val))
+    // Sans joueur : le statut touche toute l'équipe
+    let playerId = String(response.data.player_id || '');
+    let statuses = new Statuses();
+    const known = () => DB.tables.statuses.findOne({where: {slug: status, player_id: ''}});
+    // Statut de base ajouté au jeu après le début de la partie
+    if (!await known())
+        await statuses.hydrateDB(false);
+    if (!await known() || isNaN(val) || (playerId && !await DB.tables.players.findOne({where: {discord_id: playerId}})))
         return {
             action: response.action,
             error: true,
@@ -296,16 +356,36 @@ const actionSetStatus = async function(response) {
             data: {}
         };
     val = Math.max(0, Math.min(99, val));
-    response.data = {name: status, value: val};
-    let statuses = new Statuses();
+    response.data = {name: status, value: val, player_id: playerId};
 
-    await statuses.updateStatus(status, val);
+    await statuses.updateStatus(status, val, playerId);
 
     return {
         action: response.action,
         error: false,
         data: response.data
     }
+}
+
+/**
+ * Statut créé à la volée par le MJ (nom, description, retiré ou non après
+ * une planète), appliqué aussitôt à l'équipe ou à un joueur
+ * @param response
+ * @returns {Promise<{data, action, error: boolean}>}
+ */
+const actionCreateStatus = async function(response) {
+    let data = response.data || {};
+    let slug = await new Statuses().createCustom(data);
+    if (!slug)
+        return {
+            action: 'status',
+            error: true,
+            error_msg: 'nom de statut vide ou déjà pris par un statut du jeu',
+            data: {}
+        };
+    let applied = await actionSetStatus({action: 'status', data: {name: slug, value: data.value, player_id: data.player_id}});
+    applied.data.created = slug;
+    return applied;
 }
 
 /**
@@ -339,25 +419,16 @@ const actionItem = async function (response) {
     let items = new Items();
 
     if (remove) {
-        if (discord_id !== '') {
+        if (discord_id)
             await items.removeItemFromPlayer(slug, discord_id);
-            // Les onglets des joueurs se mettent à jour partout
-            return inventory.payload(null);
-        }
-        else {
+        else
             await items.remove(slug);
-        }
     }
-    else {
-        response.data = await items.add(slug);
-    }
+    else if (slug)
+        await items.add(slug, loot.qtyOf(response.data.qty));
 
-    return {
-        action: response.action,
-        remove: remove,
-        error: false,
-        data: response.data
-    }
+    // Les onglets des joueurs et la liste du vaisseau se mettent à jour partout
+    return inventory.payload(null);
 }
 
 /**
@@ -374,11 +445,15 @@ const actionRoll = async function (response) {
             error_msg: 'Player not in current game !'
         }
     }
-    let dice_result = Math.floor(Math.random() * 100) + 1;
+    // Le rôle du joueur peut ajouter des dés sur sa stat : on garde le meilleur
+    let rolled = roles.rollDice(roles.diceCount(player, response.data.stat));
+    let dice_result = rolled.kept;
     let result = await player.roll(dice_result, response.data.stat, response.data.module);
     response.data['success'] = (result >= 50);
     response.data['result'] = result;
     response.data['dice_result'] = dice_result;
+    if (rolled.dice.length > 1)
+        response.data['dice'] = rolled.dice;
     return  {
         action: response.action,
         error: false,

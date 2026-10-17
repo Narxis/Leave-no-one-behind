@@ -29,6 +29,7 @@
     let editing = null;       // objet affiché (null : nouvel objet)
     let image = null;         // nouvelle image (data URL PNG) à envoyer
     let removeImage = false;
+    let recipe = [];          // ingrédients de la recette : [{slug, qty}]
     let saved = '';           // état du formulaire au dernier enregistrement
     let busy = false;
     // Images remplacées pendant la session : on force le rechargement
@@ -172,8 +173,87 @@
         return p === NEW_POOL ? slugify($('ie-new-pool').value).replace(/-/g, '_') : p;
     }
 
+    // Quantité saisie, bornée de 1 à 99
+    function currentQty() {
+        let n = parseInt($('ie-qty').value);
+        return Number.isFinite(n) ? Math.min(Math.max(n, 1), 99) : 1;
+    }
+
+    // Prix saisi (0 : pas de prix)
+    function currentPrice() {
+        let n = parseInt($('ie-price').value);
+        return Number.isFinite(n) ? Math.min(Math.max(n, 0), 99999) : 0;
+    }
+
+    const money = catalog.currency || {name: 'crédit', plural: 'crédits', short: 'cr', cryopodsPerCredit: 5, sellRatio: .5};
+    const moneyLabel = (n) => n + ' ' + (n >= 2 ? money.plural : money.name);
+
+    function renderPrice() {
+        let price = currentPrice();
+        $('ie-price-unit').textContent = '(' + money.plural + ')';
+        $('ie-price-hint').textContent = price
+            ? 'ou ' + Math.ceil(price * money.cryopodsPerCredit) + ' cryopods · racheté ' + moneyLabel(Math.floor(price * money.sellRatio))
+            : 'Le marchand ne le propose pas d\'office';
+    }
+
+    /* ---------- Recette ---------- */
+
+    const bounded = (v) => Math.min(Math.max(parseInt(v) || 1, 1), 99);
+    const itemBySlug = (slug) => catalog.items.find(i => i.slug === slug);
+    const currentRecipe = () => recipe.length ? {ingredients: recipe.map(i => ({slug: i.slug, qty: i.qty})), qty: bounded($('ie-recipe-yield').value)} : null;
+
+    function renderRecipe() {
+        let self = editing ? editing.slug : null;
+        let list = $('ie-recipe-list');
+        list.innerHTML = '';
+        recipe.forEach((ing, index) => {
+            let item = itemBySlug(ing.slug) || {name: ing.slug, image: ''};
+            let li = document.createElement('li');
+            li.className = 'ie-recipe-row';
+            li.innerHTML = thumb(imgSrc(item), item.name) + '<span class="ie-recipe-name">' + esc(item.name) + '</span>'
+                + '<input type="number" min="1" max="99" step="1" value="' + ing.qty + '" aria-label="Quantité">'
+                + '<button type="button" class="ie-recipe-remove" title="Retirer" aria-label="Retirer">×</button>';
+            li.querySelector('input').addEventListener('input', (e) => {
+                ing.qty = bounded(e.target.value);
+                renderStatus();
+            });
+            li.querySelector('button').addEventListener('click', () => {
+                recipe.splice(index, 1);
+                renderRecipe();
+                renderStatus();
+            });
+            list.append(li);
+        });
+        list.hidden = !recipe.length;
+        $('ie-recipe-yield-box').hidden = !recipe.length;
+
+        // Ingrédients possibles : tout le catalogue, sauf l'objet lui-même et ceux déjà pris
+        let select = $('ie-recipe-item'), keep = select.value;
+        select.innerHTML = '<option value="">Ajouter un ingrédient…</option>' + catalog.items
+            .filter(i => i.slug !== self && !recipe.some(r => r.slug === i.slug))
+            .slice().sort((a, b) => a.name.localeCompare(b.name))
+            .map(i => '<option value="' + esc(i.slug) + '"' + (i.slug === keep ? ' selected' : '') + '>' + esc(i.name) + '</option>').join('');
+
+        // Ce que l'objet sert à fabriquer
+        let uses = self ? catalog.items.filter(i => i.recipe && i.recipe.ingredients.some(r => r.slug === self)) : [];
+        $('ie-recipe-uses').textContent = uses.length ? 'Sert à fabriquer : ' + uses.map(i => i.name).join(', ') + '.' : '';
+    }
+
+    function addIngredient() {
+        let slug = $('ie-recipe-item').value;
+        if (!slug)
+            return $('ie-recipe-item').focus();
+        if (recipe.length >= 8)
+            return toast('Huit ingrédients au plus', true);
+        recipe.push({slug: slug, qty: bounded($('ie-recipe-qty').value)});
+        $('ie-recipe-item').value = '';
+        $('ie-recipe-qty').value = 1;
+        renderRecipe();
+        renderStatus();
+    }
+
     function formState() {
-        return JSON.stringify([$('ie-name').value.trim(), currentPool(), currentType(), rarity, $('ie-race').value, $('ie-desc').value.trim(), image, removeImage]);
+        return JSON.stringify([$('ie-name').value.trim(), currentPool(), currentType(), rarity, $('ie-race').value, $('ie-desc').value.trim(), image, removeImage, currentQty(), currentPrice(), currentRecipe()]);
     }
 
     const isDirty = () => formState() !== saved;
@@ -214,6 +294,7 @@
         $('ie-pool-explain').textContent = pool === STARTER
             ? ($('ie-race').value ? 'Donné au début de la partie à chaque joueur ' + raceName($('ie-race').value) + '.' : 'Donné au début de la partie aux joueurs de la race choisie.')
             : 'Peut être trouvé en butin : après un combat, ou dans les choix des cartes de lieu.';
+        $('ie-qty-hint').textContent = pool === STARTER ? '(exemplaires donnés à chaque joueur)' : '(proposée d\'office dans un butin)';
     }
 
     function renderPreview() {
@@ -228,7 +309,8 @@
         $('ie-preview-type').innerHTML = t ? typeIcon(t) + ' ' + esc(typeName(t)) : '';
         $('ie-preview-desc').textContent = $('ie-desc').value.trim() || 'Pas encore de description.';
         $('ie-preview-desc').classList.toggle('is-empty', !$('ie-desc').value.trim());
-        $('ie-preview-chip').innerHTML = (src ? '<img src="' + esc(src) + '" alt="">' : '<b>' + esc(name.charAt(0)) + '</b>') + esc(name);
+        $('ie-preview-chip').innerHTML = (src ? '<img src="' + esc(src) + '" alt="">' : '<b>' + esc(name.charAt(0)) + '</b>') + esc(name)
+            + (currentQty() > 1 ? ' <small class="ie-qty-badge">×' + currentQty() + '</small>' : '');
         $('ie-desc-count').textContent = $('ie-desc').value.length + ' / 600';
         let slug = editing ? editing.slug : slugify($('ie-name').value);
         $('ie-slug').textContent = slug ? 'id : ' + slug : '';
@@ -257,6 +339,7 @@
         renderTypes();
         renderImage();
         renderPreview();
+        renderPrice();
         renderStatus();
     }
 
@@ -268,6 +351,12 @@
         let src = item || prefill || {};
         $('ie-name').value = src.name || '';
         $('ie-desc').value = src.desc || '';
+        $('ie-qty').value = src.qty || 1;
+        $('ie-price').value = src.price || '';
+        recipe = src.recipe ? src.recipe.ingredients.map(i => ({slug: i.slug, qty: i.qty})) : [];
+        $('ie-recipe-yield').value = src.recipe ? src.recipe.qty : 1;
+        $('ie-recipe-qty').value = 1;
+        $('ie-recipe-item').value = '';
         let pool = src.pool || (filter !== 'all' ? filter : catalog.pools.find(p => p !== STARTER) || STARTER);
         fillPools(pool);
         fillRaces(src.race || '');
@@ -282,6 +371,7 @@
         $('ie-delete').hidden = !item;
         $('ie-duplicate').hidden = !item;
         $('ie-error').textContent = '';
+        renderRecipe();
         saved = prefill ? '' : formState();
         renderUsage();
         refresh();
@@ -340,6 +430,9 @@
                     rarity: rarity,
                     race: $('ie-race').value,
                     desc: $('ie-desc').value,
+                    qty: currentQty(),
+                    price: currentPrice(),
+                    recipe: currentRecipe(),
                     image: image || undefined,
                     removeImage: removeImage
                 })
@@ -457,7 +550,15 @@
             $('ie-new-type').focus();
     });
     $('ie-search').addEventListener('input', renderList);
-    ['ie-name', 'ie-desc', 'ie-new-pool', 'ie-new-type'].forEach(id => $(id).addEventListener('input', refresh));
+    $('ie-recipe-add').addEventListener('click', addIngredient);
+    $('ie-recipe-item').addEventListener('change', () => $('ie-recipe-qty').focus());
+    $('ie-recipe-qty').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addIngredient();
+        }
+    });
+    ['ie-name', 'ie-desc', 'ie-new-pool', 'ie-new-type', 'ie-qty', 'ie-price', 'ie-recipe-yield'].forEach(id => $(id).addEventListener('input', refresh));
     ['ie-pool', 'ie-race'].forEach(id => $(id).addEventListener('change', () => {
         refresh();
         if (id === 'ie-pool' && $('ie-pool').value === NEW_POOL)
@@ -477,7 +578,7 @@
     });
     $('ie-duplicate').addEventListener('click', () => {
         let src = editing;
-        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, type: currentType(), rarity: rarity, race: $('ie-race').value});
+        open(null, {name: src.name + ' (copie)', desc: $('ie-desc').value, pool: currentPool() || src.pool, type: currentType(), rarity: rarity, race: $('ie-race').value, qty: currentQty(), price: currentPrice(), recipe: currentRecipe()});
         $('ie-name').focus();
         $('ie-name').select();
     });

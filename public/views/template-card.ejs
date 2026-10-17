@@ -6,7 +6,8 @@
         "/css/style.css",
         "https://use.fontawesome.com/releases/v5.7.2/css/all.css",
         "/css/plan-du-vaisseau.css",
-        "/css/ui-card.css"
+        "/css/ui-card.css",
+        "/css/merchant.css"
     ]
 }) %>
 
@@ -266,7 +267,7 @@
             </div>
             <button onclick="quickUpdateModule(this,'motors');" class="mod-b tab-moins" id="moins-mot">-</button>
             <div class="modform form-mot">
-              <input type="text" name="i-motors" class="form-input" placeholder="1-100">
+              <input type="text" name="i-motors" class="form-input" placeholder="±x / 50" title="Entrée : +10 ou -15 change par différence, 40 fixe la valeur. Avec les boutons + et -, un nombre seul sert de pas.">
             </div>
             <button onclick="quickUpdateModule(this,'motors');" class="mod-b tab-plus" id="plus-mot">+</button>
           </div>
@@ -292,7 +293,7 @@
             </div>
             <button onclick="quickUpdateModule(this,'scanner');" class="mod-b tab-moins" id="moins-scan">-</button>
             <div class="modform form-scan">
-              <input type="text" name="i-scanner" class="form-input" placeholder="1-100">
+              <input type="text" name="i-scanner" class="form-input" placeholder="±x / 50" title="Entrée : +10 ou -15 change par différence, 40 fixe la valeur. Avec les boutons + et -, un nombre seul sert de pas.">
             </div>
             <button onclick="quickUpdateModule(this,'scanner');" class="mod-b tab-plus" id="plus-scan">+</button>
           </div>
@@ -318,7 +319,7 @@
             </div>
             <button onclick="quickUpdateModule(this,'proximity');" class="mod-b tab-moins" id="moins-detect">-</button>
             <div class="modform form-detect">
-              <input type="text" name="i-proximity" class="form-input" placeholder="1-100">
+              <input type="text" name="i-proximity" class="form-input" placeholder="±x / 50" title="Entrée : +10 ou -15 change par différence, 40 fixe la valeur. Avec les boutons + et -, un nombre seul sert de pas.">
             </div>
             <button onclick="quickUpdateModule(this,'proximity');" class="mod-b tab-plus" id="plus-detect">+</button>
           </div>
@@ -344,7 +345,7 @@
             </div>
             <button onclick="quickUpdateModule(this,'oxygen');" class="mod-b tab-moins" id="moins-o2">-</button>
             <div class="modform form-o2">
-              <input type="text" name="i-oxygen" class="form-input" placeholder="1-100">
+              <input type="text" name="i-oxygen" class="form-input" placeholder="±x / 50" title="Entrée : +10 ou -15 change par différence, 40 fixe la valeur. Avec les boutons + et -, un nombre seul sert de pas.">
             </div>
             <button onclick="quickUpdateModule(this,'oxygen');" class="mod-b tab-plus" id="plus-o2">+</button>
           </div>
@@ -370,7 +371,7 @@
             </div>
             <button onclick="quickUpdateModule(this,'energy');" class="mod-b tab-moins" id="moins-elec">-</button>
             <div class="modform form-elec">
-              <input type="text" name="i-energy" class="form-input" placeholder="1-100">
+              <input type="text" name="i-energy" class="form-input" placeholder="±x / 50" title="Entrée : +10 ou -15 change par différence, 40 fixe la valeur. Avec les boutons + et -, un nombre seul sert de pas.">
             </div>
             <button onclick="quickUpdateModule(this,'energy');" class="mod-b tab-plus" id="plus-elec">+</button>
           </div>
@@ -396,7 +397,7 @@
             </div>
             <button onclick="quickUpdateModule(this,'gravity');" class="mod-b tab-moins" id="moins-grav">-</button>
             <div class="modform form-grav">
-              <input type="text" name="i-gravity" class="form-input" placeholder="1-100">
+              <input type="text" name="i-gravity" class="form-input" placeholder="±x / 50" title="Entrée : +10 ou -15 change par différence, 40 fixe la valeur. Avec les boutons + et -, un nombre seul sert de pas.">
             </div>
             <button onclick="quickUpdateModule(this,'gravity');" class="mod-b tab-plus" id="plus-grav">+</button>
           </div>
@@ -423,6 +424,7 @@
                       <% } %>
                     </datalist>
                     <input type="hidden" name="answer" id="add-item-hidden">
+                    <input type="number" name="qty" class="add-qty" min="1" max="999" value="1" title="Quantité" aria-label="Quantité">
                     <div class="input-buttons">
                       <a href="#0" class="add-todo">
                         <i class="fas fa-plus add"></i>
@@ -432,17 +434,16 @@
                   <ul class="todos">
                     <% if(typeof shipItems !== 'undefined'){ %>
                       <% shipItems.forEach(function(item) { %>
-                        <% for(var i=0; i<item.count; i++) {%>
-                        <li class="item-<%= item.slug %>" data-slug="<%= item.slug %>">
-                          <input type="checkbox" id="<%= item.slug %>-<%= i %>">
-                          <label for="<%= item.slug %>-<%= i %>">
+                        <li class="item-<%= item.slug %>" data-slug="<%= item.slug %>"<% if (item.count > 1) { %> title="Glisser : un exemplaire. Maj + glisser : les <%= item.count %>"<% } %>>
+                          <input type="checkbox" id="<%= item.slug %>-0">
+                          <label for="<%= item.slug %>-0">
                             <% if (item.image) { %><img class="item-image" src="<%= item.image %>"><% } else { %><span class="item-image item-noimg"><%= item.name.charAt(0) %></span><% } %>
                             <span class="check"></span>
                             <p><%= item.name %></p>
+                            <% if (item.count > 1) { %><span class="item-count">×<%= item.count %></span><% } %>
                           </label>
-                          <i class="far fa-trash-alt delete" data-slug="<%= item.slug %>"></i>
+                          <i class="far fa-trash-alt delete" data-slug="<%= item.slug %>" title="Retirer un exemplaire"></i>
                         </li>
-                        <% } %>
                       <% }); %>
                     <% } %>
                   </ul>
@@ -562,6 +563,7 @@
             <span class="combat-title">Combat</span>
             <span class="combat-hint">Le MJ désigne la cible et l'attaquant</span>
           </div>
+          <div class="combat-order" id="combat-order"></div>
           <div class="combat-enemies" id="combat-enemies"></div>
           <div class="combat-loot" id="combat-loot"></div>
           <div class="combat-pending" id="combat-pending"></div>
@@ -573,6 +575,15 @@
           <button type="button" class="card-loot-all" id="card-loot-all" hidden>
             <i class="fas fa-box-open"></i> Tout récupérer dans le vaisseau
           </button>
+        </div>
+        <%# Boutique ouverte par le MJ depuis son menu (merchant.js) %>
+        <div class="combat-container merchant-area combat-none" id="merchant-area">
+          <div class="merchant-head">
+            <i class="fas fa-store"></i>
+            <span class="merchant-title" id="merchant-name">Marchand</span>
+          </div>
+          <div class="merchant-items" id="merchant-items"></div>
+          <div class="merchant-news" id="merchant-news" role="status"></div>
         </div>
       </div>
     </div>
@@ -613,12 +624,13 @@
     var statusNameList = [];
     var statusDurationList = [];
     var activeStatusList = [];
-    var statusSvgList = {};
+    // Icône des statuts créés à la volée par le MJ
+    var statusSvgList = {custom: `<%- include('svg/custom') %>`};
 
     <% statuses.forEach(function(status) {%>
     statusNameList.push(`<%- status.slug %>`);
     statusDurationList[`<%- status.slug %>`] = `<%- status.duration %>`;
-    statusSvgList[`<%- status.slug %>`] = `<%- include('svg/'+(status.slug)) %>`;
+    statusSvgList[`<%- status.slug %>`] = `<%- include('svg/'+(status.custom ? 'custom' : status.slug)) %>`;
     if (<%- status.duration %> > 0) {
       activeStatusList.push(`<%- status.slug %>`);
     }
@@ -635,6 +647,7 @@
   <script src="/js/template-card.js"></script>
   <script src="/js/items.js"></script>
   <script src="/js/inventory.js"></script>
+  <script src="/js/merchant.js"></script>
   <script>
     var observer = new MutationObserver(function (mutations) {
       mutations.forEach(async function (mutation) {

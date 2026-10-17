@@ -236,6 +236,137 @@
     box-shadow: 0 0 22px -6px rgb(255 204 0 / 45%);
 }
 
+/*---Choix en attente (délai d'annulation, card.js)---*/
+.has-pending .choice:not(.choice-pending) {
+    opacity: 0.55;
+}
+
+.choice.choice-pending {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    box-shadow: var(--ui-glow-accent);
+    padding-bottom: 26px;
+    overflow: hidden;
+}
+
+.choice-cancel {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    padding: 2px 14px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 999px;
+    background: rgb(0 0 0 / 45%);
+    color: var(--ui-text);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.choice-cancel:hover {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
+.choice-delay-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+    background: var(--ui-accent);
+    transform-origin: left;
+    animation: choice-delay var(--choice-delay, 2500ms) linear forwards;
+}
+
+@keyframes choice-delay {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+}
+
+/*---Jet d'un choix : en attente du résultat (card.js)---*/
+.choice.card-roll {
+    /* Plus haut qu'un choix : il descend sous la carte au lieu de monter dessous */
+    align-self: flex-start;
+    top: 205px;
+    flex-direction: column;
+    gap: 6px;
+    width: 600px;
+    height: auto;
+    min-height: 90px;
+    padding: 10px 16px 12px;
+    box-sizing: border-box;
+    cursor: default;
+}
+
+.choice.card-roll:hover {
+    background: var(--ui-surface);
+    border-color: var(--ui-border-strong);
+    color: var(--ui-text);
+    box-shadow: 0 14px 30px -16px rgb(0 0 0 / 85%);
+}
+
+.card-roll-title {
+    color: var(--ui-accent);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.card-roll-choice {
+    font-size: 14px;
+}
+
+.card-roll-hint {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ui-text-dim);
+}
+
+.card-roll-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.card-roll-btn {
+    padding: 6px 18px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.card-roll-btn:hover {
+    background: var(--ui-fill-hover);
+}
+
+.card-roll-btn.success:hover,
+.card-roll-btn.success.suggested {
+    border-color: #7be26b;
+    color: #7be26b;
+}
+
+.card-roll-btn.failure:hover,
+.card-roll-btn.failure.suggested {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
+.card-roll-btn.suggested {
+    box-shadow: 0 0 14px -4px currentColor;
+}
+
+.card-roll-btn.cancel {
+    color: var(--ui-text-dim);
+}
+
 /*---Volet gauche : bouton menu, objets, modules secondaires---*/
 .consommable-tab {
     border: 1px solid var(--ui-border-strong);
@@ -367,6 +498,28 @@
 
 .todos .item-noimg {
     font-size: 12px;
+}
+
+/* Quantité : à droite du nom, et petit champ avant le + */
+.todos .item-count {
+    flex: none;
+    margin-left: auto;
+}
+
+.content form input[type='text'] {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+}
+
+.content input.add-qty {
+    flex: none;
+    width: 52px;
+    padding: 0 4px;
+    color: var(--ui-text);
+    font-weight: 700;
+    text-align: center;
+    outline: none;
 }
 
 .todos p {
@@ -657,6 +810,61 @@ body.combat-mode #card-loot-area {
 .combat-hint {
     font-size: 12px;
     color: var(--ui-text-dim);
+}
+
+/* Ordre de jeu (initiative) : le combattant dont c'est le tour en avant */
+.combat-order {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: -4px;
+}
+
+.combat-order.is-open {
+    display: flex;
+}
+
+.combat-order-label {
+    margin-right: 2px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ui-text-dim);
+}
+
+.combat-order-chip {
+    padding: 2px 9px;
+    border: 1px solid var(--ui-border);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--ui-text);
+    transition: border-color 200ms var(--ui-ease), background 200ms var(--ui-ease);
+}
+
+.combat-order-chip.kind-enemy {
+    color: var(--ui-danger);
+}
+
+.combat-order-chip.ko {
+    opacity: 0.35;
+    text-decoration: line-through;
+}
+
+.combat-order-chip.current {
+    border-color: var(--ui-accent);
+    background: rgb(255 204 0 / 16%);
+    color: var(--ui-accent);
+    font-weight: 700;
+}
+
+.combat-enemy.acting {
+    border-color: var(--ui-accent);
+}
+
+.player-tab.combat-acting {
+    border-color: var(--ui-accent);
+    box-shadow: 0 0 0 1px var(--ui-accent), 0 0 18px rgb(255 204 0 / 30%);
 }
 
 .combat-enemies {

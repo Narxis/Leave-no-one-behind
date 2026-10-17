@@ -88,12 +88,13 @@ class SocketLNOB {
     }
 
     // Add a conso in DB
-    addItem(slug) {
+    addItem(slug, qty = 1) {
         let payload = {
             action: 'item',
             data: {
                 remove: false,
-                slug: slug
+                slug: slug,
+                qty: qty
             }
         }
         this.send(payload);

@@ -13,6 +13,88 @@ const parseLoot = function (raw) {
     }
 }
 
+// Statut donné par un choix : {slug, duration}, ou null
+const parseStatus = function (raw) {
+    try {
+        let status = raw ? JSON.parse(raw) : null;
+        return status && status.slug ? {slug: String(status.slug), duration: parseInt(status.duration) || 1} : null;
+    }
+    catch (e) {
+        return null;
+    }
+}
+
+// Jet d'un choix (choix « roll » de baseCards.json) : le MJ dit si le jet est
+// réussi, la suite dépend du résultat. Une suite = un résultat (reveal) ou une
+// carte suivante (next), avec infos MJ, humains et butin comme un choix.
+const ROLL_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
+
+const issueOf = function (raw) {
+    raw = raw && typeof raw === 'object' ? raw : {};
+    return {
+        reveal: raw.reveal || '',
+        mjreveal: raw.mjreveal || '',
+        next: raw.next || '',
+        humans: parseInt(raw.humans) || 0,
+        loot: Array.isArray(raw.loot) ? raw.loot : []
+    };
+}
+
+// {stat, success, failure}, ou null sans jet (ou jet mal écrit)
+const parseRoll = function (raw) {
+    try {
+        let roll = typeof raw === 'string' ? (raw ? JSON.parse(raw) : null) : raw;
+        if (!roll || typeof roll !== 'object' || !roll.success || !roll.failure)
+            return null;
+        return {
+            stat: ROLL_STATS.includes(roll.stat) ? roll.stat : '',
+            success: issueOf(roll.success),
+            failure: issueOf(roll.failure)
+        };
+    }
+    catch (e) {
+        return null;
+    }
+}
+
+// Issues au hasard d'un choix (« outcomes ») : liste de suites, chacune avec
+// un poids (1 par défaut) et, au besoin, son propre jet. Le jeu en tire une
+// à l'affichage de la carte.
+const outcomeOf = function (raw) {
+    raw = raw && typeof raw === 'object' ? raw : {};
+    let weight = Number(raw.weight);
+    let outcome = Object.assign(issueOf(raw), {weight: Number.isFinite(weight) && weight >= 0 ? weight : 1});
+    let roll = parseRoll(raw.roll);
+    if (roll)
+        outcome.roll = roll;
+    return outcome;
+}
+
+// [issue, ...] (au moins 2), ou null sans issues au hasard
+const parseOutcomes = function (raw) {
+    try {
+        let list = typeof raw === 'string' ? (raw ? JSON.parse(raw) : null) : raw;
+        return Array.isArray(list) && list.length >= 2 ? list.map(outcomeOf) : null;
+    }
+    catch (e) {
+        return null;
+    }
+}
+
+// Indice tiré selon les poids (tous à 0 : chacune a la même chance)
+const drawOutcome = function (outcomes, random = Math.random) {
+    let total = outcomes.reduce((sum, o) => sum + o.weight, 0);
+    if (!(total > 0))
+        return Math.floor(random() * outcomes.length);
+    let r = random() * total;
+    for (let i = 0; i < outcomes.length; i++) {
+        r -= outcomes[i].weight;
+        if (r < 0)
+            return i;
+    }
+    return outcomes.length - 1;
+}
+
 class Card {
     id;
     type;
@@ -93,6 +175,9 @@ class Card {
                     next: this.choices[choice].next,
                     humans: this.choices[choice].humans || 0,
                     loot: Array.isArray(this.choices[choice].loot) && this.choices[choice].loot.length ? JSON.stringify(this.choices[choice].loot) : '',
+                    status: this.choices[choice].status && this.choices[choice].status.slug ? JSON.stringify(this.choices[choice].status) : '',
+                    roll: this.rollToStore(this.choices[choice].roll),
+                    outcomes: this.outcomesToStore(this.choices[choice].outcomes),
                 });
             }
             for (let mod in this.modules)
@@ -111,6 +196,32 @@ class Card {
         });
 
         return await this.getData()
+    }
+
+    // Jet enregistré en JSON, variables des textes déjà tirées ('' : pas de jet)
+    rollToStore(raw) {
+        let roll = parseRoll(raw);
+        if (!roll)
+            return '';
+        for (let issue of [roll.success, roll.failure]) {
+            issue.reveal = this.replaceVars(issue.reveal);
+            issue.mjreveal = this.replaceVars(issue.mjreveal);
+        }
+        return JSON.stringify(roll);
+    }
+
+    // Issues au hasard en JSON, variables tirées comme pour le reste de la carte
+    outcomesToStore(raw) {
+        let outcomes = parseOutcomes(raw);
+        if (!outcomes)
+            return '';
+        for (let outcome of outcomes) {
+            outcome.reveal = this.replaceVars(outcome.reveal);
+            outcome.mjreveal = this.replaceVars(outcome.mjreveal);
+            if (outcome.roll)
+                outcome.roll = JSON.parse(this.rollToStore(outcome.roll));
+        }
+        return JSON.stringify(outcomes);
     }
 
     replaceVars(text) {
@@ -191,6 +302,24 @@ class Card {
         await DB.tables.card_modules.destroy({ where: { id: this.id } });
     }
 
+    // Issue tirée au hasard : elle devient la suite du choix (résultat ou carte,
+    // jet éventuel) ; humains, butin et infos MJ s'ajoutent à ceux du choix.
+    // La liste reste dans outcomes, l'indice tiré dans outcome (menu MJ, tests)
+    pickOutcome(choice, outcomes) {
+        let index = drawOutcome(outcomes);
+        let picked = outcomes[index];
+        choice.reveal = picked.reveal;
+        choice.next = picked.next;
+        choice.mjreveal = [choice.mjreveal, picked.mjreveal].filter(t => t && t.trim()).join('\n');
+        choice.humans = (choice.humans || 0) + picked.humans;
+        choice.loot = choice.loot.concat(picked.loot);
+        delete choice.roll;
+        if (picked.roll)
+            choice.roll = picked.roll;
+        choice.outcomes = outcomes;
+        choice.outcome = index;
+    }
+
     async getData() {
 
         let activeStatus = false;
@@ -205,7 +334,8 @@ class Card {
         ];
         let indexPrio = 9999;
 
-        for (let status of statuses) {
+        // Seuls les statuts de toute l'équipe changent la carte
+        for (let status of statuses.filter(s => !s.player_id)) {
             let indexFound = prioStatuses.indexOf(status.slug);
             if (indexFound < indexPrio && indexFound > -1) {
                 activeStatus = status.slug;
@@ -261,7 +391,10 @@ class Card {
                 'mjreveal',
                 'next',
                 'humans',
-                'loot'
+                'loot',
+                'status',
+                'roll',
+                'outcomes'
             ],
             where: {
                 card_id: this.id
@@ -279,15 +412,24 @@ class Card {
             let type = splitMod[1];
 
             if (name === 'choice') {
-                choices.push({
+                let choice = {
                     id: mod.id,
                     value: mod.value,
                     reveal: mod.reveal,
                     mjreveal: mod.mjreveal,
                     next: mod.next,
                     humans: mod.humans,
-                    loot: parseLoot(mod.loot)
-                });
+                    loot: parseLoot(mod.loot),
+                    status: parseStatus(mod.status)
+                };
+                // Seulement sur les choix à jet : les autres restent comme avant
+                let roll = parseRoll(mod.roll);
+                if (roll)
+                    choice.roll = roll;
+                let outcomes = parseOutcomes(mod.outcomes);
+                if (outcomes)
+                    this.pickOutcome(choice, outcomes);
+                choices.push(choice);
             }
             else {
                 if (typeof this.modules[name] === 'undefined')
@@ -324,7 +466,8 @@ class Card {
                 alt_choices.push(Object.assign({
                     next: base.next || '',
                     humans: base.humans || 0,
-                    loot: base.loot || []
+                    loot: base.loot || [],
+                    status: base.status || null
                 }, foundChoice));
             });
             if (alt_choices.length > 0)
@@ -337,4 +480,4 @@ class Card {
     }
 }
 
-module.exports = {Card}
+module.exports = {Card, parseRoll, parseOutcomes, drawOutcome, ROLL_STATS}

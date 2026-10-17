@@ -12,7 +12,7 @@
     const STAT_LABELS = {combat: 'Combat', pilotage: 'Pilotage', engineering: 'Ingénierie', survival: 'Survie', recon: 'Reconnaissance', moral: 'Moral'};
     const ROLL_MODULES = [['', 'Sans module'], ['scanner', 'Scanners de surface'], ['proximity', 'Détecteurs de proximité'], ['motors', 'Moteurs'], ['oxygen', 'Module d\'oxygène'], ['energy', 'Électricité'], ['gravity', 'Gravité artificielle']];
     const EMOTES = ['👍', '👎', '😮', '😂', '😱', '❤️', '🤔', '🎉'];
-    const CARD_KINDS = {event: 'Événement', place: 'Lieu', planet: 'Planète en approche'};
+    const CARD_KINDS = {event: 'Événement', place: 'Lieu', planet: 'Planète en approche', blank: 'Carte blanche'};
     const PHASES = {
         init: 'En attente que le MJ lance la partie.',
         creation: 'Création des personnages en cours : va dans l\'onglet Perso.',
@@ -203,7 +203,7 @@
             let li = el('li', p.id === playerId ? 'me' : '');
             li.append(el('span', 'player-name', p.name + (p.id === playerId ? ' (toi)' : '')));
             let c = characters.get(p.id);
-            li.append(el('span', 'dim', c ? c.name + (c.race ? ' · ' + c.race : '') : 'pas de perso'));
+            li.append(el('span', 'dim', c ? c.name + (c.race ? ' · ' + c.race : '') + (c.role ? ' · ' + c.role : '') : 'pas de perso'));
             if (p.online === false)
                 li.append(el('span', 'dim', 'déconnecté'));
             return li;
@@ -224,6 +224,10 @@
             richText($('card-desc'), card.desc);
             $('card-desc').hidden = !card.desc;
             $('card-choices').replaceChildren(...(card.choices || []).map(c => richText(el('li'), c)));
+            // Dernière planète du voyage : texte envoyé par le jeu (lang.json)
+            let last = card.lastPlanet;
+            $('card-last').hidden = !last;
+            $('card-last').textContent = last ? last.title + ' : ' + last.text : '';
             $('card-note').textContent = card.kind === 'planet'
                 ? 'Le MJ scanne la planète sur l\'écran principal.'
                 : (card.choices && card.choices.length ? 'Le MJ choisit pour l\'équipage.' : '');
@@ -333,7 +337,8 @@
 
     const renderSheet = function (character) {
         $('sheet-name').textContent = character.name;
-        $('sheet-race').textContent = character.raceName || '';
+        $('sheet-race').textContent = (character.raceName || '') + (character.role ? ' · ' + character.role.name : '');
+        $('sheet-race').title = character.role ? character.role.name + ' : ' + character.role.effect : '';
         $('sheet-stats').replaceChildren(...Object.keys(STAT_LABELS).map(s => bar(STAT_LABELS[s], character[s] || 0, 100)));
         $('roll-box').hidden = !game || game.phase !== 'gameLive';
     };
@@ -368,6 +373,9 @@
         let items = (you && you.inventory) || [];
         let others = ((game && game.team) || []).filter(c => c.id !== playerId);
         $('items-empty').hidden = items.length > 0;
+        // Bourse du joueur (« 20 crédits »)
+        $('money').hidden = !(you && you.money);
+        $('money').textContent = you && you.money ? 'Bourse : ' + you.money : '';
         $('items').replaceChildren(...items.map(item => {
             let li = el('li', 'item');
             li.append(el('strong', '', item.name + (item.count > 1 ? ' ×' + item.count : '')));
@@ -434,7 +442,7 @@
             let r = data.data;
             $('roll-result').hidden = false;
             $('roll-result').className = 'roll-result ' + (r.success ? 'ok' : 'fail');
-            $('roll-result').textContent = '🎲 ' + r.dice_result + ' → ' + r.result + ' : ' + (r.success ? 'réussite !' : 'échec.');
+            $('roll-result').textContent = '🎲 ' + (r.dice ? 'meilleur de ' + r.dice.join(' / ') + ' = ' : '') + r.dice_result + ' → ' + r.result + ' : ' + (r.success ? 'réussite !' : 'échec.');
         }
     };
 
