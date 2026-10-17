@@ -560,6 +560,34 @@
       "name3":{
         "no":"L'Obscure Wasabi Omphor"
       }
+    },
+    "objet":{
+      "tazer-cosmique":{"le":"le tazer cosmique","un":"un tazer cosmique","votre":"votre tazer cosmique","no":"Tazer cosmique"},
+      "drone":{"le":"le drone","un":"un drone","votre":"votre drone","no":"Drone"},
+      "lampe-torche":{"le":"la lampe torche","un":"une lampe torche","votre":"votre lampe torche","no":"Lampe torche"},
+      "montre-boussole":{"le":"la montre-boussole","un":"une montre-boussole","votre":"votre montre-boussole","no":"Montre-Boussole"},
+      "spider-bomb":{"le":"la Spider-BOMB","un":"une Spider-BOMB","votre":"votre Spider-BOMB","no":"Spider-BOMB"},
+      "personal-shield":{"le":"le projecteur de bouclier personnel","un":"un projecteur de bouclier personnel","votre":"votre projecteur de bouclier personnel","no":"Projecteur de bouclier personnel"},
+      "em-o-droid":{"le":"l'Em-0 Droid","un":"un Em-0 Droid","votre":"votre Em-0 Droid","no":"Em-0 Droid"},
+      "filet-paralysant":{"le":"le filet paralysant","un":"un filet paralysant","votre":"votre filet paralysant","no":"Filet paralysant"}
+    },
+    "livre":{
+      "livre1":{"le":"le livre « Sentir le Fnek sans vexer un Fnek »","no":"« Sentir le Fnek sans vexer un Fnek »"},
+      "livre2":{"le":"le livre « J'avais raison : mémoires d'un Omphor, tome 47 »","no":"« J'avais raison : mémoires d'un Omphor, tome 47 »"},
+      "livre3":{"le":"le livre « Piloter comme un Aku (et survivre) »","no":"« Piloter comme un Aku (et survivre) »"},
+      "livre4":{"le":"le livre « La mycose pour les nuls »","no":"« La mycose pour les nuls »"}
+    },
+    "boisson":{
+      "boisson1":{"le":"le Nek-tar","un":"un Nek-tar","no":"Nek-tar"},
+      "boisson2":{"le":"le Spore-Spritz","un":"un Spore-Spritz","no":"Spore-Spritz"},
+      "boisson3":{"le":"le Jus de Fnek (sans odeur, promis)","un":"un Jus de Fnek (sans odeur, promis)","no":"Jus de Fnek (sans odeur, promis)"},
+      "boisson4":{"le":"le Trou Noir on the rocks","un":"un Trou Noir on the rocks","no":"Trou Noir on the rocks"},
+      "boisson5":{"le":"la Bière de Shrymp","un":"une Bière de Shrymp","no":"Bière de Shrymp"}
+    },
+    "bouteille":{
+      "bouteille1":{"le":"la bouteille de Vieux Sylv 12 ans d'âge","no":"Vieux Sylv 12 ans d'âge"},
+      "bouteille2":{"le":"la bouteille de Rhum de comète","no":"Rhum de comète"},
+      "bouteille3":{"le":"la bouteille de Liqueur d'Ygrl fermentée","no":"Liqueur d'Ygrl fermentée"}
     }
   }
 }

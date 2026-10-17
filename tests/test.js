@@ -26,6 +26,7 @@ async function test() {
 
     await setup();
     await test_cards_setup();
+    await test_card_vars();
     await test_deck_generation();
     await test_place_endings();
     await test_statuses_after_planet();
@@ -296,6 +297,42 @@ async function test_cards_setup(){
     console.log('OK');
 
     console.log('Card setup DB OK')
+}
+
+// Variables aléatoires des cartes ([article_type_id])
+async function test_card_vars() {
+    console.log('Testing card variables');
+
+    // Aucune variable [..] ne doit rester dans les textes enregistrés
+    let texts = [];
+    for (let c of await DB.tables.cards.findAll({raw: true}))
+        texts.push(c.desc, c.mjreveal);
+    for (let m of await DB.tables.card_modules.findAll({where: {type: 'choice'}, raw: true}))
+        texts.push(m.value, m.reveal, m.mjreveal);
+    for (let a of await DB.tables.cards_alt.findAll({raw: true}))
+        texts.push(a.value, a.reveal, a.mjreveal);
+    for (let text of texts) {
+        // Une variable a la forme [article_type_id] ou [type_id], sans espace (« [rev B] » est du texte)
+        assert(!/\[[^\]\s]+_[^\]\s]+\]/.test(text || ''), 'Variable non remplacée : ' + text);
+        assert(!(text || '').includes('undefined'), 'Variable vide : ' + text);
+    }
+    console.log('OK');
+
+    // Même variable = même valeur dans tous les textes d'une carte (et de ses suites)
+    let card = new Card();
+    let first = card.replaceVars('[le_race_1]|[No_objet_1]|[no_boisson_1]|[no_bouteille_1]');
+    let second = card.replaceVars('[le_race_1]|[objet_1]|[no_boisson_1]|[no_bouteille_1]');
+    assert.strictEqual(first, second);
+    assert.notStrictEqual(card.replaceVars('[no_race_1]'), card.replaceVars('[no_race_2]'));
+    console.log('OK');
+
+    // Lieu « bibli » : l'objet remis dans bibli2-1 fait partie des réponses de bibli2
+    let bibli2 = await DB.tables.cards.findOne({where: {name: 'bibli2'}, raw: true});
+    let answers = (await DB.tables.card_modules.findAll({where: {card_id: bibli2.id, type: 'choice'}, raw: true})).map(m => m.value);
+    let given = (await DB.tables.cards.findOne({where: {name: 'bibli2-1'}, raw: true})).desc;
+    let objet = Object.values(LANG.card_vars.objet).find(o => given.endsWith('vous remet ' + o.le));
+    assert(objet && answers.includes(objet.no));
+    console.log('Card variables OK');
 }
 
 // Teste le mode "Fair" avec les valeurs de baseConf.json
