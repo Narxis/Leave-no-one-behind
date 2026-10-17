@@ -777,6 +777,60 @@ body.mj-page {
     color: var(--ui-danger);
 }
 
+/* Issue imposée par le MJ pour l'attaque d'un ennemi (mj-combat.js) */
+.mj-outcome {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ui-border);
+}
+
+.mj-outcome-btn {
+    padding: 5px 10px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text-dim);
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mj-outcome-btn.active {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+}
+
+.mj-outcome-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.mj-outcome-label {
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.mj-outcome-damage {
+    width: 4em;
+    padding: 4px 6px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: 8px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    text-align: center;
+}
+
+.mj-outcome-damage:disabled {
+    opacity: 0.4;
+}
+
 .mj-enemy-attack:disabled {
     opacity: 0.4;
     cursor: default;
