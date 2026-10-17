@@ -242,6 +242,7 @@ select {
 /* Inventaire */
 .items { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .item { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
+.money { margin: 0 0 10px; font-weight: 600; }
 .item .inline-form button { margin: 0; }
 
 /* Équipage */

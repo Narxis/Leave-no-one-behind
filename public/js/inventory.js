@@ -23,12 +23,26 @@
         return el('span', 'item-image item-noimg', item.name.charAt(0));
     }
 
-    // Même rendu que partials/player-tabs.ejs
-    function renderPlayer(discord_id, items) {
+    // Monnaie : config/currency.json (envoyée avec les inventaires)
+    let currency = {name: 'crédit', plural: 'crédits', image: '/img/monnaie.svg'};
+    const moneyLabel = (n) => n + ' ' + (Math.abs(n) >= 2 ? currency.plural : currency.name);
+
+    function moneyLine(cls, amount) {
+        let line = el('div', cls);
+        let p = el('p');
+        p.append(itemIcon({name: currency.plural, image: currency.image}), document.createTextNode(moneyLabel(amount)));
+        line.append(p);
+        return line;
+    }
+
+    // Même rendu que partials/player-tabs.ejs, avec la bourse en tête
+    function renderPlayer(discord_id, items, credits) {
         let list = document.getElementById('item' + discord_id);
         if (!list)
             return;
         list.innerHTML = '';
+        if (credits !== undefined)
+            list.append(moneyLine('itemlist-line itemlist-money', credits));
         for (let item of items) {
             let line = el('div', 'itemlist-line ' + item.slug);
             line.dataset.slug = item.slug;
@@ -51,11 +65,17 @@
 
     // Même rendu que la liste .todos de template-card.ejs : une ligne par
     // objet, avec sa quantité
-    function renderShip(items) {
+    function renderShip(items, credits) {
         let list = document.querySelector('.todos');
         if (!list)
             return;
         list.innerHTML = '';
+        // Caisse de bord : pas une case à cocher, ni un objet à glisser
+        if (credits !== undefined) {
+            let li = el('li', 'ship-money');
+            li.append(moneyLine('ship-money-line', credits));
+            list.append(li);
+        }
         items.forEach((item, n) => {
             let li = el('li', 'item-' + item.slug);
             li.dataset.slug = item.slug;
@@ -79,14 +99,17 @@
 
     document.addEventListener('inventory', (e) => {
         let data = e.detail.data;
+        let wallets = data.wallets || {players: {}};
+        if (data.currency)
+            currency = data.currency;
         document.querySelectorAll('.player-tab:not(.npc-tab) .itemlist').forEach(list => {
             let id = list.id.replace(/^item/, '');
-            renderPlayer(id, data.inventories[id] || []);
+            renderPlayer(id, data.inventories[id] || [], data.wallets ? wallets.players[id] || 0 : undefined);
         });
-        renderShip(data.ship || []);
+        renderShip(data.ship || [], data.wallets ? wallets.ship || 0 : undefined);
         let ev = data.event;
         if (ev && ev.to && ev.to.type === 'player')
-            flash(document.getElementById('player-tab' + ev.to.id), '+ ' + (ev.item.count > 1 ? ev.item.count + ' ' : '') + ev.item.name);
+            flash(document.getElementById('player-tab' + ev.to.id), '+ ' + (ev.item.count > 1 && !ev.item.money ? ev.item.count + ' ' : '') + ev.item.name);
     });
 
     document.addEventListener('inventory-error', (e) => {

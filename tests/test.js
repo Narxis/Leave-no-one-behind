@@ -41,6 +41,7 @@ async function test() {
     test_ship_alerts();
     await test_items_editor();
     await test_item_quantities();
+    await test_merchant();
     test_npcs();
     await test_combat();
     test_spelling();
@@ -1163,6 +1164,149 @@ async function test_item_quantities() {
         await DB.tables.players.destroy({where: {discord_id: [A, B]}});
     }
     console.log('Item quantities OK');
+}
+
+// Monnaie et marchand : bourses, butin en monnaie, achats et ventes
+async function test_merchant() {
+    console.log('Testing money and merchant');
+    const money = require('../src/controllers/money');
+    const merchant = require('../src/controllers/merchant');
+    const inventory = require('../src/controllers/inventory');
+    const combat = require('../src/controllers/combat');
+    const cardLoot = require('../src/controllers/cardLoot');
+    const itemsEditor = require('../src/controllers/itemsEditor');
+    const cfg = money.config();
+    const file = __dirname + '/../src/config/items.json';
+    const backup = fs.readFileSync(file);
+    const A = 'shop-joueur-a', B = 'shop-joueur-b';
+    try {
+        // Configuration et libellés
+        assert.ok(cfg.name && cfg.plural && cfg.cryopodsPerCredit > 0);
+        assert.strictEqual(money.label(1), '1 ' + cfg.name);
+        assert.strictEqual(money.label(0), '0 ' + cfg.name);
+        assert.strictEqual(money.label(30), '30 ' + cfg.plural);
+        assert.ok(money.isMoney(cfg.plural.toUpperCase()));
+        assert.ok(money.isMoney('monnaie'));
+        assert.ok(!money.isMoney('Drone'));
+        assert.strictEqual(money.cryopodPrice(20, {cryopodsPerCredit: 5}), 100);
+        assert.strictEqual(money.sellPrice(15, {sellRatio: 0.5}), 7);
+
+        await new Player().create({discord_id: A, name: 'Sa', race: 'aku'});
+        await new Player().create({discord_id: B, name: 'Sb', race: 'yorc'});
+        await DB.tables.ship.update({cryopods: 1000}, {where: {}});
+        await money.reset();
+        assert.strictEqual(await money.balance({type: 'player', id: A}), Math.round(cfg.startPlayer));
+        assert.strictEqual(await money.balance({type: 'ship'}), Math.round(cfg.startShip));
+        await DB.tables.players.update({credits: 0}, {where: {discord_id: [A, B]}});
+        await DB.tables.ship.update({credits: 0}, {where: {}});
+
+        // Bourses : jamais sous zéro, virements
+        assert.strictEqual((await money.add({type: 'player', id: A}, 50)).balance, 50);
+        assert.ok((await money.add({type: 'player', id: A}, -80)).error, 'pas de solde négatif');
+        assert.strictEqual(await money.balance({type: 'player', id: A}), 50);
+        assert.ok((await money.add({type: 'player', id: 'personne'}, 5)).error);
+        assert.ok((await money.transfer({type: 'player', id: A}, {type: 'ship'}, 20)).ok);
+        assert.strictEqual(await money.balance({type: 'ship'}), 20);
+        assert.ok((await money.transfer({type: 'player', id: A}, {type: 'ship'}, 500)).error);
+
+        // Butin en monnaie : dans la bourse, pas dans le coffre
+        let made = combat.makeLoot([{name: cfg.plural, qty: 25}, 'monnaie']);
+        assert.ok(made[0].money && made[0].qty === 25 && made[1].money && made[1].qty === 1);
+        assert.ok(combat.getLootList()[0].money, 'la monnaie est proposée en tête du butin');
+        cardLoot.offer([{name: 'monnaie', qty: 30}, {name: cfg.plural, qty: 5}]);
+        let moved = await inventory.move({from: {type: 'card-loot', index: 0}, to: {type: 'player', id: B}});
+        assert.ok(moved.item.money);
+        assert.strictEqual(await money.balance({type: 'player', id: B}), 30);
+        assert.ok(!(await inventory.getInventory(B)).some(i => i.slug === money.SLUG), 'pas d\'objet « monnaie »');
+        await inventory.handle({action: 'card-loot-all'});
+        assert.strictEqual(await money.balance({type: 'ship'}), 25, 'Tout récupérer : dans la caisse de bord');
+        let msg = (await inventory.payload(null))[0];
+        assert.strictEqual(msg.data.wallets.players[B], 30);
+        assert.strictEqual(msg.data.wallets.ship, 25);
+
+        // Prix dans l'éditeur d'objets
+        let out = await itemsEditor.save({name: 'Pile test', pool: 'electronique', price: 12});
+        assert.strictEqual(out.item.price, 12);
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).electronique.find(i => i.slug === 'pile-test').price, 12);
+        out = await itemsEditor.save({slug: 'pile-test', name: 'Pile test', pool: 'electronique', price: -4});
+        assert.strictEqual(out.item.price, 0);
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).electronique.find(i => i.slug === 'pile-test').price, undefined, 'pas de prix : rien d\'écrit');
+        await itemsEditor.save({slug: 'pile-test', name: 'Pile test', pool: 'electronique', price: 12});
+
+        // Étal : prix par défaut de l'éditeur, monnaie refusée, stock
+        let stock = merchant.cleanStock([{slug: 'pile-test', qty: 2}, {name: 'Babiole maison', price: 3}, {name: cfg.plural}, {name: ''}]);
+        assert.strictEqual(stock.length, 2);
+        assert.strictEqual(stock[0].price, 12);
+        assert.strictEqual(stock[0].qty, 2);
+        assert.strictEqual(stock[1].qty, null, 'sans stock : sans limite');
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'player', id: A}})).error, 'boutique fermée');
+        merchant.open({name: '  Walt  DiFnek ', stock: [{slug: 'pile-test', qty: 2}, {name: 'Babiole maison', price: 3}]});
+        assert.strictEqual(merchant.getState().name, 'Walt DiFnek');
+
+        // Achat en monnaie par un joueur
+        let bought = await merchant.buy({index: 0, slug: 'pile-test', buyer: {type: 'player', id: A}, pay: 'credits'});
+        assert.ok(!bought.error, bought.error);
+        assert.strictEqual(await money.balance({type: 'player', id: A}), 30 - 12);
+        assert.strictEqual((await inventory.getInventory(A)).find(i => i.slug === 'pile-test').count, 1);
+        assert.strictEqual(merchant.getState().stock[0].qty, 1);
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'player', id: A}, pay: 'credits', count: 2})).error, 'pas plus que le stock');
+        assert.ok((await merchant.buy({index: 0, slug: 'autre', buyer: {type: 'player', id: A}})).error, 'mauvais objet');
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'player', id: 'personne'}})).error);
+        // Pas assez d'argent : rien ne change
+        await money.add({type: 'player', id: A}, -18);
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'player', id: A}, pay: 'credits'})).error);
+        assert.strictEqual(merchant.getState().stock[0].qty, 1);
+        assert.strictEqual((await inventory.getInventory(A)).find(i => i.slug === 'pile-test').count, 1);
+
+        // Achat en cryopods, pour le vaisseau
+        bought = await merchant.buy({index: 0, buyer: {type: 'ship'}, pay: 'cryopods'});
+        assert.strictEqual(bought.event.paid, money.cryopodPrice(12));
+        assert.strictEqual(await money.cryopods(), 1000 - money.cryopodPrice(12));
+        assert.strictEqual(bought.event.cryopods, 1000 - money.cryopodPrice(12));
+        assert.strictEqual(merchant.getState().stock[0].qty, 0);
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'ship'}, pay: 'cryopods'})).error, 'épuisé');
+        assert.strictEqual((await inventory.getShip()).find(i => i.slug === 'pile-test').count, 1);
+        // Objet saisi à la main : créé à l'achat
+        await money.add({type: 'player', id: B}, 0);
+        bought = await merchant.buy({index: 1, buyer: {type: 'player', id: B}, pay: 'credits', count: 2});
+        assert.ok(!bought.error, bought.error);
+        assert.strictEqual(await money.balance({type: 'player', id: B}), 30 - 6);
+        assert.strictEqual((await inventory.getInventory(B)).find(i => i.name === 'Babiole maison').count, 2);
+        await DB.tables.ship.update({cryopods: 5}, {where: {}});
+        assert.ok((await merchant.buy({index: 1, buyer: {type: 'ship'}, pay: 'cryopods'})).error, 'pas assez de cryopods');
+        assert.strictEqual(await money.cryopods(), 5);
+
+        // Vente : la part du prix de l'éditeur, ou le prix du MJ ; le stock remonte
+        let sold = await merchant.sell({slug: 'pile-test', seller: {type: 'player', id: A}});
+        assert.ok(!sold.error, sold.error);
+        assert.strictEqual(sold.event.paid, money.sellPrice(12));
+        assert.strictEqual(await money.balance({type: 'player', id: A}), money.sellPrice(12));
+        assert.ok(!(await inventory.getInventory(A)).some(i => i.slug === 'pile-test'));
+        assert.strictEqual(merchant.getState().stock[0].qty, 1);
+        assert.ok((await merchant.sell({slug: 'pile-test', seller: {type: 'player', id: A}})).error, 'plus rien à vendre');
+        sold = await merchant.sell({slug: 'pile-test', seller: {type: 'ship'}, price: 9});
+        assert.strictEqual(await money.balance({type: 'ship'}), 25 + 9);
+
+        // Messages du serveur : l'étal, les bourses et les inventaires
+        let msgs = await merchant.handle({action: 'money-add', data: {target: {type: 'player', id: B}, amount: '-4'}});
+        assert.strictEqual(msgs[0].action, 'merchant');
+        assert.strictEqual(msgs[0].data.wallets.players[B], 20);
+        assert.ok(msgs.some(m => m.action === 'inventory'));
+        assert.strictEqual((await merchant.handle({action: 'money-add', data: {target: {type: 'player', id: B}, amount: -500}})).action, 'merchant-error');
+        msgs = await merchant.handle({action: 'money-transfer', data: {from: {type: 'player', id: B}, to: {type: 'player', id: A}, amount: 5}});
+        assert.strictEqual(msgs[0].data.wallets.players[A], money.sellPrice(12) + 5);
+        msgs = await merchant.handle({action: 'merchant-close'});
+        assert.strictEqual(msgs[0].data.state.open, false);
+        assert.ok((await merchant.sell({slug: 'pile-test', seller: {type: 'ship'}})).error, 'boutique fermée');
+        merchant.reset();
+        console.log('Money and merchant OK');
+    }
+    finally {
+        fs.writeFileSync(file, backup);
+        await DB.tables.items.destroy({where: {slug: ['pile-test', 'custom-babiole-maison']}});
+        await DB.tables.players.destroy({where: {discord_id: [A, B]}});
+        await DB.tables.ship.update({cryopods: 1000, credits: 0}, {where: {}});
+    }
 }
 
 // Fiches de l'éditeur d'ennemis et compagnons : valeurs nettoyées et bornées

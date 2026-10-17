@@ -251,6 +251,7 @@
       "type": "armure",
       "rarity": "commun",
       "desc": "Le projecteur de bouclier personnel est un dispositif utilisant l'énergie cosmique permettant d'absorber un coup ou un projectile ciblant l'utilisateur. Le projecteur de bouclier personnel doit être rechargé en énergie cosmique avant de pouvoir être réutilisé.",
+      "price": 30,
       "image": ""
     },
     {
@@ -259,6 +260,7 @@
       "type": "gadget",
       "rarity": "commun",
       "desc": "Un drone pour révéler les stats des planètes.",
+      "price": 25,
       "image": "drone.gif"
     },
     {
@@ -267,6 +269,7 @@
       "type": "arme",
       "rarity": "commun",
       "desc": "Une bombe qui permet d’infliger de lourds dégâts à sa cible sans causer beaucoup de dégâts collatéraux.",
+      "price": 30,
       "image": "spider-bomb.gif"
     }
   ],

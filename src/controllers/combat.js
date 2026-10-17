@@ -3,6 +3,7 @@ const {Player} = require("../models/player");
 const allies = require("./allies");
 const npcs = require("./npcs");
 const loot = require("./loot");
+const money = require("./money");
 
 // Paliers de dégâts, les mêmes que les jets du menu MJ
 const DAMAGE = {
@@ -62,12 +63,13 @@ const getBestiary = function () {
     return npcs.getEnemies();
 }
 
-// Objets proposés au MJ pour le butin : tous ceux de items.json (qty : la
-// quantité proposée d'office quand on l'ajoute à un butin)
+// Objets proposés au MJ pour le butin : la monnaie, puis tous ceux de
+// items.json (qty : la quantité proposée d'office quand on l'ajoute à un butin)
 const getLootList = function () {
     let pools = JSON.parse(fs.readFileSync(__dirname + '/../config/items.json', 'utf8'));
-    let seen = new Set();
-    let list = [];
+    let coins = money.lootItem(10);
+    let seen = new Set([coins.name.toLowerCase()]);
+    let list = [coins];
     for (let item of Object.values(pools).flat()) {
         if (seen.has(item.name.toLowerCase()))
             continue;
@@ -85,7 +87,12 @@ const makeLoot = function (raw) {
     for (let e of (Array.isArray(raw) ? raw : []).slice(0, LOOT_SIZE).map(loot.entry)) {
         if (!e)
             continue;
-        let item = known.find(k => k.name.toLowerCase() === e.name.toLowerCase());
+        // La monnaie (« Crédits », « monnaie »…) va dans les bourses, pas dans les coffres
+        if (money.isMoney(e.name)) {
+            items.push(money.lootItem(e.qty));
+            continue;
+        }
+        let item = known.find(k => !k.money && k.name.toLowerCase() === e.name.toLowerCase());
         items.push(Object.assign(item ? Object.assign({}, item) : {name: e.name, slug: '', image: '', custom: true}, {qty: e.qty}));
     }
     return items;
