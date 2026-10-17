@@ -126,6 +126,7 @@
 
 .lobby-player-name { flex: 1; font-weight: 600; }
 .lobby-player-status { font-size: 13px; color: var(--ui-text-dim); }
+.lobby-player-character { font-size: 13px; color: var(--ui-text-dim); }
 .lobby-player.online .lobby-player-status { color: var(--ui-cyan); }
 
 .lobby-kick {

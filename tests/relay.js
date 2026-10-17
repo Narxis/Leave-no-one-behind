@@ -1,6 +1,7 @@
 // Tests du relais (relay/lobby-core.js) avec le relais Node de développement
 const assert = require('assert');
 const http = require('http');
+const https = require('https');
 const WebSocket = require('ws');
 const relay = require('../relay/dev-server');
 const {MAX_PLAYERS} = require('../relay/lobby-core');
@@ -32,7 +33,7 @@ const client = function (url) {
 };
 
 const get = (url) => new Promise((resolve, reject) => {
-    http.get(url, res => {
+    (url.startsWith('https:') ? https : http).get(url, res => {
         let body = '';
         res.on('data', c => body += c);
         res.on('end', () => resolve({status: res.statusCode, body}));

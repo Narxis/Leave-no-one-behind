@@ -48,7 +48,11 @@ Le workflow GitHub **App de bureau** (onglet Actions, bouton *Run workflow*) fab
 
 À l'ouverture, l'app demande « Créer une partie » (MJ) ou « Rejoindre une partie » (joueur).
 
-Le MJ lance le jeu sur son PC comme avant ; la page **Partie en ligne** (`/lobby`, ouverte d'office dans l'app) donne un code et un lien à transmettre aux joueurs, et montre qui est connecté. Les joueurs entrent le code dans l'app, ou ouvrent le lien dans leur navigateur. Pour l'instant ils voient un écran d'attente avec l'équipage : la vue joueur arrive dans une prochaine étape.
+Le MJ lance le jeu sur son PC comme avant ; la page **Partie en ligne** (`/lobby`, ouverte d'office dans l'app) donne un code et un lien à transmettre aux joueurs, et montre qui est connecté. Les joueurs entrent le code dans l'app, ou ouvrent le lien dans leur navigateur. Ils suivent ensuite la partie sur leur écran : carte en cours, fiche de leur perso, plan et modules du vaisseau, inventaire et équipage. Pendant la création (page des persos du MJ), ils créent leur perso eux-mêmes : nom, race, puis tirage des stats dé par dé. Pendant la partie, ils lancent leurs dés et envoient des emotes.
+
+Chaque joueur a un identifiant d'app, créé à sa première connexion et gardé sur son appareil. Il remplit la colonne `discord_id` du jeu : en revenant, le joueur retrouve son personnage. Les pages du MJ ont droit à toutes les actions du WebSocket ; un joueur en ligne seulement à celles de `src/controllers/remote.js` (rejoindre, nom, race, tirage des stats, dés, emote, donner un objet), toujours en son nom. Ce qu'il voit du jeu part de `src/controllers/playerView.js`, sans les secrets du MJ (révélations, suites des choix, butin, valeurs des planètes).
+
+La page joueur (`public/player`) est servie telle quelle par le relais : après l'avoir modifiée, redéployer le relais (`npm run deploy` dans `relay/`). Le plan du vaisseau y est copié par `node scripts/player-assets.js` (les tests vérifient que la copie est à jour).
 
 Les messages passent par un relais (dossier `relay/`, voir [relay/README.md](relay/README.md)) : en local `npm run relay`, en ligne sur Cloudflare Workers. Son adresse est dans `package.json` (`lnob.relayUrl`) ou dans la variable `LNOB_RELAY_URL`.
 

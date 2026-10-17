@@ -8,7 +8,7 @@ Le relais met en relation le MJ et les joueurs d'une partie en ligne. Le jeu tou
 
 ## Jouer en local
 
-À la racine du dépôt : `npm run relay`, puis `npm run app` et « Créer une partie ». Le relais local écoute sur http://127.0.0.1:8787, l'adresse utilisée par défaut.
+L'app utilise le relais en ligne, https://lnob-relay.narxis.workers.dev (`lnob.relayUrl` dans `package.json`). Pour jouer avec un relais local : `npm run relay` à la racine du dépôt, puis `LNOB_RELAY_URL=http://127.0.0.1:8787 npm run app` et « Créer une partie ».
 
 ## Mettre le relais en ligne (une seule fois)
 
@@ -19,10 +19,14 @@ Le relais met en relation le MJ et les joueurs d'une partie en ligne. Le jeu tou
 
 Pour tester une autre adresse sans refaire l'app : variable d'environnement `LNOB_RELAY_URL`.
 
+## Mettre à jour la page joueur
+
+Le relais sert la page joueur (`public/player`) telle qu'elle était au moment du déploiement. Après une modification de cette page (une nouvelle étape fusionnée sur `prod`, par exemple), relancer `npm run deploy` dans ce dossier. Mieux vaut le faire entre deux parties : le déploiement coupe les connexions en cours, même si le MJ et les joueurs se reconnectent tout seuls.
+
 ## Limites
 
 8 joueurs par partie, messages de 64 Ko au plus. Sur l'offre gratuite de Cloudflare : 100 000 requêtes par jour, où les messages WebSocket reçus comptent pour 1/20e de requête chacun ([tarifs](https://developers.cloudflare.com/durable-objects/platform/pricing/)). Une partie en utilise une infime partie.
 
 ## Tests
 
-`node tests/relay.js` (lancé par `npm test`) teste le relais Node. Pour tester la version Cloudflare : `npm run dev` dans ce dossier, puis `RELAY_URL=http://127.0.0.1:8787 node tests/relay.js` à la racine.
+`node tests/relay.js` (lancé par `npm test`) teste le relais Node. Pour tester la version Cloudflare : `npm run dev` dans ce dossier, puis `RELAY_URL=http://127.0.0.1:8787 node tests/relay.js` à la racine. Le relais en ligne se teste de la même façon : `RELAY_URL=https://lnob-relay.narxis.workers.dev node tests/relay.js`.

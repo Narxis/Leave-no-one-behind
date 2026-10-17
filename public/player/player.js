@@ -1,10 +1,24 @@
-// Page joueur : rejoindre une partie avec son code et attendre le MJ.
+// Page joueur : rejoindre une partie avec son code, puis suivre la partie.
 // Servie par le relais (lien partagé par le MJ) et ouverte par l'app de
 // bureau en mode joueur (adresse du relais dans ?relay=).
+//
+// Le MJ envoie l'état du jeu (kind 'game') et celui du joueur (kind 'you') ;
+// le joueur envoie des actions ({kind:'action'}), que le MJ accepte ou non.
 (function () {
     const PROTOCOL = 1;
     const $ = (id) => document.getElementById(id);
     const params = new URLSearchParams(location.search);
+
+    const STAT_LABELS = {combat: 'Combat', pilotage: 'Pilotage', engineering: 'Ingénierie', survival: 'Survie', recon: 'Reconnaissance', moral: 'Moral'};
+    const ROLL_MODULES = [['', 'Sans module'], ['scanner', 'Scanners de surface'], ['proximity', 'Détecteurs de proximité'], ['motors', 'Moteurs'], ['oxygen', 'Module d\'oxygène'], ['energy', 'Électricité'], ['gravity', 'Gravité artificielle']];
+    const EMOTES = ['👍', '👎', '😮', '😂', '😱', '❤️', '🤔', '🎉'];
+    const CARD_KINDS = {event: 'Événement', place: 'Lieu', planet: 'Planète en approche'};
+    const PHASES = {
+        init: 'En attente que le MJ lance la partie.',
+        creation: 'Création des personnages en cours : va dans l\'onglet Perso.',
+        gameLive: '',
+        postGame: 'La partie est terminée.'
+    };
 
     // Adresse WebSocket du relais
     const relayBase = (function () {
@@ -32,6 +46,41 @@
     const formatCode = (code) => code.length === 6 ? code.slice(0, 3) + '-' + code.slice(3) : code;
     const cleanCode = (value) => String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 
+    // Petit utilitaire : élément avec classe et texte (jamais de HTML venu du réseau)
+    const el = function (tag, cls, text) {
+        let node = document.createElement(tag);
+        if (cls)
+            node.className = cls;
+        if (text !== undefined && text !== null)
+            node.textContent = text;
+        return node;
+    };
+
+    // Texte de carte : quelques balises de mise en forme (<s>Non</s>) sont
+    // gardées, tout le reste devient du texte. Le HTML est lu dans un document
+    // inerte (rien ne s'exécute), puis reconstruit balise par balise.
+    const RICH_TAGS = ['S', 'B', 'I', 'U', 'EM', 'STRONG', 'BR'];
+    const richText = function (node, text) {
+        let doc = new DOMParser().parseFromString('<body>' + String(text || ''), 'text/html');
+        const copy = (from, to) => {
+            for (let child of from.childNodes) {
+                if (child.nodeType === Node.TEXT_NODE)
+                    to.append(child.textContent);
+                else if (child.nodeType === Node.ELEMENT_NODE) {
+                    let target = to;
+                    if (RICH_TAGS.includes(child.tagName)) {
+                        target = document.createElement(child.tagName.toLowerCase());
+                        to.append(target);
+                    }
+                    copy(child, target);
+                }
+            }
+        };
+        node.replaceChildren();
+        copy(doc.body, node);
+        return node;
+    };
+
     let socket = null;
     let leaving = false;
     let retryDelay = 1000;
@@ -40,10 +89,14 @@
     let roster = [];
     let me = null;
     let hostOnline = false;
+    let game = null;    // dernier état du jeu reçu
+    let you;            // dernier état du joueur reçu (undefined : pas encore reçu)
+    let tab = store.get('lnob-player-tab') || 'game';
 
     const show = function (panel) {
         $('join').hidden = panel !== 'join';
         $('lobby').hidden = panel !== 'lobby';
+        $('main').classList.toggle('wide', panel === 'lobby');
     };
 
     const setStatus = function (text, kind) {
@@ -56,22 +109,279 @@
         $('join-error').hidden = !message;
     };
 
+    let errorTimer = null;
+    const showActionError = function (message) {
+        clearTimeout(errorTimer);
+        $('action-error').textContent = message || '';
+        $('action-error').hidden = !message;
+        if (message)
+            errorTimer = setTimeout(() => showActionError(''), 6000);
+    };
+
+    // Message au MJ (le relais le transmet si le MJ est là)
+    const sendAction = function (action, data) {
+        if (!hostOnline)
+            return showActionError('Le MJ est déconnecté.');
+        if (socket && socket.readyState === WebSocket.OPEN)
+            socket.send(JSON.stringify({type: 'msg', data: {kind: 'action', action: action, data: data || {}}}));
+    };
+
+    // ---- Onglets ----------------------------------------------------------
+
+    const selectTab = function (name) {
+        tab = name;
+        store.set('lnob-player-tab', name);
+        document.querySelectorAll('.tab').forEach(b => {
+            b.classList.toggle('active', b.dataset.tab === name);
+            b.setAttribute('aria-selected', b.dataset.tab === name);
+        });
+        document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.dataset.panel !== name; });
+    };
+
+    // ---- Statut de connexion -------------------------------------------
+
+    const renderStatus = function () {
+        if (hostOnline)
+            setStatus('Connecté au MJ.', 'ok');
+        else
+            setStatus('Le MJ est déconnecté : la partie reprendra à son retour.', 'wait');
+    };
+
+    // ---- Équipage --------------------------------------------------------
+
     const renderPlayers = function () {
         let list = roster.length ? roster : (me ? [me] : []);
+        let characters = new Map(((game && game.team) || []).map(c => [c.id, c]));
         $('players').replaceChildren(...list.map(p => {
-            let li = document.createElement('li');
-            li.textContent = p.name + (p.id === playerId ? ' (toi)' : '') + (p.online === false ? ' · déconnecté' : '');
-            if (p.id === playerId)
-                li.className = 'me';
+            let li = el('li', p.id === playerId ? 'me' : '');
+            li.append(el('span', 'player-name', p.name + (p.id === playerId ? ' (toi)' : '')));
+            let c = characters.get(p.id);
+            li.append(el('span', 'dim', c ? c.name + (c.race ? ' · ' + c.race : '') : 'pas de perso'));
+            if (p.online === false)
+                li.append(el('span', 'dim', 'déconnecté'));
             return li;
         }));
     };
 
-    const renderStatus = function () {
-        if (hostOnline)
-            setStatus('Connecté. En attente que le MJ lance la partie.', 'ok');
-        else
-            setStatus('Le MJ est déconnecté : la partie reprendra à son retour.', 'wait');
+    // ---- Partie : carte en cours, status, alerte ---------------------------
+
+    const renderGame = function () {
+        let phase = game ? game.phase : 'init';
+        $('phase').textContent = PHASES[phase] !== undefined ? PHASES[phase] : '';
+        $('phase').hidden = !$('phase').textContent;
+
+        let card = game && game.card;
+        $('game-card').hidden = !card;
+        if (card) {
+            $('card-kind').textContent = CARD_KINDS[card.kind] || '';
+            richText($('card-desc'), card.desc);
+            $('card-desc').hidden = !card.desc;
+            $('card-choices').replaceChildren(...(card.choices || []).map(c => richText(el('li'), c)));
+            $('card-note').textContent = card.kind === 'planet'
+                ? 'Le MJ scanne la planète sur l\'écran principal.'
+                : (card.choices && card.choices.length ? 'Le MJ choisit pour l\'équipage.' : '');
+        }
+
+        let statuses = (game && game.statuses) || [];
+        $('statuses').replaceChildren(...statuses.map(s => {
+            let chip = el('span', 'chip', s.name + ' · ' + s.duration + (s.duration > 1 ? ' tours' : ' tour'));
+            chip.title = s.desc || '';
+            return chip;
+        }));
+
+        let alert = game && game.alerts && game.alerts.alert;
+        $('ship-alert').hidden = !alert;
+        if (alert)
+            $('ship-alert').textContent = '⚠ ' + alert.name + (alert.message ? ' : ' + alert.message : '');
+        // Le MJ affiche le plan : on bascule sur l'onglet Vaisseau
+        if (game && game.alerts && (game.alerts.showMap || alert) && !renderGame.mapShown)
+            selectTab('ship');
+        renderGame.mapShown = !!(game && game.alerts && (game.alerts.showMap || alert));
+    };
+
+    // ---- Vaisseau ----------------------------------------------------------
+
+    const bar = function (label, value, max) {
+        let row = el('div', 'bar-row');
+        row.append(el('span', 'bar-label', label));
+        let track = el('span', 'bar-track');
+        let fill = el('span', 'bar-fill');
+        let pct = Math.max(0, Math.min(100, (Number(value) || 0) / (max || 100) * 100));
+        fill.style.width = pct + '%';
+        fill.classList.toggle('low', pct < 35);
+        track.append(fill);
+        row.append(track, el('span', 'bar-value', String(value)));
+        return row;
+    };
+
+    const shipSvg = function () {
+        let box = $('ship-plan');
+        if (!box.firstElementChild && window.LNOB_SHIP_SVG)
+            box.innerHTML = window.LNOB_SHIP_SVG; // fichier statique de la page, pas du réseau
+        return box.querySelector('svg');
+    };
+
+    const renderShip = function () {
+        let ship = game && game.ship;
+        $('cryopods').textContent = ship ? 'Colons en cryogénie : ' + ship.cryopods : 'Pas encore de vaisseau.';
+        $('ship-modules').replaceChildren(...(ship ? ship.modules.map(m => bar(m.label, m.value, 100)) : []));
+
+        let svg = shipSvg();
+        if (!svg || typeof ShipMap === 'undefined')
+            return;
+        let alerts = (game && game.alerts) || {blink: [], alert: null};
+        let alert = alerts.alert;
+        let g = ShipMap.layer(svg, 'player-ship-layer');
+        (alerts.blink || []).filter(id => !alert || id !== alert.room)
+            .forEach(id => ShipMap.roomFill(svg, id, 'ship-blink-fill', g));
+        if (alert) {
+            ShipMap.roomFill(svg, alert.room, 'ship-alert-fill', g);
+            ShipMap.alertMarker(svg, alert.room, alert.name, g);
+        }
+        ShipMap.markAlertLabel(svg, alert ? alert.room : null);
+    };
+
+    // ---- Perso -------------------------------------------------------------
+
+    const modText = (mod) => mod > 0 ? '+' + mod : String(mod);
+
+    const renderRaces = function (character) {
+        let races = (game && game.races) || [];
+        $('race-list').replaceChildren(...races.map(r => {
+            let b = el('button', 'race' + (character.race === r.slug ? ' selected' : ''));
+            b.type = 'button';
+            b.append(el('strong', '', r.name));
+            let mods = Object.entries(r.stats || {}).filter(([, v]) => v).map(([k, v]) => (STAT_LABELS[k] || k) + ' ' + modText(v));
+            b.append(el('span', 'dim small-text', mods.length ? mods.join(', ') : 'Aucun bonus ni malus'));
+            if (r.desc)
+                b.append(el('span', 'race-desc', r.desc.replace(/<[^>]*>/g, '')));
+            b.addEventListener('click', () => sendAction('set-race', {race: r.slug}));
+            return b;
+        }));
+    };
+
+    const renderRolls = function (creation) {
+        $('stat-rolls').hidden = !creation || creation.step !== 'stats';
+        if ($('stat-rolls').hidden)
+            return;
+        $('stat-table').replaceChildren(...creation.stats.map(s => {
+            let row = el('div', 'stat-row');
+            row.append(el('span', 'stat-name', (STAT_LABELS[s.stat] || s.stat) + (s.mod ? ' (' + modText(s.mod) + ')' : '')));
+            let dice = el('span', 'dice');
+            for (let i = 0; i < s.total; i++) {
+                let v = s.dice[i];
+                let d = el('span', 'die' + (v === undefined ? ' empty' : '') + (v !== undefined && v === s.kept ? ' kept' : ''), v === undefined ? '?' : String(v));
+                dice.append(d);
+            }
+            row.append(dice);
+            let left = s.total - s.dice.length;
+            let b = el('button', 'secondary small', left ? '🎲 Lancer' : '= ' + (s.kept + 50));
+            b.type = 'button';
+            b.disabled = !left;
+            b.addEventListener('click', () => { b.disabled = true; sendAction('roll-stat', {stat: s.stat}); });
+            row.append(b);
+            return row;
+        }));
+    };
+
+    const renderSheet = function (character) {
+        $('sheet-name').textContent = character.name;
+        $('sheet-race').textContent = character.raceName || '';
+        $('sheet-stats').replaceChildren(...Object.keys(STAT_LABELS).map(s => bar(STAT_LABELS[s], character[s] || 0, 100)));
+        $('roll-box').hidden = !game || game.phase !== 'gameLive';
+    };
+
+    const renderMe = function () {
+        let phase = game ? game.phase : 'init';
+        let character = you && you.character;
+        let creation = you && you.creation;
+        $('no-character').hidden = you === undefined || !!character;
+        $('no-character-text').textContent = phase === 'creation'
+            ? 'Tu n\'as pas encore de personnage dans cette partie.'
+            : 'Tu n\'as pas de personnage dans cette partie. Les persos se créent quand le MJ ouvre la création.';
+        $('create').hidden = phase !== 'creation';
+        $('create').disabled = !hostOnline;
+
+        let creating = !!(character && creation && creation.step !== 'done');
+        $('creation').hidden = !creating;
+        if (creating) {
+            if (document.activeElement !== $('char-name'))
+                $('char-name').value = character.name;
+            renderRaces(character);
+            renderRolls(creation);
+        }
+        $('sheet').hidden = !character || creating;
+        if (character && !creating)
+            renderSheet(character);
+    };
+
+    // ---- Inventaire ----------------------------------------------------------
+
+    const renderItems = function () {
+        let items = (you && you.inventory) || [];
+        let others = ((game && game.team) || []).filter(c => c.id !== playerId);
+        $('items-empty').hidden = items.length > 0;
+        $('items').replaceChildren(...items.map(item => {
+            let li = el('li', 'item');
+            li.append(el('strong', '', item.name + (item.count > 1 ? ' ×' + item.count : '')));
+            if (item.desc)
+                li.append(el('span', 'dim small-text', String(item.desc).replace(/<[^>]*>/g, '')));
+            if (others.length) {
+                let form = el('form', 'inline-form');
+                let select = el('select');
+                select.setAttribute('aria-label', 'Donner à');
+                for (let c of others) {
+                    let o = el('option', '', c.name);
+                    o.value = c.id;
+                    select.append(o);
+                }
+                let b = el('button', 'secondary small', 'Donner');
+                b.type = 'submit';
+                form.append(select, b);
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    sendAction('inventory-move', {slug: item.slug, to: {type: 'player', id: select.value}});
+                });
+                li.append(form);
+            }
+            return li;
+        }));
+    };
+
+    const renderAll = function () {
+        renderGame();
+        renderMe();
+        renderShip();
+        renderItems();
+        renderPlayers();
+    };
+
+    // ---- Connexion au relais -------------------------------------------------
+
+    const onGameMessage = function (data) {
+        if (data.kind === 'roster') {
+            roster = Array.isArray(data.players) ? data.players : [];
+            renderPlayers();
+        }
+        else if (data.kind === 'game') {
+            game = data;
+            renderAll();
+        }
+        else if (data.kind === 'you') {
+            you = data;
+            renderMe();
+            renderItems();
+        }
+        else if (data.kind === 'refused') {
+            showActionError(data.message);
+            renderMe();
+        }
+        else if (data.kind === 'result' && data.action === 'roll' && data.data) {
+            let r = data.data;
+            $('roll-result').hidden = false;
+            $('roll-result').className = 'roll-result ' + (r.success ? 'ok' : 'fail');
+            $('roll-result').textContent = '🎲 ' + r.dice_result + ' → ' + r.result + ' : ' + (r.success ? 'réussite !' : 'échec.');
+        }
     };
 
     const connect = function () {
@@ -96,11 +406,12 @@
                 store.set('lnob-last-code', session.code);
                 show('lobby');
                 renderStatus();
-                renderPlayers();
+                renderAll();
             }
             else if (msg.type === 'host') {
                 hostOnline = msg.online;
                 renderStatus();
+                renderMe();
             }
             else if (msg.type === 'error') {
                 rejected = true;
@@ -109,10 +420,8 @@
                 $('submit').disabled = false;
                 showError(msg.message);
             }
-            else if (msg.type === 'msg' && msg.data && msg.data.kind === 'roster') {
-                roster = Array.isArray(msg.data.players) ? msg.data.players : [];
-                renderPlayers();
-            }
+            else if (msg.type === 'msg' && msg.data && typeof msg.data === 'object')
+                onGameMessage(msg.data);
         };
 
         ws.onclose = () => {
@@ -136,6 +445,8 @@
         };
     };
 
+    // ---- Formulaires et boutons ------------------------------------------
+
     $('join').addEventListener('submit', (event) => {
         event.preventDefault();
         let code = cleanCode($('code').value);
@@ -150,6 +461,8 @@
         store.set('lnob-player-name', name);
         session = {code, name};
         roster = [];
+        game = null;
+        you = undefined;
         leaving = false;
         $('submit').disabled = true;
         connect();
@@ -162,6 +475,45 @@
             socket.close(1000, 'leave');
         show('join');
     });
+
+    $('create').addEventListener('click', () => {
+        $('create').disabled = true;
+        showActionError('');
+        sendAction('join');
+    });
+
+    $('name-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        let nick = $('char-name').value.trim();
+        if (nick)
+            sendAction('set-name', {nick: nick});
+        $('char-name').blur();
+    });
+
+    $('roll-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        $('roll-result').hidden = true;
+        sendAction('roll', {stat: $('roll-stat').value, module: $('roll-module').value});
+    });
+
+    for (let s of Object.keys(STAT_LABELS).filter(s => s !== 'moral')) {
+        let o = el('option', '', STAT_LABELS[s]);
+        o.value = s;
+        $('roll-stat').append(o);
+    }
+    for (let [value, label] of ROLL_MODULES) {
+        let o = el('option', '', label);
+        o.value = value;
+        $('roll-module').append(o);
+    }
+    $('emotes').replaceChildren(...EMOTES.map(e => {
+        let b = el('button', 'emote', e);
+        b.type = 'button';
+        b.addEventListener('click', () => sendAction('emote', {emoji: e}));
+        return b;
+    }));
+    document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => selectTab(b.dataset.tab)));
+    selectTab(document.querySelector('.tab[data-tab="' + tab + '"]') ? tab : 'game');
 
     // Code reçu dans le lien du MJ, sinon le dernier utilisé
     $('code').value = formatCode(cleanCode(params.get('code') || store.get('lnob-last-code') || ''));

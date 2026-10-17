@@ -26,6 +26,10 @@ body {
     width: min(420px, 100%);
 }
 
+/* En partie : plus large, collé en haut */
+.card.wide { width: min(760px, 100%); align-self: start; }
+.card.wide .logo { margin-bottom: 12px; font-size: clamp(18px, 4vw, 24px); }
+
 .logo {
     margin: 0 0 24px;
     text-align: center;
@@ -101,3 +105,145 @@ h2 { margin: 8px 0 0; font-size: 14px; font-weight: 600; color: var(--dim); text
 .players li { padding: 8px 0; border-bottom: 1px solid var(--border); }
 .players li:last-child { border-bottom: none; }
 .players .me { color: var(--accent); }
+
+
+/* ---- En partie ---- */
+.game { gap: 12px; padding: 18px; }
+.game-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+button.small { margin-top: 0; padding: 6px 12px; font-size: 14px; }
+.small-text { font-size: 13px; }
+[hidden] { display: none !important; }
+
+.tabs { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--border); }
+.tab {
+    margin: 0;
+    padding: 10px 12px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: none;
+    color: var(--dim);
+    font-size: 15px;
+    white-space: nowrap;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-panel { display: flex; flex-direction: column; gap: 10px; }
+
+.alert-banner {
+    padding: 10px 14px;
+    border: 1px solid var(--danger);
+    border-radius: 10px;
+    background: rgb(255 90 110 / 12%);
+    color: #ffd0d6;
+    font-weight: 600;
+}
+
+/* Carte en cours */
+.game-card {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgb(255 255 255 / 3%);
+}
+.card-kind { margin: 0 0 8px; color: var(--accent); font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; }
+.card-desc { margin: 0 0 12px; font-size: 17px; line-height: 1.5; white-space: pre-line; }
+.card-choices { margin: 0 0 8px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.card-choices li { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { padding: 4px 10px; border: 1px solid var(--accent); border-radius: 999px; color: var(--accent); font-size: 13px; cursor: help; }
+
+.emotes { display: flex; flex-wrap: wrap; gap: 6px; }
+.emote { margin: 0; padding: 6px 10px; border: 1px solid var(--border); background: transparent; font-size: 22px; }
+.emote:active { transform: scale(0.92); }
+
+/* Barres : stats et modules */
+.bars { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: grid; grid-template-columns: minmax(110px, 38%) 1fr 44px; align-items: center; gap: 10px; font-size: 14px; }
+.bar-label { color: var(--dim); }
+.bar-track { height: 8px; border-radius: 4px; background: rgb(255 255 255 / 8%); overflow: hidden; }
+.bar-fill { display: block; height: 100%; background: var(--ok); }
+.bar-fill.low { background: var(--danger); }
+.bar-value { text-align: right; font-weight: 600; }
+
+/* Perso */
+.sheet-name { margin: 0; font-size: 20px; }
+.sheet-name strong { color: var(--accent); }
+.inline-form { display: flex; gap: 8px; align-items: center; }
+.inline-form input { flex: 1; min-width: 0; padding: 8px 12px; font-size: 16px; }
+select {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #15123a;
+    color: var(--text);
+    font: 500 15px Jura, system-ui, sans-serif;
+}
+.race-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.race {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+    border: 1px solid var(--border);
+    background: rgb(255 255 255 / 3%);
+    color: var(--text);
+    letter-spacing: 0;
+}
+.race.selected { border-color: var(--accent); background: rgb(255 204 0 / 10%); }
+.race-desc { font-size: 12px; font-weight: 400; color: var(--dim); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+.stat-table { display: flex; flex-direction: column; gap: 8px; }
+.stat-row { display: grid; grid-template-columns: minmax(130px, 34%) 1fr auto; align-items: center; gap: 10px; }
+.stat-name { font-size: 14px; }
+.dice { display: flex; gap: 6px; flex-wrap: wrap; }
+.die { min-width: 34px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; text-align: center; font-weight: 600; }
+.die.empty { color: var(--dim); border-style: dashed; }
+.die.kept { border-color: var(--ok); color: var(--ok); }
+
+.roll-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.roll-form button { margin: 0; }
+.roll-result { margin: 0; font-size: 18px; font-weight: 600; }
+.roll-result.ok { color: var(--ok); }
+.roll-result.fail { color: var(--danger); }
+
+/* Vaisseau */
+.ship-plan svg { width: 100%; height: auto; display: block; }
+.ship-plan .zone-active { fill: #b0a6ff; fill-opacity: 0.35; }
+.ship-plan path.ship-blink-fill { fill: #ff8a1f; animation: ship-blink 1s ease-in-out infinite; }
+.ship-plan path.ship-alert-fill { fill: #ff1f3d; animation: ship-alert-fill .6s ease-in-out infinite; }
+@keyframes ship-blink { 0%, 100% { fill-opacity: .15; } 50% { fill-opacity: .7; } }
+@keyframes ship-alert-fill { 0%, 100% { fill-opacity: .25; } 50% { fill-opacity: .85; } }
+.ship-alert-ring { fill: none; stroke: #ff1f3d; stroke-width: 4; animation: ship-alert-ring 1.8s ease-out infinite; }
+.ship-alert-ring.ring1 { animation-delay: .6s; }
+.ship-alert-ring.ring2 { animation-delay: 1.2s; }
+@keyframes ship-alert-ring { 0% { transform: scale(.4); opacity: 1; } 100% { transform: scale(4); opacity: 0; } }
+.ship-alert-dot { fill: #fff; stroke: #ff1f3d; stroke-width: 4; }
+.ship-plan text.ship-alert-label { fill: #fff; font-family: Jura, sans-serif; font-size: 26px; font-weight: 700; paint-order: stroke; stroke: #0b0630; stroke-width: 4px; }
+.ship-room-label {
+    fill: #e9e5ff;
+    font-family: Jura, sans-serif;
+    font-weight: 700;
+    text-anchor: middle;
+    dominant-baseline: central;
+    text-transform: uppercase;
+    stroke: #0b0630;
+    stroke-width: 3px;
+    paint-order: stroke;
+    opacity: .85;
+}
+.ship-room-label.is-alert { display: none; }
+
+/* Inventaire */
+.items { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.item { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
+.item .inline-form button { margin: 0; }
+
+/* Équipage */
+.players li { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.players .player-name { flex: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+    .ship-blink-fill, .ship-alert-fill, .ship-alert-ring { animation-duration: 3s !important; }
+}

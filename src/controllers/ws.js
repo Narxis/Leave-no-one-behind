@@ -11,6 +11,9 @@ const inventory = require("./inventory");
 const cardLoot = require("./cardLoot");
 const shipAlerts = require("./shipAlerts");
 const lobby = require("./lobby");
+const remote = require("./remote");
+const playerView = require("./playerView");
+const WebSocket = require("ws");
 
 const init = function (){
 
@@ -32,6 +35,14 @@ const init = function (){
         //send immediatly a feedback to the incoming connection
         ws.send('Hi there, I am a WebSocket server');
     });
+
+    // Joueurs en ligne (relais) : actions permises, en leur nom, puis
+    // résultat diffusé aux pages du MJ comme pour une action locale
+    remote.init({
+        run: (action) => makeAction(JSON.stringify(action)),
+        broadcast: (payload) => broadcastData(payload)
+    });
+    playerView.init();
 }
 
 const makeAction = async function (raw_response) {
@@ -374,7 +385,7 @@ const broadcastData = function (data, ws, sendBackToSender = true) {
         let payload = JSON.stringify(data);
         WSS.clients.forEach(function each(client) {
             if ((!sendBackToSender && (client !== ws)) || sendBackToSender) {
-                if (client.readyState === ws.OPEN) {
+                if (client.readyState === WebSocket.OPEN) {
                     client.send(payload);
                 }
             }
@@ -383,6 +394,9 @@ const broadcastData = function (data, ws, sendBackToSender = true) {
     catch (e) {
         log(e)
     }
+    // L'état du jeu a pu changer : la vue des joueurs en ligne suit
+    if (!data || data.action !== 'lobby')
+        playerView.changed();
 }
 
 module.exports = {init}
