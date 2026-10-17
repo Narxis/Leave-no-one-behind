@@ -388,6 +388,15 @@
             b.addEventListener('click', () => sendAction('set-race', {race: r.slug}));
             return b;
         }));
+        // Race aléatoire : une autre que celle déjà choisie
+        let others = races.filter(r => r.slug !== character.race);
+        if (others.length) {
+            let random = el('button', 'race');
+            random.type = 'button';
+            random.append(el('strong', '', '🎲 Race aléatoire'), el('span', 'dim small-text', 'Laisse le hasard choisir'));
+            random.addEventListener('click', () => sendAction('set-race', {race: others[Math.floor(Math.random() * others.length)].slug}));
+            $('race-list').prepend(random);
+        }
     };
 
     const renderRolls = function (creation) {
