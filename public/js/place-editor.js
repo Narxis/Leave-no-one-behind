@@ -12,6 +12,7 @@
 <div class="pe-node">
     <div class="pe-node-head"><i class="fas fa-money-check"></i><span>Carte <span class="pe-card-num"></span></span>
         <span class="pe-start-badge">Départ</span>
+        <span class="pe-marker-badge"><i class="fas fa-bookmark"></i></span>
         <button type="button" class="pe-node-play" data-action="preview" title="Tester le lieu à partir de cette carte"><i class="fas fa-play"></i></button>
         <button type="button" class="pe-node-del" data-action="delete" title="Supprimer ce bloc">×</button></div>
     <label>Texte lu aux joueurs<textarea df-desc rows="4" placeholder="Ce que découvrent les joueurs…"></textarea></label>
@@ -19,7 +20,7 @@
     <div class="pe-toggles">
         <button type="button" class="pe-toggle" data-toggle="timer" title="La carte affiche un compte à rebours"><i class="fas fa-stopwatch"></i> Chrono</button>
         <button type="button" class="pe-toggle" data-toggle="shuffle" title="L'ordre des choix est mélangé"><i class="fas fa-random"></i> Choix mélangés</button>
-        <input type="hidden" df-timer><input type="hidden" df-shuffle>
+        <input type="hidden" df-timer><input type="hidden" df-shuffle><input type="hidden" df-marker>
     </div>
     <button type="button" class="pe-node-add" data-action="add-choice"><i class="fas fa-plus"></i> Ajouter un choix</button>
 </div>`,
@@ -201,6 +202,11 @@
                 if (add)
                     add.disabled = used >= MAX_CHOICES;
                 el.querySelectorAll('.pe-toggle').forEach(btn => btn.setAttribute('aria-pressed', node.data[btn.dataset.toggle] === 'on'));
+                // Marqueur posé depuis le test (card-preview.js)
+                el.classList.toggle('is-marked', !!node.data.marker);
+                let badge = el.querySelector('.pe-marker-badge');
+                if (badge)
+                    badge.title = node.data.marker ? 'Marqueur : ' + node.data.marker : '';
             }
             if (node.name === 'choice') {
                 let taken = node.outputs.output_1.connections.length > 0;
@@ -425,7 +431,7 @@
             toast('Choisis ou crée d\'abord un lieu', 'error');
             return null;
         }
-        let defaults = type === 'card' ? {desc: '', mjreveal: '', timer: 'off', shuffle: 'off'}
+        let defaults = type === 'card' ? {desc: '', mjreveal: '', timer: 'off', shuffle: 'off', marker: ''}
             : type === 'choice' ? {choice: '', mjreveal: ''} : {reveal: ''};
         let id = editor.addNode(type, PORTS[type][0], PORTS[type][1], x, y, type, Object.assign(defaults, values || {}), TEMPLATES[type]);
         refreshNodes();
@@ -527,15 +533,17 @@
     }
 
     // Bloc relié à droite d'un autre (sortie output → entrée du nouveau)
-    function addLinked(fromId, output, type, slot) {
+    function addLinked(fromId, output, type, slot, noFocus) {
         let from = editor.getNodeFromId(fromId), el = nodeEl(fromId);
         let spot = freeSpot(type, from.pos_x + (el ? el.offsetWidth : 260) + 90, from.pos_y + slot * 60);
         let id = addBlock(type, spot.x, spot.y);
         if (id == null)
-            return;
+            return null;
         editor.addConnection(fromId, id, output, 'input_1');
         refreshNodes();
-        focusField(id);
+        if (!noFocus)
+            focusField(id);
+        return id;
     }
 
     board.addEventListener('click', async (e) => {
@@ -779,6 +787,7 @@
                     mjreveal: (choice.data.mjreveal || '').trim(),
                     loot: lootOf(choice),
                     reveal: next && next.name === 'reveal' ? (next.data.reveal || '') : null,
+                    revealId: next && next.name === 'reveal' ? String(next.id) : null,
                     next: next && next.name === 'card' ? String(next.id) : null
                 });
             }
@@ -789,6 +798,7 @@
                 mjreveal: (card.data.mjreveal || '').trim(),
                 timer: card.data.timer === 'on',
                 shuffle: card.data.shuffle === 'on',
+                marker: card.data.marker || '',
                 choices: choices
             });
         }
@@ -801,9 +811,31 @@
                 if (current() !== place)
                     selectPlace(place);
                 focusNode(id);
-            }
+            },
+            actions: previewActions
         };
     }
+
+    // Modifications faites depuis le test : elles passent par les champs des
+    // blocs, comme une saisie dans l'éditeur (lieu marqué modifié, à enregistrer)
+    const previewActions = {
+        edit(id, field, value) {
+            let el = nodeEl(id);
+            let input = el && el.querySelector('[df-' + field + ']');
+            if (!input)
+                return;
+            input.value = value;
+            input.dispatchEvent(new Event('input', {bubbles: true}));
+            refreshNodes();
+        },
+        addChoice(cardId) {
+            let node = editor.getNodeFromId(cardId);
+            let k = node ? Object.keys(node.outputs).findIndex(key => !node.outputs[key].connections.length) : -1;
+            return k < 0 ? null : addLinked(cardId, 'output_' + (k + 1), 'choice', k, true);
+        },
+        addNext: (choiceId) => addLinked(choiceId, 'output_1', 'card', 0, true),
+        addReveal: (choiceId) => addLinked(choiceId, 'output_1', 'reveal', 0, true)
+    };
 
     function openPreview(fromId) {
         let place = current();

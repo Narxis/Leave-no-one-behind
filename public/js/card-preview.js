@@ -1,30 +1,46 @@
 // Prévisualisation des cartes d'un lieu dans l'éditeur (/buildCard).
-// Rejoue l'histoire telle qu'elle est en ce moment dans l'éditeur, même non
-// enregistrée : texte tapé comme en jeu, chrono, choix mélangés, butin, résultats.
-// L'éditeur fournit l'histoire via CardPreview.open(provider, fromId) : provider()
-// renvoie l'état du lieu à cet instant (relu à chaque « Recommencer ») :
-//   {title, startId, cards, goTo}
-//   cards   : Map id → {id, num, desc, mjreveal, timer, shuffle, choices: [{id, value, mjreveal, loot, reveal | next}]}
-//   startId : carte de départ du lieu ; fromId (facultatif) la remplace
+// Deux modes :
+//  - Jouer : l'histoire telle qu'elle est dans l'éditeur, même non enregistrée,
+//    comme en partie (texte tapé, chrono, choix mélangés, butin, résultats) ;
+//  - Éditer : la carte et ses choix se modifient directement, les changements
+//    vont dans les blocs de l'éditeur (à enregistrer comme d'habitude).
+// Navigation : retour / suivant, fil des cartes jouées, « Aller à », marqueurs, raccourcis.
+//
+// L'éditeur ouvre le test avec CardPreview.open(provider, fromId). provider()
+// renvoie l'état du lieu à cet instant (relu à chaque étape) :
+//   {title, startId, cards, goTo, actions}
+//   cards   : Map id → {id, num, desc, mjreveal, timer, shuffle, marker,
+//                       choices: [{id, value, mjreveal, loot, reveal, revealId, next}]}
 //   goTo    : appelé avec l'id d'un bloc pour y aller dans l'éditeur
+//   actions : edit(id, champ, valeur), addChoice(carteId), addNext(choixId), addReveal(choixId)
+//             (renvoient l'id du bloc créé)
 window.CardPreview = (function () {
     const TIMER_SECONDS = 30;          // comme en jeu (card.js)
     const STOP_TOKEN = '{....}';       // pause « .... » puis le texte repart à zéro
     const CHAR_DELAY = 21.7;
     const FAST_FACTOR = 15, FAST_CHARS = 5;
+    const MAX_CHOICES = 3;
     const END_CHOICE = 'Continuer votre chemin';
+    const DEFAULT_MARKER = 'À revoir';
 
     const $ = (id) => document.getElementById(id);
     const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const short = (t, n) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n) + '…' : t; };
+    const hasNext = (c) => c.reveal != null || c.next != null;
 
     let provider = null, story = null, fromId = null;
-    let path = [];          // étapes jouées : [{cardId, choiceIndex}]
-    let run = 0;            // change à chaque nouvelle étape : stoppe l'écriture et le chrono en cours
+    // Étapes : {type: 'card', id, order} ou {type: 'reveal', cardId, choiceId}
+    let path = [], ahead = [];
+    let mode = 'play';
+    let run = 0;            // change à chaque nouvel affichage : stoppe l'écriture et le chrono en cours
     let fast = false, instant = false, writing = false;
     let timerHandle = null;
 
     const dialog = () => $('cp-dialog');
+    const step = () => path[path.length - 1];
+    const cardOf = (s) => s && story.cards.get(s.type === 'card' ? s.id : s.cardId);
+    const choiceOf = (s) => { let card = cardOf(s); return card && card.choices.find(c => c.id === s.choiceId); };
 
     /* ---------- Texte tapé comme en jeu ---------- */
 
@@ -42,7 +58,7 @@ window.CardPreview = (function () {
             if (instant) {
                 // Texte instantané : seul ce qui suit la dernière pause reste affiché, comme à la fin de l'écriture
                 let parts = text.split('‡');
-                box.innerText = parts[parts.length - 1];
+                shown = parts[parts.length - 1];
                 break;
             }
             box.innerText = shown;
@@ -65,8 +81,7 @@ window.CardPreview = (function () {
         }
         if (token !== run)
             return false;
-        if (!instant)
-            box.innerText = shown;
+        box.innerText = shown;
         writing = false;
         box.classList.remove('is-writing');
         return true;
@@ -99,22 +114,7 @@ window.CardPreview = (function () {
         }, 1000);
     }
 
-    /* ---------- Affichage ---------- */
-
-    function choiceButtons(list, onPick) {
-        let box = $('cp-choices');
-        box.innerHTML = '';
-        list.forEach((item, i) => {
-            let btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'cp-choice' + (item.missing ? ' is-missing' : '');
-            btn.innerHTML = '<span>' + esc(item.label || '(choix sans texte)') + '</span>'
-                + (item.missing ? '<small>pas encore de suite</small>' : '');
-            btn.style.animationDelay = (i * 90) + 'ms';
-            btn.addEventListener('click', () => onPick(item));
-            box.append(btn);
-        });
-    }
+    /* ---------- Petits morceaux d'affichage ---------- */
 
     function lootHtml(names) {
         return names.map(name => {
@@ -131,94 +131,235 @@ window.CardPreview = (function () {
         box.innerHTML = names.length ? '<span class="cp-loot-title"><i class="fas fa-gem"></i> Butin obtenu</span>' + lootHtml(names) : '';
     }
 
-    // Panneau MJ : infos MJ de la carte et de chaque choix, ce qui suit chaque choix
-    function renderMj(card, order) {
-        let html = '';
-        if (card) {
-            html += '<p class="cp-mj-line"><b>Carte n° ' + card.num + '</b>'
-                + (card.timer ? ' <span class="cp-tag"><i class="fas fa-stopwatch"></i> Chrono ' + TIMER_SECONDS + ' s</span>' : '')
-                + (card.shuffle ? ' <span class="cp-tag"><i class="fas fa-random"></i> Choix mélangés</span>' : '') + '</p>';
-            html += card.mjreveal ? '<p class="cp-mj-note">' + esc(card.mjreveal) + '</p>' : '<p class="cp-mj-empty">Pas d\'infos MJ sur cette carte.</p>';
-            if (card.timer)
-                html += '<p class="cp-mj-hint">Au bout du chrono, seul le dernier choix de la carte reste proposé.</p>';
-            html += '<ol class="cp-mj-choices">';
-            for (let c of order) {
-                let after = c.reveal != null ? 'Résultat' : c.next != null ? 'Carte n° ' + story.cards.get(c.next).num : 'Aucune suite';
-                html += '<li><span class="cp-mj-choice">' + esc(c.value || '(sans texte)') + '</span>'
-                    + '<span class="cp-mj-after' + (c.reveal == null && c.next == null ? ' is-missing' : '') + '"><i class="fas fa-long-arrow-alt-right"></i> ' + after + '</span>'
-                    + (c.mjreveal ? '<span class="cp-mj-note">' + esc(c.mjreveal) + '</span>' : '')
-                    + (c.loot.length ? '<span class="cp-mj-loot">' + lootHtml(c.loot) + '</span>' : '')
-                    + '</li>';
-            }
-            html += '</ol>';
-        }
-        $('cp-mj').innerHTML = html;
-    }
-
-    function renderPath() {
-        let crumbs = path.map((step, i) => {
-            let card = story.cards.get(step.cardId);
-            return '<button type="button" data-step="' + i + '"' + (i === path.length - 1 ? ' aria-current="step"' : '') + '>n° ' + (card ? card.num : '?') + '</button>';
-        });
-        $('cp-path').innerHTML = crumbs.join('<i class="fas fa-angle-right"></i>');
-        $('cp-back').disabled = path.length < 2;
-    }
-
-    function setEnd(kind, text) {
+    function setEnd(kind, html) {
         let box = $('cp-end');
         box.hidden = !kind;
         if (!kind)
             return;
         box.className = 'cp-end ' + kind;
-        box.innerHTML = text;
+        box.innerHTML = html;
     }
 
-    /* ---------- Déroulé ---------- */
+    const afterLabel = (c) => c.reveal != null ? 'Résultat' : c.next != null ? 'Carte n° ' + story.cards.get(c.next).num : 'Aucune suite';
 
-    // Joue la dernière étape du parcours
-    async function play() {
+    // Fil des étapes, liste « Aller à », boutons retour / suivant, marqueur
+    function renderNav() {
+        $('cp-path').innerHTML = path.map((s, i) => {
+            let card = cardOf(s);
+            let label = s.type === 'reveal' ? 'Résultat' : 'n° ' + (card ? card.num : '?');
+            return '<button type="button" data-step="' + i + '"' + (i === path.length - 1 ? ' aria-current="step"' : '')
+                + (card && card.marker && s.type === 'card' ? ' class="is-marked" title="' + esc(card.marker) + '"' : '') + '>' + label + '</button>';
+        }).join('<i class="fas fa-angle-right"></i>');
+        $('cp-back').disabled = path.length < 2;
+        $('cp-forward').disabled = !ahead.length;
+
+        let jump = $('cp-jump');
+        let cards = [...story.cards.values()].sort((a, b) => a.num - b.num);
+        jump.innerHTML = '<option value="">Aller à…</option>' + cards.map(c =>
+            '<option value="' + esc(c.id) + '">' + (c.marker ? '★ ' : '') + 'n° ' + c.num + ' — ' + esc(short(c.desc, 40) || '(sans texte)') + '</option>').join('');
+
+        let card = cardOf(step());
+        let mark = $('cp-mark');
+        mark.hidden = !card || step().type !== 'card';
+        if (card) {
+            mark.classList.toggle('is-on', !!card.marker);
+            mark.setAttribute('aria-pressed', !!card.marker);
+            mark.querySelector('span').textContent = card.marker ? 'Marquée' : 'Marquer';
+        }
+        let modeBtns = document.querySelectorAll('[data-mode]');
+        modeBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === mode));
+        dialog().classList.toggle('is-editing', mode === 'edit');
+    }
+
+    // Panneau MJ : infos de la carte (modifiables en mode Éditer), suite des choix, marqueurs
+    function renderMj(card, order) {
+        let html = '';
+        let edit = mode === 'edit';
+        let s = step();
+        if (card && s.type === 'card') {
+            html += '<p class="cp-mj-line"><b>Carte n° ' + card.num + '</b>'
+                + (!edit && card.timer ? ' <span class="cp-tag"><i class="fas fa-stopwatch"></i> Chrono ' + TIMER_SECONDS + ' s</span>' : '')
+                + (!edit && card.shuffle ? ' <span class="cp-tag"><i class="fas fa-random"></i> Choix mélangés</span>' : '') + '</p>';
+            if (edit) {
+                html += '<label class="cp-field">Infos MJ<textarea rows="2" data-edit="' + esc(card.id) + '" data-field="mjreveal" placeholder="facultatif">' + esc(card.mjreveal) + '</textarea></label>'
+                    + '<div class="cp-checks">'
+                    + '<label class="cp-switch"><input type="checkbox" data-flag="timer"' + (card.timer ? ' checked' : '') + '> Chrono</label>'
+                    + '<label class="cp-switch"><input type="checkbox" data-flag="shuffle"' + (card.shuffle ? ' checked' : '') + '> Choix mélangés</label></div>';
+            }
+            else {
+                html += card.mjreveal ? '<p class="cp-mj-note">' + esc(card.mjreveal) + '</p>' : '<p class="cp-mj-empty">Pas d\'infos MJ sur cette carte.</p>';
+                if (card.timer)
+                    html += '<p class="cp-mj-hint">Au bout du chrono, seul le dernier choix de la carte reste proposé.</p>';
+            }
+            if (card.marker)
+                html += '<label class="cp-field cp-marker-field"><span><i class="fas fa-bookmark"></i> Note du marqueur</span>'
+                    + '<input type="text" maxlength="80" data-edit="' + esc(card.id) + '" data-field="marker" value="' + esc(card.marker) + '"></label>';
+            html += '<ol class="cp-mj-choices">';
+            for (let c of order) {
+                html += '<li><span class="cp-mj-choice">' + esc(c.value || '(sans texte)') + '</span>'
+                    + '<span class="cp-mj-after' + (hasNext(c) ? '' : ' is-missing') + '"><i class="fas fa-long-arrow-alt-right"></i> ' + afterLabel(c) + '</span>'
+                    + (edit ? '<input type="text" class="cp-mj-input" data-edit="' + esc(c.id) + '" data-field="mjreveal" placeholder="Infos MJ du choix (facultatif)" value="' + esc(c.mjreveal) + '">'
+                        : (c.mjreveal ? '<span class="cp-mj-note">' + esc(c.mjreveal) + '</span>' : ''))
+                    + (c.loot.length ? '<span class="cp-mj-loot">' + lootHtml(c.loot) + '</span>' : '')
+                    + '</li>';
+            }
+            html += '</ol>';
+            if (edit && order.some(c => c.loot.length))
+                html += '<p class="cp-mj-hint">Le butin se modifie dans le bloc du choix.</p>';
+        }
+        else if (s && s.type === 'reveal') {
+            let choice = choiceOf(s);
+            html += '<p class="cp-mj-line"><b>Résultat</b> du choix « ' + esc(short(choice && choice.value, 40)) + ' »</p>'
+                + '<p class="cp-mj-hint">En jeu, la partie reprend ensuite avec la carte suivante du deck.</p>';
+        }
+        html += '<h3 class="cp-mj-sub"><i class="fas fa-bookmark"></i> Marqueurs</h3><div id="cp-markers">' + markersHtml() + '</div>';
+        $('cp-mj').innerHTML = html;
+    }
+
+    function markersHtml() {
+        let marked = [...story.cards.values()].filter(c => c.marker).sort((a, b) => a.num - b.num);
+        return marked.length ? '<ul class="cp-markers">' + marked.map(c =>
+            '<li><button type="button" data-jump="' + esc(c.id) + '"><b>n° ' + c.num + '</b> ' + esc(c.marker) + '</button></li>').join('') + '</ul>'
+            : '<p class="cp-mj-empty">Aucune carte marquée. « Marquer » (ou la touche M) en garde une pour y revenir.</p>';
+    }
+
+    /* ---------- Affichage d'une étape ---------- */
+
+    async function render(animate) {
         let token = ++run;
+        story = provider();
         stopTimer();
         setEnd(null);
         showLoot([]);
-        let step = path[path.length - 1];
-        let card = story.cards.get(step.cardId);
-        renderPath();
         $('cp-choices').innerHTML = '';
-        if (!card) {
+        let s = step();
+        let card = cardOf(s);
+        if (s.type === 'card' && card && !s.order) {
+            // Ordre des choix tiré une fois par étape (comme un tirage en jeu), gardé si on revient dessus
+            s.order = card.choices.map(c => c.id);
+            if (card.shuffle && mode === 'play')
+                shuffle(s.order);
+        }
+        renderNav();
+        if (!card || (s.type === 'reveal' && !choiceOf(s))) {
             $('cp-text').innerText = '';
+            $('cp-edit').hidden = true;
             renderMj(null, []);
-            return setEnd('is-warn', '<i class="fas fa-exclamation-triangle"></i> Cette carte n\'existe plus dans l\'éditeur.');
+            return setEnd('is-warn', '<i class="fas fa-exclamation-triangle"></i> Ce bloc n\'existe plus dans l\'éditeur.');
         }
-        $('cp-card-num').textContent = 'Carte n° ' + card.num;
-        // Ordre des choix : tiré une fois par étape (comme un tirage en jeu), gardé si on revient dessus
-        if (!step.order) {
-            step.order = card.choices.map((c, i) => i);
-            if (card.shuffle)
-                shuffle(step.order);
-        }
-        let order = step.order.map(i => card.choices[i]).filter(Boolean);
+        // Choix dans l'ordre tiré, puis ceux ajoutés depuis
+        let order = s.type === 'card' ? s.order.map(id => card.choices.find(c => c.id === id)).filter(Boolean)
+            .concat(card.choices.filter(c => !s.order.includes(c.id))) : [];
         renderMj(card, order);
-        if (!(await write(card.desc || '(carte sans texte)', token)))
-            return;
+        if (s.type === 'reveal')
+            return renderReveal(card, choiceOf(s), token, animate);
+        $('cp-card-num').textContent = 'Carte n° ' + card.num + (card.marker ? ' ★' : '');
+        if (mode === 'edit')
+            return renderCardEdit(card, order);
+        $('cp-edit').hidden = true;
+        $('cp-text').hidden = false;
+        if (animate) {
+            if (!(await write(card.desc || '(carte sans texte)', token)))
+                return;
+        }
+        else
+            $('cp-text').innerText = lastPart(card.desc || '(carte sans texte)');
         if (!order.length)
             return setEnd('is-warn', '<i class="fas fa-exclamation-triangle"></i> Cette carte ne propose aucun choix : en jeu, l\'histoire resterait bloquée ici.'
-                + ' <button type="button" class="cp-link" data-goto="' + card.id + '">Aller à la carte</button>');
-        let pick = (c) => choose(card, c, token);
-        let items = order.map(c => ({label: c.value, missing: c.reveal == null && c.next == null, choice: c}));
-        choiceButtons(items, (item) => pick(item.choice));
-        if (card.timer && !instantTimerOff())
+                + ' <button type="button" class="cp-link" data-mode-switch="edit">Ajouter un choix</button>');
+        playChoices(order, card, token);
+        if (card.timer && animate && !$('cp-no-timer').checked)
             startTimer(token, async () => {
                 // Comme en jeu : il ne reste que le dernier choix de la carte
-                let last = card.choices[card.choices.length - 1];
                 await hideChoices();
-                if (token !== run)
-                    return;
-                choiceButtons([{label: last.value, missing: last.reveal == null && last.next == null, choice: last}], (item) => pick(item.choice));
+                if (token === run)
+                    playChoices(card.choices.slice(-1), card, token);
             });
     }
 
-    const instantTimerOff = () => $('cp-no-timer').checked;
+    const lastPart = (t) => { let parts = String(t).split(STOP_TOKEN); return parts[parts.length - 1]; };
+
+    function playChoices(list, card, token) {
+        let box = $('cp-choices');
+        box.innerHTML = '';
+        list.forEach((c, i) => {
+            let btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'cp-choice' + (hasNext(c) ? '' : ' is-missing');
+            btn.dataset.key = i + 1;
+            btn.innerHTML = '<kbd>' + (i + 1) + '</kbd><span>' + esc(c.value || '(choix sans texte)') + '</span>'
+                + (hasNext(c) ? '' : '<small>pas encore de suite</small>');
+            btn.style.animationDelay = (i * 90) + 'ms';
+            btn.addEventListener('click', () => choose(card, c, token));
+            box.append(btn);
+        });
+    }
+
+    async function renderReveal(card, choice, token, animate) {
+        $('cp-card-num').textContent = 'Résultat';
+        if (mode === 'edit') {
+            showEditor(choice.revealId, 'reveal', choice.reveal, 'Ce qui arrive à la fin de ce choix…');
+            showLoot(choice.loot);
+            return setEnd('is-done', '<i class="fas fa-flag-checkered"></i> Fin de cette branche du lieu.');
+        }
+        $('cp-edit').hidden = true;
+        $('cp-text').hidden = false;
+        if (animate) {
+            if (!(await write(choice.reveal || '(résultat sans texte)', token)))
+                return;
+        }
+        else
+            $('cp-text').innerText = lastPart(choice.reveal || '(résultat sans texte)');
+        showLoot(choice.loot);
+        let btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cp-choice';
+        btn.dataset.key = 1;
+        btn.innerHTML = '<kbd>1</kbd><span>' + END_CHOICE + '</span>';
+        btn.addEventListener('click', () => {
+            $('cp-choices').innerHTML = '';
+            setEnd('is-done', '<i class="fas fa-flag-checkered"></i> Fin du lieu. En jeu, la partie reprendrait avec la carte suivante du deck.'
+                + ' <button type="button" class="cp-link" data-restart>Rejouer depuis le début</button>');
+        });
+        $('cp-choices').append(btn);
+    }
+
+    // Grand champ de texte à la place du texte de la carte
+    function showEditor(id, field, value, placeholder) {
+        let area = $('cp-edit');
+        $('cp-text').hidden = true;
+        area.hidden = false;
+        area.dataset.edit = id;
+        area.dataset.field = field;
+        area.placeholder = placeholder;
+        if (document.activeElement !== area || area.value !== value)
+            area.value = value;
+    }
+
+    function renderCardEdit(card, order) {
+        showEditor(card.id, 'desc', card.desc, 'Ce que découvrent les joueurs… ({....} pour une pause)');
+        let box = $('cp-choices');
+        order.forEach((c, i) => {
+            let row = document.createElement('div');
+            row.className = 'cp-choice is-edit' + (hasNext(c) ? '' : ' is-missing');
+            row.innerHTML = '<kbd>' + (i + 1) + '</kbd>'
+                + '<input type="text" maxlength="200" data-edit="' + esc(c.id) + '" data-field="choice" placeholder="Texte du choix" value="' + esc(c.value) + '">'
+                + (hasNext(c)
+                    ? '<button type="button" class="cp-go" data-go="' + i + '" title="Aller à la suite de ce choix">' + afterLabel(c) + ' <i class="fas fa-arrow-right"></i></button>'
+                    : '<span class="cp-go-new"><button type="button" data-create="next" data-choice="' + esc(c.id) + '"><i class="fas fa-plus"></i> Carte suivante</button>'
+                        + '<button type="button" data-create="reveal" data-choice="' + esc(c.id) + '"><i class="fas fa-plus"></i> Résultat</button></span>');
+            row.dataset.key = i + 1;
+            box.append(row);
+        });
+        if (card.choices.length < MAX_CHOICES) {
+            let add = document.createElement('button');
+            add.type = 'button';
+            add.className = 'cp-add-choice';
+            add.dataset.create = 'choice';
+            add.innerHTML = '<i class="fas fa-plus"></i> Ajouter un choix';
+            box.append(add);
+        }
+    }
 
     async function hideChoices() {
         let list = $('cp-choices').querySelectorAll('.cp-choice');
@@ -226,40 +367,77 @@ window.CardPreview = (function () {
         await sleep(instant ? 0 : 350 + list.length * 50);
     }
 
+    /* ---------- Déplacements ---------- */
+
+    function go(next, animate) {
+        path.push(next);
+        ahead = [];
+        render(animate);
+    }
+
     async function choose(card, choice, token) {
         if (token !== run)
             return;
+        if (!hasNext(choice))
+            return setEnd('is-warn', '<i class="fas fa-exclamation-triangle"></i> Ce choix n\'a pas encore de suite.'
+                + ' <button type="button" class="cp-link" data-mode-switch="edit">La créer ici</button>');
         stopTimer();
-        if (choice.reveal == null && choice.next == null) {
-            // Choix incomplet : on le signale sans quitter la carte
-            return setEnd('is-warn', '<i class="fas fa-exclamation-triangle"></i> Ce choix n\'a pas encore de suite (carte suivante ou résultat).'
-                + ' <button type="button" class="cp-link" data-goto="' + choice.id + '">Aller au choix</button>');
-        }
         token = ++run;
         await hideChoices();
         if (token !== run)
             return;
-        $('cp-choices').innerHTML = '';
-        setEnd(null);
-        if (choice.reveal != null) {
-            if (!(await write(choice.reveal || '(résultat sans texte)', token)))
-                return;
-            showLoot(choice.loot);
-            choiceButtons([{label: END_CHOICE}], () => {
-                run++;
-                $('cp-choices').innerHTML = '';
-                setEnd('is-done', '<i class="fas fa-flag-checkered"></i> Fin du lieu. En jeu, la partie reprendrait avec la carte suivante du deck.'
-                    + ' <button type="button" class="cp-link" data-restart>Rejouer depuis le début</button>');
-            });
-            return;
-        }
+        if (choice.reveal != null)
+            return go({type: 'reveal', cardId: card.id, choiceId: choice.id}, true);
         showLoot(choice.loot);
         if (choice.loot.length && !instant)
             await sleep(1200);
-        if (token !== run)
+        if (token === run)
+            go({type: 'card', id: choice.next}, true);
+    }
+
+    function back() {
+        if (path.length < 2)
             return;
-        path.push({cardId: choice.next});
-        play();
+        ahead.push(path.pop());
+        render(false);
+    }
+
+    function forward() {
+        if (!ahead.length)
+            return;
+        path.push(ahead.pop());
+        render(false);
+    }
+
+    function jumpTo(id) {
+        if (!story.cards.has(id))
+            return;
+        go({type: 'card', id: id}, mode === 'play');
+    }
+
+    function setMode(next) {
+        if (mode === next)
+            return;
+        mode = next;
+        let s = step();
+        if (s && s.type === 'card')
+            delete s.order;
+        render(false);
+    }
+
+    function toggleMarker() {
+        let card = cardOf(step());
+        if (!card || step().type !== 'card')
+            return;
+        story.actions.edit(card.id, 'marker', card.marker ? '' : DEFAULT_MARKER);
+        render(false);
+        if (!card.marker) {
+            let field = $('cp-mj').querySelector('[data-field="marker"]');
+            if (field) {
+                field.focus();
+                field.select();
+            }
+        }
     }
 
     function shuffle(list) {
@@ -276,11 +454,12 @@ window.CardPreview = (function () {
         provider = getStory;
         fromId = from != null ? String(from) : null;
         story = provider();
-        path = [{cardId: fromId || story.startId}];
+        path = [{type: 'card', id: fromId || story.startId}];
+        ahead = [];
         $('cp-title').textContent = story.title;
         if (!dialog().open)
             dialog().showModal();
-        play();
+        render(mode === 'play');
     }
 
     function close() {
@@ -296,30 +475,34 @@ window.CardPreview = (function () {
             return;
         d.addEventListener('close', () => { run++; stopTimer(); });
         $('cp-close').addEventListener('click', close);
-        $('cp-restart').addEventListener('click', () => {
-            if (provider)
-                open(provider, fromId);
+        $('cp-restart').addEventListener('click', () => { if (provider) open(provider, fromId); });
+        $('cp-back').addEventListener('click', back);
+        $('cp-forward').addEventListener('click', forward);
+        $('cp-mark').addEventListener('click', toggleMarker);
+        $('cp-jump').addEventListener('change', (e) => {
+            let id = e.target.value;
+            e.target.value = '';
+            if (id)
+                jumpTo(id);
         });
-        $('cp-back').addEventListener('click', () => {
-            if (path.length < 2)
-                return;
-            path.pop();
-            delete path[path.length - 1].order;
-            play();
-        });
-        $('cp-edit').addEventListener('click', () => {
-            let step = path[path.length - 1];
+        document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+        $('cp-edit-block').addEventListener('click', () => {
+            let s = step();
+            let choice = s && s.type === 'reveal' && choiceOf(s);
             close();
-            if (story && step)
-                story.goTo(step.cardId);
+            if (story && s)
+                story.goTo(choice ? choice.revealId : s.id);
         });
         $('cp-path').addEventListener('click', (e) => {
             let btn = e.target.closest('[data-step]');
             if (!btn)
                 return;
-            path = path.slice(0, parseInt(btn.dataset.step) + 1);
-            delete path[path.length - 1].order;
-            play();
+            let i = parseInt(btn.dataset.step);
+            if (i === path.length - 1)
+                return;
+            ahead = ahead.concat(path.slice(i + 1).reverse());
+            path = path.slice(0, i + 1);
+            render(false);
         });
         $('cp-instant').addEventListener('change', (e) => {
             instant = e.target.checked;
@@ -328,14 +511,100 @@ window.CardPreview = (function () {
         });
         // Clic sur la carte pendant l'écriture : le texte s'accélère (comme en jeu)
         $('cp-card').addEventListener('click', () => { if (writing) fast = true; });
-        $('cp-dialog').addEventListener('click', (e) => {
-            let go = e.target.closest('[data-goto]');
-            if (go) {
-                close();
-                story.goTo(go.dataset.goto);
+
+        // Modifications : chaque frappe part dans le bloc de l'éditeur
+        d.addEventListener('input', (e) => {
+            let f = e.target.closest('[data-edit]');
+            if (!f || !story)
+                return;
+            let value = f.value;
+            if (f.dataset.field === 'marker' && !value.trim())
+                return;     // un marqueur vide se retire avec le bouton « Marquée »
+            story.actions.edit(f.dataset.edit, f.dataset.field, value);
+            story = provider();
+            if (f.dataset.field === 'marker' || f.dataset.field === 'desc')
+                renderNav();
+            if (f.dataset.field === 'marker')
+                $('cp-markers').innerHTML = markersHtml();
+        });
+        d.addEventListener('change', (e) => {
+            let f = e.target.closest('[data-flag]');
+            let card = cardOf(step());
+            if (!f || !card)
+                return;
+            story.actions.edit(card.id, f.dataset.flag, f.checked ? 'on' : 'off');
+            render(false);
+        });
+
+        d.addEventListener('click', (e) => {
+            let t = e.target;
+            let s = step();
+            let card = cardOf(s);
+            if (t.closest('[data-restart]'))
+                return $('cp-restart').click();
+            let sw = t.closest('[data-mode-switch]');
+            if (sw)
+                return setMode(sw.dataset.modeSwitch);
+            let jump = t.closest('[data-jump]');
+            if (jump)
+                return jumpTo(jump.dataset.jump);
+            let goBtn = t.closest('[data-go]');
+            if (goBtn && card) {
+                let c = card.choices.find(x => x.id === goBtn.closest('.cp-choice').querySelector('[data-edit]').dataset.edit);
+                if (c && c.reveal != null)
+                    return go({type: 'reveal', cardId: card.id, choiceId: c.id}, false);
+                if (c && c.next != null)
+                    return go({type: 'card', id: c.next}, false);
             }
-            if (e.target.closest('[data-restart]'))
-                $('cp-restart').click();
+            let create = t.closest('[data-create]');
+            if (create && card) {
+                if (create.dataset.create === 'choice') {
+                    let id = story.actions.addChoice(card.id);
+                    render(false);
+                    let field = id != null && $('cp-choices').querySelector('[data-edit="' + CSS.escape(String(id)) + '"]');
+                    if (field)
+                        field.focus();
+                    return;
+                }
+                let choiceId = create.dataset.choice;
+                if (create.dataset.create === 'next') {
+                    let id = story.actions.addNext(choiceId);
+                    if (id != null) {
+                        story = provider();
+                        go({type: 'card', id: String(id)}, false);
+                        $('cp-edit').focus();
+                    }
+                }
+                else if (story.actions.addReveal(choiceId) != null) {
+                    story = provider();
+                    go({type: 'reveal', cardId: card.id, choiceId: choiceId}, false);
+                    $('cp-edit').focus();
+                }
+            }
+        });
+
+        // Raccourcis (hors champs de saisie) : ← → pour reculer / avancer, 1 à 3 pour les choix, M pour marquer
+        d.addEventListener('keydown', (e) => {
+            if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey)
+                return;
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                back();
+            }
+            else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                forward();
+            }
+            else if (e.key === 'm' || e.key === 'M')
+                toggleMarker();
+            else if (/^[1-3]$/.test(e.key)) {
+                let target = $('cp-choices').querySelector('[data-key="' + e.key + '"]');
+                if (!target)
+                    return;
+                let btn = target.matches('button') ? target : target.querySelector('[data-go]');
+                if (btn)
+                    btn.click();
+            }
         });
     }
 
