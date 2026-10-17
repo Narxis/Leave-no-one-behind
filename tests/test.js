@@ -27,6 +27,7 @@ async function test() {
     await test_cards_setup();
     await test_deck_generation();
     await test_roll();
+    test_ship_alerts();
 }
 
 async function setup(){
@@ -207,3 +208,31 @@ async function test_roll(){
 }
 
 module.exports = {test};
+
+// Alertes du plan du vaisseau envoyées par le MJ
+function test_ship_alerts() {
+    const shipAlerts = require("../src/controllers/shipAlerts");
+    shipAlerts.reset();
+
+    let res = shipAlerts.update({blink: ['cinema', 'inconnue', 'cinema'], showMap: true});
+    assert.deepStrictEqual(res.data.blink, ['cinema'], 'salles inconnues ou en double ignorées');
+    assert.strictEqual(res.data.showMap, true);
+
+    res = shipAlerts.update({alert: {room: 'pas-une-salle'}});
+    assert.strictEqual(res.error, true, 'alerte refusée sur une salle inconnue');
+
+    res = shipAlerts.update({alert: {room: 'salleO2', message: '  Fuite !  '}});
+    assert.strictEqual(res.data.alert.name, 'Salle O2');
+    assert.strictEqual(res.data.alert.message, 'Fuite !');
+    assert.deepStrictEqual(res.data.blink, ['cinema'], 'une alerte ne touche pas aux salles qui clignotent');
+    let firstId = res.data.alert.id;
+    assert.ok(shipAlerts.update({alert: {room: 'cockpit'}}).data.alert.id > firstId, 'chaque alerte a un nouvel identifiant');
+
+    res = shipAlerts.update({alert: null});
+    assert.strictEqual(res.data.alert, null);
+    assert.deepStrictEqual(shipAlerts.getState(), {blink: ['cinema'], showMap: true, alert: null});
+
+    shipAlerts.reset();
+    assert.deepStrictEqual(shipAlerts.getState(), {blink: [], showMap: false, alert: null});
+    console.log('ship alerts OK');
+}

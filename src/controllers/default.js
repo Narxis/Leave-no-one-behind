@@ -5,6 +5,7 @@ const {Player} = require("../models/player");
 const {Ship} = require("../models/ship");
 const combat = require("./combat");
 const allies = require("./allies");
+const shipAlerts = require("./shipAlerts");
 const inventory = require("./inventory");
 const planetGen = require("./planetGen");
 const leaderboard = require("./leaderboard");
@@ -158,7 +159,7 @@ module.exports = {
     async mjMenu(req, res) {
         let statuses = (await new Statuses().getAllStatuses(false))
             .map(s => ({slug: s.slug, name: s.name}));
-        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), loot: combat.getLootList(), statuses: statuses});
+        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), loot: combat.getLootList(), statuses: statuses, shipRooms: shipAlerts.ROOMS});
     },
 
     // Paramètres de la partie, choisis par le MJ avant la création des persos
@@ -184,6 +185,7 @@ module.exports = {
             await DB.tables.players.destroy({where: {}});
             await DB.tables.items.update({owners: ''}, {where: {}});
             allies.clear();
+            shipAlerts.reset();
         }
         await CONFIG.upsert('gameState', 'creation');
         // Bonus et malus des races (customs comprises), pour l'explication de la répartition des stats
@@ -748,6 +750,7 @@ module.exports = {
 
         let items = new Items();
         await items.hydrateDB();
+        shipAlerts.reset();
 
         res.redirect('/');
     }
