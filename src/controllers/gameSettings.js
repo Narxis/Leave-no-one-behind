@@ -17,11 +17,18 @@ const FIELDS = [
     {key: 'placeByStep', label: 'Lieux par étape', min: 0, max: 3}
 ];
 
+// Écart maximal des stats de départ du vaisseau quand l'option
+// « Vaisseau aléatoire » est cochée (0.1 = ±10 %)
+const SHIP_START_VARIATION = 0.1;
+
 // Options à cocher, hors difficulté (les préréglages n'y touchent pas).
 // Absente d'anciens réglages enregistrés : valeur par défaut
 const OPTIONS = [
     {key: 'clearStatusesAfterPlanet', label: 'Retirer les statuts après une planète', default: true,
-        hint: 'Blackout, Anticipation, Affaibli et Recherché sont remis à zéro en reprenant le voyage. Sinon ils continuent de baisser d\'un à chaque carte.'}
+        hint: 'Blackout, Anticipation, Affaibli et Recherché sont remis à zéro en reprenant le voyage. Sinon ils continuent de baisser d\'un à chaque carte.'},
+    {key: 'randomShipStats', label: 'Vaisseau aléatoire', default: false,
+        hint: 'Les modules du vaisseau démarrent à une valeur tirée au hasard entre ' + Math.round(100 * (1 - SHIP_START_VARIATION))
+            + ' et 100 % (±' + Math.round(SHIP_START_VARIATION * 100) + ' %, plafonné à 100 %) au lieu de 100 %.'}
 ];
 
 // Préréglages de difficulté. Normal reprend les valeurs de baseConf.json
@@ -126,4 +133,4 @@ const available = function () {
 
 load();
 
-module.exports = {FIELDS, OPTIONS, PRESETS, get, set, asConfig, available, presetOf};
+module.exports = {FIELDS, OPTIONS, PRESETS, SHIP_START_VARIATION, get, set, asConfig, available, presetOf};
