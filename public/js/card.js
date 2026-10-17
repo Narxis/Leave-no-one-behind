@@ -257,11 +257,15 @@ function setModuleVal(mod, newValue, left) {
 
 const addStatus = (status) => {
     // let index = statusNameList.findIndex(e => e === statusname)
-    let svg = statusSvgList[status.slug];
+    // Statut créé à la volée : icône générique
+    let svg = statusSvgList[status.slug] || statusSvgList.custom || '';
+    const esc = (text) => String(text || '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
+    // Statut d'un seul joueur : son nom à côté
+    let name = esc(status.name) + (status.player_id ? ' <span class="status-player">(' + esc(status.player_name) + ')</span>' : '');
 
-    const html = ` <div class="status-line" id="line_${status.id}">
+    const html = ` <div class="status-line" id="line_${status.id}" title="${esc(status.desc)}">
                         ${svg}
-                        <div class="status-name">${status.name}</div>
+                        <div class="status-name">${name}</div>
                         <div class="status-duration">${status.duration}</div>
                     </div>`;
     document.querySelector(".status").innerHTML += html
@@ -320,6 +324,9 @@ async function showChoices() {
             stopCountdown();
             if (choice.humans)
                 changeHumans(choice.humans);
+            // Statut donné par le choix (toute l'équipe)
+            if (choice.status && choice.status.slug)
+                wsLNOB.setStatus(choice.status.slug, choice.status.duration);
             await hideChoices();
             let loot = Array.isArray(choice.loot) ? choice.loot : [];
             if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL

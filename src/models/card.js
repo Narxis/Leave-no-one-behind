@@ -13,6 +13,17 @@ const parseLoot = function (raw) {
     }
 }
 
+// Statut donné par un choix : {slug, duration}, ou null
+const parseStatus = function (raw) {
+    try {
+        let status = raw ? JSON.parse(raw) : null;
+        return status && status.slug ? {slug: String(status.slug), duration: parseInt(status.duration) || 1} : null;
+    }
+    catch (e) {
+        return null;
+    }
+}
+
 class Card {
     id;
     type;
@@ -93,6 +104,7 @@ class Card {
                     next: this.choices[choice].next,
                     humans: this.choices[choice].humans || 0,
                     loot: Array.isArray(this.choices[choice].loot) && this.choices[choice].loot.length ? JSON.stringify(this.choices[choice].loot) : '',
+                    status: this.choices[choice].status && this.choices[choice].status.slug ? JSON.stringify(this.choices[choice].status) : '',
                 });
             }
             for (let mod in this.modules)
@@ -205,7 +217,8 @@ class Card {
         ];
         let indexPrio = 9999;
 
-        for (let status of statuses) {
+        // Seuls les statuts de toute l'équipe changent la carte
+        for (let status of statuses.filter(s => !s.player_id)) {
             let indexFound = prioStatuses.indexOf(status.slug);
             if (indexFound < indexPrio && indexFound > -1) {
                 activeStatus = status.slug;
@@ -261,7 +274,8 @@ class Card {
                 'mjreveal',
                 'next',
                 'humans',
-                'loot'
+                'loot',
+                'status'
             ],
             where: {
                 card_id: this.id
@@ -286,7 +300,8 @@ class Card {
                     mjreveal: mod.mjreveal,
                     next: mod.next,
                     humans: mod.humans,
-                    loot: parseLoot(mod.loot)
+                    loot: parseLoot(mod.loot),
+                    status: parseStatus(mod.status)
                 });
             }
             else {
@@ -324,7 +339,8 @@ class Card {
                 alt_choices.push(Object.assign({
                     next: base.next || '',
                     humans: base.humans || 0,
-                    loot: base.loot || []
+                    loot: base.loot || [],
+                    status: base.status || null
                 }, foundChoice));
             });
             if (alt_choices.length > 0)

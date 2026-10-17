@@ -64,7 +64,9 @@ const shipState = async function () {
 
 const statusList = async function () {
     let list = await new Statuses().getAllStatuses(true);
-    return list.map(s => ({slug: s.slug, name: s.name, desc: s.desc, duration: s.duration}));
+    // Statut d'un seul joueur : son nom à côté de celui du statut
+    return list.map(s => ({slug: s.slug, name: s.name + (s.player_id ? ' (' + (s.player_name || '?') + ')' : ''),
+        desc: s.desc, duration: s.duration, player: s.player_id || ''}));
 };
 
 const roleName = (slug) => (roles.find(slug) || {}).name || '';

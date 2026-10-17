@@ -18,7 +18,12 @@ async function getAllPlayers () {
     const search = document.getElementById('search-status');
     const duration = document.getElementById('duration-status');
     const list = document.getElementById('mj-statuses');
-    const known = (typeof STATUSES !== 'undefined' ? STATUSES : []);
+    const target = document.getElementById('target-status');
+    const datalist = document.getElementById('status');
+    const newName = document.getElementById('new-status-name');
+    const newDesc = document.getElementById('new-status-desc');
+    const newPlanet = document.getElementById('new-status-planet');
+    let known = (typeof STATUSES !== 'undefined' ? STATUSES : []);
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -41,44 +46,106 @@ async function getAllPlayers () {
         }
         for (let status of active) {
             let row = el('div', 'mj-status');
-            row.append(el('span', 'mj-status-name', status.name),
-                el('span', 'mj-status-duration', status.duration + (status.duration > 1 ? ' cartes' : ' carte')));
+            // Description au survol ; statut d'un seul joueur : son nom
+            row.title = status.desc || '';
+            let name = el('span', 'mj-status-name', status.name);
+            if (status.player_id)
+                name.append(el('span', 'mj-status-player', ' · ' + (status.player_name || '?')));
+            row.append(name, el('span', 'mj-status-duration', status.duration + (status.duration > 1 ? ' cartes' : ' carte')));
             let remove = el('button', 'mj-enemy-remove', '×');
             remove.type = 'button';
             remove.title = 'Retirer ' + status.name;
-            remove.addEventListener('click', () => wsLNOB.setStatus(status.slug, 0));
+            remove.addEventListener('click', () => wsLNOB.send({action: 'status', data: {name: status.slug, value: 0, player_id: status.player_id || ''}}));
             row.append(remove);
             list.append(row);
         }
+    }
+
+    // Statuts connus (ceux créés à la volée s'y ajoutent) et joueurs ciblables
+    function loadKnown() {
+        fetch('/api/statuses').then(r => r.json()).then(all => {
+            known = all;
+            datalist.innerHTML = '';
+            for (let s of all) {
+                let option = el('option', '', s.name);
+                option.value = s.slug;
+                datalist.append(option);
+            }
+        }).catch(() => {});
+        getAllPlayers().then(players => {
+            let current = target.value;
+            target.innerHTML = '';
+            target.append(new Option('Toute l\'équipe', ''));
+            for (let p of players)
+                target.append(new Option(p.name, p.discord_id));
+            if ([...target.options].some(o => o.value === current))
+                target.value = current;
+        }).catch(() => {});
     }
 
     function load() {
         fetch('/api/statuses/active').then(r => r.json()).then(render).catch(() => {});
     }
 
+    function durationValue() {
+        let value = parseInt(duration.value);
+        return isNaN(value) || value < 1 ? 1 : value;
+    }
+
+    function shake(input) {
+        input.classList.remove('shake');
+        void input.offsetWidth;
+        input.classList.add('shake');
+        input.focus();
+    }
+
+    // Nouveau statut : nom et description, appliqué avec la durée et la cible choisies
+    function create() {
+        if (!newName.value.trim())
+            return shake(newName);
+        wsLNOB.send({action: 'status-create', data: {name: newName.value.trim(), desc: newDesc.value.trim(),
+            clearAfterPlanet: newPlanet.checked, value: durationValue(), player_id: target.value}});
+        newName.value = '';
+        newDesc.value = '';
+        duration.value = '';
+    }
+
     function add() {
         let status = findStatus(search.value);
         if (!status) {
-            search.classList.remove('shake');
-            void search.offsetWidth;
-            search.classList.add('shake');
+            // Statut inconnu : on propose de le créer avec ce nom
+            if (search.value.trim()) {
+                newName.value = search.value.trim();
+                newName.closest('details').open = true;
+                search.value = '';
+                return newDesc.focus();
+            }
             search.title = 'Status inconnu : ' + known.map(s => s.slug).join(', ');
-            search.focus();
-            return;
+            return shake(search);
         }
-        let value = parseInt(duration.value);
-        wsLNOB.setStatus(status.slug, isNaN(value) || value < 1 ? 1 : value);
+        wsLNOB.send({action: 'status', data: {name: status.slug, value: durationValue(), player_id: target.value}});
         search.value = '';
         search.title = '';
         duration.value = '';
     }
 
     document.getElementById('add-status').addEventListener('click', add);
+    document.getElementById('new-status-create').addEventListener('click', create);
     search.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
     duration.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
-    document.addEventListener('status', load);
-    document.addEventListener('ws-reconnect', load);
+    newName.addEventListener('keydown', (e) => { if (e.key === 'Enter') create(); });
+    newDesc.addEventListener('keydown', (e) => { if (e.key === 'Enter') create(); });
+    document.addEventListener('status', (e) => {
+        load();
+        if (e.detail && e.detail.data && e.detail.data.created)
+            loadKnown();
+    });
+    document.addEventListener('ws-reconnect', () => { load(); loadKnown(); });
+    // Un joueur a rejoint ou changé de nom : la liste des cibles suit
+    document.addEventListener('join', loadKnown);
+    document.addEventListener('set-name', loadKnown);
     load();
+    loadKnown();
 })();
 
 // Jet à la place d'un joueur (pas de moyen de lancer, joueur AFK) : la demande

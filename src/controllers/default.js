@@ -164,8 +164,9 @@ module.exports = {
 
     async mjMenu(req, res) {
         let statuses = (await new Statuses().getAllStatuses(false))
-            .map(s => ({slug: s.slug, name: s.name}));
-        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), companions: npcs.getCompanions(), loot: combat.getLootList(), statuses: statuses, shipRooms: shipAlerts.ROOMS});
+            .map(s => ({slug: s.slug, name: s.name, desc: s.desc}));
+        res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), companions: npcs.getCompanions(), loot: combat.getLootList(), statuses: statuses, shipRooms: shipAlerts.ROOMS,
+            clearStatusesAfterPlanet: gameSettings.get().clearStatusesAfterPlanet});
     },
 
     // Paramètres de la partie, choisis par le MJ avant la création des persos

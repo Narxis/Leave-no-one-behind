@@ -1142,7 +1142,8 @@ body.mj-page {
 }
 
 .fight.shake,
-.status-search.shake {
+.status-search.shake,
+.mj-sp-name.shake {
     animation: mj-shake .35s;
 }
 
@@ -1380,6 +1381,60 @@ body.mj-page {
 .mj-status-duration {
     font-size: 13px;
     color: var(--ui-text-dim);
+}
+
+.mj-status-player {
+    font-weight: 500;
+    color: var(--ui-text-dim);
+}
+
+/* Cible des statuts hors combat et création d'un statut à la volée */
+.mj-status-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.mj-status-new {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mj-status-new[open] {
+    padding: 8px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-status-new summary {
+    font-size: 13px;
+    color: var(--ui-text-dim);
+    cursor: pointer;
+}
+
+.mj-status-new[open] summary {
+    margin-bottom: 8px;
+}
+
+.mj-status-new .mj-sp-name {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+}
+
+.mj-status-new .mj-sp-check {
+    margin-bottom: 8px;
+}
+
+.mj-status-new .mj-sp-apply {
+    display: block;
+    margin-left: auto;
 }
 
 /*---Menu MJ : tour en cours et statuts des ennemis---*/
