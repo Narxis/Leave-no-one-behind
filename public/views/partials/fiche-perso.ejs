@@ -16,6 +16,7 @@
     <div class="race-selector-container">
         <div class="select-affichage"></div>
         <div class="options-affichage">
+            <li class="race-possible race-random" title="Tire une race au hasard">🎲 Race aléatoire</li>
             <% races.forEach(function (race) { %>
                 <li class="race-possible" data-name="<%= race.slug %>"><%= race.name %></li>
             <% }); %>

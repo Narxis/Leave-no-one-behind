@@ -8,11 +8,24 @@ function setPlayerRaceListeners(discord_id) {
         clickImg.item(i).addEventListener('mouseup', function () {
             races.classList.toggle('display-options')
         })
-        let race_list = races.querySelectorAll('.race-possible');
+        let race_list = races.querySelectorAll('.race-possible:not(.race-random)');
         for (let k = 0; k < race_list.length; k++) {
             race_list.item(k).addEventListener('mouseup', setRaceSelect)
         }
+        let random = races.querySelector('.race-random');
+        if (random)
+            random.addEventListener('mouseup', function () {
+                setRaceSelect.call(this, true, randomRace(race_list));
+            });
     }
+}
+
+// Race aléatoire : une autre que celle déjà choisie, quand il y en a d'autres
+function randomRace(race_list) {
+    let all = [...race_list];
+    let others = all.filter(li => !li.classList.contains('selected'));
+    let pool = others.length ? others : all;
+    return pool.length ? pool[Math.floor(Math.random() * pool.length)].getAttribute('data-name') : null;
 }
 
 function setRaceSelect(e=null, race=null, discord_id=null) {
