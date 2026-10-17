@@ -14,6 +14,7 @@ const lobby = require("./lobby");
 const remote = require("./remote");
 const playerView = require("./playerView");
 const chat = require("./chat");
+const roles = require("./roles");
 const WebSocket = require("ws");
 
 const init = function (){
@@ -156,6 +157,9 @@ const makeAction = async function (raw_response) {
         case 'ally-remove':
             payload = allies.handle(response);
             break;
+        case 'player-role':
+            payload = actionSetRole(response);
+            break;
         default:
             payload = {
                 error: true,
@@ -253,6 +257,20 @@ const actionSetPlayerStat = async function(response) {
         error: false,
         data: player
     }
+}
+
+// Le MJ donne un rôle à un joueur ; celui qui l'avait le perd (rôle unique).
+// Un message par joueur modifié, pour que chaque page mette son onglet à jour
+const actionSetRole = async function (response) {
+    let data = response.data || {};
+    let changed = await roles.assign(data.discord_id, data.role);
+    if (!changed)
+        return {action: response.action, error: true, error_msg: 'Rôle inconnu ou joueur absent.'};
+    return changed.map(player => ({
+        action: response.action,
+        error: false,
+        data: {discord_id: player.discord_id, role: roles.publicRole(player.role)}
+    }));
 }
 
 /**
@@ -374,11 +392,15 @@ const actionRoll = async function (response) {
             error_msg: 'Player not in current game !'
         }
     }
-    let dice_result = Math.floor(Math.random() * 100) + 1;
+    // Le rôle du joueur peut ajouter des dés sur sa stat : on garde le meilleur
+    let rolled = roles.rollDice(roles.diceCount(player, response.data.stat));
+    let dice_result = rolled.kept;
     let result = await player.roll(dice_result, response.data.stat, response.data.module);
     response.data['success'] = (result >= 50);
     response.data['result'] = result;
     response.data['dice_result'] = dice_result;
+    if (rolled.dice.length > 1)
+        response.data['dice'] = rolled.dice;
     return  {
         action: response.action,
         error: false,

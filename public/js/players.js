@@ -94,6 +94,27 @@ function syncPlayerStats(e) {
 }
 
 document.addEventListener('playerStat', syncPlayerStats);
+
+// Le MJ a changé le rôle d'un joueur (fiche des persos) : logo à côté du nom
+function syncPlayerRole(e) {
+    let data = e.detail && e.detail.data;
+    let box = data && document.querySelector('#player-tab' + data.discord_id + ' .player-role');
+    if (!box)
+        return;
+    let role = data.role;
+    box.dataset.role = role ? role.slug : '';
+    box.title = role ? role.name + ' : ' + role.effect : '';
+    box.replaceChildren();
+    if (role) {
+        let img = document.createElement('img');
+        img.src = role.icon;
+        img.alt = role.name;
+        box.append(img);
+    }
+    fitPlayerName(box.closest('.player-tab'));
+}
+
+document.addEventListener('player-role', syncPlayerRole);
 document.addEventListener('emote', doPlayerEmote);
 document.addEventListener('roll', doPlayerRoll);
 
