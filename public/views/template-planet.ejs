@@ -665,6 +665,12 @@
   <script src="/js/planet-view.js"></script>
   <script src="/js/planet.js"></script>
   <script src="/js/players.js"></script>
+  <script>
+    // Onglets joueurs : la fiche (?) et le coffre s'ouvrent et se referment
+    // comme sur une carte (card.js n'est pas chargé sur la planète)
+    initialisePlayerExpander();
+    initialiseItemExpand();
+  </script>
   <script src="/js/inventory.js"></script>
   <%- include("partials/npc-tabs") %>
 
