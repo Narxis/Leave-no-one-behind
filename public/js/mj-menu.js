@@ -81,6 +81,67 @@ async function getAllPlayers () {
     load();
 })();
 
+// Jet à la place d'un joueur (pas de moyen de lancer, joueur AFK) : la demande
+// part exactement comme le /roll Discord (action « roll »), donc mêmes calculs,
+// même affichage sur l'écran de jeu et même effet en combat
+(function () {
+    const playerSelect = document.getElementById('mj-player-roll-player');
+    const statSelect = document.getElementById('mj-player-roll-stat');
+    const moduleSelect = document.getElementById('mj-player-roll-module');
+    const sendBtn = document.getElementById('mj-player-roll-send');
+    const result = document.getElementById('mj-player-roll-result');
+    let names = {};
+    let waiting = null;
+
+    function load() {
+        getAllPlayers().then(list => {
+            let current = playerSelect.value;
+            names = {};
+            playerSelect.innerHTML = '';
+            for (let p of list) {
+                names[p.discord_id] = p.name;
+                let option = document.createElement('option');
+                option.value = p.discord_id;
+                option.textContent = p.name;
+                playerSelect.append(option);
+            }
+            if (names[current] !== undefined)
+                playerSelect.value = current;
+            sendBtn.disabled = !list.length;
+            if (!list.length)
+                playerSelect.append(new Option('Aucun joueur', ''));
+        }).catch(() => {});
+    }
+
+    sendBtn.addEventListener('click', () => {
+        if (!playerSelect.value)
+            return;
+        sendBtn.disabled = true;
+        // Le bouton revient même si le serveur ne répond pas (joueur supprimé…)
+        waiting = setTimeout(() => { sendBtn.disabled = false; }, 3000);
+        wsLNOB.rollDice(playerSelect.value, statSelect.value, moduleSelect.value);
+    });
+
+    // Dernier jet reçu, qu'il vienne du MJ ou d'un joueur
+    document.addEventListener('roll', (e) => {
+        let data = e.detail.data;
+        let stat = statSelect.querySelector('option[value="' + data.stat + '"]');
+        let module = data.module ? moduleSelect.querySelector('option[value="' + data.module + '"]') : null;
+        result.className = 'mj-player-roll-result ' + (data.success ? 'success' : 'fail');
+        result.textContent = (names[data.discord_id] || 'Joueur') + ' · ' + (stat ? stat.textContent : data.stat)
+            + (module ? ' (' + module.textContent + ')' : '') + ' : dé ' + data.dice_result + ' → ';
+        let value = document.createElement('strong');
+        value.textContent = data.result + (data.success ? ' réussite' : ' échec');
+        result.append(value);
+        clearTimeout(waiting);
+        sendBtn.disabled = false;
+    });
+
+    document.addEventListener('join', load);
+    document.addEventListener('ws-reconnect', load);
+    load();
+})();
+
 function setMJCardValue(card) {
     if (!card || !Array.isArray(card.choices))
         return;

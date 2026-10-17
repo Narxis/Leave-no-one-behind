@@ -499,6 +499,20 @@ async function test_roll(){
     assert(rollSuccess(await player.roll(100, 'combat', true)));
     console.log('OK');
 
+    // Jet lancé par le MJ : chaque stat et module proposés dans le menu MJ
+    // doivent donner un résultat chiffré (pas de NaN, qui arriverait en null)
+    console.log('Testing MJ roll choices');
+    let view = fs.readFileSync(__dirname + '/../public/views/mj-menu.ejs', 'utf8');
+    const options = (id) => [...view.split('id="' + id + '"')[1].split('</select>')[0].matchAll(/value="([^"]*)"/g)].map(m => m[1]);
+    let stats = options('mj-player-roll-stat');
+    let modules = options('mj-player-roll-module');
+    assert.deepStrictEqual(stats, ['combat', 'pilotage', 'engineering', 'survival', 'recon']);
+    assert(modules.includes('') && modules.length === 7);
+    for (let stat of stats)
+        for (let module of modules)
+            assert(Number.isFinite(await player.roll(50, stat, module)), stat + ' / ' + module);
+    console.log('OK');
+
     console.log('Roll OK');
 }
 

@@ -83,6 +83,31 @@
                     <div class="mj-team" id="mj-team"></div>
                     <div class="mj-status-panel hide" id="mj-status-panel"></div>
                     <div class="mj-combat-log" id="mj-combat-log"></div>
+                    <!-- Jet à la place d'un joueur (AFK, pas de moyen de lancer) : même chemin que /roll -->
+                    <div class="mj-player-roll" id="mj-player-roll">
+                        <div class="mj-team-title">Jet pour un joueur</div>
+                        <div class="mj-player-roll-fields">
+                            <select class="add-life" id="mj-player-roll-player" title="Joueur"></select>
+                            <select class="add-life" id="mj-player-roll-stat" title="Stat">
+                                <option value="combat">Combat</option>
+                                <option value="pilotage">Pilotage</option>
+                                <option value="engineering">Ingénierie</option>
+                                <option value="survival">Survie</option>
+                                <option value="recon">Reconnaissance</option>
+                            </select>
+                            <select class="add-life" id="mj-player-roll-module" title="Module">
+                                <option value="">Sans module</option>
+                                <option value="scanner">Scanners de surface</option>
+                                <option value="proximity">Détecteurs de proximité</option>
+                                <option value="motors">Moteurs</option>
+                                <option value="oxygen">Module d'Oxygène</option>
+                                <option value="energy">Electricité</option>
+                                <option value="gravity">Gravité Artificielle</option>
+                            </select>
+                            <button type="button" class="add-life" id="mj-player-roll-send">Lancer</button>
+                        </div>
+                        <div class="mj-player-roll-result" id="mj-player-roll-result"></div>
+                    </div>
                     <div id="console-container">
                         <div class="life-change">Choix du type de roll : <br>
                             <div class="empty-for-flex"></div>
