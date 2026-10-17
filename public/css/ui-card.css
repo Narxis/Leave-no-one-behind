@@ -1058,8 +1058,8 @@ body:has(.consommable-tab.open-left) .card-legend {
 }
 
 /* Barre de vie des joueurs et compagnons (1 moral = 10 PV), sous leur nom,
-   visible seulement pendant un combat. L'onglet replié remonte un peu et
-   les stats descendent d'autant pour lui faire de la place */
+   visible seulement pendant un combat, avec les statuts en dessous. L'onglet
+   replié remonte un peu et les stats descendent d'autant pour leur faire de la place */
 .tab-hp {
     display: none;
     position: absolute;
@@ -1078,11 +1078,11 @@ body.combat-mode .tab-hp {
 }
 
 body.combat-mode .player-tab.move-up {
-    transform: translateY(363px);
+    transform: translateY(343px);
 }
 
 body.combat-mode .player-tab .player-stats {
-    margin-top: 22px;
+    margin-top: 42px;
 }
 
 .tab-hp-fill {
@@ -1113,4 +1113,24 @@ body.combat-mode .player-tab .player-stats {
 
 .tab-hp.ko .tab-hp-text {
     color: var(--ui-danger);
+}
+
+.combat-status.custom {
+    color: #b98cff;
+}
+
+/* Statuts d'un joueur ou compagnon, sous sa barre de vie */
+.tab-statuses {
+    position: absolute;
+    top: 108px;
+    left: 14px;
+    right: 14px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+.tab-statuses .combat-status {
+    flex: none;
+    font-size: 10px;
+    white-space: nowrap;
 }

@@ -19,12 +19,13 @@ const HP_PER_MORAL = 10;
 const MAX_HP = 100 * HP_PER_MORAL;
 let wounds = {};
 
-// Statuts que le MJ peut poser sur un ennemi, pour un nombre de tours.
-// Ils agissent quand le MJ passe au tour suivant
+// Statuts prêts à l'emploi que le MJ peut poser sur un ennemi, un joueur ou
+// un compagnon, pour un nombre de tours ; il peut aussi en inventer (nom,
+// dégâts par tour, empêche d'attaquer). Ils agissent au tour suivant
 const STATUSES = {
     saignement: {name: 'Saignement', damage: [1, 4]},
     poison: {name: 'Poison', damage: [3, 3]},
-    etourdi: {name: 'Étourdi'}
+    etourdi: {name: 'Étourdi', stun: true}
 };
 const MAX_STATUS_TURNS = 9;
 
@@ -33,7 +34,8 @@ const MAX_STATUS_TURNS = 9;
 // pending : attaque désignée par le MJ, en attente du /roll Combat du joueur
 // lootRevealed : tous les ennemis sont K.O., leur butin est montré aux joueurs
 // turn : numéro du tour, avancé par le MJ (les statuts agissent à chaque tour)
-let state = {active: false, enemies: [], log: [], pending: null, lootRevealed: false, turn: 1};
+// fighters : statuts des joueurs et compagnons, par id
+let state = {active: false, enemies: [], log: [], pending: null, lootRevealed: false, turn: 1, fighters: {}};
 let nextId = 1;
 
 const rollRange = ([min, max]) => min + Math.floor(Math.random() * (max - min + 1));
@@ -106,7 +108,7 @@ const findEnemy = function (id) {
 
 const start = function (data) {
     let enemies = (data.enemies || []).map(makeEnemy);
-    state = {active: true, enemies: enemies, log: [], pending: null, lootRevealed: false, turn: 1};
+    state = {active: true, enemies: enemies, log: [], pending: null, lootRevealed: false, turn: 1, fighters: {}};
     return addLog({type: 'start'});
 }
 
@@ -129,47 +131,128 @@ const allyJoined = function (name) {
         event: addLog({type: 'reinforcement', name: name, ally: true})}};
 }
 
-// Le MJ pose (ou retire, avec 0 tour) un statut sur un ennemi
-const setStatus = function (data) {
-    let enemy = findEnemy(data.enemy_id);
-    let status = STATUSES[data.status];
-    if (!state.active || !enemy || !status || enemy.hp <= 0)
+// Statuts d'un combattant : ennemi (dans sa fiche) ou joueur / compagnon
+// (state.fighters, par id : discord_id ou « npc<id> »). Chaque statut :
+// {name, turns, damage: [min, max] ou null, stun: ne peut pas attaquer}
+const statusesOf = function (data, create = false) {
+    if (data.enemy_id !== undefined) {
+        let enemy = findEnemy(data.enemy_id);
+        return enemy && enemy.hp > 0 ? enemy.statuses : null;
+    }
+    let id = data.ally_id !== undefined ? 'npc' + toInt(data.ally_id, -1) : (data.discord_id ? String(data.discord_id) : null);
+    if (!id)
         return null;
-    let turns = clamp(toInt(data.turns, 3), 0, MAX_STATUS_TURNS);
-    if (turns > 0)
-        enemy.statuses[data.status] = turns;
-    else
-        delete enemy.statuses[data.status];
-    return addLog({type: 'status', enemy_id: enemy.id, enemy: enemy.name, status: data.status, name: status.name, turns: turns});
+    if (!state.fighters[id] && create)
+        state.fighters[id] = {};
+    return state.fighters[id] || null;
 }
 
-// Tour suivant : saignement et poison blessent, puis chaque statut perd un tour
-const nextTurn = function () {
+const isStunned = (statuses) => Object.values(statuses || {}).some(s => s.stun);
+
+const slugify = (name) => name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+// Le MJ pose un statut (connu ou personnalisé) sur un ennemi, un joueur ou
+// un compagnon, ou le retire avec 0 tour
+const setStatus = async function (data) {
+    if (!state.active)
+        return null;
+    let target = data.target || {};
+    let name, label;
+    if (target.enemy_id !== undefined) {
+        let enemy = findEnemy(target.enemy_id);
+        if (!enemy || enemy.hp <= 0)
+            return null;
+        name = enemy.name;
+    }
+    else {
+        let fighter = await findFighter(target);
+        if (!fighter)
+            return null;
+        name = fighter.name;
+    }
+    let statuses = statusesOf(target, true);
+    let turns = clamp(toInt(data.turns, 3), 0, MAX_STATUS_TURNS);
+    let key, status;
+    if (STATUSES[data.status]) {
+        key = data.status;
+        let base = STATUSES[key];
+        status = {name: base.name, damage: base.damage || null, stun: !!base.stun};
+    }
+    else {
+        label = String(data.name || '').trim().slice(0, 30);
+        if (!label)
+            return null;
+        key = data.status && statuses[data.status] ? data.status : 'c-' + slugify(label);
+        let damage = clamp(toInt(data.damage, 0), 0, 99);
+        status = {name: label, damage: damage > 0 ? [damage, damage] : null, stun: !!data.stun, custom: true};
+    }
+    if (turns > 0)
+        statuses[key] = Object.assign(status, {turns: turns});
+    else {
+        status = statuses[key] || status;
+        delete statuses[key];
+    }
+    return addLog(Object.assign({type: 'status-change', target: name, status: key, name: status.name, turns: turns,
+        npc_target: target.ally_id !== undefined}, target));
+}
+
+// Tour suivant : les statuts qui blessent agissent (ennemis, joueurs et
+// compagnons), puis chaque statut perd un tour
+const nextTurn = async function () {
     if (!state.active)
         return null;
     let ticks = [];
+    let extra = [];
+    const tick = function (statuses, hurt) {
+        let total = 0;
+        for (let key of Object.keys(statuses)) {
+            let status = statuses[key];
+            if (status.damage) {
+                let damage = rollRange(status.damage);
+                total += damage;
+                ticks.push(Object.assign({status: key, name: status.name, damage: damage}, hurt));
+            }
+            if (--status.turns <= 0)
+                delete statuses[key];
+        }
+        return total;
+    };
     for (let enemy of state.enemies) {
         if (enemy.hp <= 0) {
             enemy.statuses = {};
             continue;
         }
-        for (let slug of Object.keys(enemy.statuses)) {
-            let status = STATUSES[slug];
-            if (status.damage && enemy.hp > 0) {
-                let damage = Math.min(enemy.hp, rollRange(status.damage));
-                enemy.hp -= damage;
-                ticks.push({enemy_id: enemy.id, enemy: enemy.name, status: slug, name: status.name, damage: damage, ko: enemy.hp === 0});
+        let damage = tick(enemy.statuses, {enemy_id: enemy.id, target: enemy.name});
+        if (damage) {
+            enemy.hp = Math.max(0, enemy.hp - damage);
+            if (enemy.hp === 0) {
+                enemy.statuses = {};
+                ticks[ticks.length - 1].ko = true;
             }
-            if (--enemy.statuses[slug] <= 0)
-                delete enemy.statuses[slug];
         }
-        if (enemy.hp <= 0)
-            enemy.statuses = {};
+    }
+    for (let id of Object.keys(state.fighters)) {
+        let target = id.startsWith('npc') ? {ally_id: toInt(id.slice(3), -1)} : {discord_id: id};
+        let fighter = await findFighter(target);
+        if (!fighter) {
+            delete state.fighters[id];
+            continue;
+        }
+        let damage = tick(state.fighters[id], Object.assign({target_id: id, target: fighter.name, npc_target: !!fighter.ally}));
+        if (damage) {
+            let hp = hpOf(fighter) - damage;
+            extra = extra.concat(await setFighterHp(fighter, hp));
+            if (hp <= 0) {
+                state.fighters[id] = {};
+                ticks[ticks.length - 1].ko = true;
+            }
+        }
     }
     state.turn++;
     let entry = addLog({type: 'turn', turn: state.turn, ticks: ticks});
     checkVictory();
-    return entry;
+    return {entry: entry, extra: extra};
 }
 
 const end = function () {
@@ -233,7 +316,8 @@ const target = async function (data) {
     if (!state.active || !enemy || enemy.hp <= 0)
         return null;
     let player = await new Player().getData(data.discord_id);
-    if (!player)
+    // Un joueur étourdi (ou sous un statut qui empêche d'attaquer) passe son tour
+    if (!player || isStunned(state.fighters[String(player.discord_id)]))
         return null;
     state.pending = {enemy_id: enemy.id, enemy: enemy.name, discord_id: player.discord_id, player: player.name};
     return addLog(Object.assign({type: 'target'}, state.pending));
@@ -295,7 +379,7 @@ const resolveRoll = function (roll) {
 const allyAttack = function (data) {
     let enemy = findEnemy(data.enemy_id);
     let ally = allies.findAlly(data.ally_id);
-    if (!state.active || !enemy || enemy.hp <= 0 || !ally)
+    if (!state.active || !enemy || enemy.hp <= 0 || !ally || isStunned(state.fighters['npc' + ally.id]))
         return null;
     state.pending = null;
     let roll = Object.assign({discord_id: 'npc' + ally.id, stat: 'combat', module: ''}, allies.roll(ally, 'combat'));
@@ -311,7 +395,7 @@ const allyAttack = function (data) {
 const enemyAttack = async function (data) {
     let enemy = findEnemy(data.enemy_id);
     // Un ennemi étourdi ne peut pas attaquer
-    if (!enemy || enemy.hp <= 0 || (enemy.statuses && enemy.statuses.etourdi))
+    if (!enemy || enemy.hp <= 0 || isStunned(enemy.statuses))
         return null;
     let target = {};
     if (data.ally_id !== undefined) {
