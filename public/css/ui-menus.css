@@ -1673,6 +1673,87 @@ body.mj-page {
     pointer-events: none;
 }
 
+/*---Menu MJ : jet d'un choix en attente (page de jeu en pause)---*/
+.mj-card-roll {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0 12px 16px;
+    padding: 12px 14px;
+    border: 1px solid var(--ui-accent);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-accent-soft);
+    box-shadow: var(--ui-glow-accent);
+    font-size: 14px;
+}
+
+.mj-card-roll[hidden] {
+    display: none;
+}
+
+.mj-card-roll-title {
+    color: var(--ui-accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.mj-card-roll-issues {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.mj-card-roll-issue {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    white-space: pre-line;
+    color: var(--ui-text-dim);
+}
+
+.mj-card-roll-issue.success b {
+    color: #7be26b;
+}
+
+.mj-card-roll-issue.failure b {
+    color: var(--ui-danger);
+}
+
+.mj-card-roll-last {
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.mj-card-roll-last:empty {
+    display: none;
+}
+
+.mj-card-roll-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 6px;
+}
+
+.mj-page .mj-card-roll-btns .add-life {
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.mj-page .mj-card-roll-btns .success.suggested {
+    border-color: #7be26b;
+    color: #7be26b;
+}
+
+.mj-page .mj-card-roll-btns .failure.suggested {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
 .mj-player-roll-result {
     font-size: 13px;
     color: var(--ui-text-dim);

@@ -160,6 +160,11 @@ class DB {
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
+            },
+            roll: { // jet du choix : JSON {stat, success, failure} (suites selon le résultat)
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
             }
         });
 
@@ -494,7 +499,7 @@ class DB {
 
         // Colonnes ajoutées après coup : on les crée dans une base existante
         // plutôt que d'incrémenter DB_VERSION (qui repartirait d'une base vide)
-        await this.addMissingColumns('card_modules', ['humans', 'loot', 'status']);
+        await this.addMissingColumns('card_modules', ['humans', 'loot', 'status', 'roll']);
         await this.addMissingColumns('players', ['role']);
         await this.addMissingColumns('statuses', ['player_id', 'custom', 'clear_after_planet']);
     }
