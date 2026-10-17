@@ -56,7 +56,18 @@ window.CardPreview = (function () {
         'module-bdd': 'Module sans bases de données',
         'module-h-bdd': 'Module sans cryopods ni bases de données',
         'stats': 'Compétence',
-        'pub': 'Nom de pub'
+        'pub': 'Nom de pub',
+        'objet': 'Objet',
+        'livre': 'Livre',
+        'film': 'Film',
+        'boisson': 'Boisson',
+        'bouteille': 'Bouteille',
+        'lieu': 'Lieu',
+        'pnj': 'Personnage (métier)',
+        'personnage': 'Personnage connu',
+        'organisation': 'Organisation',
+        'bande': 'Groupe hostile',
+        'systeme': 'Système stellaire'
     };
     const varsOf = () => (window.lang && window.lang.card_vars) || {};
     const parseVar = (token) => {
