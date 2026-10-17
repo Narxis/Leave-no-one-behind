@@ -13,6 +13,7 @@
 //                       choices: [{id, value, mjreveal, loot, reveal, revealId, next, roll}]}
 //             roll : null, ou {stat, success, failure} pour un choix à jet, chaque
 //             suite étant {reveal, revealId, next} (reveal et next du choix à null)
+//             outcomes : null, ou [{weight, reveal, revealId, next}] (issues au hasard)
 //   goTo    : appelé avec l'id d'un bloc pour y aller dans l'éditeur
 //   actions : edit(id, champ, valeur), addChoice(carteId), addNext(choixId, sortie), addReveal(choixId, sortie)
 //             (renvoient l'id du bloc créé ; sortie : 'output_2' pour la suite « échec » d'un jet)
@@ -30,9 +31,27 @@ window.CardPreview = (function () {
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     const short = (t, n) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n) + '…' : t; };
     const suiteOk = (x) => !!x && (x.reveal != null || x.next != null);
-    const hasNext = (c) => c.roll ? suiteOk(c.roll.success) && suiteOk(c.roll.failure) : suiteOk(c);
+    const hasNext = (c) => c.outcomes ? c.outcomes.every(suiteOk) : c.roll ? suiteOk(c.roll.success) && suiteOk(c.roll.failure) : suiteOk(c);
     const ISSUES = {success: 'réussite', failure: 'échec'};
-    const ISSUE_OUTPUT = {success: 'output_1', failure: 'output_2'};
+    // Issue d'une étape : 'success' / 'failure' (jet) ou 'o0', 'o1'… (issue au hasard)
+    const outcomeIndex = (issue) => /^o\d+$/.test(issue || '') ? parseInt(issue.slice(1)) : -1;
+    const issueName = (issue) => ISSUES[issue] || 'issue ' + (outcomeIndex(issue) + 1);
+    const issueOutput = (issue) => issue === 'failure' ? 'output_2' : 'output_' + (Math.max(outcomeIndex(issue), 0) + 1);
+    const chances = (list) => {
+        let total = list.reduce((a, o) => a + o.weight, 0);
+        return list.map(o => total > 0 ? Math.round(100 * o.weight / total) : Math.round(100 / list.length));
+    };
+    // Tirage pondéré, comme en jeu (src/models/card.js, drawOutcome)
+    function drawOutcome(list) {
+        let total = list.reduce((a, o) => a + o.weight, 0);
+        if (!(total > 0))
+            return Math.floor(Math.random() * list.length);
+        let r = Math.random() * total;
+        for (let i = 0; i < list.length; i++)
+            if ((r -= list[i].weight) < 0)
+                return i;
+        return list.length - 1;
+    }
     const ROLL_TITLES = {combat: 'Jet de combat', pilotage: 'Jet de pilotage', engineering: 'Jet d\'ingénierie', survival: 'Jet de survie', recon: 'Jet de reconnaissance'};
     const rollLabel = (roll) => ROLL_TITLES[roll.stat] || 'Jet';
 
@@ -51,7 +70,8 @@ window.CardPreview = (function () {
     const cardOf = (s) => s && story.cards.get(s.type === 'card' ? s.id : s.cardId);
     const choiceOf = (s) => { let card = cardOf(s); return card && card.choices.find(c => c.id === s.choiceId); };
     // Suite affichée par une étape « résultat » : celle du choix, ou du jet
-    const suiteOf = (choice, issue) => choice && (issue && choice.roll ? choice.roll[issue] : choice);
+    const suiteOf = (choice, issue) => choice && (outcomeIndex(issue) >= 0 ? (choice.outcomes || [])[outcomeIndex(issue)]
+        : issue && choice.roll ? choice.roll[issue] : choice);
 
     /* ---------- Variables de texte : [article_type_numéro] ---------- */
 
@@ -234,13 +254,14 @@ window.CardPreview = (function () {
     }
 
     const suiteLabel = (x) => !x ? 'Aucune suite' : x.reveal != null ? 'Résultat' : x.next != null ? 'Carte n° ' + story.cards.get(x.next).num : 'Aucune suite';
-    const afterLabel = (c) => c.roll ? rollLabel(c.roll) + ' : réussite → ' + suiteLabel(c.roll.success) + ', échec → ' + suiteLabel(c.roll.failure) : suiteLabel(c);
+    const afterLabel = (c) => c.outcomes ? 'Au hasard : ' + chances(c.outcomes).map((pct, k) => (k + 1) + ' (' + pct + ' %) → ' + suiteLabel(c.outcomes[k])).join(', ')
+        : c.roll ? rollLabel(c.roll) + ' : réussite → ' + suiteLabel(c.roll.success) + ', échec → ' + suiteLabel(c.roll.failure) : suiteLabel(c);
 
     // Fil des étapes, liste « Aller à », boutons retour / suivant, marqueur
     function renderNav() {
         $('cp-path').innerHTML = path.map((s, i) => {
             let card = cardOf(s);
-            let label = s.type === 'reveal' ? 'Résultat' + (s.issue ? ' (' + ISSUES[s.issue] + ')' : '') : 'n° ' + (card ? card.num : '?');
+            let label = s.type === 'reveal' ? 'Résultat' + (s.issue ? ' (' + issueName(s.issue) + ')' : '') : 'n° ' + (card ? card.num : '?');
             return '<button type="button" data-step="' + i + '"' + (i === path.length - 1 ? ' aria-current="step"' : '')
                 + (card && card.marker && s.type === 'card' ? ' class="is-marked" title="' + esc(card.marker) + '"' : '') + '>' + label + '</button>';
         }).join('<i class="fas fa-angle-right"></i>');
@@ -303,7 +324,9 @@ window.CardPreview = (function () {
         }
         else if (s && s.type === 'reveal') {
             let choice = choiceOf(s);
-            html += '<p class="cp-mj-line"><b>Résultat</b>' + (s.issue ? ' (jet ' + (s.issue === 'success' ? 'réussi' : 'raté') + ')' : '') + ' du choix « ' + esc(short(choice && choice.value, 40)) + ' »</p>'
+            let how = !s.issue ? '' : outcomeIndex(s.issue) >= 0 ? ' (issue ' + (outcomeIndex(s.issue) + 1) + ' sur ' + ((choice && choice.outcomes) || []).length + ', tirée au hasard)'
+                : ' (jet ' + (s.issue === 'success' ? 'réussi' : 'raté') + ')';
+            html += '<p class="cp-mj-line"><b>Résultat</b>' + how + ' du choix « ' + esc(short(choice && choice.value, 40)) + ' »</p>'
                 + '<p class="cp-mj-hint">En jeu, la partie reprend ensuite avec la carte suivante du deck.</p>';
         }
         html += varsHtml(card, order);
@@ -410,7 +433,7 @@ window.CardPreview = (function () {
     }
 
     async function renderReveal(card, choice, suite, token, animate) {
-        $('cp-card-num').textContent = 'Résultat' + (step().issue ? ' (' + ISSUES[step().issue] + ')' : '');
+        $('cp-card-num').textContent = 'Résultat' + (step().issue ? ' (' + issueName(step().issue) + ')' : '');
         if (mode === 'edit') {
             showEditor(suite.revealId, 'reveal', suite.reveal, 'Ce qui arrive à la fin de ce choix…');
             showLoot(choice.loot);
@@ -459,7 +482,9 @@ window.CardPreview = (function () {
             // Suite (ou, pour un jet, suite « réussite » et suite « échec ») : y aller, ou la créer
             let suiteHtml = (x, issue) => {
                 let tag = issue ? ' data-issue="' + issue + '"' : '';
-                let label = issue ? '<b class="cp-issue is-' + issue + '">' + (issue === 'success' ? 'Réussite' : 'Échec') + '</b> ' : '';
+                let label = !issue ? '' : outcomeIndex(issue) >= 0
+                    ? '<b class="cp-issue is-outcome">Issue ' + (outcomeIndex(issue) + 1) + ' · ' + chances(c.outcomes)[outcomeIndex(issue)] + ' %</b> '
+                    : '<b class="cp-issue is-' + issue + '">' + (issue === 'success' ? 'Réussite' : 'Échec') + '</b> ';
                 return suiteOk(x)
                     ? '<button type="button" class="cp-go" data-go="' + i + '"' + tag + ' title="Aller à cette suite">' + label + suiteLabel(x) + ' <i class="fas fa-arrow-right"></i></button>'
                     : '<span class="cp-go-new">' + label + '<button type="button" data-create="next" data-choice="' + esc(c.id) + '"' + tag + '><i class="fas fa-plus"></i> Carte suivante</button>'
@@ -467,7 +492,8 @@ window.CardPreview = (function () {
             };
             row.innerHTML = '<kbd>' + (i + 1) + '</kbd>'
                 + '<input type="text" maxlength="200" data-edit="' + esc(c.id) + '" data-field="choice" placeholder="Texte du choix" value="' + esc(c.value) + '">'
-                + (c.roll ? '<span class="cp-roll-suites">' + suiteHtml(c.roll.success, 'success') + suiteHtml(c.roll.failure, 'failure') + '</span>' : suiteHtml(c));
+                + (c.outcomes ? '<span class="cp-roll-suites">' + c.outcomes.map((o, k) => suiteHtml(o, 'o' + k)).join('') + '</span>'
+                    : c.roll ? '<span class="cp-roll-suites">' + suiteHtml(c.roll.success, 'success') + suiteHtml(c.roll.failure, 'failure') + '</span>' : suiteHtml(c));
             row.dataset.key = i + 1;
             box.append(row);
         });
@@ -514,6 +540,11 @@ window.CardPreview = (function () {
         await hideChoices();
         if (token !== run)
             return;
+        if (choice.outcomes) {
+            // Issue tirée au hasard selon les poids, comme en jeu
+            let k = drawOutcome(choice.outcomes);
+            return follow(card, choice, 'o' + k, choice.outcomes[k], token);
+        }
         follow(card, choice, null, choice, token);
     }
 
@@ -804,7 +835,7 @@ window.CardPreview = (function () {
                 }
                 let choiceId = create.dataset.choice;
                 let issue = create.dataset.issue || null;
-                let output = issue ? ISSUE_OUTPUT[issue] : 'output_1';
+                let output = issueOutput(issue);
                 if (create.dataset.create === 'next') {
                     let id = story.actions.addNext(choiceId, output);
                     if (id != null) {

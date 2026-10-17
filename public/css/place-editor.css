@@ -606,9 +606,109 @@
     color: var(--ui-danger);
 }
 
-.place-editor-page .drawflow .drawflow-node.is-roll .outputs .output {
+/* Issues au hasard : une sortie numérotée par issue, avec son poids */
+.pe-random-btn {
+    width: 100%;
+    padding: 5px 6px;
+    border: 1px solid var(--ui-border);
+    border-radius: 7px;
+    background: none;
+    color: var(--ui-text-dim);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.pe-random-btn[aria-pressed="true"] {
+    border-color: var(--pe-type);
+    background: rgb(79 216 224 / 12%);
+    color: var(--pe-type);
+}
+
+.pe-random-btn:disabled,
+.pe-node .pe-roll select:disabled {
+    opacity: .35;
+    cursor: default;
+}
+
+.pe-suites {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.drawflow-node.is-random .pe-adds-label {
+    display: flex;
+}
+
+.pe-adds-label.is-random {
+    white-space: nowrap;
+    align-items: center;
+    gap: 6px;
+    color: var(--pe-type);
+}
+
+.pe-adds-label.is-random label {
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+}
+
+.pe-node .pe-adds-label input[type="number"] {
+    width: 44px;
+    padding: 2px 4px;
+    border: 1px solid var(--ui-border);
+    border-radius: 5px;
+    background: rgb(0 0 0 / 32%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 12px;
+}
+
+.pe-chance {
+    min-width: 34px;
+    text-align: right;
+    color: var(--ui-text-dim);
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+.pe-outcome-del {
+    border: none;
+    background: none;
+    color: var(--ui-text-dim);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.pe-outcome-del:hover {
+    color: var(--ui-danger);
+}
+
+.place-editor-page .drawflow .drawflow-node.is-roll .outputs .output,
+.place-editor-page .drawflow .drawflow-node.is-random .outputs .output {
     position: relative;
 }
+
+.place-editor-page .drawflow .drawflow-node.is-random .outputs .output::after {
+    position: absolute;
+    left: 20px;
+    top: -1px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--pe-type);
+    pointer-events: none;
+}
+
+.place-editor-page .drawflow .drawflow-node.is-random .outputs .output_1::after { content: '1'; }
+.place-editor-page .drawflow .drawflow-node.is-random .outputs .output_2::after { content: '2'; }
+.place-editor-page .drawflow .drawflow-node.is-random .outputs .output_3::after { content: '3'; }
+.place-editor-page .drawflow .drawflow-node.is-random .outputs .output_4::after { content: '4'; }
 
 .place-editor-page .drawflow .drawflow-node.is-roll .outputs .output::after {
     position: absolute;

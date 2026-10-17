@@ -787,8 +787,18 @@
       "choices": [
         {
           "value": "Récupérer le cargo et l'ouvrir",
-          "reveal": "\n\u00a0 Vous ouvrez le conteneur et un système de défense se déclenche, des araignées mycophiles en sortent. Au fond du conteneur, vous apercevez un drone.",
-          "mjreveal": "  Perte de moral et donne un drone"
+          "outcomes": [
+            {
+              "weight": 3,
+              "reveal": "\n\u00a0 Vous ouvrez le conteneur et un système de défense se déclenche, des araignées mycophiles en sortent. Au fond du conteneur, vous apercevez un drone.",
+              "mjreveal": "  Perte de moral et donne un drone"
+            },
+            {
+              "weight": 1,
+              "reveal": "\n\u00a0 Vous ouvrez le conteneur : il est rempli de caisses d'outils encore emballées. Personne ne semble les réclamer.",
+              "loot": ["Outils"]
+            }
+          ]
         },
         {
           "value": "Récupérer le cargo et appeler le propriétaire",

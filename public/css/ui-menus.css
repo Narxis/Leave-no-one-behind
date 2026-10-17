@@ -1673,6 +1673,12 @@ body.mj-page {
     pointer-events: none;
 }
 
+/*---Menu MJ : issue tirée au hasard pour un choix---*/
+.mj-outcome {
+    color: var(--ui-accent);
+    font-weight: 600;
+}
+
 /*---Menu MJ : jet d'un choix en attente (page de jeu en pause)---*/
 .mj-card-roll {
     display: flex;

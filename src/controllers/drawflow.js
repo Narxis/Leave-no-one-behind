@@ -24,9 +24,10 @@ module.exports = {
         var i, result = [];
 
         for (i in card.choices) {
-            // Choix à jet : on suit les cartes de ses deux suites (réussite, échec)
-            if (card.choices[i].roll) {
-                for (let issue of [card.choices[i].roll.success, card.choices[i].roll.failure]) {
+            // Choix à jet ou à issues au hasard : on suit les cartes de toutes ses suites
+            if (card.choices[i].roll || card.choices[i].outcomes) {
+                let issues = this.suitesOf(card.choices[i]).flatMap(s => s.issue.roll ? [s.issue.roll.success, s.issue.roll.failure] : [s.issue]);
+                for (let issue of issues) {
                     let nextCard = issue.next && await DB.tables.cards.findOne({attributes: ['id'], where: { name:issue.next }});
                     if (nextCard)
                         result = result.concat(await this.searchAll(await new Card(nextCard.id).getData()));
@@ -158,6 +159,9 @@ module.exports = {
     },
     // Suites d'un choix : la sienne, ou réussite (output_1) et échec (output_2) d'un jet
     suitesOf (choice) {
+        // Issues au hasard : une sortie chacune (le jet d'une issue n'est pas représenté)
+        if (choice.outcomes)
+            return choice.outcomes.map((o, k) => ({issue: o, suffix: '_o' + k}));
         if (choice.roll)
             return [{issue: choice.roll.success, suffix: '_s'}, {issue: choice.roll.failure, suffix: '_f'}];
         return [{issue: choice, suffix: ''}];
@@ -186,7 +190,9 @@ module.exports = {
         });
 
         let data = {"choice": dat.choices[index].value};
-        if (dat.choices[index].roll)
+        if (dat.choices[index].outcomes)
+            data.random = JSON.stringify(dat.choices[index].outcomes.map(o => o.weight));
+        else if (dat.choices[index].roll)
             data.roll = dat.choices[index].roll.stat || 'pilotage';
 
         return {

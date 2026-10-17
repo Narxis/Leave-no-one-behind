@@ -249,7 +249,10 @@ function setMJCardValue(card) {
         // Butin du choix : distribué sur la page de jeu avant la suite
         let loot = Array.isArray(choice.loot) && choice.loot.length
             ? '<br><br><span class="mj-loot">Butin : ' + choice.loot.map(n => String(n).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]))).join(', ') + '</span>' : '';
-        document.querySelector('#choice' + i + ' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + (choice.roll ? rollIssuesHtml(choice.roll) : (choice.reveal || '')) + loot;
+        // Issues au hasard : celle tirée pour cette carte est déjà la suite du choix
+        let drawn = Array.isArray(choice.outcomes)
+            ? '<span class="mj-outcome">Issue tirée au hasard : ' + (choice.outcome + 1) + ' sur ' + choice.outcomes.length + '</span><br>' : '';
+        document.querySelector('#choice' + i + ' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + drawn + (choice.roll ? rollIssuesHtml(choice.roll) : (choice.reveal || (choice.next ? 'Carte suivante (' + escMj(choice.next) + ')' : ''))) + loot;
     });
 }
 
