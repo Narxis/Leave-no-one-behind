@@ -86,7 +86,7 @@
                 return e;
             };
             const num = (v) => Number(v || 0).toLocaleString('fr-FR');
-            const race = (r) => r ? r.charAt(0).toUpperCase() + r.slice(1).replace('_', '-') : '';
+            const race = (r) => r ? r.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-') : '';
             const duration = (ms) => {
                 if (!ms || ms < 0)
                     return '—';

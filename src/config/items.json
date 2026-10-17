@@ -28,11 +28,11 @@
       "image": "kev-lar.png"
     },
     {
-      "name": "Pelotte de laine",
+      "name": "Pelote de laine",
       "slug": "pelotte",
       "type": "consommable",
       "rarity": "commun",
-      "desc": "Offir une pelotte de laine à un Nek lui remonte le moral.",
+      "desc": "Offrir une pelote de laine à un Nek lui remonte le moral.",
       "race": "sylv",
       "image": "pelotte.png"
     },
@@ -55,11 +55,11 @@
       "image": "fouetygrl.png"
     },
     {
-      "name": "Shrymp utility Kit",
+      "name": "Shrymp Utility Kit",
       "slug": "shrymp-kit",
       "type": "outil",
       "rarity": "commun",
-      "desc": "Le shrymp utility campement kit contient de nombreux ustensiles",
+      "desc": "Le Shrymp Utility Kit (kit de campement) contient de nombreux ustensiles",
       "race": "shrymp",
       "image": ""
     },
@@ -68,7 +68,7 @@
       "slug": "corde",
       "type": "outil",
       "rarity": "commun",
-      "desc": "Une corde dans le Shrymp Kit",
+      "desc": "Une corde dans le Shrymp Utility Kit",
       "race": "shrymp",
       "image": "corde.png"
     },
@@ -77,16 +77,16 @@
       "slug": "lampe-torche",
       "type": "outil",
       "rarity": "commun",
-      "desc": "Une lampe torche dans le Shrymp Kit",
+      "desc": "Une lampe torche dans le Shrymp Utility Kit",
       "race": "shrymp",
       "image": "flashlight.png"
     },
     {
-      "name": "Nourriture déshydraté",
+      "name": "Nourriture déshydratée",
       "slug": "nourriture-deshydrate",
       "type": "consommable",
       "rarity": "commun",
-      "desc": "De la nourriture déshydraté",
+      "desc": "De la nourriture déshydratée",
       "race": "shrymp",
       "image": "desfood.png"
     },
@@ -100,7 +100,7 @@
       "image": "dictionnaire.png"
     },
     {
-      "name": "Mèche Ygrl",
+      "name": "Mèche d'Ygrl",
       "slug": "meche-ygrl",
       "type": "divers",
       "rarity": "commun",
@@ -145,7 +145,7 @@
       "image": "boule-fnek.png"
     },
     {
-      "name": "Paquet de shrips",
+      "name": "Paquet de Shrips",
       "slug": "paquet-shrimps",
       "type": "consommable",
       "rarity": "commun",
@@ -212,12 +212,12 @@
       "slug": "projectile-nek-feu",
       "type": "arme",
       "rarity": "commun",
-      "desc": "Dagues de lancée utilisant la chaleur des nek-feux pour accélérer vers sa cible",
+      "desc": "Dagues de lancée utilisant la chaleur des Nek-Feux pour accélérer vers sa cible",
       "race": "nek_feu",
       "image": ""
     },
     {
-      "name": "Nek'ronomicon",
+      "name": "Nek'Ronomicon",
       "slug": "nek-ronomicon",
       "type": "divers",
       "rarity": "commun",
@@ -262,11 +262,11 @@
       "image": "drone.gif"
     },
     {
-      "name": "Spider-BOMB",
+      "name": "SPIDER bomb",
       "slug": "spider-bomb",
       "type": "arme",
       "rarity": "commun",
-      "desc": "Une bombe qui permet d’infliger de lourd à sa cible sans causer beaucoup de dégâts collatéraux.",
+      "desc": "Une bombe qui permet d’infliger de lourds dégâts à sa cible sans causer beaucoup de dégâts collatéraux.",
       "image": "spider-bomb.gif"
     }
   ],
