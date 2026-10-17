@@ -11,7 +11,7 @@ class DB {
     constructor() {}
     async init(test = false) {
 
-        if (process.env.DB_URL === '') {
+        if (!process.env.DB_URL) {
             let db_name = test ? 'test_db' : 'database' + DB_VERSION;
             log('Using local DB', "#666666")
             this.sequelize =  new Sequelize(db_name, '', '', {
