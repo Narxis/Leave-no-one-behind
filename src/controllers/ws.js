@@ -10,6 +10,7 @@ const allies = require("./allies");
 const inventory = require("./inventory");
 const cardLoot = require("./cardLoot");
 const blankCard = require("./blankCard");
+const loot = require("./loot");
 const shipAlerts = require("./shipAlerts");
 const lobby = require("./lobby");
 const remote = require("./remote");
@@ -402,25 +403,16 @@ const actionItem = async function (response) {
     let items = new Items();
 
     if (remove) {
-        if (discord_id !== '') {
+        if (discord_id)
             await items.removeItemFromPlayer(slug, discord_id);
-            // Les onglets des joueurs se mettent à jour partout
-            return inventory.payload(null);
-        }
-        else {
+        else
             await items.remove(slug);
-        }
     }
-    else {
-        response.data = await items.add(slug);
-    }
+    else if (slug)
+        await items.add(slug, loot.qtyOf(response.data.qty));
 
-    return {
-        action: response.action,
-        remove: remove,
-        error: false,
-        data: response.data
-    }
+    // Les onglets des joueurs et la liste du vaisseau se mettent à jour partout
+    return inventory.payload(null);
 }
 
 /**

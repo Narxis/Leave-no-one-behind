@@ -799,6 +799,23 @@ body.combat-mode .stats-legend-title {
     font-weight: 700;
 }
 
+/* Quantité d'un objet du butin (combat, carte) */
+.combat-loot-item {
+    position: relative;
+}
+
+.combat-loot-qty {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--ui-accent);
+    color: #1a1238;
+    font-size: 12px;
+    font-weight: 800;
+}
+
 .combat-loot-hint {
     margin: -6px 0 10px;
     font-size: 12px;

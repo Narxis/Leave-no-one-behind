@@ -9,6 +9,9 @@ const races = require('./races');
 // partie aux joueurs de leur race. Chaque modification met aussi à jour la
 // table items de la partie en cours, sans toucher aux exemplaires que les
 // joueurs ou le vaisseau possèdent déjà.
+// La quantité (« qty », 1 si absente) est le nombre d'exemplaires donnés à
+// chaque joueur pour un objet de départ, et la quantité proposée d'office
+// quand on ajoute l'objet à un butin (cartes, ennemis, combat).
 
 const ITEMS_FILE = path.join(__dirname, '../config/items.json');
 const IMAGE_DIR = path.join(__dirname, '../../public/img/items');
@@ -16,6 +19,7 @@ const IMAGE_PATH = '/img/items/';
 const STARTER = 'starter';
 const MAX_NAME = 60;
 const MAX_DESC = 600;
+const MAX_QTY = 99;
 // Types proposés d'office dans l'éditeur ; on peut en créer d'autres
 // Raretés, de la plus courante à la plus rare
 const RARITIES = ['commun', 'peu_commun', 'rare', 'epique', 'legendaire'];
@@ -29,6 +33,7 @@ const slugify = (text, sep = '-') => String(text).toLowerCase()
     .replace(/[^a-z0-9]+/g, sep).replace(new RegExp('^' + sep + '+|' + sep + '+$', 'g'), '');
 
 const imageUrl = (file) => file ? IMAGE_PATH + file : '';
+const qtyOf = (v) => Math.min(Math.max(parseInt(v) || 1, 1), MAX_QTY);
 const ownersOf = (row) => row && row.owners ? String(row.owners).split(',').filter(Boolean) : [];
 
 // Exemplaires dans la partie en cours : {slug: {players, ship}}
@@ -54,6 +59,7 @@ const list = async function () {
                 type: item.type || '',
                 rarity: RARITIES.includes(item.rarity) ? item.rarity : RARITIES[0],
                 race: item.race || '',
+                qty: qtyOf(item.qty),
                 image: imageUrl(item.image),
                 used: used[item.slug] || {players: 0, ship: 0}
             });
@@ -127,6 +133,8 @@ const save = async function (data) {
     item.desc = String(data.desc || '').replace(/\r/g, '').trim().slice(0, MAX_DESC);
     if (race)
         item.race = race;
+    if (qtyOf(data.qty) > 1)
+        item.qty = qtyOf(data.qty);
     item.image = existing ? (existing.item.image || '') : '';
 
     // Image envoyée par l'éditeur : un PNG déjà redimensionné par le navigateur
@@ -175,4 +183,4 @@ const remove = async function (slug) {
     return {ok: true, kept: !!kept};
 }
 
-module.exports = {list, save, remove, STARTER, TYPES, RARITIES};
+module.exports = {list, save, remove, STARTER, TYPES, RARITIES, MAX_QTY};

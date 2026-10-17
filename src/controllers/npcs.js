@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const lootEntry = require('./loot');
 
 // Ennemis et compagnons préparés dans l'éditeur (/bestiaire), proposés
 // ensuite au MJ dans son menu (onglets Adversaires et Compagnons).
@@ -48,10 +49,9 @@ const cleanEnemy = function (data) {
     if (!name)
         return {error: 'Donne un nom à l\'ennemi.'};
     let loot = [];
-    for (let entry of (Array.isArray(data.loot) ? data.loot : [])) {
-        let item = cleanText(entry && entry.name !== undefined ? entry.name : entry, 60);
-        if (item && loot.length < LOOT_SIZE)
-            loot.push(item);
+    for (let entry of (Array.isArray(data.loot) ? data.loot : []).map(lootEntry.entry)) {
+        if (entry && loot.length < LOOT_SIZE)
+            loot.push(lootEntry.stored(entry));
     }
     return {enemy: {
         name: name,

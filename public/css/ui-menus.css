@@ -1011,8 +1011,12 @@ body.mj-page {
 
 .mj-loot-form {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) 58px auto;
     gap: 6px;
+}
+
+.mj-loot-qty {
+    text-align: center;
 }
 
 .mj-loot-input {

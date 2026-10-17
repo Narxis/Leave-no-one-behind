@@ -500,6 +500,28 @@
     font-size: 12px;
 }
 
+/* Quantité : à droite du nom, et petit champ avant le + */
+.todos .item-count {
+    flex: none;
+    margin-left: auto;
+}
+
+.content form input[type='text'] {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+}
+
+.content input.add-qty {
+    flex: none;
+    width: 52px;
+    padding: 0 4px;
+    color: var(--ui-text);
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+}
+
 .todos p {
     position: static;
     top: auto;

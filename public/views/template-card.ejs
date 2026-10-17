@@ -423,6 +423,7 @@
                       <% } %>
                     </datalist>
                     <input type="hidden" name="answer" id="add-item-hidden">
+                    <input type="number" name="qty" class="add-qty" min="1" max="999" value="1" title="Quantité" aria-label="Quantité">
                     <div class="input-buttons">
                       <a href="#0" class="add-todo">
                         <i class="fas fa-plus add"></i>
@@ -432,17 +433,16 @@
                   <ul class="todos">
                     <% if(typeof shipItems !== 'undefined'){ %>
                       <% shipItems.forEach(function(item) { %>
-                        <% for(var i=0; i<item.count; i++) {%>
-                        <li class="item-<%= item.slug %>" data-slug="<%= item.slug %>">
-                          <input type="checkbox" id="<%= item.slug %>-<%= i %>">
-                          <label for="<%= item.slug %>-<%= i %>">
+                        <li class="item-<%= item.slug %>" data-slug="<%= item.slug %>"<% if (item.count > 1) { %> title="Glisser : un exemplaire. Maj + glisser : les <%= item.count %>"<% } %>>
+                          <input type="checkbox" id="<%= item.slug %>-0">
+                          <label for="<%= item.slug %>-0">
                             <% if (item.image) { %><img class="item-image" src="<%= item.image %>"><% } else { %><span class="item-image item-noimg"><%= item.name.charAt(0) %></span><% } %>
                             <span class="check"></span>
                             <p><%= item.name %></p>
+                            <% if (item.count > 1) { %><span class="item-count">×<%= item.count %></span><% } %>
                           </label>
-                          <i class="far fa-trash-alt delete" data-slug="<%= item.slug %>"></i>
+                          <i class="far fa-trash-alt delete" data-slug="<%= item.slug %>" title="Retirer un exemplaire"></i>
                         </li>
-                        <% } %>
                       <% }); %>
                     <% } %>
                   </ul>
