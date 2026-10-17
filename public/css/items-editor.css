@@ -208,6 +208,15 @@
     border-color: var(--ui-accent);
 }
 
+.ie-filter-label {
+    margin-bottom: -6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ui-text-dim);
+}
+
 .ie-filters {
     display: flex;
     flex-wrap: wrap;
@@ -340,6 +349,21 @@
     border-radius: 999px;
     font-size: 11px;
     color: var(--ui-cyan);
+}
+
+.ie-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.ie-tag-type {
+    color: var(--ui-accent);
+    border-color: rgb(255 204 0 / 35%);
+}
+
+.ie-tag i {
+    font-size: 10px;
 }
 
 .ie-dot {
@@ -531,6 +555,63 @@
 .ie-counter {
     align-self: flex-end;
     font-size: 12px;
+}
+
+.ie-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.ie-types button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--ui-border);
+    border-radius: 999px;
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.ie-types button:hover {
+    background: var(--ui-fill-hover);
+    border-color: var(--ui-border-strong);
+}
+
+.ie-types button i {
+    color: var(--ui-text-dim);
+}
+
+.ie-types button[aria-checked="true"] {
+    border-color: var(--ui-accent);
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+}
+
+.ie-types button[aria-checked="true"] i {
+    color: var(--ui-accent);
+}
+
+.ie-types .ie-type-new {
+    border-style: dashed;
+    color: var(--ui-text-dim);
+}
+
+.ie-new-type input {
+    max-width: 320px;
+}
+
+.ie-preview-body .ie-tag-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
 }
 
 .ie-explain {

@@ -250,8 +250,10 @@ async function test_items_editor() {
         assert.ok((await itemsEditor.save({name: ''})).error, 'un objet sans nom est refusé');
         assert.ok((await itemsEditor.save({name: 'Truc', pool: 'starter'})).error, 'un objet de départ sans race est refusé');
 
-        let out = await itemsEditor.save({name: 'Clé à molette test', pool: 'Outils test', desc: 'Pour les tests'});
+        let out = await itemsEditor.save({name: 'Clé à molette test', pool: 'Outils test', type: 'Relique sacrée', desc: 'Pour les tests'});
         assert.strictEqual(out.item.slug, 'cle-a-molette-test');
+        assert.strictEqual(out.item.type, 'relique_sacree');
+        assert.ok((await itemsEditor.list()).types.includes('relique_sacree'), 'un nouveau type rejoint la liste');
         assert.strictEqual(out.item.pool, 'outils_test');
         assert.ok((await itemsEditor.save({name: 'clé à MOLETTE test', pool: 'electronique'})).error, 'deux objets ne portent pas le même nom');
         let row = await DB.tables.items.findOne({raw: true, where: {slug: 'cle-a-molette-test'}});

@@ -30,7 +30,10 @@
             <i class="fas fa-search"></i>
             <input type="search" id="ie-search" placeholder="Chercher un objet" aria-label="Chercher un objet" autocomplete="off">
         </div>
+        <div class="ie-filter-label">Catégorie</div>
         <div class="ie-filters" id="ie-filters" role="tablist" aria-label="Catégories"></div>
+        <div class="ie-filter-label">Type</div>
+        <div class="ie-filters" id="ie-type-filters" role="tablist" aria-label="Types"></div>
         <div class="ie-list" id="ie-list"></div>
     </aside>
 
@@ -70,6 +73,13 @@
                 </div>
             </div>
 
+            <div class="ie-field">Type
+                <div class="ie-types" id="ie-type" role="radiogroup" aria-label="Type"></div>
+                <div class="ie-new-type" id="ie-new-type-box" hidden>
+                    <input type="text" id="ie-new-type" maxlength="30" placeholder="Nom du nouveau type (ex. relique)" aria-label="Nom du nouveau type">
+                </div>
+            </div>
+
             <label class="ie-field"><span>Description <small>(lue par les joueurs dans leur inventaire)</small></span>
                 <textarea id="ie-desc" rows="5" maxlength="600" placeholder="À quoi sert-il, d'où vient-il…"></textarea>
                 <span class="ie-counter" id="ie-desc-count"></span>
@@ -91,6 +101,7 @@
                 <div class="ie-preview-img" id="ie-preview-img"></div>
                 <div class="ie-preview-body">
                     <b id="ie-preview-name"></b>
+                    <span class="ie-tag ie-tag-type" id="ie-preview-type" hidden></span>
                     <p id="ie-preview-desc"></p>
                 </div>
             </div>
@@ -110,6 +121,7 @@
     <div class="ie-dialog-body">
         <ol class="ie-steps">
             <li><b>Le catalogue.</b> Tous les objets du jeu sont ici, rangés par catégorie. Ils sont enregistrés dans <code>src/config/items.json</code>.</li>
+            <li><b>Types.</b> Arme, armure, consommable, ressource… Clique sur un type pour le choisir, ou sur « Nouveau type » pour en créer un. Les filtres « Type » à gauche servent à les retrouver.</li>
             <li><b>Objets de départ.</b> La catégorie « Départ » donne l'objet, au lancement de la partie, à chaque joueur de la race choisie.</li>
             <li><b>Les autres catégories</b> servent au butin : le MJ les propose après un combat, et l'éditeur de lieux les propose dans les choix des cartes.</li>
             <li><b>Image.</b> Clique sur le cadre ou glisses-y une image : elle est recadrée en carré et enregistrée dans <code>public/img/items</code>.</li>

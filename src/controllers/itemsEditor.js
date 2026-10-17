@@ -3,7 +3,8 @@ const path = require('path');
 const races = require('./races');
 
 // Catalogue des objets (éditeur /items) : src/config/items.json, rangé par
-// catégorie (« pool »). Les objets « starter » sont donnés au début de la
+// catégorie (« pool »). Chaque objet a aussi un type facultatif (arme,
+// consommable, ressource…), propre au catalogue pour l'instant. Les objets « starter » sont donnés au début de la
 // partie aux joueurs de leur race. Chaque modification met aussi à jour la
 // table items de la partie en cours, sans toucher aux exemplaires que les
 // joueurs ou le vaisseau possèdent déjà.
@@ -14,6 +15,8 @@ const IMAGE_PATH = '/img/items/';
 const STARTER = 'starter';
 const MAX_NAME = 60;
 const MAX_DESC = 600;
+// Types proposés d'office dans l'éditeur ; on peut en créer d'autres
+const TYPES = ['arme', 'armure', 'munition', 'consommable', 'ressource', 'outil', 'gadget', 'divers'];
 
 const read = () => JSON.parse(fs.readFileSync(ITEMS_FILE, 'utf8'));
 const write = (pools) => fs.writeFileSync(ITEMS_FILE, JSON.stringify(pools, null, 2) + '\n');
@@ -45,11 +48,13 @@ const list = async function () {
                 name: item.name,
                 desc: item.desc || '',
                 pool: pool,
+                type: item.type || '',
                 race: item.race || '',
                 image: imageUrl(item.image),
                 used: used[item.slug] || {players: 0, ship: 0}
             });
-    return {items: items, pools: Object.keys(pools), races: races.list().map(r => ({slug: r.slug, name: r.name}))};
+    let types = TYPES.concat([...new Set(items.map(i => i.type).filter(t => t && !TYPES.includes(t)))]);
+    return {items: items, pools: Object.keys(pools), types: types, races: races.list().map(r => ({slug: r.slug, name: r.name}))};
 }
 
 const find = function (pools, slug) {
@@ -90,6 +95,7 @@ const save = async function (data) {
     let pool = slugify(data.pool || '', '_').slice(0, 30);
     if (!pool)
         return {error: 'Choisis une catégorie.'};
+    let type = slugify(data.type || '', '_').slice(0, 30);
     let race = pool === STARTER ? String(data.race || '') : '';
     if (pool === STARTER && !race)
         return {error: 'Un objet de départ appartient à une race : choisis-la.'};
@@ -108,9 +114,11 @@ const save = async function (data) {
 
     let item = {
         name: name,
-        slug: slug,
-        desc: String(data.desc || '').replace(/\r/g, '').trim().slice(0, MAX_DESC)
+        slug: slug
     };
+    if (type)
+        item.type = type;
+    item.desc = String(data.desc || '').replace(/\r/g, '').trim().slice(0, MAX_DESC);
     if (race)
         item.race = race;
     item.image = existing ? (existing.item.image || '') : '';
@@ -161,4 +169,4 @@ const remove = async function (slug) {
     return {ok: true, kept: !!kept};
 }
 
-module.exports = {list, save, remove, STARTER};
+module.exports = {list, save, remove, STARTER, TYPES};
