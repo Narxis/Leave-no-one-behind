@@ -128,3 +128,6 @@ public/views/index-legacy.ejs
 storage/cache/allies.json
 storage/cache/leaderboard.json
 storage/cache/gameSettings.json
+
+# Relais Cloudflare : fichiers locaux de wrangler
+relay/.wrangler/

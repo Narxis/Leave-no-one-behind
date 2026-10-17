@@ -2,6 +2,7 @@
 
 - [Setup](#setup)
 - [App de bureau](#app-de-bureau)
+- [Partie en ligne](#partie-en-ligne)
 - [Routes](#routes)
 - [Ajouter une page](#ajouter-une-page)
 - [Event Listeners](#event-listeners)
@@ -42,6 +43,14 @@ Pour fabriquer l'installeur du système en cours (`.exe` sous Windows, `.dmg` so
 run `npm run dist`
 
 Le workflow GitHub **App de bureau** (onglet Actions, bouton *Run workflow*) fabrique les trois et les met dans les artefacts du run. L'app n'est pas signée : Windows et macOS affichent un avertissement au premier lancement.
+
+## PARTIE EN LIGNE
+
+À l'ouverture, l'app demande « Créer une partie » (MJ) ou « Rejoindre une partie » (joueur).
+
+Le MJ lance le jeu sur son PC comme avant ; la page **Partie en ligne** (`/lobby`, ouverte d'office dans l'app) donne un code et un lien à transmettre aux joueurs, et montre qui est connecté. Les joueurs entrent le code dans l'app, ou ouvrent le lien dans leur navigateur. Pour l'instant ils voient un écran d'attente avec l'équipage : la vue joueur arrive dans une prochaine étape.
+
+Les messages passent par un relais (dossier `relay/`, voir [relay/README.md](relay/README.md)) : en local `npm run relay`, en ligne sur Cloudflare Workers. Son adresse est dans `package.json` (`lnob.relayUrl`) ou dans la variable `LNOB_RELAY_URL`.
 
 ## ROUTES
 
