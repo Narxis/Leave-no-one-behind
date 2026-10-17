@@ -1,5 +1,6 @@
 const combat = require('./combat');
 const cardLoot = require('./cardLoot');
+const loot = require('./loot');
 
 // Inventaires des joueurs : un objet appartient à un joueur quand son
 // discord_id figure dans « owners » (liste séparée par des virgules). Un id
@@ -60,9 +61,22 @@ const setOwners = (row, owners) => DB.tables.items.update({owners: owners.join('
 
 const isPlayer = async (discord_id) => !!discord_id && !!(await DB.tables.players.findOne({raw: true, where: {discord_id: String(discord_id)}}));
 
-// Déplace un exemplaire d'un objet. from / to : {type: 'player', id},
+// Ajoute count exemplaires à un joueur ou au vaisseau
+const giveTo = async function (row, to, count) {
+    if (to.type === 'player') {
+        let fresh = await DB.tables.items.findOne({raw: true, where: {id: row.id}});
+        await setOwners(fresh, ownersOf(fresh).concat(Array(count).fill(String(to.id))));
+    }
+    else
+        await DB.tables.items.increment({quantity: count}, {where: {id: row.id}});
+}
+
+// Déplace des exemplaires d'un objet. from / to : {type: 'player', id},
 // {type: 'ship'} ou, en source seulement, {type: 'loot', index} (butin du
-// combat gagné). Renvoie {error} ou {item, from, to, lootTaken}
+// combat gagné) et {type: 'card-loot', index} (butin d'une carte).
+// Un butin part en entier (toute sa quantité) ; depuis un inventaire, on
+// déplace count exemplaires (1 par défaut, all : tous).
+// Renvoie {error} ou {item, from, to, lootTaken}
 const move = async function (data) {
     let from = data.from || {}, to = data.to || {};
     if (to.type === 'player' && !(await isPlayer(to.id)))
@@ -73,14 +87,16 @@ const move = async function (data) {
         return {error: 'L\'objet y est déjà'};
 
     // On vérifie et on retire d'abord la source : rien n'est créé si elle est vide
-    let row, lootTaken = false, cardLootTaken = false;
+    let row, count = data.all ? loot.MAX_QTY : loot.qtyOf(data.count), lootTaken = false, cardLootTaken = false;
     if (from.type === 'player') {
         row = await DB.tables.items.findOne({raw: true, where: {slug: String(data.slug || '')}});
         let owners = row ? ownersOf(row) : [];
-        let at = owners.indexOf(String(from.id));
-        if (at < 0)
+        let mine = owners.filter(id => id === String(from.id)).length;
+        if (!mine)
             return {error: 'Cet objet n\'est pas dans l\'inventaire'};
-        owners.splice(at, 1);
+        count = Math.min(count, mine);
+        for (let i = 0; i < count; i++)
+            owners.splice(owners.indexOf(String(from.id)), 1);
         await setOwners(row, owners);
         row.owners = owners.join(',');
     }
@@ -88,37 +104,25 @@ const move = async function (data) {
         row = await DB.tables.items.findOne({raw: true, where: {slug: String(data.slug || '')}});
         if (!row || row.quantity <= 0)
             return {error: 'Cet objet n\'est plus dans le vaisseau'};
-        await DB.tables.items.decrement({quantity: 1}, {where: {id: row.id}});
+        count = Math.min(count, row.quantity);
+        await DB.tables.items.decrement({quantity: count}, {where: {id: row.id}});
     }
-    else if (from.type === 'loot') {
-        let loot = combat.takeLoot(from.index, data.slug, data.name);
-        if (!loot)
+    else if (from.type === 'loot' || from.type === 'card-loot') {
+        let taken = from.type === 'loot' ? combat.takeLoot(from.index, data.slug, data.name) : cardLoot.take(from.index, data.slug, data.name);
+        if (!taken)
             return {error: 'Ce butin n\'est plus disponible'};
-        row = await ensureItem(loot);
-        lootTaken = true;
-        if (!row)
-            return {error: 'Objet inconnu'};
-    }
-    else if (from.type === 'card-loot') {
-        let loot = cardLoot.take(from.index, data.slug, data.name);
-        if (!loot)
-            return {error: 'Ce butin n\'est plus disponible'};
-        row = await ensureItem(loot);
-        cardLootTaken = true;
+        row = await ensureItem(taken);
+        count = loot.qtyOf(taken.qty);
+        lootTaken = from.type === 'loot';
+        cardLootTaken = from.type === 'card-loot';
         if (!row)
             return {error: 'Objet inconnu'};
     }
     else
         return {error: 'Origine inconnue'};
 
-    if (to.type === 'player') {
-        let fresh = await DB.tables.items.findOne({raw: true, where: {id: row.id}});
-        await setOwners(fresh, ownersOf(fresh).concat(String(to.id)));
-    }
-    else
-        await DB.tables.items.increment({quantity: 1}, {where: {id: row.id}});
-
-    return {item: itemView(row, 1), from: from, to: to, lootTaken: lootTaken, cardLootTaken: cardLootTaken};
+    await giveTo(row, to, count);
+    return {item: itemView(row, count), from: from, to: to, lootTaken: lootTaken, cardLootTaken: cardLootTaken};
 }
 
 // « Tout récupérer » : tout le butin de la carte va dans le vaisseau
@@ -127,7 +131,7 @@ const takeAllCardLoot = async function () {
     for (let item of items) {
         let row = await ensureItem(item);
         if (row)
-            await DB.tables.items.increment({quantity: 1}, {where: {id: row.id}});
+            await giveTo(row, {type: 'ship'}, loot.qtyOf(item.qty));
     }
     return {cardLootTaken: true, toShip: items.length};
 }

@@ -6,6 +6,11 @@
     const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
     const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
     const toInt = (v, def) => Number.isFinite(parseInt(v)) ? parseInt(v) : def;
+    // Entrée de butin : un nom (un exemplaire) ou {name, qty}
+    const lootName = (e) => String(e && typeof e === 'object' ? e.name || '' : e || '');
+    const lootQty = (e) => e && typeof e === 'object' && e.qty > 1 ? e.qty : 1;
+    const lootStored = (name, qty) => qty > 1 ? {name: name, qty: Math.min(qty, 999)} : name;
+    const lootLabel = (e) => lootQty(e) > 1 ? lootName(e) + ' ×' + lootQty(e) : lootName(e);
 
     const DAMAGE = {faible: [1, 4], moyen: [5, 8], fort: [9, 12]};
     const DAMAGE_LABEL = {faible: 'Faibles', moyen: 'Moyens', fort: 'Forts'};
@@ -80,7 +85,7 @@
                 + pill('PV ' + entry.hp, 'ne-pill-hp') + pill('Att ' + entry.offense, '', 'Attaque')
                 + pill('Déf ' + entry.defense, '', 'Défense') + pill('Dégâts ' + (DAMAGE_LABEL[entry.damage] || entry.damage).toLowerCase(), 'ne-pill-' + entry.damage);
             if (entry.loot && entry.loot.length)
-                pills += pill(entry.loot.length + (entry.loot.length > 1 ? ' objets' : ' objet'), 'ne-pill-loot', entry.loot.join(', '));
+                pills += pill(entry.loot.length + (entry.loot.length > 1 ? ' objets' : ' objet'), 'ne-pill-loot', entry.loot.map(lootLabel).join(', '));
         }
         else {
             sub = entry.race ? '<span class="ne-card-sub">' + esc(entry.race) + '</span>' : '';
@@ -173,13 +178,14 @@
         box.innerHTML = '';
         if (!enemy.loot.length)
             box.innerHTML = '<span class="ne-loot-empty">Pas de butin</span>';
-        enemy.loot.forEach((name, i) => {
+        enemy.loot.forEach((entry, i) => {
+            let name = lootName(entry);
             let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === name.toLowerCase());
             let chip = document.createElement('span');
             chip.className = 'ne-chip' + (known ? '' : ' is-custom');
-            chip.title = known ? name : name + ' (objet libre, absent de la liste des objets)';
+            chip.title = known ? lootLabel(entry) : lootLabel(entry) + ' (objet libre, absent de la liste des objets)';
             chip.innerHTML = (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<span class="ne-chip-initial">' + esc(name.charAt(0)) + '</span>')
-                + '<span>' + esc(name) + '</span><button type="button" title="Retirer ' + esc(name) + '" aria-label="Retirer ' + esc(name) + '">×</button>';
+                + '<span>' + esc(lootLabel(entry)) + '</span><button type="button" title="Retirer ' + esc(name) + '" aria-label="Retirer ' + esc(name) + '">×</button>';
             chip.querySelector('button').addEventListener('click', () => {
                 enemy.loot.splice(i, 1);
                 renderLoot();
@@ -188,6 +194,7 @@
         });
         let full = enemy.loot.length >= NPC_LIMITS.loot;
         $('ne-loot-input').disabled = full;
+        $('ne-loot-qty').disabled = full;
         $('ne-loot-btn').disabled = full;
         $('ne-loot-input').placeholder = full ? NPC_LIMITS.loot + ' objets au plus' : 'Ajouter un objet…';
     }
@@ -195,11 +202,22 @@
     function addLoot() {
         let input = $('ne-loot-input');
         let name = input.value.replace(/\s+/g, ' ').trim().slice(0, 60);
-        if (!name || enemy.loot.length >= NPC_LIMITS.loot)
+        if (!name)
             return;
+        let qty = Math.min(Math.max(parseInt($('ne-loot-qty').value) || 1, 1), 999);
         let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === name.toLowerCase());
-        enemy.loot.push(known ? known.name : name);
+        if (known)
+            name = known.name;
+        // Déjà dans le butin : la quantité s'ajoute
+        let at = enemy.loot.findIndex(e => lootName(e).toLowerCase() === name.toLowerCase());
+        if (at >= 0)
+            enemy.loot[at] = lootStored(name, lootQty(enemy.loot[at]) + qty);
+        else if (enemy.loot.length >= NPC_LIMITS.loot)
+            return;
+        else
+            enemy.loot.push(lootStored(name, qty));
         input.value = '';
+        $('ne-loot-qty').value = 1;
         renderLoot();
         input.focus();
     }
@@ -213,7 +231,7 @@
             damage: src && DAMAGE[src.damage] ? src.damage : 'moyen',
             // Nouvelle fiche : catégorie du filtre affiché, s'il y en a un
             category: src ? categoryOf(src) : (filter !== 'all' ? filter : 'standard'),
-            loot: src && Array.isArray(src.loot) ? src.loot.map(l => typeof l === 'string' ? l : l.name).filter(Boolean) : []
+            loot: src && Array.isArray(src.loot) ? src.loot.filter(l => lootName(l)).map(l => lootStored(lootName(l), lootQty(l))) : []
         });
         $('ne-enemy-name').value = src ? src.name : '';
         for (let key of ['hp', 'offense', 'defense']) {
@@ -472,6 +490,18 @@
         renderEnemy();
     }));
     $('ne-loot-btn').addEventListener('click', addLoot);
+    // Objet de la liste : sa quantité habituelle est proposée
+    $('ne-loot-input').addEventListener('input', () => {
+        let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === $('ne-loot-input').value.trim().toLowerCase());
+        if (known)
+            $('ne-loot-qty').value = known.qty || 1;
+    });
+    $('ne-loot-qty').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addLoot();
+        }
+    });
     $('ne-loot-input').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();

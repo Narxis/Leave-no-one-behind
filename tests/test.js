@@ -33,6 +33,7 @@ async function test() {
     await test_roll();
     test_ship_alerts();
     await test_items_editor();
+    await test_item_quantities();
     test_npcs();
     await test_remote();
 }
@@ -590,6 +591,94 @@ async function test_items_editor() {
     finally {
         fs.writeFileSync(file, backup);
     }
+}
+
+// Quantités d'objets : butin en plusieurs exemplaires, déplacement d'une
+// pile ou d'un exemplaire, objets de départ en plusieurs exemplaires
+async function test_item_quantities() {
+    console.log('Testing item quantities');
+    const loot = require('../src/controllers/loot');
+    const combat = require('../src/controllers/combat');
+    const cardLoot = require('../src/controllers/cardLoot');
+    const inventory = require('../src/controllers/inventory');
+    const itemsEditor = require('../src/controllers/itemsEditor');
+    const {Items} = require('../src/models/items');
+
+    assert.deepStrictEqual(loot.entry('  Corde '), {name: 'Corde', qty: 1});
+    assert.deepStrictEqual(loot.entry({name: 'Munition', qty: '12'}), {name: 'Munition', qty: 12});
+    assert.strictEqual(loot.entry({name: 'Munition', qty: 5000}).qty, loot.MAX_QTY, 'quantité bornée');
+    assert.strictEqual(loot.entry({name: 'Munition', qty: -3}).qty, 1);
+    assert.strictEqual(loot.entry({name: '  '}), null);
+    assert.strictEqual(loot.stored({name: 'Corde', qty: 1}), 'Corde', 'un seul exemplaire : le nom seul, comme avant');
+    assert.deepStrictEqual(loot.stored({name: 'Corde', qty: 3}), {name: 'Corde', qty: 3});
+
+    let made = combat.makeLoot(['Corde', {name: 'Bidule test', qty: 4}, '']);
+    assert.strictEqual(made.length, 2);
+    assert.strictEqual(made[0].qty, 1);
+    assert.strictEqual(made[1].qty, 4);
+    assert.ok(made[1].custom);
+    const npcs = require('../src/controllers/npcs');
+    assert.deepStrictEqual(npcs.cleanEnemy({name: 'Pirate', loot: ['Corde', {name: 'Bidule', qty: '3'}]}).enemy.loot, ['Corde', {name: 'Bidule', qty: 3}]);
+
+    // Butin d'une carte : toute la pile part d'un coup
+    const A = 'qty-joueur-a', B = 'qty-joueur-b';
+    await new Player().create({discord_id: A, name: 'Qa', race: 'aku'});
+    await new Player().create({discord_id: B, name: 'Qb', race: 'yorc'});
+    const count = async (id) => ((await inventory.getInventory(id)).find(i => i.name === 'Bidule test') || {count: 0}).count;
+    const ship = async () => ((await inventory.getShip()).find(i => i.name === 'Bidule test') || {count: 0}).count;
+    cardLoot.offer([{name: 'Bidule test', qty: 5}]);
+    let moved = await inventory.move({from: {type: 'card-loot', index: 0}, to: {type: 'player', id: A}, name: 'Bidule test'});
+    assert.strictEqual(moved.item.count, 5);
+    assert.strictEqual(await count(A), 5);
+    assert.strictEqual(cardLoot.getState().items.length, 0);
+
+    // Depuis un inventaire : un exemplaire, plusieurs (count), ou tous (all)
+    let slug = moved.item.slug;
+    await inventory.move({slug: slug, from: {type: 'player', id: A}, to: {type: 'ship'}});
+    assert.strictEqual(await count(A), 4);
+    assert.strictEqual(await ship(), 1);
+    await inventory.move({slug: slug, from: {type: 'player', id: A}, to: {type: 'player', id: B}, count: 2});
+    assert.strictEqual(await count(A), 2);
+    assert.strictEqual(await count(B), 2);
+    await inventory.move({slug: slug, from: {type: 'player', id: A}, to: {type: 'ship'}, all: true});
+    assert.strictEqual(await count(A), 0);
+    assert.strictEqual(await ship(), 3);
+    moved = await inventory.move({slug: slug, from: {type: 'ship'}, to: {type: 'player', id: A}, count: 10});
+    assert.strictEqual(moved.item.count, 3, 'on ne prend pas plus que la pile');
+    assert.strictEqual(await ship(), 0);
+    assert.ok((await inventory.move({slug: slug, from: {type: 'ship'}, to: {type: 'player', id: A}})).error);
+
+    // « Tout récupérer » : les quantités vont dans le vaisseau
+    cardLoot.offer([{name: 'Bidule test', qty: 7}, 'Bidule test']);
+    await inventory.handle({action: 'card-loot-all'});
+    assert.strictEqual(await ship(), 8);
+    // Le vaisseau ne descend pas sous zéro
+    await new Items().remove(slug, 50);
+    assert.strictEqual(await ship(), 8);
+
+    // Objet de départ en plusieurs exemplaires, sans doublon si on recommence
+    const file = __dirname + '/../src/config/items.json';
+    const backup = fs.readFileSync(file);
+    try {
+        let out = await itemsEditor.save({name: 'Ration test', pool: 'starter', race: 'aku', qty: 3});
+        assert.strictEqual(out.item.qty, 3);
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).starter.find(i => i.slug === 'ration-test').qty, 3);
+        assert.strictEqual(combat.getLootList().find(i => i.slug === 'ration-test').qty, 3);
+        out = await itemsEditor.save({name: 'Ration seule test', pool: 'electronique', qty: 1});
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).electronique.find(i => i.slug === 'ration-seule-test').qty, undefined, 'qty 1 non écrite');
+        await new Items().giveAllStarters();
+        await new Items().giveAllStarters();
+        let ration = (await inventory.getInventory(A)).find(i => i.slug === 'ration-test');
+        assert.strictEqual(ration.count, 3);
+        assert.ok(!(await inventory.getInventory(B)).some(i => i.slug === 'ration-test'), 'pas pour une autre race');
+        await itemsEditor.remove('ration-seule-test');
+    }
+    finally {
+        fs.writeFileSync(file, backup);
+        await DB.tables.items.destroy({where: {slug: ['ration-test', 'ration-seule-test', slug]}});
+        await DB.tables.players.destroy({where: {discord_id: [A, B]}});
+    }
+    console.log('Item quantities OK');
 }
 
 // Fiches de l'éditeur d'ennemis et compagnons : valeurs nettoyées et bornées

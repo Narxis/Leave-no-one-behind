@@ -86,6 +86,12 @@
                 </div>
             </div>
 
+            <div class="ie-row ie-numbers">
+                <label class="ie-field ie-field-num"><span>Quantité <small id="ie-qty-hint"></small></span>
+                    <input type="number" id="ie-qty" min="1" max="99" step="1" value="1" inputmode="numeric">
+                </label>
+            </div>
+
             <label class="ie-field"><span>Description <small>(lue par les joueurs dans leur inventaire)</small></span>
                 <textarea id="ie-desc" rows="5" maxlength="600" placeholder="À quoi sert-il, d'où vient-il…"></textarea>
                 <span class="ie-counter" id="ie-desc-count"></span>
@@ -132,6 +138,7 @@
             <li><b>Types.</b> Arme, armure, consommable, ressource… Clique sur un type pour le choisir, ou sur « Nouveau type » pour en créer un. Les filtres « Type » à gauche servent à les retrouver.</li>
             <li><b>Objets de départ.</b> La catégorie « Départ » donne l'objet, au lancement de la partie, à chaque joueur de la race choisie.</li>
             <li><b>Les autres catégories</b> servent au butin : le MJ les propose après un combat, et l'éditeur de lieux les propose dans les choix des cartes.</li>
+            <li><b>Quantité.</b> Pour un objet de départ : combien d'exemplaires chaque joueur reçoit. Pour les autres : la quantité proposée d'office quand on ajoute l'objet à un butin (on peut la changer dans le butin).</li>
             <li><b>Image.</b> Clique sur le cadre ou glisses-y une image : elle est recadrée en carré et enregistrée dans <code>public/img/items</code>.</li>
             <li><b>Enregistrer</b> (Ctrl+S) met aussi à jour la partie en cours : les joueurs voient tout de suite le nouveau nom, la description et l'image.</li>
             <li><b>Supprimer</b> retire l'objet du catalogue. Les exemplaires déjà possédés par les joueurs ou rangés dans le vaisseau restent jusqu'à la prochaine partie.</li>

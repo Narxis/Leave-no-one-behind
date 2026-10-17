@@ -20,17 +20,18 @@ const generateTemplate = (item) => {
   itemList.innerHTML += html;
 };
 
+// La liste est redessinée par l'événement « inventory » (inventory.js)
 function addItem(e) {
   e.preventDefault();
   const item = submitForm.add.value.trim();
   let slug = hiddenAnswer.value;
+  let qty = parseInt(submitForm.qty && submitForm.qty.value) || 1;
   hiddenAnswer.value = "";
   if (item.length) {
     listLength += 1;
-    // generateTemplate(item, slug);
     submitForm.reset();
   }
-  wsLNOB.addItem(slug)
+  wsLNOB.addItem(slug, qty)
 }
 
 function displayItem(e) {
@@ -47,7 +48,6 @@ function deleteTodos(e) {
     console.log(e.target);
     let slug = e.target.getAttribute('data-slug');
     wsLNOB.delItem(slug);
-    e.target.parentElement.remove();
   }
 }
 

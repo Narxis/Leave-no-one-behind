@@ -1000,3 +1000,18 @@
         width: 100%;
     }
 }
+
+/* Quantité (et prix) : petits champs numériques côte à côte */
+.ie-numbers {
+    flex-wrap: wrap;
+}
+
+.ie-row > .ie-field-num {
+    flex: 0 1 220px;
+}
+
+.ie-qty-badge {
+    margin-left: 4px;
+    opacity: .8;
+    font-weight: 700;
+}

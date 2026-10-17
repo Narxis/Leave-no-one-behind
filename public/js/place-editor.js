@@ -35,6 +35,7 @@
         <div class="pe-loot-list"></div>
         <div class="pe-loot-add">
             <input type="text" list="pe-loot-items" maxlength="60" placeholder="Ajouter un objet…">
+            <input type="number" class="pe-loot-qty" min="1" max="999" value="1" title="Quantité" aria-label="Quantité">
             <button type="button" data-action="loot-add" title="Ajouter cet objet au butin"><i class="fas fa-plus"></i></button>
         </div>
         <input type="hidden" df-loot>
@@ -448,6 +449,11 @@
     /* ---------- Butin d'un choix ---------- */
 
     const LOOT_MAX = 12;
+    const QTY_MAX = 999;
+    // Une entrée de butin : un nom (un exemplaire) ou {name, qty}
+    const lootName = (entry) => String(entry && typeof entry === 'object' ? entry.name : entry);
+    const lootQty = (entry) => entry && typeof entry === 'object' && entry.qty > 1 ? entry.qty : 1;
+    const lootEntry = (name, qty) => qty > 1 ? {name: name, qty: Math.min(qty, QTY_MAX)} : name;
     // Butin rangé dans node.data.loot en JSON (le champ caché df-loot)
     function lootOf(node) {
         try {
@@ -472,13 +478,15 @@
         if (!box)
             return;
         box.innerHTML = '';
-        list.forEach((name, i) => {
-            let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === String(name).toLowerCase());
+        list.forEach((entry, i) => {
+            let name = lootName(entry), qty = lootQty(entry);
+            let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === name.toLowerCase());
             let chip = document.createElement('span');
             chip.className = 'pe-loot-chip' + (known ? '' : ' is-custom');
-            chip.title = known ? name : name + ' (objet hors catalogue, créé à la distribution)';
-            chip.innerHTML = (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<span class="pe-loot-initial">' + esc(String(name).charAt(0)) + '</span>')
+            chip.title = (qty > 1 ? qty + ' × ' : '') + (known ? name : name + ' (objet hors catalogue, créé à la distribution)');
+            chip.innerHTML = (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<span class="pe-loot-initial">' + esc(name.charAt(0)) + '</span>')
                 + '<span>' + esc(name) + '</span>'
+                + (qty > 1 ? '<b class="pe-loot-count">×' + qty + '</b>' : '')
                 + '<button type="button" data-action="loot-remove" data-index="' + i + '" title="Retirer">×</button>';
             box.append(chip);
         });
@@ -488,20 +496,42 @@
     }
 
     function addLoot(el, node) {
-        let input = el.querySelector('.pe-loot-add input');
+        let input = el.querySelector('.pe-loot-add input[type="text"]');
+        let qtyField = el.querySelector('.pe-loot-qty');
         let name = input.value.trim().slice(0, 60);
         if (!name)
             return input.focus();
+        let qty = Math.min(Math.max(parseInt(qtyField && qtyField.value) || 1, 1), QTY_MAX);
         // Même casse que le catalogue quand l'objet existe
         let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === name.toLowerCase());
+        if (known)
+            name = known.name;
         let list = lootOf(node);
-        if (list.length >= LOOT_MAX)
+        // Déjà dans le butin : on ajoute à sa quantité
+        let at = list.findIndex(e => lootName(e).toLowerCase() === name.toLowerCase());
+        if (at >= 0)
+            list[at] = lootEntry(name, lootQty(list[at]) + qty);
+        else if (list.length >= LOOT_MAX)
             return toast(LOOT_MAX + ' objets au plus par choix', 'error');
-        list.push(known ? known.name : name);
+        else
+            list.push(lootEntry(name, qty));
         setLoot(el, list);
         input.value = '';
+        if (qtyField)
+            qtyField.value = 1;
         input.focus();
     }
+
+    // Objet du catalogue choisi : sa quantité habituelle est proposée
+    board.addEventListener('input', (e) => {
+        let input = e.target.closest('.pe-loot-add input[type="text"]');
+        if (!input)
+            return;
+        let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === input.value.trim().toLowerCase());
+        let qtyField = input.parentElement.querySelector('.pe-loot-qty');
+        if (known && qtyField)
+            qtyField.value = known.qty || 1;
+    });
 
     // Entrée dans le champ : ajoute l'objet
     board.addEventListener('keydown', (e) => {
