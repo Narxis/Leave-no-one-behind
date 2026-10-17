@@ -166,10 +166,6 @@
 
     const selectTab = function (name) {
         tab = name;
-        if (name === 'chat') {
-            chatUnread[chatChannel] = 0;
-            renderChatBadges();
-        }
         store.set('lnob-player-tab', name);
         document.querySelectorAll('.tab').forEach(b => {
             b.classList.toggle('active', b.dataset.tab === name);
@@ -189,9 +185,6 @@
             b.textContent = chatUnread[c];
             b.hidden = !chatUnread[c];
         }
-        let total = chatUnread.room + chatUnread.gm;
-        $('chat-badge').textContent = total;
-        $('chat-badge').hidden = !total;
     };
 
     const renderChat = function () {
@@ -213,7 +206,8 @@
     const addChat = function (m) {
         chat.push(m);
         let c = channelOf(m);
-        if (m.from.id !== playerId && (tab !== 'chat' || c !== chatChannel))
+        // Le chat est toujours affiché : seule l'autre conversation compte des non-lus
+        if (m.from.id !== playerId && c !== chatChannel)
             chatUnread[c]++;
         renderChat();
     };
