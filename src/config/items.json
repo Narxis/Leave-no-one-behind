@@ -205,6 +205,19 @@
       "rarity": "commun",
       "desc": "Filet pouvant neutraliser temporairement une cible à distance",
       "race": "nek_eau",
+      "recipe": {
+        "ingredients": [
+          {
+            "slug": "corde",
+            "qty": 2
+          },
+          {
+            "slug": "tazer-cosmique",
+            "qty": 1
+          }
+        ],
+        "qty": 1
+      },
       "image": "fap.png"
     },
     {

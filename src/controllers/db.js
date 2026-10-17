@@ -269,6 +269,11 @@ class DB {
                 defaultValue: 0,
                 allowNull: false
             },
+            armory_up: { // niveau d'amélioration de l'armurerie (artisanat)
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
             scanner: {
                 type: Sequelize.INTEGER,
                 defaultValue: 100,
@@ -480,7 +485,7 @@ class DB {
         // plutôt que d'incrémenter DB_VERSION (qui repartirait d'une base vide)
         await this.addMissingColumns('card_modules', ['humans', 'loot']);
         await this.addMissingColumns('players', ['credits']);
-        await this.addMissingColumns('ship', ['credits']);
+        await this.addMissingColumns('ship', ['credits', 'armory_up']);
     }
 
     async addMissingColumns(table, columns) {

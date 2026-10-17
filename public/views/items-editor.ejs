@@ -101,6 +101,20 @@
                 <span class="ie-counter" id="ie-desc-count"></span>
             </label>
 
+            <div class="ie-field ie-recipe">
+                <span>Recette <small>(objets à assembler à l'atelier pour fabriquer celui-ci)</small></span>
+                <ul class="ie-recipe-list" id="ie-recipe-list"></ul>
+                <div class="ie-recipe-add">
+                    <select id="ie-recipe-item" aria-label="Ingrédient à ajouter"></select>
+                    <input type="number" id="ie-recipe-qty" min="1" max="99" step="1" value="1" inputmode="numeric" aria-label="Quantité de l'ingrédient">
+                    <button type="button" class="ie-btn" id="ie-recipe-add"><i class="fas fa-plus"></i> Ingrédient</button>
+                </div>
+                <label class="ie-recipe-yield" id="ie-recipe-yield-box" hidden>Exemplaires fabriqués
+                    <input type="number" id="ie-recipe-yield" min="1" max="99" step="1" value="1" inputmode="numeric">
+                </label>
+                <small class="ie-recipe-uses" id="ie-recipe-uses"></small>
+            </div>
+
             <section class="ie-usage" id="ie-usage" hidden></section>
 
             <p class="ie-error" id="ie-error" role="alert"></p>
@@ -144,6 +158,7 @@
             <li><b>Les autres catégories</b> servent au butin : le MJ les propose après un combat, et l'éditeur de lieux les propose dans les choix des cartes.</li>
             <li><b>Prix.</b> En monnaie du jeu (nom et taux dans <code>src/config/currency.json</code>). C'est le prix des marchands ; payé en cryopods, il est multiplié par le taux de change, et un marchand rachète l'objet à une part de ce prix. Sans prix, le marchand ne le propose pas d'office.</li>
             <li><b>Quantité.</b> Pour un objet de départ : combien d'exemplaires chaque joueur reçoit. Pour les autres : la quantité proposée d'office quand on ajoute l'objet à un butin (on peut la changer dans le butin).</li>
+            <li><b>Recette.</b> Les objets à assembler pour fabriquer celui-ci, avec leur quantité, et le nombre d'exemplaires obtenus. Le MJ lance la fabrication depuis l'atelier du menu MJ. Sans ingrédient, l'objet n'a pas de recette.</li>
             <li><b>Image.</b> Clique sur le cadre ou glisses-y une image : elle est recadrée en carré et enregistrée dans <code>public/img/items</code>.</li>
             <li><b>Enregistrer</b> (Ctrl+S) met aussi à jour la partie en cours : les joueurs voient tout de suite le nouveau nom, la description et l'image.</li>
             <li><b>Supprimer</b> retire l'objet du catalogue. Les exemplaires déjà possédés par les joueurs ou rangés dans le vaisseau restent jusqu'à la prochaine partie.</li>

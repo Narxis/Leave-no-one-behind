@@ -7,7 +7,8 @@
         "/css/ui-menus.css",
         "/css/ship-alerts.css",
         "/css/mj-ship.css",
-        "/css/mj-shop.css"
+        "/css/mj-shop.css",
+        "/css/mj-craft.css"
     ]
 }) %>
 
@@ -204,6 +205,47 @@
                     <div class="mj-shop-log" id="mj-shop-log"></div>
                 </div>
             </section>
+
+            <!-- Atelier d'artisanat (mj-craft.js) -->
+            <section class="mj-craft" id="mj-craft">
+                <div class="mj-craft-col">
+                    <div class="mj-shop-head">
+                        <div class="mj-ship-title">Atelier</div>
+                        <span class="mj-craft-state" id="mj-craft-state">Moment calme</span>
+                    </div>
+                    <p class="mj-ship-help">On fabrique dans le vaisseau, pendant un moment calme. Les ingrédients sont pris dans l'inventaire de l'artisan, qui reçoit l'objet.</p>
+                    <div class="mj-craft-settings">
+                        <label>Artisan <select id="mj-craft-crafter" class="add-life"></select></label>
+                        <label>Armurerie <select id="mj-craft-armory" class="add-life"></select></label>
+                    </div>
+                    <div class="mj-craft-dice">
+                        <label class="mj-ship-toggle"><input type="checkbox" id="mj-craft-roll"> Lancer le dé de réussite</label>
+                        <span class="mj-craft-chance" id="mj-craft-chance"></span>
+                    </div>
+                    <small class="mj-craft-fail" id="mj-craft-fail"></small>
+                    <div class="mj-ship-subtitle">Recettes</div>
+                    <div class="mj-craft-recipes" id="mj-craft-recipes"></div>
+                    <div class="mj-shop-msg" id="mj-craft-msg" role="status"></div>
+                </div>
+                <div class="mj-craft-col">
+                    <div class="mj-ship-subtitle">Assemblage libre</div>
+                    <p class="mj-ship-help">Assemblez des objets de l'artisan et décidez du résultat (un objet du catalogue ou un nouveau nom).</p>
+                    <div class="mj-craft-free-add">
+                        <select id="mj-craft-free-item" class="add-life" aria-label="Ingrédient"></select>
+                        <input type="number" id="mj-craft-free-qty" class="add-life" min="1" max="99" value="1" aria-label="Quantité">
+                        <button type="button" class="add-life" id="mj-craft-free-add" title="Ajouter l'ingrédient">+</button>
+                    </div>
+                    <div class="mj-craft-free-list" id="mj-craft-free-list"></div>
+                    <div class="mj-craft-free-result">
+                        <input type="text" id="mj-craft-result" class="add-life" list="mj-craft-results" maxlength="60" placeholder="Objet obtenu">
+                        <input type="number" id="mj-craft-result-qty" class="add-life" min="1" max="99" value="1" aria-label="Exemplaires obtenus">
+                    </div>
+                    <datalist id="mj-craft-results"></datalist>
+                    <button type="button" class="add-life fight" id="mj-craft-free-make" disabled>Assembler</button>
+                    <div class="mj-ship-subtitle">Journal</div>
+                    <div class="mj-shop-log" id="mj-craft-log"></div>
+                </div>
+            </section>
         </div>
     </div>
 <script>var BESTIARY = <%- JSON.stringify(locals.bestiary || []).replace(/</g, '\\u003c') %>;
@@ -222,5 +264,6 @@ var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u00
 <script src="js/ship-map.js"></script>
 <script src="js/mj-ship.js"></script>
 <script src="js/mj-shop.js"></script>
+<script src="js/mj-craft.js"></script>
 <%- include("partials/bottom-scripts") %>
 </body>

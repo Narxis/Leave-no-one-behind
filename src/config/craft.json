@@ -1,0 +1,6 @@
+{
+  "baseChance": 70,
+  "armoryBonus": 10,
+  "armoryMax": 3,
+  "failLosesIngredients": true
+}

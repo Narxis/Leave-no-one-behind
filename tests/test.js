@@ -35,6 +35,7 @@ async function test() {
     await test_items_editor();
     await test_item_quantities();
     await test_merchant();
+    await test_craft();
     test_npcs();
     await test_remote();
 }
@@ -822,6 +823,118 @@ async function test_merchant() {
         await DB.tables.items.destroy({where: {slug: ['pile-test', 'custom-babiole-maison']}});
         await DB.tables.players.destroy({where: {discord_id: [A, B]}});
         await DB.tables.ship.update({cryopods: 1000, credits: 0}, {where: {}});
+    }
+}
+
+// Artisanat : recettes de l'éditeur d'objets, fabrication, dé et armurerie
+async function test_craft() {
+    console.log('Testing craft');
+    const craft = require('../src/controllers/craft');
+    const inventory = require('../src/controllers/inventory');
+    const combat = require('../src/controllers/combat');
+    const itemsEditor = require('../src/controllers/itemsEditor');
+    const file = __dirname + '/../src/config/items.json';
+    const backup = fs.readFileSync(file);
+    const A = 'craft-joueur-a';
+    const SLUGS = ['ferraille-test', 'colle-test', 'bouclier-test', 'custom-totem-test'];
+    const count = async (slug, who) => inventory.countOf(slug, who);
+    const player = {type: 'player', id: A}, ship = {type: 'ship'};
+    try {
+        // Recettes propres : ingrédients connus, fusionnés, jamais l'objet lui-même
+        let known = {a: true, b: true, c: true};
+        assert.deepStrictEqual(craft.cleanRecipe({ingredients: [{slug: 'a', qty: 2}, {slug: 'a', qty: '1'}, {slug: 'x'}, {slug: 'c'}, {slug: 'b', qty: -5}], qty: 0}, known, 'c'),
+            {ingredients: [{slug: 'a', qty: 3}, {slug: 'b', qty: 1}], qty: 1});
+        assert.strictEqual(craft.cleanRecipe({ingredients: [{slug: 'x'}]}, known, 'c'), null);
+        assert.strictEqual(craft.cleanRecipe(null, known, 'c'), null);
+        assert.strictEqual(craft.cleanRecipe({ingredients: 'a'}, known, 'c'), null);
+
+        // Recette saisie dans l'éditeur d'objets
+        await itemsEditor.save({name: 'Ferraille test', pool: 'atelier_test'});
+        await itemsEditor.save({name: 'Colle test', pool: 'atelier_test'});
+        let out = await itemsEditor.save({name: 'Bouclier test', pool: 'atelier_test',
+            recipe: {ingredients: [{slug: 'ferraille-test', qty: 2}, {slug: 'colle-test', qty: 1}, {slug: 'inconnu'}, {slug: 'bouclier-test'}], qty: 2}});
+        assert.deepStrictEqual(out.item.recipe, {ingredients: [{slug: 'ferraille-test', qty: 2}, {slug: 'colle-test', qty: 1}], qty: 2});
+        assert.deepStrictEqual(JSON.parse(fs.readFileSync(file)).atelier_test.find(i => i.slug === 'bouclier-test').recipe, out.item.recipe);
+        out = await itemsEditor.save({slug: 'colle-test', name: 'Colle test', pool: 'atelier_test', recipe: {ingredients: []}});
+        assert.strictEqual(out.item.recipe, null);
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).atelier_test.find(i => i.slug === 'colle-test').recipe, undefined, 'sans ingrédient : pas de recette écrite');
+        let recipe = craft.recipes().find(r => r.slug === 'bouclier-test');
+        assert.strictEqual(recipe.ingredients[0].name, 'Ferraille test');
+        assert.strictEqual(recipe.qty, 2);
+
+        // Armurerie et chance de réussite
+        const cfg = craft.config();
+        assert.strictEqual(craft.chance(0, {baseChance: 70, armoryBonus: 10}), 70);
+        assert.strictEqual(craft.chance(5, {baseChance: 70, armoryBonus: 10}), 100, 'jamais plus de 100 %');
+        assert.strictEqual((await craft.setArmory(99)).level, cfg.armoryMax);
+        assert.strictEqual(await craft.armory(), cfg.armoryMax);
+        assert.strictEqual((await craft.setArmory(-2)).level, 0);
+        let msg = (await craft.handle({action: 'craft-armory', data: {level: 1}}))[0];
+        assert.strictEqual(msg.action, 'craft');
+        assert.strictEqual(msg.data.armory, 1);
+        assert.strictEqual(msg.data.chance, craft.chance(1, cfg));
+
+        // Fabrication : il faut tous les ingrédients chez l'artisan
+        await new Player().create({discord_id: A, name: 'Ca', race: 'aku'});
+        let ferraille = await inventory.ensureItem({slug: 'ferraille-test'});
+        let colle = await inventory.ensureItem({slug: 'colle-test'});
+        await inventory.giveTo(ferraille, player, 3);
+        assert.ok((await craft.make({crafter: player, slug: 'bouclier-test'})).error.includes('Colle test'), 'il manque la colle');
+        assert.ok((await craft.make({crafter: {type: 'player', id: 'personne'}, slug: 'bouclier-test'})).error);
+        assert.ok((await craft.make({crafter: player, slug: 'ferraille-test'})).error, 'pas de recette');
+        await inventory.giveTo(colle, player, 1);
+
+        // Jamais en plein combat
+        await combat.handle({action: 'combat-start', data: {enemies: [{name: 'Pirate', hp: 5}]}});
+        assert.ok((await craft.make({crafter: player, slug: 'bouclier-test'})).error.includes('combat'));
+        await combat.handle({action: 'combat-end'});
+
+        let made = await craft.make({crafter: player, slug: 'bouclier-test'});
+        assert.ok(!made.error, made.error);
+        assert.strictEqual(made.event.type, 'craft');
+        assert.strictEqual(await count('ferraille-test', player), 1);
+        assert.strictEqual(await count('colle-test', player), 0);
+        assert.strictEqual(await count('bouclier-test', player), 2, 'la recette donne 2 exemplaires');
+
+        // Dé raté : les ingrédients sont perdus (config failLosesIngredients)
+        await inventory.giveTo(ferraille, ship, 2);
+        await inventory.giveTo(colle, ship, 1);
+        await craft.setArmory(0);
+        const random = Math.random;
+        Math.random = () => 0.999;      // 100 : raté
+        try {
+            made = await craft.make({crafter: ship, slug: 'bouclier-test', roll: true});
+        } finally {
+            Math.random = random;
+        }
+        assert.strictEqual(made.event.type, 'craft-failed');
+        assert.strictEqual(made.event.roll, 100);
+        assert.strictEqual(made.item, null);
+        assert.strictEqual(await count('bouclier-test', ship), 0);
+        assert.strictEqual(await count('ferraille-test', ship), cfg.failLosesIngredients ? 0 : 2);
+
+        // Assemblage libre : le MJ choisit les ingrédients et le résultat
+        assert.ok((await craft.make({crafter: player, ingredients: [], name: 'Totem test'})).error);
+        assert.ok((await craft.make({crafter: player, ingredients: [{slug: 'ferraille-test', qty: 1}]})).error, 'il faut un résultat');
+        assert.ok((await craft.make({crafter: player, ingredients: [{slug: 'ferraille-test', qty: 5}], name: 'Totem test'})).error, 'pas assez de ferraille');
+        let msgs = await craft.handle({action: 'craft-make', data: {crafter: player, ingredients: [{slug: 'ferraille-test', qty: 1}, {slug: 'bouclier-test', qty: 1}], name: 'Totem test', qty: 1}});
+        assert.strictEqual(msgs[0].action, 'craft');
+        assert.strictEqual(msgs[0].data.event.free, true);
+        assert.ok(msgs.some(m => m.action === 'inventory' && m.data.event && m.data.event.item.name === 'Totem test'), 'l\'écran de jeu voit l\'objet arriver');
+        assert.strictEqual(msgs[0].data.holdings.players[A]['custom-totem-test'], 1);
+        assert.strictEqual(await count('ferraille-test', player), 0);
+        assert.strictEqual(await count('bouclier-test', player), 1);
+        assert.strictEqual((await craft.handle({action: 'craft-make', data: {crafter: player, slug: 'bouclier-test'}})).action, 'craft-error');
+        assert.strictEqual(msgs[0].data.log.length, 3);
+        craft.reset();
+        assert.strictEqual((await craft.message()).data.log.length, 0);
+        console.log('Craft OK');
+    }
+    finally {
+        fs.writeFileSync(file, backup);
+        await DB.tables.items.destroy({where: {slug: SLUGS}});
+        await DB.tables.players.destroy({where: {discord_id: A}});
+        await DB.tables.ship.update({armory_up: 0}, {where: {}});
     }
 }
 

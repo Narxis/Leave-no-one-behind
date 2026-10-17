@@ -19,6 +19,7 @@ const itemsEditor = require("./itemsEditor");
 const npcs = require("./npcs");
 const money = require("./money");
 const merchant = require("./merchant");
+const craft = require("./craft");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
@@ -755,9 +756,10 @@ module.exports = {
     let items = new Items();
     await items.hydrateDB();
     await items.giveAllStarters();
-    // Bourses de départ (config/currency.json), boutique fermée
+    // Bourses de départ (config/currency.json), boutique fermée, atelier vide
     await money.reset();
     merchant.reset();
+    craft.reset();
 
     await CONFIG.upsert('gameState', 'gameLive')
     playerView.changed();

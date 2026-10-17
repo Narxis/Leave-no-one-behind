@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const races = require('./races');
 const money = require('./money');
+const craft = require('./craft');
 
 // Catalogue des objets (éditeur /items) : src/config/items.json, rangé par
 // catégorie (« pool »). Chaque objet a aussi un type facultatif (arme,
@@ -15,6 +16,8 @@ const money = require('./money');
 // quand on ajoute l'objet à un butin (cartes, ennemis, combat).
 // Le prix (« price », en monnaie du jeu, absent : pas de prix) est celui des
 // marchands ; ils le rachètent à une part de ce prix (config/currency.json).
+// La recette (« recipe », facultative) dit comment fabriquer l'objet à
+// l'atelier : {ingredients: [{slug, qty}], qty: exemplaires fabriqués}.
 
 const ITEMS_FILE = path.join(__dirname, '../config/items.json');
 const IMAGE_DIR = path.join(__dirname, '../../public/img/items');
@@ -39,6 +42,7 @@ const slugify = (text, sep = '-') => String(text).toLowerCase()
 const imageUrl = (file) => file ? IMAGE_PATH + file : '';
 const qtyOf = (v) => Math.min(Math.max(parseInt(v) || 1, 1), MAX_QTY);
 const priceOf = (v) => Math.min(Math.max(parseInt(v) || 0, 0), MAX_PRICE);
+const knownSlugs = (pools) => Object.fromEntries(Object.values(pools).flat().map(i => [i.slug, true]));
 const ownersOf = (row) => row && row.owners ? String(row.owners).split(',').filter(Boolean) : [];
 
 // Exemplaires dans la partie en cours : {slug: {players, ship}}
@@ -52,7 +56,7 @@ const usage = async function () {
 
 // Liste à plat, dans l'ordre du fichier
 const list = async function () {
-    let pools = read(), used = await usage();
+    let pools = read(), used = await usage(), known = knownSlugs(pools);
     let items = [];
     for (let pool in pools)
         for (let item of pools[pool])
@@ -66,6 +70,7 @@ const list = async function () {
                 race: item.race || '',
                 qty: qtyOf(item.qty),
                 price: priceOf(item.price),
+                recipe: craft.cleanRecipe(item.recipe, known, item.slug),
                 image: imageUrl(item.image),
                 used: used[item.slug] || {players: 0, ship: 0}
             });
@@ -143,6 +148,9 @@ const save = async function (data) {
         item.qty = qtyOf(data.qty);
     if (priceOf(data.price) > 0)
         item.price = priceOf(data.price);
+    let recipe = craft.cleanRecipe(data.recipe, knownSlugs(pools), slug);
+    if (recipe)
+        item.recipe = recipe;
     item.image = existing ? (existing.item.image || '') : '';
 
     // Image envoyée par l'éditeur : un PNG déjà redimensionné par le navigateur
