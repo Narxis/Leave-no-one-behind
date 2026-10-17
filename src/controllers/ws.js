@@ -245,8 +245,19 @@ const actionSetModule = async function(response) {
  */
 const actionSetStatus = async function(response) {
 
-    let status = response.data.name;
-    let val = response.data.value;
+    let status = String(response.data.name || '').trim().toLowerCase();
+    // Durée en tours de carte : un champ vide vaut 1, 0 retire le status
+    let val = response.data.value === '' || response.data.value === undefined ? 1 : parseInt(response.data.value);
+    let known = await DB.tables.statuses.findOne({where: {slug: status}});
+    if (!known || isNaN(val))
+        return {
+            action: response.action,
+            error: true,
+            error_msg: 'status inconnu ou durée invalide : ' + status,
+            data: {}
+        };
+    val = Math.max(0, Math.min(99, val));
+    response.data = {name: status, value: val};
     let statuses = new Statuses();
 
     await statuses.updateStatus(status, val);

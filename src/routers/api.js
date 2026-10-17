@@ -10,6 +10,7 @@ module.exports = function(router) {
     router.get(basePath + '/nextCard/get', controller.getNextCard);
     router.get(basePath + '/nextCard/pop', controller.popNextCard);
     router.get(basePath + '/nextCard/get/:name', controller.getCardByName);
+    router.get(basePath + '/currentCard', controller.getCurrentCard);
 
     router.get(basePath + '/getAllCards', controller.getAllCards);
     router.get(basePath + '/getAllCards/:type', controller.getAllCards);
