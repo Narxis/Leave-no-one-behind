@@ -1,0 +1,39 @@
+# Construit l'app de bureau (Windows, macOS, Linux) à la demande depuis
+# l'onglet Actions, ou quand un tag v* est poussé. Les installeurs sont
+# téléchargeables dans les artefacts du run.
+name: App de bureau
+
+on:
+  workflow_dispatch:
+  push:
+    tags: [ "v*" ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-latest, macos-latest, ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
+    - run: npm ci
+    - run: npm test
+    # Pas de certificat de signature pour l'instant : Windows et macOS
+    # afficheront un avertissement au premier lancement
+    - run: npx electron-builder --publish never
+      env:
+        CSC_IDENTITY_AUTO_DISCOVERY: false
+    - uses: actions/upload-artifact@v4
+      with:
+        name: lnob-${{ matrix.os }}
+        path: |
+          dist/*.exe
+          dist/*.dmg
+          dist/*.AppImage
+        if-no-files-found: error

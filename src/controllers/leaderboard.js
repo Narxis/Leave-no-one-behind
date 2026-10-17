@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const allies = require('./allies');
 const gameSettings = require('./gameSettings');
 
@@ -7,9 +6,8 @@ const gameSettings = require('./gameSettings');
 // son score est enregistré à l'écran de fin. Gardé dans un fichier (comme les
 // alliés) : la configuration en base est remise à zéro à chaque démarrage du
 // serveur, le classement doit survivre aux parties et aux redémarrages.
-// Chemin relatif au dossier du serveur, pour qu'un serveur de test lancé
-// ailleurs avec sa copie de storage n'écrive pas dans celle du jeu
-const FILE = path.join(process.cwd(), 'storage/cache/leaderboard.json');
+// Dans le dossier de données (voir config/paths.js)
+const FILE = require('../config/paths').cache('leaderboard.json');
 const NAME_MAX = 40;
 
 let data = {current: null, entries: []};
