@@ -16,6 +16,7 @@ const {Player} = require('../models/player');
 const lobby = require('./lobby');
 const races = require('./races');
 const statRolls = require('./statRolls');
+const chat = require('./chat');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = ['', 'scanner', 'proximity', 'motors', 'oxygen', 'energy', 'gravity'];
@@ -97,6 +98,15 @@ const RULES = {
             return refuse('Emote invalide.');
         return {action: 'emote', emoji: emoji, type: 'glyph', uid: player.id};
     },
+    // Chat : salon commun, ou privé (seul le MJ le lit). Signé du nom du
+    // perso s'il en a un, sinon du pseudo du lobby.
+    chat: async (player, data) => {
+        let character = await characterOf(player.id);
+        let result = chat.fromPlayer(player, character ? character.name : player.name, data);
+        if (result.error)
+            return refuse(result.error);
+        return {done: true, action: 'chat'};
+    },
     // Donner un objet de son inventaire à un autre joueur (comme /donner)
     'inventory-move': async (player, data) => {
         let to = data.to || {};
@@ -131,6 +141,8 @@ const init = function ({run, broadcast}) {
         if (action.refused)
             return lobby.sendTo(player.id, {kind: 'refused', action: message.action, message: action.refused});
 
+        if (action.done)
+            return; // déjà fait et diffusé (chat)
         log('[LOBBY] ' + player.name + ' : ' + action.action, '#4fd8e0');
         let results = [].concat(await run(action));
         for (let result of results)

@@ -32,7 +32,7 @@
     gap: 16px;
     padding: 12px 20px 12px 92px;
     border-bottom: 1px solid var(--ui-border);
-    background: rgb(12 9 38 / 88%);
+    background: rgb(12 9 38);
     backdrop-filter: blur(10px);
 }
 
@@ -151,7 +151,7 @@
     padding: 16px;
     overflow-y: auto;
     border-right: 1px solid var(--ui-border);
-    background: rgb(12 9 38 / 80%);
+    background: rgb(12 9 38);
     backdrop-filter: blur(10px);
 }
 
@@ -390,7 +390,7 @@
     padding: 4px;
     border: 1px solid var(--ui-border);
     border-radius: var(--ui-radius-sm);
-    background: rgb(12 9 38 / 88%);
+    background: rgb(12 9 38);
 }
 
 .pe-zoom button {

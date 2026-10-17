@@ -31,10 +31,22 @@
             <p class="lobby-empty" id="lobby-empty">Personne pour l'instant.</p>
             <ul class="lobby-players" id="lobby-players"></ul>
 
+            <h2 class="lobby-subtitle">Chat</h2>
+            <div class="chat" id="chat">
+                <div class="chat-channels" id="chat-channels" role="group" aria-label="Conversations"></div>
+                <ol class="chat-messages" id="chat-messages" aria-live="polite"></ol>
+                <p class="chat-empty" id="chat-empty">Aucun message.</p>
+                <form class="chat-form" id="chat-form" autocomplete="off">
+                    <textarea id="chat-text" rows="2" maxlength="500" placeholder="Écrire dans le salon…" aria-label="Message"></textarea>
+                    <button type="submit" class="lobby-btn primary">Envoyer</button>
+                </form>
+            </div>
+
             <button type="button" class="lobby-btn danger" id="lobby-close">Fermer la partie</button>
         </section>
         <p class="lobby-error" id="lobby-error" role="alert" hidden></p>
     </main>
     <script src="/js/lobby.js"></script>
+    <script src="/js/lobby-chat.js"></script>
     <%- include("partials/bottom-scripts") %>
 </body>
