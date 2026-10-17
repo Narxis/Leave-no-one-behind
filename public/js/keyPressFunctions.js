@@ -115,6 +115,8 @@ async function initialiseKeyListener() {
                 document.querySelector(".tab-grav").classList.toggle("open");
                 break;
             case "ArrowLeft":
+                // Pas d'onglet consommables sur la planète
+                if (typeof initialiseleLeftTabs !== 'function') break;
                 (async function leftKeyPress() {
                     await initialiseleLeftTabs();
                     document.querySelector(".wrapper-menu").classList.toggle("open-but");
