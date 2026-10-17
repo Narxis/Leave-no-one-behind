@@ -379,6 +379,11 @@ input.add-life:focus,
 /* Mise en page responsive : 3 colonnes, puis 2, puis 1. Le cadre n'est
    plus centré sur un point fixe (.center 0x0) mais dans le flux, pour que
    la page défile quand il ne tient pas à l'écran */
+/* Le menu Échap passe au-dessus du cadre (.center a aussi un z-index) */
+.mj-page #menuToggle {
+    z-index: 10;
+}
+
 .mj-page .center {
     position: relative;
     z-index: 1;
