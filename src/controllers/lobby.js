@@ -20,9 +20,29 @@ const reset = function () {
 };
 reset();
 
-// Écouteurs des messages des joueurs (étapes suivantes : jeu, chat…)
+// Écouteurs des messages et des arrivées des joueurs (remote.js)
 const listeners = [];
 const onPlayerMessage = (fn) => listeners.push(fn);
+const joinListeners = [];
+const onPlayerJoin = (fn) => joinListeners.push(fn);
+
+const notifyJoin = function (player) {
+    for (let fn of joinListeners) {
+        try {
+            fn(player);
+        } catch (e) {
+            log('[LOBBY] ' + e);
+        }
+    }
+};
+
+// Un joueur arrive ou revient : on garde le nom de son perso, s'il en a un
+const addPlayer = function (p) {
+    let known = state.players.get(p.id);
+    let player = {id: p.id, name: p.name, online: true, character: known ? known.character : null};
+    state.players.set(p.id, player);
+    return player;
+};
 
 const formatCode = (code) => code ? code.slice(0, 3) + '-' + code.slice(3) : null;
 
@@ -82,15 +102,16 @@ const onRelayMessage = function (raw) {
         // Retour après une coupure : ceux qui sont encore là repassent en ligne
         for (let p of state.players.values())
             p.online = false;
-        for (let p of msg.players)
-            state.players.set(p.id, {id: p.id, name: p.name, online: true});
+        let back = msg.players.map(addPlayer);
         log('[LOBBY] Partie ouverte : ' + formatCode(msg.code), '#4fd8e0');
         changed();
+        back.forEach(notifyJoin);
     }
     else if (msg.type === 'join') {
-        state.players.set(msg.player.id, {id: msg.player.id, name: msg.player.name, online: true});
+        let player = addPlayer(msg.player);
         log('[LOBBY] ' + msg.player.name + ' a rejoint la partie', '#4fd8e0');
         changed();
+        notifyJoin(player);
     }
     else if (msg.type === 'leave') {
         let p = state.players.get(msg.id);
@@ -174,6 +195,15 @@ const close = function () {
     return message();
 };
 
+// Nom du perso lié à ce joueur (null s'il n'en a pas encore)
+const setCharacter = function (id, name) {
+    let p = state.players.get(String(id));
+    if (!p || p.character === name)
+        return;
+    p.character = name;
+    changed();
+};
+
 const kick = function (id) {
     relaySend({type: 'kick', id: String(id)});
     state.players.delete(String(id));
@@ -195,4 +225,4 @@ const handle = function (response) {
     }
 };
 
-module.exports = {RELAY_URL, open, close, kick, handle, getState, sendTo, onPlayerMessage};
+module.exports = {RELAY_URL, open, close, kick, handle, getState, sendTo, setCharacter, onPlayerMessage, onPlayerJoin};

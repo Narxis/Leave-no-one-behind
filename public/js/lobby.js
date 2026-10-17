@@ -32,6 +32,10 @@
             let name = document.createElement('span');
             name.className = 'lobby-player-name';
             name.textContent = p.name;
+            // Perso retrouvé grâce à l'identifiant d'app du joueur
+            let character = document.createElement('span');
+            character.className = 'lobby-player-character';
+            character.textContent = p.character ? 'perso : ' + p.character : 'pas de perso';
             let status = document.createElement('span');
             status.className = 'lobby-player-status';
             status.textContent = p.online ? 'en ligne' : 'déconnecté';
@@ -43,7 +47,7 @@
                 if (confirm('Retirer ' + p.name + ' de la partie ?'))
                     wsLNOB.send({action: 'lobby-kick', data: {id: p.id}});
             });
-            li.append(name, status, kick);
+            li.append(name, character, status, kick);
             return li;
         }));
     };

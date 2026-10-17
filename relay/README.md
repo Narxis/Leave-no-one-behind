@@ -8,7 +8,7 @@ Le relais met en relation le MJ et les joueurs d'une partie en ligne. Le jeu tou
 
 ## Jouer en local
 
-À la racine du dépôt : `npm run relay`, puis `npm run app` et « Créer une partie ». Le relais local écoute sur http://127.0.0.1:8787, l'adresse utilisée par défaut.
+L'app utilise le relais en ligne, https://lnob-relay.narxis.workers.dev (`lnob.relayUrl` dans `package.json`). Pour jouer avec un relais local : `npm run relay` à la racine du dépôt, puis `LNOB_RELAY_URL=http://127.0.0.1:8787 npm run app` et « Créer une partie ».
 
 ## Mettre le relais en ligne (une seule fois)
 
@@ -25,4 +25,4 @@ Pour tester une autre adresse sans refaire l'app : variable d'environnement `LNO
 
 ## Tests
 
-`node tests/relay.js` (lancé par `npm test`) teste le relais Node. Pour tester la version Cloudflare : `npm run dev` dans ce dossier, puis `RELAY_URL=http://127.0.0.1:8787 node tests/relay.js` à la racine.
+`node tests/relay.js` (lancé par `npm test`) teste le relais Node. Pour tester la version Cloudflare : `npm run dev` dans ce dossier, puis `RELAY_URL=http://127.0.0.1:8787 node tests/relay.js` à la racine. Le relais en ligne se teste de la même façon : `RELAY_URL=https://lnob-relay.narxis.workers.dev node tests/relay.js`.
