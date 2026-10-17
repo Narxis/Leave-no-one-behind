@@ -13,6 +13,7 @@ const shipAlerts = require("./shipAlerts");
 const lobby = require("./lobby");
 const remote = require("./remote");
 const playerView = require("./playerView");
+const chat = require("./chat");
 const WebSocket = require("ws");
 
 const init = function (){
@@ -28,7 +29,8 @@ const init = function (){
             // aussi une attaque de combat)
             makeAction(data).then(data => {
                 for (let payload of (Array.isArray(data) ? data : [data]))
-                    broadcastData(payload, ws);
+                    if (payload)
+                        broadcastData(payload, ws);
             })
         });
 
@@ -43,6 +45,7 @@ const init = function (){
         broadcast: (payload) => broadcastData(payload)
     });
     playerView.init();
+    chat.init(payload => broadcastData(payload));
 }
 
 const makeAction = async function (raw_response) {
@@ -134,6 +137,10 @@ const makeAction = async function (raw_response) {
         case 'lobby-close':
         case 'lobby-kick':
             payload = lobby.handle(response);
+            break;
+        case 'chat-send':
+        case 'chat-history':
+            payload = chat.handle(response);
             break;
         case 'ship-alerts':
             payload = shipAlerts.handle(response);
@@ -395,7 +402,7 @@ const broadcastData = function (data, ws, sendBackToSender = true) {
         log(e)
     }
     // L'état du jeu a pu changer : la vue des joueurs en ligne suit
-    if (!data || data.action !== 'lobby')
+    if (!data || !['lobby', 'chat', 'chat-history'].includes(data.action))
         playerView.changed();
 }
 
