@@ -6,6 +6,7 @@
     const list = document.getElementById('mj-enemies');
     const logBox = document.getElementById('mj-combat-log');
     const startBtn = document.getElementById('combat-start');
+    const initSelect = document.getElementById('combat-initiative');
     const search = document.getElementById('search-ennemy');
     const teamBox = document.getElementById('mj-team');
     const statusBox = document.getElementById('mj-status-panel');
@@ -300,14 +301,83 @@
         list.append(box);
     }
 
-    // Tour en cours ; « Tour suivant » fait agir les statuts
+    // Tour en cours et ordre de jeu ; « Tour suivant » fait agir les statuts
     function renderTurn() {
         let bar = el('div', 'mj-turn');
         bar.append(el('span', 'mj-turn-label', 'Tour ' + (state.turn || 1)));
-        let next = button('mj-turn-next', 'Tour suivant', () => wsLNOB.send({action: 'combat-turn', data: {}}));
-        next.title = 'Les statuts qui blessent agissent, puis chaque statut perd un tour';
-        bar.append(next);
+        let order = state.order || [];
+        if (order.length) {
+            let next = button('mj-turn-next', 'Au suivant', () => wsLNOB.send({action: 'combat-next', data: {}}));
+            next.title = 'Passe la main au combattant suivant ; après le dernier, le tour passe';
+            bar.append(next);
+        }
+        let turn = button('mj-turn-next mj-turn-skip', 'Tour suivant', () => wsLNOB.send({action: 'combat-turn', data: {}}));
+        turn.title = 'Les statuts qui blessent agissent, puis chaque statut perd un tour ; la main revient au premier';
+        bar.append(turn);
+        if (order.length)
+            bar.append(renderOrder(order));
         list.append(bar);
+    }
+
+    // Combattant K.O. : il passe son tour
+    function isDownLocal(f) {
+        if (f.kind === 'enemy') {
+            let enemy = state.enemies.find(e => e.id === f.id);
+            return !enemy || enemy.hp <= 0;
+        }
+        let who = f.kind === 'ally' ? allies.find(a => 'npc' + a.id === f.id) : players.find(p => String(p.discord_id) === f.id);
+        return !!who && hpOf(f.id, who.moral) <= 0;
+    }
+
+    // Ordre de jeu, fixé par l'initiative : le MJ le change avec les flèches
+    // ou en glissant un nom, et donne la main à quelqu'un en cliquant son nom
+    let dragFrom = null;
+    function renderOrder(order) {
+        let box = el('ol', 'mj-order');
+        let keys = order.map(f => f.kind + ':' + f.id);
+        const send = (data) => wsLNOB.send({action: 'combat-order', data: data});
+        const move = (from, to) => {
+            let k = keys.slice();
+            k.splice(to, 0, k.splice(from, 1)[0]);
+            send({order: k});
+        };
+        order.forEach((f, i) => {
+            let row = el('li', 'mj-order-row kind-' + f.kind + (i === state.current ? ' current' : '') + (isDownLocal(f) ? ' ko' : ''));
+            let name = button('mj-order-name', f.name, () => send({current: keys[i]}));
+            name.title = i === state.current ? 'À ' + f.name + ' de jouer' : 'Donner la main à ' + f.name;
+            if (f.kind === 'ally')
+                name.prepend(el('span', 'mj-ally-badge', 'PNJ'));
+            let up = button('mj-order-move', '▲', () => move(i, i - 1));
+            up.disabled = i === 0;
+            up.title = 'Jouer plus tôt';
+            let down = button('mj-order-move', '▼', () => move(i, i + 1));
+            down.disabled = i === order.length - 1;
+            down.title = 'Jouer plus tard';
+            row.append(el('span', 'mj-order-rank', (i + 1) + '.'), name, up, down);
+
+            row.draggable = true;
+            row.addEventListener('dragstart', (e) => {
+                dragFrom = i;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', keys[i]);
+            });
+            row.addEventListener('dragover', (e) => {
+                if (dragFrom === null)
+                    return;
+                e.preventDefault();
+                row.classList.add('drop');
+            });
+            row.addEventListener('dragleave', () => row.classList.remove('drop'));
+            row.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (dragFrom !== null && dragFrom !== i)
+                    move(dragFrom, i);
+                dragFrom = null;
+            });
+            row.addEventListener('dragend', () => { dragFrom = null; });
+            box.append(row);
+        });
+        return box;
     }
 
     const isStunned = (statuses) => Object.values(statuses || {}).some(s => s.stun);
@@ -515,6 +585,7 @@
         if (refocus && list.querySelector(refocus))
             list.querySelector(refocus).focus();
         startBtn.textContent = state.active ? 'Terminer le combat' : 'Commencer le combat';
+        initSelect.classList.toggle('hide', state.active);
         startBtn.classList.toggle('running', state.active);
         // Fin du combat : rare et irréversible, elle demande un appui long (ui-hold.js)
         if (state.active)
@@ -640,7 +711,7 @@
             startBtn.classList.add('shake');
             return;
         }
-        wsLNOB.send({action: 'combat-start', data: {enemies: pending}});
+        wsLNOB.send({action: 'combat-start', data: {enemies: pending, initiative: initSelect.value}});
     });
 
     document.addEventListener('combat', (e) => {
