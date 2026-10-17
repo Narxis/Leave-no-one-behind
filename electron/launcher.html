@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'">
+    <title>LNOB</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jura:wght@400;600;700&display=swap">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 28px;
+            padding: 32px;
+            background: radial-gradient(circle at 50% 0%, #1d1650 0%, #0b0c14 65%);
+            color: #eeecfb;
+            font-family: Jura, system-ui, sans-serif;
+            user-select: none;
+        }
+        h1 {
+            margin: 0;
+            text-align: center;
+            font-size: 28px;
+            letter-spacing: .08em;
+            color: #ffcc00;
+            text-shadow: 0 0 14px rgb(255 204 0 / 45%);
+        }
+        h1 span { opacity: .45; }
+        .choices { display: flex; flex-direction: column; gap: 14px; }
+        button {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 18px 20px;
+            border: 1px solid rgb(176 166 255 / 26%);
+            border-radius: 14px;
+            background: rgb(16 12 48 / 78%);
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+        button:hover:not(:disabled) { border-color: #ffcc00; }
+        button:disabled { opacity: .5; cursor: wait; }
+        button strong { font-size: 19px; letter-spacing: .04em; color: #ffcc00; }
+        button span { font-size: 14px; color: rgb(226 222 255 / 62%); }
+        .message { margin: 0; min-height: 20px; color: rgb(226 222 255 / 62%); text-align: center; font-size: 14px; }
+        .message.error { color: #ff5a6e; }
+    </style>
+</head>
+<body>
+    <h1>LEAVE <span>NO</span> ONE BEHIND</h1>
+    <div class="choices">
+        <button type="button" data-choice="host">
+            <strong>Créer une partie</strong>
+            <span>Tu es le MJ : le jeu tourne sur ce PC et tu donnes un code aux joueurs.</span>
+        </button>
+        <button type="button" data-choice="join">
+            <strong>Rejoindre une partie</strong>
+            <span>Tu es joueur : entre le code donné par le MJ.</span>
+        </button>
+    </div>
+    <p class="message" id="message" role="status"></p>
+    <script>
+        for (let button of document.querySelectorAll('button[data-choice]')) {
+            button.addEventListener('click', async () => {
+                let buttons = document.querySelectorAll('button');
+                let message = document.getElementById('message');
+                buttons.forEach(b => b.disabled = true);
+                message.className = 'message';
+                message.textContent = button.dataset.choice === 'host' ? 'Démarrage du jeu…' : '';
+                let result = await window.lnob.start(button.dataset.choice);
+                if (result && result.error) {
+                    message.className = 'message error';
+                    message.textContent = result.error;
+                    buttons.forEach(b => b.disabled = false);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

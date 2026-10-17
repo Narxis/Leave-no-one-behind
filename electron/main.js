@@ -1,14 +1,11 @@
-// App de bureau LNOB : lance le serveur du jeu dans l'app et l'affiche dans
-// une fenêtre, sans navigateur ni terminal.
-const {app, BrowserWindow, Menu, dialog, shell} = require('electron');
+// App de bureau LNOB. À l'ouverture, on choisit son mode :
+// - MJ : l'app lance le serveur du jeu, l'affiche et ouvre la partie en ligne
+//   (code à donner aux joueurs) ;
+// - joueur : l'app ouvre la page joueur, qui rejoint la partie par le relais.
+const {app, BrowserWindow, Menu, dialog, ipcMain, shell} = require('electron');
 const net = require('net');
 const os = require('os');
 const path = require('path');
-
-// Une seule app ouverte à la fois : deux serveurs écriraient dans les mêmes bases
-const hasLock = app.requestSingleInstanceLock();
-if (!hasLock)
-    app.quit();
 
 // Ce que le jeu écrit (bases, storage/cache, images des races customs) va dans
 // le dossier de données de l'utilisateur : le dossier de l'app est en lecture seule
@@ -19,6 +16,7 @@ process.env.DISABLE_BOT = 'true';
 const PREFERRED_PORT = parseInt(process.env.PORT) || 8080;
 let port = null;
 let mainWindow = null;
+let mode = null; // 'host' ou 'join'
 
 // Le port habituel s'il est libre (le panneau MJ sur téléphone garde la même
 // adresse d'une partie à l'autre), sinon un port choisi par le système
@@ -120,58 +118,117 @@ const showPhoneAccess = function () {
     win.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(html));
 };
 
+const viewMenu = {
+    label: 'Affichage',
+    submenu: [
+        {role: 'reload', label: 'Recharger'},
+        {role: 'resetZoom', label: 'Taille normale'},
+        {role: 'zoomIn', label: 'Agrandir'},
+        {role: 'zoomOut', label: 'Réduire'},
+        {type: 'separator'},
+        {role: 'togglefullscreen', label: 'Plein écran'},
+        {role: 'toggleDevTools', label: 'Outils de développement'}
+    ]
+};
+
 const buildMenu = function () {
+    let game = mode === 'host' ? [
+        {label: 'Écran principal', accelerator: 'CmdOrCtrl+Shift+H', click: () => mainWindow && mainWindow.loadURL(localUrl())},
+        {label: 'Panneau MJ', accelerator: 'CmdOrCtrl+M', click: () => createWindow('mj-menu', {width: 1280, height: 800})},
+        {label: 'Partie en ligne', accelerator: 'CmdOrCtrl+L', click: () => createWindow('lobby', {width: 760, height: 820, minWidth: 480})},
+        {label: 'Panneau MJ sur un téléphone…', click: showPhoneAccess},
+        {type: 'separator'},
+        {label: 'Dossier des données', click: () => shell.openPath(process.env.LNOB_DATA_DIR)},
+        {type: 'separator'}
+    ] : [];
     Menu.setApplicationMenu(Menu.buildFromTemplate([
-        {
-            label: 'Jeu',
-            submenu: [
-                {label: 'Écran principal', accelerator: 'CmdOrCtrl+Shift+H', click: () => mainWindow && mainWindow.loadURL(localUrl())},
-                {label: 'Panneau MJ', accelerator: 'CmdOrCtrl+M', click: () => createWindow('mj-menu', {width: 1280, height: 800})},
-                {label: 'Panneau MJ sur un téléphone…', click: showPhoneAccess},
-                {type: 'separator'},
-                {label: 'Dossier des données', click: () => shell.openPath(process.env.LNOB_DATA_DIR)},
-                {type: 'separator'},
-                {role: 'togglefullscreen', label: 'Plein écran'},
-                {role: 'quit', label: 'Quitter'}
-            ]
-        },
-        {
-            label: 'Affichage',
-            submenu: [
-                {role: 'reload', label: 'Recharger'},
-                {role: 'resetZoom', label: 'Taille normale'},
-                {role: 'zoomIn', label: 'Agrandir'},
-                {role: 'zoomOut', label: 'Réduire'},
-                {type: 'separator'},
-                {role: 'toggleDevTools', label: 'Outils de développement'}
-            ]
-        }
+        {label: 'Jeu', submenu: [...game, {role: 'quit', label: 'Quitter'}]},
+        viewMenu
     ]));
 };
 
-app.on('second-instance', () => {
-    if (mainWindow) {
-        if (mainWindow.isMinimized())
-            mainWindow.restore();
-        mainWindow.focus();
-    }
-});
+// Fenêtre de départ : « Créer une partie (MJ) » ou « Rejoindre une partie »
+const createLauncher = function () {
+    let win = new BrowserWindow({
+        width: 560,
+        height: 520,
+        resizable: false,
+        title: 'LNOB',
+        icon: path.join(__dirname, '../public/img/lnob-icon.ico'),
+        autoHideMenuBar: true,
+        backgroundColor: '#0b0c14',
+        webPreferences: {contextIsolation: true, sandbox: true, preload: path.join(__dirname, 'preload.js')}
+    });
+    win.loadFile(path.join(__dirname, 'launcher.html'));
+    return win;
+};
 
-app.on('window-all-closed', () => app.quit());
-
-app.whenReady().then(async () => {
-    if (!hasLock)
-        return;
+// Mode MJ : serveur du jeu, écran principal et partie en ligne
+const startHost = async function (launcher) {
+    // Un seul MJ par PC : deux serveurs écriraient dans les mêmes bases
+    if (!app.requestSingleInstanceLock())
+        return {error: 'Une partie MJ est déjà ouverte sur ce PC.'};
     try {
         process.env.PORT = String(await freePort());
         let started = await require('../server').start();
         port = started.port;
     } catch (e) {
-        dialog.showErrorBox('LNOB', 'Le jeu n\'a pas pu démarrer :\n\n' + (e && e.stack || e));
-        app.quit();
-        return;
+        app.releaseSingleInstanceLock();
+        return {error: 'Le jeu n\'a pas pu démarrer : ' + (e && e.message || e)};
     }
+    mode = 'host';
     buildMenu();
+    require('../src/controllers/lobby').open();
     mainWindow = createWindow('');
     mainWindow.maximize();
+    createWindow('lobby', {width: 760, height: 820, minWidth: 480});
+    launcher.close();
+    return {ok: true};
+};
+
+// Mode joueur : la page joueur, reliée au relais de la partie
+const startJoin = function (launcher) {
+    mode = 'join';
+    buildMenu();
+    let relay = require('../src/controllers/lobby').RELAY_URL;
+    let win = new BrowserWindow({
+        width: 900,
+        height: 760,
+        minWidth: 360,
+        minHeight: 480,
+        title: 'LNOB',
+        icon: path.join(__dirname, '../public/img/lnob-icon.ico'),
+        autoHideMenuBar: true,
+        backgroundColor: '#0b0c14',
+        webPreferences: {contextIsolation: true, sandbox: true}
+    });
+    // Les liens vers d'autres sites s'ouvrent dans le navigateur
+    win.webContents.setWindowOpenHandler(({url}) => {
+        shell.openExternal(url);
+        return {action: 'deny'};
+    });
+    win.webContents.on('will-navigate', (event, url) => {
+        if (!url.startsWith('file:')) {
+            event.preventDefault();
+            shell.openExternal(url);
+        }
+    });
+    win.loadFile(path.join(__dirname, '../public/player/index.html'), {query: {relay: relay}});
+    mainWindow = win;
+    launcher.close();
+    return {ok: true};
+};
+
+ipcMain.handle('lnob:start', (event, choice) => {
+    let launcher = BrowserWindow.fromWebContents(event.sender);
+    if (mode || !launcher)
+        return {error: 'Déjà lancé.'};
+    return choice === 'host' ? startHost(launcher) : startJoin(launcher);
+});
+
+app.on('window-all-closed', () => app.quit());
+
+app.whenReady().then(() => {
+    buildMenu();
+    createLauncher();
 });

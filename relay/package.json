@@ -1,0 +1,12 @@
+{
+  "name": "lnob-relay",
+  "private": true,
+  "description": "Relais LNOB : met en relation le MJ et les joueurs (Cloudflare Workers)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.147.0"
+  }
+}

@@ -27,6 +27,7 @@ module.exports = function(router) {
     router.get('/races', controller.renderRaces);
     router.get('/bestiaire', controller.renderNpcEditor);
     router.get('/leaderboard', controller.leaderboard);
+    router.get('/lobby', controller.lobby);
     router.get('/index-legacy', controller.indexLegacy);
 
     router.post('/fiche', controller.renderSingleSheet);
