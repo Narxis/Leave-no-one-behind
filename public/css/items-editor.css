@@ -1020,3 +1020,83 @@
     opacity: .8;
     font-weight: 700;
 }
+
+/* Recette : ingrédients à assembler à l'atelier */
+.ie-recipe-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ie-recipe-list[hidden] {
+    display: none;
+}
+
+.ie-recipe-row {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) 70px 24px;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 8px;
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    color: var(--ui-text);
+}
+
+.ie-recipe-row > img,
+.ie-recipe-row > .ie-noimg {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.ie-recipe-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ie-field .ie-recipe-row input {
+    padding: 5px 8px;
+    font-size: 14px;
+}
+
+.ie-recipe-remove {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--ui-text-dim);
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.ie-recipe-remove:hover {
+    color: var(--ui-danger);
+}
+
+.ie-recipe-add {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 70px auto;
+    gap: 8px;
+}
+
+.ie-recipe-yield {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ie-field .ie-recipe-yield input {
+    width: 80px;
+}
+
+.ie-recipe-yield[hidden] {
+    display: none;
+}
+
+.ie-recipe-uses {
+    color: var(--ui-cyan);
+}

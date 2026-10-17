@@ -794,6 +794,15 @@ body.combat-mode .stats-legend-title {
     transform: translateX(-50%);
 }
 
+/* Annonce (atelier) plutôt qu'erreur, au-dessus des onglets des joueurs */
+.inventory-toast.is-info {
+    bottom: 120px;
+    border-color: rgb(255 204 0 / 55%);
+    background: rgb(24 20 50 / 94%);
+    color: #ffe9a8;
+    font-size: 15px;
+}
+
 .item-count {
     color: var(--ui-accent);
     font-weight: 700;

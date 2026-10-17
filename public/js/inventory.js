@@ -116,6 +116,15 @@
         toast(e.detail.data.message);
     });
 
+    // Atelier (menu MJ) : l'objet fabriqué, ou l'échec, est annoncé à l'écran
+    document.addEventListener('craft', (e) => {
+        let ev = e.detail.data.event;
+        if (!ev || (ev.type !== 'craft' && ev.type !== 'craft-failed'))
+            return;
+        let what = (ev.qty > 1 ? ev.qty + ' × ' : '') + ev.name;
+        toast(ev.type === 'craft' ? ev.who + ' fabrique ' + what : ev.who + ' rate la fabrication de ' + what, true);
+    });
+
     // Petit texte qui s'envole de l'onglet du joueur qui reçoit l'objet
     function flash(tab, text) {
         if (!tab)
@@ -128,8 +137,8 @@
         setTimeout(() => { f.remove(); tab.classList.remove('item-received'); }, 1600);
     }
 
-    function toast(text) {
-        let t = el('div', 'inventory-toast', text);
+    function toast(text, info) {
+        let t = el('div', 'inventory-toast' + (info ? ' is-info' : ''), text);
         document.body.append(t);
         setTimeout(() => t.remove(), 2600);
     }
