@@ -1,16 +1,16 @@
 {
   "initial": [
     {
-      "desc": "\n\u00a0Mise à jour de l’autopilote en v7.27 \u005brev B\u005D {....} \n\u00a0Vérification de l’état des cryopods {....} \n\u00a01000 humains détectés, démarrage des cryopods {....} \n\u00a0Calcul de l’itinéraire en cours {....} \n\u00a0Quantité carburant ~ 250mg {....} \n\u00a0[conf_planetCount] planètes trouvées sur l’itinéraire {....} \n\u00a0Initialisation de la phase de lancement {....} \n\u00a0Le vaisseau est opérationnel et prêt à partir. Vous pouvez effectuer une dernière inspection avant le départ. \n\n\u00a0 Êtes-vous prêt à partir un jour sans retour ?",
+      "desc": "\n\u00a0Mise à jour de l’autopilote en v7.27 \u005brev B\u005D {....} \n\u00a0Vérification de l’état des cryopods {....} \n\u00a01000 humains détectés, démarrage des cryopods {....} \n\u00a0Calcul de l’itinéraire en cours {....} \n\u00a0Quantité carburant ~ 250\u00a0mg {....} \n\u00a0[conf_planetCount] planètes trouvées sur l’itinéraire {....} \n\u00a0Initialisation de la phase de lancement {....} \n\u00a0Le vaisseau est opérationnel et prêt à partir. Vous pouvez effectuer une dernière inspection avant le départ.\n\n\u00a0 Êtes-vous prêt à partir un jour sans retour\u00a0?",
       "timer": "false",
       "choices": [
         {
           "value": "Oui",
-          "reveal": "\n\u00a0Erreur de l'autopilote ..."
+          "reveal": "\n\u00a0Erreur de l’autopilote…"
         },
         {
           "value": "<s>Non</s>",
-          "reveal": "\n\u00a0Erreur de l'autopilote ..."
+          "reveal": "\n\u00a0Erreur de l’autopilote…"
         }
       ]
     }
@@ -139,8 +139,18 @@
         },
         {
           "value": "Tenter une manoeuvre d'evitement",
-          "reveal": "\n\u00a0 Vous essayez d'éviter les débris, mais malheureusement, ils percutent une autre partie de votre vaisseau.",
-          "mjreveal": "  Jet de pilotage\n  Choississez un autre module."
+          "mjreveal": "  Jet de pilotage",
+          "roll": {
+            "stat": "pilotage",
+            "success": {
+              "reveal": "\n\u00a0 D'un coup de manche, vous faites pivoter le vaisseau : les débris frôlent la coque sans la toucher.",
+              "mjreveal": "  Aucun dégât."
+            },
+            "failure": {
+              "reveal": "\n\u00a0 Vous essayez d'éviter les débris, mais malheureusement, ils percutent une autre partie de votre vaisseau.",
+              "mjreveal": "  Choississez un autre module."
+            }
+          }
         },
         {
           "value": "Ne rien faire",
@@ -359,8 +369,8 @@
         },
         {
           "value": "Menacer de les attaquer en justice grâce a votre avo-cat-e\n(Nek-Air présente)",
-          "reveal": "\n\u00a0 La douane est terrifiée à l'idée de devoir aller au tribunal contre une Nek-air et vous laisse passer.",
-          "mjreveal": "  Une Nek-air doit faire partie de l'équipage."
+          "reveal": "\n\u00a0 La douane est terrifiée à l'idée de devoir aller au tribunal contre une Nek-Air et vous laisse passer.",
+          "mjreveal": "  Une Nek-Air doit faire partie de l'équipage."
         },
         {
           "value": "Donnez vos consommables à la douane",
@@ -444,17 +454,17 @@
       ]
     },
     {
-      "desc": "\n\u00a0 Vous êtes touché par un projectile qui a percé la coque du vaisseau. \n \u00a0 Les systèmes de réparation ont rapidement colmaté la brèche, mais vous découvrez que ce projectile est une Spider-bomb. \n \n \u00a0 Il faut la désamorcer rapidement.",
+      "desc": "\n\u00a0 Vous êtes touché par un projectile qui a percé la coque du vaisseau. \n \u00a0 Les systèmes de réparation ont rapidement colmaté la brèche, mais vous découvrez que ce projectile est une SPIDER bomb. \n \n \u00a0 Il faut la désamorcer rapidement.",
       "timer": true,
       "choices": [
         {
           "value": "Envoyer un membre de l'équipage",
-          "reveal": "\n\u00a0 Vous recevez une alerte indiquant qu'une spider-bomb a atterri dans la salle de cinéma à bord de votre vaisseau. \n \u00a0 Vous dépêchez un membre de l'équipe pour la désamorcer. \n \u00a0 Les portes sont verrouillées une fois qu'il se retrouve seul avec le dispositif, mais malheureusement, la bombe explose, libérant des araignées mycophiles qui se dirigent rapidement vers les conduits d'aération.",
+          "reveal": "\n\u00a0 Vous recevez une alerte indiquant qu'une SPIDER bomb a atterri dans la salle de cinéma à bord de votre vaisseau. \n \u00a0 Vous dépêchez un membre de l'équipe pour la désamorcer. \n \u00a0 Les portes sont verrouillées une fois qu'il se retrouve seul avec le dispositif, mais malheureusement, la bombe explose, libérant des araignées mycophiles qui se dirigent rapidement vers les conduits d'aération.",
           "mjreveal": "  Forte perte de moral pour le membre désigné."
         },
         {
           "value": "Envoyer un Sylv désamorcer la bombe\n (Sylv présent)",
-          "reveal": "\n\u00a0 Le Sylv découvre une étiquette sur la spider-bomb, il la lit et réalise qu'il s'agit du manuel de désamorçage. \n \n \u00a0 Les instructions sont claires et la bombe est rapidement désamorcée avec succès.",
+          "reveal": "\n\u00a0 Le Sylv découvre une étiquette sur la SPIDER bomb, il la lit et réalise qu'il s'agit du manuel de désamorçage. \n \n \u00a0 Les instructions sont claires et la bombe est rapidement désamorcée avec succès.",
           "mjreveal": "  Un sylv doit faire partie de l'équipage.\n  Donne une \"SPIDER bomb\"."
         },
         {
@@ -645,7 +655,8 @@
         {
           "value": "Entrer en contact",
           "reveal": "\n\u00a0 Les Sylvs vous parlent des recherches de \"Dimalou\". Vous ne comprenez pas un mot de ce qu'ils racontent, mais ils vous ont bien diverti",
-          "mjreveal": "  Gain de moral."
+          "mjreveal": "  Gain de moral. Donne le statut \"Diverti\" (3 cartes).",
+          "status": {"slug": "diverti", "duration": 3}
         },
         {
           "value": "Les inviter à bord",
@@ -776,8 +787,18 @@
       "choices": [
         {
           "value": "Récupérer le cargo et l'ouvrir",
-          "reveal": "\n\u00a0 Vous ouvrez le conteneur et un système de défense se déclenche, des araignées mycophiles en sortent. Au fond du conteneur, vous apercevez un drone.",
-          "mjreveal": "  Perte de moral et donne un drone"
+          "outcomes": [
+            {
+              "weight": 3,
+              "reveal": "\n\u00a0 Vous ouvrez le conteneur et un système de défense se déclenche, des araignées mycophiles en sortent. Au fond du conteneur, vous apercevez un drone.",
+              "mjreveal": "  Perte de moral et donne un drone"
+            },
+            {
+              "weight": 1,
+              "reveal": "\n\u00a0 Vous ouvrez le conteneur : il est rempli de caisses d'outils encore emballées. Personne ne semble les réclamer.",
+              "loot": ["Outils"]
+            }
+          ]
         },
         {
           "value": "Récupérer le cargo et appeler le propriétaire",
@@ -1034,7 +1055,7 @@
       ]
     },
     {
-      "desc": "\n\u00a0 La Nek-air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\n \n \u00a0 Elle vous tend [le_livre_1] en pensant que c'est le votre",
+      "desc": "\n\u00a0 La Nek-Air qui s'occupe de la bibliothèque vous interpelle :\n\"Hey ! Vous avez fait tomber ce livre par terre\"\n \n \u00a0 Elle vous tend [le_livre_1] en pensant que c'est le votre",
       "name": "bibli3-2",
       "timer": false,
       "choices": [
@@ -1487,7 +1508,7 @@
       ]
     },
     {
-      "desc": "\u00a0 \"Confirmation de la transaction, \"Formule_Premium\" , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n \u00a0 Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n \u00a0 Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-air s'assurent que tout est conforme aux normes intergalactiques. \n \n \u00a0 Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. ",
+      "desc": "\u00a0 \"Confirmation de la transaction, \"Formule_Premium\" , merci d'avoir utilisé la Plateforme d'échange.\" \n \n \u00a0 Des \"Universal Working Units\" équipés de produits d'entretien se mettent aussitôt à la tâche et nettoient le PLUGS de fond en comble pendant que des Akus vous installent dans des sièges massants. \n \u00a0 Des Sylvs se faufilent entre les UWU pour passer vos moteurs en révision, à leurs pieds vous apercevez une poignée de Shrymps s'occuper de la ventilation. \n \u00a0 Une fois fini, toute l'équipe de nettoyage et réparation range ses outils pendant que des Nek-Airs s'assurent que tout est conforme aux normes intergalactiques. \n \n \u00a0 Vous vous sentez détendus après vous être fait pomponner par les Akus, et êtes stupéfaits de voir votre vaisseau retrouver une nouvelle jeunesse. ",
       "mjreveal": "  Fort gain de moral et fortes réparations de vaisseau.",
       "name":"station2-2",
       "timer": false,

@@ -1,6 +1,7 @@
 const {Player} = require("./../models/player");
 const {Ship} = require("./../models/ship");
 const {hydrateCardDB, getCardsIds, cardPop, announceCard, getCurrentCard} = require("./deck");
+const blankCard = require("./blankCard");
 const ws = require("ws");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
@@ -278,6 +279,11 @@ module.exports = {
         res.json(getCurrentCard() || {});
     },
 
+    // Carte blanche en cours (panneau MJ ouvert ou rechargé pendant l'attente)
+    getBlankCard(req, res) {
+        res.json(blankCard.getState() || {});
+    },
+
     async popNextCard(req, res) {
 
         let statuses = await new Statuses();
@@ -288,18 +294,15 @@ module.exports = {
         // reprend le voyage, la carte piochée est tirée sans eux (variantes)
         let last = await DB.tables.deck.findOne({where: {deck_id: 0, played: 1}, order: [['id', 'DESC']], raw: true});
         let lastCard = last && await DB.tables.cards.findOne({attributes: ['type'], where: {id: last.card_id}, raw: true});
-        let clear = !!lastCard && lastCard.type === TYPE_PLANET && gameSettings.get().clearStatusesAfterPlanet;
-        if (clear) {
-            for (let i of activeStatuses)
-                await statuses.updateStatus(i.slug, 0);
-        }
+        // Un statut créé à la volée suit sa propre case plutôt que l'option
+        let afterPlanet = !!lastCard && lastCard.type === TYPE_PLANET;
+        let clearOption = gameSettings.get().clearStatusesAfterPlanet;
+        let isCleared = (s) => afterPlanet && (s.clear_after_planet === null || s.clear_after_planet === undefined ? clearOption : !!s.clear_after_planet);
+        await statuses.countDown(activeStatuses.filter(isCleared), true);
 
         let next_card = await cardPop();
 
-        if (!clear) {
-            for (let i of activeStatuses)
-                await statuses.remove(i.slug);
-        }
+        await statuses.countDown(activeStatuses.filter(s => !isCleared(s)));
         // Les durées ont baissé (ou sont remises à zéro) : le panneau MJ redessine ses status
         if (activeStatuses.length) {
             const wsClient = new ws(WS_URL);

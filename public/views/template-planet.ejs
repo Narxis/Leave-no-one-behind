@@ -487,6 +487,13 @@
         </div>
       </div>
     </div>
+    <% if (locals.lastPlanet) { %>
+    <%# Dernière planète du paquet : texte dans src/config/lang.json (last_planet) %>
+    <div class="last-planet-alert" role="alert">
+      <span class="last-planet-title"><%= lastPlanet.title %></span>
+      <span class="last-planet-text"><%= lastPlanet.text %></span>
+    </div>
+    <% } %>
     <div class="topcenter">
       <button onclick="location.href = '/land' " class="land-button">Atterrir sur la planète.</button>
       <button onclick="location.reload()" class="leave-button">Continuer votre voyage.</button>
@@ -665,6 +672,12 @@
   <script src="/js/planet-view.js"></script>
   <script src="/js/planet.js"></script>
   <script src="/js/players.js"></script>
+  <script>
+    // Onglets joueurs : la fiche (?) et le coffre s'ouvrent et se referment
+    // comme sur une carte (card.js n'est pas chargé sur la planète)
+    initialisePlayerExpander();
+    initialiseItemExpand();
+  </script>
   <script src="/js/inventory.js"></script>
   <%- include("partials/npc-tabs") %>
 

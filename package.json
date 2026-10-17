@@ -8,6 +8,7 @@
     "app": "electron .",
     "dist": "electron-builder",
     "relay": "node relay/dev-server.js",
+    "wiki-tableaux": "node scripts/wiki-tableaux.js",
     "test": "node tests/test.js && node tests/relay.js"
   },
   "author": "",

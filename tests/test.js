@@ -29,12 +29,70 @@ async function test() {
     await test_card_vars();
     await test_deck_generation();
     await test_place_endings();
+    await test_card_rolls();
+    await test_card_outcomes();
     await test_statuses_after_planet();
+    test_random_ship();
+    await test_last_planet();
+    await test_custom_statuses();
+    await test_blank_card();
     await test_roll();
+    await test_roles();
     test_ship_alerts();
     await test_items_editor();
+    await test_item_quantities();
+    await test_merchant();
+    await test_craft();
     test_npcs();
+    await test_combat();
+    test_spelling();
+    test_wiki_tables();
+    test_random_companion();
     await test_remote();
+}
+
+// Orthographe des noms affichés : les identifiants (slugs) ne changent pas
+function test_spelling() {
+    console.log('Testing spelling');
+    const races = require('../src/controllers/races');
+    assert.strictEqual(races.nameOf('nek_eau'), 'Nek-Eau');
+    assert.strictEqual(races.nameOf('nek_terre'), 'Nek-Terre');
+    assert.strictEqual(races.nameOf('fnek'), 'Fnek');
+    assert.strictEqual(LANG.card_vars.race.nek_feu.nos, 'Nek-Feux');
+    const items = JSON.parse(fs.readFileSync(__dirname + '/../src/config/items.json', 'utf8'));
+    const bySlug = {};
+    for (let pool in items) for (let item of items[pool]) bySlug[item.slug] = item.name;
+    assert.strictEqual(bySlug['pelotte'], 'Pelote de laine');
+    assert.strictEqual(bySlug['nourriture-deshydrate'], 'Nourriture déshydratée');
+    assert.strictEqual(bySlug['shrymp-kit'], 'Shrymp Utility Kit');
+    assert.strictEqual(bySlug['meche-ygrl'], "Mèche d'Ygrl");
+    assert.strictEqual(bySlug['nek-ronomicon'], "Nek'Ronomicon");
+    assert.strictEqual(bySlug['spider-bomb'], 'SPIDER bomb');
+    const statuses = JSON.parse(fs.readFileSync(__dirname + '/../src/config/statuses.json', 'utf8'));
+    assert.strictEqual(statuses.find(s => s.slug === 'weak').name, 'Affaibli');
+    console.log('OK');
+}
+
+// Tableaux du wiki : seul le texte entre les marqueurs est remplacé
+function test_wiki_tables() {
+    console.log('Testing wiki tables');
+    const wiki = require('../scripts/wiki-tableaux');
+    let page = 'Avant\n<!-- jeu:debut stats-races fnek -->\nvieux\n<!-- jeu:fin -->\nAprès\n';
+    let out = wiki.render(page);
+    assert.ok(out.startsWith('Avant\n<!-- jeu:debut stats-races fnek -->\n'));
+    assert.ok(out.endsWith('<!-- jeu:fin -->\nAprès\n'));
+    assert.ok(!out.includes('vieux'));
+    let fnek = require('../src/config/raceStats.json').fnek;
+    assert.ok(out.includes('| ' + (fnek.combat > 0 ? '+' : '') + fnek.combat + ' |'), 'stats de la race');
+    assert.strictEqual(wiki.render(out), out, 'deux passages donnent le même texte');
+    out = wiki.render('<!-- jeu:debut stats-races nek_eau,nek_air -->\n<!-- jeu:fin -->');
+    assert.ok(out.includes('| Race | Combat'));
+    assert.strictEqual(out.split('\n').filter(l => l.startsWith('| Nek-')).length, 2);
+    assert.ok(wiki.render('<!-- jeu:debut statuts -->\n<!-- jeu:fin -->').includes('Blackout'));
+    assert.ok(wiki.render('<!-- jeu:debut objets-depart -->\n<!-- jeu:fin -->').includes('Fronde Fnek'));
+    assert.throws(() => wiki.render('<!-- jeu:debut inconnu -->\n<!-- jeu:fin -->'));
+    assert.strictEqual(wiki.render('Sans marqueur'), 'Sans marqueur');
+    console.log('OK');
 }
 
 // Joueurs en ligne : seules quelques actions passent, toujours en leur nom
@@ -196,7 +254,10 @@ function test_player_view() {
     let seen = playerView.publicCard(card);
     assert.deepEqual(seen, {id: 4, kind: 'event', desc: 'Une alarme… retentit', timer: true, choices: ['Fuir', 'Combattre']});
     let planet = playerView.publicCard({id: 9, type: TYPE_PLANET, name: 'archetype', desc: '', modules: {oxy: {val: 80, cost: 2}}});
-    assert.deepEqual(planet, {id: 9, kind: 'planet', desc: '', choices: []});
+    assert.deepEqual(planet, {id: 9, kind: 'planet', desc: '', choices: [], lastPlanet: null});
+    let last = playerView.publicCard({id: 9, type: TYPE_PLANET, modules: {}, lastPlanet: true});
+    assert.deepEqual(last.lastPlanet, LANG.last_planet);
+    assert(LANG.last_planet.title && LANG.last_planet.text);
     assert.equal(playerView.publicCard(null), null);
     console.log('Player view OK');
 }
@@ -307,8 +368,17 @@ async function test_card_vars() {
     let texts = [];
     for (let c of await DB.tables.cards.findAll({raw: true}))
         texts.push(c.desc, c.mjreveal);
-    for (let m of await DB.tables.card_modules.findAll({where: {type: 'choice'}, raw: true}))
+    for (let m of await DB.tables.card_modules.findAll({where: {type: 'choice'}, raw: true})) {
         texts.push(m.value, m.reveal, m.mjreveal);
+        if (m.roll)
+            for (let issue of Object.values(JSON.parse(m.roll)).filter(i => i && typeof i === 'object'))
+                texts.push(issue.reveal, issue.mjreveal);
+        for (let outcome of m.outcomes ? JSON.parse(m.outcomes) : []) {
+            texts.push(outcome.reveal, outcome.mjreveal);
+            if (outcome.roll)
+                texts.push(outcome.roll.success.reveal, outcome.roll.success.mjreveal, outcome.roll.failure.reveal, outcome.roll.failure.mjreveal);
+        }
+    }
     for (let a of await DB.tables.cards_alt.findAll({raw: true}))
         texts.push(a.value, a.reveal, a.mjreveal);
     for (let text of texts) {
@@ -316,6 +386,40 @@ async function test_card_vars() {
         assert(!/\[[^\]\s]+_[^\]\s]+\]/.test(text || ''), 'Variable non remplacée : ' + text);
         assert(!(text || '').includes('undefined'), 'Variable vide : ' + text);
     }
+    console.log('OK');
+
+    // Listes de variables : toutes les entrées d'une liste ont les mêmes articles
+    // (sinon un tirage au hasard peut donner « undefined »)
+    const lists = Object.keys(LANG.card_vars).filter(type => !['planet_text', 'end_screen'].includes(type)
+        && Object.values(LANG.card_vars[type]).every(e => e && typeof e === 'object'));
+    for (let type of lists) {
+        assert(!type.includes('_'), 'Nom de liste avec « _ » : ' + type);
+        let entries = Object.entries(LANG.card_vars[type]);
+        let articles = Object.keys(entries[0][1]).sort().join(',');
+        for (let [key, forms] of entries) {
+            assert.strictEqual(Object.keys(forms).sort().join(','), articles, 'Articles différents dans ' + type + '.' + key);
+            assert(Object.values(forms).every(v => typeof v === 'string' && v.trim()), 'Forme vide dans ' + type + '.' + key);
+        }
+    }
+
+    // Chaque variable des cartes a une liste qui connaît son article
+    let raw = fs.readFileSync(__dirname + '/../src/config/baseCards.json', 'utf8');
+    for (let token of new Set(raw.match(/\[[^\]\s"]+_[^\]\s"]+\]/g))) {
+        let parts = token.slice(1, -1).split('_');
+        if (parts.length === 2 && LANG.card_vars[parts[0].toLowerCase()])
+            parts = ['no', parts[0].toLowerCase(), parts[1]];
+        let article = parts[0].toLowerCase(), type = parts[1];
+        if (article === 'conf') {
+            assert(CONFIG[parts[1]] !== undefined, 'Paramètre inconnu : ' + token);
+            continue;
+        }
+        assert(lists.includes(type), 'Pas de liste pour ' + token);
+        assert(article in Object.values(LANG.card_vars[type])[0], 'Article inconnu pour ' + token);
+    }
+
+    // Les nouvelles listes se résolvent sans trou
+    let sample = new Card().replaceVars('[Le_lieu_1] [du_pnj_1] [au_organisation_1] [le_bande_1] [du_personnage_1] [le_systeme_1] [le_film_1]');
+    assert(!/\[|undefined/.test(sample), sample);
     console.log('OK');
 
     // Même variable = même valeur dans tous les textes d'une carte (et de ses suites)
@@ -404,8 +508,23 @@ async function test_deck_generation(){
     console.log('Deck generation OK')
 }
 
-// Lieux : chaque choix a une seule suite, un résultat (fin du lieu, suivie
-// d'un seul « Continuer votre chemin ») ou une carte du lieu qui existe
+// Suites d'un choix : la sienne, ou réussite et échec de son jet ; pour des
+// issues au hasard, celles de chaque issue (et non seulement de celle tirée)
+const issueSuites = (issue) => issue.roll ? [issue.roll.success, issue.roll.failure] : [issue];
+const choiceSuites = (choice) => (choice.outcomes || [choice]).flatMap(issueSuites);
+
+// Une suite unique : un résultat ou une carte qui existe
+function assertSuite(suite, names, label) {
+    let hasReveal = !!(suite.reveal && suite.reveal.trim());
+    let hasNext = !!suite.next;
+    assert(hasReveal !== hasNext, 'Choix sans suite unique : ' + label);
+    if (hasNext)
+        assert(names.includes(suite.next), 'Suite inconnue : ' + suite.next);
+}
+
+// Lieux : chaque choix a une seule suite (ou, pour un jet, une suite réussite
+// et une suite échec), un résultat (fin du lieu, suivie d'un seul « Continuer
+// votre chemin ») ou une carte du lieu qui existe
 async function test_place_endings(){
     console.log('Testing place choices');
     let rows = await DB.tables.cards.findAll({where: {type: [TYPE_PLACE, TYPE_FOLLOWUP]}, raw: true});
@@ -415,17 +534,196 @@ async function test_place_endings(){
         let card = await new Card(row.id).getData();
         assert(card.choices.length > 0, 'Carte de lieu sans choix : ' + row.name);
         for (let choice of card.choices) {
-            let hasReveal = !!(choice.reveal && choice.reveal.trim());
-            let hasNext = !!choice.next;
-            assert(hasReveal !== hasNext, 'Choix sans suite unique : ' + row.name + ' / ' + choice.value);
-            if (hasNext)
-                assert(names.includes(choice.next), 'Suite inconnue : ' + choice.next);
+            if (choice.roll)
+                assert(!choice.next && !(choice.reveal || '').trim(), 'Choix à jet avec sa propre suite : ' + row.name + ' / ' + choice.value);
+            for (let suite of choiceSuites(choice))
+                assertSuite(suite, names, row.name + ' / ' + choice.value);
         }
     }
     console.log('OK');
 }
 
+// Jets des choix : une suite réussite et une suite échec, cartes sans jet inchangées
+async function test_card_rolls() {
+    console.log('Testing card rolls');
+    const {parseRoll} = require('../src/models/card');
+    let names = (await DB.tables.cards.findAll({raw: true})).map(r => r.name).filter(n => n);
+    let rolls = 0;
+    for (let row of await DB.tables.cards.findAll({where: {type: [TYPE_POSITIVE, TYPE_NEGATIVE, TYPE_NEUTRAL, TYPE_INITIAL]}, raw: true})) {
+        let card = await new Card(row.id).getData();
+        for (let choice of card.choices) {
+            if (!choice.roll && !choice.outcomes)
+                continue;
+            rolls += choice.roll ? 1 : 0;
+            if (choice.roll)
+                assert(!choice.next && !(choice.reveal || '').trim(), 'Choix à jet avec sa propre suite : ' + choice.value);
+            for (let suite of choiceSuites(choice))
+                assertSuite(suite, names, choice.value);
+        }
+    }
+    // Exemple de baseCards.json : la manoeuvre d'évitement des débris
+    assert(rolls > 0, 'aucune carte avec un jet');
+    console.log('OK');
+
+    console.log('Roll format and compatibility');
+    assert.strictEqual(parseRoll(''), null);
+    assert.strictEqual(parseRoll('pas du json'), null);
+    assert.strictEqual(parseRoll({stat: 'pilotage', success: {reveal: 'ok'}}), null);
+    assert.deepStrictEqual(parseRoll({stat: 'inconnue', success: {reveal: 'ok'}, failure: {next: 'x', humans: '-5', loot: ['medkit']}}), {
+        stat: '',
+        success: {reveal: 'ok', mjreveal: '', next: '', humans: 0, loot: []},
+        failure: {reveal: '', mjreveal: '', next: 'x', humans: -5, loot: ['medkit']}
+    });
+    let card = await new Card().create({
+        type: TYPE_NEUTRAL, desc: 'Un astéroïde', timer: 1,
+        choices: [
+            {value: 'Esquiver', mjreveal: 'Jet de pilotage', roll: {stat: 'pilotage', success: {reveal: 'Évité [le_race_1]'}, failure: {reveal: 'Touché', humans: -10}}},
+            {value: 'Ne rien faire', reveal: 'Boum'}
+        ]
+    });
+    let [dodge, nothing] = card.choices;
+    assert.strictEqual(dodge.roll.stat, 'pilotage');
+    assert(!dodge.roll.success.reveal.includes('[') && dodge.roll.failure.humans === -10);
+    assert.strictEqual(nothing.roll, undefined);
+    assert.strictEqual(nothing.reveal, 'Boum');
+    // (Card.delete efface les modules par id de module, pas par carte)
+    await DB.tables.card_modules.destroy({where: {card_id: card.id}});
+    await DB.tables.cards.destroy({where: {id: card.id}});
+    console.log('OK');
+}
+
+// Issues tirées au hasard pour un même choix
+async function test_card_outcomes() {
+    console.log('Testing card outcomes');
+    const {parseOutcomes, drawOutcome} = require('../src/models/card');
+
+    // Exemple de baseCards.json : le conteneur ouvert
+    let examples = 0;
+    for (let row of await DB.tables.cards.findAll({where: {type: [TYPE_POSITIVE, TYPE_NEGATIVE, TYPE_NEUTRAL, TYPE_PLACE, TYPE_FOLLOWUP]}, raw: true}))
+        for (let choice of (await new Card(row.id).getData()).choices)
+            if (choice.outcomes) {
+                examples++;
+                assert(choice.outcome >= 0 && choice.outcome < choice.outcomes.length);
+                assert(!!choice.reveal || !!choice.next || !!choice.roll, 'Issue tirée sans suite : ' + choice.value);
+            }
+    assert(examples > 0, 'aucun choix avec des issues au hasard');
+    console.log('OK');
+
+    console.log('Outcomes format and draw');
+    assert.strictEqual(parseOutcomes(''), null);
+    assert.strictEqual(parseOutcomes([{reveal: 'seule'}]), null);   // une seule issue : choix normal
+    let list = parseOutcomes([{reveal: 'a'}, {weight: 3, next: 'b', loot: ['Outils']}, {weight: -2, reveal: 'c', roll: {stat: 'combat', success: {reveal: 'ok'}, failure: {reveal: 'ko'}}}]);
+    assert.deepStrictEqual(list.map(o => o.weight), [1, 3, 1]);
+    assert.strictEqual(list[1].next, 'b');
+    assert.strictEqual(list[2].roll.stat, 'combat');
+    // Poids 1 / 3 / 1 sur 5 : [0, .2[ → 0, [.2, .8[ → 1, [.8, 1[ → 2
+    assert.deepStrictEqual([0, .19, .2, .79, .8, .99].map(r => drawOutcome(list, () => r)), [0, 0, 1, 1, 2, 2]);
+    assert.strictEqual(drawOutcome([{weight: 0}, {weight: 0}], () => .6), 1);
+    console.log('OK');
+
+    console.log('Outcomes in game');
+    let card = await new Card().create({
+        type: TYPE_NEUTRAL, desc: 'Un conteneur',
+        choices: [
+            {value: 'Ouvrir', mjreveal: 'MJ', humans: -5, loot: ['Corde'], outcomes: [
+                {reveal: 'Des araignées [le_race_1]', mjreveal: 'perte de moral'},
+                {reveal: 'Des outils', humans: 10, loot: ['Outils']},
+                {roll: {stat: 'pilotage', success: {reveal: 'esquivé'}, failure: {reveal: 'touché'}}}
+            ]},
+            {value: 'Partir', reveal: 'Rien'}
+        ]
+    });
+    let seen = new Set();
+    for (let i = 0; i < 60 && seen.size < 3; i++) {
+        let open = (await new Card(card.id).getData()).choices.find(c => c.value === 'Ouvrir');
+        seen.add(open.outcome);
+        assert.strictEqual(open.outcomes.length, 3);
+        if (open.outcome === 0)
+            assert(open.reveal.startsWith('Des araignées') && !open.reveal.includes('[') && open.mjreveal === 'MJ\nperte de moral' && !open.roll);
+        if (open.outcome === 1)
+            assert(open.reveal === 'Des outils' && open.humans === 5 && open.loot.join() === 'Corde,Outils');
+        if (open.outcome === 2)
+            assert(open.roll && open.roll.success.reveal === 'esquivé' && open.reveal === '');
+    }
+    assert.strictEqual(seen.size, 3, 'toutes les issues doivent pouvoir sortir');
+    let leave = (await new Card(card.id).getData()).choices.find(c => c.value === 'Partir');
+    assert(leave.outcomes === undefined && leave.outcome === undefined && leave.reveal === 'Rien');
+    await DB.tables.card_modules.destroy({where: {card_id: card.id}});
+    await DB.tables.cards.destroy({where: {id: card.id}});
+    console.log('OK');
+}
+
 // Statuts hors combat au retour d'une planète, selon l'option du MJ
+// Carte blanche : « Autre… » sur les cartes à choix, carte écrite par le MJ
+async function test_blank_card() {
+    console.log('Testing blank card');
+    const blankCard = require('../src/controllers/blankCard');
+    const gameSettings = require('../src/controllers/gameSettings');
+    const playerView = require('../src/controllers/playerView');
+    const get = gameSettings.get;
+    const choices = (n) => Array.from({length: n}, (_, i) => ({value: 'C' + i, reveal: '', next: '', humans: 0, loot: []}));
+    const others = (card) => card.choices.filter(c => c.other).length;
+
+    try {
+        console.log('« Autre… » : cartes RP à choix, sans chrono, une seule fois');
+        assert.strictEqual(get().otherChoice, true);
+        let card = blankCard.addOther(blankCard.addOther({type: TYPE_NEGATIVE, timer: 0, choices: choices(2)}));
+        assert.equal(card.choices.length, 3);
+        assert.equal(card.choices[2].value, blankCard.OTHER_LABEL);
+        assert.equal(others(card), 1);
+        assert.equal(others(blankCard.addOther({type: TYPE_PLACE, timer: 0, choices: choices(3)})), 1);
+        assert.equal(others(blankCard.addOther({type: TYPE_NEGATIVE, timer: 1, choices: choices(2)})), 0);
+        assert.equal(others(blankCard.addOther({type: TYPE_NEUTRAL, timer: 0, choices: choices(1)})), 0);
+        assert.equal(others(blankCard.addOther({type: TYPE_INITIAL, timer: 'false', choices: choices(2)})), 0);
+        assert.deepEqual(playerView.publicCard(card).choices, ['C0', 'C1', blankCard.OTHER_LABEL]);
+        gameSettings.get = () => Object.assign(get(), {otherChoice: false});
+        assert.equal(others(blankCard.addOther({type: TYPE_POSITIVE, timer: 0, choices: choices(2)})), 0);
+        gameSettings.get = get;
+        console.log('OK');
+
+        console.log('Carte du MJ bornée : 4 choix au plus, choix sans texte ignorés');
+        assert.equal(blankCard.clean({desc: '  ', choices: [{value: ''}]}), null);
+        let clean = blankCard.clean({desc: ' Une porte ', choices: [
+            {value: 'A', reveal: 'ra', moral: '-7', humans: 'x', loot: 'Medkit'},
+            {value: ''}, {value: 'B', moral: 500}, {value: 'C'}, {value: 'D'}, {value: 'E'}]});
+        assert.equal(clean.desc, 'Une porte');
+        assert.deepEqual(clean.choices.map(c => c.value), ['A', 'B', 'C', 'D']);
+        assert.deepEqual(clean.choices[0], {value: 'A', reveal: 'ra', moral: -7, humans: 0, loot: ['Medkit']});
+        assert.equal(clean.choices[1].moral, 100);
+        console.log('OK');
+
+        console.log('Demande, affichage, choix : moral de chaque joueur, borné');
+        await new Player().create({discord_id: 'blank1', name: 'B1'});
+        await new Player().create({discord_id: 'blank2', name: 'B2'});
+        await new Player().update({moral: 50}, 'blank1');
+        await new Player().update({moral: 3}, 'blank2');
+        assert.equal((await blankCard.handle({action: 'blank-card-request', data: {desc: 'carte'}})).data.status, 'waiting');
+        assert.equal(blankCard.publicCard().kind, 'blank');
+        assert.ok((await blankCard.handle({action: 'blank-card-show', data: {desc: '', choices: []}})).error);
+        let shown = await blankCard.handle({action: 'blank-card-show', data: {desc: 'Suite', choices: [{value: 'Ouvrir', reveal: 'Ouvert', moral: -5}]}});
+        assert.equal(shown.action, 'blank-card-show');
+        // Les joueurs en ligne voient le texte et les choix, pas les résultats
+        assert.deepEqual(blankCard.publicCard(), {id: 'blank', kind: 'blank', desc: 'Suite', timer: false, choices: ['Ouvrir']});
+        let out = await blankCard.handle({action: 'blank-card-choice', data: {index: 0}});
+        assert.equal(out[0].action, 'blank-card-choice');
+        assert.equal(out.filter(m => m.action === 'playerStat').length, 2);
+        assert.equal((await new Player().getData('blank1')).moral, 45);
+        assert.equal((await new Player().getData('blank2')).moral, 0);
+        assert.equal(blankCard.getState(), null);
+        assert.ok((await blankCard.handle({action: 'blank-card-choice', data: {index: 0}})).error);
+        await blankCard.handle({action: 'blank-card-request', data: {}});
+        await blankCard.handle({action: 'blank-card-cancel', data: {}});
+        assert.equal(blankCard.getState(), null);
+        console.log('OK');
+    }
+    finally {
+        gameSettings.get = get;
+        blankCard.reset();
+        await new Player().delete('blank1');
+        await new Player().delete('blank2');
+    }
+}
+
 async function test_statuses_after_planet() {
     console.log('Testing statuses after planet');
     const api = require('../src/controllers/api');
@@ -480,6 +778,145 @@ async function test_statuses_after_planet() {
     }
 }
 
+// Option « Vaisseau aléatoire » : désactivée par défaut, stats à ±10 % sans dépasser 100
+function test_random_ship() {
+    console.log('Testing random ship');
+    const gameSettings = require('../src/controllers/gameSettings');
+    const variation = gameSettings.SHIP_START_VARIATION;
+    assert.strictEqual(gameSettings.OPTIONS.find(o => o.key === 'randomShipStats').default, false);
+    let low = Ship.randomStart(variation, () => 0);
+    let high = Ship.randomStart(variation, () => 0.999999);
+    assert.strictEqual(low.motors, 90);
+    assert.strictEqual(high.motors, 100);
+    assert.strictEqual(low.cryopods, undefined);
+    for (let i = 0; i < 50; i++)
+        for (let [stat, v] of Object.entries(Ship.randomStart(variation)))
+            assert(Number.isInteger(v) && v >= 90 && v <= 100, stat + ' = ' + v);
+    console.log('Random ship OK');
+}
+
+// Alerte « dernière planète » : seule la dernière planète du paquet est marquée
+async function test_last_planet() {
+    console.log('Testing last planet');
+    const {cardPop, planetsLeft} = require('../src/controllers/deck');
+    let deck = await DB.tables.deck.findAll({where: {deck_id: 0}, order: [['id', 'ASC']], raw: true});
+    let cards = await DB.tables.cards.findAll({attributes: ['id', 'type'], raw: true});
+    let typeOf = (id) => cards.find(c => c.id === id).type;
+    let planets = deck.filter(d => typeOf(d.card_id) === TYPE_PLANET);
+    assert(planets.length >= 2);
+    // Paquet joué jusqu'avant une planète donnée : elle sort au prochain tirage
+    const popPlanet = async (row) => {
+        await DB.tables.deck.update({played: 0}, {where: {deck_id: 0}});
+        for (let d of deck.filter(d => d.id < row.id))
+            await DB.tables.deck.update({played: 1}, {where: {id: d.id}});
+        return await cardPop();
+    };
+    try {
+        assert.strictEqual(await planetsLeft(), planets.length);
+        let first = await popPlanet(planets[0]);
+        assert.strictEqual(first.type, TYPE_PLANET);
+        assert.strictEqual(first.lastPlanet, false);
+        let last = await popPlanet(planets[planets.length - 1]);
+        assert.strictEqual(last.lastPlanet, true);
+        assert.strictEqual(await planetsLeft(), 0);
+        console.log('Last planet OK');
+    }
+    finally {
+        await DB.tables.deck.update({played: 0}, {where: {deck_id: 0}});
+    }
+}
+
+// Statuts créés à la volée, statuts d'un seul joueur et Diverti
+async function test_custom_statuses() {
+    console.log('Testing custom statuses');
+    const api = require('../src/controllers/api');
+    const gameSettings = require('../src/controllers/gameSettings');
+    const {Statuses} = require('../src/models/statuses');
+    const get = gameSettings.get;
+    const statuses = new Statuses();
+    await statuses.hydrateDB();
+    const res = {json() {}};
+    const row = (slug, player = '') => DB.tables.statuses.findOne({where: {slug: slug, player_id: player}, raw: true});
+    let bob = await new Player().create({discord_id: 'status-bob', name: 'Bob', moral: 100});
+    let eve = await new Player().create({discord_id: 'status-eve', name: 'Eve', moral: 100});
+
+    try {
+        console.log('Diverti fait partie des statuts de base');
+        assert.ok(await row('diverti'));
+        console.log('OK');
+
+        console.log('Création à la volée');
+        assert.strictEqual(await statuses.createCustom({name: '  '}), false);
+        assert.strictEqual(await statuses.createCustom({name: 'Blackout'}), false);
+        let slug = await statuses.createCustom({name: 'Sous le charme', desc: 'Les joueurs rêvassent.', clearAfterPlanet: false});
+        assert.strictEqual(slug, 'c-sous-le-charme');
+        assert.strictEqual((await row(slug)).desc, 'Les joueurs rêvassent.');
+        assert.strictEqual(await statuses.createCustom({name: 'Sous le charme', desc: 'Autre texte', clearAfterPlanet: true}), slug);
+        assert.strictEqual((await row(slug)).desc, 'Autre texte');
+        assert.ok((await statuses.getAllStatuses(false)).some(s => s.slug === slug));
+        console.log('OK');
+
+        console.log('Statut d\'un seul joueur');
+        await statuses.updateStatus(slug, 2, bob.discord_id);
+        assert.strictEqual((await row(slug)).duration, 0);
+        let active = await statuses.getAllStatuses();
+        assert.deepStrictEqual(active.map(s => [s.slug, s.player_name, s.desc]), [[slug, 'Bob', 'Autre texte']]);
+        assert.strictEqual((await statuses.getAllStatuses(false)).filter(s => s.slug === slug).length, 1);
+        await statuses.updateStatus(slug, 0, bob.discord_id);
+        assert.strictEqual(await row(slug, bob.discord_id), null);
+        console.log('OK');
+
+        console.log('Diverti : pertes de moral divisées par deux, arrondi vers le bas');
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 100, 90), 90);
+        await statuses.updateStatus('diverti', 3, bob.discord_id);
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 100, 90), 95);
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 100, 93), 97);
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 100, 99), 100);
+        assert.strictEqual(await statuses.moralAfterLoss(bob.discord_id, 50, 60), 60);
+        assert.strictEqual(await statuses.moralAfterLoss(eve.discord_id, 100, 90), 90);
+        await statuses.updateStatus('diverti', 3);
+        assert.strictEqual(await statuses.moralAfterLoss(eve.discord_id, 100, 90), 95);
+        await statuses.updateStatus('diverti', 0);
+        await statuses.updateStatus('diverti', 0, bob.discord_id);
+        console.log('OK');
+
+        console.log('Carte du vaisseau Sylv : le choix donne Diverti');
+        let sylv = await DB.tables.card_modules.findOne({where: {status: {[require('sequelize').Op.ne]: ''}}, raw: true});
+        assert.deepStrictEqual(JSON.parse(sylv.status), {slug: 'diverti', duration: 3});
+        let card = await new Card(sylv.card_id).getData();
+        assert.deepStrictEqual(card.choices.find(c => c.status).status, {slug: 'diverti', duration: 3});
+        console.log('OK');
+
+        console.log('Après une planète : la case du statut créé l\'emporte sur l\'option');
+        let kept = await statuses.createCustom({name: 'Tenace', clearAfterPlanet: false});
+        let gone = await statuses.createCustom({name: 'Fragile', clearAfterPlanet: true});
+        gameSettings.get = () => Object.assign(get(), {clearStatusesAfterPlanet: false});
+        await statuses.updateStatus(kept, 3);
+        await statuses.updateStatus(gone, 3);
+        await statuses.updateStatus('blackout', 3);
+        await statuses.updateStatus(kept, 1, eve.discord_id);
+        let deck = await DB.tables.deck.findAll({where: {deck_id: 0}, order: [['id', 'ASC']], raw: true});
+        for (let elt of deck) {
+            await DB.tables.deck.update({played: 1}, {where: {id: elt.id}});
+            if ((await DB.tables.cards.findOne({where: {id: elt.card_id}, raw: true})).type === TYPE_PLANET)
+                break;
+        }
+        await api.popNextCard({}, res);
+        assert.strictEqual((await row(kept)).duration, 2);
+        assert.strictEqual((await row(gone)).duration, 0);
+        assert.strictEqual((await row('blackout')).duration, 2);
+        // Le statut du joueur arrivé à 0 disparaît
+        assert.strictEqual(await row(kept, eve.discord_id), null);
+        console.log('OK');
+    }
+    finally {
+        gameSettings.get = get;
+        await DB.tables.deck.update({played: 0}, {where: {deck_id: 0}});
+        await DB.tables.players.destroy({where: {discord_id: [bob.discord_id, eve.discord_id]}});
+        await statuses.hydrateDB();
+    }
+}
+
 async function test_roll(){
     console.log('Testing roll');
 
@@ -514,6 +951,56 @@ async function test_roll(){
     console.log('OK');
 
     console.log('Roll OK');
+}
+
+// Rôles des joueurs : config, dés en plus sur la stat du rôle, un seul joueur par rôle
+async function test_roles() {
+    console.log('Testing roles');
+    const roles = require('../src/controllers/roles');
+    const remote = require('../src/controllers/remote');
+    const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
+
+    let list = roles.list();
+    assert.ok(list.length >= 6);
+    assert.ok(roles.find('capitaine'));
+    let slugs = new Set();
+    for (let role of list) {
+        assert.ok(role.slug && role.name && role.effect, JSON.stringify(role));
+        assert.ok(!slugs.has(role.slug), 'rôle en double : ' + role.slug);
+        slugs.add(role.slug);
+        assert.ok(role.stat === null || STATS.includes(role.stat), role.slug + ' : stat ' + role.stat);
+        assert.ok(fs.existsSync(__dirname + '/../public' + role.icon), 'icône manquante : ' + role.icon);
+    }
+
+    // Dés : 1 de base, +bonus sur la stat du rôle ; on garde le meilleur
+    assert.equal(roles.diceCount({role: 'pilote'}, 'pilotage'), 2);
+    assert.equal(roles.diceCount({role: 'pilote'}, 'combat'), 1);
+    assert.equal(roles.diceCount({role: 'capitaine'}, 'pilotage'), 1);
+    assert.equal(roles.diceCount({role: ''}, 'combat'), 1);
+    assert.equal(roles.diceCount({role: 'inconnu'}, 'combat'), 1);
+    let values = [0.10, 0.75];
+    let rolled = roles.rollDice(2, () => values.shift());
+    assert.deepStrictEqual(rolled, {dice: [11, 76], kept: 76});
+    assert.equal(roles.rollDice(1, () => 0.5).dice.length, 1);
+
+    // Attribution : rôle unique, le joueur qui l'avait le perd
+    await new Player().create({discord_id: 'role-a', name: 'A', moral: 100});
+    await new Player().create({discord_id: 'role-b', name: 'B', moral: 100});
+    let changed = await roles.assign('role-a', 'pilote');
+    assert.equal(changed.length, 1);
+    assert.equal((await new Player().getData('role-a')).role, 'pilote');
+    changed = await roles.assign('role-b', 'pilote');
+    assert.deepStrictEqual(changed.map(p => [p.discord_id, p.role]), [['role-a', ''], ['role-b', 'pilote']]);
+    assert.equal(await roles.assign('role-a', 'inconnu'), null);
+    assert.equal(await roles.assign('personne', 'pilote'), null);
+    await roles.assign('role-b', '');
+    assert.equal((await new Player().getData('role-b')).role, '');
+    assert.equal(roles.publicRole('pilote').name, 'Pilote');
+    assert.equal(roles.publicRole(''), null);
+
+    // Seul le MJ donne les rôles
+    assert.ok((await remote.translate({id: 'role-a', name: 'A'}, {kind: 'action', action: 'player-role', data: {role: 'capitaine'}})).refused);
+    console.log('Roles OK');
 }
 
 module.exports = {test};
@@ -592,6 +1079,349 @@ async function test_items_editor() {
     }
 }
 
+// Quantités d'objets : butin en plusieurs exemplaires, déplacement d'une
+// pile ou d'un exemplaire, objets de départ en plusieurs exemplaires
+async function test_item_quantities() {
+    console.log('Testing item quantities');
+    const loot = require('../src/controllers/loot');
+    const combat = require('../src/controllers/combat');
+    const cardLoot = require('../src/controllers/cardLoot');
+    const inventory = require('../src/controllers/inventory');
+    const itemsEditor = require('../src/controllers/itemsEditor');
+    const {Items} = require('../src/models/items');
+
+    assert.deepStrictEqual(loot.entry('  Corde '), {name: 'Corde', qty: 1});
+    assert.deepStrictEqual(loot.entry({name: 'Munition', qty: '12'}), {name: 'Munition', qty: 12});
+    assert.strictEqual(loot.entry({name: 'Munition', qty: 5000}).qty, loot.MAX_QTY, 'quantité bornée');
+    assert.strictEqual(loot.entry({name: 'Munition', qty: -3}).qty, 1);
+    assert.strictEqual(loot.entry({name: '  '}), null);
+    assert.strictEqual(loot.stored({name: 'Corde', qty: 1}), 'Corde', 'un seul exemplaire : le nom seul, comme avant');
+    assert.deepStrictEqual(loot.stored({name: 'Corde', qty: 3}), {name: 'Corde', qty: 3});
+
+    let made = combat.makeLoot(['Corde', {name: 'Bidule test', qty: 4}, '']);
+    assert.strictEqual(made.length, 2);
+    assert.strictEqual(made[0].qty, 1);
+    assert.strictEqual(made[1].qty, 4);
+    assert.ok(made[1].custom);
+    const npcs = require('../src/controllers/npcs');
+    assert.deepStrictEqual(npcs.cleanEnemy({name: 'Pirate', loot: ['Corde', {name: 'Bidule', qty: '3'}]}).enemy.loot, ['Corde', {name: 'Bidule', qty: 3}]);
+
+    // Butin d'une carte : toute la pile part d'un coup
+    const A = 'qty-joueur-a', B = 'qty-joueur-b';
+    await new Player().create({discord_id: A, name: 'Qa', race: 'aku'});
+    await new Player().create({discord_id: B, name: 'Qb', race: 'yorc'});
+    const count = async (id) => ((await inventory.getInventory(id)).find(i => i.name === 'Bidule test') || {count: 0}).count;
+    const ship = async () => ((await inventory.getShip()).find(i => i.name === 'Bidule test') || {count: 0}).count;
+    cardLoot.offer([{name: 'Bidule test', qty: 5}]);
+    let moved = await inventory.move({from: {type: 'card-loot', index: 0}, to: {type: 'player', id: A}, name: 'Bidule test'});
+    assert.strictEqual(moved.item.count, 5);
+    assert.strictEqual(await count(A), 5);
+    assert.strictEqual(cardLoot.getState().items.length, 0);
+
+    // Depuis un inventaire : un exemplaire, plusieurs (count), ou tous (all)
+    let slug = moved.item.slug;
+    await inventory.move({slug: slug, from: {type: 'player', id: A}, to: {type: 'ship'}});
+    assert.strictEqual(await count(A), 4);
+    assert.strictEqual(await ship(), 1);
+    await inventory.move({slug: slug, from: {type: 'player', id: A}, to: {type: 'player', id: B}, count: 2});
+    assert.strictEqual(await count(A), 2);
+    assert.strictEqual(await count(B), 2);
+    await inventory.move({slug: slug, from: {type: 'player', id: A}, to: {type: 'ship'}, all: true});
+    assert.strictEqual(await count(A), 0);
+    assert.strictEqual(await ship(), 3);
+    moved = await inventory.move({slug: slug, from: {type: 'ship'}, to: {type: 'player', id: A}, count: 10});
+    assert.strictEqual(moved.item.count, 3, 'on ne prend pas plus que la pile');
+    assert.strictEqual(await ship(), 0);
+    assert.ok((await inventory.move({slug: slug, from: {type: 'ship'}, to: {type: 'player', id: A}})).error);
+
+    // « Tout récupérer » : les quantités vont dans le vaisseau
+    cardLoot.offer([{name: 'Bidule test', qty: 7}, 'Bidule test']);
+    await inventory.handle({action: 'card-loot-all'});
+    assert.strictEqual(await ship(), 8);
+    // Le vaisseau ne descend pas sous zéro
+    await new Items().remove(slug, 50);
+    assert.strictEqual(await ship(), 8);
+
+    // Objet de départ en plusieurs exemplaires, sans doublon si on recommence
+    const file = __dirname + '/../src/config/items.json';
+    const backup = fs.readFileSync(file);
+    try {
+        let out = await itemsEditor.save({name: 'Ration test', pool: 'starter', race: 'aku', qty: 3});
+        assert.strictEqual(out.item.qty, 3);
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).starter.find(i => i.slug === 'ration-test').qty, 3);
+        assert.strictEqual(combat.getLootList().find(i => i.slug === 'ration-test').qty, 3);
+        out = await itemsEditor.save({name: 'Ration seule test', pool: 'electronique', qty: 1});
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).electronique.find(i => i.slug === 'ration-seule-test').qty, undefined, 'qty 1 non écrite');
+        await new Items().giveAllStarters();
+        await new Items().giveAllStarters();
+        let ration = (await inventory.getInventory(A)).find(i => i.slug === 'ration-test');
+        assert.strictEqual(ration.count, 3);
+        assert.ok(!(await inventory.getInventory(B)).some(i => i.slug === 'ration-test'), 'pas pour une autre race');
+        await itemsEditor.remove('ration-seule-test');
+    }
+    finally {
+        fs.writeFileSync(file, backup);
+        await DB.tables.items.destroy({where: {slug: ['ration-test', 'ration-seule-test', slug]}});
+        await DB.tables.players.destroy({where: {discord_id: [A, B]}});
+    }
+    console.log('Item quantities OK');
+}
+
+// Monnaie et marchand : bourses, butin en monnaie, achats et ventes
+async function test_merchant() {
+    console.log('Testing money and merchant');
+    const money = require('../src/controllers/money');
+    const merchant = require('../src/controllers/merchant');
+    const inventory = require('../src/controllers/inventory');
+    const combat = require('../src/controllers/combat');
+    const cardLoot = require('../src/controllers/cardLoot');
+    const itemsEditor = require('../src/controllers/itemsEditor');
+    const cfg = money.config();
+    const file = __dirname + '/../src/config/items.json';
+    const backup = fs.readFileSync(file);
+    const A = 'shop-joueur-a', B = 'shop-joueur-b';
+    try {
+        // Configuration et libellés
+        assert.ok(cfg.name && cfg.plural && cfg.cryopodsPerCredit > 0);
+        assert.strictEqual(money.label(1), '1 ' + cfg.name);
+        assert.strictEqual(money.label(0), '0 ' + cfg.name);
+        assert.strictEqual(money.label(30), '30 ' + cfg.plural);
+        assert.ok(money.isMoney(cfg.plural.toUpperCase()));
+        assert.ok(money.isMoney('monnaie'));
+        assert.ok(!money.isMoney('Drone'));
+        assert.strictEqual(money.cryopodPrice(20, {cryopodsPerCredit: 5}), 100);
+        assert.strictEqual(money.sellPrice(15, {sellRatio: 0.5}), 7);
+
+        await new Player().create({discord_id: A, name: 'Sa', race: 'aku'});
+        await new Player().create({discord_id: B, name: 'Sb', race: 'yorc'});
+        await DB.tables.ship.update({cryopods: 1000}, {where: {}});
+        await money.reset();
+        assert.strictEqual(await money.balance({type: 'player', id: A}), Math.round(cfg.startPlayer));
+        assert.strictEqual(await money.balance({type: 'ship'}), Math.round(cfg.startShip));
+        await DB.tables.players.update({credits: 0}, {where: {discord_id: [A, B]}});
+        await DB.tables.ship.update({credits: 0}, {where: {}});
+
+        // Bourses : jamais sous zéro, virements
+        assert.strictEqual((await money.add({type: 'player', id: A}, 50)).balance, 50);
+        assert.ok((await money.add({type: 'player', id: A}, -80)).error, 'pas de solde négatif');
+        assert.strictEqual(await money.balance({type: 'player', id: A}), 50);
+        assert.ok((await money.add({type: 'player', id: 'personne'}, 5)).error);
+        assert.ok((await money.transfer({type: 'player', id: A}, {type: 'ship'}, 20)).ok);
+        assert.strictEqual(await money.balance({type: 'ship'}), 20);
+        assert.ok((await money.transfer({type: 'player', id: A}, {type: 'ship'}, 500)).error);
+
+        // Butin en monnaie : dans la bourse, pas dans le coffre
+        let made = combat.makeLoot([{name: cfg.plural, qty: 25}, 'monnaie']);
+        assert.ok(made[0].money && made[0].qty === 25 && made[1].money && made[1].qty === 1);
+        assert.ok(combat.getLootList()[0].money, 'la monnaie est proposée en tête du butin');
+        cardLoot.offer([{name: 'monnaie', qty: 30}, {name: cfg.plural, qty: 5}]);
+        let moved = await inventory.move({from: {type: 'card-loot', index: 0}, to: {type: 'player', id: B}});
+        assert.ok(moved.item.money);
+        assert.strictEqual(await money.balance({type: 'player', id: B}), 30);
+        assert.ok(!(await inventory.getInventory(B)).some(i => i.slug === money.SLUG), 'pas d\'objet « monnaie »');
+        await inventory.handle({action: 'card-loot-all'});
+        assert.strictEqual(await money.balance({type: 'ship'}), 25, 'Tout récupérer : dans la caisse de bord');
+        let msg = (await inventory.payload(null))[0];
+        assert.strictEqual(msg.data.wallets.players[B], 30);
+        assert.strictEqual(msg.data.wallets.ship, 25);
+
+        // Prix dans l'éditeur d'objets
+        let out = await itemsEditor.save({name: 'Pile test', pool: 'electronique', price: 12});
+        assert.strictEqual(out.item.price, 12);
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).electronique.find(i => i.slug === 'pile-test').price, 12);
+        out = await itemsEditor.save({slug: 'pile-test', name: 'Pile test', pool: 'electronique', price: -4});
+        assert.strictEqual(out.item.price, 0);
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).electronique.find(i => i.slug === 'pile-test').price, undefined, 'pas de prix : rien d\'écrit');
+        await itemsEditor.save({slug: 'pile-test', name: 'Pile test', pool: 'electronique', price: 12});
+
+        // Étal : prix par défaut de l'éditeur, monnaie refusée, stock
+        let stock = merchant.cleanStock([{slug: 'pile-test', qty: 2}, {name: 'Babiole maison', price: 3}, {name: cfg.plural}, {name: ''}]);
+        assert.strictEqual(stock.length, 2);
+        assert.strictEqual(stock[0].price, 12);
+        assert.strictEqual(stock[0].qty, 2);
+        assert.strictEqual(stock[1].qty, null, 'sans stock : sans limite');
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'player', id: A}})).error, 'boutique fermée');
+        merchant.open({name: '  Walt  DiFnek ', stock: [{slug: 'pile-test', qty: 2}, {name: 'Babiole maison', price: 3}]});
+        assert.strictEqual(merchant.getState().name, 'Walt DiFnek');
+
+        // Achat en monnaie par un joueur
+        let bought = await merchant.buy({index: 0, slug: 'pile-test', buyer: {type: 'player', id: A}, pay: 'credits'});
+        assert.ok(!bought.error, bought.error);
+        assert.strictEqual(await money.balance({type: 'player', id: A}), 30 - 12);
+        assert.strictEqual((await inventory.getInventory(A)).find(i => i.slug === 'pile-test').count, 1);
+        assert.strictEqual(merchant.getState().stock[0].qty, 1);
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'player', id: A}, pay: 'credits', count: 2})).error, 'pas plus que le stock');
+        assert.ok((await merchant.buy({index: 0, slug: 'autre', buyer: {type: 'player', id: A}})).error, 'mauvais objet');
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'player', id: 'personne'}})).error);
+        // Pas assez d'argent : rien ne change
+        await money.add({type: 'player', id: A}, -18);
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'player', id: A}, pay: 'credits'})).error);
+        assert.strictEqual(merchant.getState().stock[0].qty, 1);
+        assert.strictEqual((await inventory.getInventory(A)).find(i => i.slug === 'pile-test').count, 1);
+
+        // Achat en cryopods, pour le vaisseau
+        bought = await merchant.buy({index: 0, buyer: {type: 'ship'}, pay: 'cryopods'});
+        assert.strictEqual(bought.event.paid, money.cryopodPrice(12));
+        assert.strictEqual(await money.cryopods(), 1000 - money.cryopodPrice(12));
+        assert.strictEqual(bought.event.cryopods, 1000 - money.cryopodPrice(12));
+        assert.strictEqual(merchant.getState().stock[0].qty, 0);
+        assert.ok((await merchant.buy({index: 0, buyer: {type: 'ship'}, pay: 'cryopods'})).error, 'épuisé');
+        assert.strictEqual((await inventory.getShip()).find(i => i.slug === 'pile-test').count, 1);
+        // Objet saisi à la main : créé à l'achat
+        await money.add({type: 'player', id: B}, 0);
+        bought = await merchant.buy({index: 1, buyer: {type: 'player', id: B}, pay: 'credits', count: 2});
+        assert.ok(!bought.error, bought.error);
+        assert.strictEqual(await money.balance({type: 'player', id: B}), 30 - 6);
+        assert.strictEqual((await inventory.getInventory(B)).find(i => i.name === 'Babiole maison').count, 2);
+        await DB.tables.ship.update({cryopods: 5}, {where: {}});
+        assert.ok((await merchant.buy({index: 1, buyer: {type: 'ship'}, pay: 'cryopods'})).error, 'pas assez de cryopods');
+        assert.strictEqual(await money.cryopods(), 5);
+
+        // Vente : la part du prix de l'éditeur, ou le prix du MJ ; le stock remonte
+        let sold = await merchant.sell({slug: 'pile-test', seller: {type: 'player', id: A}});
+        assert.ok(!sold.error, sold.error);
+        assert.strictEqual(sold.event.paid, money.sellPrice(12));
+        assert.strictEqual(await money.balance({type: 'player', id: A}), money.sellPrice(12));
+        assert.ok(!(await inventory.getInventory(A)).some(i => i.slug === 'pile-test'));
+        assert.strictEqual(merchant.getState().stock[0].qty, 1);
+        assert.ok((await merchant.sell({slug: 'pile-test', seller: {type: 'player', id: A}})).error, 'plus rien à vendre');
+        sold = await merchant.sell({slug: 'pile-test', seller: {type: 'ship'}, price: 9});
+        assert.strictEqual(await money.balance({type: 'ship'}), 25 + 9);
+
+        // Messages du serveur : l'étal, les bourses et les inventaires
+        let msgs = await merchant.handle({action: 'money-add', data: {target: {type: 'player', id: B}, amount: '-4'}});
+        assert.strictEqual(msgs[0].action, 'merchant');
+        assert.strictEqual(msgs[0].data.wallets.players[B], 20);
+        assert.ok(msgs.some(m => m.action === 'inventory'));
+        assert.strictEqual((await merchant.handle({action: 'money-add', data: {target: {type: 'player', id: B}, amount: -500}})).action, 'merchant-error');
+        msgs = await merchant.handle({action: 'money-transfer', data: {from: {type: 'player', id: B}, to: {type: 'player', id: A}, amount: 5}});
+        assert.strictEqual(msgs[0].data.wallets.players[A], money.sellPrice(12) + 5);
+        msgs = await merchant.handle({action: 'merchant-close'});
+        assert.strictEqual(msgs[0].data.state.open, false);
+        assert.ok((await merchant.sell({slug: 'pile-test', seller: {type: 'ship'}})).error, 'boutique fermée');
+        merchant.reset();
+        console.log('Money and merchant OK');
+    }
+    finally {
+        fs.writeFileSync(file, backup);
+        await DB.tables.items.destroy({where: {slug: ['pile-test', 'custom-babiole-maison']}});
+        await DB.tables.players.destroy({where: {discord_id: [A, B]}});
+        await DB.tables.ship.update({cryopods: 1000, credits: 0}, {where: {}});
+    }
+}
+
+// Artisanat : recettes de l'éditeur d'objets, fabrication, dé et armurerie
+async function test_craft() {
+    console.log('Testing craft');
+    const craft = require('../src/controllers/craft');
+    const inventory = require('../src/controllers/inventory');
+    const combat = require('../src/controllers/combat');
+    const itemsEditor = require('../src/controllers/itemsEditor');
+    const file = __dirname + '/../src/config/items.json';
+    const backup = fs.readFileSync(file);
+    const A = 'craft-joueur-a';
+    const SLUGS = ['ferraille-test', 'colle-test', 'bouclier-test', 'custom-totem-test'];
+    const count = async (slug, who) => inventory.countOf(slug, who);
+    const player = {type: 'player', id: A}, ship = {type: 'ship'};
+    try {
+        // Recettes propres : ingrédients connus, fusionnés, jamais l'objet lui-même
+        let known = {a: true, b: true, c: true};
+        assert.deepStrictEqual(craft.cleanRecipe({ingredients: [{slug: 'a', qty: 2}, {slug: 'a', qty: '1'}, {slug: 'x'}, {slug: 'c'}, {slug: 'b', qty: -5}], qty: 0}, known, 'c'),
+            {ingredients: [{slug: 'a', qty: 3}, {slug: 'b', qty: 1}], qty: 1});
+        assert.strictEqual(craft.cleanRecipe({ingredients: [{slug: 'x'}]}, known, 'c'), null);
+        assert.strictEqual(craft.cleanRecipe(null, known, 'c'), null);
+        assert.strictEqual(craft.cleanRecipe({ingredients: 'a'}, known, 'c'), null);
+
+        // Recette saisie dans l'éditeur d'objets
+        await itemsEditor.save({name: 'Ferraille test', pool: 'atelier_test'});
+        await itemsEditor.save({name: 'Colle test', pool: 'atelier_test'});
+        let out = await itemsEditor.save({name: 'Bouclier test', pool: 'atelier_test',
+            recipe: {ingredients: [{slug: 'ferraille-test', qty: 2}, {slug: 'colle-test', qty: 1}, {slug: 'inconnu'}, {slug: 'bouclier-test'}], qty: 2}});
+        assert.deepStrictEqual(out.item.recipe, {ingredients: [{slug: 'ferraille-test', qty: 2}, {slug: 'colle-test', qty: 1}], qty: 2});
+        assert.deepStrictEqual(JSON.parse(fs.readFileSync(file)).atelier_test.find(i => i.slug === 'bouclier-test').recipe, out.item.recipe);
+        out = await itemsEditor.save({slug: 'colle-test', name: 'Colle test', pool: 'atelier_test', recipe: {ingredients: []}});
+        assert.strictEqual(out.item.recipe, null);
+        assert.strictEqual(JSON.parse(fs.readFileSync(file)).atelier_test.find(i => i.slug === 'colle-test').recipe, undefined, 'sans ingrédient : pas de recette écrite');
+        let recipe = craft.recipes().find(r => r.slug === 'bouclier-test');
+        assert.strictEqual(recipe.ingredients[0].name, 'Ferraille test');
+        assert.strictEqual(recipe.qty, 2);
+
+        // Armurerie et chance de réussite
+        const cfg = craft.config();
+        assert.strictEqual(craft.chance(0, {baseChance: 70, armoryBonus: 10}), 70);
+        assert.strictEqual(craft.chance(5, {baseChance: 70, armoryBonus: 10}), 100, 'jamais plus de 100 %');
+        assert.strictEqual((await craft.setArmory(99)).level, cfg.armoryMax);
+        assert.strictEqual(await craft.armory(), cfg.armoryMax);
+        assert.strictEqual((await craft.setArmory(-2)).level, 0);
+        let msg = (await craft.handle({action: 'craft-armory', data: {level: 1}}))[0];
+        assert.strictEqual(msg.action, 'craft');
+        assert.strictEqual(msg.data.armory, 1);
+        assert.strictEqual(msg.data.chance, craft.chance(1, cfg));
+
+        // Fabrication : il faut tous les ingrédients chez l'artisan
+        await new Player().create({discord_id: A, name: 'Ca', race: 'aku'});
+        let ferraille = await inventory.ensureItem({slug: 'ferraille-test'});
+        let colle = await inventory.ensureItem({slug: 'colle-test'});
+        await inventory.giveTo(ferraille, player, 3);
+        assert.ok((await craft.make({crafter: player, slug: 'bouclier-test'})).error.includes('Colle test'), 'il manque la colle');
+        assert.ok((await craft.make({crafter: {type: 'player', id: 'personne'}, slug: 'bouclier-test'})).error);
+        assert.ok((await craft.make({crafter: player, slug: 'ferraille-test'})).error, 'pas de recette');
+        await inventory.giveTo(colle, player, 1);
+
+        // Jamais en plein combat
+        await combat.handle({action: 'combat-start', data: {enemies: [{name: 'Pirate', hp: 5}]}});
+        assert.ok((await craft.make({crafter: player, slug: 'bouclier-test'})).error.includes('combat'));
+        await combat.handle({action: 'combat-end'});
+
+        let made = await craft.make({crafter: player, slug: 'bouclier-test'});
+        assert.ok(!made.error, made.error);
+        assert.strictEqual(made.event.type, 'craft');
+        assert.strictEqual(await count('ferraille-test', player), 1);
+        assert.strictEqual(await count('colle-test', player), 0);
+        assert.strictEqual(await count('bouclier-test', player), 2, 'la recette donne 2 exemplaires');
+
+        // Dé raté : les ingrédients sont perdus (config failLosesIngredients)
+        await inventory.giveTo(ferraille, ship, 2);
+        await inventory.giveTo(colle, ship, 1);
+        await craft.setArmory(0);
+        const random = Math.random;
+        Math.random = () => 0.999;      // 100 : raté
+        try {
+            made = await craft.make({crafter: ship, slug: 'bouclier-test', roll: true});
+        } finally {
+            Math.random = random;
+        }
+        assert.strictEqual(made.event.type, 'craft-failed');
+        assert.strictEqual(made.event.roll, 100);
+        assert.strictEqual(made.item, null);
+        assert.strictEqual(await count('bouclier-test', ship), 0);
+        assert.strictEqual(await count('ferraille-test', ship), cfg.failLosesIngredients ? 0 : 2);
+
+        // Assemblage libre : le MJ choisit les ingrédients et le résultat
+        assert.ok((await craft.make({crafter: player, ingredients: [], name: 'Totem test'})).error);
+        assert.ok((await craft.make({crafter: player, ingredients: [{slug: 'ferraille-test', qty: 1}]})).error, 'il faut un résultat');
+        assert.ok((await craft.make({crafter: player, ingredients: [{slug: 'ferraille-test', qty: 5}], name: 'Totem test'})).error, 'pas assez de ferraille');
+        let msgs = await craft.handle({action: 'craft-make', data: {crafter: player, ingredients: [{slug: 'ferraille-test', qty: 1}, {slug: 'bouclier-test', qty: 1}], name: 'Totem test', qty: 1}});
+        assert.strictEqual(msgs[0].action, 'craft');
+        assert.strictEqual(msgs[0].data.event.free, true);
+        assert.ok(msgs.some(m => m.action === 'inventory' && m.data.event && m.data.event.item.name === 'Totem test'), 'l\'écran de jeu voit l\'objet arriver');
+        assert.strictEqual(msgs[0].data.holdings.players[A]['custom-totem-test'], 1);
+        assert.strictEqual(await count('ferraille-test', player), 0);
+        assert.strictEqual(await count('bouclier-test', player), 1);
+        assert.strictEqual((await craft.handle({action: 'craft-make', data: {crafter: player, slug: 'bouclier-test'}})).action, 'craft-error');
+        assert.strictEqual(msgs[0].data.log.length, 3);
+        craft.reset();
+        assert.strictEqual((await craft.message()).data.log.length, 0);
+        console.log('Craft OK');
+    }
+    finally {
+        fs.writeFileSync(file, backup);
+        await DB.tables.items.destroy({where: {slug: SLUGS}});
+        await DB.tables.players.destroy({where: {discord_id: A}});
+        await DB.tables.ship.update({armory_up: 0}, {where: {}});
+    }
+}
+
 // Fiches de l'éditeur d'ennemis et compagnons : valeurs nettoyées et bornées
 function test_npcs() {
     const npcs = require("../src/controllers/npcs");
@@ -620,4 +1450,141 @@ function test_npcs() {
     // Sans fichier modifié, les ennemis de départ viennent de config/bestiary.json
     assert.ok(npcs.getEnemies().length > 0);
     console.log('npcs OK');
+}
+
+// Combat : une attaque validée par le MJ peut poser un statut si elle touche
+async function test_combat() {
+    console.log('Testing combat');
+    const combat = require('../src/controllers/combat');
+    const run = async (action, data) => [].concat(await combat.handle({action, data})).pop().data;
+    let hero = await new Player().create({discord_id: 'combat-hero', name: 'Héro', combat: 50, moral: 50});
+    let id = String(hero.discord_id);
+
+    let {state} = await run('combat-start', {enemies: [{name: 'Yorc', hp: 30, offense: 100, defense: 50, damage: 'faible'}]});
+    let yorc = state.enemies[0];
+
+    // Touché, dégâts imposés et saignement posé sur la cible
+    let {event} = await run('combat-enemy-attack', {enemy_id: yorc.id, discord_id: id, outcome: 'hit', damage: 5,
+        status: {status: 'saignement', turns: 2}});
+    assert.ok(event.hit);
+    assert.strictEqual(event.hp, 495);
+    assert.deepStrictEqual(event.status, {key: 'saignement', name: 'Saignement', turns: 2});
+    assert.strictEqual(combat.getState().fighters[id].saignement.turns, 2);
+
+    // Raté : pas de statut
+    ({event} = await run('combat-enemy-attack', {enemy_id: yorc.id, discord_id: id, outcome: 'miss', status: {status: 'poison'}}));
+    assert.ok(!event.hit && !event.status);
+    assert.ok(!combat.getState().fighters[id].poison);
+
+    // Attaque d'un joueur : le statut attend son jet, posé s'il touche
+    ({state} = await run('combat-target', {enemy_id: yorc.id, discord_id: id, status: {status: 'poison', turns: 4}}));
+    assert.strictEqual(state.pending.status.status, 'poison');
+    const roll = (result) => ({error: false, data: {discord_id: id, stat: 'combat', module: '', result: result, dice_result: result}});
+    let attack = combat.resolveRoll(roll(60));
+    assert.ok(attack.data.event.hit && !attack.data.event.ko);
+    assert.strictEqual(attack.data.event.status.name, 'Poison');
+    assert.strictEqual(attack.data.state.enemies[0].statuses.poison.turns, 4);
+    assert.strictEqual(attack.data.state.pending, null);
+
+    // Un jet raté ne pose rien
+    await run('combat-status', {target: {enemy_id: yorc.id}, status: 'poison', turns: 0});
+    await run('combat-target', {enemy_id: yorc.id, discord_id: id, status: {status: 'etourdi'}});
+    attack = combat.resolveRoll(roll(10));
+    assert.ok(!attack.data.event.hit && !attack.data.state.enemies[0].statuses.etourdi);
+
+    // Statut personnalisé, toujours posé depuis le panneau des statuts
+    ({event} = await run('combat-status', {target: {discord_id: id}, name: 'Brûlure', damage: 2, turns: 3}));
+    assert.strictEqual(event.name, 'Brûlure');
+    assert.deepStrictEqual(combat.getState().fighters[id]['c-brulure'].damage, [2, 2]);
+
+    await run('combat-end', {});
+
+    // Initiative : joueurs puis compagnons du moral le plus haut au plus bas,
+    // à égalité dans l'ordre d'arrivée ; qui commence selon le mode
+    const P = (id, moral) => ({discord_id: id, name: id, moral: moral});
+    const foes = [{id: 9, name: 'Yorc'}];
+    const names = (o) => o.order.map(f => f.name);
+    let o = combat.makeOrder('joueurs', [P('a', 50), P('b', 80), P('c', 80)], [{id: 1, name: 'Zorg', moral: 80}], foes);
+    assert.strictEqual(o.first, 'joueurs');
+    assert.deepStrictEqual(names(o), ['b', 'c', 'Zorg', 'a', 'Yorc']);
+    assert.deepStrictEqual(names(combat.makeOrder('adversaires', [P('a', 90)], [], foes)), ['Yorc', 'a']);
+    assert.deepStrictEqual(names(combat.makeOrder('manuel', [P('a', 10), P('b', 90)], [], foes)), ['a', 'b', 'Yorc']);
+    o = combat.makeOrder('hasard', [P('a', 75)], [], foes, () => 0);
+    assert.strictEqual(o.reason, 'moral', 'aucun joueur au-dessus de 75 : les adversaires commencent');
+    assert.strictEqual(o.first, 'adversaires');
+    assert.strictEqual(combat.makeOrder('hasard', [P('a', 76)], [], foes, () => 0).first, 'joueurs');
+    assert.strictEqual(combat.makeOrder('hasard', [P('a', 76)], [], foes, () => 0.9).first, 'adversaires');
+
+    // Pendant le combat : au suivant, ordre changé à la main, renfort en dernier
+    ({state} = await run('combat-start', {enemies: [{name: 'Yorc', hp: 30}], initiative: 'adversaires'}));
+    assert.strictEqual(state.order[0].kind, 'enemy');
+    assert.strictEqual(state.current, 0);
+    assert.strictEqual(state.log[1].type, 'initiative');
+    let keys = state.order.map(f => f.kind + ':' + f.id);
+    // Les joueurs à 0 de moral (K.O.) des tests précédents sont sautés
+    ({state} = await run('combat-next', {}));
+    let acting = keys[state.current];
+    assert.ok(state.current > 0);
+    ({state} = await run('combat-order', {order: keys.slice().reverse()}));
+    assert.deepStrictEqual(state.order.map(f => f.kind + ':' + f.id), keys.slice().reverse());
+    assert.strictEqual(state.order[state.current].kind + ':' + state.order[state.current].id, acting, 'la main ne change pas');
+    ({state} = await run('combat-order', {current: 'player:' + id}));
+    assert.strictEqual(state.order[state.current].id, id);
+    ({state} = await run('combat-add', {enemy: {name: 'Pirate'}}));
+    assert.strictEqual(state.order[state.order.length - 1].name, 'Pirate');
+    // Un ennemi K.O. passe son tour ; après le dernier, le tour passe
+    await run('combat-hp', {enemy_id: state.enemies[1].id, hp: 0});
+    await run('combat-order', {current: keys[0]});
+    let turn = state.turn;
+    for (let i = 0; i < state.order.length && combat.getState().turn === turn; i++)
+        ({state} = await run('combat-next', {}));
+    assert.strictEqual(state.turn, turn + 1);
+    assert.strictEqual(state.current, 0);
+    await run('combat-end', {});
+    console.log('Combat OK');
+}
+
+// Compagnon tiré au hasard depuis le menu MJ, et ses jets hors combat
+function test_random_companion() {
+    const allies = require("../src/controllers/allies");
+    const names = require("../src/config/companionNames.json");
+    const saved = allies.getAllies();
+    allies.clear();
+    try {
+        // Dés toujours à 50 : bonus ou malus, la stat vaut 100
+        let ally = allies.randomCompanion({race: 'sylv'}, () => 0.99);
+        assert.strictEqual(ally.race, 'Sylv');
+        assert.ok(names.sylv.includes(ally.name), 'nom pris dans la liste de la race');
+        assert.deepStrictEqual([ally.combat, ally.recon, ally.moral], [100, 100, 100]);
+        // Dés à 1 : 51 partout
+        assert.strictEqual(allies.randomCompanion({race: 'aku'}, () => 0).pilotage, 51);
+        // Race tirée au hasard, nom de sa liste ou de la liste par défaut
+        for (let i = 0; i < 20; i++) {
+            let any = allies.randomCompanion();
+            assert.ok(any.race && any.name.length <= 20);
+            for (let stat of ['combat', 'pilotage', 'engineering', 'survival', 'recon'])
+                assert.ok(any[stat] >= 51 && any[stat] <= 100);
+        }
+
+        // Ajouté par l'action du menu, sans reprendre un nom déjà pris
+        let first = allies.handle({action: 'ally-random', data: {race: 'yorc'}}).data.allies[0];
+        assert.ok(names.yorc.includes(first.name));
+        let second = allies.randomCompanion({race: 'yorc'});
+        assert.notStrictEqual(second.name, first.name);
+
+        // Jet hors combat : affiché comme celui d'un joueur (id « npc<id> »)
+        let roll = allies.rollAction({id: first.id, stat: 'recon'});
+        assert.strictEqual(roll.action, 'roll');
+        assert.strictEqual(roll.data.discord_id, 'npc' + first.id);
+        assert.strictEqual(roll.data.stat, 'recon');
+        assert.strictEqual(roll.data.success, roll.data.result >= 50);
+        assert.ok(allies.rollAction({id: first.id, stat: 'moral'}).error);
+        assert.ok(allies.rollAction({id: 999, stat: 'recon'}).error);
+    }
+    finally {
+        allies.clear();
+        for (let ally of saved)
+            allies.handle({action: 'ally-add', data: ally});
+    }
+    console.log('Random companion OK');
 }

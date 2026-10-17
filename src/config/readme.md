@@ -52,6 +52,39 @@ ___
     }
 ```
 
+### Choix avec un jet
+
+La suite dépend d'un jet : en jeu, le chrono se met en pause et le MJ dit si le jet est réussi ou raté (menu MJ ou boutons sous la carte).
+`stat` : combat, pilotage, engineering, survival ou recon. Chaque suite a un `reveal` (résultat) ou un `next` (carte suivante d'un lieu), et peut avoir `mjreveal`, `humans` et `loot` comme un choix.
+Le `humans` et le `loot` du choix lui-même s'appliquent quel que soit le résultat. Les variantes (`alts`) n'ont pas de jet.
+
+```json
+        {
+          "value": "Tenter une manoeuvre d'evitement",
+          "mjreveal": "Jet de pilotage",
+          "roll": {
+            "stat": "pilotage",
+            "success": { "reveal": "\n   ", "mjreveal": "" },
+            "failure": { "reveal": "\n   ", "mjreveal": "" }
+          }
+        }
+```
+
+### Choix avec des issues au hasard
+
+Le jeu tire une issue à l'affichage de la carte (le menu MJ montre laquelle). `weight` est facultatif (1 par défaut) : poids 3 contre 1 = 75 % / 25 %.
+Chaque issue a un `reveal` ou un `next` (ou un `roll`), et peut avoir `mjreveal`, `humans` et `loot`, qui s'ajoutent à ceux du choix.
+
+```json
+        {
+          "value": "Récupérer le cargo et l'ouvrir",
+          "outcomes": [
+            { "weight": 3, "reveal": "\n   ", "mjreveal": "" },
+            { "weight": 1, "reveal": "\n   ", "loot": ["Outils"] }
+          ]
+        }
+```
+
 ### Planet Template
 
 ```json
@@ -186,7 +219,7 @@ ___
 
 * ```[art_race_0]``` **(toute les races)**
 
-  fnek, omphor, sylv, ygrl, shrymp, aku, york, nek_eau, nek_feu, nek_terre, nek_air.
+  fnek, omphor, sylv, ygrl, shrymp, aku, yorc, nek_eau, nek_feu, nek_terre, nek_air.
 
 ### Stats
 
@@ -195,3 +228,22 @@ ___
 * ```[art_stats_0]``` **(toute les stats)**
 
   combat, pilotage, ingenierie, survie, reconnaissance.
+
+### Autres listes
+
+Toutes les entrées d'une liste ont les mêmes articles (vérifié par `npm test`). Forme courte : ```[objet_1]``` = ```[no_objet_1]```.
+
+| Variable | Articles | Contenu |
+| --- | --- | --- |
+| ```[art_pub_0]``` | no | noms du pub de l'espace |
+| ```[art_objet_0]``` | le, un, votre, no | objets de `items.json` (clé = slug) |
+| ```[art_livre_0]``` | le, no | titres de livres |
+| ```[art_film_0]``` | le, no | films des races (Walt DiFnek, Nek-flix…) |
+| ```[art_boisson_0]``` | le, un, no | boissons servies au pub |
+| ```[art_bouteille_0]``` | le, no | bouteilles |
+| ```[art_lieu_0]``` | le, un, du, au, no | types de lieux (casino, observatoire…) |
+| ```[art_pnj_0]``` | le, les, un, des, du, au, aux, no, nos | personnages par métier (marchand, douanier…) |
+| ```[art_personnage_0]``` | le, du, au, no | personnages connus (préfet Dimalou, Chris Tale…) |
+| ```[art_organisation_0]``` | le, du, au, no | organisations (OLI, Fnak, Galaxyssimo™…) |
+| ```[art_bande_0]``` | le, du, au, no | groupes hostiles (PEACE, AMIS…) |
+| ```[art_systeme_0]``` | le, du, au, no | systèmes stellaires |

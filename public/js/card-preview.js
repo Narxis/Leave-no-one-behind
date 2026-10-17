@@ -10,10 +10,13 @@
 // renvoie l'état du lieu à cet instant (relu à chaque étape) :
 //   {title, startId, cards, goTo, actions}
 //   cards   : Map id → {id, num, desc, mjreveal, timer, shuffle, marker,
-//                       choices: [{id, value, mjreveal, loot, reveal, revealId, next}]}
+//                       choices: [{id, value, mjreveal, loot, reveal, revealId, next, roll}]}
+//             roll : null, ou {stat, success, failure} pour un choix à jet, chaque
+//             suite étant {reveal, revealId, next} (reveal et next du choix à null)
+//             outcomes : null, ou [{weight, reveal, revealId, next}] (issues au hasard)
 //   goTo    : appelé avec l'id d'un bloc pour y aller dans l'éditeur
-//   actions : edit(id, champ, valeur), addChoice(carteId), addNext(choixId), addReveal(choixId)
-//             (renvoient l'id du bloc créé)
+//   actions : edit(id, champ, valeur), addChoice(carteId), addNext(choixId, sortie), addReveal(choixId, sortie)
+//             (renvoient l'id du bloc créé ; sortie : 'output_2' pour la suite « échec » d'un jet)
 window.CardPreview = (function () {
     const TIMER_SECONDS = 30;          // comme en jeu (card.js)
     const STOP_TOKEN = '{....}';       // pause « .... » puis le texte repart à zéro
@@ -27,20 +30,48 @@ window.CardPreview = (function () {
     const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     const short = (t, n) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n) + '…' : t; };
-    const hasNext = (c) => c.reveal != null || c.next != null;
+    const suiteOk = (x) => !!x && (x.reveal != null || x.next != null);
+    const hasNext = (c) => c.outcomes ? c.outcomes.every(suiteOk) : c.roll ? suiteOk(c.roll.success) && suiteOk(c.roll.failure) : suiteOk(c);
+    const ISSUES = {success: 'réussite', failure: 'échec'};
+    // Issue d'une étape : 'success' / 'failure' (jet) ou 'o0', 'o1'… (issue au hasard)
+    const outcomeIndex = (issue) => /^o\d+$/.test(issue || '') ? parseInt(issue.slice(1)) : -1;
+    const issueName = (issue) => ISSUES[issue] || 'issue ' + (outcomeIndex(issue) + 1);
+    const issueOutput = (issue) => issue === 'failure' ? 'output_2' : 'output_' + (Math.max(outcomeIndex(issue), 0) + 1);
+    const chances = (list) => {
+        let total = list.reduce((a, o) => a + o.weight, 0);
+        return list.map(o => total > 0 ? Math.round(100 * o.weight / total) : Math.round(100 / list.length));
+    };
+    // Tirage pondéré, comme en jeu (src/models/card.js, drawOutcome)
+    function drawOutcome(list) {
+        let total = list.reduce((a, o) => a + o.weight, 0);
+        if (!(total > 0))
+            return Math.floor(Math.random() * list.length);
+        let r = Math.random() * total;
+        for (let i = 0; i < list.length; i++)
+            if ((r -= list[i].weight) < 0)
+                return i;
+        return list.length - 1;
+    }
+    const ROLL_TITLES = {combat: 'Jet de combat', pilotage: 'Jet de pilotage', engineering: 'Jet d\'ingénierie', survival: 'Jet de survie', recon: 'Jet de reconnaissance'};
+    const rollLabel = (roll) => ROLL_TITLES[roll.stat] || 'Jet';
 
     let provider = null, story = null, fromId = null;
-    // Étapes : {type: 'card', id, order} ou {type: 'reveal', cardId, choiceId}
+    // Étapes : {type: 'card', id, order} ou {type: 'reveal', cardId, choiceId, issue}
+    // (issue : 'success' / 'failure' pour le résultat d'un choix à jet)
     let path = [], ahead = [];
     let mode = 'play';
     let run = 0;            // change à chaque nouvel affichage : stoppe l'écriture et le chrono en cours
     let fast = false, instant = false, writing = false;
     let timerHandle = null;
+    let timerPaused = false;    // pendant un jet : le chrono attend le résultat
 
     const dialog = () => $('cp-dialog');
     const step = () => path[path.length - 1];
     const cardOf = (s) => s && story.cards.get(s.type === 'card' ? s.id : s.cardId);
     const choiceOf = (s) => { let card = cardOf(s); return card && card.choices.find(c => c.id === s.choiceId); };
+    // Suite affichée par une étape « résultat » : celle du choix, ou du jet
+    const suiteOf = (choice, issue) => choice && (outcomeIndex(issue) >= 0 ? (choice.outcomes || [])[outcomeIndex(issue)]
+        : issue && choice.roll ? choice.roll[issue] : choice);
 
     /* ---------- Variables de texte : [article_type_numéro] ---------- */
 
@@ -56,7 +87,18 @@ window.CardPreview = (function () {
         'module-bdd': 'Module sans bases de données',
         'module-h-bdd': 'Module sans cryopods ni bases de données',
         'stats': 'Compétence',
-        'pub': 'Nom de pub'
+        'pub': 'Nom de pub',
+        'objet': 'Objet',
+        'livre': 'Livre',
+        'film': 'Film',
+        'boisson': 'Boisson',
+        'bouteille': 'Bouteille',
+        'lieu': 'Lieu',
+        'pnj': 'Personnage (métier)',
+        'personnage': 'Personnage connu',
+        'organisation': 'Organisation',
+        'bande': 'Groupe hostile',
+        'systeme': 'Système stellaire'
     };
     const varsOf = () => (window.lang && window.lang.card_vars) || {};
     const parseVar = (token) => {
@@ -160,6 +202,7 @@ window.CardPreview = (function () {
     function stopTimer() {
         clearInterval(timerHandle);
         timerHandle = null;
+        timerPaused = false;
         $('cp-timer').hidden = true;
     }
 
@@ -172,6 +215,8 @@ window.CardPreview = (function () {
         timerHandle = setInterval(() => {
             if (token !== run)
                 return stopTimer();
+            if (timerPaused)
+                return;
             left--;
             el.querySelector('span').textContent = Math.max(left, 0);
             el.classList.toggle('is-low', left <= 5);
@@ -184,12 +229,15 @@ window.CardPreview = (function () {
 
     /* ---------- Petits morceaux d'affichage ---------- */
 
+    // Entrées du butin : un nom, ou {name, qty} pour plusieurs exemplaires
     function lootHtml(names) {
-        return names.map(name => {
-            let known = (window.LOOT_ITEMS || []).find(it => it.name.toLowerCase() === String(name).toLowerCase());
+        return names.map(entry => {
+            let obj = entry && typeof entry === 'object';
+            let name = String(obj ? entry.name : entry), qty = obj && entry.qty > 1 ? entry.qty : 1;
+            let known = (window.LOOT_ITEMS || []).find(it => it.name.toLowerCase() === name.toLowerCase());
             return '<span class="cp-loot-chip' + (known ? '' : ' is-custom') + '">'
-                + (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<b>' + esc(String(name).charAt(0)) + '</b>')
-                + esc(name) + '</span>';
+                + (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<b>' + esc(name.charAt(0)) + '</b>')
+                + esc(name) + (qty > 1 ? ' ×' + qty : '') + '</span>';
         }).join('');
     }
 
@@ -208,13 +256,15 @@ window.CardPreview = (function () {
         box.innerHTML = html;
     }
 
-    const afterLabel = (c) => c.reveal != null ? 'Résultat' : c.next != null ? 'Carte n° ' + story.cards.get(c.next).num : 'Aucune suite';
+    const suiteLabel = (x) => !x ? 'Aucune suite' : x.reveal != null ? 'Résultat' : x.next != null ? 'Carte n° ' + story.cards.get(x.next).num : 'Aucune suite';
+    const afterLabel = (c) => c.outcomes ? 'Au hasard : ' + chances(c.outcomes).map((pct, k) => (k + 1) + ' (' + pct + ' %) → ' + suiteLabel(c.outcomes[k])).join(', ')
+        : c.roll ? rollLabel(c.roll) + ' : réussite → ' + suiteLabel(c.roll.success) + ', échec → ' + suiteLabel(c.roll.failure) : suiteLabel(c);
 
     // Fil des étapes, liste « Aller à », boutons retour / suivant, marqueur
     function renderNav() {
         $('cp-path').innerHTML = path.map((s, i) => {
             let card = cardOf(s);
-            let label = s.type === 'reveal' ? 'Résultat' : 'n° ' + (card ? card.num : '?');
+            let label = s.type === 'reveal' ? 'Résultat' + (s.issue ? ' (' + issueName(s.issue) + ')' : '') : 'n° ' + (card ? card.num : '?');
             return '<button type="button" data-step="' + i + '"' + (i === path.length - 1 ? ' aria-current="step"' : '')
                 + (card && card.marker && s.type === 'card' ? ' class="is-marked" title="' + esc(card.marker) + '"' : '') + '>' + label + '</button>';
         }).join('<i class="fas fa-angle-right"></i>');
@@ -277,7 +327,9 @@ window.CardPreview = (function () {
         }
         else if (s && s.type === 'reveal') {
             let choice = choiceOf(s);
-            html += '<p class="cp-mj-line"><b>Résultat</b> du choix « ' + esc(short(choice && choice.value, 40)) + ' »</p>'
+            let how = !s.issue ? '' : outcomeIndex(s.issue) >= 0 ? ' (issue ' + (outcomeIndex(s.issue) + 1) + ' sur ' + ((choice && choice.outcomes) || []).length + ', tirée au hasard)'
+                : ' (jet ' + (s.issue === 'success' ? 'réussi' : 'raté') + ')';
+            html += '<p class="cp-mj-line"><b>Résultat</b>' + how + ' du choix « ' + esc(short(choice && choice.value, 40)) + ' »</p>'
                 + '<p class="cp-mj-hint">En jeu, la partie reprend ensuite avec la carte suivante du deck.</p>';
         }
         html += varsHtml(card, order);
@@ -288,7 +340,7 @@ window.CardPreview = (function () {
     // Variables de l'étape : exemple de valeur (mode Éditer) ou valeur tirée (mode Jouer)
     function varsHtml(card, order) {
         let s = step();
-        let texts = s.type === 'reveal' ? [(choiceOf(s) || {}).reveal]
+        let texts = s.type === 'reveal' ? [(suiteOf(choiceOf(s), s.issue) || {}).reveal]
             : [card.desc, card.mjreveal].concat(order.flatMap(c => [c.value, c.mjreveal]));
         let found = [...new Set(texts.join(' ').match(VAR_RE) || [])];
         if (mode === 'play')
@@ -329,7 +381,7 @@ window.CardPreview = (function () {
                 shuffle(s.order);
         }
         renderNav();
-        if (!card || (s.type === 'reveal' && !choiceOf(s))) {
+        if (!card || (s.type === 'reveal' && (suiteOf(choiceOf(s), s.issue) || {}).reveal == null)) {
             $('cp-text').innerText = '';
             $('cp-edit').hidden = true;
             renderMj(null, []);
@@ -340,7 +392,7 @@ window.CardPreview = (function () {
             .concat(card.choices.filter(c => !s.order.includes(c.id))) : [];
         renderMj(card, order);
         if (s.type === 'reveal')
-            return renderReveal(card, choiceOf(s), token, animate);
+            return renderReveal(card, choiceOf(s), suiteOf(choiceOf(s), s.issue), token, animate);
         $('cp-card-num').textContent = 'Carte n° ' + card.num + (card.marker ? ' ★' : '');
         if (mode === 'edit')
             return renderCardEdit(card, order);
@@ -383,21 +435,21 @@ window.CardPreview = (function () {
         });
     }
 
-    async function renderReveal(card, choice, token, animate) {
-        $('cp-card-num').textContent = 'Résultat';
+    async function renderReveal(card, choice, suite, token, animate) {
+        $('cp-card-num').textContent = 'Résultat' + (step().issue ? ' (' + issueName(step().issue) + ')' : '');
         if (mode === 'edit') {
-            showEditor(choice.revealId, 'reveal', choice.reveal, 'Ce qui arrive à la fin de ce choix…');
+            showEditor(suite.revealId, 'reveal', suite.reveal, 'Ce qui arrive à la fin de ce choix…');
             showLoot(choice.loot);
             return setEnd('is-done', '<i class="fas fa-flag-checkered"></i> Fin de cette branche du lieu.');
         }
         $('cp-edit').hidden = true;
         $('cp-text').hidden = false;
         if (animate) {
-            if (!(await write(shown(step(), choice.reveal) || '(résultat sans texte)', token)))
+            if (!(await write(shown(step(), suite.reveal) || '(résultat sans texte)', token)))
                 return;
         }
         else
-            $('cp-text').innerText = lastPart(shown(step(), choice.reveal) || '(résultat sans texte)');
+            $('cp-text').innerText = lastPart(shown(step(), suite.reveal) || '(résultat sans texte)');
         showLoot(choice.loot);
         let btn = document.createElement('button');
         btn.type = 'button';
@@ -430,12 +482,21 @@ window.CardPreview = (function () {
         order.forEach((c, i) => {
             let row = document.createElement('div');
             row.className = 'cp-choice is-edit' + (hasNext(c) ? '' : ' is-missing');
+            // Suite (ou, pour un jet, suite « réussite » et suite « échec ») : y aller, ou la créer
+            let suiteHtml = (x, issue) => {
+                let tag = issue ? ' data-issue="' + issue + '"' : '';
+                let label = !issue ? '' : outcomeIndex(issue) >= 0
+                    ? '<b class="cp-issue is-outcome">Issue ' + (outcomeIndex(issue) + 1) + ' · ' + chances(c.outcomes)[outcomeIndex(issue)] + ' %</b> '
+                    : '<b class="cp-issue is-' + issue + '">' + (issue === 'success' ? 'Réussite' : 'Échec') + '</b> ';
+                return suiteOk(x)
+                    ? '<button type="button" class="cp-go" data-go="' + i + '"' + tag + ' title="Aller à cette suite">' + label + suiteLabel(x) + ' <i class="fas fa-arrow-right"></i></button>'
+                    : '<span class="cp-go-new">' + label + '<button type="button" data-create="next" data-choice="' + esc(c.id) + '"' + tag + '><i class="fas fa-plus"></i> Carte suivante</button>'
+                        + '<button type="button" data-create="reveal" data-choice="' + esc(c.id) + '"' + tag + '><i class="fas fa-plus"></i> Résultat</button></span>';
+            };
             row.innerHTML = '<kbd>' + (i + 1) + '</kbd>'
                 + '<input type="text" maxlength="200" data-edit="' + esc(c.id) + '" data-field="choice" placeholder="Texte du choix" value="' + esc(c.value) + '">'
-                + (hasNext(c)
-                    ? '<button type="button" class="cp-go" data-go="' + i + '" title="Aller à la suite de ce choix">' + afterLabel(c) + ' <i class="fas fa-arrow-right"></i></button>'
-                    : '<span class="cp-go-new"><button type="button" data-create="next" data-choice="' + esc(c.id) + '"><i class="fas fa-plus"></i> Carte suivante</button>'
-                        + '<button type="button" data-create="reveal" data-choice="' + esc(c.id) + '"><i class="fas fa-plus"></i> Résultat</button></span>');
+                + (c.outcomes ? '<span class="cp-roll-suites">' + c.outcomes.map((o, k) => suiteHtml(o, 'o' + k)).join('') + '</span>'
+                    : c.roll ? '<span class="cp-roll-suites">' + suiteHtml(c.roll.success, 'success') + suiteHtml(c.roll.failure, 'failure') + '</span>' : suiteHtml(c));
             row.dataset.key = i + 1;
             box.append(row);
         });
@@ -469,18 +530,67 @@ window.CardPreview = (function () {
         if (!hasNext(choice))
             return setEnd('is-warn', '<i class="fas fa-exclamation-triangle"></i> Ce choix n\'a pas encore de suite.'
                 + ' <button type="button" class="cp-link" data-mode-switch="edit">La créer ici</button>');
+        if (choice.roll) {
+            // Comme en jeu : chrono en pause, le MJ dit si le jet est réussi
+            timerPaused = true;
+            await hideChoices();
+            if (token === run)
+                askRoll(card, choice, token);
+            return;
+        }
         stopTimer();
         token = ++run;
         await hideChoices();
         if (token !== run)
             return;
-        if (choice.reveal != null)
-            return go({type: 'reveal', cardId: card.id, choiceId: choice.id}, true);
+        if (choice.outcomes) {
+            // Issue tirée au hasard selon les poids, comme en jeu
+            let k = drawOutcome(choice.outcomes);
+            return follow(card, choice, 'o' + k, choice.outcomes[k], token);
+        }
+        follow(card, choice, null, choice, token);
+    }
+
+    // Suite d'un choix, ou du résultat de son jet (issue)
+    async function follow(card, choice, issue, suite, token) {
+        if (suite.reveal != null)
+            return go({type: 'reveal', cardId: card.id, choiceId: choice.id, issue: issue}, true);
         showLoot(choice.loot);
         if (choice.loot.length && !instant)
             await sleep(1200);
         if (token === run)
-            go({type: 'card', id: choice.next}, true);
+            go({type: 'card', id: suite.next}, true);
+    }
+
+    function askRoll(card, choice, token) {
+        let box = $('cp-choices');
+        box.innerHTML = '<div class="cp-roll"><b><i class="fas fa-dice-d20"></i> ' + rollLabel(choice.roll) + '</b>'
+            + '<span>« ' + esc(short(shown(step(), choice.value), 60)) + ' » : chrono en pause, le MJ valide le résultat.</span>'
+            + '<span class="cp-roll-btns">'
+            + '<button type="button" class="cp-choice is-success" data-key="1" data-roll="success"><kbd>1</kbd><span>Réussi</span><small>' + suiteLabel(choice.roll.success) + '</small></button>'
+            + '<button type="button" class="cp-choice is-failure" data-key="2" data-roll="failure"><kbd>2</kbd><span>Raté</span><small>' + suiteLabel(choice.roll.failure) + '</small></button>'
+            + '<button type="button" class="cp-choice is-cancel" data-key="3" data-roll="cancel"><kbd>3</kbd><span>Annuler</span></button>'
+            + '</span></div>';
+        box.querySelectorAll('[data-roll]').forEach(btn => btn.addEventListener('click', async () => {
+            if (token !== run)
+                return;
+            let issue = btn.dataset.roll;
+            if (issue === 'cancel') {
+                timerPaused = false;
+                return playChoices(cardOrder(card), card, token);
+            }
+            stopTimer();
+            token = ++run;
+            await hideChoices();
+            if (token === run)
+                follow(card, choice, issue, choice.roll[issue], token);
+        }));
+    }
+
+    // Choix de la carte dans l'ordre tiré pour l'étape
+    function cardOrder(card) {
+        let s = step();
+        return (s.order || card.choices.map(c => c.id)).map(id => card.choices.find(c => c.id === id)).filter(Boolean);
     }
 
     function back() {
@@ -646,10 +756,10 @@ window.CardPreview = (function () {
         });
         $('cp-edit-block').addEventListener('click', () => {
             let s = step();
-            let choice = s && s.type === 'reveal' && choiceOf(s);
+            let suite = s && s.type === 'reveal' && suiteOf(choiceOf(s), s.issue);
             close();
             if (story && s)
-                story.goTo(choice ? choice.revealId : s.id);
+                story.goTo(suite ? suite.revealId : s.id);
         });
         $('cp-path').addEventListener('click', (e) => {
             let btn = e.target.closest('[data-step]');
@@ -709,10 +819,12 @@ window.CardPreview = (function () {
             let goBtn = t.closest('[data-go]');
             if (goBtn && card) {
                 let c = card.choices.find(x => x.id === goBtn.closest('.cp-choice').querySelector('[data-edit]').dataset.edit);
-                if (c && c.reveal != null)
-                    return go({type: 'reveal', cardId: card.id, choiceId: c.id}, false);
-                if (c && c.next != null)
-                    return go({type: 'card', id: c.next}, false);
+                let issue = goBtn.dataset.issue || null;
+                let suite = suiteOf(c, issue);
+                if (suite && suite.reveal != null)
+                    return go({type: 'reveal', cardId: card.id, choiceId: c.id, issue: issue}, false);
+                if (suite && suite.next != null)
+                    return go({type: 'card', id: suite.next}, false);
             }
             let create = t.closest('[data-create]');
             if (create && card) {
@@ -725,17 +837,19 @@ window.CardPreview = (function () {
                     return;
                 }
                 let choiceId = create.dataset.choice;
+                let issue = create.dataset.issue || null;
+                let output = issueOutput(issue);
                 if (create.dataset.create === 'next') {
-                    let id = story.actions.addNext(choiceId);
+                    let id = story.actions.addNext(choiceId, output);
                     if (id != null) {
                         story = provider();
                         go({type: 'card', id: String(id)}, false);
                         $('cp-edit').focus();
                     }
                 }
-                else if (story.actions.addReveal(choiceId) != null) {
+                else if (story.actions.addReveal(choiceId, output) != null) {
                     story = provider();
-                    go({type: 'reveal', cardId: card.id, choiceId: choiceId}, false);
+                    go({type: 'reveal', cardId: card.id, choiceId: choiceId, issue: issue}, false);
                     $('cp-edit').focus();
                 }
             }

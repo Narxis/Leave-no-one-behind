@@ -352,6 +352,11 @@ input.add-life:focus,
         border-bottom: none;
     }
 
+    /* Compagnons : +, compagnon au hasard et x sur une ligne */
+    .ally:not(.hide) {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
     #search-ennemy,
     #search-ally,
     #search-status {
@@ -469,6 +474,7 @@ input.add-life:focus,
 .mj-page #add-monstre,
 .mj-page #monstre-list,
 .mj-page #add-friend,
+.mj-page #random-friend,
 .mj-page #friend-list {
     margin: 0;
 }
@@ -782,6 +788,94 @@ body.mj-page {
     color: var(--ui-danger);
 }
 
+/* Attaque en préparation : choix sélectionné, puis « Valider » (mj-combat.js) */
+.mj-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+}
+
+.mj-attacker.selected,
+.mj-attacker.selected:hover {
+    border-color: var(--ui-accent);
+    background: rgb(255 204 0 / 16%);
+    color: var(--ui-accent);
+}
+
+.mj-victims .mj-attacker.selected,
+.mj-victims .mj-attacker.selected:hover {
+    border-color: var(--ui-danger);
+    background: rgb(255 90 110 / 18%);
+    color: var(--ui-danger);
+}
+
+.mj-hit-status .mj-sp-select {
+    flex: 0 1 auto;
+}
+
+.mj-hit-status .mj-turn-duration:disabled {
+    opacity: 0.4;
+}
+
+.mj-draft-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+}
+
+.mj-validate {
+    padding: 6px 16px;
+}
+
+.mj-validate:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Appui long pour confirmer (ui-hold.js) : le bouton se remplit pendant le
+   maintien ; un simple clic affiche le rappel de data-hold dessous */
+[data-hold] {
+    position: relative;
+}
+
+[data-hold].holding,
+[data-hold].holding:hover {
+    background-image: linear-gradient(rgb(255 255 255 / 22%), rgb(255 255 255 / 22%));
+    background-repeat: no-repeat;
+    animation: hold-fill var(--hold-ms, 800ms) linear forwards;
+}
+
+@keyframes hold-fill {
+    from { background-size: 0% 100%; }
+    to { background-size: 100% 100%; }
+}
+
+[data-hold].hold-hint::after {
+    content: attr(data-hold);
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    z-index: 5;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: rgb(0 0 0 / 85%);
+    color: var(--ui-text);
+    font-size: 12px;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translateX(-50%);
+    animation: hold-hint 1.8s forwards;
+}
+
+@keyframes hold-hint {
+    0%, 75% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
 /* Issue imposée par le MJ pour l'attaque d'un ennemi (mj-combat.js) */
 .mj-outcome {
     display: flex;
@@ -917,8 +1011,12 @@ body.mj-page {
 
 .mj-loot-form {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) 58px auto;
     gap: 6px;
+}
+
+.mj-loot-qty {
+    text-align: center;
 }
 
 .mj-loot-input {
@@ -1054,7 +1152,8 @@ body.mj-page {
 }
 
 .fight.shake,
-.status-search.shake {
+.status-search.shake,
+.mj-sp-name.shake {
     animation: mj-shake .35s;
 }
 
@@ -1134,6 +1233,13 @@ body.mj-page {
     font-size: 13px;
     font-weight: 600;
     transition: background 150ms var(--ui-ease), color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+/* Race aléatoire : toute la largeur, au-dessus des races */
+.options-affichage li.race-random {
+    grid-column: 1 / -1;
+    border-color: var(--ui-border);
+    text-align: center;
 }
 
 .options-affichage li:hover {
@@ -1294,6 +1400,60 @@ body.mj-page {
     color: var(--ui-text-dim);
 }
 
+.mj-status-player {
+    font-weight: 500;
+    color: var(--ui-text-dim);
+}
+
+/* Cible des statuts hors combat et création d'un statut à la volée */
+.mj-status-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.mj-status-new {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mj-status-new[open] {
+    padding: 8px;
+    border: 1px solid var(--ui-border);
+    border-radius: 10px;
+    background: var(--ui-fill);
+}
+
+.mj-status-new summary {
+    font-size: 13px;
+    color: var(--ui-text-dim);
+    cursor: pointer;
+}
+
+.mj-status-new[open] summary {
+    margin-bottom: 8px;
+}
+
+.mj-status-new .mj-sp-name {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+}
+
+.mj-status-new .mj-sp-check {
+    margin-bottom: 8px;
+}
+
+.mj-status-new .mj-sp-apply {
+    display: block;
+    margin-left: auto;
+}
+
 /*---Menu MJ : tour en cours et statuts des ennemis---*/
 .mj-turn {
     display: flex;
@@ -1337,6 +1497,111 @@ body.mj-page {
     padding: 5px 10px;
     border-color: var(--ui-accent);
     color: var(--ui-accent);
+}
+
+.mj-turn-skip {
+    border-color: var(--ui-border-strong);
+    color: var(--ui-text-dim);
+}
+
+/*---Menu MJ : initiative et ordre de jeu---*/
+.mj-page .combat .combat-initiative {
+    width: 90%;
+    height: auto;
+    margin: 1em 0 -0.4em;
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+.mj-page .combat .combat-initiative option {
+    background: #17181c;
+}
+
+.mj-page .combat .combat-initiative.hide {
+    display: none;
+}
+
+.mj-order {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    margin: 2px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mj-order-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: grab;
+}
+
+.mj-order-row.current {
+    border-color: var(--ui-accent);
+    background: rgb(255 204 0 / 12%);
+}
+
+.mj-order-row.drop {
+    border-style: dashed;
+    border-color: var(--ui-text-dim);
+}
+
+.mj-order-row.ko {
+    opacity: 0.4;
+}
+
+.mj-order-rank {
+    width: 1.6em;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+    text-align: right;
+}
+
+.mj-order-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    padding: 2px 4px;
+    border: none;
+    background: none;
+    color: var(--ui-text);
+    font-family: 'Jura', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.mj-order-row.kind-enemy .mj-order-name {
+    color: var(--ui-danger);
+}
+
+.mj-order-row.current .mj-order-name {
+    color: var(--ui-accent);
+}
+
+.mj-order-move {
+    width: 24px;
+    height: 22px;
+    padding: 0;
+    border: 1px solid var(--ui-border);
+    border-radius: 6px;
+    background: var(--ui-fill);
+    color: var(--ui-text-dim);
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.mj-order-move:disabled {
+    opacity: 0.3;
+    cursor: default;
 }
 
 .mj-statuses-line {
@@ -1410,6 +1675,93 @@ body.mj-page {
     opacity: .4;
     cursor: default;
     pointer-events: none;
+}
+
+/*---Menu MJ : issue tirée au hasard pour un choix---*/
+.mj-outcome {
+    color: var(--ui-accent);
+    font-weight: 600;
+}
+
+/*---Menu MJ : jet d'un choix en attente (page de jeu en pause)---*/
+.mj-card-roll {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0 12px 16px;
+    padding: 12px 14px;
+    border: 1px solid var(--ui-accent);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-accent-soft);
+    box-shadow: var(--ui-glow-accent);
+    font-size: 14px;
+}
+
+.mj-card-roll[hidden] {
+    display: none;
+}
+
+.mj-card-roll-title {
+    color: var(--ui-accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.mj-card-roll-issues {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.mj-card-roll-issue {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    white-space: pre-line;
+    color: var(--ui-text-dim);
+}
+
+.mj-card-roll-issue.success b {
+    color: #7be26b;
+}
+
+.mj-card-roll-issue.failure b {
+    color: var(--ui-danger);
+}
+
+.mj-card-roll-last {
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.mj-card-roll-last:empty {
+    display: none;
+}
+
+.mj-card-roll-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 6px;
+}
+
+.mj-page .mj-card-roll-btns .add-life {
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.mj-page .mj-card-roll-btns .success.suggested {
+    border-color: #7be26b;
+    color: #7be26b;
+}
+
+.mj-page .mj-card-roll-btns .failure.suggested {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
 }
 
 .mj-player-roll-result {

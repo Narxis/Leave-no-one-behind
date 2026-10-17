@@ -35,14 +35,27 @@
         <div class="pe-loot-list"></div>
         <div class="pe-loot-add">
             <input type="text" list="pe-loot-items" maxlength="60" placeholder="Ajouter un objet…">
+            <input type="number" class="pe-loot-qty" min="1" max="999" value="1" title="Quantité" aria-label="Quantité">
             <button type="button" data-action="loot-add" title="Ajouter cet objet au butin"><i class="fas fa-plus"></i></button>
         </div>
         <input type="hidden" df-loot>
     </div>
-    <div class="pe-node-adds">
-        <button type="button" class="pe-node-add" data-action="add-next"><i class="fas fa-plus"></i> Carte suivante</button>
-        <button type="button" class="pe-node-add" data-action="add-reveal"><i class="fas fa-plus"></i> Résultat</button>
+    <label class="pe-roll" title="La suite dépend d'un jet : le MJ dit s'il est réussi (sortie du haut) ou raté (sortie du bas)">
+        <span><i class="fas fa-dice-d20"></i> Jet <small>(facultatif)</small></span>
+        <select df-roll>
+            <option value="">Pas de jet : une seule suite</option>
+            <option value="combat">Jet de combat</option>
+            <option value="pilotage">Jet de pilotage</option>
+            <option value="engineering">Jet d'ingénierie</option>
+            <option value="survival">Jet de survie</option>
+            <option value="recon">Jet de reconnaissance</option>
+        </select>
+    </label>
+    <div class="pe-random">
+        <button type="button" class="pe-random-btn" data-action="random-toggle" title="Plusieurs issues possibles pour ce choix : le jeu en tire une au hasard, selon leurs poids"><i class="fas fa-random"></i> Issues au hasard</button>
+        <input type="hidden" df-random>
     </div>
+    <div class="pe-suites"></div>
 </div>`,
         reveal: `
 <div class="pe-node">
@@ -53,6 +66,30 @@
     };
     const PORTS = {card: [1, MAX_CHOICES], choice: [1, 1], reveal: [1, 0]};
     const LABELS = {card: 'Carte', choice: 'Choix', reveal: 'Résultat'};
+
+    // Choix à jet (champ df-roll = la stat) : deux sorties, réussite puis échec.
+    // Choix à issues au hasard (champ df-random = poids en JSON) : une sortie par issue
+    const MAX_OUTCOMES = 4;
+    function weightsOf(node) {
+        try {
+            let list = JSON.parse(node.data.random || '[]');
+            return Array.isArray(list) ? list.map(w => Number.isFinite(Number(w)) && Number(w) >= 0 ? Number(w) : 1) : [];
+        }
+        catch (e) {
+            return [];
+        }
+    }
+    const isRandom = (node) => node.name === 'choice' && weightsOf(node).length >= 2;
+    const isRoll = (node) => node.name === 'choice' && !!node.data.roll && !isRandom(node);
+    const choiceOutputs = (node) => isRandom(node) ? weightsOf(node).map((w, k) => 'output_' + (k + 1))
+        : isRoll(node) ? ['output_1', 'output_2'] : ['output_1'];
+    const outputLabel = (node, out) => isRandom(node) ? 'pour l\'issue ' + out.slice(7)
+        : isRoll(node) ? (out === 'output_1' ? 'en cas de réussite' : 'en cas d\'échec') : '';
+    // Chance de chaque issue, en %
+    const chances = (weights) => {
+        let total = weights.reduce((a, b) => a + b, 0);
+        return weights.map(w => total > 0 ? Math.round(100 * w / total) : Math.round(100 / weights.length));
+    };
 
     const $ = (id) => document.getElementById(id);
     const board = $('drawflow');
@@ -170,10 +207,12 @@
             for (let k = 1; k <= MAX_CHOICES; k++) {
                 let link = card.outputs['output_' + k] && card.outputs['output_' + k].connections[0];
                 let choice = link && byId.get(String(link.node));
-                let next = choice && choice.outputs.output_1.connections[0];
-                let target = next && byId.get(String(next.node));
-                if (target && target.name === 'card' && !order.has(target.id))
-                    queue.push(target);
+                for (let out of choice ? choiceOutputs(choice) : []) {
+                    let next = choice.outputs[out] && choice.outputs[out].connections[0];
+                    let target = next && byId.get(String(next.node));
+                    if (target && target.name === 'card' && !order.has(target.id))
+                        queue.push(target);
+                }
             }
         }
         // Cartes isolées : à la suite, de haut en bas
@@ -209,12 +248,78 @@
                     badge.title = node.data.marker ? 'Marqueur : ' + node.data.marker : '';
             }
             if (node.name === 'choice') {
-                let taken = node.outputs.output_1.connections.length > 0;
-                el.querySelectorAll('.pe-node-adds button').forEach(btn => btn.disabled = taken);
+                el.classList.toggle('is-roll', isRoll(node));
+                el.classList.toggle('is-random', isRandom(node));
+                // Jet et issues au hasard ne vont pas ensemble dans l'éditeur
+                let rollField = el.querySelector('select[df-roll]');
+                if (rollField)
+                    rollField.disabled = isRandom(node);
+                let randomBtn = el.querySelector('[data-action="random-toggle"]');
+                if (randomBtn) {
+                    randomBtn.disabled = isRoll(node);
+                    randomBtn.setAttribute('aria-pressed', isRandom(node));
+                }
+                renderSuites(el, node);
                 renderLoot(el, lootOf(node));
             }
         }
     }
+
+    // Boutons « + Carte suivante / + Résultat » de chaque sortie d'un choix,
+    // avec « Si réussite / Si échec » ou le poids de chaque issue au hasard
+    function renderSuites(el, node) {
+        let box = el.querySelector('.pe-suites');
+        if (!box)
+            return;
+        let outs = choiceOutputs(node), weights = weightsOf(node), pct = chances(weights);
+        // Poids en cours de saisie : on ne touche qu'aux pourcentages
+        if (box.contains(document.activeElement) && document.activeElement.matches('[data-weight]')) {
+            box.querySelectorAll('.pe-chance').forEach((c, k) => c.textContent = (pct[k] != null ? pct[k] : '?') + ' %');
+            return;
+        }
+        let html = outs.map((out, k) => {
+            let label = '';
+            if (isRoll(node))
+                label = k ? '<span class="pe-adds-label is-failure">Si échec</span>' : '<span class="pe-adds-label is-success">Si réussite</span>';
+            else if (isRandom(node))
+                label = '<span class="pe-adds-label is-random">Issue ' + (k + 1)
+                    + '<label title="Poids : chances relatives de cette issue">poids <input type="number" min="0" max="99" step="1" data-weight="' + k + '" value="' + weights[k] + '"></label>'
+                    + '<span class="pe-chance">' + pct[k] + ' %</span>'
+                    + (outs.length > 2 ? '<button type="button" class="pe-outcome-del" data-action="random-remove" data-index="' + k + '" title="Retirer cette issue">×</button>' : '')
+                    + '</span>';
+            let taken = !!node.outputs[out] && node.outputs[out].connections.length > 0;
+            let dis = taken ? ' disabled' : '';
+            return '<div class="pe-node-adds" data-output="' + out + '">' + label
+                + '<button type="button" class="pe-node-add" data-action="add-next"' + dis + '><i class="fas fa-plus"></i> Carte suivante</button>'
+                + '<button type="button" class="pe-node-add" data-action="add-reveal"' + dis + '><i class="fas fa-plus"></i> Résultat</button></div>';
+        }).join('');
+        if (isRandom(node) && outs.length < MAX_OUTCOMES)
+            html += '<button type="button" class="pe-node-add pe-outcome-add" data-action="random-add"><i class="fas fa-plus"></i> Issue</button>';
+        box.innerHTML = html;
+    }
+
+    // Poids des issues : passent par le champ caché df-random, comme une saisie
+    function setRandom(el, weights) {
+        let field = el.querySelector('[df-random]');
+        field.value = weights.length >= 2 ? JSON.stringify(weights) : '';
+        field.dispatchEvent(new Event('input', {bubbles: true}));
+    }
+
+    board.addEventListener('input', (e) => {
+        let input = e.target.closest('[data-weight]');
+        if (!input)
+            return;
+        let el = input.closest('.drawflow-node');
+        let weights = weightsOf(editor.getNodeFromId(el.id.slice(5)));
+        let w = parseFloat(input.value);
+        weights[parseInt(input.dataset.weight)] = Number.isFinite(w) && w >= 0 ? w : 1;
+        setRandom(el, weights);
+    });
+    // Champ quitté : les blocs sont redessinés avec le poids gardé
+    board.addEventListener('focusout', (e) => {
+        if (e.target.matches('[data-weight]'))
+            setTimeout(refreshNodes, 0);
+    });
 
     function refresh() {
         renderPlaces();
@@ -432,7 +537,7 @@
             return null;
         }
         let defaults = type === 'card' ? {desc: '', mjreveal: '', timer: 'off', shuffle: 'off', marker: ''}
-            : type === 'choice' ? {choice: '', mjreveal: ''} : {reveal: ''};
+            : type === 'choice' ? {choice: '', mjreveal: '', roll: '', random: ''} : {reveal: ''};
         let id = editor.addNode(type, PORTS[type][0], PORTS[type][1], x, y, type, Object.assign(defaults, values || {}), TEMPLATES[type]);
         refreshNodes();
         return id;
@@ -448,6 +553,11 @@
     /* ---------- Butin d'un choix ---------- */
 
     const LOOT_MAX = 12;
+    const QTY_MAX = 999;
+    // Une entrée de butin : un nom (un exemplaire) ou {name, qty}
+    const lootName = (entry) => String(entry && typeof entry === 'object' ? entry.name : entry);
+    const lootQty = (entry) => entry && typeof entry === 'object' && entry.qty > 1 ? entry.qty : 1;
+    const lootEntry = (name, qty) => qty > 1 ? {name: name, qty: Math.min(qty, QTY_MAX)} : name;
     // Butin rangé dans node.data.loot en JSON (le champ caché df-loot)
     function lootOf(node) {
         try {
@@ -472,13 +582,15 @@
         if (!box)
             return;
         box.innerHTML = '';
-        list.forEach((name, i) => {
-            let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === String(name).toLowerCase());
+        list.forEach((entry, i) => {
+            let name = lootName(entry), qty = lootQty(entry);
+            let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === name.toLowerCase());
             let chip = document.createElement('span');
             chip.className = 'pe-loot-chip' + (known ? '' : ' is-custom');
-            chip.title = known ? name : name + ' (objet hors catalogue, créé à la distribution)';
-            chip.innerHTML = (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<span class="pe-loot-initial">' + esc(String(name).charAt(0)) + '</span>')
+            chip.title = (qty > 1 ? qty + ' × ' : '') + (known ? name : name + ' (objet hors catalogue, créé à la distribution)');
+            chip.innerHTML = (known && known.image ? '<img src="' + esc(known.image) + '" alt="">' : '<span class="pe-loot-initial">' + esc(name.charAt(0)) + '</span>')
                 + '<span>' + esc(name) + '</span>'
+                + (qty > 1 ? '<b class="pe-loot-count">×' + qty + '</b>' : '')
                 + '<button type="button" data-action="loot-remove" data-index="' + i + '" title="Retirer">×</button>';
             box.append(chip);
         });
@@ -488,20 +600,42 @@
     }
 
     function addLoot(el, node) {
-        let input = el.querySelector('.pe-loot-add input');
+        let input = el.querySelector('.pe-loot-add input[type="text"]');
+        let qtyField = el.querySelector('.pe-loot-qty');
         let name = input.value.trim().slice(0, 60);
         if (!name)
             return input.focus();
+        let qty = Math.min(Math.max(parseInt(qtyField && qtyField.value) || 1, 1), QTY_MAX);
         // Même casse que le catalogue quand l'objet existe
         let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === name.toLowerCase());
+        if (known)
+            name = known.name;
         let list = lootOf(node);
-        if (list.length >= LOOT_MAX)
+        // Déjà dans le butin : on ajoute à sa quantité
+        let at = list.findIndex(e => lootName(e).toLowerCase() === name.toLowerCase());
+        if (at >= 0)
+            list[at] = lootEntry(name, lootQty(list[at]) + qty);
+        else if (list.length >= LOOT_MAX)
             return toast(LOOT_MAX + ' objets au plus par choix', 'error');
-        list.push(known ? known.name : name);
+        else
+            list.push(lootEntry(name, qty));
         setLoot(el, list);
         input.value = '';
+        if (qtyField)
+            qtyField.value = 1;
         input.focus();
     }
+
+    // Objet du catalogue choisi : sa quantité habituelle est proposée
+    board.addEventListener('input', (e) => {
+        let input = e.target.closest('.pe-loot-add input[type="text"]');
+        if (!input)
+            return;
+        let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === input.value.trim().toLowerCase());
+        let qtyField = input.parentElement.querySelector('.pe-loot-qty');
+        if (known && qtyField)
+            qtyField.value = known.qty || 1;
+    });
 
     // Entrée dans le champ : ajoute l'objet
     board.addEventListener('keydown', (e) => {
@@ -576,11 +710,44 @@
                 break;
             }
             case 'add-next':
-                addLinked(id, 'output_1', 'card', 0);
+            case 'add-reveal': {
+                // Choix à jet ou à issues : la suite part de la sortie de son bouton
+                let output = btn.closest('.pe-node-adds').dataset.output || 'output_1';
+                addLinked(id, output, btn.dataset.action === 'add-next' ? 'card' : 'reveal', (parseInt(output.slice(7)) - 1) * 4);
                 break;
-            case 'add-reveal':
-                addLinked(id, 'output_1', 'reveal', 0);
+            }
+            case 'random-toggle': {
+                let el = btn.closest('.drawflow-node');
+                if (isRandom(node)) {
+                    setRandom(el, []);
+                    break;
+                }
+                let roll = el.querySelector('select[df-roll]');
+                if (roll.value) {
+                    roll.value = '';
+                    roll.dispatchEvent(new Event('input', {bubbles: true}));
+                }
+                setRandom(el, [1, 1]);
                 break;
+            }
+            case 'random-add': {
+                let weights = weightsOf(node);
+                if (weights.length < MAX_OUTCOMES)
+                    setRandom(btn.closest('.drawflow-node'), weights.concat(1));
+                break;
+            }
+            case 'random-remove': {
+                // La sortie part avec sa suite ; les suivantes sont renumérotées par Drawflow
+                let k = parseInt(btn.dataset.index);
+                let weights = weightsOf(node);
+                if (weights.length <= 2)
+                    break;
+                let el = btn.closest('.drawflow-node');
+                editor.removeNodeOutput(id, 'output_' + (k + 1));
+                weights.splice(k, 1);
+                setRandom(el, weights);
+                break;
+            }
             case 'preview':
                 openPreview(id);
                 break;
@@ -616,6 +783,26 @@
         focusField(addBlock(type, p.x - 40, p.y - 20));
     });
 
+    // Jet ou issues ajoutés / retirés : le choix gagne ou perd des sorties (les dernières)
+    function syncChoicePorts(id) {
+        let node = editor.getNodeFromId(id);
+        if (!node || node.name !== 'choice')
+            return;
+        let want = choiceOutputs(node).length;
+        let have = Object.keys(node.outputs).length;
+        let detached = false;
+        for (; have < want; have++)
+            editor.addNodeOutput(id);
+        for (; have > want; have--) {
+            detached = detached || node.outputs['output_' + have].connections.length > 0;
+            editor.removeNodeOutput(id, 'output_' + have);
+        }
+        if (detached)
+            toast('Des suites ont été détachées du choix (les blocs restent sur le plan)');
+        refreshNodes();
+    }
+    editor.on('nodeDataChanged', syncChoicePorts);
+
     ['nodeCreated', 'nodeRemoved', 'connectionCreated', 'connectionRemoved', 'nodeMoved', 'nodeDataChanged']
         .forEach(ev => editor.on(ev, markDirty));
     ['connectionCreated', 'connectionRemoved', 'nodeRemoved'].forEach(ev => editor.on(ev, () => refreshNodes()));
@@ -648,8 +835,9 @@
             let short = label ? '« ' + (label.length > 40 ? label.slice(0, 40) + '…' : label) + ' »' : 'sans texte';
             if (!n.inputs.input_1.connections.length)
                 add('error', n, 'Le choix ' + short + ' n\'est relié à aucune carte.');
-            if (!n.outputs.output_1.connections.length)
-                add('error', n, 'Le choix ' + short + ' n\'a pas de suite (carte suivante ou résultat).');
+            for (let out of choiceOutputs(n))
+                if (!n.outputs[out] || !n.outputs[out].connections.length)
+                    add('error', n, 'Le choix ' + short + ' n\'a pas de suite' + (outputLabel(n, out) ? ' ' + outputLabel(n, out) : '') + ' (carte suivante ou résultat).');
             if (!label)
                 add('warn', n, 'Un choix n\'a pas de texte.');
         }
@@ -721,11 +909,17 @@
                 let loot = lootOf(choice);
                 if (loot.length)
                     c.loot = loot;
-                let next = byId(choice.outputs.output_1.connections[0].node);
-                if (next.name === 'reveal')
-                    c.reveal = next.data.reveal || '';
+                let suiteOf = (out) => {
+                    let next = byId(choice.outputs[out].connections[0].node);
+                    return next.name === 'reveal' ? {reveal: next.data.reveal || ''} : {next: nameOf(next)};
+                };
+                let weights = weightsOf(choice);
+                if (isRandom(choice))
+                    c.outcomes = choiceOutputs(choice).map((out, k) => Object.assign(weights[k] !== 1 ? {weight: weights[k]} : {}, suiteOf(out)));
+                else if (isRoll(choice))
+                    c.roll = {stat: choice.data.roll, success: suiteOf('output_1'), failure: suiteOf('output_2')};
                 else
-                    c.next = nameOf(next);
+                    Object.assign(c, suiteOf('output_1'));
                 choices.push(c);
             }
             entry.choices = choices;
@@ -779,17 +973,24 @@
                 let choice = link && byId.get(String(link.node));
                 if (!choice)
                     continue;
-                let out = choice.outputs.output_1.connections[0];
-                let next = out && byId.get(String(out.node));
-                choices.push({
+                let suiteOf = (output) => {
+                    let out = choice.outputs[output] && choice.outputs[output].connections[0];
+                    let next = out && byId.get(String(out.node));
+                    return {
+                        reveal: next && next.name === 'reveal' ? (next.data.reveal || '') : null,
+                        revealId: next && next.name === 'reveal' ? String(next.id) : null,
+                        next: next && next.name === 'card' ? String(next.id) : null
+                    };
+                };
+                let roll = isRoll(choice), random = isRandom(choice), weights = weightsOf(choice);
+                choices.push(Object.assign({
                     id: String(choice.id),
                     value: choice.data.choice || '',
                     mjreveal: (choice.data.mjreveal || '').trim(),
                     loot: lootOf(choice),
-                    reveal: next && next.name === 'reveal' ? (next.data.reveal || '') : null,
-                    revealId: next && next.name === 'reveal' ? String(next.id) : null,
-                    next: next && next.name === 'card' ? String(next.id) : null
-                });
+                    roll: roll ? {stat: choice.data.roll, success: suiteOf('output_1'), failure: suiteOf('output_2')} : null,
+                    outcomes: random ? choiceOutputs(choice).map((out, k) => Object.assign({weight: weights[k]}, suiteOf(out))) : null
+                }, roll || random ? {reveal: null, revealId: null, next: null} : suiteOf('output_1')));
             }
             cards.set(String(card.id), {
                 id: String(card.id),
@@ -833,8 +1034,8 @@
             let k = node ? Object.keys(node.outputs).findIndex(key => !node.outputs[key].connections.length) : -1;
             return k < 0 ? null : addLinked(cardId, 'output_' + (k + 1), 'choice', k, true);
         },
-        addNext: (choiceId) => addLinked(choiceId, 'output_1', 'card', 0, true),
-        addReveal: (choiceId) => addLinked(choiceId, 'output_1', 'reveal', 0, true)
+        addNext: (choiceId, output = 'output_1') => addLinked(choiceId, output, 'card', (parseInt(output.slice(7)) - 1) * 4, true),
+        addReveal: (choiceId, output = 'output_1') => addLinked(choiceId, output, 'reveal', (parseInt(output.slice(7)) - 1) * 4, true)
     };
 
     function openPreview(fromId) {

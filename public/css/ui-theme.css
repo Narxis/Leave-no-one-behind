@@ -794,9 +794,35 @@ body.combat-mode .stats-legend-title {
     transform: translateX(-50%);
 }
 
+/* Annonce (atelier) plutôt qu'erreur, au-dessus des onglets des joueurs */
+.inventory-toast.is-info {
+    bottom: 120px;
+    border-color: rgb(255 204 0 / 55%);
+    background: rgb(24 20 50 / 94%);
+    color: #ffe9a8;
+    font-size: 15px;
+}
+
 .item-count {
     color: var(--ui-accent);
     font-weight: 700;
+}
+
+/* Quantité d'un objet du butin (combat, carte) */
+.combat-loot-item {
+    position: relative;
+}
+
+.combat-loot-qty {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--ui-accent);
+    color: #1a1238;
+    font-size: 12px;
+    font-weight: 800;
 }
 
 .combat-loot-hint {
@@ -865,4 +891,22 @@ body.combat-mode .stats-legend-title {
     padding: 0 3px;
     font-size: 9px;
     letter-spacing: 0.04em;
+}
+
+/* Logo du rôle du joueur (src/config/roles.json), devant son nom */
+.player-tab .player-name .player-role {
+    flex: none;
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+}
+
+.player-tab .player-name .player-role:empty {
+    display: none;
+}
+
+.player-tab .player-name .player-role img {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 4px rgb(255 204 0 / 35%));
 }

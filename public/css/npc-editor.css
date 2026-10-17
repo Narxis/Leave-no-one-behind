@@ -226,6 +226,12 @@
     border-color: var(--ui-accent);
 }
 
+.ne-loot-add input#ne-loot-qty {
+    flex: none;
+    width: 72px;
+    text-align: center;
+}
+
 .ne-loot-add .re-btn {
     padding: 6px 14px;
 }

@@ -6,7 +6,10 @@
         "/css/mj-menu.css",
         "/css/ui-menus.css",
         "/css/ship-alerts.css",
-        "/css/mj-ship.css"
+        "/css/mj-ship.css",
+        "/css/mj-blank.css",
+        "/css/mj-shop.css",
+        "/css/mj-craft.css"
     ]
 }) %>
 
@@ -21,6 +24,21 @@
                         </div>
                         <div class="desc-mjreveal"></div>
                         <div class="desc-text">Ici serra présenté le texte descriptif de la carte actuelle, certaines informations ne seront visible qu'ici !</div>
+                    </div>
+                    <!-- Jet d'un choix en attente sur la page de jeu : le MJ dit s'il est réussi -->
+                    <div class="mj-card-roll" id="mj-card-roll" hidden>
+                        <div class="mj-card-roll-title"><span id="mj-card-roll-stat">Jet</span> en attente</div>
+                        <div class="mj-card-roll-choice" id="mj-card-roll-choice"></div>
+                        <div class="mj-card-roll-issues">
+                            <div class="mj-card-roll-issue success"><b>Si réussite</b><span id="mj-card-roll-success"></span></div>
+                            <div class="mj-card-roll-issue failure"><b>Si échec</b><span id="mj-card-roll-failure"></span></div>
+                        </div>
+                        <div class="mj-card-roll-last" id="mj-card-roll-last"></div>
+                        <div class="mj-card-roll-btns">
+                            <button type="button" class="add-life success" data-card-roll="success">Réussi</button>
+                            <button type="button" class="add-life failure" data-card-roll="failure">Raté</button>
+                            <button type="button" class="add-life" data-card-roll="cancel" title="Revenir aux choix, le chrono repart">Annuler</button>
+                        </div>
                     </div>
                     <% for(var i=0; i<3; i++) {%>
                     <div class="choice" id="choice<%= i %>">
@@ -59,6 +77,7 @@
                                     <% }); %>
                                 </datalist>
                                 <button class="add-life" id="add-friend">+</button>
+                                <button class="add-life" id="random-friend" title="Compagnon au hasard : race, nom et stats tirés comme un personnage">🎲</button>
                                 <button class="add-life" id="friend-list">x</button>
                             </div>
                         </div>
@@ -75,17 +94,40 @@
                         <input type="number" min="1" max="10" class="add-life status-duration-text" id="duration-status" placeholder="1">
                         <button class="add-life" id="add-status">+</button>
                     </div>
+                    <div class="mj-status-form">
+                        <label class="mj-sp-row">
+                            <span class="mj-outcome-label">Pour</span>
+                            <select class="mj-sp-select" id="target-status"><option value="">Toute l'équipe</option></select>
+                        </label>
+                        <details class="mj-status-new">
+                            <summary>Créer un statut</summary>
+                            <input class="mj-sp-name" type="text" id="new-status-name" maxlength="30" placeholder="Nom du statut">
+                            <input class="mj-sp-name" type="text" id="new-status-desc" maxlength="160" placeholder="Description courte (affichée au survol)">
+                            <label class="mj-sp-check mj-sp-left">
+                                <input type="checkbox" id="new-status-planet" <%= locals.clearStatusesAfterPlanet ? 'checked' : '' %>>
+                                <span>Retiré après une planète</span>
+                            </label>
+                            <button type="button" class="mj-turn-next mj-sp-apply" id="new-status-create">Créer et appliquer</button>
+                        </details>
+                    </div>
                     <div class="mj-statuses" id="mj-statuses"></div>
                 </div>
                 <div class="combat">
                     <!--Un espace pour chaque joueurs pour un boutton join-->
+                    <%# Qui commence (wiki : regles/combat.md) ; l'ordre reste modifiable pendant le combat %>
+                    <select class="add-life combat-initiative" id="combat-initiative" title="Initiative : qui commence le combat">
+                        <option value="hasard" title="Sauf si aucun joueur n'a plus de 75 de moral : les adversaires commencent">Initiative : pile ou face</option>
+                        <option value="joueurs" title="Ils lancent le combat : ils commencent">Les joueurs attaquent</option>
+                        <option value="adversaires">Attaque surprise : adversaires d'abord</option>
+                        <option value="manuel">Ordre fixé à la main</option>
+                    </select>
                     <button class="add-life fight" id="combat-start">Commencer le combat</button>
                     <div class="mj-team" id="mj-team"></div>
                     <div class="mj-status-panel hide" id="mj-status-panel"></div>
                     <div class="mj-combat-log" id="mj-combat-log"></div>
                     <!-- Jet à la place d'un joueur (AFK, pas de moyen de lancer) : même chemin que /roll -->
                     <div class="mj-player-roll" id="mj-player-roll">
-                        <div class="mj-team-title">Jet pour un joueur</div>
+                        <div class="mj-team-title">Jet pour un joueur ou un compagnon</div>
                         <div class="mj-player-roll-fields">
                             <select class="add-life" id="mj-player-roll-player" title="Joueur"></select>
                             <select class="add-life" id="mj-player-roll-stat" title="Stat">
@@ -135,6 +177,32 @@
                     </div>
                 </div>
             </div>
+            <!-- Carte blanche : la suite d'une action libre (« Autre… »), écrite sur le moment (mj-blank.js) -->
+            <section class="mj-blank" id="mj-blank">
+                <div class="mj-blank-head">
+                    <div class="mj-ship-title">Carte blanche</div>
+                    <div class="mj-blank-status" id="mj-blank-status">Les joueurs peuvent choisir « Autre… » sur les cartes à choix ; vous pouvez aussi afficher une carte blanche à tout moment.</div>
+                </div>
+                <textarea class="add-life mj-blank-desc" id="mj-blank-desc" maxlength="2000" rows="4" placeholder="Texte de la carte : ce qui arrive suite à l'action des joueurs"></textarea>
+                <div class="mj-blank-choices" id="mj-blank-choices">
+                    <% for (var b = 0; b < 4; b++) { %>
+                    <div class="mj-blank-choice" data-index="<%= b %>">
+                        <input type="text" class="add-life mj-blank-value" maxlength="80" placeholder="Choix <%= b + 1 %><%= b ? ' (facultatif)' : '' %>">
+                        <textarea class="add-life mj-blank-reveal" maxlength="1000" rows="2" placeholder="Résultat affiché après ce choix"></textarea>
+                        <div class="mj-blank-effects">
+                            <label title="Moral de chaque joueur (+ ou −)">Moral <input type="number" class="add-life mj-blank-moral" min="-100" max="100" step="1" placeholder="0"></label>
+                            <label title="Humains gagnés ou perdus (+ ou −)">Humains <input type="number" class="add-life mj-blank-humans" min="-1000" max="1000" step="5" placeholder="0"></label>
+                            <label title="Objet trouvé, à distribuer comme le butin d'une carte">Butin <input type="text" class="add-life mj-blank-loot" list="loot-list" maxlength="60" placeholder="aucun"></label>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="mj-blank-buttons">
+                    <button type="button" class="add-life fight" id="mj-blank-show">Afficher aux joueurs</button>
+                    <button type="button" class="add-life" id="mj-blank-cancel">Annuler (reprendre la carte)</button>
+                    <button type="button" class="add-life" id="mj-blank-clear">Vider</button>
+                </div>
+            </section>
             <!-- Plan du vaisseau : salles qui clignotent et alertes chez les joueurs (mj-ship.js) -->
             <section class="mj-ship" id="mj-ship">
                 <div class="mj-ship-map" id="mj-ship-map">
@@ -166,6 +234,84 @@
                     </div>
                 </div>
             </section>
+            <!-- Marchand et bourses (mj-shop.js) -->
+            <section class="mj-shop" id="mj-shop">
+                <div class="mj-shop-col">
+                    <div class="mj-shop-head">
+                        <div class="mj-ship-title">Marchand</div>
+                        <span class="mj-shop-state" id="mj-shop-state">Boutique fermée</span>
+                    </div>
+                    <input type="text" id="mj-shop-name" class="add-life" maxlength="40" placeholder="Nom du marchand (ex. Walt DiFnek)">
+                    <div class="mj-shop-stock-head"><span>Objet</span><span>Prix</span><span></span><span>Stock</span><span></span><span></span></div>
+                    <div class="mj-shop-stock" id="mj-shop-stock"></div>
+                    <div class="mj-shop-add" id="mj-shop-add-box">
+                        <input type="text" id="mj-shop-item" class="add-life" list="mj-shop-items" maxlength="60" placeholder="Ajouter un objet à l'étal">
+                        <button type="button" class="add-life" id="mj-shop-add" title="Ajouter à l'étal">+</button>
+                        <button type="button" class="add-life" id="mj-shop-fill" title="Ajoute tous les objets qui ont un prix dans l'éditeur d'objets">Objets à prix</button>
+                    </div>
+                    <datalist id="mj-shop-items"></datalist>
+                    <div class="mj-shop-pay">
+                        <label>Acheteur <select id="mj-shop-buyer" class="add-life"></select></label>
+                        <label>Paiement <select id="mj-shop-pay" class="add-life"><option value="credits">Monnaie</option><option value="cryopods">Cryopods</option></select></label>
+                    </div>
+                    <div class="mj-shop-actions">
+                        <button type="button" class="add-life fight" id="mj-shop-open">Ouvrir la boutique</button>
+                        <button type="button" class="add-life" id="mj-shop-close" disabled>Fermer la boutique</button>
+                    </div>
+                    <div class="mj-shop-msg" id="mj-shop-msg" role="status"></div>
+                </div>
+                <div class="mj-shop-col">
+                    <div class="mj-ship-subtitle">Bourses</div>
+                    <div class="mj-shop-wallets" id="mj-shop-wallets"></div>
+                    <div class="mj-shop-cryopods" id="mj-shop-cryopods"></div>
+                    <div class="mj-ship-subtitle">Vendre au marchand</div>
+                    <label class="mj-shop-seller">Vendeur <select id="mj-shop-seller" class="add-life"></select></label>
+                    <div class="mj-shop-sell" id="mj-shop-sell"></div>
+                    <div class="mj-ship-subtitle">Journal</div>
+                    <div class="mj-shop-log" id="mj-shop-log"></div>
+                </div>
+            </section>
+
+            <!-- Atelier d'artisanat (mj-craft.js) -->
+            <section class="mj-craft" id="mj-craft">
+                <div class="mj-craft-col">
+                    <div class="mj-shop-head">
+                        <div class="mj-ship-title">Atelier</div>
+                        <span class="mj-craft-state" id="mj-craft-state">Moment calme</span>
+                    </div>
+                    <p class="mj-ship-help">On fabrique dans le vaisseau, pendant un moment calme. Les ingrédients sont pris dans l'inventaire de l'artisan, qui reçoit l'objet.</p>
+                    <div class="mj-craft-settings">
+                        <label>Artisan <select id="mj-craft-crafter" class="add-life"></select></label>
+                        <label>Armurerie <select id="mj-craft-armory" class="add-life"></select></label>
+                    </div>
+                    <div class="mj-craft-dice">
+                        <label class="mj-ship-toggle"><input type="checkbox" id="mj-craft-roll"> Lancer le dé de réussite</label>
+                        <span class="mj-craft-chance" id="mj-craft-chance"></span>
+                    </div>
+                    <small class="mj-craft-fail" id="mj-craft-fail"></small>
+                    <div class="mj-ship-subtitle">Recettes</div>
+                    <div class="mj-craft-recipes" id="mj-craft-recipes"></div>
+                    <div class="mj-shop-msg" id="mj-craft-msg" role="status"></div>
+                </div>
+                <div class="mj-craft-col">
+                    <div class="mj-ship-subtitle">Assemblage libre</div>
+                    <p class="mj-ship-help">Assemblez des objets de l'artisan et décidez du résultat (un objet du catalogue ou un nouveau nom).</p>
+                    <div class="mj-craft-free-add">
+                        <select id="mj-craft-free-item" class="add-life" aria-label="Ingrédient"></select>
+                        <input type="number" id="mj-craft-free-qty" class="add-life" min="1" max="99" value="1" aria-label="Quantité">
+                        <button type="button" class="add-life" id="mj-craft-free-add" title="Ajouter l'ingrédient">+</button>
+                    </div>
+                    <div class="mj-craft-free-list" id="mj-craft-free-list"></div>
+                    <div class="mj-craft-free-result">
+                        <input type="text" id="mj-craft-result" class="add-life" list="mj-craft-results" maxlength="60" placeholder="Objet obtenu">
+                        <input type="number" id="mj-craft-result-qty" class="add-life" min="1" max="99" value="1" aria-label="Exemplaires obtenus">
+                    </div>
+                    <datalist id="mj-craft-results"></datalist>
+                    <button type="button" class="add-life fight" id="mj-craft-free-make" disabled>Assembler</button>
+                    <div class="mj-ship-subtitle">Journal</div>
+                    <div class="mj-shop-log" id="mj-craft-log"></div>
+                </div>
+            </section>
         </div>
     </div>
 <script>var BESTIARY = <%- JSON.stringify(locals.bestiary || []).replace(/</g, '\\u003c') %>;
@@ -174,7 +320,7 @@ var STATUSES = <%- JSON.stringify(locals.statuses || []).replace(/</g, '\\u003c'
 var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u003c') %>;</script>
 <datalist id="loot-list">
     <% (locals.loot || []).forEach(function(item) { %>
-    <option value="<%= item.name %>"></option>
+    <option value="<%= item.name %>" data-qty="<%= item.qty || 1 %>"></option>
     <% }); %>
 </datalist>
 <script src="js/mj-menu.js"></script>
@@ -183,5 +329,8 @@ var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u00
 <script src="js/mj-allies.js"></script>
 <script src="js/ship-map.js"></script>
 <script src="js/mj-ship.js"></script>
+<script src="js/mj-blank.js"></script>
+<script src="js/mj-shop.js"></script>
+<script src="js/mj-craft.js"></script>
 <%- include("partials/bottom-scripts") %>
 </body>

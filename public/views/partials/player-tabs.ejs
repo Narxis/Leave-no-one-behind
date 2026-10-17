@@ -14,8 +14,10 @@
         </div>
     </div>
     <div class="player-roll">
-        <div class="player-name" title="<%= player.name %>"><span class="player-name-text"><%= player.name %></span>
-            <% if (player.race) { %><div class="player-race"><%= player.race.charAt(0).toUpperCase() + player.race.slice(1).replace('_', '-') %></div><% } %>
+        <%# Rôle donné par le MJ (src/config/roles.json), mis à jour par players.js %>
+        <% let role = player.role && typeof playerRoles !== 'undefined' ? playerRoles.find(player.role) : null; %>
+        <div class="player-name" title="<%= player.name %>"><span class="player-role" data-role="<%= role ? role.slug : '' %>"<% if (role) { %> title="<%= role.name %> : <%= role.effect %>"<% } %>><% if (role) { %><img src="<%= role.icon %>" alt="<%= role.name %>"><% } %></span><span class="player-name-text"><%= player.name %></span>
+            <% if (player.race) { %><div class="player-race"><%= player.race.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-') %></div><% } %>
         </div>
         <div class="modform input-roll">
             <div class="player-stat-value output-roll-boite" id="outputroll-img">

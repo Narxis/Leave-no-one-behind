@@ -7,6 +7,9 @@ const fs = require('fs');
 const FILE = require('../config/paths').cache('allies.json');
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon', 'moral'];
 const MAX_ALLIES = 6;
+// Noms des compagnons tirés au hasard, par race
+const NAMES_FILE = require('path').join(__dirname, '../config/companionNames.json');
+const races = require('./races');
 
 let allies = [];
 let nextId = 1;
@@ -78,6 +81,44 @@ const remove = function (data) {
     return {type: 'remove', id: ally.id};
 }
 
+// Compagnon tiré d'un clic : race au hasard (ou celle demandée), stats
+// tirées comme un personnage joueur (statRolls : 50 + le meilleur ou le pire
+// de |bonus|+1 dés de 50, moral 100) et nom pris dans la liste de sa race
+const randomCompanion = function (data = {}, random = Math.random) {
+    let list = races.list();
+    let race = list.find(r => r.slug === data.race) || list[Math.floor(random() * list.length)];
+    let ally = {race: race ? race.name : ''};
+    for (let stat of STATS) {
+        if (stat === 'moral') {
+            ally.moral = 100;
+            continue;
+        }
+        let mod = race ? parseInt(race.stats[stat]) || 0 : 0;
+        let dice = Array.from({length: Math.abs(mod) + 1}, () => Math.floor(random() * 50) + 1);
+        ally[stat] = 50 + (mod > 0 ? Math.max(...dice) : (mod < 0 ? Math.min(...dice) : dice[0]));
+    }
+    let names = readNames();
+    let pool = (race && names[race.slug]) || names.default || [];
+    let taken = allies.map(a => a.name.toLowerCase());
+    let free = pool.filter(n => !taken.includes(String(n).toLowerCase()));
+    let name = (free.length ? free : pool)[Math.floor(random() * (free.length || pool.length))] || 'Compagnon';
+    // Tous les noms déjà pris : un numéro les distingue
+    if (!free.length)
+        name = String(name).slice(0, 17) + ' ' + (allies.length + 1);
+    ally.name = String(name).slice(0, 20);
+    return ally;
+}
+
+const readNames = function () {
+    try {
+        return JSON.parse(fs.readFileSync(NAMES_FILE, 'utf8'));
+    } catch (e) {
+        return {};
+    }
+}
+
+const addRandom = (data) => add(randomCompanion(data));
+
 // Même formule que Player.roll pour un jet sans module
 const roll = function (ally, stat) {
     let dice = Math.floor(Math.random() * 100) + 1;
@@ -85,8 +126,20 @@ const roll = function (ally, stat) {
     return {dice_result: dice, result: result, success: result >= 50};
 }
 
+// Jet d'un compagnon hors combat, lancé par le MJ : affiché comme celui
+// d'un joueur (onglet sous la carte, panneau du MJ)
+const ROLL_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
+const rollAction = function (data = {}) {
+    let ally = findAlly(data.id);
+    if (!ally || !ROLL_STATS.includes(data.stat))
+        return {action: 'roll', error: true, error_msg: 'compagnon ou stat inconnu', data: {}};
+    return {action: 'roll', error: false,
+        data: Object.assign({discord_id: 'npc' + ally.id, name: ally.name, stat: data.stat, module: ''}, roll(ally, data.stat))};
+}
+
 const ACTIONS = {
     'ally-add': add,
+    'ally-random': addRandom,
     'ally-update': update,
     'ally-remove': remove
 };
@@ -112,4 +165,4 @@ const clear = function () {
 
 load();
 
-module.exports = {handle, getAllies, clear, findAlly, roll, STATS, ACTIONS};
+module.exports = {handle, getAllies, clear, findAlly, roll, rollAction, randomCompanion, STATS, ACTIONS};

@@ -155,6 +155,21 @@ class DB {
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
+            },
+            status: { // statut donné par le choix : JSON {slug, duration}
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
+            },
+            roll: { // jet du choix : JSON {stat, success, failure} (suites selon le résultat)
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
+            },
+            outcomes: { // issues tirées au hasard : JSON [{weight, reveal|next, ...}]
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
             }
         });
 
@@ -240,6 +255,17 @@ class DB {
                 type: Sequelize.INTEGER,
                 defaultValue: 100,
                 allowNull: false
+            },
+            // Rôle donné par le MJ (src/config/roles.json), '' : aucun
+            role: {
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            credits: { // bourse du joueur (monnaie : config/currency.json)
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
             }
         });
 
@@ -257,6 +283,16 @@ class DB {
             cryopods: {
                 type: Sequelize.INTEGER,
                 defaultValue: 1000,
+                allowNull: false
+            },
+            credits: { // caisse de bord, commune à l'équipage
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
+                allowNull: false
+            },
+            armory_up: { // niveau d'amélioration de l'armurerie (artisanat)
+                type: Sequelize.INTEGER,
+                defaultValue: 0,
                 allowNull: false
             },
             scanner: {
@@ -432,6 +468,21 @@ class DB {
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
+            },
+            player_id: { // '' : toute l'équipe, sinon le discord_id du joueur concerné
+                type: Sequelize.STRING,
+                defaultValue: '',
+                allowNull: false
+            },
+            custom: { // créé à la volée par le MJ
+                type: Sequelize.BOOLEAN,
+                defaultValue: false,
+                allowNull: false
+            },
+            clear_after_planet: { // null : suit l'option de partie
+                type: Sequelize.BOOLEAN,
+                defaultValue: null,
+                allowNull: true
             }
         })
 
@@ -468,7 +519,10 @@ class DB {
 
         // Colonnes ajoutées après coup : on les crée dans une base existante
         // plutôt que d'incrémenter DB_VERSION (qui repartirait d'une base vide)
-        await this.addMissingColumns('card_modules', ['humans', 'loot']);
+        await this.addMissingColumns('card_modules', ['humans', 'loot', 'status', 'roll', 'outcomes']);
+        await this.addMissingColumns('players', ['role', 'credits']);
+        await this.addMissingColumns('ship', ['credits', 'armory_up']);
+        await this.addMissingColumns('statuses', ['player_id', 'custom', 'clear_after_planet']);
     }
 
     async addMissingColumns(table, columns) {

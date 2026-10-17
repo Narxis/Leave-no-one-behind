@@ -526,6 +526,73 @@
     border-style: dashed;
 }
 
+/* Jet d'un choix : réussite / échec, comme en jeu */
+.cp-roll {
+    display: flex;
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.cp-roll > b {
+    color: var(--ui-accent);
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.cp-roll-btns {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.cp-roll .cp-choice small {
+    color: var(--ui-text-dim);
+}
+
+.cp-roll .cp-choice.is-success:hover {
+    border-color: #7be26b;
+    color: #7be26b;
+}
+
+.cp-roll .cp-choice.is-failure:hover {
+    border-color: var(--ui-danger);
+    color: var(--ui-danger);
+}
+
+.cp-roll .cp-choice.is-cancel {
+    flex-grow: 0;
+    color: var(--ui-text-dim);
+}
+
+.cp-roll-suites {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cp-issue {
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.cp-issue.is-success {
+    color: #7be26b;
+}
+
+.cp-issue.is-failure {
+    color: var(--ui-danger);
+}
+
+.cp-issue.is-outcome {
+    color: var(--ui-cyan);
+}
+
 .cp-choice.is-leaving {
     transform: translateY(24px);
     opacity: 0;
