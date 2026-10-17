@@ -745,7 +745,7 @@ module.exports = {
     await deckGenerator();
 
     let ship = new Ship();
-    await ship.create();
+    await ship.create(gameSettings.get().randomShipStats ? Ship.randomStart(gameSettings.SHIP_START_VARIATION) : {});
 
     let statuses = new Statuses();
     await statuses.hydrateDB();

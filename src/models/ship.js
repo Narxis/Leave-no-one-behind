@@ -1,5 +1,10 @@
 const {Op} = require("sequelize");
 
+// Modules du vaisseau dont la valeur de départ peut être tirée au hasard
+const RANDOM_START_STATS = ['scanner', 'proximity', 'motors', 'shield', 'oxygen', 'energy', 'gravity',
+    'landing', 'dbscience', 'dbhistory', 'construction'];
+const MODULE_MAX = 100;
+
 class Ship{
     id;
     name;
@@ -175,6 +180,20 @@ class Ship{
         dat.cryopods = Math.floor(this.cryopods - (10*(100-this.landing)/4))
 
         await this.update(dat);
+    }
+
+    // Stats de départ légèrement aléatoires (option de partie « Vaisseau
+    // aléatoire ») : chaque module part d'une valeur tirée entre -variation et
+    // +variation autour de sa valeur de base, sans dépasser 100 %
+    static randomStart(variation, rand = Math.random) {
+        let base = new Ship().accepted_datas;
+        let data = {};
+        for (let stat of RANDOM_START_STATS) {
+            let min = Math.round(base[stat] * (1 - variation));
+            let max = Math.min(MODULE_MAX, Math.round(base[stat] * (1 + variation)));
+            data[stat] = min + Math.floor(rand() * (max - min + 1));
+        }
+        return data;
     }
 
     async upgradeModule(module){
