@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/rest": "^1.3.0",
+    "@discordjs/rest": "^2.6.3",
     "assert": "^2.0.0",
     "chalk": "^4.1.2",
     "discord.js": "^14.8.0",
@@ -25,15 +25,23 @@
     "pg": "^8.8.0",
     "qrcode-terminal": "^0.12.0",
     "sequelize": "^6.29.0",
-    "sqlite3": "^5.1.5",
+    "sqlite3": "^6.0.1",
     "ws": "^8.10.0"
   },
   "devDependencies": {
     "electron": "44.5.1",
-    "electron-builder": "26.15.3"
+    "electron-builder": "26.17.0"
+  },
+  "overrides": {
+    "sequelize": {
+      "uuid": "^11.1.1"
+    },
+    "@electron/get": {
+      "global-agent": "^4.1.3"
+    }
   },
   "allowScripts": {
-    "sqlite3@5.1.6": true
+    "sqlite3@6.0.1": true
   },
   "build": {
     "appId": "com.narxis.lnob",
