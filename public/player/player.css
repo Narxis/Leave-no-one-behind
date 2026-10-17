@@ -101,3 +101,9 @@ h2 { margin: 8px 0 0; font-size: 14px; font-weight: 600; color: var(--dim); text
 .players li { padding: 8px 0; border-bottom: 1px solid var(--border); }
 .players li:last-child { border-bottom: none; }
 .players .me { color: var(--accent); }
+
+/* Perso du joueur, retrouvé par son identifiant d'app */
+.character { display: flex; flex-direction: column; gap: 8px; padding: 12px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.character[hidden], .character [hidden] { display: none; }
+.character p { margin: 0; }
+.character strong { color: var(--accent); }

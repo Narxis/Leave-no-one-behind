@@ -30,6 +30,49 @@ async function test() {
     test_ship_alerts();
     await test_items_editor();
     test_npcs();
+    await test_remote();
+}
+
+// Joueurs en ligne : seules quelques actions passent, toujours en leur nom
+async function test_remote() {
+    console.log('Testing online player actions');
+    const remote = require('../src/controllers/remote');
+    const races = require('../src/controllers/races');
+    let alice = {id: 'a1b2c3d4e5f6a7b8', name: 'Alice'};
+    let act = (action, data) => remote.translate(alice, {kind: 'action', action, data});
+
+    // Pas de perso : rejoindre le crée avec le pseudo du lobby
+    assert.equal(await remote.characterOf(alice.id), null);
+    assert.deepEqual(await act('join', {uid: 'quelqu-un-d-autre', nick: 'Bob'}), {action: 'join', uid: alice.id, nick: 'Alice'});
+    await new Player().create({discord_id: alice.id, name: 'Alice'});
+    assert.equal((await remote.characterOf(alice.id)).name, 'Alice');
+    assert.ok((await act('join')).refused);
+
+    // Le lancer est fait au nom du joueur, même s'il en désigne un autre
+    assert.deepEqual(await act('roll', {discord_id: 'autre', stat: 'combat', module: 'motors'}),
+        {action: 'roll', data: {discord_id: alice.id, stat: 'combat', module: 'motors'}});
+    assert.ok((await act('roll', {stat: 'moral'})).refused);
+
+    // Actions du MJ refusées
+    for (let action of ['playerStat', 'setModule', 'status', 'combat-hp', 'lobby-kick', 'passThrough', 'item', 'ally-add'])
+        assert.equal((await act(action, {})).refused, 'Action réservée au MJ.');
+
+    let race = Object.keys(races.getStats())[0];
+    assert.deepEqual(await act('set-race', {race, uid: 'autre'}), {action: 'set-race', uid: alice.id, race});
+    assert.ok((await act('set-race', {race: '../x'})).refused);
+    assert.equal((await act('set-name', {nick: '  Capitaine   Alice '})).nick, 'Capitaine Alice');
+    assert.equal((await act('emote', {emoji: '🚀', type: 'url'})).type, 'glyph');
+    assert.ok((await act('emote', {emoji: '<img src=x onerror=alert(1)>'})).refused);
+
+    // Donner un objet : toujours depuis son propre inventaire, à un autre joueur
+    let give = await act('inventory-move', {slug: 'medkit', from: {type: 'ship'}, to: {type: 'player', id: 'bob-0001'}});
+    assert.deepEqual(give.data.from, {type: 'player', id: alice.id});
+    assert.ok((await act('inventory-move', {slug: 'medkit', to: {type: 'player', id: alice.id}})).refused);
+    assert.ok((await act('inventory-move', {slug: 'medkit', to: {type: 'ship'}})).refused);
+
+    // Message qui n'est pas une action : ignoré
+    assert.equal(await remote.translate(alice, {kind: 'chat'}), null);
+    console.log('Online player actions OK');
 }
 
 async function setup(){
