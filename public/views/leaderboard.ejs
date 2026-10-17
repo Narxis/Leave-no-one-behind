@@ -3,7 +3,8 @@
     cssFiles:[
         "/css/style.css",
         "/css/leaderboard.css",
-        "/css/ui-menus.css"
+        "/css/ui-menus.css",
+        "/css/parametres.css"
     ]
 }) %>
 <body>
@@ -13,6 +14,17 @@
         <% if (!entries.length) { %>
             <p class="leaderboard-empty">Aucune partie terminée pour l'instant. Le score d'une équipe s'ajoute ici à la fin de sa partie.</p>
         <% } else { %>
+            <%# Comparer les scores à réglages égaux : filtre par difficulté %>
+            <% const presetName = (e) => e.settings && e.settings.preset ? e.settings.preset.name : 'Non renseignée';
+               const levels = [...new Set(entries.map(presetName))]; %>
+            <% if (levels.length > 1) { %>
+                <div class="gs-filter" role="radiogroup" aria-label="Difficulté">
+                    <button type="button" class="gs-preset" data-level="" role="radio" aria-checked="true">Toutes</button>
+                    <% levels.forEach(function (level) { %>
+                        <button type="button" class="gs-preset" data-level="<%= level %>" role="radio" aria-checked="false"><%= level %></button>
+                    <% }); %>
+                </div>
+            <% } %>
             <div class="leaderboard-scroll">
                 <table class="leaderboard-table">
                     <thead>
@@ -22,18 +34,20 @@
                             <th scope="col" class="num">Score</th>
                             <th scope="col" class="num">Survivants</th>
                             <th scope="col">Planète</th>
+                            <th scope="col">Difficulté</th>
                             <th scope="col">Date</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% entries.forEach(function (entry, i) { %>
                             <tr class="<%= entry.id === highlight ? 'is-current' : '' %><%= i < 3 ? ' podium podium-' + (i + 1) : '' %>"
-                                data-id="<%= entry.id %>" tabindex="0" role="button" aria-label="Détail de l'équipe <%= entry.team %>">
+                                data-id="<%= entry.id %>" data-level="<%= presetName(entry) %>" tabindex="0" role="button" aria-label="Détail de l'équipe <%= entry.team %>">
                                 <td class="rank"><%= i + 1 %></td>
                                 <td class="team"><%= entry.team %></td>
                                 <td class="num score"><%= entry.score.toLocaleString('fr-FR') %></td>
                                 <td class="num"><%= entry.cryopods.toLocaleString('fr-FR') %></td>
                                 <td><%= entry.planet || '—' %></td>
+                                <td class="level"><%= entry.settings && entry.settings.preset ? entry.settings.preset.name : '—' %></td>
                                 <td class="date"><%= new Date(entry.date).toLocaleDateString('fr-FR') %></td>
                             </tr>
                         <% }); %>
@@ -98,6 +112,14 @@
                     fact('Planète', entry.planet || '—'),
                     fact('Date', new Date(entry.date).toLocaleString('fr-FR', {dateStyle: 'short', timeStyle: 'short'}))
                 );
+                if (entry.settings) {
+                    let s = entry.settings;
+                    facts.append(fact('Difficulté', s.preset ? s.preset.name : 'Personnalisé'),
+                        fact('Planètes', num(s.planetCount)),
+                        fact('Cartes par étape', s.negativeByStep + ' nég. · ' + s.positiveByStep + ' pos. · '
+                            + s.neutralByStep + (s.neutralByStep > 1 ? ' neutres' : ' neutre') + ' · '
+                            + s.placeByStep + (s.placeByStep > 1 ? ' lieux' : ' lieu')));
+                }
                 if (entry.breakdown)
                     facts.append(fact('Score vaisseau', num(entry.breakdown.ship)),
                         fact('Score planète', num(entry.breakdown.planet)),
@@ -149,6 +171,21 @@
                     }
                 });
             });
+            // Filtre par difficulté : les rangs sont recomptés dans le groupe choisi
+            document.querySelectorAll('.gs-filter .gs-preset').forEach(button => {
+                button.addEventListener('click', () => {
+                    let level = button.dataset.level;
+                    document.querySelectorAll('.gs-filter .gs-preset').forEach(b => b.setAttribute('aria-checked', String(b === button)));
+                    let rank = 0;
+                    document.querySelectorAll('.leaderboard-table tbody tr[data-id]').forEach(row => {
+                        let shown = !level || row.dataset.level === level;
+                        row.hidden = !shown;
+                        if (shown)
+                            row.querySelector('.rank').textContent = ++rank;
+                    });
+                });
+            });
+
             document.getElementById('team-detail-close').addEventListener('click', () => dialog.close());
             // Clic en dehors de la fiche : elle se ferme
             dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });

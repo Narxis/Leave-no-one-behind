@@ -1,0 +1,148 @@
+<%- include("partials/head", {
+    title: "Paramètres de partie",
+    cssFiles:[
+        "/css/style.css",
+        "/css/ui-menus.css",
+        "/css/parametres.css"
+    ]
+}) %>
+<body class="settings-page">
+    <%- include("partials/nav") %>
+    <main class="gs">
+        <h1 class="gs-title">Paramètres de la partie</h1>
+
+        <form class="gs-form" id="gs-form" autocomplete="off" novalidate>
+            <fieldset class="gs-presets">
+                <legend class="gs-sub">Difficulté</legend>
+                <div class="gs-preset-list" role="radiogroup">
+                    <% presets.forEach(function (preset) { %>
+                        <button type="button" class="gs-preset" data-preset="<%= preset.slug %>" role="radio"
+                                aria-checked="<%= settings.preset.slug === preset.slug %>"><%= preset.name %></button>
+                    <% }); %>
+                    <span class="gs-preset gs-preset-custom" id="gs-custom" role="radio" aria-disabled="true"
+                          aria-checked="<%= settings.preset.slug === 'perso' %>">Personnalisé</span>
+                </div>
+                <p class="gs-hint">Un préréglage remplit les valeurs d'un coup. Modifier une valeur passe en « Personnalisé ».</p>
+            </fieldset>
+
+            <div class="gs-fields">
+                <% fields.forEach(function (field) { %>
+                    <div class="gs-field">
+                        <label class="gs-label" for="gs-<%= field.key %>"><%= field.label %></label>
+                        <div class="gs-stepper">
+                            <button type="button" class="gs-step" data-step="-1" data-for="<%= field.key %>" aria-label="Moins">−</button>
+                            <input class="gs-input" type="number" id="gs-<%= field.key %>" name="<%= field.key %>"
+                                   min="<%= field.min %>" max="<%= field.max %>" step="1" value="<%= settings[field.key] %>">
+                            <button type="button" class="gs-step" data-step="1" data-for="<%= field.key %>" aria-label="Plus">+</button>
+                        </div>
+                        <p class="gs-note" id="gs-note-<%= field.key %>"></p>
+                    </div>
+                <% }); %>
+            </div>
+
+            <p class="gs-total" id="gs-total"></p>
+            <p class="gs-error" id="gs-error" role="alert"></p>
+
+            <div class="gs-actions">
+                <a href="/" class="gs-btn">Retour</a>
+                <button type="submit" class="gs-btn gs-btn-primary">Créer les personnages</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        var GS_FIELDS = <%- JSON.stringify(fields).replace(/</g, '\\u003c') %>;
+        var GS_PRESETS = <%- JSON.stringify(presets).replace(/</g, '\\u003c') %>;
+        var GS_AVAILABLE = <%- JSON.stringify(available).replace(/</g, '\\u003c') %>;
+    </script>
+    <script>
+        (function () {
+            const form = document.getElementById('gs-form');
+            const error = document.getElementById('gs-error');
+            const input = (key) => document.getElementById('gs-' + key);
+            const clamp = (v, f) => Math.min(f.max, Math.max(f.min, Math.round(v)));
+            const plural = (n, word) => n + ' ' + word + (n > 1 ? 's' : '');
+
+            const values = () => Object.fromEntries(GS_FIELDS.map(f => {
+                let v = Number(input(f.key).value);
+                return [f.key, Number.isFinite(v) ? clamp(v, f) : f.min];
+            }));
+
+            // Préréglage correspondant aux valeurs, en surbrillance
+            function refresh() {
+                let v = values();
+                let match = GS_PRESETS.find(p => GS_FIELDS.every(f => p.values[f.key] === v[f.key]));
+                document.querySelectorAll('.gs-preset').forEach(b => {
+                    let on = match ? b.dataset.preset === match.slug : b.id === 'gs-custom';
+                    b.setAttribute('aria-checked', String(on));
+                });
+
+                // Cartes demandées sur toute la partie, comparées à celles qui existent
+                let total = 0;
+                for (let f of GS_FIELDS) {
+                    let note = document.getElementById('gs-note-' + f.key);
+                    note.textContent = '';
+                    note.classList.remove('is-warning');
+                    if (f.key === 'planetCount')
+                        continue;
+                    let need = v[f.key] * v.planetCount;
+                    total += need;
+                    let have = GS_AVAILABLE[f.key];
+                    if (have === undefined)
+                        continue;
+                    if (need > have) {
+                        note.textContent = need + ' demandées, ' + have + ' dans le jeu : les dernières étapes en auront moins.';
+                        note.classList.add('is-warning');
+                    }
+                    else
+                        note.textContent = need + ' sur la partie, ' + have + ' dans le jeu.';
+                }
+                document.getElementById('gs-total').textContent = 'Paquet : ' + plural(v.planetCount, 'planète')
+                    + ' et jusqu\'à ' + plural(total, 'carte') + ' d\'événement, soit environ '
+                    + plural(Math.ceil(total / v.planetCount), 'carte') + ' entre deux planètes.';
+            }
+
+            document.querySelectorAll('button.gs-preset').forEach(b => b.addEventListener('click', () => {
+                let preset = GS_PRESETS.find(p => p.slug === b.dataset.preset);
+                for (let f of GS_FIELDS)
+                    input(f.key).value = preset.values[f.key];
+                refresh();
+            }));
+
+            document.querySelectorAll('.gs-step').forEach(b => b.addEventListener('click', () => {
+                let f = GS_FIELDS.find(f => f.key === b.dataset.for);
+                let el = input(f.key);
+                el.value = clamp((Number(el.value) || 0) + Number(b.dataset.step), f);
+                refresh();
+            }));
+
+            GS_FIELDS.forEach(f => {
+                input(f.key).addEventListener('input', refresh);
+                // Valeur hors bornes corrigée en quittant le champ
+                input(f.key).addEventListener('change', () => {
+                    input(f.key).value = values()[f.key];
+                    refresh();
+                });
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                error.textContent = '';
+                fetch('/api/settings', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(values())
+                }).then(r => r.json().then(body => ({ok: r.ok, body})))
+                    .then(({ok, body}) => {
+                        if (!ok)
+                            throw new Error(body.error || 'Enregistrement impossible');
+                        window.location.href = '/persos';
+                    })
+                    .catch(err => { error.textContent = err.message; });
+            });
+
+            refresh();
+        })();
+    </script>
+    <%- include("partials/bottom-scripts") %>
+</body>

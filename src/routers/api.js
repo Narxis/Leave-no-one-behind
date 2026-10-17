@@ -23,6 +23,8 @@ module.exports = function(router) {
     router.post(basePath + '/races', controller.saveRace);
     router.delete(basePath + '/races/:slug', controller.deleteRace);
     router.post(basePath + '/team', controller.setTeam);
+    router.get(basePath + '/settings', controller.getSettings);
+    router.post(basePath + '/settings', controller.setSettings);
     router.get(basePath + '/player/:discordId', controller.getPlayer);
     // router.get(basePath + '/player/:playerId/:stat/:val', controller.updatePlayer); // :val can be SIGNED
 

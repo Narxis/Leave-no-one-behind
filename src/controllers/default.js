@@ -8,6 +8,7 @@ const allies = require("./allies");
 const inventory = require("./inventory");
 const planetGen = require("./planetGen");
 const leaderboard = require("./leaderboard");
+const gameSettings = require("./gameSettings");
 const races = require("./races");
 const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
@@ -56,9 +57,14 @@ const renderEndScreen = async function (res, ship, planet, scoreCards, record = 
 
     let js = {vars:`var score=JSON.parse('` + JSON.stringify(score) + `'); var ship=JSON.parse('` + JSON.stringify(ship) + `');`};
 
+    // Réglages avec lesquels la partie a été jouée (ceux du lancement)
+    let current = leaderboard.getCurrent();
+    let settings = record && current && current.settings ? current.settings : gameSettings.get();
+
     let vars = {
         ship: ship,
         score: score,
+        settings: settings,
         js: js,
         planet: planet,
         leaderboardId: leaderboardId,
@@ -155,6 +161,17 @@ module.exports = {
         res.render('mj-menu', {lang: langJS, bestiary: combat.getBestiary(), loot: combat.getLootList(), statuses: statuses});
     },
 
+    // Paramètres de la partie, choisis par le MJ avant la création des persos
+    settings(req, res) {
+        res.render('parametres', {
+            lang: langJS,
+            settings: gameSettings.get(),
+            fields: gameSettings.FIELDS,
+            presets: gameSettings.PRESETS,
+            available: gameSettings.available()
+        });
+    },
+
     async persos(req, res) {
         // Nouvelle création : les personnages de la partie précédente sont effacés
         // (avec leurs objets et les compagnons du MJ). Pas sur un rechargement de
@@ -170,7 +187,7 @@ module.exports = {
         }
         await CONFIG.upsert('gameState', 'creation');
         // Bonus et malus des races (customs comprises), pour l'explication de la répartition des stats
-        res.render('perso', {lang: langJS, races: races.list()});
+        res.render('perso', {lang: langJS, races: races.list(), settings: gameSettings.get()});
     },
 
     // Éditeur des races customs
