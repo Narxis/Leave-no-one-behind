@@ -1370,6 +1370,66 @@ body.mj-page {
     cursor: default;
 }
 
+/*---Menu MJ : jet lancé à la place d'un joueur---*/
+.mj-player-roll {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 16px 12px;
+}
+
+.mj-player-roll-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+.mj-page .mj-player-roll .add-life {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 6px 10px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.mj-page .mj-player-roll button.add-life {
+    text-align: center;
+}
+
+.mj-page .mj-player-roll select.add-life option {
+    background: #17181c;
+}
+
+.mj-page .mj-player-roll button:disabled {
+    opacity: .4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.mj-player-roll-result {
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.mj-player-roll-result:empty {
+    display: none;
+}
+
+.mj-player-roll-result strong {
+    color: var(--ui-text);
+}
+
+.mj-player-roll-result.success strong {
+    color: #7be26b;
+}
+
+.mj-player-roll-result.fail strong {
+    color: var(--ui-danger);
+}
+
 /*---Menu MJ : points de vie des joueurs et compagnons---*/
 .mj-team {
     display: flex;
