@@ -5,18 +5,25 @@
 // et toujours en son nom : son identifiant d'app (celui du lobby) remplit le
 // champ discord_id du jeu, quoi que contienne son message.
 //
+// Comme avec le bot, la création du perso n'est ouverte que pendant la
+// création (page des persos du MJ) et les dés de jeu que pendant la partie.
+//
 // Joueur → MJ : {kind: 'action', action, data}
-// MJ → joueur : {kind: 'you', character}        son perso (null s'il n'en a pas)
-//               {kind: 'result', action, data}  action faite
+// MJ → joueur : {kind: 'result', action, data}  action faite
 //               {kind: 'refused', action, message}
+// (l'état du jeu et du perso part de playerView.js)
 const {Player} = require('../models/player');
 const lobby = require('./lobby');
 const races = require('./races');
+const statRolls = require('./statRolls');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = ['', 'scanner', 'proximity', 'motors', 'oxygen', 'energy', 'gravity'];
 
 const refuse = (message) => ({refused: message});
+const NOT_CREATION = 'La création des persos n\'est pas ouverte : le MJ doit être sur la page des personnages.';
+const NOT_LIVE = 'Les dés se lancent pendant la partie.';
+const inCreation = () => CONFIG.gameState === 'creation';
 const text = (value, max) => String(value || '').replace(/\s+/g, ' ').trim().slice(0, max);
 
 // Ce que le joueur voit de son perso
@@ -35,22 +42,50 @@ const characterOf = async function (id) {
 const RULES = {
     // Rejoindre l'équipage : crée son perso avec le pseudo du lobby
     join: async (player) => {
+        if (!inCreation())
+            return refuse(NOT_CREATION);
         if (await characterOf(player.id))
             return refuse('Tu as déjà un personnage dans cette partie.');
         return {action: 'join', uid: player.id, nick: player.name};
     },
     'set-name': async (player, data) => {
+        if (!inCreation())
+            return refuse(NOT_CREATION);
         let nick = text(data.nick, 30);
         if (!nick)
             return refuse('Nom vide.');
         return {action: 'set-name', uid: player.id, nick: nick};
     },
     'set-race': async (player, data) => {
+        if (!inCreation())
+            return refuse(NOT_CREATION);
+        let me = await new Player().getData(player.id);
+        if (!me)
+            return refuse('Crée d\'abord ton personnage.');
+        if (statRolls.isDone(me))
+            return refuse('Tes stats sont déjà tirées : demande au MJ pour changer de race.');
         if (!Object.prototype.hasOwnProperty.call(races.getStats(), data.race))
             return refuse('Race inconnue.');
         return {action: 'set-race', uid: player.id, race: data.race};
     },
+    // Dé suivant d'une stat, tiré par le serveur (création du perso)
+    'roll-stat': async (player, data) => {
+        if (!inCreation())
+            return refuse(NOT_CREATION);
+        let me = await new Player().getData(player.id);
+        if (!me)
+            return refuse('Crée d\'abord ton personnage.');
+        let result = statRolls.roll(me, data.stat);
+        if (result.error)
+            return refuse(result.error);
+        if (!result.stats)
+            return {action: 'roll-stats', uid: player.id, data: result.dice};
+        await me.update(result.stats, player.id);
+        return {action: 'roll-stats-done', uid: player.id, data: await new Player().getData(player.id)};
+    },
     roll: async (player, data) => {
+        if (CONFIG.gameState !== 'gameLive')
+            return refuse(NOT_LIVE);
         if (!STATS.includes(data.stat) || !MODULES.includes(data.module || ''))
             return refuse('Lancer invalide.');
         return {action: 'roll', data: {discord_id: player.id, stat: data.stat, module: data.module || ''}};
@@ -84,18 +119,9 @@ const translate = async function (player, message) {
     return rule(player, data);
 };
 
-// Le perso du joueur, à son arrivée et quand il change
-const sendCharacter = async function (player) {
-    let character = await characterOf(player.id);
-    lobby.setCharacter(player.id, character ? character.name : null);
-    lobby.sendTo(player.id, {kind: 'you', character: character});
-};
-
 // run(message) exécute une action comme si elle venait d'une page du MJ et
 // renvoie ses messages ; broadcast(message) les envoie aux pages du MJ
 const init = function ({run, broadcast}) {
-    lobby.onPlayerJoin(player => sendCharacter(player).catch(e => log('[LOBBY] ' + e)));
-
     lobby.onPlayerMessage(async (player, message) => {
         if (!player.name)
             return; // pas (ou plus) dans le lobby
@@ -114,8 +140,6 @@ const init = function ({run, broadcast}) {
         if (first.error || first.action === 'inventory-error')
             return lobby.sendTo(player.id, {kind: 'refused', action: message.action, message: first.error_msg || first.message || (first.data && first.data.message) || 'Action impossible.'});
         lobby.sendTo(player.id, {kind: 'result', action: message.action, data: action.action === 'roll' ? first.data : null});
-        if (['join', 'set-name', 'set-race'].includes(action.action))
-            await sendCharacter(player);
     });
 };
 

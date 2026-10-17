@@ -12,6 +12,7 @@ const cardLoot = require("./cardLoot");
 const shipAlerts = require("./shipAlerts");
 const lobby = require("./lobby");
 const remote = require("./remote");
+const playerView = require("./playerView");
 const WebSocket = require("ws");
 
 const init = function (){
@@ -41,6 +42,7 @@ const init = function (){
         run: (action) => makeAction(JSON.stringify(action)),
         broadcast: (payload) => broadcastData(payload)
     });
+    playerView.init();
 }
 
 const makeAction = async function (raw_response) {
@@ -392,6 +394,9 @@ const broadcastData = function (data, ws, sendBackToSender = true) {
     catch (e) {
         log(e)
     }
+    // L'état du jeu a pu changer : la vue des joueurs en ligne suit
+    if (!data || data.action !== 'lobby')
+        playerView.changed();
 }
 
 module.exports = {init}

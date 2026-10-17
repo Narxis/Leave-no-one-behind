@@ -41,6 +41,11 @@ async function test_remote() {
     let alice = {id: 'a1b2c3d4e5f6a7b8', name: 'Alice'};
     let act = (action, data) => remote.translate(alice, {kind: 'action', action, data});
 
+    // Création fermée : pas de perso, pas de race
+    CONFIG.gameState = 'gameLive';
+    assert.ok((await act('join')).refused);
+    CONFIG.gameState = 'creation';
+
     // Pas de perso : rejoindre le crée avec le pseudo du lobby
     assert.equal(await remote.characterOf(alice.id), null);
     assert.deepEqual(await act('join', {uid: 'quelqu-un-d-autre', nick: 'Bob'}), {action: 'join', uid: alice.id, nick: 'Alice'});
@@ -49,6 +54,8 @@ async function test_remote() {
     assert.ok((await act('join')).refused);
 
     // Le lancer est fait au nom du joueur, même s'il en désigne un autre
+    assert.ok((await act('roll', {stat: 'combat'})).refused); // pas pendant la création
+    CONFIG.gameState = 'gameLive';
     assert.deepEqual(await act('roll', {discord_id: 'autre', stat: 'combat', module: 'motors'}),
         {action: 'roll', data: {discord_id: alice.id, stat: 'combat', module: 'motors'}});
     assert.ok((await act('roll', {stat: 'moral'})).refused);
@@ -57,6 +64,8 @@ async function test_remote() {
     for (let action of ['playerStat', 'setModule', 'status', 'combat-hp', 'lobby-kick', 'passThrough', 'item', 'ally-add'])
         assert.equal((await act(action, {})).refused, 'Action réservée au MJ.');
 
+    assert.ok((await act('set-race', {race: Object.keys(races.getStats())[0]})).refused); // création fermée
+    CONFIG.gameState = 'creation';
     let race = Object.keys(races.getStats())[0];
     assert.deepEqual(await act('set-race', {race, uid: 'autre'}), {action: 'set-race', uid: alice.id, race});
     assert.ok((await act('set-race', {race: '../x'})).refused);
@@ -72,7 +81,88 @@ async function test_remote() {
 
     // Message qui n'est pas une action : ignoré
     assert.equal(await remote.translate(alice, {kind: 'chat'}), null);
+
+    // Tirage des stats par le serveur, dé par dé
+    await new Player().update({race: race}, alice.id);
+    let mods = races.getStats()[race];
+    let total = ['combat', 'pilotage', 'engineering', 'survival', 'recon'].reduce((n, s) => n + Math.abs(parseInt(mods[s]) || 0) + 1, 0);
+    assert.ok((await act('roll-stat', {stat: 'moral'})).refused);
+    let last;
+    for (let i = 0; i < total; i++) {
+        let stat = ['combat', 'pilotage', 'engineering', 'survival', 'recon'].find(s => {
+            let st = require('../src/controllers/statRolls').state({discord_id: alice.id, race: race, combat: 0});
+            let row = st.stats.find(r => r.stat === s);
+            return row.dice.length < row.total;
+        });
+        last = await act('roll-stat', {stat});
+        assert.equal(last.action, i < total - 1 ? 'roll-stats' : 'roll-stats-done');
+    }
+    let done = await new Player().getData(alice.id);
+    for (let s of ['combat', 'pilotage', 'engineering', 'survival', 'recon'])
+        assert.ok(done[s] >= 51 && done[s] <= 100, s + ' = ' + done[s]);
+    assert.equal(done.moral, 100);
+    assert.ok((await act('roll-stat', {stat: 'combat'})).refused);
+    assert.ok((await act('set-race', {race})).refused); // stats déjà tirées
     console.log('Online player actions OK');
+
+    test_stat_rolls();
+    test_player_view();
+    test_player_assets();
+}
+
+// Règles du tirage : dés = |bonus| + 1, meilleur dé avec un bonus, pire avec un malus
+function test_stat_rolls() {
+    console.log('Testing stat rolls');
+    const statRolls = require('../src/controllers/statRolls');
+    const races = require('../src/controllers/races');
+    let stats = races.getStats();
+    let race = Object.keys(stats).find(r => ['combat', 'pilotage', 'engineering', 'survival', 'recon'].some(s => parseInt(stats[r][s]) > 0)
+        && ['combat', 'pilotage', 'engineering', 'survival', 'recon'].some(s => parseInt(stats[r][s]) < 0));
+    assert.ok(race, 'une race avec bonus et malus');
+    let player = {discord_id: 'rolls-test-0001', race: race, combat: 0, pilotage: 0, engineering: 0, survival: 0, recon: 0};
+    let values = [10, 40, 25, 5, 50, 30, 20, 45, 15, 35, 12, 33, 44];
+    let k = 0;
+    let random = () => (values[k++ % values.length] - 1) / 50;
+    let result;
+    for (let s of statRolls.STATS)
+        for (let i = 0; i <= Math.abs(parseInt(stats[race][s]) || 0); i++)
+            result = statRolls.roll(player, s, random);
+    assert.ok(result.stats);
+    for (let s of statRolls.STATS) {
+        let mod = parseInt(stats[race][s]) || 0;
+        let dice = result.dice[s];
+        assert.equal(dice.length, Math.abs(mod) + 1);
+        let keep = mod > 0 ? Math.max(...dice) : mod < 0 ? Math.min(...dice) : dice[0];
+        assert.equal(result.stats[s], keep + 50);
+    }
+    assert.equal(result.stats.moral, 100);
+    console.log('Stat rolls OK');
+}
+
+// Ce que les joueurs voient d'une carte : ni révélations, ni suites, ni butin
+function test_player_view() {
+    console.log('Testing player view');
+    const playerView = require('../src/controllers/playerView');
+    let card = {id: 4, type: TYPE_NEGATIVE, name: 'secret-name', desc: 'Une alarme{....} retentit', mjreveal: 'piège', timer: 1,
+        choices: [{value: 'Fuir', reveal: 'ils meurent', mjreveal: 'x', next: 'suite', loot: ['medkit']}, {value: 'Combattre'}]};
+    let seen = playerView.publicCard(card);
+    assert.deepEqual(seen, {id: 4, kind: 'event', desc: 'Une alarme… retentit', timer: true, choices: ['Fuir', 'Combattre']});
+    let planet = playerView.publicCard({id: 9, type: TYPE_PLANET, name: 'archetype', desc: '', modules: {oxy: {val: 80, cost: 2}}});
+    assert.deepEqual(planet, {id: 9, kind: 'planet', desc: '', choices: []});
+    assert.equal(playerView.publicCard(null), null);
+    console.log('Player view OK');
+}
+
+// Fichiers générés de la page joueur : à jour avec leurs sources
+function test_player_assets() {
+    console.log('Testing player assets');
+    const assets = require('../scripts/player-assets');
+    const path = require('path');
+    for (let [file, content] of Object.entries(assets.files())) {
+        let current = fs.readFileSync(path.join(assets.ROOT, file), 'utf8').replace(/\r\n/g, '\n');
+        assert.equal(current, content.replace(/\r\n/g, '\n'), file + ' n\'est pas à jour : lance node scripts/player-assets.js');
+    }
+    console.log('Player assets OK');
 }
 
 async function setup(){
