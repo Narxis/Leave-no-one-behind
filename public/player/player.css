@@ -360,7 +360,20 @@ button.choice-text {
 .choice-tab.dimmed { opacity: .45; }
 .card-note { margin: 14px 0 0; color: var(--dim); font-size: 13px; text-align: center; }
 
-/* Compte à rebours des choix : posé sur le haut de la carte, chiffres
+/* Compte à rebours de l'écran de jeu : bras robot en haut à droite de la
+   carte et vaisseau en haut à gauche (positions de timer-animation.css,
+   comptées depuis le coin de la carte) */
+.timer-host { position: absolute; top: 0; left: 0; z-index: 0; width: 0; height: 0; pointer-events: none; }
+.stage-screen > .timer-host { align-self: flex-start; }
+body.planet-mode .timer-host, .stage-screen:has(> #combat:not([hidden])) .timer-host { display: none; }
+@media (min-width: 900px) {
+    .card-timer { display: none !important; }
+}
+@media (max-width: 899px) {
+    .timer-host { display: none; }
+}
+
+/* Compte à rebours sur téléphone : posé sur le haut de la carte, chiffres
    dorés qui battent à chaque seconde, rouges sur la fin */
 .stage-screen { position: relative; }
 .card-timer {
@@ -612,6 +625,19 @@ body.planet-mode .planet-orbit { display: none; }
 .dial.dial-row .dial-value { grid-area: 1 / 2; justify-self: center; font-size: 10px; }
 .hud-second { display: flex; justify-content: space-between; gap: 6px; font-size: 13px; }
 .hud-second strong { white-space: nowrap; }
+
+/* Votes sur la page planète : scans de la liste et boutons de sortie
+   (comme .p-txt, .land-button et .leave-button chez le MJ) */
+.planet-scans li.votable { cursor: pointer; transition: background .15s var(--ease), border-color .15s var(--ease); }
+.planet-scans li.votable:hover, .planet-scans li.votable:focus-visible { border-left-color: var(--accent); background: rgb(255 204 0 / 10%); outline: none; }
+.planet-scans li.voted, .planet-exit.voted { box-shadow: inset 0 0 0 1px var(--ok); }
+.planet-scans li.chosen, .planet-exit.chosen { box-shadow: inset 0 0 0 1px var(--accent); }
+.planet-scans li[data-votes]::after, .planet-exit[data-votes]::after { content: attr(data-votes); display: block; margin-top: 2px; color: var(--ok); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; }
+.planet-exits { position: absolute; top: 0; left: 50%; z-index: 2; display: flex; gap: 12px; transform: translateX(-50%); }
+.planet-exit { margin: 0; padding: 10px 18px; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); color: var(--text); font-size: 15px; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+.planet-exit.land { border-color: rgb(255 204 0 / 60%); color: var(--accent); }
+.planet-exit:not(:disabled):hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-accent); }
+.planet-exit:disabled { cursor: default; opacity: .85; }
 
 /* Inventaire */
 .items { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }

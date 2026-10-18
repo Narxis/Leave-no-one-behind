@@ -5,6 +5,8 @@
 //                                   public/player/planet-view.js
 //                                   public/player/status-icons.js
 //                                   public/player/game-icons.js
+//                                   public/player/timer-markup.js,
+//                                   timer-animation.css, timer-anim.js
 //                                   et public/player/img/modules/*.svg
 // Les vignettes des races de base (public/player/img/races/*.webp, 240 px)
 // sont faites une fois à la main depuis public/img/races, par exemple :
@@ -69,6 +71,26 @@ const MODULE_ICONS = {
     gravity: 'artificial-gravity-svgrepo-com.svg'
 };
 
+// Compte à rebours de l'écran de jeu (bras robot, boule d'énergie, vaisseau
+// qui flotte au-dessus de la carte) : même balisage, même CSS (police en
+// data: pour le file://), même script d'animation
+const blockAt = function (lines, start) {
+    let indent = lines[start].match(/^ */)[0];
+    let end = lines.findIndex((l, i) => i > start && l === indent + '</div>');
+    return lines.slice(start, end + 1).join('\n');
+};
+const timerMarkup = function () {
+    let lines = read('public/views/template-card.ejs').split('\n');
+    let arm = blockAt(lines, lines.findIndex(l => l.includes('<div id="bigboite"')));
+    let ship = blockAt(lines, lines.findIndex(l => l.includes('<div id="plugship"')));
+    return HEADER + 'window.LNOB_TIMER_HTML = ' + JSON.stringify(arm + '\n' + ship) + ';\n';
+};
+const timerCss = function () {
+    let font = 'data:font/ttf;base64,' + fs.readFileSync(path.join(ROOT, 'public/fonts/7segments.ttf')).toString('base64');
+    return '/* Généré par scripts/player-assets.js : ne pas modifier à la main */\n'
+        + read('public/css/timer-animation.css').replace("url('/fonts/7segments.ttf')", "url('" + font + "')");
+};
+
 // Fichier généré → contenu attendu
 const files = () => ({
     'public/player/ship-svg.js': shipSvg(),
@@ -76,6 +98,9 @@ const files = () => ({
     'public/player/planet-view.js': HEADER + read('public/js/planet-view.js'),
     'public/player/status-icons.js': statusIcons(),
     'public/player/game-icons.js': gameIcons(),
+    'public/player/timer-markup.js': timerMarkup(),
+    'public/player/timer-animation.css': timerCss(),
+    'public/player/timer-anim.js': HEADER + read('public/js/timer-anim.js'),
     ...Object.fromEntries(Object.entries(MODULE_ICONS).map(([id, file]) =>
         ['public/player/img/modules/' + id + '.svg', read('public/img/modules/' + file)]))
 });

@@ -501,6 +501,34 @@
 
     let timer = null;
     let timerSeen = 0;
+    // Animation de l'écran de jeu (timer-anim.js) : chaque seconde reçue fait
+    // avancer le bras et la boule ; fin du temps : pschitt et lancer ;
+    // choix fait avant : la boule se dissipe
+    let timerLast = null;
+    if (window.LNOB_TIMER_HTML)
+        $('timer-host').innerHTML = LNOB_TIMER_HTML;
+    const timerAnim = function (next) {
+        if (typeof TimerAnim === 'undefined' || !$('bigboite'))
+            return;
+        let box = $('bigboite');
+        try {
+            if (next && !next.paused) {
+                // Arrivé en cours de compte à rebours : bras déjà sorti
+                if (next.left < 30 && !box.classList.contains('float'))
+                    box.classList.add('grow', 'float', 'idle');
+                TimerAnim.tick(next.left);
+            }
+            else if (!next && timerLast) {
+                if (timerLast.left <= 1) {
+                    TimerAnim.tick(0);
+                    TimerAnim.finish();
+                }
+                else
+                    TimerAnim.cancel();
+            }
+        } catch (e) { /* animation seulement */ }
+        timerLast = next;
+    };
     const renderTimer = function () {
         let card = game && game.card;
         let show = !!(timer && card && !game.combat && card.kind !== 'planet' && timer.cardId === String(card.id)
@@ -578,6 +606,12 @@
         let choices = showCard ? (card.choices || []) : [];
         let canVote = showCard && !!card.screen && card.chosen === null && !!character;
         let myVote = you ? you.vote : null;
+        // Planète : comme chez le MJ, on vote sur les scans de la liste et
+        // sur les boutons Atterrir / Continuer, pas sur des onglets
+        let planetVoting = showCard && card.kind === 'planet';
+        renderPlanetVotes(planetVoting ? card : null, canVote, myVote);
+        if (planetVoting)
+            choices = [];
         $('card-choices').hidden = !choices.length;
         $('card-choices').replaceChildren(...choices.map((c, i) => {
             let li = el('li', 'choice-tab');
@@ -600,7 +634,7 @@
         if (combat)
             note = 'Combat en cours : lance tes dés depuis l\'onglet Perso quand le MJ te le demande.';
         else if (showCard && card.kind === 'planet' && canVote)
-            note = myVote === null || myVote === undefined ? 'Vote pour la suite, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
+            note = myVote === null || myVote === undefined ? 'Touche un scan ou un bouton pour voter, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
         else if (showCard && card.kind === 'planet')
             note = card.chosen !== null && card.chosen !== undefined ? 'Le MJ a choisi.' : 'Le MJ scanne la planète sur l\'écran principal.';
         else if (showCard && card.chosen !== null && card.chosen !== undefined)
@@ -753,6 +787,7 @@
         $('planet-drones').textContent = 'Drones : ' + (planet.drones || 0);
         $('planet-scans').replaceChildren(...scans.map(s => {
             let li = el('li', s.revealed ? 'scanned' : '');
+            li.dataset.label = s.label;
             let head = el('div', 'scan-head');
             head.append(el('span', 'scan-label', 'Scan ' + s.label));
             if (!s.revealed && s.cost !== null && s.cost !== undefined)
@@ -770,6 +805,47 @@
             li.append(el('span', 'planet-label-cost', s.revealed ? 'scanné' : (s.cost !== null && s.cost !== undefined ? 'coût : ' + s.cost : '')));
             return li;
         }));
+    };
+
+    // Votes de la page planète : chaque choix annoncé par le MJ est un scan
+    // (même nom que dans la liste) ou un bouton de sortie (Atterrir…)
+    const renderPlanetVotes = function (card, canVote, myVote) {
+        let choices = card ? (card.choices || []) : [];
+        let counts = card ? (card.counts || []) : [];
+        const votes = (i) => counts[i] ? counts[i] + (counts[i] > 1 ? ' votes' : ' vote') : '';
+        const wire = (node, i) => {
+            node.classList.toggle('voted', myVote === i);
+            node.classList.toggle('chosen', card.chosen === i);
+            if (votes(i))
+                node.dataset.votes = votes(i);
+            else
+                delete node.dataset.votes;
+            if (!canVote)
+                return;
+            node.classList.add('votable');
+            node.tabIndex = 0;
+            node.setAttribute('role', 'button');
+            node.title = myVote === i ? 'Retirer mon vote' : 'Voter pour ce scan';
+            const go = () => sendAction('vote', {index: myVote === i ? null : i});
+            node.addEventListener('click', go);
+            node.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+        };
+        let scanItems = Array.from($('planet-scans').children);
+        let scanLabels = scanItems.map(li => li.dataset.label);
+        scanItems.forEach(li => {
+            let i = choices.indexOf(li.dataset.label);
+            if (i >= 0)
+                wire(li, i);
+        });
+        $('planet-exits').replaceChildren(...choices.map((c, i) => [c, i]).filter(([c]) => !scanLabels.includes(c)).map(([c, i]) => {
+            let b = el('button', 'planet-exit' + (/atterrir|terminer/i.test(c) ? ' land' : ''), c);
+            b.type = 'button';
+            wire(b, i);
+            if (!canVote)
+                b.disabled = true;
+            return b;
+        }));
+        $('planet-exits').hidden = !$('planet-exits').children.length;
     };
 
     // ---- Vaisseau ----------------------------------------------------------
@@ -1081,6 +1157,7 @@
         else if (data.kind === 'timer') {
             timer = data.timer && Number.isInteger(data.timer.left) ? data.timer : null;
             timerSeen = Date.now();
+            timerAnim(timer);
             renderTimer();
         }
         else if (data.kind === 'you') {

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LNOB · Rejoindre une partie</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="timer-animation.css">
     <link rel="stylesheet" href="player.css">
 </head>
 <body>
@@ -103,7 +104,10 @@
                 <div class="stage-row">
                     <div class="stage-screen">
                         <!-- Carte (événement, lieu, carte blanche) -->
-                        <!-- Compte à rebours des choix, comme sur l'écran de jeu -->
+                        <!-- Bras robot du compte à rebours et vaisseau au-dessus de la
+                             carte, comme sur l'écran de jeu (timer-markup.js) -->
+                        <div id="timer-host" class="timer-host" aria-hidden="true"></div>
+                        <!-- Compte à rebours sur téléphone (le bras n'y tient pas) -->
                         <div id="card-timer" class="card-timer" role="timer" hidden>
                             <span id="card-timer-text" class="card-timer-text">30</span>
                             <span class="card-timer-track"><span id="card-timer-fill" class="card-timer-fill"></span></span>
@@ -123,6 +127,7 @@
                                 <ul id="planet-scans" class="planet-scans"></ul>
                             </div>
                             <div class="planet-stage">
+                                <div id="planet-exits" class="planet-exits" hidden></div>
                                 <div class="planet-orbit" aria-hidden="true"></div>
                                 <div id="planet-frame" class="planet-frame"></div>
                                 <ul id="planet-labels" class="planet-labels" aria-hidden="true"></ul>
@@ -273,6 +278,8 @@
 <script src="planet-view.js"></script>
 <script src="status-icons.js"></script>
 <script src="game-icons.js"></script>
+<script src="timer-markup.js"></script>
+<script src="timer-anim.js"></script>
 <script src="player.js"></script>
 </body>
 </html>
