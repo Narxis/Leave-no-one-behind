@@ -174,7 +174,7 @@ module.exports = {
         data = JSON.stringify(data);
 
         // « < » échappé : un texte contenant </script> ne casse pas la page
-        res.render('drawflow', {vars: {dat: data.replace(/</g, '\\u003c')}, lang: langJS, lootItems: combat.getLootList()});
+        res.render('drawflow', {vars: {dat: data.replace(/</g, '\\u003c')}, lang: langJS, lootItems: combat.getLootList(), statusList: require('../config/statuses.json').map(st => ({slug: st.slug, name: st.name}))});
     },
 
     async renderSingleSheet (req, res) {
