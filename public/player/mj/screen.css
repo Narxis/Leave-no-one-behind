@@ -17,6 +17,40 @@ html, body {
     pointer-events: none !important;
 }
 
+/* Onglets des modules ouverts : la valeur du module (screen.js) à la place
+   des + et - du MJ, centrée sous le nom */
+.tab .player-mod-value {
+    position: absolute;
+    top: 20px;
+    left: 80px;
+    width: 125px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ui-text, #fff);
+    font-family: 'Jura', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+}
+
+/* Texte trop long pour la carte : la carte garde sa taille, le texte défile
+   dedans, sans ascenseur visible */
+.card-text {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+}
+.card-text::-webkit-scrollbar {
+    display: none;
+}
+/* (les cases des réponses, posées sur le texte, laissent passer la molette) */
+.container-card .answer {
+    pointer-events: none;
+}
+
 /* Cases du type de jet (perso / module) : affichées, mais posées par le jeu */
 .roll-type {
     pointer-events: none;

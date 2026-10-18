@@ -54,6 +54,7 @@
                     <button type="button" role="tab" data-tab="bag" class="tab">Inventaire</button>
                     <button type="button" role="tab" data-tab="crew" class="tab">Équipage</button>
                     <button type="button" role="tab" data-tab="codex" class="tab">Codex</button>
+                    <button type="button" role="tab" data-tab="ranks" class="tab">Classement</button>
                 </nav>
                 <button type="button" id="leave" class="secondary small">Quitter la partie</button>
             </div>
@@ -61,6 +62,8 @@
         <!-- Écran de jeu du MJ porté tel quel (sur ordinateur, onglet Partie) -->
         <iframe id="mj-screen" class="mj-screen" src="mj/screen.html" title="Écran de jeu" aria-hidden="true"></iframe>
         <div id="ship-alert" class="alert-banner" role="alert" hidden></div>
+        <!-- Compte à rebours (téléphone) : bandeaux et flashs jaunes, comme l'écran de jeu -->
+        <div id="timer-alert" class="timer-alert" data-manual="1" aria-hidden="true"><div class="timer-alert-vignette"></div><div class="timer-alert-stripes top"></div><div class="timer-alert-stripes bottom"></div></div>
         <p id="action-error" class="error toast" role="alert" hidden></p>
 
         <div class="game-layout">
@@ -98,7 +101,6 @@
         <div class="tab-panel" data-panel="game">
             <div id="phase" class="phase-banner" hidden>
                 <p id="phase-text"></p>
-                <button type="button" id="phase-action" class="primary small" hidden></button>
             </div>
 
             <div id="stage" class="stage" hidden>
@@ -182,6 +184,8 @@
 
         <!-- Perso : création, fiche, dés -->
         <div class="tab-panel sheet-panel hud-panel" data-panel="me">
+            <!-- Création des persos, onglet Partie : le message d'attente, au-dessus de la fiche -->
+            <p id="me-phase" class="me-phase" hidden></p>
             <div id="no-character" hidden>
                 <p id="no-character-text"></p>
                 <button type="button" id="create" class="primary">Créer mon personnage</button>
@@ -268,6 +272,27 @@
             <ul id="codex-list" class="codex-list"></ul>
             <p id="codex-empty" class="dim"></p>
             <p class="dim small-text">Le Codex se remplit au fil de la partie : races croisées, objets trouvés, statuts subis. Il repart de zéro à chaque nouvelle partie. <a class="wiki-link" target="_blank" rel="noopener">Wiki des règles ↗</a></p>
+        </div>
+
+        <!-- Classement des équipes, comme la page du MJ (leaderboard.ejs) -->
+        <div class="tab-panel hud-panel ranks-panel" data-panel="ranks">
+            <h2 class="ranks-title">Classement des équipes</h2>
+            <div id="ranks-filter" class="ranks-filter" role="radiogroup" aria-label="Difficulté" hidden></div>
+            <div class="ranks-scroll">
+                <table id="ranks-table" class="ranks-table" hidden>
+                    <thead>
+                        <tr><th scope="col">#</th><th scope="col">Équipe</th><th scope="col" class="num">Score</th><th scope="col" class="num">Survivants</th><th scope="col">Planète</th><th scope="col">Difficulté</th><th scope="col">Date</th></tr>
+                    </thead>
+                    <tbody id="ranks-body"></tbody>
+                </table>
+            </div>
+            <p id="ranks-empty" class="dim">Aucune partie terminée pour l'instant. Le score d'une équipe s'ajoute ici à la fin de sa partie.</p>
+            <p id="ranks-hint" class="dim small-text" hidden>Touche une équipe pour voir son détail.</p>
+            <dialog id="team-dialog" class="race-dialog team-dialog" aria-labelledby="team-dialog-title">
+                <button id="team-dialog-close" type="button" class="race-dialog-close" aria-label="Fermer">✕</button>
+                <h2 id="team-dialog-title" class="team-dialog-title"></h2>
+                <div id="team-dialog-body"></div>
+            </dialog>
         </div>
         </div>
         <!-- Chat en bas à droite (en bas sur téléphone), qu'on peut fermer :

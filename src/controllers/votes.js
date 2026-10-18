@@ -44,6 +44,9 @@ const counts = function () {
     return list;
 };
 
+// Qui a voté quoi (id du joueur, nom du perso, index du choix)
+const voters = () => Array.from(votes, ([id, v]) => ({id, name: v.name, index: v.index}));
+
 // Message pour les pages du MJ : votes par choix et qui a voté quoi
 const payload = function () {
     return {
@@ -54,7 +57,7 @@ const payload = function () {
             choices: screen ? screen.choices : [],
             chosen: screen ? screen.chosen : null,
             counts: counts(),
-            voters: Array.from(votes, ([id, v]) => ({id, name: v.name, index: v.index}))
+            voters: voters()
         }
     };
 };
@@ -76,11 +79,12 @@ const vote = function (playerId, name, index) {
 };
 
 // Carte vue par les joueurs : l'affichage de la page de jeu s'il concerne
-// bien la carte en cours, sinon rien (la carte du paquet sert alors)
+// bien la carte en cours, sinon rien (la carte du paquet sert alors). Qui a
+// voté quoi est montré à tous, avec le logo de son rôle
 const screenFor = function (cardId) {
     if (!screen || screen.cardId !== (cardId === undefined || cardId === null ? null : String(cardId)))
         return null;
-    return {id: screen.id, text: screen.text, choices: screen.choices, chosen: screen.chosen, counts: counts()};
+    return {id: screen.id, text: screen.text, choices: screen.choices, chosen: screen.chosen, counts: counts(), voters: voters()};
 };
 
 const voteOf = (playerId) => votes.has(playerId) ? votes.get(playerId).index : null;

@@ -19,6 +19,30 @@
     const q = (sel) => document.querySelector(sel);
     const esc = (text) => String(text === undefined || text === null ? '' : text)
         .replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
+    // Mise en forme des intitulés de choix, comme chez le MJ (« <s>Non</s> »
+    // barré…) : seules ces balises sont gardées, le reste devient du texte.
+    // Le HTML est lu dans un document inerte, puis reconstruit balise par balise.
+    const RICH_TAGS = ['S', 'B', 'I', 'U', 'EM', 'STRONG', 'BR'];
+    const richText = function (node, text) {
+        let doc = new DOMParser().parseFromString('<body>' + String(text || ''), 'text/html');
+        const copy = (from, to) => {
+            for (let child of from.childNodes) {
+                if (child.nodeType === Node.TEXT_NODE)
+                    to.append(child.textContent);
+                else if (child.nodeType === Node.ELEMENT_NODE) {
+                    let target = to;
+                    if (RICH_TAGS.includes(child.tagName)) {
+                        target = document.createElement(child.tagName.toLowerCase());
+                        to.append(target);
+                    }
+                    copy(child, target);
+                }
+            }
+        };
+        node.replaceChildren();
+        copy(doc.body, node);
+        return node;
+    };
 
     let game = null;
     let you = null;
@@ -61,6 +85,18 @@
                 let button = dial.querySelector('.mod-button');
                 if (button)
                     button.setAttribute('data-tooltip', String(button.getAttribute('data-tooltip') || '').replace(/\d+%$/, value + '%'));
+                // Onglet ouvert : la valeur du module à la place des + et -
+                // du MJ, sous son nom
+                let tab = dial.closest('.tab');
+                if (tab) {
+                    let shown = tab.querySelector('.player-mod-value');
+                    if (!shown) {
+                        shown = document.createElement('div');
+                        shown.className = 'player-mod-value';
+                        tab.append(shown);
+                    }
+                    shown.textContent = value + ' %';
+                }
                 continue;
             }
             let left = document.getElementById(mod.id + '-value');
@@ -320,7 +356,7 @@
             btn.classList.add('choice', 'move-down');
             btn.id = 'choice' + i;
             btn.type = 'button';
-            btn.textContent = choices[i];
+            richText(btn, choices[i]);
             btn.addEventListener('mouseup', () => vote(i));
             tab.append(btn);
             updateVotes();
@@ -354,7 +390,13 @@
                     badge.className = 'vote-count';
                     btn.append(badge);
                 }
-                badge.textContent = count + (count > 1 ? ' votes' : ' vote');
+                // Logo du rôle de ceux qui ont voté, puis le nombre de voix
+                let voters = ((card && card.voters) || []).filter(v => v.index === i);
+                let key = count + '|' + voters.map(v => v.id).join(',');
+                if (badge.dataset.key !== key) {
+                    badge.dataset.key = key;
+                    badge.replaceChildren(voteRoleIcons(voters), count + (count > 1 ? ' votes' : ' vote'));
+                }
             }
             btn.classList.toggle('player-voted', mine === i);
             btn.classList.toggle('player-chosen', !!card && card.chosen === i);
@@ -408,6 +450,11 @@
     const mjEvent = function (payload) {
         if (!payload || typeof payload.action !== 'string')
             return;
+        // Logo du rôle donné par le MJ : celui recopié à côté de cet écran
+        if (payload.action === 'player-role' && payload.data && payload.data.role) {
+            let role = Object.assign({}, payload.data.role, {icon: imageUrl(payload.data.role.icon)});
+            payload = Object.assign({}, payload, {data: Object.assign({}, payload.data, {role: role})});
+        }
         // Images des objets : celles recopiées à côté de cet écran
         if (payload.action === 'inventory' && payload.data) {
             const fix = (item) => Object.assign({}, item, {image: imageUrl(item.image)});
@@ -481,7 +528,7 @@
     // Voix sur les boutons (le code de planet.js) et vote du joueur entouré
     const renderPlanetVotes = function (card) {
         window.planetVoteChoices = card.screen ? (card.choices || []).map(planetChoice) : [];
-        document.dispatchEvent(new CustomEvent('votes', {detail: {data: {counts: card.screen ? card.counts || [] : []}}}));
+        document.dispatchEvent(new CustomEvent('votes', {detail: {data: {counts: card.screen ? card.counts || [] : [], voters: card.screen ? card.voters || [] : []}}}));
         document.querySelectorAll(PLANET_BUTTONS).forEach(b => b.classList.remove('player-voted', 'player-can-vote'));
         window.planetVoteChoices.forEach((choice, i) => {
             let button = choice.button && q(choice.button);
