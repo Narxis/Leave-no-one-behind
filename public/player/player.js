@@ -452,12 +452,15 @@
         let score = game && game.score;
         let combat = game && game.combat;
         let card = game && game.card;
+        // Lancement de la partie : synopsis puis fiche du vaisseau, comme une
+        // carte avec un seul choix « Continuer »
+        let intro = !!card && card.kind === 'intro';
         renderHud();
         renderCrewStrip();
 
         // Bandeau d'attente (lancement, création, fin sans score)
         let text = PHASES[phase] !== undefined ? PHASES[phase] : '';
-        if (phase === 'postGame' && score)
+        if ((phase === 'postGame' && score) || intro)
             text = '';
         if (phase === 'gameLive' && !card && !combat)
             text = 'Le MJ prépare la suite…';
@@ -469,7 +472,7 @@
 
         renderEnd(phase === 'postGame' ? score : null);
 
-        let onStage = phase === 'gameLive' && !!(card || combat);
+        let onStage = intro || (phase === 'gameLive' && !!(card || combat));
         $('stage').hidden = !onStage;
         if (!onStage) {
             renderPlanet(null);
@@ -482,7 +485,7 @@
         $('game-card').hidden = !showCard || isPlanet;
         renderPlanet(isPlanet ? card.planet : null);
         if (showCard && !isPlanet) {
-            $('card-kind').textContent = CARD_KINDS[card.kind] || '';
+            $('card-kind').textContent = card.title || CARD_KINDS[card.kind] || '';
             let key = card.id + '|' + (card.screen || '') + '|' + card.desc;
             if (key !== revealKey)
                 richText($('card-desc'), card.desc);
@@ -501,7 +504,7 @@
         // choix (card.screen) et que le MJ n'a pas encore cliqué.
         let choices = showCard ? (card.choices || []) : [];
         let canVote = showCard && !!card.screen && card.chosen === null && !!character;
-        let myVote = you ? you.vote : null;
+        let myVote = intro ? (you && you.introReady ? 0 : null) : (you ? you.vote : null);
         $('card-choices').hidden = !choices.length;
         $('card-choices').replaceChildren(...choices.map((c, i) => {
             let li = el('li', 'choice-tab');
@@ -513,15 +516,23 @@
             if (canVote) {
                 body.type = 'button';
                 body.title = myVote === i ? 'Retirer mon vote' : 'Voter pour ce choix';
-                body.addEventListener('click', () => sendAction('vote', {index: myVote === i ? null : i}));
+                body.addEventListener('click', () => intro
+                    ? sendAction('intro-ready', {ready: myVote !== i})
+                    : sendAction('vote', {index: myVote === i ? null : i}));
             }
             li.append(body);
-            if (count)
+            if (intro && card.expected)
+                li.append(el('span', 'choice-votes', count + '/' + card.expected + ' prêts'));
+            else if (count)
                 li.append(el('span', 'choice-votes', count + (count > 1 ? ' votes' : ' vote')));
             return li;
         }));
         let note = '';
-        if (combat)
+        if (intro)
+            note = !character ? 'Il faut un perso pour voter.'
+                : myVote === 0 ? 'Prêt ! On attend le reste de l\'équipage. Touche à nouveau pour annuler.'
+                : 'Lis le texte, puis touche Continuer quand tu es prêt.';
+        else if (combat)
             note = 'Combat en cours : lance tes dés depuis l\'onglet Perso quand le MJ te le demande.';
         else if (showCard && card.kind === 'planet' && canVote)
             note = myVote === null || myVote === undefined ? 'Vote pour la suite, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';

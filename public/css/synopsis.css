@@ -29,3 +29,15 @@
     color: #fff;
     justify-content: center;
 }
+/* Joueurs en ligne prêts à continuer (js/intro-votes.js) */
+.intro-ready {
+    position: absolute;
+    top: 345px;
+    left: 580px;
+    width: 200px;
+    margin: 0;
+    text-align: center;
+    color: #fff;
+    font-size: 1.1em;
+    text-shadow: 0 0 6px #000;
+}
