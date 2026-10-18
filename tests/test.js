@@ -1764,6 +1764,14 @@ async function test_combat() {
     let {state} = await run('combat-start', {enemies: [{name: 'Yorc', hp: 30, offense: 100, defense: 50, damage: 'faible'}]});
     let yorc = state.enemies[0];
 
+    // Les joueurs en ligne voient les adversaires et leurs PV, pas leurs stats
+    const playerView = require('../src/controllers/playerView');
+    let seen = playerView.combatState();
+    assert.deepEqual(seen.enemies, [{id: yorc.id, name: 'Yorc', hp: 30, maxHp: 30, ko: false}]);
+    assert.equal(seen.turn, 1);
+    assert.equal(seen.loot, null);
+    assert.ok(seen.order.some(f => f.kind === 'enemy' && f.name === 'Yorc'));
+
     // Touché, dégâts imposés et saignement posé sur la cible
     let {event} = await run('combat-enemy-attack', {enemy_id: yorc.id, discord_id: id, outcome: 'hit', damage: 5,
         status: {status: 'saignement', turns: 2}});
@@ -1799,6 +1807,7 @@ async function test_combat() {
     assert.deepStrictEqual(combat.getState().fighters[id]['c-brulure'].damage, [2, 2]);
 
     await run('combat-end', {});
+    assert.equal(playerView.combatState(), null);
 
     // Initiative : joueurs puis compagnons du moral le plus haut au plus bas,
     // à égalité dans l'ordre d'arrivée ; qui commence selon le mode
