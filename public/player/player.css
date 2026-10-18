@@ -362,28 +362,31 @@ button.choice-text {
    autres, glissés sous la carte, bout arrondi (rayon 36px) avec l'anneau
    de 54px et l'icône centrés dans l'arrondi, sans pourcentage */
 .module-dials {
+    /* --tab-h et --dials-top suivent la hauteur de la carte (fitDials,
+       player.js) : les 6 onglets ne dépassent jamais de la carte */
+    --tab-h: 71px;
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin: 38px 0 0 -30px;
+    margin: var(--dials-top, 38px) 0 0 -30px;
     padding: 0;
     list-style: none;
 }
 .stage .module-dials .dial {
     position: relative;
-    width: 102px;
-    height: 71px;
+    width: calc(30px + var(--tab-h));
+    height: var(--tab-h);
     padding: 0;
     border: 1px solid var(--border-strong);
     border-left: none;
-    border-radius: 0 36px 36px 0;
+    border-radius: 0 calc(var(--tab-h) / 2) calc(var(--tab-h) / 2) 0;
     background: var(--surface);
     box-shadow: 0 10px 30px -14px rgb(0 0 0 / 85%);
     transition: transform .3s var(--ease);
 }
 .stage .module-dials .dial:hover { transform: translateX(5px); }
-.stage .module-dials .dial-face { position: absolute; left: calc(100% - 36px); top: 50%; width: 54px; height: 54px; transform: translate(-50%, -50%); }
-.stage .module-dials .dial-img { width: 34px; height: 34px; }
+.stage .module-dials .dial-face { position: absolute; left: calc(100% - var(--tab-h) / 2); top: 50%; width: calc(var(--tab-h) * .76); height: calc(var(--tab-h) * .76); transform: translate(-50%, -50%); }
+.stage .module-dials .dial-img { width: 63%; height: 63%; }
 .stage .module-dials .dial-value { display: none; }
 .dial { --gauge: var(--ok); display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
 .dial.warn { --gauge: var(--accent); }
