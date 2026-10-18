@@ -60,7 +60,9 @@
         </div>
         <div class="l-ob">LEAVE&nbsp;<span class="no">NO</span>&nbsp;ONE BEHIND</div>
         <a href="/parametres" class="hidden-mobile pas-title">Appuyez sur une touche pour continuer</a>
+        <% if (locals.isMJ !== false) { %>
         <a href="/mj-menu" class="display-mobile mj-button">MJ MENU</a>
+        <% } %>
     </div>
     <script src="js/main-menu.js"></script>
     <%- include("partials/bottom-scripts") %>
