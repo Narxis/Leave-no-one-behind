@@ -1017,6 +1017,45 @@ a.wiki-link, .codex-entry a { color: var(--ok); }
 .codex-filter { margin: 0; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: none; color: var(--dim); font-size: 14px; letter-spacing: 0; }
 .codex-filter.active { border-color: var(--accent); color: var(--accent); }
 .codex-filter span { opacity: .7; font-size: 12px; }
+
+/* Classement des équipes (comme leaderboard.css chez le MJ) */
+.ranks-title { margin: 0 0 14px; font-size: 20px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); text-align: center; }
+.ranks-filter { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 12px; }
+.ranks-scroll { overflow-x: auto; }
+.ranks-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.ranks-table th { position: sticky; top: 0; padding: 10px 12px; background: var(--surface-flat); border-bottom: 1px solid var(--border); color: var(--dim); font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; text-align: left; }
+.ranks-table td { padding: 11px 12px; border-bottom: 1px solid rgb(176 166 255 / 10%); }
+.ranks-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.ranks-table .rank { width: 36px; color: var(--dim); font-weight: 700; }
+.ranks-table .team { font-weight: 700; }
+.ranks-table .score { color: var(--accent); font-weight: 700; }
+.ranks-table .date { color: var(--dim); white-space: nowrap; }
+.ranks-table .podium-1 .rank { color: #ffd34d; }
+.ranks-table .podium-2 .rank { color: #d9dde6; }
+.ranks-table .podium-3 .rank { color: #e0a56b; }
+.ranks-table tr.is-current td { background: var(--accent-soft); }
+.ranks-table tr.is-current td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+.ranks-table tbody tr { cursor: pointer; transition: background 150ms var(--ease); }
+.ranks-table tbody tr:hover td, .ranks-table tbody tr:focus-visible td { background: var(--fill); }
+#ranks-empty { margin: 24px 0; text-align: center; }
+.team-dialog-title { margin: 0; padding-right: 40px; font-size: 22px; color: var(--accent); }
+.team-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.team-fact { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--fill); }
+.team-fact-label { color: var(--dim); font-size: 12px; }
+.team-fact-value { font-weight: 700; }
+.team-members { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.team-member { padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--fill); }
+.team-member-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.team-member-name { font-weight: 700; }
+.team-member-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; font-size: 13px; }
+.team-stat { display: flex; justify-content: space-between; gap: 6px; }
+.team-stat-label { color: var(--dim); }
+.team-npcs { display: flex; flex-wrap: wrap; gap: 6px; }
+.team-npc { padding: 4px 10px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; }
+@media (max-width: 640px) {
+    .ranks-table { font-size: 13px; }
+    .ranks-table th, .ranks-table td { padding: 8px 6px; }
+}
 .codex-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .codex-entry { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
 .codex-entry .race-desc { -webkit-line-clamp: unset; }

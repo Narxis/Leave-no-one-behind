@@ -6,6 +6,7 @@
 //    combat, score}                                                  à tous
 //   {kind: 'you', character, inventory, money, creation}              à chacun
 //   {kind: 'codex', races, items, statuses, totals, wiki}              à tous
+//   {kind: 'leaderboard', entries, current}   classement des équipes, à tous
 //   {kind: 'timer', timer: {cardId, left, paused} | null}   compte à rebours
 //   {kind: 'codex-image', key, src}   images des fiches (customs, objets),
 //                                     une fois par joueur
@@ -34,6 +35,7 @@ const codex = require('./codex');
 const combat = require('./combat');
 const intro = require('./intro');
 const allies = require('./allies');
+const leaderboard = require('./leaderboard');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -290,9 +292,23 @@ const sendImages = async function (id, game, codexMessage) {
     }
 };
 
+// Classement des équipes, comme la page du MJ (leaderboard.ejs), sans les
+// pseudos Discord des joueurs
+const leaderboardState = function () {
+    let current = leaderboard.getCurrent();
+    return {
+        kind: 'leaderboard',
+        current: current ? current.id : null,
+        entries: leaderboard.list().slice(0, 200).map(e => Object.assign({}, e, {
+            members: Array.isArray(e.members) ? e.members.map(m => ({name: m.name, race: m.race, stats: m.stats})) : undefined
+        }))
+    };
+};
+
 // Derniers états envoyés, pour n'envoyer que ce qui change
 let lastGame = null;
 let lastCodex = null;
+let lastRanks = null;
 const lastYou = new Map();
 let timer = null;
 let running = false;
@@ -310,6 +326,12 @@ const send = async function (force) {
     if (force === true || bookJson !== lastCodex) {
         lastCodex = bookJson;
         lobby.sendTo('*', book);
+    }
+    let ranks = leaderboardState();
+    let ranksJson = JSON.stringify(ranks);
+    if (force === true || ranksJson !== lastRanks) {
+        lastRanks = ranksJson;
+        lobby.sendTo('*', ranks);
     }
     for (let p of lobby.getState().players) {
         if (!p.online)
@@ -358,6 +380,7 @@ const welcome = async function (player) {
     lobby.sendTo(player.id, game);
     let book = await codexState(game);
     lobby.sendTo(player.id, book);
+    lobby.sendTo(player.id, leaderboardState());
     // Quelque chose de nouveau rencontré : les autres aussi
     if (JSON.stringify(book) !== lastCodex)
         changed();
@@ -383,4 +406,4 @@ const init = function () {
     lobby.onPlayerJoin(player => welcome(player).catch(e => log('[LOBBY] ' + e)));
 };
 
-module.exports = {init, changed, welcome, publicCard, gameState, playerState, combatState, setScore, setTimer, setCardText, mirror, publicCombat, MIRRORED, MODULES};
+module.exports = {init, changed, welcome, publicCard, gameState, playerState, combatState, setScore, setTimer, setCardText, mirror, publicCombat, leaderboardState, MIRRORED, MODULES};
