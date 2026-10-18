@@ -11,7 +11,8 @@ const {Lobby, EXPIRY_MS, newCode, normalizeCode} = require('./lobby-core');
 const discordAuth = require('./discord-auth');
 
 const PLAYER_DIR = path.join(__dirname, '../public/player');
-const TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon'};
+const TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
+    '.webp': 'image/webp', '.gif': 'image/gif', '.jpg': 'image/jpeg', '.ttf': 'font/ttf'};
 
 // Lobbies en mémoire, par code
 const createStore = function (options) {
