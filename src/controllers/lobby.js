@@ -54,6 +54,10 @@ const addPlayer = function (p) {
 
 const formatCode = (code) => code ? code.slice(0, 3) + '-' + code.slice(3) : null;
 
+// Étape de la partie (creation, gameLive, postGame…) : le lobby propose de la lancer ou de la reprendre
+const phase = () => (global.CONFIG && CONFIG.gameState) || null;
+let lastPhase = null;
+
 const getState = function () {
     return {
         status: state.status,
@@ -61,7 +65,8 @@ const getState = function () {
         link: state.code ? RELAY_URL + '/?code=' + state.code : null,
         relay: RELAY_URL,
         error: state.error,
-        players: [...state.players.values()]
+        players: [...state.players.values()],
+        phase: phase()
     };
 };
 
@@ -71,6 +76,7 @@ const message = () => ({action: 'lobby', error: false, data: getState()});
 const broadcast = function () {
     if (!global.WSS)
         return;
+    lastPhase = phase();
     let payload = JSON.stringify(message());
     WSS.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN)
@@ -88,6 +94,12 @@ const sendTo = (to, data) => relaySend({type: 'send', to: to, data: data});
 
 // Liste de l'équipage, affichée sur l'écran d'attente des joueurs
 const sendRoster = () => sendTo('*', {kind: 'roster', players: [...state.players.values()]});
+
+// La partie a changé d'étape : les pages du MJ mettent à jour le bouton de lancement
+const phaseChanged = function () {
+    if (phase() !== lastPhase)
+        broadcast();
+};
 
 const changed = function () {
     broadcast();
@@ -239,4 +251,4 @@ const handle = function (response) {
     }
 };
 
-module.exports = {RELAY_URL, open, close, kick, handle, getState, sendTo, setCharacter, discordOf, onPlayerMessage, onPlayerJoin, onRelayMessage};
+module.exports = {RELAY_URL, open, close, kick, handle, getState, sendTo, setCharacter, discordOf, phaseChanged, onPlayerMessage, onPlayerJoin, onRelayMessage};

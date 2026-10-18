@@ -553,12 +553,15 @@
         let score = game && game.score;
         let combat = game && game.combat;
         let card = game && game.card;
+        // Lancement de la partie : synopsis puis fiche du vaisseau, comme une
+        // carte avec un seul choix « Continuer »
+        let intro = !!card && card.kind === 'intro';
         renderHud();
         renderCrewStrip();
 
         // Bandeau d'attente (lancement, création, fin sans score)
         let text = PHASES[phase] !== undefined ? PHASES[phase] : '';
-        if (phase === 'postGame' && score)
+        if ((phase === 'postGame' && score) || intro)
             text = '';
         if (phase === 'gameLive' && !card && !combat)
             text = 'Le MJ prépare la suite…';
@@ -570,7 +573,7 @@
 
         renderEnd(phase === 'postGame' ? score : null);
 
-        let onStage = phase === 'gameLive' && !!(card || combat);
+        let onStage = intro || (phase === 'gameLive' && !!(card || combat));
         $('stage').hidden = !onStage;
         if (!onStage) {
             renderPlanet(null);
@@ -593,7 +596,7 @@
         planetShown = isPlanet;
         updatePlanetMode();
         if (showCard && !isPlanet) {
-            $('card-kind').textContent = CARD_KINDS[card.kind] || '';
+            $('card-kind').textContent = card.title || CARD_KINDS[card.kind] || '';
             let key = card.id + '|' + (card.screen || '') + '|' + card.desc;
             if (key !== revealKey) {
                 $('card-desc').dataset.text = card.desc;
@@ -614,10 +617,10 @@
         // choix (card.screen) et que le MJ n'a pas encore cliqué.
         let choices = showCard ? (card.choices || []) : [];
         let canVote = showCard && !!card.screen && card.chosen === null && !!character;
-        let myVote = you ? you.vote : null;
+        let myVote = intro ? (you && you.introReady ? 0 : null) : (you ? you.vote : null);
         // Planète : comme chez le MJ, on vote sur les scans de la liste et
         // sur les boutons Atterrir / Continuer, pas sur des onglets
-        let planetVoting = showCard && card.kind === 'planet';
+        let planetVoting = showCard && !intro && card.kind === 'planet';
         renderPlanetVotes(planetVoting ? card : null, canVote, myVote);
         if (planetVoting)
             choices = [];
@@ -632,15 +635,23 @@
             if (canVote) {
                 body.type = 'button';
                 body.title = myVote === i ? 'Retirer mon vote' : 'Voter pour ce choix';
-                body.addEventListener('click', () => sendAction('vote', {index: myVote === i ? null : i}));
+                body.addEventListener('click', () => intro
+                    ? sendAction('intro-ready', {ready: myVote !== i})
+                    : sendAction('vote', {index: myVote === i ? null : i}));
             }
             li.append(body);
-            if (count)
+            if (intro && card.expected)
+                li.append(el('span', 'choice-votes', count + '/' + card.expected + ' prêts'));
+            else if (count)
                 li.append(el('span', 'choice-votes', count + (count > 1 ? ' votes' : ' vote')));
             return li;
         }));
         let note = '';
-        if (combat)
+        if (intro)
+            note = !character ? 'Il faut un perso pour voter.'
+                : myVote === 0 ? 'Prêt ! On attend le reste de l\'équipage. Touche à nouveau pour annuler.'
+                : 'Lis le texte, puis touche Continuer quand tu es prêt.';
+        else if (combat)
             note = 'Combat en cours : lance tes dés depuis l\'onglet Perso quand le MJ te le demande.';
         else if (showCard && card.kind === 'planet' && canVote)
             note = myVote === null || myVote === undefined ? 'Touche un scan ou un bouton pour voter, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
@@ -1029,8 +1040,13 @@
         $('codex-empty').hidden = !empty;
     };
 
+    // Après le dernier dé, le tirage reste affiché jusqu'au clic sur Continuer
+    let rollsHeld = false;
+    let lastCreationStep = null;
+
     const renderRolls = function (creation) {
-        $('stat-rolls').hidden = !creation || creation.step !== 'stats';
+        $('stat-rolls').hidden = !creation || !creation.stats || (creation.step !== 'stats' && !rollsHeld);
+        $('rolls-done').hidden = !rollsHeld;
         if ($('stat-rolls').hidden)
             return;
         $('stat-table').replaceChildren(...creation.stats.map(s => {
@@ -1085,7 +1101,13 @@
         $('create').hidden = phase !== 'creation';
         $('create').disabled = !hostOnline;
 
-        let creating = !!(character && creation && creation.step !== 'done');
+        let step = creation ? creation.step : null;
+        if (lastCreationStep === 'stats' && step === 'done' && creation.stats)
+            rollsHeld = true;
+        else if (step !== 'done')
+            rollsHeld = false;
+        lastCreationStep = step;
+        let creating = !!(character && creation && (step !== 'done' || rollsHeld));
         $('creation').hidden = !creating;
         if (creating) {
             if (document.activeElement !== $('char-name'))
@@ -1433,6 +1455,10 @@
     });
 
     $('phase-action').addEventListener('click', () => selectTab('me'));
+    $('rolls-continue').addEventListener('click', () => {
+        rollsHeld = false;
+        renderMe();
+    });
     $('back-game').addEventListener('click', () => selectTab('game'));
     $('menu-toggle').addEventListener('click', () => setMenu($('menu-drawer').hidden));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });

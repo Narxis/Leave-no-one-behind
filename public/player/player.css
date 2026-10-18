@@ -594,6 +594,8 @@ select {
 
 .stat-table { display: flex; flex-direction: column; gap: 8px; }
 .stat-row { display: grid; grid-template-columns: minmax(130px, 34%) 1fr auto; align-items: center; gap: 10px; }
+.rolls-done { margin-top: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.rolls-done p { margin: 0; flex: 1 1 200px; }
 .stat-name { font-size: 14px; }
 .dice { display: flex; gap: 6px; flex-wrap: wrap; }
 .die { min-width: 34px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; text-align: center; font-weight: 600; }

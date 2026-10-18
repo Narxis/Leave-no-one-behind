@@ -176,6 +176,67 @@ async function test_remote() {
     test_player_assets();
     await test_codex();
     await test_discord_profiles();
+    await test_intro();
+}
+
+// Lancement : synopsis et fiche du vaisseau vus par les joueurs, qui votent
+// « Continuer » ; tous prêts, la page du MJ passe à la suite
+async function test_intro() {
+    console.log('Testing intro screens');
+    const intro = require('../src/controllers/intro');
+    const lobby = require('../src/controllers/lobby');
+    const remote = require('../src/controllers/remote');
+    const playerView = require('../src/controllers/playerView');
+    const join = (player) => lobby.onRelayMessage(Buffer.from(JSON.stringify({type: 'join', player: player})));
+    let alice = {id: 'intro-alice-01', name: 'Alice'};
+    let bob = {id: 'intro-bob-0001', name: 'Bob'};
+    let ready = (player, value) => remote.translate(player, {kind: 'action', action: 'intro-ready', data: {ready: value}});
+    join(alice);
+    join(bob);
+    for (let p of [alice, bob]) {
+        await DB.tables.players.create({discord_id: p.id, name: p.name});
+        lobby.setCharacter(p.id, p.name);
+    }
+
+    intro.clear();
+    assert.ok((await ready(alice, true)).refused); // rien à valider
+    CONFIG.gameState = 'creation';
+    intro.set('synopsis');
+    let game = await playerView.gameState();
+    assert.equal(game.card.kind, 'intro');
+    assert.equal(game.card.desc, intro.SYNOPSIS);
+    assert.deepEqual([game.card.choices, game.card.counts, game.card.expected], [['Continuer'], [0], 2]);
+
+    let sent = await ready(alice, true);
+    assert.equal(sent.action, 'passThrough');
+    assert.deepEqual(sent.data.data, {step: 'synopsis', ready: 1, expected: 2, all: false});
+    assert.equal((await playerView.playerState(alice.id)).introReady, true);
+    assert.equal((await playerView.playerState(bob.id)).introReady, false);
+    await ready(alice, false); // annuler
+    assert.equal(intro.payload().data.ready, 0);
+    await ready(alice, true);
+    await ready(bob, true);
+    assert.equal(intro.payload().data.all, true);
+    // Sans perso : pas de vote
+    assert.ok((await ready({id: 'intro-nobody-1', name: 'X'}, true)).refused);
+
+    // Fiche du vaisseau : nouvel écran, votes remis à zéro, même en partie
+    CONFIG.gameState = 'gameLive';
+    intro.set('ship');
+    game = await playerView.gameState();
+    assert.equal(game.card.title, 'Navire PLUGS');
+    assert.deepEqual(intro.payload().data, {step: 'ship', ready: 0, expected: 2, all: false});
+    // Un joueur hors ligne n'est plus attendu
+    lobby.kick(bob.id);
+    await ready(alice, true);
+    assert.equal(intro.payload().data.all, true);
+
+    // Première carte : retour à la carte du paquet
+    intro.clear();
+    assert.notEqual(((await playerView.gameState()).card || {}).kind, 'intro');
+    lobby.kick(alice.id);
+    await DB.tables.players.destroy({where: {discord_id: [alice.id, bob.id]}});
+    console.log('Intro screens OK');
 }
 
 // Chat : salon pour tous, privé entre le MJ et un joueur, historique, anti-flood
@@ -354,6 +415,12 @@ function test_stat_rolls() {
         assert.equal(result.stats[s], keep + 50);
     }
     assert.equal(result.stats.moral, 100);
+    // Fini : le dernier tirage reste visible pour le joueur
+    let done = statRolls.state(Object.assign({}, player, result.stats));
+    assert.equal(done.step, 'done');
+    assert.deepEqual(done.stats.map(s => s.dice), statRolls.STATS.map(s => result.dice[s]));
+    statRolls.reset(player.discord_id);
+    assert.deepEqual(statRolls.state(Object.assign({}, player, result.stats)), {step: 'done'});
     console.log('Stat rolls OK');
 }
 

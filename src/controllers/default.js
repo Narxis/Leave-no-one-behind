@@ -14,6 +14,7 @@ const lobby = require("./lobby");
 const playerView = require("./playerView");
 const chat = require("./chat");
 const votes = require("./votes");
+const intro = require("./intro");
 const planetScan = require("./planetScan");
 const itemUse = require("./itemUse");
 const codex = require("./codex");
@@ -223,6 +224,7 @@ module.exports = {
             codex.reset();
         }
         await CONFIG.upsert('gameState', 'creation');
+        intro.clear();
         playerView.changed();
         // Bonus et malus des races (customs comprises), pour l'explication de la répartition des stats
         res.render('perso', {lang: langJS, races: races.list(), customRaces: races.allowedState(), settings: gameSettings.get()});
@@ -260,8 +262,11 @@ module.exports = {
         res.render('fiche-vaisseau', {lang: langJS});
     },
 
+    // Synopsis : les joueurs en ligne le lisent aussi et votent pour continuer
     synopsis(req, res) {
-        res.render('synopsis', {lang: langJS});
+        intro.set('synopsis');
+        playerView.changed();
+        res.render('synopsis', {lang: langJS, synopsis: JSON.stringify(intro.SYNOPSIS).replace(/</g, '\\u003c')});
     },
 
     mainMenu(req, res) {
@@ -290,6 +295,8 @@ module.exports = {
 
         if (CONFIG.gameState !== 'gameLive')
             await CONFIG.upsert('gameState', 'gameLive');
+        // Fin du lancement : les joueurs passent à la première carte
+        intro.clear();
         playerView.changed();
         //
         // for (let i of activeStatuses) {
@@ -773,6 +780,9 @@ module.exports = {
 
     async start(req, res) {
 
+    // Fiche du vaisseau : les joueurs en ligne la lisent aussi et votent pour continuer
+    intro.set('ship');
+    playerView.changed();
     res.render('fiche-vaisseau', {lang: langJS});
     await DB.tables.ship.destroy({truncate: true, restartIdentity: true});
     await destroyDeck();

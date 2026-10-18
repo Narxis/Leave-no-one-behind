@@ -61,7 +61,22 @@ const createWindow = function (page, options) {
     }, options || {}));
 
     // Les liens vers d'autres sites s'ouvrent dans le navigateur
-    win.webContents.setWindowOpenHandler(({url}) => {
+    win.webContents.setWindowOpenHandler(({url, frameName}) => {
+        // Boutons du lobby (« Lancer la partie »…) : la page s'ouvre dans la
+        // fenêtre principale du jeu, recréée si le MJ l'a fermée
+        if (frameName === 'lnob-game' && isGameUrl(url)) {
+            let page = new URL(url).pathname.replace(/^\/+/, '');
+            if (mainWindow && !mainWindow.isDestroyed()) {
+                mainWindow.loadURL(localUrl(page));
+                if (mainWindow.isMinimized())
+                    mainWindow.restore();
+                mainWindow.focus();
+            } else {
+                mainWindow = createWindow(page);
+                mainWindow.maximize();
+            }
+            return {action: 'deny'};
+        }
         if (isGameUrl(url))
             return {action: 'allow'};
         shell.openExternal(url);
