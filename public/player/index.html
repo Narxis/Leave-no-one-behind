@@ -194,17 +194,29 @@
                     <button type="submit" class="secondary small">Enregistrer</button>
                 </form>
                 <h2>Race</h2>
-                <p class="dim small-text">Touche une race pour la choisir. <a class="wiki-link" data-page="regles/creation-personnage/" target="_blank" rel="noopener">Règles de création sur le wiki ↗</a></p>
+                <p class="dim small-text">Touche une race pour ouvrir sa fiche complète, puis lance tes dés. <a class="wiki-link" data-page="regles/creation-personnage/" target="_blank" rel="noopener">Règles de création sur le wiki ↗</a></p>
+                <p id="race-resume" class="race-resume" hidden></p>
                 <div id="race-list" class="race-list"></div>
-                <div id="stat-rolls" hidden>
-                    <h2>Tirage des stats</h2>
-                    <p class="dim small-text">Chaque stat a un dé de plus par point de bonus ou de malus de ta race. Avec un bonus on garde le meilleur dé, avec un malus le pire. La stat vaut ce dé + 50.</p>
-                    <div id="stat-table" class="stat-table"></div>
-                    <div id="rolls-done" class="rolls-done" hidden>
-                        <p>Tirage terminé ! Regarde tes stats avant de passer à ta fiche.</p>
-                        <button id="rolls-continue" type="button" class="primary">Continuer</button>
+                <!-- Fiche d'une race en fenêtre : image, description, stats,
+                     affinités, objets de départ, puis le tirage des dés -->
+                <dialog id="race-dialog" class="race-dialog" aria-labelledby="race-dialog-name">
+                    <button id="race-dialog-close" type="button" class="race-dialog-close" aria-label="Fermer">✕</button>
+                    <div id="race-dialog-sheet" class="race-dialog-sheet"></div>
+                    <div id="race-choose-box" class="race-choose-box">
+                        <p id="race-choose-note" class="dim small-text" hidden></p>
+                        <button id="race-choose" type="button" class="primary">Jouer cette race et lancer les dés</button>
                     </div>
-                </div>
+                    <p id="race-dialog-error" class="error" role="alert" hidden></p>
+                    <div id="stat-rolls" class="stat-rolls" hidden>
+                        <h3>Tirage des stats</h3>
+                        <p class="dim small-text">Chaque stat a un dé de plus par point de bonus ou de malus de ta race. Avec un bonus on garde le meilleur dé, avec un malus le pire. La stat vaut ce dé + 50.</p>
+                        <div id="stat-table" class="stat-table"></div>
+                        <div id="rolls-done" class="rolls-done" hidden>
+                            <p>Tirage terminé ! Regarde tes stats avant de passer à ta fiche.</p>
+                            <button id="rolls-continue" type="button" class="primary">Continuer</button>
+                        </div>
+                    </div>
+                </dialog>
             </div>
 
             <div id="sheet" hidden>

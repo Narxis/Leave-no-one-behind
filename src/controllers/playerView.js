@@ -218,8 +218,9 @@ const gameState = async function () {
         statuses: await statusList(),
         alerts: {blink: alerts.blink || [], showMap: !!alerts.showMap, alert: alerts.alert ? {room: alerts.alert.room, name: alerts.alert.name, message: alerts.alert.message} : null},
         team: await team(),
-        // Pour la création du perso : fiches des races de la partie (bonus et malus, affinités)
-        races: phase === 'creation' ? races.playable().map(r => codex.raceCard(r)) : [],
+        // Pour la création du perso : fiches des races de la partie (bonus et
+        // malus, affinités, objets de départ)
+        races: phase === 'creation' ? await codex.creationCards() : [],
         combat: phase === 'gameLive' ? combatState() : null,
         score: phase === 'postGame' ? score : null
     };
