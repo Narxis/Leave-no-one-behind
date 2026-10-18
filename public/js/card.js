@@ -692,6 +692,12 @@ function cardTextPause(ms) {
     return sleep(cardTextFast ? ms / CARD_TEXT_FAST_FACTOR : ms);
 }
 
+// Texte écrit, annoncé aux joueurs en ligne : leur page l'écrit en même temps
+function announceCardText(data) {
+    if (typeof wsLNOB !== 'undefined')
+        wsLNOB.send({action: 'card-text', data: data});
+}
+
 async function writeCardDesc(text = null) {
 
     let currentText = '';
@@ -703,6 +709,7 @@ async function writeCardDesc(text = null) {
     text = text.replaceAll(stopTokenToReplace, stopToken);
     cardTextFast = false;
     cardTextWriting = true;
+    announceCardText({text: text.replaceAll(stopToken, stopTokenToReplace)});
     for (let i = 0; i <= text.length; i++) {
         textDiv.innerText = currentText;
         if (text.substring(i, i + 1) === stopToken) {
@@ -724,8 +731,10 @@ async function writeCardDesc(text = null) {
 }
 
 document.addEventListener('mouseup', function (e) {
-    if (cardTextWriting && e.button === 0 && e.target.closest('.container-card'))
+    if (cardTextWriting && !cardTextFast && e.button === 0 && e.target.closest('.container-card')) {
         cardTextFast = true;
+        announceCardText({fast: true});
+    }
 });
 
 (function(){

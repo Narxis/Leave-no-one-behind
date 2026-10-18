@@ -150,6 +150,27 @@ const setTimer = function (data) {
     return null; // rien à renvoyer aux pages du MJ
 };
 
+// Texte de la carte tel que la page de jeu l'écrit (card.js, writeCardDesc) :
+// les joueurs l'écrivent en même temps que le MJ, pas avant lui
+let cardWriting = null;
+const setCardText = function (data) {
+    data = data && typeof data === 'object' ? data : {};
+    let msg;
+    if (data.fast) {
+        if (!cardWriting)
+            return null;
+        cardWriting.fast = true;
+        msg = {kind: 'card-text', fast: true, seq: cardWriting.seq};
+    }
+    else {
+        cardWriting = {text: String(data.text || '').slice(0, 20000), seq: (cardWriting ? cardWriting.seq : 0) + 1, at: Date.now(), fast: false};
+        msg = {kind: 'card-text', text: cardWriting.text, seq: cardWriting.seq};
+    }
+    if (lobby.getState().status === 'open')
+        lobby.sendTo('*', msg);
+    return null; // rien à renvoyer aux pages du MJ
+};
+
 // Tout ce qui est commun aux joueurs
 const gameState = async function () {
     let alerts = shipAlerts.getState();
@@ -304,10 +325,13 @@ const welcome = async function (player) {
     lobby.sendTo(player.id, you);
     if (choiceTimer)
         lobby.sendTo(player.id, {kind: 'timer', timer: choiceTimer});
+    // Arrivée en cours de carte : le texte déjà écrit par le MJ, sans l'animer
+    if (cardWriting)
+        lobby.sendTo(player.id, {kind: 'card-text', text: cardWriting.text, seq: cardWriting.seq, late: true});
 };
 
 const init = function () {
     lobby.onPlayerJoin(player => welcome(player).catch(e => log('[LOBBY] ' + e)));
 };
 
-module.exports = {init, changed, welcome, publicCard, gameState, playerState, combatState, setScore, setTimer, MODULES};
+module.exports = {init, changed, welcome, publicCard, gameState, playerState, combatState, setScore, setTimer, setCardText, MODULES};
