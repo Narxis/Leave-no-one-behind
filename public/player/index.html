@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="player.css">
 </head>
 <body>
+<div class="starfield" aria-hidden="true"></div>
 <main class="card" id="main">
     <h1 class="logo">LEAVE <span>NO</span> ONE BEHIND</h1>
 
@@ -33,50 +34,134 @@
         <p class="wiki-line"><a class="wiki-link" target="_blank" rel="noopener">Wiki des règles ↗</a></p>
     </form>
 
-    <!-- Dans la partie -->
-    <section id="lobby" class="panel game" hidden>
-        <div class="game-layout">
-        <div class="game-main">
-        <header class="game-head">
-            <p class="dim">Partie <strong id="lobby-code"></strong></p>
+    <!-- Dans la partie : mise en page de l'écran de jeu du MJ (carte au
+         centre, modules à droite, stats et humains à gauche, équipage en bas) -->
+    <section id="lobby" class="game" hidden>
+        <header class="topbar">
+            <p class="topbar-logo">LEAVE <span>NO</span> ONE BEHIND</p>
+            <div class="topbar-info">
+                <p class="dim">Partie <strong id="lobby-code"></strong></p>
+                <p id="status" class="status" role="status"></p>
+            </div>
+            <nav class="tabs" role="tablist">
+                <button type="button" role="tab" data-tab="game" class="tab">Partie</button>
+                <button type="button" role="tab" data-tab="me" class="tab">Perso</button>
+                <button type="button" role="tab" data-tab="ship" class="tab">Vaisseau</button>
+                <button type="button" role="tab" data-tab="bag" class="tab">Inventaire</button>
+                <button type="button" role="tab" data-tab="crew" class="tab">Équipage</button>
+                <button type="button" role="tab" data-tab="codex" class="tab">Codex</button>
+            </nav>
             <button type="button" id="leave" class="secondary small">Quitter</button>
         </header>
-        <p id="status" class="status" role="status"></p>
         <div id="ship-alert" class="alert-banner" role="alert" hidden></div>
-        <p id="action-error" class="error" role="alert" hidden></p>
+        <p id="action-error" class="error toast" role="alert" hidden></p>
 
-        <nav class="tabs" role="tablist">
-            <button type="button" role="tab" data-tab="game" class="tab">Partie</button>
-            <button type="button" role="tab" data-tab="me" class="tab">Perso</button>
-            <button type="button" role="tab" data-tab="ship" class="tab">Vaisseau</button>
-            <button type="button" role="tab" data-tab="bag" class="tab">Inventaire</button>
-            <button type="button" role="tab" data-tab="crew" class="tab">Équipage</button>
-            <button type="button" role="tab" data-tab="codex" class="tab">Codex</button>
-        </nav>
-
-        <!-- Carte en cours -->
-        <div class="tab-panel" data-panel="game">
-            <p id="phase" class="dim"></p>
-            <article id="game-card" class="game-card" hidden>
-                <p id="card-kind" class="card-kind"></p>
-                <div id="card-last" class="alert-banner card-last" role="alert" hidden></div>
-                <p id="card-desc" class="card-desc"></p>
-                <div id="planet" class="planet" hidden>
-                    <div id="planet-frame" class="planet-frame"></div>
-                    <p id="planet-points" class="planet-points"></p>
-                    <ul id="planet-scans" class="planet-scans"></ul>
-                    <h2 id="planet-vote-title">Vote de l'équipage</h2>
+        <div class="game-layout">
+        <!-- Colonne de gauche : humains et statuts (en haut à droite sur
+             l'écran de jeu), stats du perso, emotes -->
+        <aside class="hud">
+            <section class="hud-panel hud-humans">
+                <p class="humans-line">
+                    <svg class="heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
+                    <span>Humains :</span> <strong id="humans">…</strong>
+                </p>
+                <div class="status-table">
+                    <p class="status-table-head"><span>Status :</span><span>Durée</span></p>
+                    <ul id="statuses" class="status-rows"></ul>
+                    <p id="statuses-empty" class="dim small-text">Aucun statut.</p>
                 </div>
-                <ul id="card-choices" class="card-choices"></ul>
-                <p id="card-note" class="dim small-text"></p>
-            </article>
-            <div id="statuses" class="chips"></div>
-            <h2>Emotes</h2>
-            <div id="emotes" class="emotes"></div>
+            </section>
+            <section class="hud-panel hud-stats">
+                <h2 class="hud-title">Statistiques</h2>
+                <ul id="hud-stats" class="hud-stat-list"></ul>
+                <p id="hud-no-stats" class="dim small-text">Pas encore de perso.</p>
+            </section>
+            <section class="hud-panel hud-emotes">
+                <h2 class="hud-title">Emotes</h2>
+                <div id="emotes" class="emotes"></div>
+            </section>
+        </aside>
+
+        <div class="game-main">
+        <!-- Écran de jeu : carte, planète, combat ou score -->
+        <div class="tab-panel" data-panel="game">
+            <div id="phase" class="phase-banner" hidden>
+                <p id="phase-text"></p>
+                <button type="button" id="phase-action" class="primary small" hidden></button>
+            </div>
+
+            <div id="stage" class="stage" hidden>
+                <div id="card-last" class="alert-banner card-last" role="alert" hidden></div>
+                <div class="stage-row">
+                    <div class="stage-screen">
+                        <!-- Carte (événement, lieu, carte blanche) -->
+                        <article id="game-card" class="screen-card" hidden>
+                            <div class="screen-inner">
+                                <p id="card-kind" class="card-kind"></p>
+                                <p id="card-desc" class="card-desc"></p>
+                            </div>
+                        </article>
+
+                        <!-- Planète : scans à gauche, planète au centre avec ses relevés -->
+                        <div id="planet" class="planet-screen" hidden>
+                            <div class="planet-side hud-panel">
+                                <p id="planet-points" class="planet-points"></p>
+                                <p id="planet-drones" class="planet-drones"></p>
+                                <ul id="planet-scans" class="planet-scans"></ul>
+                            </div>
+                            <div class="planet-stage">
+                                <div class="planet-orbit" aria-hidden="true"></div>
+                                <div id="planet-frame" class="planet-frame"></div>
+                                <ul id="planet-labels" class="planet-labels" aria-hidden="true"></ul>
+                            </div>
+                        </div>
+
+                        <!-- Combat : adversaires, ordre de jeu, butin -->
+                        <div id="combat" class="combat-screen" hidden>
+                            <div class="combat-head">
+                                <p class="combat-title">Combat</p>
+                                <p id="combat-turn" class="dim"></p>
+                            </div>
+                            <ol id="combat-order" class="combat-order"></ol>
+                            <ul id="combat-enemies" class="combat-enemies"></ul>
+                            <div id="combat-loot" class="combat-loot" hidden>
+                                <p class="combat-loot-title">Butin</p>
+                                <ul id="combat-loot-items" class="combat-loot-items"></ul>
+                            </div>
+                        </div>
+                        <ul id="card-choices" class="choice-tabs"></ul>
+                        <p id="card-note" class="card-note"></p>
+                    </div>
+                    <!-- Modules principaux, à droite de la carte comme sur l'écran de jeu -->
+                    <ul id="module-dials" class="module-dials"></ul>
+                </div>
+            </div>
+
+            <!-- Fin de partie : écran de score -->
+            <div id="end-screen" class="end-screen hud-panel" hidden>
+                <div class="end-score">
+                    <p class="end-title">Score :</p>
+                    <dl id="end-lines" class="end-lines"></dl>
+                </div>
+                <div class="end-recap">
+                    <p class="humans-line">
+                        <svg class="heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
+                        <span>Humains :</span> <strong id="end-humans"></strong>
+                    </p>
+                    <ul id="end-modules" class="end-modules"></ul>
+                </div>
+                <div class="end-planet-box">
+                    <p id="end-planet-name" class="end-planet-name"></p>
+                    <div id="end-planet" class="end-planet"></div>
+                </div>
+            </div>
+
+            <!-- Équipage, en bas comme les fiches des joueurs sur l'écran de jeu -->
+            <ul id="crew-strip" class="crew-strip"></ul>
         </div>
 
         <!-- Perso : création, fiche, dés -->
-        <div class="tab-panel" data-panel="me">
+        <div class="tab-panel sheet-panel hud-panel" data-panel="me">
             <div id="no-character" hidden>
                 <p id="no-character-text"></p>
                 <button type="button" id="create" class="primary">Créer mon personnage</button>
@@ -99,9 +184,9 @@
             </div>
 
             <div id="sheet" hidden>
-                <p class="sheet-name"><strong id="sheet-name"></strong> <span id="sheet-race" class="dim"></span></p>
-                <div id="sheet-stats" class="bars"></div>
-                <div id="roll-box" hidden>
+                <p class="sheet-name"><strong id="sheet-name"></strong> <span id="sheet-race" class="race-pill"></span> <span id="sheet-role" class="dim"></span></p>
+                <div id="sheet-stats" class="sheet-stats"></div>
+                <div id="roll-box" class="roll-box" hidden>
                     <h2>Lancer les dés</h2>
                     <form id="roll-form" class="roll-form">
                         <select id="roll-stat" aria-label="Stat"></select>
@@ -113,27 +198,30 @@
             </div>
         </div>
 
-        <!-- Vaisseau : plan, modules, status -->
-        <div class="tab-panel" data-panel="ship">
+        <!-- Vaisseau : plan, modules -->
+        <div class="tab-panel hud-panel" data-panel="ship">
             <div id="ship-plan" class="ship-plan"></div>
-            <p id="cryopods" class="dim"></p>
+            <p id="cryopods" class="humans-line"></p>
+            <h2>Modules principaux</h2>
+            <ul id="ship-main" class="module-dials flat"></ul>
+            <h2>Modules secondaires</h2>
             <div id="ship-modules" class="bars"></div>
         </div>
 
         <!-- Inventaire -->
-        <div class="tab-panel" data-panel="bag">
+        <div class="tab-panel hud-panel" data-panel="bag">
             <p id="money" class="money" hidden></p>
             <ul id="items" class="items"></ul>
             <p id="items-empty" class="dim">Ton inventaire est vide.</p>
         </div>
 
         <!-- Équipage -->
-        <div class="tab-panel" data-panel="crew">
+        <div class="tab-panel hud-panel" data-panel="crew">
             <ul id="players" class="players"></ul>
         </div>
 
         <!-- Codex : ce que l'équipage a rencontré pendant la partie -->
-        <div class="tab-panel" data-panel="codex">
+        <div class="tab-panel hud-panel" data-panel="codex">
             <input type="search" id="codex-search" class="codex-search" placeholder="Rechercher dans le Codex…" aria-label="Rechercher dans le Codex" autocomplete="off">
             <div class="codex-filters" role="group" aria-label="Filtrer">
                 <button type="button" class="codex-filter active" data-filter="all">Tout</button>
@@ -168,6 +256,7 @@
 <script src="ship-labels.js"></script>
 <script src="planet-view.js"></script>
 <script src="status-icons.js"></script>
+<script src="game-icons.js"></script>
 <script src="player.js"></script>
 </body>
 </html>

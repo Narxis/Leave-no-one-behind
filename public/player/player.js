@@ -13,12 +13,18 @@
     const ROLL_MODULES = [['', 'Sans module'], ['scanner', 'Scanners de surface'], ['proximity', 'Détecteurs de proximité'], ['motors', 'Moteurs'], ['oxygen', 'Module d\'oxygène'], ['energy', 'Électricité'], ['gravity', 'Gravité artificielle']];
     const EMOTES = ['👍', '👎', '😮', '😂', '😱', '❤️', '🤔', '🎉'];
     const CARD_KINDS = {event: 'Événement', place: 'Lieu', planet: 'Planète en approche', blank: 'Carte blanche'};
+    // Panneau « Statistiques » et cadrans des modules, comme sur l'écran de jeu
+    const HUD_STATS = [['combat', 'Combat/offense'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'], ['survival', 'Survie/défense'], ['recon', 'Reconnaissance'], ['moral', 'Moral']];
+    const MAIN_MODULES = {motors: 'Moteurs', scanner: 'Scanner', proximity: 'Détecteur', oxygen: 'Oxygène', energy: 'Électricité', gravity: 'Gravité'};
+    // Relevés autour de la planète : à gauche, puis à droite (écran de jeu)
+    const PLANET_LEFT = ['oxy', 'cli', 'grv'];
+    const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     // Site du wiki des règles (même adresse dans src/controllers/codex.js)
     const WIKI_URL = 'https://narxis.github.io/Leave-no-one-behind-Wiki/';
     const RARITIES = {commun: 'Commun', peu_commun: 'Peu commun', rare: 'Rare', epique: 'Épique', legendaire: 'Légendaire'};
     const PHASES = {
         init: 'En attente que le MJ lance la partie.',
-        creation: 'Création des personnages en cours : va dans l\'onglet Perso.',
+        creation: 'Création des personnages en cours.',
         gameLive: '',
         postGame: 'La partie est terminée.'
     };
@@ -252,70 +258,228 @@
                 li.append(el('span', 'dim', 'déconnecté'));
             return li;
         }));
+        if (game)
+            renderCrewStrip();
+    };
+
+    // Fiches des joueurs en bas de l'écran, comme sur l'écran de jeu
+    const renderCrewStrip = function () {
+        let online = new Map(roster.map(p => [p.id, p]));
+        let team = (game && game.team) || [];
+        $('crew-strip').hidden = !team.length;
+        $('crew-strip').replaceChildren(...team.map(c => {
+            let li = el('li', 'crew-tab' + (c.id === playerId ? ' me' : ''));
+            let head = el('div', 'crew-head');
+            head.append(el('span', 'crew-name', c.name));
+            if (c.race)
+                head.append(el('span', 'race-pill', c.race));
+            li.append(head);
+            let foot = el('div', 'crew-foot');
+            let p = online.get(c.id);
+            let dot = el('span', 'online-dot' + (p && p.online !== false ? ' on' : ''));
+            dot.title = p && p.online !== false ? 'En ligne' : 'Hors ligne';
+            foot.append(dot, el('span', 'dim small-text', c.role || (c.id === playerId ? 'Toi' : '')));
+            let tag = discordTag(c.discord);
+            if (tag)
+                foot.append(tag);
+            li.append(foot);
+            return li;
+        }));
+    };
+
+    // ---- HUD : humains, statuts, stats du perso ---------------------------
+
+    const svgIcon = function (cls, svg) {
+        let icon = el('span', cls);
+        icon.setAttribute('aria-hidden', 'true');
+        if (svg)
+            icon.innerHTML = svg; // fichier statique de la page, pas du réseau
+        return icon;
+    };
+
+    const renderHud = function () {
+        let ship = game && game.ship;
+        $('humans').textContent = ship ? ship.cryopods : '…';
+        let statuses = (game && game.statuses) || [];
+        $('statuses-empty').hidden = statuses.length > 0;
+        $('statuses').replaceChildren(...statuses.map(st => {
+            let li = el('li', 'status-row' + (st.player === playerId ? ' mine' : ''));
+            li.title = st.desc || '';
+            li.append(el('span', 'status-name', st.name), el('span', 'status-turns', String(st.duration)));
+            return li;
+        }));
+        let character = you && you.character;
+        $('hud-no-stats').hidden = !!character;
+        $('hud-stats').replaceChildren(...(character ? HUD_STATS.map(([stat, label]) => {
+            let li = el('li', 'hud-stat');
+            li.append(svgIcon('stat-icon', window.LNOB_STAT_SVG && LNOB_STAT_SVG[stat]), el('span', 'hud-stat-label', label),
+                el('strong', 'hud-stat-value', String(character[stat] || 0)));
+            return li;
+        }) : []));
+    };
+
+    // Cadran d'un module : anneau rempli selon la valeur, icône au centre
+    const dial = function (id, label, value) {
+        let li = el('li', 'dial');
+        let pct = Math.max(0, Math.min(100, Number(value) || 0));
+        li.classList.toggle('low', pct < 35);
+        li.title = label + ' ' + pct + ' %';
+        let ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        ring.setAttribute('viewBox', '0 0 100 100');
+        ring.setAttribute('class', 'dial-ring');
+        ring.setAttribute('aria-hidden', 'true');
+        ring.innerHTML = '<circle class="dial-track" cx="50" cy="50" r="44" pathLength="100"/>'
+            + '<circle class="dial-fill" cx="50" cy="50" r="44" pathLength="100" stroke-dasharray="100" stroke-dashoffset="' + (100 - pct) + '"/>';
+        let face = el('span', 'dial-face');
+        face.append(ring);
+        let img = el('img', 'dial-img');
+        img.src = 'img/modules/' + id + '.svg';
+        img.alt = '';
+        face.append(img);
+        li.append(face, el('span', 'dial-label', label), el('span', 'dial-value', pct + ' %'));
+        return li;
+    };
+
+    const renderDials = function (list) {
+        let ship = game && game.ship;
+        let values = new Map(ship ? ship.modules.map(m => [m.id, m.value]) : []);
+        list.replaceChildren(...(ship ? Object.entries(MAIN_MODULES).map(([id, label]) => dial(id, label, values.get(id))) : []));
+    };
+
+    // ---- Révélation de la carte : cadre qui s'ouvre, texte qui s'écrit -----
+
+    let revealKey = null;
+    let typing = null;
+    const typeText = function (node) {
+        clearInterval(typing);
+        if (reduceMotion)
+            return;
+        let parts = [];
+        const walk = (n) => n.childNodes.forEach(c => c.nodeType === Node.TEXT_NODE ? parts.push([c, c.textContent]) : walk(c));
+        walk(node);
+        parts.forEach(([c]) => { c.textContent = ''; });
+        let i = 0, pos = 0;
+        typing = setInterval(() => {
+            let budget = 3;
+            while (budget > 0 && i < parts.length) {
+                let [c, text] = parts[i];
+                let take = Math.min(budget, text.length - pos);
+                c.textContent += text.slice(pos, pos + take);
+                pos += take;
+                budget -= take;
+                if (pos >= text.length) {
+                    i++;
+                    pos = 0;
+                }
+            }
+            if (i >= parts.length)
+                clearInterval(typing);
+        }, 22);
+    };
+
+    const reveal = function (frame, key, textNode) {
+        if (key === revealKey)
+            return;
+        revealKey = key;
+        if (!key || reduceMotion)
+            return;
+        frame.classList.remove('revealing');
+        void frame.offsetWidth; // relance l'animation
+        frame.classList.add('revealing');
+        if (textNode)
+            typeText(textNode);
     };
 
     // ---- Partie : carte en cours, status, alerte ---------------------------
 
     const renderGame = function () {
         let phase = game ? game.phase : 'init';
-        $('phase').textContent = PHASES[phase] !== undefined ? PHASES[phase] : '';
-        $('phase').hidden = !$('phase').textContent;
-
+        let score = game && game.score;
+        let combat = game && game.combat;
         let card = game && game.card;
-        $('game-card').hidden = !card;
-        if (!card || card.kind !== 'planet')
-            renderPlanet(null);
-        if (card) {
-            $('card-kind').textContent = CARD_KINDS[card.kind] || '';
-            richText($('card-desc'), card.desc);
-            $('card-desc').hidden = !card.desc;
-            // Choix : on vote, le MJ tranche. Votes possibles quand la page
-            // de jeu a annoncé ses choix (card.screen) et que le MJ n'a pas
-            // encore cliqué.
-            let canVote = !!card.screen && card.chosen === null && !!you && !!you.character;
-            let myVote = you ? you.vote : null;
-            $('card-choices').replaceChildren(...(card.choices || []).map((c, i) => {
-                let li = el('li', 'card-choice');
-                let count = (card.counts || [])[i] || 0;
-                li.classList.toggle('voted', myVote === i);
-                li.classList.toggle('chosen', card.chosen === i);
-                let body = richText(el(canVote ? 'button' : 'span', 'choice-text'), c);
-                if (canVote) {
-                    body.type = 'button';
-                    body.title = myVote === i ? 'Retirer mon vote' : 'Voter pour ce choix';
-                    body.addEventListener('click', () => sendAction('vote', {index: myVote === i ? null : i}));
-                }
-                li.append(body);
-                if (count)
-                    li.append(el('span', 'choice-votes', count + (count > 1 ? ' votes' : ' vote')));
-                return li;
-            }));
-            renderPlanet(card.kind === 'planet' ? card.planet : null);
-            // Dernière planète du voyage : texte envoyé par le jeu (lang.json)
-            let last = card.lastPlanet;
-            $('card-last').hidden = !last;
-            $('card-last').textContent = last ? last.title + ' : ' + last.text : '';
-            $('planet-vote-title').hidden = !(card.choices && card.choices.length);
-            let note = '';
-            if (card.kind === 'planet' && canVote)
-                note = myVote === null || myVote === undefined ? 'Vote pour la suite, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
-            else if (card.kind === 'planet')
-                note = card.chosen !== null && card.chosen !== undefined ? 'Le MJ a choisi.' : 'Le MJ scanne la planète sur l\'écran principal.';
-            else if (card.chosen !== null && card.chosen !== undefined)
-                note = 'Le MJ a choisi.';
-            else if (canVote)
-                note = myVote === null || myVote === undefined ? 'Vote pour un choix, le MJ tranche.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
-            else if (card.choices && card.choices.length)
-                note = you && you.character ? 'Le MJ choisit pour l\'équipage.' : 'Il faut un perso pour voter.';
-            $('card-note').textContent = note;
-        }
+        renderHud();
+        renderCrewStrip();
 
-        let statuses = (game && game.statuses) || [];
-        $('statuses').replaceChildren(...statuses.map(s => {
-            let chip = el('span', 'chip', s.name + ' · ' + s.duration + (s.duration > 1 ? ' tours' : ' tour'));
-            chip.title = s.desc || '';
-            return chip;
+        // Bandeau d'attente (lancement, création, fin sans score)
+        let text = PHASES[phase] !== undefined ? PHASES[phase] : '';
+        if (phase === 'postGame' && score)
+            text = '';
+        if (phase === 'gameLive' && !card && !combat)
+            text = 'Le MJ prépare la suite…';
+        $('phase-text').textContent = text;
+        $('phase').hidden = !text;
+        let character = you && you.character;
+        $('phase-action').hidden = phase !== 'creation';
+        $('phase-action').textContent = character ? 'Voir ma fiche' : 'Créer mon personnage';
+
+        renderEnd(phase === 'postGame' ? score : null);
+
+        let onStage = phase === 'gameLive' && !!(card || combat);
+        $('stage').hidden = !onStage;
+        if (!onStage) {
+            renderPlanet(null);
+            reveal($('game-card'), null);
+        }
+        renderDials($('module-dials'));
+        renderCombat(onStage ? combat : null);
+        let showCard = onStage && !combat && !!card;
+        let isPlanet = showCard && card.kind === 'planet';
+        $('game-card').hidden = !showCard || isPlanet;
+        renderPlanet(isPlanet ? card.planet : null);
+        if (showCard && !isPlanet) {
+            $('card-kind').textContent = CARD_KINDS[card.kind] || '';
+            let key = card.id + '|' + (card.screen || '') + '|' + card.desc;
+            if (key !== revealKey)
+                richText($('card-desc'), card.desc);
+            $('card-desc').hidden = !card.desc;
+            reveal($('game-card'), key, $('card-desc'));
+        }
+        else if (isPlanet)
+            reveal($('planet'), 'planet|' + card.id);
+        // Dernière planète du voyage : texte envoyé par le jeu (lang.json)
+        let last = showCard && card.lastPlanet;
+        $('card-last').hidden = !last;
+        $('card-last').textContent = last ? last.title + ' : ' + last.text : '';
+
+        // Choix sous la carte, comme les onglets de l'écran de jeu : on vote,
+        // le MJ tranche. Votes possibles quand la page de jeu a annoncé ses
+        // choix (card.screen) et que le MJ n'a pas encore cliqué.
+        let choices = showCard ? (card.choices || []) : [];
+        let canVote = showCard && !!card.screen && card.chosen === null && !!character;
+        let myVote = you ? you.vote : null;
+        $('card-choices').hidden = !choices.length;
+        $('card-choices').replaceChildren(...choices.map((c, i) => {
+            let li = el('li', 'choice-tab');
+            let count = (card.counts || [])[i] || 0;
+            li.classList.toggle('voted', myVote === i);
+            li.classList.toggle('chosen', card.chosen === i);
+            li.classList.toggle('dimmed', card.chosen !== null && card.chosen !== undefined && card.chosen !== i);
+            let body = richText(el(canVote ? 'button' : 'span', 'choice-text'), c);
+            if (canVote) {
+                body.type = 'button';
+                body.title = myVote === i ? 'Retirer mon vote' : 'Voter pour ce choix';
+                body.addEventListener('click', () => sendAction('vote', {index: myVote === i ? null : i}));
+            }
+            li.append(body);
+            if (count)
+                li.append(el('span', 'choice-votes', count + (count > 1 ? ' votes' : ' vote')));
+            return li;
         }));
+        let note = '';
+        if (combat)
+            note = 'Combat en cours : lance tes dés depuis l\'onglet Perso quand le MJ te le demande.';
+        else if (showCard && card.kind === 'planet' && canVote)
+            note = myVote === null || myVote === undefined ? 'Vote pour la suite, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
+        else if (showCard && card.kind === 'planet')
+            note = card.chosen !== null && card.chosen !== undefined ? 'Le MJ a choisi.' : 'Le MJ scanne la planète sur l\'écran principal.';
+        else if (showCard && card.chosen !== null && card.chosen !== undefined)
+            note = 'Le MJ a choisi.';
+        else if (canVote)
+            note = myVote === null || myVote === undefined ? 'Vote pour un choix, le MJ tranche.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
+        else if (choices.length)
+            note = character ? 'Le MJ choisit pour l\'équipage.' : 'Il faut un perso pour voter.';
+        $('card-note').textContent = note;
+        $('card-note').hidden = !note;
 
         let alert = game && game.alerts && game.alerts.alert;
         $('ship-alert').hidden = !alert;
@@ -325,6 +489,97 @@
         if (game && game.alerts && (game.alerts.showMap || alert) && !renderGame.mapShown)
             selectTab('ship');
         renderGame.mapShown = !!(game && game.alerts && (game.alerts.showMap || alert));
+    };
+
+    // ---- Combat ------------------------------------------------------------
+
+    const renderCombat = function (combat) {
+        $('combat').hidden = !combat;
+        if (!combat)
+            return;
+        $('combat-turn').textContent = 'Tour ' + combat.turn;
+        $('combat-order').replaceChildren(...(combat.order || []).map((f, i) => {
+            let li = el('li', 'combat-chip kind-' + f.kind + (i === combat.current ? ' current' : '') + (f.kind === 'player' && f.id === playerId ? ' me' : ''), f.name);
+            if (i === combat.current)
+                li.setAttribute('aria-current', 'true');
+            return li;
+        }));
+        let current = (combat.order || [])[combat.current];
+        $('combat-enemies').dataset.count = combat.enemies.length;
+        $('combat-enemies').replaceChildren(...combat.enemies.map(e => {
+            let li = el('li', 'combat-enemy' + (e.ko ? ' ko' : '') + (current && current.kind === 'enemy' && current.id === String(e.id) ? ' acting' : ''));
+            li.append(el('p', 'combat-enemy-name', e.name));
+            let track = el('span', 'combat-bar');
+            let fill = el('span', 'combat-bar-fill');
+            let pct = e.maxHp ? Math.max(0, e.hp) / e.maxHp * 100 : 0;
+            fill.style.width = pct + '%';
+            fill.dataset.level = pct <= 25 ? 'crit' : pct <= 50 ? 'warn' : '';
+            track.append(fill);
+            li.append(track, el('p', 'combat-enemy-hp', e.ko ? 'K.O.' : Math.max(0, e.hp) + ' / ' + e.maxHp + ' PV'));
+            return li;
+        }));
+        let loot = combat.loot;
+        $('combat-loot').hidden = !loot;
+        if (loot)
+            $('combat-loot-items').replaceChildren(...(loot.length ? loot : ['Rien à ramasser']).map(name => el('li', 'combat-loot-item', name)));
+    };
+
+    // ---- Fin de partie : écran de score -------------------------------------
+
+    let endShown = null;
+    const countUp = function (node, value) {
+        let target = Math.round(Number(value) || 0);
+        if (reduceMotion) {
+            node.textContent = target.toLocaleString('fr-FR');
+            return;
+        }
+        let start = performance.now();
+        const step = (now) => {
+            let t = Math.min(1, (now - start) / 1600);
+            node.textContent = Math.round(target * (1 - Math.pow(1 - t, 3))).toLocaleString('fr-FR');
+            if (t < 1)
+                requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    };
+
+    const renderEnd = function (score) {
+        $('end-screen').hidden = !score;
+        if (!score) {
+            if (endShown) {
+                $('end-planet').replaceChildren();
+                endShown = null;
+            }
+            return;
+        }
+        let key = JSON.stringify(score);
+        if (key === endShown)
+            return;
+        endShown = key;
+        let lines = [['Humains en vie', score.cryopods], ['Score vaisseau', score.scoreShip], ['Score planète', score.scorePlanet], ['Bonus cartes', score.scoreCards], ['Score total', score.scoreTotal]];
+        $('end-lines').replaceChildren(...lines.flatMap(([label, value], i) => {
+            let dt = el('dt', i === lines.length - 1 ? 'total' : '', label);
+            let dd = el('dd', i === lines.length - 1 ? 'total' : '', '0');
+            setTimeout(() => countUp(dd, value), reduceMotion ? 0 : i * 450);
+            return [dt, dd];
+        }));
+        $('end-humans').textContent = score.cryopods;
+        let ship = score.ship || {};
+        $('end-modules').replaceChildren(...Object.entries(MAIN_MODULES).map(([id, label]) => dial(id, label, ship[id])),
+            ...[['landing', 'Atterrissage'], ['construction', 'Construction'], ['dbscience', 'BDD scientifique'], ['dbhistory', 'BDD historique']].map(([id, label]) => {
+                let li = el('li', 'end-secondary');
+                li.append(el('span', 'dim', label), el('strong', '', (ship[id] || 0) + ' %'));
+                return li;
+            }));
+        let planet = score.planet || {};
+        $('end-planet-name').textContent = planet.name ? 'Planète atteinte : ' + planet.name : 'Planète atteinte';
+        if (window.PlanetView && planet.modules) {
+            let canvas = el('canvas', 'planet-canvas');
+            canvas.setAttribute('aria-hidden', 'true');
+            $('end-planet').replaceChildren(canvas);
+            let size = canvas.clientWidth || 240;
+            PlanetView.create(canvas, {size: size, radius: size * .3, modules: planet.modules, seed: planet.id, revealed: 'all'});
+        }
     };
 
     // ---- Planète : dessin couche par couche, points de détection, scans -----
@@ -352,7 +607,7 @@
             let size = canvas.clientWidth || 260;
             let view = PlanetView.create(canvas, {
                 size: size,
-                radius: size * .225,
+                radius: size * .3,
                 modules: planet.modules || {},
                 seed: planet.id,
                 revealed: fresh ? keys : planetDrawn.keys
@@ -363,15 +618,25 @@
         }
 
         let points = planet.points === null || planet.points === undefined ? '…' : planet.points;
-        $('planet-points').textContent = 'Points de détection : ' + points + (planet.drones ? ' · Drones : ' + planet.drones : '');
+        $('planet-points').replaceChildren('Points de détection : ', el('strong', '', String(points)));
+        $('planet-drones').textContent = 'Drones : ' + (planet.drones || 0);
         $('planet-scans').replaceChildren(...scans.map(s => {
             let li = el('li', s.revealed ? 'scanned' : '');
             let head = el('div', 'scan-head');
-            head.append(el('span', 'scan-label', s.label));
+            head.append(el('span', 'scan-label', 'Scan ' + s.label));
             if (!s.revealed && s.cost !== null && s.cost !== undefined)
                 head.append(el('span', 'scan-cost', s.cost + ' pts'));
             li.append(head);
-            li.append(el('p', 'scan-text', s.revealed ? s.text : 'Pas encore scanné.'));
+            if (s.revealed)
+                li.append(el('p', 'scan-text', s.text));
+            return li;
+        }));
+        // Relevés autour de la planète : nom et coût, ou « scanné »
+        $('planet-labels').replaceChildren(...scans.map(s => {
+            let left = PLANET_LEFT.includes(s.key);
+            let li = el('li', 'planet-label ' + (left ? 'left' : 'right') + ' row-' + (left ? PLANET_LEFT.indexOf(s.key) : scans.filter(x => !PLANET_LEFT.includes(x.key)).indexOf(s)) + (s.revealed ? ' scanned' : ''));
+            li.append(el('span', 'planet-label-name', s.label));
+            li.append(el('span', 'planet-label-cost', s.revealed ? 'scanné' : (s.cost !== null && s.cost !== undefined ? 'coût : ' + s.cost : '')));
             return li;
         }));
     };
@@ -398,8 +663,9 @@
 
     const renderShip = function () {
         let ship = game && game.ship;
-        $('cryopods').textContent = ship ? 'Colons en cryogénie : ' + ship.cryopods : 'Pas encore de vaisseau.';
-        $('ship-modules').replaceChildren(...(ship ? ship.modules.map(m => bar(m.label, m.value, 100)) : []));
+        $('cryopods').textContent = ship ? 'Humains en cryogénie : ' + ship.cryopods : 'Pas encore de vaisseau.';
+        renderDials($('ship-main'));
+        $('ship-modules').replaceChildren(...(ship ? ship.modules.filter(m => !MAIN_MODULES[m.id]).map(m => bar(m.label, m.value, 100)) : []));
 
         let svg = shipSvg();
         if (!svg || typeof ShipMap === 'undefined')
@@ -573,9 +839,22 @@
 
     const renderSheet = function (character) {
         $('sheet-name').textContent = character.name;
-        $('sheet-race').textContent = (character.raceName || '') + (character.role ? ' · ' + character.role.name : '');
-        $('sheet-race').title = character.role ? character.role.name + ' : ' + character.role.effect : '';
-        $('sheet-stats').replaceChildren(...Object.keys(STAT_LABELS).map(s => bar(STAT_LABELS[s], character[s] || 0, 100)));
+        $('sheet-race').textContent = character.raceName || '';
+        $('sheet-race').hidden = !character.raceName;
+        $('sheet-role').textContent = character.role ? character.role.name : '';
+        $('sheet-role').title = character.role ? character.role.name + ' : ' + character.role.effect : '';
+        // Stats en tuiles, avec les icônes de l'écran de jeu
+        $('sheet-stats').replaceChildren(...HUD_STATS.map(([stat, label]) => {
+            let tile = el('div', 'stat-tile');
+            tile.append(svgIcon('stat-icon', window.LNOB_STAT_SVG && LNOB_STAT_SVG[stat]), el('span', 'stat-tile-label', label),
+                el('strong', 'stat-tile-value', String(character[stat] || 0)));
+            let track = el('span', 'bar-track');
+            let fill = el('span', 'bar-fill');
+            fill.style.width = Math.max(0, Math.min(100, Number(character[stat]) || 0)) + '%';
+            track.append(fill);
+            tile.append(track);
+            return tile;
+        }));
         $('roll-box').hidden = !game || game.phase !== 'gameLive';
     };
 
@@ -837,6 +1116,8 @@
             socket.close(1000, 'leave');
         show('join');
     });
+
+    $('phase-action').addEventListener('click', () => selectTab('me'));
 
     $('create').addEventListener('click', () => {
         $('create').disabled = true;
