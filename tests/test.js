@@ -270,7 +270,7 @@ async function test_votes() {
     // Suite affichée : nouveaux choix, votes remis à zéro, texte révélé public
     votes.setScreen({cardId: 4, text: 'Vous fuyez{....} de justesse', choices: ['Continuer votre chemin']});
     seen = playerView.publicCard(card);
-    assert.equal(seen.desc, 'Vous fuyez… de justesse');
+    assert.equal(seen.desc, 'Vous fuyez{....} de justesse');
     assert.deepEqual(seen.counts, [0]);
     assert.equal(votes.voteOf(alice.id), null);
 
@@ -363,7 +363,7 @@ function test_player_view() {
     let card = {id: 4, type: TYPE_NEGATIVE, name: 'secret-name', desc: 'Une alarme{....} retentit', mjreveal: 'piège', timer: 1,
         choices: [{value: 'Fuir', reveal: 'ils meurent', mjreveal: 'x', next: 'suite', loot: ['medkit']}, {value: 'Combattre'}]};
     let seen = playerView.publicCard(card);
-    assert.deepEqual(seen, {id: 4, kind: 'event', desc: 'Une alarme… retentit', timer: true, choices: ['Fuir', 'Combattre']});
+    assert.deepEqual(seen, {id: 4, kind: 'event', desc: 'Une alarme{....} retentit', timer: true, choices: ['Fuir', 'Combattre']});
     let planet = playerView.publicCard({id: 9, type: TYPE_PLANET, name: 'archetype', desc: '', modules: {oxy: {val: 80, cost: 2}}});
     assert.deepEqual([planet.id, planet.kind, planet.desc, planet.choices, planet.lastPlanet], [9, 'planet', '', [], null]);
     assert.deepEqual(planet.planet.modules, {}); // rien de scanné : aucune valeur
@@ -1833,6 +1833,17 @@ async function test_combat() {
 
     await run('combat-end', {});
     assert.equal(playerView.combatState(), null);
+
+    // Atterrissage : le score posé par l'écran de fin passe les joueurs en fin
+    // de partie, même si la partie n'est pas en postGame
+    let state0 = CONFIG.gameState;
+    CONFIG.gameState = 'gameLive';
+    playerView.setScore({total: 1000});
+    let ended = await playerView.gameState();
+    assert.deepEqual([ended.phase, ended.card, ended.score], ['postGame', null, {total: 1000}]);
+    playerView.setScore(null);
+    assert.equal((await playerView.gameState()).phase, 'gameLive');
+    CONFIG.gameState = state0;
 
     // Initiative : joueurs puis compagnons du moral le plus haut au plus bas,
     // à égalité dans l'ordre d'arrivée ; qui commence selon le mode

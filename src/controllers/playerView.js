@@ -6,6 +6,7 @@
 //    combat, score}                                                  à tous
 //   {kind: 'you', character, inventory, money, creation}              à chacun
 //   {kind: 'codex', races, items, statuses, totals, wiki}              à tous
+//   {kind: 'timer', timer: {cardId, left, paused} | null}   compte à rebours
 //   {kind: 'codex-image', key, src}   images des fiches (customs, objets),
 //                                     une fois par joueur
 // Les secrets du MJ (révélations, suites des choix, butin, valeurs des
@@ -46,6 +47,9 @@ const cardKind = function (card) {
 };
 
 const cleanText = (text) => String(text || '').replaceAll('{....}', '…');
+// Texte de la carte : les pauses {....} restent, la page joueur les anime
+// comme l'écran de jeu (points, puis le texte repart à zéro)
+const cardText = (text) => String(text || '');
 
 // La carte telle que les joueurs la voient : le texte et les choix proposés.
 // Si la page de jeu a annoncé ce qu'elle affiche pour cette carte (suite
@@ -68,7 +72,7 @@ const publicCard = function (card) {
         return {
             id: card.id,
             kind: kind,
-            desc: cleanText(screen.text),
+            desc: cardText(screen.text),
             timer: !!card.timer,
             screen: screen.id,
             choices: screen.choices.map(cleanText),
@@ -78,7 +82,7 @@ const publicCard = function (card) {
     return {
         id: card.id,
         kind: kind,
-        desc: cleanText(card.desc),
+        desc: cardText(card.desc),
         timer: !!card.timer,
         choices: (card.choices || []).map(c => cleanText(c.value)).filter(Boolean)
     };
@@ -133,10 +137,24 @@ const setScore = function (value) {
     changed();
 };
 
+// Compte à rebours des choix, tenu par la page de jeu (card.js) : envoyé
+// à part, à chaque seconde, sans recalculer tout l'état
+let choiceTimer = null;
+const setTimer = function (data) {
+    data = data && typeof data === 'object' ? data : {};
+    let left = Math.floor(Number(data.left));
+    choiceTimer = left > 0 && left <= 60 ? {cardId: String(data.cardId), left: left, paused: !!data.paused} : null;
+    if (lobby.getState().status === 'open')
+        lobby.sendTo('*', {kind: 'timer', timer: choiceTimer});
+    return null; // rien à renvoyer aux pages du MJ
+};
+
 // Tout ce qui est commun aux joueurs
 const gameState = async function () {
     let alerts = shipAlerts.getState();
-    let phase = CONFIG.gameState;
+    // Atterrissage : l'écran de score est affiché sans que la partie passe
+    // en postGame (seul le paquet vide le fait) ; le score posé suffit
+    let phase = score ? 'postGame' : CONFIG.gameState;
     return {
         kind: 'game',
         phase: phase,
@@ -279,10 +297,12 @@ const welcome = async function (player) {
     let you = await playerState(player.id);
     lastYou.set(player.id, JSON.stringify(you));
     lobby.sendTo(player.id, you);
+    if (choiceTimer)
+        lobby.sendTo(player.id, {kind: 'timer', timer: choiceTimer});
 };
 
 const init = function () {
     lobby.onPlayerJoin(player => welcome(player).catch(e => log('[LOBBY] ' + e)));
 };
 
-module.exports = {init, changed, welcome, publicCard, gameState, playerState, combatState, setScore, MODULES};
+module.exports = {init, changed, welcome, publicCard, gameState, playerState, combatState, setScore, setTimer, MODULES};
