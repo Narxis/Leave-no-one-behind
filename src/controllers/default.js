@@ -70,6 +70,14 @@ const renderEndScreen = async function (res, ship, planet, scoreCards, record = 
         scoreTotal: scoreTotal
     }
 
+    // Fin de partie : les joueurs en ligne voient le même écran de score
+    if (record)
+        playerView.setScore({
+            cryopods: ship.cryopods, scoreShip: scoreShip, scorePlanet: scorePlanet, scoreCards: scoreCards, scoreTotal: scoreTotal,
+            ship: Object.fromEntries(playerView.MODULES.map(([id]) => [id, Number(ship[id]) || 0])),
+            planet: {id: planet.id || 0, name: planet.name || '', modules: Object.fromEntries(Object.entries(planet.modules || {}).map(([k, m]) => [k, {val: Number(m.val) || 0}]))}
+        });
+
     let leaderboardId = record ? await leaderboard.record({
         score: scoreTotal, cryopods: ship.cryopods, planet: planet.name,
         scoreShip: scoreShip, scorePlanet: scorePlanet, scoreCards: scoreCards
@@ -787,7 +795,7 @@ module.exports = {
     craft.reset();
 
     await CONFIG.upsert('gameState', 'gameLive')
-    playerView.changed();
+    playerView.setScore(null);
 
     let data = JSON.stringify({
         action: 'game-ready'
