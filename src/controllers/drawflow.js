@@ -190,6 +190,15 @@ module.exports = {
         });
 
         let data = {"choice": dat.choices[index].value};
+        // Infos MJ, butin et statut du choix : repris par l'éditeur
+        if (dat.choices[index].mjreveal)
+            data.mjreveal = dat.choices[index].mjreveal;
+        if (Array.isArray(dat.choices[index].loot) && dat.choices[index].loot.length)
+            data.loot = JSON.stringify(dat.choices[index].loot);
+        if (dat.choices[index].status && dat.choices[index].status.slug) {
+            data.status = dat.choices[index].status.slug;
+            data.statusdur = String(dat.choices[index].status.duration || 1);
+        }
         if (dat.choices[index].outcomes)
             data.random = JSON.stringify(dat.choices[index].outcomes.map(o => o.weight));
         else if (dat.choices[index].roll)

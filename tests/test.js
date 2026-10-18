@@ -729,6 +729,8 @@ async function test_card_vars() {
     let second = card.replaceVars('[le_race_1]|[objet_1]|[no_boisson_1]|[no_bouteille_1]');
     assert.strictEqual(first, second);
     assert.notStrictEqual(card.replaceVars('[no_race_1]'), card.replaceVars('[no_race_2]'));
+    // Crochets sans « _ » : du texte, laissé tel quel
+    assert.strictEqual(card.replaceVars('Plan [rev B]'), 'Plan [rev B]');
     console.log('OK');
 
     // Lieu « bibli » : l'objet remis dans bibli2-1 fait partie des réponses de bibli2
@@ -887,9 +889,10 @@ async function test_card_rolls() {
     assert(!dodge.roll.success.reveal.includes('[') && dodge.roll.failure.humans === -10);
     assert.strictEqual(nothing.roll, undefined);
     assert.strictEqual(nothing.reveal, 'Boum');
-    // (Card.delete efface les modules par id de module, pas par carte)
-    await DB.tables.card_modules.destroy({where: {card_id: card.id}});
-    await DB.tables.cards.destroy({where: {id: card.id}});
+    // Card.delete efface la carte et tous ses modules
+    await card.delete();
+    assert.strictEqual(await DB.tables.card_modules.count({where: {card_id: card.id}}), 0);
+    assert.strictEqual(await DB.tables.cards.count({where: {id: card.id}}), 0);
     console.log('OK');
 }
 

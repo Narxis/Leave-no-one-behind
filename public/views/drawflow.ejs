@@ -204,6 +204,7 @@
 
 <script src="/js/drawflow/drawflow.min.js"></script>
 <script>var PLACES_DATA = <%- vars.dat %>;</script>
+<script>var STATUS_LIST = <%- JSON.stringify(statusList).replace(/</g, '\\u003c') %>;</script>
 <script>var LOOT_ITEMS = <%- JSON.stringify(lootItems).replace(/</g, '\\u003c') %>;</script>
 <datalist id="pe-loot-items">
     <% lootItems.forEach(function (item) { %><option value="<%= item.name %>"></option><% }); %>
