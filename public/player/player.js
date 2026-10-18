@@ -130,6 +130,8 @@
     let you;            // dernier état du joueur reçu (undefined : pas encore reçu)
     let tab = store.get('lnob-player-tab') || 'game';
     let codex = null;       // ce que l'équipage a rencontré (kind 'codex')
+    let ranks = null;       // classement des équipes (kind 'leaderboard')
+    let ranksLevel = '';    // filtre de difficulté choisi
     let codexFilter = 'all';
     const codexImages = new Map(); // images des fiches envoyées par le MJ (customs, objets)
     let chat = [];          // messages visibles par ce joueur
@@ -1281,6 +1283,113 @@
         return icon;
     };
 
+    // ---- Classement des équipes (comme leaderboard.ejs chez le MJ) ----------
+
+    const RANK_STATS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'],
+        ['survival', 'Survie'], ['recon', 'Recon.', 'Reconnaissance'], ['moral', 'Moral']];
+    const rankNum = (v) => Number(v || 0).toLocaleString('fr-FR');
+    const rankRace = (r) => r ? String(r).split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-') : '';
+    const rankLevel = (e) => e.settings && e.settings.preset ? e.settings.preset.name : 'Non renseignée';
+    const rankDuration = function (ms) {
+        if (!ms || ms < 0)
+            return '—';
+        let min = Math.round(ms / 60000), h = Math.floor(min / 60);
+        if (!min)
+            return 'moins d\'1 min';
+        return h ? h + ' h ' + String(min % 60).padStart(2, '0') : min + ' min';
+    };
+    const rankFact = function (label, value) {
+        let f = el('div', 'team-fact');
+        f.append(el('span', 'team-fact-label', label), el('span', 'team-fact-value', value));
+        return f;
+    };
+
+    // Détail d'une équipe : score, durée, personnages et compagnons
+    const openTeam = function (entry) {
+        $('team-dialog-title').textContent = entry.team;
+        let body = $('team-dialog-body');
+        body.replaceChildren();
+        let facts = el('div', 'team-facts');
+        facts.append(rankFact('Score', rankNum(entry.score)), rankFact('Durée de la partie', rankDuration(entry.duration)),
+            rankFact('Survivants', rankNum(entry.cryopods)), rankFact('Planète', entry.planet || '—'),
+            rankFact('Date', new Date(entry.date).toLocaleString('fr-FR', {dateStyle: 'short', timeStyle: 'short'})));
+        if (entry.settings) {
+            let s = entry.settings;
+            facts.append(rankFact('Difficulté', s.preset ? s.preset.name : 'Personnalisé'), rankFact('Planètes', rankNum(s.planetCount)));
+        }
+        if (entry.breakdown)
+            facts.append(rankFact('Score vaisseau', rankNum(entry.breakdown.ship)), rankFact('Score planète', rankNum(entry.breakdown.planet)),
+                rankFact('Score cartes', rankNum(entry.breakdown.cards)));
+        body.append(facts);
+        if (!entry.members)
+            body.append(el('p', 'dim', 'La composition de l\'équipe n\'était pas encore enregistrée pour cette partie.'));
+        else {
+            body.append(el('h3', '', 'Personnages'));
+            let list = el('div', 'team-members');
+            for (let m of entry.members) {
+                let card = el('div', 'team-member');
+                let head = el('div', 'team-member-head');
+                head.append(el('span', 'team-member-name', m.name || '—'));
+                if (m.race)
+                    head.append(el('span', 'race-pill', rankRace(m.race)));
+                let stats = el('div', 'team-member-stats');
+                for (let [key, label, full] of RANK_STATS) {
+                    let s = el('span', 'team-stat');
+                    s.title = full || label;
+                    s.append(el('span', 'team-stat-label', label), el('b', '', String(m.stats ? m.stats[key] : '—')));
+                    stats.append(s);
+                }
+                card.append(head, stats);
+                list.append(card);
+            }
+            body.append(list);
+            if (entry.npcs && entry.npcs.length) {
+                body.append(el('h3', '', 'Compagnons'));
+                let npcs = el('div', 'team-npcs');
+                for (let n of entry.npcs)
+                    npcs.append(el('span', 'team-npc', n.name + (n.race ? ' · ' + rankRace(n.race) : '')));
+                body.append(npcs);
+            }
+        }
+        if (!$('team-dialog').open)
+            $('team-dialog').showModal();
+    };
+
+    const renderRanks = function () {
+        let entries = ranks && Array.isArray(ranks.entries) ? ranks.entries : [];
+        $('ranks-empty').hidden = !!entries.length;
+        $('ranks-table').hidden = !entries.length;
+        $('ranks-hint').hidden = !entries.length;
+        // Filtre par difficulté : les rangs sont recomptés dans le groupe choisi
+        let levels = [...new Set(entries.map(rankLevel))];
+        if (!levels.includes(ranksLevel))
+            ranksLevel = '';
+        $('ranks-filter').hidden = levels.length < 2;
+        $('ranks-filter').replaceChildren(...(levels.length < 2 ? [] : [''].concat(levels).map(level => {
+            let b = el('button', 'codex-filter' + (level === ranksLevel ? ' active' : ''), level || 'Toutes');
+            b.type = 'button';
+            b.setAttribute('role', 'radio');
+            b.setAttribute('aria-checked', String(level === ranksLevel));
+            b.addEventListener('click', () => { ranksLevel = level; renderRanks(); });
+            return b;
+        })));
+        let rank = 0;
+        $('ranks-body').replaceChildren(...entries.map((entry, i) => [entry, i]).filter(([entry]) => !ranksLevel || rankLevel(entry) === ranksLevel).map(([entry]) => {
+            rank++;
+            let tr = el('tr', (ranks.current && entry.id === ranks.current ? 'is-current ' : '') + (rank <= 3 ? 'podium podium-' + rank : ''));
+            tr.tabIndex = 0;
+            tr.setAttribute('role', 'button');
+            tr.setAttribute('aria-label', 'Détail de l\'équipe ' + entry.team);
+            tr.append(el('td', 'rank', String(rank)), el('td', 'team', entry.team), el('td', 'num score', rankNum(entry.score)),
+                el('td', 'num', rankNum(entry.cryopods)), el('td', '', entry.planet || '—'),
+                el('td', 'level', entry.settings && entry.settings.preset ? entry.settings.preset.name : '—'),
+                el('td', 'date', new Date(entry.date).toLocaleDateString('fr-FR')));
+            tr.addEventListener('click', () => openTeam(entry));
+            tr.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openTeam(entry); } });
+            return tr;
+        }));
+    };
+
     const renderCodex = function () {
         let book = codex || {races: [], items: [], statuses: [], totals: {}};
         let totals = book.totals || {};
@@ -1525,6 +1634,10 @@
         else if (data.kind === 'codex') {
             codex = data;
             renderCodex();
+        }
+        else if (data.kind === 'leaderboard') {
+            ranks = data;
+            renderRanks();
         }
         // Image d'une fiche, en data URL (rien d'autre n'est accepté)
         else if (data.kind === 'codex-image' && typeof data.key === 'string' && /^data:image\/(png|jpeg|webp);base64,/.test(data.src || '')) {
@@ -1784,6 +1897,9 @@
 
     $('rolls-continue').addEventListener('click', closeRace);
     $('race-dialog-close').addEventListener('click', closeRace);
+    $('team-dialog-close').addEventListener('click', () => $('team-dialog').close());
+    // Clic en dehors de la fiche : elle se ferme
+    $('team-dialog').addEventListener('click', (e) => { if (e.target === $('team-dialog')) $('team-dialog').close(); });
     // Échap ou clic hors de la fenêtre
     $('race-dialog').addEventListener('close', () => { if (raceOpen) closeRace(); else if (you && you.character) renderRaces(you.character); });
     $('race-dialog').addEventListener('click', (e) => {

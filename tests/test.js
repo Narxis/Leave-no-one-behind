@@ -534,6 +534,18 @@ function test_mj_screen_port() {
         assert.ok(!/location\.(href|reload)|href="\/leaderboard/.test(html.replace(/<script[\s\S]*?<\/script>/g, '')), page + '.html : pas de navigation du MJ');
     }
     assert.ok(/var PLANET_DATA = \{id: Number\([^)]*\)[^}]*modules: \{\}\}/.test(files['public/player/mj/planet.html']), 'planet.html : planète sans valeurs');
+    // Classement pour les joueurs : les équipes et leurs persos, sans pseudo Discord
+    const leaderboard = require('../src/controllers/leaderboard');
+    const list = leaderboard.list;
+    leaderboard.list = () => [{id: 'x', team: 'Équipe', score: 10, members: [{name: 'Kaël', race: 'fnek', discord: '@kael', stats: {combat: 50}}]}];
+    try {
+        let ranks = playerView.leaderboardState();
+        assert.equal(ranks.kind, 'leaderboard');
+        assert.equal(ranks.entries[0].team, 'Équipe');
+        assert.deepEqual(ranks.entries[0].members, [{name: 'Kaël', race: 'fnek', stats: {combat: 50}}]);
+    } finally {
+        leaderboard.list = list;
+    }
     // Pages portées en mode standard (doctype), celles du MJ non : une
     // longueur sans unité y serait ignorée (nom des modules décalé)
     for (let file of Object.keys(files).filter(f => /^public\/player\/mj\/css\/.*\.css$/.test(f)))
