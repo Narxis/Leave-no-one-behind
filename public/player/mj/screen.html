@@ -813,6 +813,13 @@
     function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
     // Les boutons du MJ n'envoient rien depuis l'écran des joueurs
     var wsLNOB = {send() {}, setModule() {}, setStatus() {}, addItem() {}, delItem() {}, setStatistic() {}, rollDice() {}, triggerCustomEvent() {}};
+    // Les scripts repris lisent l'API du MJ au chargement (/api/combat…) : ici
+    // l'état vient de la page joueur, rien n'est demandé au relais
+    (function (fetchPage) {
+        window.fetch = function (url) {
+            return String(url).indexOf('/api/') === 0 ? Promise.reject(new Error('API du MJ : sur sa page seulement')) : fetchPage.apply(this, arguments);
+        };
+    })(window.fetch);
 </script>
 <script src="js/players.js"></script>
 <script src="js/timer-anim.js"></script>

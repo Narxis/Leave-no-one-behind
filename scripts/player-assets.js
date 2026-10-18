@@ -208,7 +208,14 @@ const stubs = function (extra) {
     var statusSvgList = Object.assign({custom: ${JSON.stringify(custom)}}, window.LNOB_STATUS_SVG || {});
     function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
     // Les boutons du MJ n'envoient rien depuis l'écran des joueurs
-    var wsLNOB = {send() {}, setModule() {}, setStatus() {}, addItem() {}, delItem() {}, setStatistic() {}, rollDice() {}, triggerCustomEvent() {}};${extra || ''}
+    var wsLNOB = {send() {}, setModule() {}, setStatus() {}, addItem() {}, delItem() {}, setStatistic() {}, rollDice() {}, triggerCustomEvent() {}};
+    // Les scripts repris lisent l'API du MJ au chargement (/api/combat…) : ici
+    // l'état vient de la page joueur, rien n'est demandé au relais
+    (function (fetchPage) {
+        window.fetch = function (url) {
+            return String(url).indexOf('/api/') === 0 ? Promise.reject(new Error('API du MJ : sur sa page seulement')) : fetchPage.apply(this, arguments);
+        };
+    })(window.fetch);${extra || ''}
 </script>`;
 };
 const scripts = (names, attr) => names.map(name => '<script src="js/' + name + '.js"' + (attr || '') + '></script>').join('\n');
