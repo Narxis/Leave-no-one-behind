@@ -238,8 +238,52 @@ select {
 .roll-result.fail { color: var(--danger); }
 
 /* Vaisseau */
-.ship-plan svg { width: 100%; height: auto; display: block; }
-.ship-plan .zone-active { fill: #b0a6ff; fill-opacity: 0.35; }
+/* Mêmes positions que sur la page de jeu (plan-du-vaisseau.css) : le contour
+   (public/img/plan-plugs-stroke.png, 1153 × 681) et les salles par-dessus */
+.ship-plan { position: relative; width: 100%; aspect-ratio: 1153 / 681; }
+.ship-outline {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgb(205 198 255 / 90%), rgb(140 200 230 / 80%));
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    filter: drop-shadow(0 0 4px rgb(130 110 255 / 45%));
+    pointer-events: none;
+}
+.ship-rooms {
+    position: absolute;
+    left: calc(40 / 1153 * 100%);
+    top: calc(49 / 681 * 100%);
+    width: calc(1074 / 1153 * 100%);
+    height: calc(613 / 681 * 100%);
+}
+.ship-plan svg { width: 100%; height: 100%; display: block; overflow: visible; }
+/* Les murs viennent du contour : les salles du SVG ne servent qu'aux couleurs */
+.ship-plan .zone-active { fill: transparent; pointer-events: none; }
+.ship-plan #player-ship-layer { pointer-events: none; }
+/* Survol des salles dont le nom est replié (ship-labels.js) */
+.ship-room-hit { fill: #b0a6ff; fill-opacity: 0; pointer-events: none; }
+.ship-room-hit.is-folded { pointer-events: all; cursor: help; }
+.ship-room-hit.is-folded:hover, .ship-room-hit.is-shown { fill-opacity: .25; }
+/* Masqués sans display: none, pour pouvoir encore les mesurer (getBBox) */
+.ship-room-label.is-folded { visibility: hidden; }
+.ship-tip {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #0b0630;
+    color: #e9e5ff;
+    font: 700 12px Jura, system-ui, sans-serif;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1;
+}
+.ship-tip.below { transform: translate(-50%, 0); }
 .ship-plan path.ship-blink-fill { fill: #ff8a1f; animation: ship-blink 1s ease-in-out infinite; }
 .ship-plan path.ship-alert-fill { fill: #ff1f3d; animation: ship-alert-fill .6s ease-in-out infinite; }
 @keyframes ship-blink { 0%, 100% { fill-opacity: .15; } 50% { fill-opacity: .7; } }
@@ -251,6 +295,7 @@ select {
 .ship-alert-dot { fill: #fff; stroke: #ff1f3d; stroke-width: 4; }
 .ship-plan text.ship-alert-label { fill: #fff; font-family: Jura, sans-serif; font-size: 26px; font-weight: 700; paint-order: stroke; stroke: #0b0630; stroke-width: 4px; }
 .ship-room-label {
+    pointer-events: none;
     fill: #e9e5ff;
     font-family: Jura, sans-serif;
     font-weight: 700;
@@ -262,7 +307,7 @@ select {
     paint-order: stroke;
     opacity: .85;
 }
-.ship-room-label.is-alert { display: none; }
+.ship-room-label.is-alert { visibility: hidden; }
 
 /* Inventaire */
 .items { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
