@@ -213,8 +213,8 @@ h2 { margin: 8px 0 0; font-size: 13px; font-weight: 600; color: var(--dim); text
 .stat-icon svg { width: 100%; height: 100%; fill: #fff; }
 .hud-stat-value { margin-left: auto; color: var(--accent); font-variant-numeric: tabular-nums; }
 
-.emotes { display: flex; flex-wrap: wrap; gap: 6px; }
-.emote { margin: 0; padding: 4px 8px; border: 1px solid var(--border); background: var(--fill); font-size: 20px; line-height: 1.2; }
+.emotes { display: flex; gap: 4px; }
+.emote { flex: 1 1 0; min-width: 0; margin: 0; padding: 3px 0; border: 1px solid var(--border); background: var(--fill); font-size: 20px; line-height: 1.2; }
 .emote:hover { border-color: var(--border-strong); }
 .emote:active { transform: scale(0.92); }
 
@@ -239,6 +239,7 @@ h2 { margin: 8px 0 0; font-size: 13px; font-weight: 600; color: var(--dim); text
 .stage { display: flex; flex-direction: column; align-items: center; min-width: 0; }
 .stage .card-last { align-self: stretch; margin-bottom: 12px; }
 .stage-row { display: flex; align-items: flex-start; width: 100%; min-width: 0; }
+.stage-screen > .screen-card, .stage-screen > .combat-screen, .stage-screen > .planet-screen { position: relative; z-index: 1; }
 .stage-screen { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
 .stage-screen > * { align-self: stretch; }
 .stage-screen > .choice-tabs { align-self: center; }
@@ -355,12 +356,12 @@ button.choice-text {
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin: 26px 0 0 -1px;
+    margin: 24px 0 0 -26px;
     padding: 0;
     list-style: none;
 }
 .stage .module-dials .dial {
-    padding: 6px 10px 6px 12px;
+    padding: 5px 10px 5px 36px;
     border: 1px solid var(--border-strong);
     border-left: none;
     border-radius: 0 40px 40px 0;
@@ -368,7 +369,7 @@ button.choice-text {
 }
 .stage .module-dials .dial + .dial { margin-top: -1px; }
 .dial { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
-.dial-face { position: relative; display: grid; place-items: center; width: 50px; height: 50px; }
+.dial-face { position: relative; display: grid; place-items: center; width: 46px; height: 46px; }
 .dial-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
 .dial-track { fill: rgb(10 8 30 / 85%); stroke: rgb(255 255 255 / 10%); stroke-width: 8; }
 .dial-fill { fill: none; stroke: var(--ok); stroke-width: 8; stroke-linecap: round; filter: drop-shadow(0 0 4px rgb(79 216 224 / 70%)); transition: stroke-dashoffset .8s var(--ease); }
@@ -549,6 +550,10 @@ select {
 /* Grand écran : HUD à gauche, écran au centre, chat à droite */
 @media (min-width: 900px) {
     .game-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
+    /* Fiches de l'équipage collées en bas de l'écran, comme sur l'écran de jeu */
+    .tab-panel[data-panel="game"] { min-height: calc(100vh - 104px); }
+    .crew-strip { position: sticky; bottom: -16px; z-index: 2; margin: auto 0 -16px; padding-top: 10px; }
+    .crew-tab { border-bottom: none; border-radius: 16px 16px 0 0; padding-bottom: 18px; }
     .hud { grid-column: 1 / -1; }
 }
 @media (min-width: 1240px) {
