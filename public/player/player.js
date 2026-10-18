@@ -193,7 +193,7 @@
     let mjPage = mjFrame ? mjFrame.getAttribute('src') : null;
     let mjLastText = null;   // dernier texte annoncé par le MJ (pour un écran rechargé)
     let mjLastTimer = null;
-    const MJ_REPLAY = ['inventory', 'combat', 'card-loot', 'allies'];
+    const MJ_REPLAY = ['inventory', 'item-requests', 'combat', 'card-loot', 'allies'];
     const mjLastEvents = new Map();
     const wideScreen = window.matchMedia ? window.matchMedia('(min-width: 900px)') : {matches: true};
     const toMjScreen = function (message) {
@@ -250,6 +250,12 @@
             for (let payload of mjLastEvents.values())
                 toMjScreen({lnob: 'mj-event', payload: payload});
         }
+        // Écran porté : objet de son inventaire glissé sur un autre joueur ou
+        // le vaisseau, ou objet d'un autre demandé
+        else if (m.lnobScreen === 'move' && typeof m.slug === 'string' && m.to && (m.to.type === 'ship' || (m.to.type === 'player' && typeof m.to.id === 'string')))
+            sendAction('inventory-move', {slug: m.slug, to: m.to.type === 'ship' ? {type: 'ship'} : {type: 'player', id: m.to.id}, all: !!m.all});
+        else if (m.lnobScreen === 'request' && typeof m.slug === 'string' && m.owner && (m.owner.type === 'ship' || (m.owner.type === 'player' && typeof m.owner.id === 'string')))
+            sendAction('item-request', {slug: m.slug, owner: m.owner.type === 'ship' ? {type: 'ship'} : {type: 'player', id: m.owner.id}});
         else if (m.lnobScreen === 'vote' && (m.index === null || Number.isInteger(m.index)))
             sendAction('vote', {index: m.index});
     });
@@ -323,7 +329,7 @@
         let list = chat.filter(m => channelOf(m) === chatChannel);
         $('chat-empty').hidden = list.length > 0;
         $('chat-messages').replaceChildren(...list.map(m => {
-            let li = el('li', 'chat-message' + (m.from.gm ? ' gm' : '') + (m.from.id === playerId ? ' mine' : ''));
+            let li = el('li', 'chat-message' + (m.from.gm ? ' gm' : '') + (m.from.id === playerId ? ' mine' : '') + (m.dice ? ' chat-dice' : ''));
             let head = el('div', 'chat-head');
             head.append(el('strong', '', m.from.name), el('span', 'dim', chatTime(m.at)));
             li.append(head, el('p', 'chat-text', m.text));
@@ -370,10 +376,35 @@
         return tag;
     };
 
+    // Objets des autres joueurs et du vaisseau : on ne les prend pas, on les
+    // demande (le logo de son rôle s'affiche à côté chez tout le monde, un
+    // message part dans le chat) ; un second appui retire la demande
+    const askList = function (items, owner, asks) {
+        let ul = el('ul', 'crew-items');
+        for (let item of items) {
+            let asked = asks.find(a => a.slug === item.slug && a.owner && a.owner.type === owner.type && String(a.owner.id || '') === String(owner.id || ''));
+            let mine = !!asked && (asked.from || []).some(f => f.id === playerId);
+            let row = el('li', mine ? 'asked' : '');
+            row.append(el('span', 'crew-item-name', item.name + (item.count > 1 ? ' ×' + item.count : '')));
+            if (asked && asked.from.length)
+                row.append(voterIcons({voters: asked.from.map(f => Object.assign({index: 0}, f))}, 0));
+            let b = el('button', 'secondary small', mine ? 'Annuler' : 'Demander');
+            b.type = 'button';
+            b.title = mine ? 'Retirer ma demande' : 'Demander cet objet';
+            b.addEventListener('click', () => sendAction('item-request', {slug: item.slug, owner: owner}));
+            row.append(b);
+            ul.append(row);
+        }
+        return ul;
+    };
+
     const renderPlayers = function () {
         let list = roster.length ? roster : (me ? [me] : []);
         let characters = new Map(((game && game.team) || []).map(c => [c.id, c]));
-        $('players').replaceChildren(...list.map(p => {
+        let stock = (mjLastEvents.get('inventory') || {}).data || {};
+        let asks = ((mjLastEvents.get('item-requests') || {}).data || {}).requests || [];
+        let canAsk = !!(game && game.phase === 'gameLive' && you && you.character);
+        let rows = list.map(p => {
             let li = el('li', p.id === playerId ? 'me' : '');
             li.append(el('span', 'player-name', p.name + (p.id === playerId ? ' (toi)' : '')));
             let tag = discordTag(p.discord);
@@ -383,8 +414,18 @@
             li.append(el('span', 'dim', c ? c.name + (c.race ? ' · ' + c.race : '') + (c.role ? ' · ' + c.role : '') : 'pas de perso'));
             if (p.online === false)
                 li.append(el('span', 'dim', 'déconnecté'));
+            let items = c && p.id !== playerId && canAsk && (stock.inventories || {})[p.id];
+            if (items && items.length)
+                li.append(askList(items, {type: 'player', id: p.id}, asks));
             return li;
-        }));
+        });
+        // Le vaisseau : ce qu'on y prend passe aussi par le MJ
+        if (canAsk && (stock.ship || []).length) {
+            let hold = el('li', 'ship-hold');
+            hold.append(el('span', 'player-name', 'Vaisseau'), el('span', 'dim', 'demande au MJ'), askList(stock.ship, {type: 'ship'}, asks));
+            rows.push(hold);
+        }
+        $('players').replaceChildren(...rows);
         if (game)
             renderCrewStrip();
     };
@@ -1494,7 +1535,7 @@
             tile.append(track);
             return tile;
         }));
-        $('roll-box').hidden = !game || game.phase !== 'gameLive';
+        renderDice();
     };
 
     const renderMe = function () {
@@ -1546,11 +1587,27 @@
         // Bourse du joueur (« 20 crédits »)
         $('money').hidden = !(you && you.money);
         $('money').textContent = you && you.money ? 'Bourse : ' + you.money : '';
+        let requested = (you && you.requested) || [];
         $('items').replaceChildren(...items.map(item => {
             let li = el('li', 'item');
             li.append(el('strong', '', item.name + (item.count > 1 ? ' ×' + item.count : '')));
             if (item.desc)
                 li.append(el('span', 'dim small-text', String(item.desc).replace(/<[^>]*>/g, '')));
+            // Demandé par d'autres joueurs : leur logo, et de quoi le leur donner
+            let asked = requested.find(r => r.slug === item.slug);
+            if (asked && asked.from.length) {
+                li.classList.add('requested');
+                let line = el('span', 'item-asked');
+                line.append(voterIcons({voters: asked.from.map(f => Object.assign({index: 0}, f))}, 0),
+                    'Demandé par ' + asked.from.map(f => f.name).join(', '));
+                li.append(line);
+                for (let f of asked.from) {
+                    let give = el('button', 'primary small', 'Donner à ' + f.name);
+                    give.type = 'button';
+                    give.addEventListener('click', () => sendAction('inventory-move', {slug: item.slug, to: {type: 'player', id: f.id}}));
+                    li.append(give);
+                }
+            }
             // Utiliser : demande au MJ, qui accepte ou refuse
             if (game && game.phase === 'gameLive') {
                 let pending = ((you && you.pendingItems) || []).includes(item.slug);
@@ -1569,12 +1626,16 @@
                     o.value = c.id;
                     select.append(o);
                 }
+                // Ou le ranger dans le vaisseau
+                let hold = el('option', '', 'Vaisseau');
+                hold.value = '@ship';
+                select.append(hold);
                 let b = el('button', 'secondary small', 'Donner');
                 b.type = 'submit';
                 form.append(select, b);
                 form.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    sendAction('inventory-move', {slug: item.slug, to: {type: 'player', id: select.value}});
+                    sendAction('inventory-move', {slug: item.slug, to: select.value === '@ship' ? {type: 'ship'} : {type: 'player', id: select.value}});
                 });
                 li.append(form);
             }
@@ -1590,6 +1651,70 @@
         renderPlayers();
         renderCodex();
     };
+
+    // ---- Fenêtre de dés ------------------------------------------------------
+    // Toujours à portée (bouton 🎲 en bas à gauche) : jets sur ses stats
+    // pendant la partie, dés neutres D2 à D100 à tout moment. Les dés neutres
+    // sont lancés par le serveur et annoncés dans le chat (ou au MJ seul).
+
+    const ROLL_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
+    const diceWin = window.DiceWindow ? DiceWindow.create({
+        storageKey: 'lnob-player-dice',
+        modules: ROLL_MODULES,
+        secretLabel: 'Seul le MJ voit le résultat',
+        secretDefault: false,
+        timeoutText: 'Pas de réponse du MJ : relance quand il est connecté.',
+        onStat: (stat, module) => sendAction('roll', {stat: stat, module: module}),
+        onDice: (sides, count, secret) => sendAction('dice', {sides: sides, count: count, secret: secret})
+    }) : null;
+
+    const renderDice = function () {
+        if (!diceWin)
+            return;
+        let c = you && you.character;
+        let live = !!(game && game.phase === 'gameLive');
+        let stats = c && live ? ROLL_STATS.map(s => ({stat: s, label: STAT_LABELS[s], value: c[s]})) : [];
+        diceWin.setStats(stats, !c ? 'Les jets de stats arrivent avec ton perso.' : live ? '' : 'Les jets de stats se font pendant la partie.');
+    };
+
+    // Jet sur une stat : même calcul que /roll (dé, rôle, module), résultat
+    // aussi montré sur l'écran de jeu
+    const diceStatResult = function (r) {
+        if (!diceWin)
+            return;
+        let label = STAT_LABELS[r.stat] || r.stat;
+        let tone = r.success ? 'ok' : 'fail';
+        diceWin.result({title: label, total: r.result, tone: tone,
+            detail: (r.dice ? 'dés ' + r.dice.join(' / ') + ', gardé ' : 'dé ') + r.dice_result + ' · ' + (r.success ? 'réussite' : 'échec')});
+        diceWin.log({who: 'Toi', what: label, total: r.result, tone: tone});
+    };
+    const diceNeutralResult = function (r) {
+        if (diceWin)
+            diceWin.result({title: r.count + 'D' + r.sides + (r.secret ? ' · vu par le MJ seul' : ''), total: r.total, detail: r.count > 1 ? r.dice.join(' + ') : ''});
+    };
+    // Jets annoncés dans le chat (les siens compris)
+    const diceLogChat = function (m) {
+        if (diceWin && m.dice)
+            diceWin.log({who: m.from.id === playerId ? 'Toi' : m.from.name, what: m.dice.count + 'D' + m.dice.sides + (m.to ? ' · secret' : ''), total: m.dice.total});
+    };
+    const diceHistory = function (list) {
+        if (!diceWin)
+            return;
+        diceWin.clearLog();
+        list.filter(m => m.dice).slice(-8).forEach(diceLogChat);
+    };
+
+    // Téléphone : le bouton passe au-dessus du chat ouvert (collé en bas)
+    if (window.ResizeObserver) {
+        const lift = () => {
+            let dock = $('chat');
+            let docked = dock && !dock.hidden && !wideScreen.matches;
+            document.documentElement.style.setProperty('--dice-lift', docked ? dock.offsetHeight + 'px' : '0px');
+        };
+        new ResizeObserver(lift).observe($('chat'));
+        if (wideScreen.addEventListener)
+            wideScreen.addEventListener('change', lift);
+    }
 
     // ---- Connexion au relais -------------------------------------------------
 
@@ -1615,6 +1740,9 @@
             if (MJ_REPLAY.includes(data.payload.action))
                 mjLastEvents.set(data.payload.action, data.payload);
             toMjScreen({lnob: 'mj-event', payload: data.payload});
+            // Objets des autres, à demander depuis l'onglet Équipage
+            if (data.payload.action === 'inventory' || data.payload.action === 'item-requests')
+                renderPlayers();
         }
         else if (data.kind === 'timer') {
             timer = data.timer && Number.isInteger(data.timer.left) ? data.timer : null;
@@ -1630,6 +1758,7 @@
             renderGame();
             renderMe();
             renderItems();
+            renderPlayers();
         }
         else if (data.kind === 'codex') {
             codex = data;
@@ -1648,12 +1777,18 @@
         else if (data.kind === 'chat-history') {
             chat = Array.isArray(data.messages) ? data.messages : [];
             renderChat();
+            diceHistory(chat);
         }
         else if (data.kind === 'chat' && data.message) {
             addChat(data.message);
+            if (data.message.dice)
+                diceLogChat(data.message);
         }
         else if (data.kind === 'refused') {
             showActionError(data.message);
+            // Jet refusé : la fenêtre de dés arrête sa roue
+            if ((data.action === 'roll' || data.action === 'dice') && diceWin)
+                diceWin.fail(data.message || 'Jet impossible.');
             // Fenêtre de race ouverte : le message y est aussi (la bulle est dessous)
             $('race-dialog-error').textContent = data.message || '';
             $('race-dialog-error').hidden = !$('race-dialog').open || !data.message;
@@ -1663,12 +1798,10 @@
         else if (data.kind === 'notice' && data.text) {
             showActionError(String(data.text), true);
         }
-        else if (data.kind === 'result' && data.action === 'roll' && data.data) {
-            let r = data.data;
-            $('roll-result').hidden = false;
-            $('roll-result').className = 'roll-result ' + (r.success ? 'ok' : 'fail');
-            $('roll-result').textContent = '🎲 ' + (r.dice ? 'meilleur de ' + r.dice.join(' / ') + ' = ' : '') + r.dice_result + ' → ' + r.result + ' : ' + (r.success ? 'réussite !' : 'échec.');
-        }
+        else if (data.kind === 'result' && data.action === 'roll' && data.data)
+            diceStatResult(data.data);
+        else if (data.kind === 'result' && data.action === 'dice' && data.data)
+            diceNeutralResult(data.data);
     };
 
     const connect = function () {
@@ -1961,22 +2094,6 @@
         }
     });
 
-    $('roll-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        $('roll-result').hidden = true;
-        sendAction('roll', {stat: $('roll-stat').value, module: $('roll-module').value});
-    });
-
-    for (let s of Object.keys(STAT_LABELS).filter(s => s !== 'moral')) {
-        let o = el('option', '', STAT_LABELS[s]);
-        o.value = s;
-        $('roll-stat').append(o);
-    }
-    for (let [value, label] of ROLL_MODULES) {
-        let o = el('option', '', label);
-        o.value = value;
-        $('roll-module').append(o);
-    }
     $('emotes').replaceChildren(...EMOTES.map(e => {
         let b = el('button', 'emote', e);
         b.type = 'button';

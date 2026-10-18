@@ -108,10 +108,42 @@
             renderPlayer(id, data.inventories[id] || [], data.wallets ? wallets.players[id] || 0 : undefined);
         });
         renderShip(data.ship || [], data.wallets ? wallets.ship || 0 : undefined);
+        paintRequests();
         let ev = data.event;
         if (ev && ev.to && ev.to.type === 'player')
             flash(document.getElementById('player-tab' + ev.to.id), '+ ' + (ev.item.count > 1 && !ev.item.money ? ev.item.count + ' ' : '') + ev.item.name);
     });
+
+    // Demandes des joueurs en ligne (itemRequests.js) : le logo du rôle de
+    // ceux qui veulent l'objet, à côté de lui ; le coffre du joueur qui l'a
+    // s'allume pour qu'il le voie
+    let requests = [];
+    function paintRequests() {
+        document.querySelectorAll('.item-requesters').forEach(n => n.remove());
+        document.querySelectorAll('.player-tab.item-requested').forEach(n => n.classList.remove('item-requested'));
+        for (let r of requests) {
+            let list = r.owner.type === 'ship' ? document.querySelector('.todos') : document.getElementById('item' + r.owner.id);
+            let line = list && Array.from(list.querySelectorAll('[data-slug]')).find(n => n.dataset.slug === r.slug && !n.classList.contains('delete'));
+            if (!line || typeof voteRoleIcons !== 'function')
+                continue;
+            let icons = voteRoleIcons(r.from);
+            icons.classList.add('item-requesters');
+            icons.title = 'Demandé par ' + r.from.map(f => f.name).join(', ');
+            (line.querySelector('p') || line).append(icons);
+            let tab = r.owner.type === 'player' && document.getElementById('player-tab' + r.owner.id);
+            if (tab)
+                tab.classList.add('item-requested');
+        }
+    }
+    document.addEventListener('item-requests', (e) => {
+        requests = (e.detail.data && e.detail.data.requests) || [];
+        paintRequests();
+    });
+    // Page ouverte ou reconnectée : les demandes en cours
+    if (typeof wsLNOB !== 'undefined') {
+        document.addEventListener('ws-reconnect', () => wsLNOB.send({action: 'item-requests'}));
+        wsLNOB.send({action: 'item-requests'});
+    }
 
     document.addEventListener('inventory-error', (e) => {
         toast(e.detail.data.message);
@@ -146,6 +178,11 @@
 
     /* Glisser-déposer */
 
+    // Nom d'un objet de coffre : le texte de la ligne, sans l'initiale (objet
+    // sans image), la quantité ni le logo de ceux qui le demandent
+    const lineName = (p) => Array.from(p.childNodes).filter(n => n.nodeType === Node.TEXT_NODE)
+        .map(n => n.textContent).join('').trim();
+
     // Ce qu'on attrape : {item: {slug, name}, from, node}
     function sourceOf(target) {
         let cardLoot = target.closest('.card-loot-item[data-index]');
@@ -158,7 +195,7 @@
                 from: {type: 'loot', index: parseInt(loot.dataset.index)}};
         let line = target.closest('.player-tab:not(.npc-tab) .itemlist-line[data-slug]');
         if (line && !target.closest('.item-trash'))
-            return {node: line, slug: line.dataset.slug, name: line.querySelector('p').textContent.replace(/\s×\d+$/, ''),
+            return {node: line, slug: line.dataset.slug, name: lineName(line.querySelector('p')),
                 from: {type: 'player', id: line.dataset.owner}};
         let li = target.closest('.todos li[data-slug]');
         if (li && !target.closest('.delete'))

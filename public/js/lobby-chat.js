@@ -43,7 +43,7 @@
         let list = messages.filter(m => channelOf(m) === channel);
         $('chat-empty').hidden = list.length > 0;
         $('chat-messages').replaceChildren(...list.map(m => {
-            let li = el('li', 'chat-message' + (m.from.gm ? ' gm' : ''));
+            let li = el('li', 'chat-message' + (m.from.gm ? ' gm' : '') + (m.dice ? ' chat-dice' : ''));
             let head = el('div', 'chat-head');
             head.append(el('strong', '', m.from.name), el('span', 'chat-time', time(m.at)));
             li.append(head, el('p', 'chat-text', m.text));

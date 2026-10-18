@@ -136,11 +136,14 @@ async function test_remote() {
     assert.equal((await act('emote', {emoji: '🚀', type: 'url'})).type, 'glyph');
     assert.ok((await act('emote', {emoji: '<img src=x onerror=alert(1)>'})).refused);
 
-    // Donner un objet : toujours depuis son propre inventaire, à un autre joueur
+    // Donner un objet : toujours depuis son propre inventaire, à un autre
+    // joueur ou au vaisseau
     let give = await act('inventory-move', {slug: 'medkit', from: {type: 'ship'}, to: {type: 'player', id: 'bob-0001'}});
     assert.deepEqual(give.data.from, {type: 'player', id: alice.id});
     assert.ok((await act('inventory-move', {slug: 'medkit', to: {type: 'player', id: alice.id}})).refused);
-    assert.ok((await act('inventory-move', {slug: 'medkit', to: {type: 'ship'}})).refused);
+    assert.ok((await act('inventory-move', {slug: 'medkit', to: {type: 'loot', index: 0}})).refused);
+    assert.deepEqual((await act('inventory-move', {slug: 'medkit', from: {type: 'player', id: 'bob-0001'}, to: {type: 'ship'}, all: true})).data,
+        {slug: 'medkit', from: {type: 'player', id: alice.id}, to: {type: 'ship'}, all: true});
 
     // Message qui n'est pas une action : ignoré
     assert.equal(await remote.translate(alice, {kind: 'chat'}), null);
@@ -176,6 +179,8 @@ async function test_remote() {
     await test_chat();
     await test_votes();
     await test_item_use();
+    await test_item_requests();
+    await test_dice();
     test_stat_rolls();
     test_player_view();
     test_player_assets();
@@ -395,6 +400,157 @@ async function test_item_use() {
     await DB.tables.items.destroy({where: {id: row.id}});
     chat.clear();
     console.log('Item use OK');
+}
+
+// Objets entre joueurs : on donne ce qu'on a, on demande ce qu'ont les
+// autres (logo à côté de l'objet, message au salon), sans jamais le prendre
+async function test_item_requests() {
+    console.log('Testing item requests');
+    const itemRequests = require('../src/controllers/itemRequests');
+    const remote = require('../src/controllers/remote');
+    const inventory = require('../src/controllers/inventory');
+    const playerView = require('../src/controllers/playerView');
+    const chat = require('../src/controllers/chat');
+    let ana = {id: 'req-ana-00000001', name: 'ana'};
+    let ben = {id: 'req-ben-00000001', name: 'ben'};
+    let ask = (player, slug, owner) => remote.translate(player, {kind: 'action', action: 'item-request', data: {slug, owner}});
+    let move = (player, data) => remote.translate(player, {kind: 'action', action: 'inventory-move', data});
+    itemRequests.clear();
+    chat.clear();
+    CONFIG.gameState = 'gameLive';
+    await DB.tables.players.create({discord_id: ana.id, name: 'Ana'});
+    await DB.tables.items.create({slug: 'test-rope', name: 'Corde', desc: '', pool: '', race: '', quantity: 2, image: '', owners: ana.id});
+    const rope = (owner) => ({owner, slug: 'test-rope'});
+
+    // Sans perso : pas de demande
+    assert.ok((await ask(ben, 'test-rope', {type: 'player', id: ana.id})).refused);
+    await DB.tables.players.create({discord_id: ben.id, name: 'Ben'});
+
+    // Ben demande la corde d'Ana : son logo à côté de l'objet (pages du MJ et
+    // écrans portés), un message de Ben pour Ana au salon
+    let sent = await ask(ben, 'test-rope', {type: 'player', id: ana.id});
+    assert.equal(sent.action, 'passThrough');
+    assert.deepEqual(sent.data, {action: 'item-requests', error: false,
+        data: {requests: [Object.assign(rope({type: 'player', id: ana.id}), {from: [{id: ben.id, name: 'Ben'}]})]}});
+    let said = chat.historyFor(ana.id).pop();
+    assert.equal(said.from.name, 'Ben');
+    assert.ok(said.text.includes('@Ana') && said.text.includes('« Corde »'), said.text);
+    // Ana le voit sur sa page, avec de quoi la lui donner
+    assert.deepEqual((await playerView.playerState(ana.id)).requested, [{slug: 'test-rope', from: [{id: ben.id, name: 'Ben'}]}]);
+    assert.deepEqual((await playerView.playerState(ben.id)).requested, []);
+
+    // Pas chez soi, pas ce qui n'y est pas
+    assert.ok((await ask(ana, 'test-rope', {type: 'player', id: ana.id})).refused);
+    assert.ok((await ask(ben, 'test-rope', {type: 'player', id: ben.id})).refused);
+    assert.ok((await ask(ana, 'pas-la', {type: 'ship'})).refused);
+    assert.ok((await ask(ana, 'test-rope', {type: 'loot'})).refused);
+
+    // Dans le vaisseau : la demande va au MJ ; un second clic la retire, sans
+    // nouveau message
+    sent = await ask(ana, 'test-rope', {type: 'ship'});
+    assert.equal(sent.data.data.requests.length, 2);
+    assert.ok(chat.historyFor(ana.id).pop().text.startsWith('MJ :'));
+    let count = chat.historyFor(ana.id).length;
+    sent = await ask(ana, 'test-rope', {type: 'ship'});
+    assert.deepEqual(sent.data.data.requests.map(r => r.owner.type), ['player']);
+    assert.equal(chat.historyFor(ana.id).length, count);
+
+    // On ne prend jamais : un déplacement part toujours de son propre coffre
+    assert.ok((await move(ben, {slug: 'test-rope', from: {type: 'player', id: ana.id}, to: {type: 'player', id: ben.id}})).refused);
+    let fromShip = await move(ben, {slug: 'test-rope', from: {type: 'ship'}, to: {type: 'player', id: ana.id}});
+    assert.deepEqual(fromShip.data.from, {type: 'player', id: ben.id});
+    assert.equal((await inventory.handle(fromShip)).action, 'inventory-error'); // Ben n'a pas de corde
+
+    // Ana la donne à Ben : la demande tombe, les pages en sont prévenues
+    let out = await inventory.handle(await move(ana, {slug: 'test-rope', to: {type: 'player', id: ben.id}}));
+    assert.equal((await inventory.getInventory(ben.id)).find(i => i.slug === 'test-rope').count, 1);
+    assert.deepEqual(out.find(m => m.action === 'item-requests').data.requests, []);
+    assert.deepEqual(itemRequests.list(), []);
+
+    // Ben la range dans le vaisseau
+    await inventory.handle(await move(ben, {slug: 'test-rope', to: {type: 'ship'}}));
+    assert.equal(await inventory.countOf('test-rope', {type: 'ship'}), 3);
+    assert.equal(await inventory.countOf('test-rope', {type: 'player', id: ben.id}), 0);
+
+    // Nouvelle partie : plus de demande
+    await ask(ben, 'test-rope', {type: 'ship'});
+    itemRequests.clear();
+    assert.deepEqual(itemRequests.payload().data.requests, []);
+    assert.ok(playerView.MIRRORED.includes('item-requests'));
+
+    await DB.tables.items.destroy({where: {slug: 'test-rope'}});
+    await DB.tables.players.destroy({where: {discord_id: [ana.id, ben.id]}});
+    chat.clear();
+    console.log('Item requests OK');
+}
+
+// Fenêtre de dés : dés neutres lancés par le serveur, annoncés au salon (ou
+// au MJ seul), avec un détail qu'un message tapé à la main n'a pas
+async function test_dice() {
+    console.log('Testing dice window');
+    const dice = require('../src/controllers/dice');
+    const chat = require('../src/controllers/chat');
+    const remote = require('../src/controllers/remote');
+    let gmSeen = [];
+    chat.init(m => gmSeen.push(m));
+    chat.clear();
+    let zoe = {id: 'dice-zoe-0000001', name: 'Zoé'};
+    let max = {id: 'dice-max-0000001', name: 'Max'};
+    let throwDice = (player, data) => remote.translate(player, {kind: 'action', action: 'dice', data});
+
+    // Dés connus seulement, de 1 à 10 dés
+    assert.deepEqual(dice.SIDES, [2, 4, 6, 8, 10, 20, 100]);
+    assert.ok(dice.roll(7, 1).error);
+    assert.ok(dice.roll('../20', 1).error);
+    let faces = [3, 5, 6];
+    let r = dice.roll(6, 3, () => faces.shift());
+    assert.deepEqual(r, {sides: 6, count: 3, dice: [3, 5, 6], total: 14});
+    assert.equal(dice.text(r), '🎲 3D6 : 3 + 5 + 6 = 14');
+    assert.equal(dice.text(dice.roll(20, 1, () => 17)), '🎲 1D20 : 17');
+    assert.equal(dice.roll(4, 50).count, dice.MAX_COUNT);
+    assert.equal(dice.roll(4, -2).count, 1);
+    for (let i = 0; i < 200; i++) {
+        let one = dice.roll(100, 1);
+        assert.ok(one.total >= 1 && one.total <= 100);
+    }
+
+    // Un joueur lance : résultat pour lui, message de jet au salon pour tous
+    let sent = await throwDice(zoe, {sides: 20, count: 2});
+    assert.equal(sent.done, true);
+    assert.equal(sent.result.sides, 20);
+    assert.equal(sent.result.dice.length, 2);
+    assert.equal(sent.result.secret, false);
+    let said = chat.historyFor(max.id).pop();
+    assert.deepEqual(said.dice, {sides: 20, count: 2, dice: sent.result.dice, total: sent.result.total});
+    assert.equal(said.to, null);
+    assert.equal(said.from.name, 'Zoé'); // pas de perso : son pseudo
+    assert.equal(gmSeen.pop().data.message.dice.total, sent.result.total); // le MJ le voit
+
+    // Secret : le MJ et lui seulement
+    sent = await throwDice(zoe, {sides: 100, count: 1, secret: true});
+    assert.equal(sent.result.secret, true);
+    assert.equal(chat.historyFor(zoe.id).pop().to, zoe.id);
+    assert.ok(!chat.historyFor(max.id).some(m => m.dice && m.dice.sides === 100));
+
+    // Dé inconnu refusé ; un message tapé ne devient pas un jet
+    assert.ok((await throwDice(zoe, {sides: 3})).refused);
+    await remote.translate(max, {kind: 'action', action: 'chat', data: {text: '🎲 1D20 : 20', dice: {sides: 20, count: 1, dice: [20], total: 20}}});
+    assert.equal(chat.historyFor(max.id).pop().dice, undefined);
+
+    // Pas de rafale : même limite que le chat
+    let refused = 0;
+    for (let i = 0; i < 8; i++)
+        if ((await throwDice(max, {sides: 6})).refused)
+            refused++;
+    assert.ok(refused >= 2, 'anti-flood');
+
+    // Jet du MJ montré au salon
+    let gm = chat.gmDice(dice.roll(8, 1, () => 4));
+    assert.deepEqual([gm.from.gm, gm.to, gm.text, gm.dice.total], [true, null, '🎲 1D8 : 4', 4]);
+    assert.ok(remote.ACTIONS.includes('dice'));
+
+    chat.clear();
+    console.log('Dice window OK');
 }
 
 // Règles du tirage : dés = |bonus| + 1, meilleur dé avec un bonus, pire avec un malus
