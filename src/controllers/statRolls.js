@@ -83,6 +83,13 @@ const roll = function (player, stat, random = Math.random) {
     return {dice: entry.dice, stats: stats};
 };
 
+// Premier dé lancé : la race ne change plus (sinon changer de race et
+// revenir relancerait les dés)
+const started = function (player) {
+    let entry = rolls.get(player.discord_id);
+    return !!(entry && entry.race === player.race && STATS.some(s => entry.dice[s].length));
+};
+
 const reset = (id) => { rolls.delete(id); finished.delete(id); };
 
-module.exports = {state, roll, reset, isDone, STATS};
+module.exports = {state, roll, reset, isDone, started, STATS};

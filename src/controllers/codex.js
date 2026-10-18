@@ -161,6 +161,16 @@ const raceCard = function (race, seenRaces) {
     return card;
 };
 
+// Fiches des races jouables pour la création du perso, avec leurs objets de
+// départ (donnés à toute race dont le nom commence par celui de l'objet,
+// comme giveAllStarters : les objets « nek » vont aux quatre Neks)
+const creationCards = async function () {
+    let starters = (await itemCatalog()).filter(i => i.pool === 'starter' && i.race);
+    return races.playable().map(r => Object.assign(raceCard(r), {
+        starterItems: starters.filter(i => r.slug.startsWith(i.race)).map(i => ({name: i.name, desc: plain(i.desc)}))
+    }));
+};
+
 const itemCard = (item) => ({
     slug: item.slug, name: item.name, desc: plain(item.desc), type: item.type, rarity: item.rarity,
     race: item.race ? races.nameOf(item.race) : '',
@@ -255,4 +265,4 @@ const imageData = async function (key) {
     }
 };
 
-module.exports = {WIKI_URL, WIKI_PAGES, observe, remember, reset, known, racesIn, raceCard, forPlayers, forGm, imageData, IMAGE_MAX};
+module.exports = {WIKI_URL, WIKI_PAGES, observe, remember, reset, known, racesIn, raceCard, creationCards, forPlayers, forGm, imageData, IMAGE_MAX};
