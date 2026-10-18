@@ -48,6 +48,7 @@ async function test() {
     test_spelling();
     test_wiki_tables();
     test_random_companion();
+    test_mj_access();
     await test_remote();
 }
 
@@ -1933,4 +1934,53 @@ function test_random_companion() {
             allies.handle({action: 'ally-add', data: ally});
     }
     console.log('Random companion OK');
+}
+
+// Pages MJ : le PC du serveur et le lien MJ y ont accès, pas les joueurs du réseau
+function test_mj_access() {
+    console.log('Testing MJ access');
+    const mjAccess = require('../src/controllers/mjAccess');
+    const ejs = require('ejs');
+    const run = function (ip, path, extra) {
+        let req = Object.assign({method: 'GET', path: path, query: {}, headers: {}, socket: {remoteAddress: ip}}, extra || {});
+        let res = {locals: {}, headers: {}, setHeader(k, v) { this.headers[k] = v; }, redirect(to) { this.to = to; }};
+        let passed = false;
+        mjAccess.middleware(req, res, () => passed = true);
+        return {res, passed};
+    };
+    // PC du serveur : tout passe
+    for (let ip of ['127.0.0.1', '::1', '::ffff:127.0.0.1']) {
+        let r = run(ip, '/mj-menu');
+        assert.ok(r.passed && r.res.locals.isMJ);
+    }
+    // Joueur sur le réseau : pages MJ renvoyées au menu, le reste passe
+    for (let path of ['/mj-menu', '/template-card', '/template-planet', '/planet-lab', '/buildCard', '/races', '/items', '/bestiaire', '/end-screen', '/reset', '/MJ-Menu', '/races/']) {
+        let r = run('192.168.1.20', path);
+        assert.ok(!r.passed, path);
+        assert.strictEqual(r.res.to, '/index');
+    }
+    for (let path of ['/index', '/lobby', '/parametres', '/persos', '/fiche-vaisseau', '/codex', '/leaderboard', '/player/index.html']) {
+        let r = run('192.168.1.20', path);
+        assert.ok(r.passed && r.res.locals.isMJ === false, path);
+    }
+    // Lien MJ (QR code) : cookie posé, puis reconnu sans la clé
+    let key = mjAccess.getKey();
+    assert.ok(mjAccess.mjUrl('http://192.168.1.2:8080', 'mj-menu').endsWith('/mj-menu?mj=' + key));
+    let first = run('192.168.1.30', '/mj-menu', {query: {mj: key}});
+    assert.ok(first.passed && /lnob_mj=/.test(first.res.headers['Set-Cookie']));
+    assert.ok(run('192.168.1.30', '/races', {headers: {cookie: 'a=1; lnob_mj=' + key}}).passed);
+    assert.ok(!run('192.168.1.30', '/races', {headers: {cookie: 'lnob_mj=faux'}}).passed);
+    assert.ok(!run('192.168.1.30', '/races', {query: {mj: 'faux'}}).passed);
+
+    // Menu : liens MJ cachés aux joueurs
+    let nav = fs.readFileSync(__dirname + '/../public/views/partials/nav.ejs', 'utf8');
+    let player = ejs.render(nav, {isMJ: false});
+    let mj = ejs.render(nav, {isMJ: true});
+    for (let href of ['/mj-menu', '/template-card', '/template-planet', '/planet-lab', '/buildCard', '/races', '/items', '/bestiaire', '/end-screen', '/reset']) {
+        assert.ok(!player.includes('href="' + href + '"'), href);
+        assert.ok(mj.includes('href="' + href + '"'), href);
+    }
+    for (let href of ['/index', '/lobby', '/parametres', '/persos', '/fiche-vaisseau', '/codex', '/leaderboard'])
+        assert.ok(player.includes('href="' + href + '"'), href);
+    console.log('MJ access OK');
 }

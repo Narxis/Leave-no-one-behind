@@ -91,7 +91,10 @@ if (require.main === module) {
             log('Ajouter FORCE_COLOR=true aux variables d\'environnement pour les couleurs sur gitbash \n');
         log(`http://localhost:${PORT}/` + chalk.hex('#aaaaaa')(' (local)'),'#0645AD')
         log(`http://${ip}:${PORT}/` + chalk.hex('#aaaaaa')(' (Wifi Network)'),'#0645AD')
-        qrcode.generate(`http://${ip}:${PORT}/`, {small:true}, function (qrcode) {
+        // Lien MJ (avec la clé) : les autres appareils du réseau n'ont pas les pages MJ
+        let mjLink = require('./src/controllers/mjAccess').mjUrl(`http://${ip}:${PORT}`, 'mj-menu');
+        log(mjLink + chalk.hex('#aaaaaa')(' (MJ sur le Wifi)'),'#0645AD')
+        qrcode.generate(mjLink, {small:true}, function (qrcode) {
             console.log(qrcode);
         });
     });
