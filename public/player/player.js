@@ -138,6 +138,7 @@
         $('join').hidden = panel !== 'join';
         $('lobby').hidden = panel !== 'lobby';
         $('main').classList.toggle('wide', panel === 'lobby');
+        document.body.classList.toggle('in-game', panel === 'lobby');
     };
 
     const setStatus = function (text, kind) {
@@ -178,6 +179,16 @@
             b.setAttribute('aria-selected', b.dataset.tab === name);
         });
         document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.dataset.panel !== name; });
+        $('back-game').hidden = name === 'game';
+        setMenu(false);
+    };
+
+    // ---- Menu (burger en haut à gauche) ------------------------------------
+
+    const setMenu = function (open) {
+        $('menu-drawer').hidden = !open;
+        $('menu-toggle').setAttribute('aria-expanded', open);
+        $('menu-toggle').classList.toggle('open', open);
     };
 
     // ---- Chat ------------------------------------------------------------
@@ -191,6 +202,25 @@
             b.textContent = chatUnread[c];
             b.hidden = !chatUnread[c];
         }
+        $('chat-open-badge').textContent = chatClosedUnread;
+        $('chat-open-badge').hidden = !chatClosedUnread;
+    };
+
+    // Chat fermé : un bouton le rouvre, avec les messages arrivés entre-temps
+    // (ouvert d'office sur grand écran, fermé sur téléphone, où il cache la carte)
+    let chatPref = store.get('lnob-chat-closed');
+    let chatOpen = chatPref ? chatPref !== '1' : !!(window.matchMedia && window.matchMedia('(min-width: 900px)').matches);
+    let chatClosedUnread = 0;
+    const setChatOpen = function (open) {
+        chatOpen = open;
+        store.set('lnob-chat-closed', open ? '0' : '1');
+        $('chat').hidden = !open;
+        $('chat-open').hidden = open;
+        if (open) {
+            chatClosedUnread = 0;
+            renderChat();
+        }
+        renderChatBadges();
     };
 
     const renderChat = function () {
@@ -215,6 +245,8 @@
         // Le chat est toujours affiché : seule l'autre conversation compte des non-lus
         if (m.from.id !== playerId && c !== chatChannel)
             chatUnread[c]++;
+        if (m.from.id !== playerId && !chatOpen)
+            chatClosedUnread++;
         renderChat();
     };
 
@@ -1082,6 +1114,79 @@
     });
     renderDiscord();
 
+    // ---- Fond : étoiles qui filent, comme sur l'écran de jeu ---------------
+
+    (function () {
+        let canvas = $('starfield');
+        let ctx = canvas.getContext && canvas.getContext('2d');
+        if (!ctx)
+            return;
+        let w = 0, h = 0, stars = [];
+        const spawn = (star, far) => {
+            star.a = Math.random() * Math.PI * 2;
+            star.d = far ? Math.random() : Math.random() * .05;
+            star.v = .0008 + Math.random() * .0022;
+        };
+        const resize = () => {
+            let dpr = Math.min(window.devicePixelRatio || 1, 2);
+            w = canvas.width = innerWidth * dpr;
+            h = canvas.height = innerHeight * dpr;
+            canvas.style.width = innerWidth + 'px';
+            canvas.style.height = innerHeight + 'px';
+        };
+        for (let i = 0; i < 220; i++) {
+            let star = {};
+            spawn(star, true);
+            stars.push(star);
+        }
+        const draw = () => {
+            ctx.clearRect(0, 0, w, h);
+            let cx = w / 2, cy = h / 2, reach = Math.hypot(cx, cy);
+            let scale = w / 1600;
+            for (let st of stars) {
+                let k = st.d * st.d;
+                let r = k * reach;
+                let x = cx + Math.cos(st.a) * r, y = cy + Math.sin(st.a) * r;
+                let len = reduceMotion ? 0 : k * 34 * scale;
+                let alpha = Math.min(.7, st.d * .8);
+                if (len < 1.5) {
+                    ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
+                    ctx.fillRect(x, y, 1.5 * scale + .5, 1.5 * scale + .5);
+                }
+                else {
+                    // Traînée qui s'efface vers le centre
+                    let tx = x - Math.cos(st.a) * len, ty = y - Math.sin(st.a) * len;
+                    let g = ctx.createLinearGradient(tx, ty, x, y);
+                    g.addColorStop(0, 'rgba(255,255,255,0)');
+                    g.addColorStop(1, 'rgba(255,255,255,' + alpha + ')');
+                    ctx.strokeStyle = g;
+                    ctx.lineWidth = Math.max(1, k * 2.4 * scale);
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(tx, ty);
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                }
+                if (!reduceMotion) {
+                    st.d += st.v;
+                    if (st.d > 1.05)
+                        spawn(st, false);
+                }
+            }
+        };
+        const loop = () => {
+            if (!document.hidden)
+                draw();
+            requestAnimationFrame(loop);
+        };
+        resize();
+        addEventListener('resize', () => { resize(); draw(); });
+        if (reduceMotion)
+            draw();
+        else
+            requestAnimationFrame(loop);
+    })();
+
     // ---- Formulaires et boutons ------------------------------------------
 
     $('join').addEventListener('submit', (event) => {
@@ -1118,6 +1223,16 @@
     });
 
     $('phase-action').addEventListener('click', () => selectTab('me'));
+    $('back-game').addEventListener('click', () => selectTab('game'));
+    $('menu-toggle').addEventListener('click', () => setMenu($('menu-drawer').hidden));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+    document.addEventListener('click', (e) => {
+        if (!$('menu-drawer').hidden && !e.target.closest('.topbar'))
+            setMenu(false);
+    });
+    $('chat-close').addEventListener('click', () => setChatOpen(false));
+    $('chat-open').addEventListener('click', () => { setChatOpen(true); $('chat-text').focus(); });
+    setChatOpen(chatOpen);
 
     $('create').addEventListener('click', () => {
         $('create').disabled = true;
