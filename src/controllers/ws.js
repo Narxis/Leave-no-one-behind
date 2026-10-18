@@ -22,6 +22,7 @@ const roles = require("./roles");
 const votes = require("./votes");
 const planetScan = require("./planetScan");
 const itemUse = require("./itemUse");
+const intro = require("./intro");
 const WebSocket = require("ws");
 
 const init = function (){
@@ -186,6 +187,10 @@ const makeAction = async function (raw_response) {
             break;
         case 'votes':
             payload = votes.payload();
+            break;
+        // Synopsis et fiche du vaisseau : joueurs prêts à continuer
+        case 'intro':
+            payload = intro.payload();
             break;
         // Page planète : points de détection et scans faits
         case 'planet-screen':

@@ -8,6 +8,9 @@ const races = require('./races');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const rolls = new Map(); // id du joueur → {race, dice: {stat: [valeurs]}}
+// Dernier tirage terminé, gardé pour que le joueur voie son dernier dé
+// avant de passer à sa fiche
+const finished = new Map();
 
 const dieCount = (mod) => Math.abs(parseInt(mod) || 0) + 1;
 const modsOf = (race) => races.getStats()[race] || {};
@@ -34,21 +37,24 @@ const current = function (player) {
     return entry;
 };
 
-// Ce que voit le joueur : dés lancés, dés restants et dé gardé par stat
+const statsOf = function (race, entry) {
+    let mods = modsOf(race);
+    return STATS.map(stat => {
+        let mod = parseInt(mods[stat]) || 0;
+        return {stat, mod, dice: entry.dice[stat], total: dieCount(mod), kept: kept(entry.dice[stat], mod)};
+    });
+};
+
+// Ce que voit le joueur : dés lancés, dés restants et dé gardé par stat.
+// Une fois fini, le dernier tirage reste visible (stats) s'il est connu.
 const state = function (player) {
     if (!player.race)
         return {step: 'race'};
-    if (isDone(player))
-        return {step: 'done'};
-    let mods = modsOf(player.race);
-    let entry = current(player);
-    return {
-        step: 'stats',
-        stats: STATS.map(stat => {
-            let mod = parseInt(mods[stat]) || 0;
-            return {stat, mod, dice: entry.dice[stat], total: dieCount(mod), kept: kept(entry.dice[stat], mod)};
-        })
-    };
+    if (isDone(player)) {
+        let last = finished.get(player.discord_id);
+        return last && last.race === player.race ? {step: 'done', stats: statsOf(player.race, last)} : {step: 'done'};
+    }
+    return {step: 'stats', stats: statsOf(player.race, current(player))};
 };
 
 // Lance le dé suivant de cette stat. Renvoie {dice} pendant le tirage,
@@ -73,9 +79,10 @@ const roll = function (player, stat, random = Math.random) {
     for (let s of STATS)
         stats[s] = kept(entry.dice[s], parseInt(mods[s]) || 0) + 50;
     rolls.delete(player.discord_id);
+    finished.set(player.discord_id, entry);
     return {dice: entry.dice, stats: stats};
 };
 
-const reset = (id) => rolls.delete(id);
+const reset = (id) => { rolls.delete(id); finished.delete(id); };
 
 module.exports = {state, roll, reset, isDone, STATS};

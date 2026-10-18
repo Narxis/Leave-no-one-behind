@@ -119,6 +119,20 @@
 .lobby-btn.primary { align-self: center; padding: 12px 28px; border-color: var(--ui-accent); color: var(--ui-accent); background: var(--ui-accent-soft); }
 .lobby-btn.danger { align-self: flex-end; border-color: rgb(255 90 110 / 45%); color: var(--ui-danger); background: transparent; }
 
+.lobby-launch {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    text-align: center;
+}
+
+.lobby-launch-hint { color: var(--ui-text-dim); font-size: 14px; }
+.lobby-launch-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.lobby-launch-buttons .lobby-btn[hidden] { display: none; }
+
 .lobby-empty { color: var(--ui-text-dim); }
 .lobby-empty[hidden] { display: none; }
 
