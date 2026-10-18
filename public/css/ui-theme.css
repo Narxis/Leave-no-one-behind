@@ -711,6 +711,44 @@ body.combat-mode .stats-legend-title {
 }
 /*---^^^---Noms des stats---^^^---*/
 
+/* Objets demandés par des joueurs en ligne : logo du rôle des demandeurs à
+   côté de l'objet, coffre du joueur qui l'a allumé (inventory.js) */
+.item-requesters {
+    display: inline-flex;
+    gap: 3px;
+    margin-left: auto;
+    padding-left: 6px;
+    vertical-align: middle;
+}
+
+.item-requesters .vote-role {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.item-requesters .vote-initial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ui-accent);
+    border-radius: 50%;
+    color: var(--ui-accent);
+    font-size: 10px;
+    line-height: 1;
+}
+
+.player-tab.item-requested .expander-item {
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+    animation: item-requested 1.4s ease-in-out infinite;
+}
+
+@keyframes item-requested {
+    0%, 100% { box-shadow: 0 0 0 0 rgb(255 204 0 / 0%); }
+    50% { box-shadow: 0 0 14px 2px rgb(255 204 0 / 55%); }
+}
+
 /* Inventaires : glisser-déposer du MJ (inventory.js) */
 .combat-loot-item[data-index],
 .player-tab:not(.npc-tab) .itemlist-line[data-slug],

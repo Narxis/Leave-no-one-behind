@@ -14,6 +14,7 @@ const lobby = require("./lobby");
 const playerView = require("./playerView");
 const chat = require("./chat");
 const votes = require("./votes");
+const itemRequests = require("./itemRequests");
 const intro = require("./intro");
 const planetScan = require("./planetScan");
 const itemUse = require("./itemUse");
@@ -223,6 +224,7 @@ module.exports = {
             shipAlerts.reset();
             chat.clear();
             votes.clear();
+            itemRequests.clear();
             planetScan.clear();
             itemUse.clear();
             // Codex des joueurs : rien de rencontré dans la nouvelle partie

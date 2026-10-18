@@ -12,6 +12,8 @@
 // et il renvoie à la page joueur :
 //   {lnobScreen: 'ready'}                 prêt à recevoir l'état
 //   {lnobScreen: 'vote', index}           vote du joueur sur un choix
+//   {lnobScreen: 'move', slug, to, all}   objet de son coffre donné
+//   {lnobScreen: 'request', slug, owner}  objet d'un autre demandé
 (function () {
     'use strict';
 
@@ -212,11 +214,75 @@
             icon.classList.remove('hide-opacity');
     });
 
-    // Pas de glisser-déposer des objets : c'est le MJ qui les range
+    // ---- Objets : chacun range son propre coffre --------------------------
+    // Le joueur glisse un objet de son coffre sur l'onglet d'un autre joueur
+    // ou sur la liste du vaisseau pour le donner (le glisser-déposer
+    // d'inventory.js, comme chez le MJ). Il ne prend rien chez les autres :
+    // un clic sur leur objet le demande (son logo s'affiche à côté, un message
+    // part dans le chat), un second clic retire la demande. Le butin reste
+    // distribué par le MJ.
+    let itemAsks = [];
+    const canHandleItems = () => !!(me && you && you.character);
+    const isOwnLine = (line) => !!line && canHandleItems() && line.matches('.itemlist-line[data-slug]')
+        && !line.closest('.npc-tab') && line.dataset.owner === String(me);
+    // Objet d'un autre joueur ou du vaisseau : {slug, owner}
+    const askable = function (target) {
+        if (!canHandleItems())
+            return null;
+        let line = target.closest('.player-tab:not(.npc-tab) .itemlist-line[data-slug]');
+        if (line && line.dataset.owner !== String(me))
+            return {slug: line.dataset.slug, owner: {type: 'player', id: line.dataset.owner}};
+        let li = target.closest('.todos li[data-slug]');
+        if (li)
+            return {slug: li.dataset.slug, owner: {type: 'ship'}};
+        return null;
+    };
+    const askedByMe = (slug, owner) => itemAsks.some(r => r.slug === slug && r.owner.type === owner.type
+        && String(r.owner.id || '') === String(owner.id || '') && (r.from || []).some(f => f.id === String(me)));
+
+    // Seuls ses propres objets s'attrapent
     window.addEventListener('pointerdown', (e) => {
-        if (e.target.closest && e.target.closest('[data-slug], .itemlist-line, .todos li'))
+        let line = e.target.closest && e.target.closest('[data-slug], .itemlist-line, .todos li');
+        if (line && !(isOwnLine(line) && !e.target.closest('.item-trash')))
             e.stopPropagation();
     }, true);
+    // Clic sur un objet : le coffre reste ouvert, la case du vaisseau n'est
+    // pas cochée ; sur l'objet d'un autre, c'est une demande
+    for (let type of ['mouseup', 'click'])
+        window.addEventListener(type, (e) => {
+            if (!e.target.closest || !e.target.closest('.itemlist-line, .todos li[data-slug]'))
+                return;
+            e.stopPropagation();
+            if (type !== 'click')
+                return;
+            e.preventDefault();
+            let ask = askable(e.target);
+            if (ask && e.button === 0)
+                toPage('request', ask);
+        }, true);
+
+    // Lâché sur un joueur ou le vaisseau (inventory.js) : la page joueur
+    // l'envoie au relais, qui le donne depuis son coffre
+    wsLNOB.send = function (msg) {
+        let d = msg && msg.action === 'inventory-move' && msg.data;
+        if (!d || !d.from || d.from.type !== 'player' || String(d.from.id) !== String(me) || !d.to)
+            return;
+        toPage('move', {slug: String(d.slug || ''), to: d.to.type === 'ship' ? {type: 'ship'} : {type: 'player', id: String(d.to.id || '')}, all: !!d.all});
+    };
+
+    // Ce que chaque objet permet, au survol
+    const markItems = function () {
+        document.querySelectorAll('.player-tab:not(.npc-tab) .itemlist-line[data-slug], .todos li[data-slug]').forEach(line => {
+            let own = isOwnLine(line);
+            let ask = !own && askable(line);
+            line.classList.toggle('player-own', own);
+            line.classList.toggle('player-ask', !!ask);
+            line.classList.toggle('player-asked', !!ask && askedByMe(ask.slug, ask.owner));
+            let count = line.querySelector('.item-count');
+            line.title = own ? 'Glisser sur un joueur ou sur le vaisseau pour le donner' + (count ? ' (Maj : toute la pile)' : '')
+                : ask ? (askedByMe(ask.slug, ask.owner) ? 'Annuler ma demande' : 'Demander cet objet') : '';
+        });
+    };
 
     // ---- Texte de la carte, au rythme de la page du MJ ---------------------
     // Même écriture que card.js (writeCardDesc) : 21,7 ms par lettre, quatre
@@ -455,7 +521,11 @@
             state.items = (state.items || []).map(item => Object.assign({}, item, {image: imageUrl(item.image)}));
             payload = Object.assign({}, payload, {data: Object.assign({}, payload.data, {state: state})});
         }
+        if (payload.action === 'item-requests')
+            itemAsks = (payload.data && payload.data.requests) || [];
         document.dispatchEvent(new CustomEvent(payload.action, {detail: payload}));
+        if (payload.action === 'inventory' || payload.action === 'item-requests')
+            markItems();
         // Butin d'une carte vidé : chez le MJ, card.js le ferme puis l'histoire
         // reprend ; ici on le ferme après le même délai
         if (payload.action === 'card-loot' && !(payload.data.state.items || []).length) {
@@ -624,6 +694,7 @@
         renderShip(game.ship);
         renderStatuses(game.statuses);
         renderTeam(game.team);
+        markItems();
         let card = game.card;
         if (PLANET) {
             if (card && card.kind === 'planet')

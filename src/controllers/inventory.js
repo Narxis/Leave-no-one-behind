@@ -2,6 +2,7 @@ const combat = require('./combat');
 const cardLoot = require('./cardLoot');
 const loot = require('./loot');
 const money = require('./money');
+const itemRequests = require('./itemRequests');
 
 // Inventaires des joueurs : un objet appartient à un joueur quand son
 // discord_id figure dans « owners » (liste séparée par des virgules). Un id
@@ -175,11 +176,16 @@ const takeAllCardLoot = async function () {
 
 // Message websocket : inventaires à jour (+ l'état du combat si le butin a changé)
 const payload = async function (event) {
+    let inventories = await getInventories();
+    let ship = await getShip();
     let messages = [{
         action: 'inventory',
         error: false,
-        data: {inventories: await getInventories(), ship: await getShip(), wallets: await money.wallets(), currency: money.publicConfig(), event: event || null}
+        data: {inventories: inventories, ship: ship, wallets: await money.wallets(), currency: money.publicConfig(), event: event || null}
     }];
+    // Objet parti (donné, utilisé, jeté) : les demandes qu'il avait tombent
+    if (itemRequests.prune(inventories, ship))
+        messages.push(itemRequests.payload());
     if (event && event.lootTaken)
         messages.push({action: 'combat', error: false, data: {state: combat.getState(), event: {type: 'loot-taken'}}});
     if (event && event.cardLootTaken)
