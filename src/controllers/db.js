@@ -156,6 +156,11 @@ class DB {
                 defaultValue: '',
                 allowNull: false
             },
+            shop: { // marchand ouvert par le choix : JSON {name, stock?}
+                type: Sequelize.TEXT,
+                defaultValue: '',
+                allowNull: false
+            },
             status: { // statut donné par le choix : JSON {slug, duration}
                 type: Sequelize.TEXT,
                 defaultValue: '',
@@ -519,7 +524,7 @@ class DB {
 
         // Colonnes ajoutées après coup : on les crée dans une base existante
         // plutôt que d'incrémenter DB_VERSION (qui repartirait d'une base vide)
-        await this.addMissingColumns('card_modules', ['humans', 'loot', 'status', 'roll', 'outcomes']);
+        await this.addMissingColumns('card_modules', ['humans', 'loot', 'status', 'roll', 'outcomes', 'shop']);
         await this.addMissingColumns('players', ['role', 'credits']);
         await this.addMissingColumns('ship', ['credits', 'armory_up']);
         await this.addMissingColumns('statuses', ['player_id', 'custom', 'clear_after_planet']);
