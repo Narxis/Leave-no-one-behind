@@ -351,7 +351,8 @@ function announceScreen(chosen) {
     wsLNOB.send({action: 'card-screen', data: data});
 }
 
-// Votes des joueurs : nombre de voix sous chaque bouton
+// Votes des joueurs : sous chaque bouton, le logo du rôle de ceux qui l'ont
+// choisi et le nombre de voix
 function showVotes(data) {
     if (!data)
         return;
@@ -369,7 +370,7 @@ function showVotes(data) {
             badge.className = 'vote-count';
             btn.append(badge);
         }
-        badge.textContent = count + (count > 1 ? ' votes' : ' vote');
+        badge.replaceChildren(voteRoleIcons((data.voters || []).filter(v => v.index === i)), count + (count > 1 ? ' votes' : ' vote'));
     });
 }
 document.addEventListener('votes', (e) => showVotes(e.detail.data));

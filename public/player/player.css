@@ -244,6 +244,8 @@ h2 { margin: 8px 0 0; font-size: 13px; font-weight: 600; color: var(--dim); text
     text-align: center;
 }
 .phase-banner p { margin: 0; }
+/* Création des persos : message d'attente en tête de la fiche (onglet Partie) */
+.me-phase { margin: 0 0 4px; padding-bottom: 14px; border-bottom: 1px solid var(--border); font-size: 20px; text-align: center; }
 
 .stage { display: flex; flex-direction: column; align-items: center; min-width: 0; }
 .stage .card-last { align-self: stretch; margin-bottom: 12px; }
@@ -285,10 +287,23 @@ h2 { margin: 8px 0 0; font-size: 13px; font-weight: 600; color: var(--dim); text
 }
 .screen-inner {
     position: relative;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     min-height: 390px;
     padding: 10px 17px;
 }
+/* La carte garde sa taille, comme celle du jeu : un texte trop long défile
+   dedans (le titre reste en haut), sans ascenseur visible */
+.screen-card { height: 452px; }
+.screen-inner .card-desc {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+}
+.screen-inner .card-desc::-webkit-scrollbar { display: none; }
 /* Coins dorés de la carte du jeu (template-card.css, ui-card.css) : un en
    haut à droite, un en bas à gauche ; au survol, ils s'étirent en cadre */
 .screen-card::after, .screen-inner::before {
@@ -371,6 +386,11 @@ button.choice-text {
     letter-spacing: 0.06em;
     pointer-events: none;
 }
+/* Qui a voté : logo du rôle (initiale sans rôle) avant le nombre de voix */
+.choice-voters { display: inline-flex; gap: 3px; margin-right: 6px; vertical-align: middle; }
+.choice-voters:empty { display: none; }
+.voter-icon { width: 16px; height: 16px; object-fit: contain; }
+.voter-initial { display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--ok); border-radius: 50%; font-size: 9px; line-height: 1; letter-spacing: 0; }
 .choice-tab.voted { border-color: var(--ok); color: var(--text); box-shadow: 0 0 20px -6px rgb(79 216 224 / 55%); }
 .choice-tab.chosen { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-accent); }
 .choice-tab.dimmed { opacity: .45; }
@@ -735,7 +755,8 @@ body.planet-mode .planet-orbit { display: none; }
     .stage .module-dials .dial-img { width: 62%; height: 62%; }
     .stage .module-dials .dial-value { display: block; }
     .screen-card, .combat-screen { min-height: 0; padding: 14px; border-radius: 18px; }
-    .screen-inner { min-height: 160px; padding: 18px 16px; }
+    .screen-card { height: clamp(240px, 50vh, 420px); }
+    .screen-inner { min-height: 0; padding: 18px 16px; }
     .choice-tabs { flex-direction: column; width: calc(100% - 28px); padding: 0; gap: 0; }
     .choice-tab { flex: none; min-height: 52px; padding: 12px 14px 22px; border-radius: 0; border-top: 1px solid var(--border); }
     .choice-tab:first-child { border-top: none; }

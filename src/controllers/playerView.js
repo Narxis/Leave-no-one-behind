@@ -71,7 +71,7 @@ const publicCard = function (card) {
         let seen = {id: card.id, kind: kind, desc: '', choices: [], lastPlanet: card.lastPlanet ? LANG.last_planet : null,
             planet: planetScan.forCard(card)};
         if (screen)
-            Object.assign(seen, {screen: screen.id, choices: screen.choices.map(cleanText), counts: screen.counts, chosen: screen.chosen});
+            Object.assign(seen, {screen: screen.id, choices: screen.choices.map(cleanText), counts: screen.counts, voters: screen.voters, chosen: screen.chosen});
         return seen;
     }
     if (screen)
@@ -83,6 +83,7 @@ const publicCard = function (card) {
             screen: screen.id,
             choices: screen.choices.map(cleanText),
             counts: screen.counts,
+            voters: screen.voters,
             chosen: screen.chosen
         };
     return {
