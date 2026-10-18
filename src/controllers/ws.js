@@ -33,7 +33,8 @@ const init = function (){
 
             let data = isBinary ? message : message.toString();
             let data_json = JSON.parse(data);
-            log('[WS] '+ chalk.hex('#aaaaaa')(data_json.action), '#ffcc00');
+            if (data_json.action !== 'card-timer') // une fois par seconde
+                log('[WS] '+ chalk.hex('#aaaaaa')(data_json.action), '#ffcc00');
             // Une action peut produire plusieurs messages (un /roll qui règle
             // aussi une attaque de combat)
             makeAction(data).then(data => {
@@ -179,6 +180,10 @@ const makeAction = async function (raw_response) {
         // Page de jeu : texte et choix affichés (votes des joueurs)
         case 'card-screen':
             payload = votes.setScreen(response.data);
+            break;
+        // Page de jeu : compte à rebours des choix, pour les joueurs en ligne
+        case 'card-timer':
+            payload = playerView.setTimer(response.data);
             break;
         case 'votes':
             payload = votes.payload();

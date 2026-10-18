@@ -48,6 +48,7 @@ async function test() {
     test_spelling();
     test_wiki_tables();
     test_random_companion();
+    test_mj_access();
     await test_remote();
 }
 
@@ -331,7 +332,7 @@ async function test_votes() {
     // Suite affichée : nouveaux choix, votes remis à zéro, texte révélé public
     votes.setScreen({cardId: 4, text: 'Vous fuyez{....} de justesse', choices: ['Continuer votre chemin']});
     seen = playerView.publicCard(card);
-    assert.equal(seen.desc, 'Vous fuyez… de justesse');
+    assert.equal(seen.desc, 'Vous fuyez{....} de justesse');
     assert.deepEqual(seen.counts, [0]);
     assert.equal(votes.voteOf(alice.id), null);
 
@@ -430,7 +431,7 @@ function test_player_view() {
     let card = {id: 4, type: TYPE_NEGATIVE, name: 'secret-name', desc: 'Une alarme{....} retentit', mjreveal: 'piège', timer: 1,
         choices: [{value: 'Fuir', reveal: 'ils meurent', mjreveal: 'x', next: 'suite', loot: ['medkit']}, {value: 'Combattre'}]};
     let seen = playerView.publicCard(card);
-    assert.deepEqual(seen, {id: 4, kind: 'event', desc: 'Une alarme… retentit', timer: true, choices: ['Fuir', 'Combattre']});
+    assert.deepEqual(seen, {id: 4, kind: 'event', desc: 'Une alarme{....} retentit', timer: true, choices: ['Fuir', 'Combattre']});
     let planet = playerView.publicCard({id: 9, type: TYPE_PLANET, name: 'archetype', desc: '', modules: {oxy: {val: 80, cost: 2}}});
     assert.deepEqual([planet.id, planet.kind, planet.desc, planet.choices, planet.lastPlanet], [9, 'planet', '', [], null]);
     assert.deepEqual(planet.planet.modules, {}); // rien de scanné : aucune valeur
@@ -1901,6 +1902,17 @@ async function test_combat() {
     await run('combat-end', {});
     assert.equal(playerView.combatState(), null);
 
+    // Atterrissage : le score posé par l'écran de fin passe les joueurs en fin
+    // de partie, même si la partie n'est pas en postGame
+    let state0 = CONFIG.gameState;
+    CONFIG.gameState = 'gameLive';
+    playerView.setScore({total: 1000});
+    let ended = await playerView.gameState();
+    assert.deepEqual([ended.phase, ended.card, ended.score], ['postGame', null, {total: 1000}]);
+    playerView.setScore(null);
+    assert.equal((await playerView.gameState()).phase, 'gameLive');
+    CONFIG.gameState = state0;
+
     // Initiative : joueurs puis compagnons du moral le plus haut au plus bas,
     // à égalité dans l'ordre d'arrivée ; qui commence selon le mode
     const P = (id, moral) => ({discord_id: id, name: id, moral: moral});
@@ -1989,4 +2001,58 @@ function test_random_companion() {
             allies.handle({action: 'ally-add', data: ally});
     }
     console.log('Random companion OK');
+}
+
+// Pages MJ : le PC du serveur et le lien MJ y ont accès, pas les joueurs du réseau
+function test_mj_access() {
+    console.log('Testing MJ access');
+    const mjAccess = require('../src/controllers/mjAccess');
+    const ejs = require('ejs');
+    const run = function (ip, path, extra) {
+        let req = Object.assign({method: 'GET', path: path, query: {}, headers: {}, socket: {remoteAddress: ip}}, extra || {});
+        let res = {locals: {}, headers: {}, setHeader(k, v) { this.headers[k] = v; }, redirect(to) { this.to = to; }};
+        let passed = false;
+        mjAccess.middleware(req, res, () => passed = true);
+        return {res, passed};
+    };
+    // PC du serveur : tout passe
+    for (let ip of ['127.0.0.1', '::1', '::ffff:127.0.0.1']) {
+        let r = run(ip, '/mj-menu');
+        assert.ok(r.passed && r.res.locals.isMJ);
+    }
+    // Joueur sur le réseau : pages MJ renvoyées au menu, le reste passe
+    for (let path of ['/mj-menu', '/template-card', '/template-planet', '/planet-lab', '/buildCard', '/races', '/items', '/bestiaire', '/end-screen', '/reset', '/MJ-Menu', '/races/']) {
+        let r = run('192.168.1.20', path);
+        assert.ok(!r.passed, path);
+        assert.strictEqual(r.res.to, '/index');
+    }
+    for (let path of ['/index', '/lobby', '/parametres', '/persos', '/fiche-vaisseau', '/codex', '/leaderboard', '/player/index.html']) {
+        let r = run('192.168.1.20', path);
+        assert.ok(r.passed && r.res.locals.isMJ === false, path);
+    }
+    // Lien MJ (QR code) : cookie posé, puis reconnu sans la clé
+    let key = mjAccess.getKey();
+    assert.ok(mjAccess.mjUrl('http://192.168.1.2:8080', 'mj-menu').endsWith('/mj-menu?mj=' + key));
+    let first = run('192.168.1.30', '/mj-menu', {query: {mj: key}});
+    assert.ok(first.passed && /lnob_mj=/.test(first.res.headers['Set-Cookie']));
+    assert.ok(run('192.168.1.30', '/races', {headers: {cookie: 'a=1; lnob_mj=' + key}}).passed);
+    assert.ok(!run('192.168.1.30', '/races', {headers: {cookie: 'lnob_mj=faux'}}).passed);
+    assert.ok(!run('192.168.1.30', '/races', {query: {mj: 'faux'}}).passed);
+
+    // Menu : liens MJ cachés aux joueurs
+    let nav = fs.readFileSync(__dirname + '/../public/views/partials/nav.ejs', 'utf8');
+    let player = ejs.render(nav, {isMJ: false});
+    let mj = ejs.render(nav, {isMJ: true});
+    for (let href of ['/mj-menu', '/template-card', '/template-planet', '/planet-lab', '/buildCard', '/races', '/items', '/bestiaire', '/end-screen', '/reset']) {
+        assert.ok(!player.includes('href="' + href + '"'), href);
+        assert.ok(mj.includes('href="' + href + '"'), href);
+    }
+    for (let href of ['/index', '/lobby', '/parametres', '/persos', '/fiche-vaisseau', '/codex', '/leaderboard'])
+        assert.ok(player.includes('href="' + href + '"'), href);
+    // Options : dans l'engrenage, pour le MJ et les joueurs
+    for (let page of [player, mj]) {
+        assert.ok(page.includes('id="options-open" class="options-gear"'));
+        assert.ok(!page.includes('<li>Options</li>'));
+    }
+    console.log('MJ access OK');
 }

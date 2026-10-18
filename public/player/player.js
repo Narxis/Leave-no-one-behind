@@ -16,8 +16,10 @@
     // Panneau « Statistiques » et cadrans des modules, comme sur l'écran de jeu
     const HUD_STATS = [['combat', 'Combat/offense'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'], ['survival', 'Survie/défense'], ['recon', 'Reconnaissance'], ['moral', 'Moral']];
     const MAIN_MODULES = {motors: 'Moteurs', scanner: 'Scanner', proximity: 'Détecteur', oxygen: 'Oxygène', energy: 'Électricité', gravity: 'Gravité'};
+    const SECOND_MODULES = [['landing', 'Atterrissage'], ['construction', 'Construction'], ['dbscience', 'BDD scientifique'], ['dbhistory', 'BDD historique']];
     // Relevés autour de la planète : à gauche, puis à droite (écran de jeu)
     const PLANET_LEFT = ['oxy', 'cli', 'grv'];
+    let starWarp = () => {}; // voyage entre deux cartes (fond étoilé, plus bas)
     const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     // Site du wiki des règles (même adresse dans src/controllers/codex.js)
     const WIKI_URL = 'https://narxis.github.io/Leave-no-one-behind-Wiki/';
@@ -171,6 +173,13 @@
 
     // ---- Onglets ----------------------------------------------------------
 
+    // Planète affichée sur l'onglet Partie : disposition de la page planète
+    // du MJ (scans à gauche, planète au centre, humains et modules à droite)
+    let planetShown = false;
+    const updatePlanetMode = function () {
+        document.body.classList.toggle('planet-mode', planetShown && tab === 'game');
+    };
+
     const selectTab = function (name) {
         tab = name;
         store.set('lnob-player-tab', name);
@@ -181,6 +190,7 @@
         document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.dataset.panel !== name; });
         $('back-game').hidden = name === 'game';
         setMenu(false);
+        updatePlanetMode();
     };
 
     // ---- Menu (burger en haut à gauche) ------------------------------------
@@ -340,6 +350,18 @@
             li.append(el('span', 'status-name', st.name), el('span', 'status-turns', String(st.duration)));
             return li;
         }));
+        // Modules principaux et secondaires (panneau de droite de la page planète)
+        let values = new Map(ship ? ship.modules.map(m => [m.id, m.value]) : []);
+        $('hud-main-modules').replaceChildren(...Object.entries(MAIN_MODULES).map(([id, label]) => {
+            let li = dial(id, label, values.get(id));
+            li.classList.add('dial-row');
+            return li;
+        }));
+        $('hud-second-modules').replaceChildren(...SECOND_MODULES.map(([id, label]) => {
+            let li = el('li', 'hud-second');
+            li.append(el('span', 'dim', label + ' :'), el('strong', '', (values.get(id) || 0) + ' %'));
+            return li;
+        }));
         let character = you && you.character;
         $('hud-no-stats').hidden = !!character;
         $('hud-stats').replaceChildren(...(character ? HUD_STATS.map(([stat, label]) => {
@@ -404,48 +426,127 @@
     // ---- Révélation de la carte : cadre qui s'ouvre, texte qui s'écrit -----
 
     let revealKey = null;
-    let typing = null;
-    const typeText = function (node) {
-        clearInterval(typing);
-        if (reduceMotion)
-            return;
-        let parts = [];
-        const walk = (n) => n.childNodes.forEach(c => c.nodeType === Node.TEXT_NODE ? parts.push([c, c.textContent]) : walk(c));
-        walk(node);
-        parts.forEach(([c]) => { c.textContent = ''; });
-        let i = 0, pos = 0;
-        typing = setInterval(() => {
-            let budget = 3;
-            while (budget > 0 && i < parts.length) {
-                let [c, text] = parts[i];
-                let take = Math.min(budget, text.length - pos);
-                c.textContent += text.slice(pos, pos + take);
-                pos += take;
-                budget -= take;
-                if (pos >= text.length) {
-                    i++;
-                    pos = 0;
+    let lastTravelKey; // undefined : rien reçu encore (pas de voyage au chargement)
+    // Texte de la carte écrit lettre par lettre, comme l'écran de jeu
+    // (card.js, writeCardDesc) : 22 ms par lettre ; à chaque pause {....},
+    // quatre points (400 ms chacun), puis le texte s'efface et repart à zéro.
+    // Un clic sur la carte accélère (pauses divisées par 15, 5 lettres à la fois).
+    const STOP_TOKEN = '{....}';
+    const lastSegment = (text) => String(text || '').split(STOP_TOKEN).pop();
+    let typingRun = 0;
+    let typingFast = false;
+    const typePause = (ms) => new Promise(r => setTimeout(r, typingFast ? ms / 15 : ms));
+    const typeText = async function (node, text) {
+        let run = ++typingRun;
+        typingFast = false;
+        let segments = String(text || '').split(STOP_TOKEN);
+        for (let s = 0; s < segments.length; s++) {
+            richText(node, segments[s]);
+            let parts = [];
+            const walk = (n) => n.childNodes.forEach(c => c.nodeType === Node.TEXT_NODE ? parts.push([c, c.textContent]) : walk(c));
+            walk(node);
+            parts.forEach(([c]) => { c.textContent = ''; });
+            let count = 0;
+            for (let [c, full] of parts) {
+                for (let i = 0; i < full.length; i++) {
+                    c.textContent += full[i];
+                    if (!typingFast || ++count % 5 === 0)
+                        await typePause(22);
+                    if (run !== typingRun)
+                        return;
                 }
             }
-            if (i >= parts.length)
-                clearInterval(typing);
-        }, 22);
+            if (s === segments.length - 1)
+                break;
+            let dots = document.createTextNode('');
+            node.append(dots);
+            for (let d = 0; d < 4; d++) {
+                await typePause(400);
+                if (run !== typingRun)
+                    return;
+                dots.textContent += '.';
+            }
+            await typePause(500);
+            if (run !== typingRun)
+                return;
+        }
+    };
+    // Texte en entier tout de suite (carte déjà écrite) : la dernière partie
+    const showText = function (node, text) {
+        typingRun++;
+        richText(node, lastSegment(text));
     };
 
     const reveal = function (frame, key, textNode) {
         if (key === revealKey)
             return;
         revealKey = key;
-        if (!key || reduceMotion)
+        if (!key) {
+            typingRun++;
             return;
-        frame.classList.remove('revealing');
-        void frame.offsetWidth; // relance l'animation
-        frame.classList.add('revealing');
+        }
+        if (!reduceMotion) {
+            frame.classList.remove('revealing');
+            void frame.offsetWidth; // relance l'animation
+            frame.classList.add('revealing');
+        }
+        // L'écriture lettre par lettre fait partie du jeu : gardée même
+        // quand l'appareil demande moins d'animations, comme chez le MJ
         if (textNode)
-            typeText(textNode);
+            typeText(textNode, textNode.dataset.text);
     };
+    $('game-card').addEventListener('click', () => { typingFast = true; });
 
     // ---- Partie : carte en cours, status, alerte ---------------------------
+
+    // ---- Compte à rebours des choix (envoyé par la page de jeu chaque seconde)
+
+    let timer = null;
+    let timerSeen = 0;
+    // Animation de l'écran de jeu (timer-anim.js) : chaque seconde reçue fait
+    // avancer le bras et la boule ; fin du temps : pschitt et lancer ;
+    // choix fait avant : la boule se dissipe
+    let timerLast = null;
+    if (window.LNOB_TIMER_HTML)
+        $('timer-host').innerHTML = LNOB_TIMER_HTML;
+    const timerAnim = function (next) {
+        if (typeof TimerAnim === 'undefined' || !$('bigboite'))
+            return;
+        let box = $('bigboite');
+        try {
+            if (next && !next.paused) {
+                // Arrivé en cours de compte à rebours : bras déjà sorti
+                if (next.left < 30 && !box.classList.contains('float'))
+                    box.classList.add('grow', 'float', 'idle');
+                TimerAnim.tick(next.left);
+            }
+            else if (!next && timerLast) {
+                if (timerLast.left <= 1) {
+                    TimerAnim.tick(0);
+                    TimerAnim.finish();
+                }
+                else
+                    TimerAnim.cancel();
+            }
+        } catch (e) { /* animation seulement */ }
+        timerLast = next;
+    };
+    const renderTimer = function () {
+        let card = game && game.card;
+        let show = !!(timer && card && !game.combat && card.kind !== 'planet' && timer.cardId === String(card.id)
+            && (timer.paused || Date.now() - timerSeen < 3500));
+        $('card-timer').hidden = !show;
+        if (!show)
+            return;
+        $('card-timer-text').textContent = String(timer.left).padStart(2, '0');
+        $('card-timer-fill').style.width = Math.min(100, timer.left / 30 * 100) + '%';
+        $('card-timer').classList.toggle('paused', timer.paused);
+        $('card-timer').classList.toggle('critical', timer.left <= 5);
+        $('card-timer').classList.toggle('warn', timer.left <= 10);
+        $('card-timer').title = timer.paused ? 'Compte à rebours en pause' : 'Temps restant pour choisir';
+    };
+    // Plus de nouvelles de la page de jeu : le chrono disparaît
+    setInterval(() => { if (timer && !timer.paused && !$('card-timer').hidden) renderTimer(); }, 1000);
 
     const renderGame = function () {
         let phase = game ? game.phase : 'init';
@@ -480,15 +581,27 @@
         }
         renderDials($('module-dials'));
         renderCombat(onStage ? combat : null);
+        renderTimer();
+        // Nouvelle carte : voyage rapide dans les étoiles, comme initCard()
+        let travelKey = card ? String(card.id) : null;
+        if (game) {
+            if (travelKey && travelKey !== lastTravelKey && lastTravelKey !== undefined)
+                starWarp();
+            lastTravelKey = travelKey;
+        }
         let showCard = onStage && !combat && !!card;
         let isPlanet = showCard && card.kind === 'planet';
         $('game-card').hidden = !showCard || isPlanet;
         renderPlanet(isPlanet ? card.planet : null);
+        planetShown = isPlanet;
+        updatePlanetMode();
         if (showCard && !isPlanet) {
             $('card-kind').textContent = card.title || CARD_KINDS[card.kind] || '';
             let key = card.id + '|' + (card.screen || '') + '|' + card.desc;
-            if (key !== revealKey)
-                richText($('card-desc'), card.desc);
+            if (key !== revealKey) {
+                $('card-desc').dataset.text = card.desc;
+                showText($('card-desc'), card.desc);
+            }
             $('card-desc').hidden = !card.desc;
             reveal($('game-card'), key, $('card-desc'));
         }
@@ -505,6 +618,12 @@
         let choices = showCard ? (card.choices || []) : [];
         let canVote = showCard && !!card.screen && card.chosen === null && !!character;
         let myVote = intro ? (you && you.introReady ? 0 : null) : (you ? you.vote : null);
+        // Planète : comme chez le MJ, on vote sur les scans de la liste et
+        // sur les boutons Atterrir / Continuer, pas sur des onglets
+        let planetVoting = showCard && !intro && card.kind === 'planet';
+        renderPlanetVotes(planetVoting ? card : null, canVote, myVote);
+        if (planetVoting)
+            choices = [];
         $('card-choices').hidden = !choices.length;
         $('card-choices').replaceChildren(...choices.map((c, i) => {
             let li = el('li', 'choice-tab');
@@ -535,7 +654,7 @@
         else if (combat)
             note = 'Combat en cours : lance tes dés depuis l\'onglet Perso quand le MJ te le demande.';
         else if (showCard && card.kind === 'planet' && canVote)
-            note = myVote === null || myVote === undefined ? 'Vote pour la suite, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
+            note = myVote === null || myVote === undefined ? 'Touche un scan ou un bouton pour voter, le MJ scanne sur l\'écran principal.' : 'Vote envoyé. Touche ton choix à nouveau pour le retirer.';
         else if (showCard && card.kind === 'planet')
             note = card.chosen !== null && card.chosen !== undefined ? 'Le MJ a choisi.' : 'Le MJ scanne la planète sur l\'écran principal.';
         else if (showCard && card.chosen !== null && card.chosen !== undefined)
@@ -632,7 +751,7 @@
         $('end-humans').textContent = score.cryopods;
         let ship = score.ship || {};
         $('end-modules').replaceChildren(...Object.entries(MAIN_MODULES).map(([id, label]) => dial(id, label, ship[id])),
-            ...[['landing', 'Atterrissage'], ['construction', 'Construction'], ['dbscience', 'BDD scientifique'], ['dbhistory', 'BDD historique']].map(([id, label]) => {
+            ...SECOND_MODULES.map(([id, label]) => {
                 let li = el('li', 'end-secondary');
                 li.append(el('span', 'dim', label), el('strong', '', (ship[id] || 0) + ' %'));
                 return li;
@@ -688,6 +807,7 @@
         $('planet-drones').textContent = 'Drones : ' + (planet.drones || 0);
         $('planet-scans').replaceChildren(...scans.map(s => {
             let li = el('li', s.revealed ? 'scanned' : '');
+            li.dataset.label = s.label;
             let head = el('div', 'scan-head');
             head.append(el('span', 'scan-label', 'Scan ' + s.label));
             if (!s.revealed && s.cost !== null && s.cost !== undefined)
@@ -705,6 +825,47 @@
             li.append(el('span', 'planet-label-cost', s.revealed ? 'scanné' : (s.cost !== null && s.cost !== undefined ? 'coût : ' + s.cost : '')));
             return li;
         }));
+    };
+
+    // Votes de la page planète : chaque choix annoncé par le MJ est un scan
+    // (même nom que dans la liste) ou un bouton de sortie (Atterrir…)
+    const renderPlanetVotes = function (card, canVote, myVote) {
+        let choices = card ? (card.choices || []) : [];
+        let counts = card ? (card.counts || []) : [];
+        const votes = (i) => counts[i] ? counts[i] + (counts[i] > 1 ? ' votes' : ' vote') : '';
+        const wire = (node, i) => {
+            node.classList.toggle('voted', myVote === i);
+            node.classList.toggle('chosen', card.chosen === i);
+            if (votes(i))
+                node.dataset.votes = votes(i);
+            else
+                delete node.dataset.votes;
+            if (!canVote)
+                return;
+            node.classList.add('votable');
+            node.tabIndex = 0;
+            node.setAttribute('role', 'button');
+            node.title = myVote === i ? 'Retirer mon vote' : 'Voter pour ce scan';
+            const go = () => sendAction('vote', {index: myVote === i ? null : i});
+            node.addEventListener('click', go);
+            node.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+        };
+        let scanItems = Array.from($('planet-scans').children);
+        let scanLabels = scanItems.map(li => li.dataset.label);
+        scanItems.forEach(li => {
+            let i = choices.indexOf(li.dataset.label);
+            if (i >= 0)
+                wire(li, i);
+        });
+        $('planet-exits').replaceChildren(...choices.map((c, i) => [c, i]).filter(([c]) => !scanLabels.includes(c)).map(([c, i]) => {
+            let b = el('button', 'planet-exit' + (/atterrir|terminer/i.test(c) ? ' land' : ''), c);
+            b.type = 'button';
+            wire(b, i);
+            if (!canVote)
+                b.disabled = true;
+            return b;
+        }));
+        $('planet-exits').hidden = !$('planet-exits').children.length;
     };
 
     // ---- Vaisseau ----------------------------------------------------------
@@ -1024,6 +1185,12 @@
             game = data;
             renderAll();
         }
+        else if (data.kind === 'timer') {
+            timer = data.timer && Number.isInteger(data.timer.left) ? data.timer : null;
+            timerSeen = Date.now();
+            timerAnim(timer);
+            renderTimer();
+        }
         else if (data.kind === 'you') {
             you = data;
             renderGame();
@@ -1159,75 +1326,95 @@
     });
     renderDiscord();
 
-    // ---- Fond : étoiles qui filent, comme sur l'écran de jeu ---------------
+    // ---- Fond étoilé ---------------------------------------------------------
 
+    // Fond étoilé de l'écran de jeu (public/js/stars.js) : étoiles en 3D qui
+    // dérivent très lentement ; elles ne s'étirent en traînées que pendant
+    // le voyage entre deux cartes (fastTravel, 2 s)
     (function () {
         let canvas = $('starfield');
         let ctx = canvas.getContext && canvas.getContext('2d');
         if (!ctx)
             return;
-        let w = 0, h = 0, stars = [];
-        const spawn = (star, far) => {
-            star.a = Math.random() * Math.PI * 2;
-            star.d = far ? Math.random() : Math.random() * .05;
-            star.v = .0008 + Math.random() * .0022;
+        const STARS = 1000, FOV = 20, BASE_SPEED = .015, STRETCH = 5, BASE_SIZE = .08, TRAVEL = 2000;
+        let w = 0, h = 0, dpr = 1, cameraZ = 0, speed = 0, warpSpeed = 0, stars = [];
+        const randomize = (star, initial) => {
+            star.z = initial ? Math.random() * 2000 : cameraZ + Math.random() * 1000 + 2000;
+            let deg = Math.random() * Math.PI * 2, distance = Math.random() * 50 + 1;
+            star.x = Math.cos(deg) * distance;
+            star.y = Math.sin(deg) * distance;
         };
+        for (let i = 0; i < STARS; i++) {
+            let star = {};
+            randomize(star, true);
+            stars.push(star);
+        }
         const resize = () => {
-            let dpr = Math.min(window.devicePixelRatio || 1, 2);
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
             w = canvas.width = innerWidth * dpr;
             h = canvas.height = innerHeight * dpr;
             canvas.style.width = innerWidth + 'px';
             canvas.style.height = innerHeight + 'px';
         };
-        for (let i = 0; i < 220; i++) {
-            let star = {};
-            spawn(star, true);
-            stars.push(star);
-        }
-        const draw = () => {
+        let last = 0;
+        const draw = (now) => {
+            let delta = last ? Math.min(4, (now - last) / (1000 / 60)) : 1;
+            last = now;
+            speed += (warpSpeed - speed) / 20;
+            if (!reduceMotion)
+                cameraZ += delta * 10 * (speed + BASE_SPEED);
             ctx.clearRect(0, 0, w, h);
-            let cx = w / 2, cy = h / 2, reach = Math.hypot(cx, cy);
-            let scale = w / 1600;
-            for (let st of stars) {
-                let k = st.d * st.d;
-                let r = k * reach;
-                let x = cx + Math.cos(st.a) * r, y = cy + Math.sin(st.a) * r;
-                let len = reduceMotion ? 0 : k * 34 * scale;
-                let alpha = Math.min(.7, st.d * .8);
-                if (len < 1.5) {
-                    ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
-                    ctx.fillRect(x, y, 1.5 * scale + .5, 1.5 * scale + .5);
+            ctx.fillStyle = ctx.strokeStyle = '#fff';
+            ctx.lineCap = 'round';
+            let sw = w / dpr, cx = w / 2, cy = h / 2;
+            for (let star of stars) {
+                if (star.z < cameraZ)
+                    randomize(star);
+                let z = star.z - cameraZ;
+                let x = (star.x * (FOV / z) * sw) * dpr + cx;
+                let y = (star.y * (FOV / z) * sw) * dpr + cy;
+                let dx = x - cx, dy = y - cy;
+                let dist = Math.hypot(dx, dy) / dpr;
+                let ds = Math.max(0, (2000 - z) / 2000);
+                // Taille du sprite (128 px dans le jeu), étirée vers le centre
+                let size = 128 * ds * BASE_SIZE * .45 * dpr;
+                let len = 128 * (ds * BASE_SIZE + ds * speed * STRETCH * dist / sw) * .7 * dpr;
+                if (size < .2)
+                    continue;
+                ctx.globalAlpha = Math.min(1, .35 + ds);
+                if (len <= size * 1.6) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+                    ctx.fill();
                 }
                 else {
-                    // Traînée qui s'efface vers le centre
-                    let tx = x - Math.cos(st.a) * len, ty = y - Math.sin(st.a) * len;
-                    let g = ctx.createLinearGradient(tx, ty, x, y);
-                    g.addColorStop(0, 'rgba(255,255,255,0)');
-                    g.addColorStop(1, 'rgba(255,255,255,' + alpha + ')');
-                    ctx.strokeStyle = g;
-                    ctx.lineWidth = Math.max(1, k * 2.4 * scale);
-                    ctx.lineCap = 'round';
+                    let ux = dx / (dist * dpr || 1), uy = dy / (dist * dpr || 1);
+                    ctx.lineWidth = size;
                     ctx.beginPath();
-                    ctx.moveTo(tx, ty);
-                    ctx.lineTo(x, y);
+                    ctx.moveTo(x - ux * len * .3, y - uy * len * .3);
+                    ctx.lineTo(x + ux * len * .7, y + uy * len * .7);
                     ctx.stroke();
                 }
-                if (!reduceMotion) {
-                    st.d += st.v;
-                    if (st.d > 1.05)
-                        spawn(st, false);
-                }
             }
+            ctx.globalAlpha = 1;
         };
-        const loop = () => {
+        const loop = (now) => {
             if (!document.hidden)
-                draw();
+                draw(now);
             requestAnimationFrame(loop);
         };
+        let travelTimer = null;
+        starWarp = () => {
+            if (reduceMotion)
+                return;
+            warpSpeed = 1;
+            clearTimeout(travelTimer);
+            travelTimer = setTimeout(() => { warpSpeed = 0; }, TRAVEL);
+        };
         resize();
-        addEventListener('resize', () => { resize(); draw(); });
+        addEventListener('resize', () => { resize(); draw(performance.now()); });
         if (reduceMotion)
-            draw();
+            draw(0);
         else
             requestAnimationFrame(loop);
     })();

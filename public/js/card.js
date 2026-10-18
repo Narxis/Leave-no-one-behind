@@ -52,16 +52,30 @@ async function getCardByName (name) {
     return JSON.parse(await rawResponse.text());
 }
 
+// Compte à rebours montré aux joueurs en ligne (playerView.setTimer)
+function announceTimer(left, paused) {
+    if (typeof wsLNOB === 'undefined')
+        return;
+    wsLNOB.send({action: 'card-timer', data: {cardId: currentCard.id, left: left, paused: !!paused}});
+}
+
 function startCountDown() {
 
     let time_left = 30;
+    let pausedSent = false;
     countDownRunning = true;
 
     const tick = async function () {
-        if (countDownPauses.size)
+        if (countDownPauses.size) {
+            if (!pausedSent)
+                announceTimer(time_left + 1, true);
+            pausedSent = true;
             return;
+        }
+        pausedSent = false;
         if (time_left > 0) {
             TimerAnim.tick(time_left);
+            announceTimer(time_left);
             time_left--;
             return;
         }
@@ -72,6 +86,7 @@ function startCountDown() {
         }
         clearInterval(interval_cd);
         countDownRunning = false;
+        announceTimer(0);
         let choicetab = document.getElementById('choicetab');
         TimerAnim.tick(0);
         choicetab.style.pointerEvents = 'none';
@@ -90,6 +105,7 @@ async function stopCountdown() {
     if (typeof interval_cd !== 'undefined' && countDownRunning) {
         clearInterval(interval_cd);
         countDownRunning = false;
+        announceTimer(0);
         await TimerAnim.cancel();
     }
 }

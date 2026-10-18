@@ -204,7 +204,10 @@ h2 { margin: 8px 0 0; font-size: 13px; font-weight: 600; color: var(--dim); text
 
 /* Statistiques du perso, avec les icônes de l'écran de jeu */
 .hud-stat-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
-.hud-stat { display: flex; align-items: center; gap: 12px; font-size: 15px; letter-spacing: 0.03em; }
+/* Trois colonnes de même largeur sur chaque ligne : les valeurs restent
+   alignées à droite quelle que soit la longueur du libellé */
+.hud-stat { display: grid; grid-template-columns: auto minmax(0, 1fr) 3ch; align-items: center; gap: 10px; font-size: 15px; letter-spacing: 0.03em; }
+.hud-stat-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .stat-icon {
     display: grid;
     place-items: center;
@@ -217,7 +220,7 @@ h2 { margin: 8px 0 0; font-size: 13px; font-weight: 600; color: var(--dim); text
     background: rgb(255 255 255 / 6%);
 }
 .stat-icon svg { width: 100%; height: 100%; fill: #fff; }
-.hud-stat-value { margin-left: auto; color: var(--accent); font-variant-numeric: tabular-nums; }
+.hud-stat-value { color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: 0; text-align: right; }
 
 .emotes { display: flex; gap: 4px; }
 .emote { flex: 1 1 0; min-width: 0; margin: 0; padding: 3px 0; border: 1px solid var(--border); background: var(--fill); font-size: 20px; line-height: 1.2; }
@@ -356,6 +359,48 @@ button.choice-text {
 .choice-tab.chosen { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-accent); }
 .choice-tab.dimmed { opacity: .45; }
 .card-note { margin: 14px 0 0; color: var(--dim); font-size: 13px; text-align: center; }
+
+/* Compte à rebours de l'écran de jeu : bras robot en haut à droite de la
+   carte et vaisseau en haut à gauche (positions de timer-animation.css,
+   comptées depuis le coin de la carte) */
+.timer-host { position: absolute; top: 0; left: 0; z-index: 0; width: 0; height: 0; pointer-events: none; }
+.stage-screen > .timer-host { align-self: flex-start; }
+body.planet-mode .timer-host, .stage-screen:has(> #combat:not([hidden])) .timer-host { display: none; }
+@media (min-width: 900px) {
+    .card-timer { display: none !important; }
+}
+@media (max-width: 899px) {
+    .timer-host { display: none; }
+}
+
+/* Compte à rebours sur téléphone : posé sur le haut de la carte, chiffres
+   dorés qui battent à chaque seconde, rouges sur la fin */
+.stage-screen { position: relative; }
+.card-timer {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 22px 10px;
+    border: 1px solid var(--accent);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--glow-accent), 0 10px 30px -12px rgb(0 0 0 / 85%);
+}
+.card-timer-text { color: var(--accent); font-size: 34px; font-weight: 700; line-height: 1; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; text-shadow: 0 0 14px rgb(255 204 0 / 55%); animation: timer-beat 1s ease-out infinite; }
+.card-timer-track { width: 90px; height: 4px; overflow: hidden; border-radius: 2px; background: rgb(255 255 255 / 10%); }
+.card-timer-fill { display: block; height: 100%; background: var(--accent); transition: width 1s linear; }
+.card-timer.critical { border-color: var(--danger); }
+.card-timer.critical .card-timer-text { color: var(--danger); text-shadow: 0 0 14px rgb(255 90 110 / 60%); }
+.card-timer.critical .card-timer-fill { background: var(--danger); }
+.card-timer.paused { border-color: var(--border-strong); box-shadow: none; }
+.card-timer.paused .card-timer-text { color: var(--dim); text-shadow: none; animation: none; }
+@keyframes timer-beat { 0% { transform: scale(1.12); } 40% { transform: scale(1); } }
 
 /* Modules principaux : onglets à droite de la carte, comme chez le MJ
    (template-card.css + ui-card.css) : onglets de 71px collés les uns aux
@@ -563,6 +608,39 @@ select {
 .roll-result.ok { color: var(--ok); }
 .roll-result.fail { color: var(--danger); }
 
+/* Page planète (comme public/views/template-planet.ejs) : panneau des
+   scans à gauche, planète seule au centre avec ses relevés, panneau de
+   droite avec les humains et les modules principaux et secondaires */
+.hud-modules { display: none; }
+body.planet-mode .hud-modules { display: block; }
+body.planet-mode .hud-humans .status-table,
+body.planet-mode .hud-stats,
+body.planet-mode #module-dials,
+body.planet-mode .planet-orbit { display: none; }
+.hud-modules-title { margin: 14px 0 10px; text-transform: none; padding-top: 12px; border-top: 1px solid var(--border); font-size: 15px; font-weight: 600; letter-spacing: 0.05em; text-align: center; }
+.hud-main-modules, .hud-second-modules { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; margin: 0; padding: 0; list-style: none; }
+.dial.dial-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px; }
+.dial.dial-row .dial-label { display: block; grid-area: 1 / 1; font-size: 13px; }
+.dial.dial-row .dial-label::after { content: ' :'; }
+.dial.dial-row .dial-face { grid-area: 1 / 2; width: 40px; height: 40px; }
+.dial.dial-row .dial-img { display: none; }
+.dial.dial-row .dial-value { grid-area: 1 / 2; justify-self: center; font-size: 10px; }
+.hud-second { display: flex; justify-content: space-between; gap: 6px; font-size: 13px; }
+.hud-second strong { white-space: nowrap; }
+
+/* Votes sur la page planète : scans de la liste et boutons de sortie
+   (comme .p-txt, .land-button et .leave-button chez le MJ) */
+.planet-scans li.votable { cursor: pointer; transition: background .15s var(--ease), border-color .15s var(--ease); }
+.planet-scans li.votable:hover, .planet-scans li.votable:focus-visible { border-left-color: var(--accent); background: rgb(255 204 0 / 10%); outline: none; }
+.planet-scans li.voted, .planet-exit.voted { box-shadow: inset 0 0 0 1px var(--ok); }
+.planet-scans li.chosen, .planet-exit.chosen { box-shadow: inset 0 0 0 1px var(--accent); }
+.planet-scans li[data-votes]::after, .planet-exit[data-votes]::after { content: attr(data-votes); display: block; margin-top: 2px; color: var(--ok); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; }
+.planet-exits { position: absolute; top: 0; left: 50%; z-index: 2; display: flex; gap: 12px; transform: translateX(-50%); }
+.planet-exit { margin: 0; padding: 10px 18px; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); color: var(--text); font-size: 15px; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+.planet-exit.land { border-color: rgb(255 204 0 / 60%); color: var(--accent); }
+.planet-exit:not(:disabled):hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-accent); }
+.planet-exit:disabled { cursor: default; opacity: .85; }
+
 /* Inventaire */
 .items { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
 .item { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--fill); }
@@ -576,11 +654,11 @@ select {
 @media (min-width: 900px) {
     body.in-game { padding: 0; overflow: hidden; }
     .card.wide { width: 100%; }
-    .topbar { position: fixed; top: 24px; left: 28px; }
+    .topbar { position: fixed; top: 24px; left: 28px; z-index: 30; }
     #ship-alert, #action-error { position: fixed; top: 24px; left: 50%; z-index: 25; transform: translateX(-50%); max-width: min(600px, 60vw); }
     .hud { display: contents; }
     .hud-humans { position: fixed; top: 24px; right: 24px; z-index: 10; width: 280px; max-height: 30vh; overflow-y: auto; }
-    .hud-stats { position: fixed; left: 20px; top: 50%; z-index: 10; width: 230px; transform: translateY(-50%); }
+    .hud-stats { position: fixed; left: 20px; top: 50%; z-index: 10; width: 250px; transform: translateY(-50%); }
     .game-main {
         position: fixed;
         inset: 0 250px 0 250px;
@@ -602,9 +680,24 @@ select {
     .crew-strip { position: fixed; bottom: 0; left: 50%; z-index: 5; margin: 0; transform: translateX(-50%); flex-wrap: nowrap; width: max-content; max-width: calc(100vw - 700px); }
     .crew-tab { flex: 0 1 200px; min-width: 140px; border-bottom: none; border-radius: 16px 16px 0 0; padding-bottom: 18px; }
 }
+@media (min-width: 900px) {
+    body.planet-mode .hud-humans { top: 20px; width: 330px; max-height: calc(100vh - 40px); }
+    body.planet-mode .game-main { inset: 0 370px 0 20px; }
+    body.planet-mode .stage { width: 100%; }
+    body.planet-mode .planet-screen { grid-template-columns: 290px minmax(0, 1fr); gap: 30px; }
+    body.planet-mode .planet-side { min-height: min(64vh, 600px); }
+    body.planet-mode .planet-stage { min-height: min(64vh, 600px); }
+    body.planet-mode .planet-frame { width: min(240px, 46%); }
+    body.planet-mode .planet-label { width: 170px; font-size: 18px; }
+}
 @media (min-width: 900px) and (max-width: 1279px) {
+    body.planet-mode .hud-humans { width: 280px; }
+    body.planet-mode .planet-screen { grid-template-columns: 240px minmax(0, 1fr); gap: 16px; }
+    body.planet-mode .game-main { inset: 0 300px 0 20px; }
+    body.planet-mode .planet-label { width: 120px; font-size: 15px; }
     .game-main { inset: 0 20px 0 240px; }
-    .hud-stats { width: 210px; }
+    .hud-stats { width: 220px; }
+    .hud-stats .hud-stat { gap: 8px; font-size: 14px; }
     .crew-strip { max-width: calc(100vw - 280px); left: calc(50% + 110px); }
 }
 

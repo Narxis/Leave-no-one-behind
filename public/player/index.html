@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LNOB · Rejoindre une partie</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="timer-animation.css">
     <link rel="stylesheet" href="player.css">
 </head>
 <body>
@@ -69,6 +70,13 @@
                     <svg class="heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
                     <span>Humains :</span> <strong id="humans">…</strong>
                 </p>
+                <!-- Page planète : modules, comme le panneau de droite du MJ -->
+                <div class="hud-modules">
+                    <h2 class="hud-modules-title">Modules principaux :</h2>
+                    <ul id="hud-main-modules" class="hud-main-modules"></ul>
+                    <h2 class="hud-modules-title">Modules secondaires :</h2>
+                    <ul id="hud-second-modules" class="hud-second-modules"></ul>
+                </div>
                 <div class="status-table">
                     <p class="status-table-head"><span>Status :</span><span>Durée</span></p>
                     <ul id="statuses" class="status-rows"></ul>
@@ -96,6 +104,14 @@
                 <div class="stage-row">
                     <div class="stage-screen">
                         <!-- Carte (événement, lieu, carte blanche) -->
+                        <!-- Bras robot du compte à rebours et vaisseau au-dessus de la
+                             carte, comme sur l'écran de jeu (timer-markup.js) -->
+                        <div id="timer-host" class="timer-host" aria-hidden="true"></div>
+                        <!-- Compte à rebours sur téléphone (le bras n'y tient pas) -->
+                        <div id="card-timer" class="card-timer" role="timer" hidden>
+                            <span id="card-timer-text" class="card-timer-text">30</span>
+                            <span class="card-timer-track"><span id="card-timer-fill" class="card-timer-fill"></span></span>
+                        </div>
                         <article id="game-card" class="screen-card" hidden>
                             <div class="screen-inner">
                                 <p id="card-kind" class="card-kind"></p>
@@ -111,6 +127,7 @@
                                 <ul id="planet-scans" class="planet-scans"></ul>
                             </div>
                             <div class="planet-stage">
+                                <div id="planet-exits" class="planet-exits" hidden></div>
                                 <div class="planet-orbit" aria-hidden="true"></div>
                                 <div id="planet-frame" class="planet-frame"></div>
                                 <ul id="planet-labels" class="planet-labels" aria-hidden="true"></ul>
@@ -265,6 +282,8 @@
 <script src="planet-view.js"></script>
 <script src="status-icons.js"></script>
 <script src="game-icons.js"></script>
+<script src="timer-markup.js"></script>
+<script src="timer-anim.js"></script>
 <script src="player.js"></script>
 </body>
 </html>
