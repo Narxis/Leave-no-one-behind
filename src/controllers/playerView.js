@@ -9,6 +9,10 @@
 //   {kind: 'timer', timer: {cardId, left, paused} | null}   compte à rebours
 //   {kind: 'codex-image', key, src}   images des fiches (customs, objets),
 //                                     une fois par joueur
+//   {kind: 'card-text', text, seq} | {kind: 'card-text', fast, seq}
+//                                     texte de la carte, écrit au rythme du MJ
+//   {kind: 'mj-event', payload}      événements de l'écran de jeu repris tels
+//                                     quels par l'écran porté (MIRRORED)
 // Les secrets du MJ (révélations, suites des choix, butin, valeurs des
 // planètes) ne sortent jamais d'ici.
 const {Player} = require('../models/player');
@@ -29,6 +33,7 @@ const itemUse = require('./itemUse');
 const codex = require('./codex');
 const combat = require('./combat');
 const intro = require('./intro');
+const allies = require('./allies');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -111,8 +116,10 @@ const roleName = (slug) => (roles.find(slug) || {}).name || '';
 const team = async function () {
     let players = await DB.tables.players.findAll({raw: true});
     // Compte Discord du joueur, pour se reconnaître malgré les noms de persos
+    // roleInfo et stats : pour les onglets des joueurs de l'écran de jeu porté
     return players.map(p => ({id: p.discord_id, name: p.name, race: races.nameOf(p.race), role: roleName(p.role),
-        discord: lobby.discordOf(p.discord_id)}));
+        discord: lobby.discordOf(p.discord_id), roleInfo: roles.publicRole(p.role),
+        stats: Object.fromEntries(STATS.concat('moral').map(stat => [stat, p[stat]]))}));
 };
 
 // Combat en cours, comme sur l'écran de jeu : adversaires et leurs PV,
@@ -148,6 +155,51 @@ const setTimer = function (data) {
     if (lobby.getState().status === 'open')
         lobby.sendTo('*', {kind: 'timer', timer: choiceTimer});
     return null; // rien à renvoyer aux pages du MJ
+};
+
+// Texte de la carte tel que la page de jeu l'écrit (card.js, writeCardDesc) :
+// les joueurs l'écrivent en même temps que le MJ, pas avant lui
+let cardWriting = null;
+const setCardText = function (data) {
+    data = data && typeof data === 'object' ? data : {};
+    let msg;
+    if (data.fast) {
+        if (!cardWriting)
+            return null;
+        cardWriting.fast = true;
+        msg = {kind: 'card-text', fast: true, seq: cardWriting.seq};
+    }
+    else {
+        cardWriting = {text: String(data.text || '').slice(0, 20000), seq: (cardWriting ? cardWriting.seq : 0) + 1, at: Date.now(), fast: false};
+        msg = {kind: 'card-text', text: cardWriting.text, seq: cardWriting.seq};
+    }
+    if (lobby.getState().status === 'open')
+        lobby.sendTo('*', msg);
+    return null; // rien à renvoyer aux pages du MJ
+};
+
+// Événements de l'écran de jeu que l'écran porté des joueurs reprend tels
+// quels (mêmes scripts : players.js, inventory.js) : jets, emotes, stats et
+// rôles des joueurs, inventaires, butin d'une carte, combat (combat.js),
+// onglets des compagnons (npc-tabs.js)
+const MIRRORED = ['roll', 'emote', 'playerStat', 'player-role', 'inventory', 'card-loot', 'combat', 'allies'];
+// Combat : ce que l'écran de jeu montre, sans le butin caché ni les
+// caractéristiques d'attaque des adversaires
+const publicCombat = function (state) {
+    return Object.assign({}, state, {
+        enemies: (state.enemies || []).map(e => ({id: e.id, name: e.name, hp: e.hp, maxHp: e.maxHp, defense: e.defense,
+            statuses: e.statuses || {}, loot: state.lootRevealed ? e.loot || [] : []}))
+    });
+};
+const mirrorPayload = function (payload) {
+    if (payload.action !== 'combat' || !payload.data)
+        return payload;
+    return Object.assign({}, payload, {data: Object.assign({}, payload.data, {state: publicCombat(payload.data.state || {})})});
+};
+const mirror = function (payload) {
+    if (!payload || payload.error || !MIRRORED.includes(payload.action) || lobby.getState().status !== 'open')
+        return;
+    lobby.sendTo('*', {kind: 'mj-event', payload: mirrorPayload(payload)});
 };
 
 // Tout ce qui est commun aux joueurs
@@ -305,10 +357,18 @@ const welcome = async function (player) {
     lobby.sendTo(player.id, you);
     if (choiceTimer)
         lobby.sendTo(player.id, {kind: 'timer', timer: choiceTimer});
+    // Inventaires (coffres des onglets, objets du vaisseau) et combat en cours
+    let stock = (await inventory.payload())[0];
+    lobby.sendTo(player.id, {kind: 'mj-event', payload: stock});
+    lobby.sendTo(player.id, {kind: 'mj-event', payload: {action: 'allies', error: false, data: {allies: allies.getAllies(), event: null}}});
+    lobby.sendTo(player.id, {kind: 'mj-event', payload: mirrorPayload({action: 'combat', error: false, data: {state: combat.getState(), event: null}})});
+    // Arrivée en cours de carte : le texte déjà écrit par le MJ, sans l'animer
+    if (cardWriting)
+        lobby.sendTo(player.id, {kind: 'card-text', text: cardWriting.text, seq: cardWriting.seq, late: true});
 };
 
 const init = function () {
     lobby.onPlayerJoin(player => welcome(player).catch(e => log('[LOBBY] ' + e)));
 };
 
-module.exports = {init, changed, welcome, publicCard, gameState, playerState, combatState, setScore, setTimer, MODULES};
+module.exports = {init, changed, welcome, publicCard, gameState, playerState, combatState, setScore, setTimer, setCardText, mirror, publicCombat, MIRRORED, MODULES};

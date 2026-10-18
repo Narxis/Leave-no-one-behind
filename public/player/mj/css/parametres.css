@@ -1,0 +1,290 @@
+/* Généré par scripts/player-assets.js depuis public/css/parametres.css : ne pas modifier à la main */
+/* Paramètres de la partie (parametres.ejs) */
+.settings-page {
+    overflow: auto;
+}
+
+.gs {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    width: min(760px, calc(100vw - 32px));
+    margin: 40px auto;
+    padding: 28px 32px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius);
+    background: var(--ui-surface);
+    box-shadow: var(--ui-shadow);
+    color: var(--ui-text);
+}
+
+.gs-title {
+    margin: 0 0 22px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ui-accent);
+    text-align: center;
+}
+
+.gs-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.gs-presets {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.gs-sub {
+    margin-bottom: 10px;
+    padding: 0;
+    color: var(--ui-text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.gs-preset-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.gs-preset {
+    flex: 1 1 120px;
+    padding: 10px 14px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+button.gs-preset:hover {
+    background: var(--ui-fill-hover);
+}
+
+.gs-preset[aria-checked="true"] {
+    border-color: var(--ui-accent);
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+}
+
+/* Indicateur seulement : on y arrive en changeant une valeur */
+.gs-preset-custom {
+    cursor: default;
+    color: var(--ui-text-dim);
+}
+
+.gs-hint {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.gs-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+}
+
+.gs-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+}
+
+.gs-label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.gs-stepper {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.gs-step {
+    width: 38px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.gs-step:hover {
+    background: var(--ui-fill-hover);
+    border-color: var(--ui-accent);
+}
+
+.gs-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: rgb(0 0 0 / 25%);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    -moz-appearance: textfield;
+}
+
+.gs-input::-webkit-outer-spin-button,
+.gs-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.gs-note {
+    min-height: 1.3em;
+    margin: 0;
+    font-size: 12px;
+    color: var(--ui-text-dim);
+}
+
+.gs-note.is-warning {
+    color: var(--ui-accent);
+}
+
+/* Options à cocher (hors difficulté) */
+.gs-options {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.gs-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    cursor: pointer;
+}
+
+.gs-option input {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+}
+
+.gs-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.gs-total {
+    margin: 0;
+    text-align: center;
+    color: var(--ui-text-dim);
+}
+
+.gs-error {
+    margin: 0;
+    min-height: 1.2em;
+    text-align: center;
+    color: var(--ui-danger);
+}
+
+.gs-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.gs-btn {
+    padding: 10px 22px;
+    border: 1px solid var(--ui-border-strong);
+    border-radius: var(--ui-radius-sm);
+    background: var(--ui-fill);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
+}
+
+.gs-btn:hover {
+    background: var(--ui-fill-hover);
+    border-color: var(--ui-accent);
+}
+
+.gs-btn-primary {
+    border-color: var(--ui-accent);
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+}
+
+/* Récap des paramètres, repris sur l'écran de création, de fin et au classement */
+.gs-recap {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    font-size: 13px;
+    color: var(--ui-text-dim);
+}
+
+.gs-recap-preset {
+    padding: 2px 10px;
+    border: 1px solid var(--ui-accent);
+    border-radius: 999px;
+    background: var(--ui-accent-soft);
+    color: var(--ui-accent);
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .gs {
+        margin: 16px auto;
+        padding: 20px 16px;
+    }
+}
+
+.gs-recap-edit {
+    color: var(--ui-cyan);
+    text-decoration: underline;
+}
+
+/* Filtre du classement par difficulté */
+.gs-filter {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
+
+.gs-filter .gs-preset {
+    flex: 0 0 auto;
+    padding: 6px 14px;
+    font-size: 13px;
+}
