@@ -27,6 +27,7 @@ const planetScan = require('./planetScan');
 const itemUse = require('./itemUse');
 const codex = require('./codex');
 const combat = require('./combat');
+const intro = require('./intro');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -140,8 +141,9 @@ const gameState = async function () {
     return {
         kind: 'game',
         phase: phase,
-        // Une carte blanche en cours passe devant la carte du paquet
-        card: phase === 'gameLive' ? (blankCard.publicCard() || publicCard(deck.getCurrentCard())) : null,
+        // Lancement (synopsis, fiche du vaisseau) ; sinon une carte blanche
+        // en cours passe devant la carte du paquet
+        card: intro.publicCard() || (phase === 'gameLive' ? (blankCard.publicCard() || publicCard(deck.getCurrentCard())) : null),
         ship: await shipState(),
         statuses: await statusList(),
         alerts: {blink: alerts.blink || [], showMap: !!alerts.showMap, alert: alerts.alert ? {room: alerts.alert.room, name: alerts.alert.name, message: alerts.alert.message} : null},
@@ -171,6 +173,8 @@ const playerState = async function (id) {
         money: player ? money.label(await money.balance({type: 'player', id: id}) || 0) : null,
         creation: player && CONFIG.gameState === 'creation' ? statRolls.state(player) : null,
         vote: votes.voteOf(id),
+        // Prêt à quitter le synopsis ou la fiche du vaisseau
+        introReady: intro.isReady(id),
         // Objets dont l'utilisation attend la réponse du MJ
         pendingItems: itemUse.pendingFor(id)
     };
