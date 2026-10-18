@@ -451,7 +451,7 @@
                 for (let i = 0; i < full.length; i++) {
                     c.textContent += full[i];
                     if (!typingFast || ++count % 5 === 0)
-                        await typePause(22);
+                        await typePause(21.7);
                     if (run !== typingRun)
                         return;
                 }
@@ -496,6 +496,45 @@
             typeText(textNode, textNode.dataset.text);
     };
     $('game-card').addEventListener('click', () => { typingFast = true; });
+
+    // Texte de la carte, écrit en même temps que sur l'écran du MJ : sa page
+    // annonce chaque texte qu'elle commence à écrire (et le clic qui accélère)
+    let mjText = null;        // {text, seq, at} : dernier texte annoncé
+    let textCardId = null;    // carte dont le texte est affiché
+    let textFallback = null;
+    const MJ_TEXT_RECENT = 3000;
+    const onCardText = function (data) {
+        if (data.fast) {
+            if (mjText && data.seq === mjText.seq)
+                typingFast = true;
+            return;
+        }
+        mjText = {text: String(data.text || ''), seq: data.seq, at: Date.now()};
+        clearTimeout(textFallback);
+        let node = $('card-desc');
+        node.dataset.text = mjText.text;
+        if (data.late)
+            showText(node, mjText.text);
+        else
+            typeText(node, mjText.text);
+    };
+    // Nouvelle carte : texte vidé en attendant celui du MJ (sauf s'il vient
+    // d'arriver, juste avant l'état de la partie). Sans nouvelles de sa page,
+    // le texte de la carte s'affiche quand même.
+    const syncCardText = function (card) {
+        if (card.id === textCardId)
+            return;
+        textCardId = card.id;
+        clearTimeout(textFallback);
+        if (mjText && Date.now() - mjText.at < MJ_TEXT_RECENT)
+            return;
+        typingRun++;
+        $('card-desc').replaceChildren();
+        textFallback = setTimeout(() => {
+            if (textCardId === card.id && (!mjText || Date.now() - mjText.at > 6000))
+                showText($('card-desc'), card.desc);
+        }, 6000);
+    };
 
     // ---- Partie : carte en cours, status, alerte ---------------------------
 
@@ -595,7 +634,16 @@
         renderPlanet(isPlanet ? card.planet : null);
         planetShown = isPlanet;
         updatePlanetMode();
-        if (showCard && !isPlanet) {
+        $('game-card').classList.toggle('intro-card', !!intro);
+        if (showCard && !isPlanet && card.kind !== 'intro') {
+            // Texte écrit au rythme du MJ (message card-text) : rien n'est
+            // écrit avant que sa page commence
+            $('card-kind').textContent = card.title || CARD_KINDS[card.kind] || '';
+            $('card-desc').hidden = false;
+            syncCardText(card);
+            reveal($('game-card'), 'card|' + card.id);
+        }
+        else if (showCard && !isPlanet) {
             $('card-kind').textContent = card.title || CARD_KINDS[card.kind] || '';
             let key = card.id + '|' + (card.screen || '') + '|' + card.desc;
             if (key !== revealKey) {
@@ -1185,6 +1233,8 @@
             game = data;
             renderAll();
         }
+        else if (data.kind === 'card-text')
+            onCardText(data);
         else if (data.kind === 'timer') {
             timer = data.timer && Number.isInteger(data.timer.left) ? data.timer : null;
             timerSeen = Date.now();
