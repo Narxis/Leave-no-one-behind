@@ -19,6 +19,7 @@
     const SECOND_MODULES = [['landing', 'Atterrissage'], ['construction', 'Construction'], ['dbscience', 'BDD scientifique'], ['dbhistory', 'BDD historique']];
     // Relevés autour de la planète : à gauche, puis à droite (écran de jeu)
     const PLANET_LEFT = ['oxy', 'cli', 'grv'];
+    let starWarp = () => {}; // voyage entre deux cartes (fond étoilé, plus bas)
     const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     // Site du wiki des règles (même adresse dans src/controllers/codex.js)
     const WIKI_URL = 'https://narxis.github.io/Leave-no-one-behind-Wiki/';
@@ -425,6 +426,7 @@
     // ---- Révélation de la carte : cadre qui s'ouvre, texte qui s'écrit -----
 
     let revealKey = null;
+    let lastTravelKey; // undefined : rien reçu encore (pas de voyage au chargement)
     // Texte de la carte écrit lettre par lettre, comme l'écran de jeu
     // (card.js, writeCardDesc) : 22 ms par lettre ; à chaque pause {....},
     // quatre points (400 ms chacun), puis le texte s'efface et repart à zéro.
@@ -577,6 +579,13 @@
         renderDials($('module-dials'));
         renderCombat(onStage ? combat : null);
         renderTimer();
+        // Nouvelle carte : voyage rapide dans les étoiles, comme initCard()
+        let travelKey = card ? String(card.id) : null;
+        if (game) {
+            if (travelKey && travelKey !== lastTravelKey && lastTravelKey !== undefined)
+                starWarp();
+            lastTravelKey = travelKey;
+        }
         let showCard = onStage && !combat && !!card;
         let isPlanet = showCard && card.kind === 'planet';
         $('game-card').hidden = !showCard || isPlanet;
@@ -1295,75 +1304,95 @@
     });
     renderDiscord();
 
-    // ---- Fond : étoiles qui filent, comme sur l'écran de jeu ---------------
+    // ---- Fond étoilé ---------------------------------------------------------
 
+    // Fond étoilé de l'écran de jeu (public/js/stars.js) : étoiles en 3D qui
+    // dérivent très lentement ; elles ne s'étirent en traînées que pendant
+    // le voyage entre deux cartes (fastTravel, 2 s)
     (function () {
         let canvas = $('starfield');
         let ctx = canvas.getContext && canvas.getContext('2d');
         if (!ctx)
             return;
-        let w = 0, h = 0, stars = [];
-        const spawn = (star, far) => {
-            star.a = Math.random() * Math.PI * 2;
-            star.d = far ? Math.random() : Math.random() * .05;
-            star.v = .0008 + Math.random() * .0022;
+        const STARS = 1000, FOV = 20, BASE_SPEED = .015, STRETCH = 5, BASE_SIZE = .08, TRAVEL = 2000;
+        let w = 0, h = 0, dpr = 1, cameraZ = 0, speed = 0, warpSpeed = 0, stars = [];
+        const randomize = (star, initial) => {
+            star.z = initial ? Math.random() * 2000 : cameraZ + Math.random() * 1000 + 2000;
+            let deg = Math.random() * Math.PI * 2, distance = Math.random() * 50 + 1;
+            star.x = Math.cos(deg) * distance;
+            star.y = Math.sin(deg) * distance;
         };
+        for (let i = 0; i < STARS; i++) {
+            let star = {};
+            randomize(star, true);
+            stars.push(star);
+        }
         const resize = () => {
-            let dpr = Math.min(window.devicePixelRatio || 1, 2);
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
             w = canvas.width = innerWidth * dpr;
             h = canvas.height = innerHeight * dpr;
             canvas.style.width = innerWidth + 'px';
             canvas.style.height = innerHeight + 'px';
         };
-        for (let i = 0; i < 220; i++) {
-            let star = {};
-            spawn(star, true);
-            stars.push(star);
-        }
-        const draw = () => {
+        let last = 0;
+        const draw = (now) => {
+            let delta = last ? Math.min(4, (now - last) / (1000 / 60)) : 1;
+            last = now;
+            speed += (warpSpeed - speed) / 20;
+            if (!reduceMotion)
+                cameraZ += delta * 10 * (speed + BASE_SPEED);
             ctx.clearRect(0, 0, w, h);
-            let cx = w / 2, cy = h / 2, reach = Math.hypot(cx, cy);
-            let scale = w / 1600;
-            for (let st of stars) {
-                let k = st.d * st.d;
-                let r = k * reach;
-                let x = cx + Math.cos(st.a) * r, y = cy + Math.sin(st.a) * r;
-                let len = reduceMotion ? 0 : k * 34 * scale;
-                let alpha = Math.min(.7, st.d * .8);
-                if (len < 1.5) {
-                    ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
-                    ctx.fillRect(x, y, 1.5 * scale + .5, 1.5 * scale + .5);
+            ctx.fillStyle = ctx.strokeStyle = '#fff';
+            ctx.lineCap = 'round';
+            let sw = w / dpr, cx = w / 2, cy = h / 2;
+            for (let star of stars) {
+                if (star.z < cameraZ)
+                    randomize(star);
+                let z = star.z - cameraZ;
+                let x = (star.x * (FOV / z) * sw) * dpr + cx;
+                let y = (star.y * (FOV / z) * sw) * dpr + cy;
+                let dx = x - cx, dy = y - cy;
+                let dist = Math.hypot(dx, dy) / dpr;
+                let ds = Math.max(0, (2000 - z) / 2000);
+                // Taille du sprite (128 px dans le jeu), étirée vers le centre
+                let size = 128 * ds * BASE_SIZE * .45 * dpr;
+                let len = 128 * (ds * BASE_SIZE + ds * speed * STRETCH * dist / sw) * .7 * dpr;
+                if (size < .2)
+                    continue;
+                ctx.globalAlpha = Math.min(1, .35 + ds);
+                if (len <= size * 1.6) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+                    ctx.fill();
                 }
                 else {
-                    // Traînée qui s'efface vers le centre
-                    let tx = x - Math.cos(st.a) * len, ty = y - Math.sin(st.a) * len;
-                    let g = ctx.createLinearGradient(tx, ty, x, y);
-                    g.addColorStop(0, 'rgba(255,255,255,0)');
-                    g.addColorStop(1, 'rgba(255,255,255,' + alpha + ')');
-                    ctx.strokeStyle = g;
-                    ctx.lineWidth = Math.max(1, k * 2.4 * scale);
-                    ctx.lineCap = 'round';
+                    let ux = dx / (dist * dpr || 1), uy = dy / (dist * dpr || 1);
+                    ctx.lineWidth = size;
                     ctx.beginPath();
-                    ctx.moveTo(tx, ty);
-                    ctx.lineTo(x, y);
+                    ctx.moveTo(x - ux * len * .3, y - uy * len * .3);
+                    ctx.lineTo(x + ux * len * .7, y + uy * len * .7);
                     ctx.stroke();
                 }
-                if (!reduceMotion) {
-                    st.d += st.v;
-                    if (st.d > 1.05)
-                        spawn(st, false);
-                }
             }
+            ctx.globalAlpha = 1;
         };
-        const loop = () => {
+        const loop = (now) => {
             if (!document.hidden)
-                draw();
+                draw(now);
             requestAnimationFrame(loop);
         };
+        let travelTimer = null;
+        starWarp = () => {
+            if (reduceMotion)
+                return;
+            warpSpeed = 1;
+            clearTimeout(travelTimer);
+            travelTimer = setTimeout(() => { warpSpeed = 0; }, TRAVEL);
+        };
         resize();
-        addEventListener('resize', () => { resize(); draw(); });
+        addEventListener('resize', () => { resize(); draw(performance.now()); });
         if (reduceMotion)
-            draw();
+            draw(0);
         else
             requestAnimationFrame(loop);
     })();
