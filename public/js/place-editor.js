@@ -48,6 +48,11 @@
         </select>
         <input type="number" df-statusdur min="1" max="99" placeholder="1" title="Durée, en cartes" aria-label="Durée du statut, en cartes">
     </div>
+    <label class="pe-shop" title="Valider ce choix ouvre la boutique sur l'écran de jeu. Elle vend le dernier étal préparé par le MJ, ou à défaut les objets qui ont un prix">
+        <span><i class="fas fa-store"></i> Marchand <small>(facultatif)</small></span>
+        <input type="text" df-shop maxlength="40" placeholder="Nom du marchand (vide : pas de boutique)">
+        <input type="hidden" df-shopstock>
+    </label>
     <label class="pe-roll" title="La suite dépend d'un jet : le MJ dit s'il est réussi (sortie du haut) ou raté (sortie du bas)">
         <span><i class="fas fa-dice-d20"></i> Jet <small>(facultatif)</small></span>
         <select df-roll>
@@ -545,7 +550,7 @@
             return null;
         }
         let defaults = type === 'card' ? {desc: '', mjreveal: '', timer: 'off', shuffle: 'off', marker: ''}
-            : type === 'choice' ? {choice: '', mjreveal: '', roll: '', random: '', status: '', statusdur: ''} : {reveal: ''};
+            : type === 'choice' ? {choice: '', mjreveal: '', roll: '', random: '', status: '', statusdur: '', shop: '', shopstock: ''} : {reveal: ''};
         let id = editor.addNode(type, PORTS[type][0], PORTS[type][1], x, y, type, Object.assign(defaults, values || {}), TEMPLATES[type]);
         refreshNodes();
         return id;
@@ -562,6 +567,21 @@
     function statusOf(node) {
         let slug = node.data.status;
         return slug ? {slug: slug, duration: Math.max(1, parseInt(node.data.statusdur) || 1)} : null;
+    }
+
+    // Marchand ouvert par un choix : {name, stock?}, ou null
+    function shopOf(node) {
+        let name = (node.data.shop || '').trim();
+        if (!name)
+            return null;
+        let shop = {name: name};
+        try {
+            let stock = JSON.parse(node.data.shopstock || 'null');
+            if (Array.isArray(stock))
+                shop.stock = stock;
+        }
+        catch (e) {}
+        return shop;
     }
 
     /* ---------- Butin d'un choix ---------- */
@@ -925,6 +945,8 @@
                     c.loot = loot;
                 if (statusOf(choice))
                     c.status = statusOf(choice);
+                if (shopOf(choice))
+                    c.shop = shopOf(choice);
                 let suiteOf = (out) => {
                     let next = byId(choice.outputs[out].connections[0].node);
                     return next.name === 'reveal' ? {reveal: next.data.reveal || ''} : {next: nameOf(next)};
@@ -1005,6 +1027,7 @@
                     mjreveal: (choice.data.mjreveal || '').trim(),
                     loot: lootOf(choice),
                     status: statusOf(choice),
+                    shop: shopOf(choice),
                     roll: roll ? {stat: choice.data.roll, success: suiteOf('output_1'), failure: suiteOf('output_2')} : null,
                     outcomes: random ? choiceOutputs(choice).map((out, k) => Object.assign({weight: weights[k]}, suiteOf(out))) : null
                 }, roll || random ? {reveal: null, revealId: null, next: null} : suiteOf('output_1')));

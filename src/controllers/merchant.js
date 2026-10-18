@@ -104,7 +104,12 @@ const open = function (data) {
     let wasOpen = state.open;
     state.open = true;
     state.name = text(data.name, 40) || DEFAULT_NAME;
-    state.stock = cleanStock(data.stock);
+    // Ouvert depuis une carte sans liste d'objets : dernier étal du MJ,
+    // à défaut les objets du catalogue qui ont un prix
+    if (Array.isArray(data.stock))
+        state.stock = cleanStock(data.stock);
+    else if (!state.stock.length)
+        state.stock = cleanStock(catalog().filter(i => i.price > 0));
     if (!wasOpen)
         state.log = [];
     return {type: wasOpen ? 'update' : 'open'};

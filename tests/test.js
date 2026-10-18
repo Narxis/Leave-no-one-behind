@@ -1603,7 +1603,29 @@ async function test_merchant() {
         msgs = await merchant.handle({action: 'merchant-close'});
         assert.strictEqual(msgs[0].data.state.open, false);
         assert.ok((await merchant.sell({slug: 'pile-test', seller: {type: 'ship'}})).error, 'boutique fermée');
+
+        // Ouverte depuis une carte sans liste : dernier étal, sinon objets à prix
+        let lastStock = merchant.getState().stock;
+        merchant.open({name: 'Marchand de carte'});
+        assert.deepStrictEqual(merchant.getState().stock, lastStock);
         merchant.reset();
+        merchant.open({});
+        assert.deepStrictEqual(merchant.getState().stock.map(i => i.name).sort(), merchant.catalog().filter(i => i.price > 0).map(i => i.name).sort());
+        assert.strictEqual(merchant.getState().name, 'Marchand');
+        merchant.reset();
+
+        // Choix de carte qui ouvre la boutique
+        const {parseShop} = require('../src/models/card');
+        assert.strictEqual(parseShop(''), null);
+        assert.strictEqual(parseShop('pas du json'), null);
+        assert.deepStrictEqual(parseShop(true), {name: ''});
+        assert.deepStrictEqual(parseShop({name: 'Zork', stock: [{name: 'Corde', price: 2}]}), {name: 'Zork', stock: [{name: 'Corde', price: 2}]});
+        let shopCard = await new Card().create({type: TYPE_NEUTRAL, desc: 'Un bazar', choices: [
+            {value: 'Entrer', reveal: 'Bienvenue', shop: {name: 'Zork'}}, {value: 'Passer', reveal: 'Tant pis'}]});
+        let shopChoices = (await new Card(shopCard.id).getData()).choices;
+        assert.deepStrictEqual(shopChoices.find(c => c.value === 'Entrer').shop, {name: 'Zork'});
+        assert.strictEqual(shopChoices.find(c => c.value === 'Passer').shop, undefined);
+        await shopCard.delete();
         console.log('Money and merchant OK');
     }
     finally {

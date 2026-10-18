@@ -423,6 +423,9 @@ async function showChoices() {
             // Statut donné par le choix (toute l'équipe)
             if (choice.status && choice.status.slug)
                 wsLNOB.setStatus(choice.status.slug, choice.status.duration);
+            // Le choix ouvre la boutique (merchant.js) ; le MJ la ferme de son menu
+            if (choice.shop)
+                wsLNOB.send({action: 'merchant-open', data: choice.shop});
             await hideChoices();
             await followChoice(next);
         };
