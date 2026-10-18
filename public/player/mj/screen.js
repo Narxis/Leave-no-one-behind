@@ -143,6 +143,31 @@
     // Images du jeu (/img/…) : recopiées à côté de cet écran
     const imageUrl = (src) => /^data:image\//.test(src || '') ? src : (/^\/img\//.test(src || '') ? src.slice(1) : '');
 
+    // Race sous le nom, comme chez le MJ. Mise à jour à chaque état : l'onglet
+    // est créé quand le joueur arrive, souvent avant qu'il choisisse sa race
+    const syncRace = function (tab, race) {
+        let name = tab && tab.querySelector('.player-name');
+        if (!name)
+            return;
+        let label = race ? raceLabel(race) : '';
+        let box = name.querySelector('.player-race');
+        if ((box ? box.textContent : '') === label)
+            return;
+        if (!label)
+            box.remove();
+        else {
+            if (!box) {
+                box = document.createElement('div');
+                box.className = 'player-race';
+                name.append(box);
+            }
+            box.textContent = label;
+        }
+        // Le nom se resserre si la race prend de la place (players.js)
+        if (window.fitPlayerName)
+            fitPlayerName(tab);
+    };
+
     const buildTab = function (player) {
         let html = TAB_TEMPLATE.split('__ID__').join(esc(player.id)).split('__NAME__').join(esc(player.name));
         for (let stat of STATS) {
@@ -152,13 +177,7 @@
         let box = document.createElement('div');
         box.innerHTML = html.trim();
         let tab = box.firstElementChild;
-        // Race sous le nom, comme chez le MJ
-        if (player.race) {
-            let race = document.createElement('div');
-            race.className = 'player-race';
-            race.textContent = raceLabel(player.race);
-            tab.querySelector('.player-name').append(race);
-        }
+        syncRace(tab, player.race);
         tab.classList.toggle('player-me', player.id === me);
         // Ouvrir les stats (« ? ») et le coffre, comme players.js
         tab.querySelector('.expander').addEventListener('mouseup', () => tab.classList.toggle('move-up'));
@@ -190,6 +209,7 @@
         }
         // Stats et rôles qui changent : mêmes fonctions que chez le MJ (players.js)
         for (let player of team) {
+            syncRace(document.getElementById('player-tab' + player.id), player.race);
             if (player.stats)
                 syncPlayerStats({detail: {data: Object.assign({discord_id: player.id}, player.stats)}});
             let box = document.querySelector('#player-tab' + player.id + ' .player-role');
