@@ -92,18 +92,24 @@ const timerCss = function () {
 };
 
 // ---- Écran de jeu du MJ, porté tel quel pour les joueurs (public/player/mj) ----
-// La page joueur affiche, dans un cadre (iframe), une copie de l'écran de
-// jeu (template-card.ejs) : même balisage, mêmes feuilles de style, mêmes
-// scripts d'affichage. Seuls les boutons du MJ sont cachés (mj/screen.css),
-// et mj/screen.js remplit l'écran avec l'état de la partie reçu du relais.
-// Les fichiers (styles, scripts, images) sont recopiés dans public/player/mj :
-// le relais ne sert que public/player.
+// La page joueur affiche, dans un cadre (iframe), une copie des pages de jeu
+// du MJ : mj/screen.html (template-card.ejs : carte, combat),
+// mj/planet.html (template-planet.ejs : scans d'une planète) et mj/end.html
+// (end-screen.ejs : score de fin). Même balisage,
+// mêmes feuilles de style, mêmes scripts d'affichage ; seuls les boutons du
+// MJ sont cachés (mj/screen.css), et mj/screen.js remplit l'écran avec l'état
+// de la partie reçu du relais. Les fichiers (styles, scripts, images) sont
+// recopiés dans public/player/mj : le relais ne sert que public/player.
 const MJ_DIR = 'public/player/mj/';
-// Feuilles de style de template-card.ejs, dans le même ordre (head.ejs ajoute ui-theme.css)
-const MJ_CSS = ['template-card', 'timer-animation', 'style', 'plan-du-vaisseau', 'ui-card', 'merchant', 'ui-theme'];
-// Scripts d'affichage repris tels quels, dans l'ordre de template-card.ejs
-// (ui-gauges.js et stat-tooltips.js viennent de bottom-scripts.ejs, en defer)
+const CARD_VIEW = 'public/views/template-card.ejs';
+const PLANET_VIEW = 'public/views/template-planet.ejs';
+const END_VIEW = 'public/views/end-screen.ejs';
+// Scripts d'affichage repris tels quels, dans l'ordre des vues
 const MJ_JS = ['players', 'timer-anim', 'combat-text', 'combat', 'card-loot', 'template-card', 'inventory'];
+const PLANET_JS = ['planet', 'players'];
+// Après les onglets : inventaires, puis onglets des compagnons (partials/npc-tabs.ejs)
+const TABS_JS = ['inventory'];
+// bottom-scripts.ejs, en defer
 const MJ_JS_DEFER = ['ui-gauges', 'stat-tooltips'];
 
 // Données vides pour rendre les vues (tout est rempli ensuite par mj/screen.js)
@@ -113,7 +119,16 @@ const viewLocals = () => ({
     players: [], ship: STUB_SHIP, card: {}, statuses: [], items: [], shipItems: [], lang: {lang: ''},
     shipRooms: JSON.parse(read('src/config/shipRooms.json')), playerRoles: {find: () => null}, discordOf: () => null
 });
-const renderView = (file, locals) => ejs.render(read(file), locals, {filename: path.join(ROOT, file)});
+// Planète sans valeurs ni coûts : ils arrivent au fil des scans
+const PLANET_MODULES = ['oxy', 'cli', 'fau', 'flo', 'civ', 'res', 'wtr', 'grv'];
+const planetLocals = (last) => Object.assign(viewLocals(), {
+    card: {id: 0, modules: Object.fromEntries(PLANET_MODULES.map(k => [k, {val: 0, cost: ''}]))},
+    lastPlanet: last ? JSON.parse(read('src/config/lang.json')).last_planet : null
+});
+const renderView = (file, locals) => ejs.render(read(file), locals, {filename: path.join(ROOT, file)}).replace(/\r\n/g, '\n');
+const tidy = (html) => html.replace(/[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n').trimEnd();
+// Boutons qui changent de page chez le MJ (atterrir, repartir) : sans effet ici
+const noNavigation = (html) => html.replace(/ onclick="[^"]*"/g, '');
 
 // Fichiers de public/ cités par une vue ou une feuille de style (/img/…, /fonts/…) :
 // recopiés dans public/player/mj/, chemin rendu relatif
@@ -130,6 +145,19 @@ const relink = (html) => html.replace(/(src|href)="(\/?(?:img|fonts)\/[^"]+)"/g,
     return local ? attr + '="' + local + '"' : all;
 });
 
+// Feuilles de style d'une vue : la liste cssFiles de son en-tête, puis
+// ui-theme.css (ajoutée par partials/head.ejs)
+const viewCss = function (file) {
+    let m = read(file).match(/cssFiles\s*:\s*\[([^\]]*)\]/);
+    if (!m)
+        throw new Error(file + ' : feuilles de style introuvables');
+    return [...m[1].matchAll(/"([^"]+)"/g)].map(x => x[1]).concat('/css/ui-theme.css');
+};
+const cssName = (href) => (href.match(/^\/css\/([\w-]+)\.css$/) || [])[1];
+const cssLinks = (file) => viewCss(file)
+    .map(href => '    <link rel="stylesheet" href="' + (cssName(href) ? 'css/' + cssName(href) + '.css' : href) + '">').join('\n');
+const mjCssNames = () => [...new Set([CARD_VIEW, PLANET_VIEW, END_VIEW].flatMap(viewCss).map(cssName).filter(Boolean))];
+
 // Feuille de style : chemins absolus rendus relatifs (le fichier est dans mj/css/),
 // photo de fond externe retirée (ui-card.css la remplace de toute façon)
 const mjCss = function (name) {
@@ -142,26 +170,23 @@ const mjCss = function (name) {
             .replace(/url\(https:\/\/images\.pexels\.com[^)]*\)/g, 'none');
 };
 
-// Morceau de template-card.ejs : de <div class="center"> au bouton « suivant »
-const mjBody = function () {
-    let html = renderView('public/views/template-card.ejs', viewLocals()).replace(/\r\n/g, '\n');
-    let start = html.indexOf('  <div class="center">');
-    let end = html.indexOf('  <div class="next-button"');
-    if (start < 0 || end < start)
-        throw new Error('template-card.ejs : écran de jeu introuvable');
-    return relink(html.slice(start, end).replace(/[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n').trimEnd());
+// Morceau d'une vue rendue, de start (inclus) à end (exclu)
+const slice = function (html, start, end, what) {
+    let from = html.search(start);
+    let to = html.indexOf(end, from);
+    if (from < 0 || to < 0)
+        throw new Error(what + ' : écran de jeu introuvable');
+    return relink(noNavigation(tidy(html.slice(from, html.lastIndexOf('\n', to)))));
 };
-
-// Script en ligne de template-card.ejs qui anime l'écran (jauges, onglets des
-// modules, onglet de gauche) : repris tel quel
-const mjInlineScript = function () {
-    let html = renderView('public/views/template-card.ejs', viewLocals()).replace(/\r\n/g, '\n');
-    let start = html.lastIndexOf('<script>', html.indexOf('var observer = new MutationObserver'));
+// Script en ligne qui anime l'écran (jauges, onglets des modules…) : repris tel quel
+const inlineScript = function (html, marker, what) {
+    let start = html.lastIndexOf('<script>', html.indexOf(marker));
     let end = html.indexOf('</script>', start);
-    if (start < 0 || end < 0)
-        throw new Error('template-card.ejs : script de l\'écran introuvable');
+    if (html.indexOf(marker) < 0 || start < 0 || end < 0)
+        throw new Error(what + ' : script de l\'écran introuvable');
     return html.slice(start, end + '</script>'.length).replace(/[ \t]+$/gm, '');
 };
+const bodyTag = (html) => (html.match(/<body[^>]*>/) || ['<body>'])[0];
 
 // Onglet d'un joueur (partials/player-tabs.ejs), avec des repères remplacés par mj/screen.js
 const mjPlayerTab = function () {
@@ -169,45 +194,124 @@ const mjPlayerTab = function () {
     for (let stat of ['combat', 'pilotage', 'engineering', 'survival', 'recon', 'moral'])
         player[stat] = '__' + stat.toUpperCase() + '__';
     let html = renderView('public/views/partials/player-tabs.ejs', Object.assign(viewLocals(), {player}));
-    return relink(html.replace(/\r\n/g, '\n').replace(/[ \t]+$/gm, '').trim());
+    return relink(tidy(html).trim());
 };
+// Onglets des compagnons : modèle et script de la vue (partials/npc-tabs.ejs)
+const npcTabs = () => relink(tidy(renderView('public/views/partials/npc-tabs.ejs', viewLocals())).trim())
+    .replace(/src="\/js\/npc-tabs\.js"/, 'src="js/npc-tabs.js"');
 
-const mjScreen = function () {
-    let css = MJ_CSS.map(name => '    <link rel="stylesheet" href="css/' + name + '.css">').join('\n');
-    let js = MJ_JS.map(name => '<script src="js/' + name + '.js"></script>').join('\n');
-    let deferred = MJ_JS_DEFER.map(name => '<script src="js/' + name + '.js" defer></script>').join('\n');
+// Ce que la page du MJ a et que les scripts repris attendent
+const stubs = function (extra) {
     let custom = read('public/views/svg/custom.ejs').trim();
-    return `<!doctype html>
-<!-- Généré par scripts/player-assets.js depuis template-card.ejs : ne pas modifier à la main -->
-<html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LNOB</title>
-${css}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
-    <link rel="stylesheet" href="screen.css">
-</head>
-<body class="wrap--1">
-${mjBody()}
-  <template id="player-tab-template">
-${mjPlayerTab()}
-  </template>
-<script src="../status-icons.js"></script>
-<script>
+    return `<script>
     // Icônes des statuts, comme sur l'écran de jeu (card.js, addStatus)
     var statusSvgList = Object.assign({custom: ${JSON.stringify(custom)}}, window.LNOB_STATUS_SVG || {});
     function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
     // Les boutons du MJ n'envoient rien depuis l'écran des joueurs
-    var wsLNOB = {send() {}, setModule() {}, setStatus() {}, addItem() {}, delItem() {}, setStatistic() {}, rollDice() {}, triggerCustomEvent() {}};
-</script>
-${js}
-  ${mjInlineScript()}
-${deferred}
-<script src="screen.js" defer></script>
-</body>
+    var wsLNOB = {send() {}, setModule() {}, setStatus() {}, addItem() {}, delItem() {}, setStatistic() {}, rollDice() {}, triggerCustomEvent() {}};${extra || ''}
+</script>`;
+};
+const scripts = (names, attr) => names.map(name => '<script src="js/' + name + '.js"' + (attr || '') + '></script>').join('\n');
+
+const page = (view, title, head, body) => `<!doctype html>
+<!-- Généré par scripts/player-assets.js depuis ${view.split('/').pop()} : ne pas modifier à la main -->
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${title}</title>
+${head}
+    <link rel="stylesheet" href="screen.css">
+</head>
+${body}
 </html>
 `;
+
+// Carte (événement, lieu), son combat et son butin
+const mjScreen = function () {
+    let html = renderView(CARD_VIEW, viewLocals());
+    return page(CARD_VIEW, 'LNOB', cssLinks(CARD_VIEW), `${bodyTag(html)}
+${slice(html, /^ *<div class="center">/m, '<div class="next-button"', 'template-card.ejs')}
+  <template id="player-tab-template">
+${mjPlayerTab()}
+  </template>
+<script src="../status-icons.js"></script>
+${stubs()}
+${scripts(MJ_JS)}
+${npcTabs()}
+  ${inlineScript(html, 'var observer = new MutationObserver', 'template-card.ejs')}
+${scripts(MJ_JS_DEFER, ' defer')}
+<script src="screen.js" defer></script>
+</body>`);
+};
+
+// Planète : la même page que le MJ, dessinée sans ses valeurs secrètes ;
+// mj/screen.js joue chaque scan fait par le MJ avec planet.js
+const mjPlanet = function () {
+    let html = renderView(PLANET_VIEW, planetLocals(false));
+    let lines = renderView(PLANET_VIEW, planetLocals(true)).split('\n');
+    let block = function (cls) {
+        let i = lines.findIndex(l => l.includes('<div class="' + cls + '"'));
+        if (i < 0)
+            throw new Error('template-planet.ejs : ' + cls + ' introuvable');
+        return blockAt(lines, i);
+    };
+    let last = relink(noNavigation(tidy(block('last-planet-alert') + '\n' + block('topcenter'))));
+    let texts = JSON.parse(read('src/config/lang.json')).card_vars.planet_text;
+    return page(PLANET_VIEW, 'LNOB', cssLinks(PLANET_VIEW), `${bodyTag(html)}
+${slice(html, /^ *<div class="center">/m, '<script>var PLANET_DATA', 'template-planet.ejs')}
+  <template id="last-planet-template">
+${last}
+  </template>
+  <template id="player-tab-template">
+${mjPlayerTab()}
+  </template>
+<script src="../status-icons.js"></script>
+${stubs(`
+    // Planète de la carte en cours (?card=id) : même graine, donc même planète
+    // que chez le MJ ; ses valeurs n'arrivent qu'au fil des scans (mj/screen.js)
+    var PLANET_DATA = {id: Number(new URLSearchParams(location.search).get('card')) || 0, modules: {}};
+    // Dernière planète (?last=1) : l'alerte et le seul bouton « Terminer le voyage »
+    var LAST_PLANET = new URLSearchParams(location.search).get('last') === '1';
+    if (LAST_PLANET)
+        document.querySelector('.topcenter').replaceWith(document.getElementById('last-planet-template').content.cloneNode(true));
+    // Textes des scans du jeu (planet.js les prépare au chargement)
+    var lang = {card_vars: {planet_text: ${JSON.stringify(texts).replace(/</g, '\\u003c')}}};`)}
+<script src="../planet-view.js"></script>
+${scripts(PLANET_JS)}
+${scripts(TABS_JS)}
+${npcTabs()}
+  ${inlineScript(html, 'var observer = new MutationObserver', 'template-planet.ejs')}
+${scripts(MJ_JS_DEFER, ' defer')}
+<script src="screen.js" defer></script>
+</body>`);
+};
+
+// Écran de fin : le même que chez le MJ ; end-screen.js lit le score au
+// chargement, mj/screen.js le charge une fois le score reçu. Les valeurs de
+// la planète sont des repères (__oxy__…) remplacés par mj/screen.js
+const mjEnd = function () {
+    let locals = Object.assign(viewLocals(), {
+        score: {scoreShip: 0, scorePlanet: 0, scoreCards: 0, scoreTotal: 0}, settings: null, js: {vars: ''}, leaderboardId: null,
+        planet: {id: 0, name: '', modules: Object.fromEntries(PLANET_MODULES.map(k => [k, {val: '__' + k + '__'}]))}
+    });
+    let html = renderView(END_VIEW, locals);
+    let lang = JSON.parse(read('src/config/lang.json')).card_vars;
+    let texts = {planet_text: lang.planet_text, end_screen: lang.end_screen};
+    // Récap des réglages (partials/settings-recap.ejs), compilé pour le navigateur
+    let recap = ejs.compile(read('public/views/partials/settings-recap.ejs'), {client: true, compileDebug: false}).toString();
+    return page(END_VIEW, 'LNOB', cssLinks(END_VIEW), `${bodyTag(html)}
+${slice(html, /^ *<div class="center">/m, '<script>', 'end-screen.ejs').replace(/ href="\/leaderboard[^"]*"/, '')}
+<script src="../status-icons.js"></script>
+${stubs(`
+    // Textes de l'écran de fin et des scans du jeu (end-screen.js)
+    var lang = {card_vars: ${JSON.stringify(texts).replace(/</g, '\\u003c')}};
+    var settingsRecap = ${recap};`)}
+<script src="../planet-view.js"></script>
+  ${inlineScript(html, 'var observer = new MutationObserver', 'end-screen.ejs')}
+${scripts(MJ_JS_DEFER, ' defer')}
+<script src="screen.js" defer></script>
+</body>`);
 };
 
 // Fichiers de l'écran porté (le HTML d'abord : il relève les images à recopier)
@@ -215,9 +319,11 @@ const mjFiles = function () {
     mjAssets.clear();
     let out = {};
     out[MJ_DIR + 'screen.html'] = mjScreen();
-    for (let name of MJ_CSS)
+    out[MJ_DIR + 'planet.html'] = mjPlanet();
+    out[MJ_DIR + 'end.html'] = mjEnd();
+    for (let name of mjCssNames())
         out[MJ_DIR + 'css/' + name + '.css'] = mjCss(name);
-    for (let name of MJ_JS.concat(MJ_JS_DEFER))
+    for (let name of [...new Set(MJ_JS.concat(PLANET_JS, TABS_JS, MJ_JS_DEFER, ['npc-tabs', 'end-screen']))])
         out[MJ_DIR + 'js/' + name + '.js'] = HEADER + read('public/js/' + name + '.js');
     // Images des objets (coffres, liste du vaisseau) et de la monnaie
     for (let file of fs.readdirSync(path.join(ROOT, 'public/img/items')).sort())

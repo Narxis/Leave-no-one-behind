@@ -1,5 +1,6 @@
-/* Écran de jeu porté pour les joueurs (screen.html, généré depuis
-   template-card.ejs) : seuls les réglages propres aux joueurs sont ici. */
+/* Écran de jeu porté pour les joueurs (screen.html et planet.html, générés
+   depuis template-card.ejs et template-planet.ejs) : seuls les réglages
+   propres aux joueurs sont ici. */
 
 /* Le fond étoilé est dessiné par la page joueur, derrière ce cadre */
 html, body {
@@ -41,5 +42,23 @@ html, body {
 /* Butin : c'est le MJ qui le distribue */
 #card-loot-all,
 .combat-loot-hint {
+    display: none !important;
+}
+
+/* Planète (planet.html) : les boutons des scans et de l'atterrissage servent
+   à voter ; le scan et l'atterrissage restent faits par le MJ */
+.p-txt, .land-button, .leave-button, .use-drone {
+    cursor: default;
+}
+.p-txt.player-can-vote, .land-button.player-can-vote, .leave-button.player-can-vote {
+    cursor: pointer;
+}
+.p-txt.player-voted, .land-button.player-voted, .leave-button.player-voted {
+    outline: 2px solid var(--ui-accent, #ffcc00);
+    outline-offset: 2px;
+}
+
+/* Écran de fin (end.html) : « Suivant » mène le MJ au classement */
+.endscreen-container ~ .next {
     display: none !important;
 }

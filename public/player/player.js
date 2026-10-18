@@ -180,16 +180,18 @@
         document.body.classList.toggle('planet-mode', planetShown && tab === 'game');
     };
 
-    // ---- Écran de jeu du MJ, porté tel quel (mj/screen.html) ----------------
-    // Sur ordinateur, l'onglet Partie affiche une copie de l'écran de jeu du
-    // MJ (même balisage, mêmes styles, mêmes scripts), dans un cadre. La page
-    // lui transmet l'état de la partie et ce que la page du MJ écrit ; il
-    // renvoie les votes du joueur. Sur téléphone, la page garde sa mise en page.
+    // ---- Écran de jeu du MJ, porté tel quel (mj/screen.html, mj/planet.html) --
+    // Sur ordinateur, l'onglet Partie affiche une copie des pages de jeu du MJ
+    // (même balisage, mêmes styles, mêmes scripts), dans un cadre : la page de
+    // la carte, ou celle de la planète. La page lui transmet l'état de la
+    // partie et ce que la page du MJ écrit ; il renvoie les votes du joueur.
+    // Sur téléphone, la page garde sa mise en page.
     const mjFrame = $('mj-screen');
     let mjReady = false;
+    let mjPage = mjFrame ? mjFrame.getAttribute('src') : null;
     let mjLastText = null;   // dernier texte annoncé par le MJ (pour un écran rechargé)
     let mjLastTimer = null;
-    const MJ_REPLAY = ['inventory', 'combat', 'card-loot'];
+    const MJ_REPLAY = ['inventory', 'combat', 'card-loot', 'allies'];
     const mjLastEvents = new Map();
     const wideScreen = window.matchMedia ? window.matchMedia('(min-width: 900px)') : {matches: true};
     const toMjScreen = function (message) {
@@ -197,14 +199,34 @@
             mjFrame.contentWindow.postMessage(message, '*');
     };
     const mjState = () => toMjScreen({lnob: 'state', game: game, you: you || null, me: playerId});
-    // Ce que l'écran porté sait déjà afficher : une carte (événement, lieu,
-    // carte blanche), avec son combat, hors planète
+    // Ce que l'écran porté affiche : une carte (événement, lieu, carte
+    // blanche) avec son combat, une planète, ou le score de fin
     const mjScreenFits = function () {
         let card = game && game.card;
-        return !!(wideScreen.matches && tab === 'game' && game && game.phase === 'gameLive'
-            && card && card.kind !== 'planet' && card.kind !== 'intro');
+        if (!wideScreen.matches || tab !== 'game' || !game)
+            return false;
+        if (game.phase === 'postGame')
+            return !!game.score;
+        return game.phase === 'gameLive' && !!card && card.kind !== 'intro';
+    };
+    // Page du MJ à montrer : l'écran de fin, celle de la planète (sa graine,
+    // et la dernière planète a un seul bouton), sinon celle de la carte
+    const mjScreenPage = function () {
+        let card = game && game.card;
+        if (game && game.phase === 'postGame' && game.score)
+            return 'mj/end.html';
+        if (!card || card.kind !== 'planet')
+            return 'mj/screen.html';
+        return 'mj/planet.html?card=' + encodeURIComponent(card.id) + (card.lastPlanet ? '&last=1' : '');
     };
     const updateMjScreen = function () {
+        let page = mjScreenPage();
+        // Changement de page, comme le MJ passe de la carte à la planète
+        if (mjFrame && wideScreen.matches && page !== mjPage) {
+            mjPage = page;
+            mjReady = false;
+            mjFrame.setAttribute('src', page);
+        }
         let on = !!mjFrame && mjScreenFits();
         document.body.classList.toggle('mj-screen-on', on);
         if (mjFrame)

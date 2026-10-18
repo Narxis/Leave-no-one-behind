@@ -1,7 +1,9 @@
-// Écran de jeu porté pour les joueurs. screen.html est une copie de l'écran
-// de jeu du MJ (template-card.ejs), générée par scripts/player-assets.js ;
-// ce script le fait vivre comme card.js le fait chez le MJ, mais à partir de
-// ce que la page joueur (player.js) lui transmet :
+// Écran de jeu porté pour les joueurs. screen.html, planet.html et end.html
+// sont des copies des pages de jeu du MJ (template-card.ejs,
+// template-planet.ejs, end-screen.ejs), générées par
+// scripts/player-assets.js ; ce script les fait vivre comme card.js,
+// planet.js et end-screen.js le font chez le MJ, mais à partir de ce que la
+// page joueur (player.js) lui transmet :
 //   {lnob: 'state', game, you, me}        état de la partie (relais)
 //   {lnob: 'card-text', data}             texte que la page du MJ écrit
 //   {lnob: 'timer', timer}                compte à rebours des choix
@@ -21,6 +23,9 @@
     let game = null;
     let you = null;
     let me = null;
+    // Page planète (planet.html), écran de fin (end.html) ou carte (screen.html)
+    const PLANET = !!q('.planet-summary');
+    const END = !!q('.endscreen-container');
 
     // ---- Mise en place, comme card.js au chargement -----------------------
 
@@ -42,6 +47,8 @@
 
     // ---- Modules, humains, statuts -----------------------------------------
 
+    // Modules secondaires de la page planète (template-planet.ejs)
+    const PLANET_SECONDARY = {landing: 'module-9', construction: 'module-10', dbscience: 'module-11', dbhistory: 'module-12'};
     const renderShip = function (ship) {
         if (!ship)
             return;
@@ -59,8 +66,11 @@
             let left = document.getElementById(mod.id + '-value');
             if (left)
                 left.innerText = value;
+            let secondary = PLANET_SECONDARY[mod.id] && q('#' + PLANET_SECONDARY[mod.id] + ' .mod-value');
+            if (secondary)
+                secondary.innerText = value + '%';
         }
-        let humans = document.getElementById('cryopods-value');
+        let humans = document.getElementById('cryopods-value') || q('.humain-value');
         if (humans && ship.cryopods !== undefined && humans.innerText !== String(ship.cryopods))
             humans.innerText = ship.cryopods;
     };
@@ -85,12 +95,13 @@
                         <div class="status-duration">${esc(status.duration)}</div>
                     </div>`;
         }
-        q('.status').innerHTML = html;
+        if (q('.status'))
+            q('.status').innerHTML = html;
     };
 
     // ---- Onglets des joueurs (partials/player-tabs.ejs) -------------------
 
-    const TAB_TEMPLATE = document.getElementById('player-tab-template').innerHTML;
+    const TAB_TEMPLATE = (document.getElementById('player-tab-template') || {}).innerHTML || '';
     const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon', 'moral'];
     const raceLabel = (race) => String(race || '').split(/[_ ]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-');
     // Images du jeu (/img/…) : recopiées à côté de cet écran
@@ -403,6 +414,8 @@
         if (payload.action === 'card-loot' && !(payload.data.state.items || []).length) {
             let area = document.getElementById('card-loot-area');
             setTimeout(() => {
+                if (!area)
+                    return;
                 area.classList.remove('combat-in');
                 area.classList.add('combat-out');
                 setTimeout(() => area.classList.add('combat-none'), 400);
@@ -410,15 +423,166 @@
         }
     };
 
+    // ---- Planète, comme planet.js chez le MJ --------------------------------
+    // Chaque scan fait par le MJ est rejoué par planet.js lui-même (même trait
+    // vers la planète, même texte écrit lettre à lettre, même couche qui
+    // apparaît) : on lui donne le texte du scan reçu du relais, puis on
+    // « clique » le bouton du scan à sa place. Les valeurs de la planète
+    // n'arrivent qu'une fois scannées (planetScan.js) ; le joueur vote pour le
+    // scan suivant ou pour atterrir en cliquant les mêmes boutons.
+
+    // Clé du scan → préfixe des éléments et variables de planet.js (o2-txt,
+    // pointso2, texto2, costo2…)
+    const SCANS = {oxy: 'o2', cli: 'cl', ff: 'ff', res: 're', wtr: 'eau', grv: 'gr'};
+    const PLANET_BUTTONS = '.p-txt, .use-drone, .land-button, .leave-button';
+    const planetDone = new Set();
+    let planetDriving = false;
+
+    const replayScan = function (scan) {
+        let p = SCANS[scan.key];
+        let button = p && q('.' + p + '-txt');
+        if (!button)
+            return;
+        window['text' + p] = String(scan.text || '');
+        planetDriving = true;
+        window.detectionPoints = Infinity;
+        try {
+            button.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+        } finally {
+            planetDriving = false;
+        }
+    };
+
+    const planetChoice = (label) => PLANET_SCANS.concat(PLANET_EXITS).find(c => c.label === label) || {button: null};
+    const canPlanetVote = function () {
+        let card = game && game.card;
+        return !!(card && card.screen && card.chosen === null && you && you.character);
+    };
+    // Voix sur les boutons (le code de planet.js) et vote du joueur entouré
+    const renderPlanetVotes = function (card) {
+        window.planetVoteChoices = card.screen ? (card.choices || []).map(planetChoice) : [];
+        document.dispatchEvent(new CustomEvent('votes', {detail: {data: {counts: card.screen ? card.counts || [] : []}}}));
+        document.querySelectorAll(PLANET_BUTTONS).forEach(b => b.classList.remove('player-voted', 'player-can-vote'));
+        window.planetVoteChoices.forEach((choice, i) => {
+            let button = choice.button && q(choice.button);
+            if (!button)
+                return;
+            button.classList.toggle('player-can-vote', canPlanetVote());
+            button.classList.toggle('player-voted', !!you && you.vote === i);
+        });
+    };
+
+    const renderPlanet = function (card) {
+        let planet = card.planet;
+        if (!planet || String(planet.id) !== String(PLANET_DATA.id))
+            return;
+        let scans = planet.scans || [];
+        // Coût de chaque scan sur son bouton, comme chez le MJ
+        for (let scan of scans) {
+            let p = SCANS[scan.key];
+            let cost = scan.cost === null || scan.cost === undefined ? '' : String(scan.cost);
+            let box = p && document.getElementById('points' + p);
+            if (!box)
+                continue;
+            window['cost' + p] = cost;
+            if (!planetDone.has(scan.key) && box.innerText !== cost)
+                box.innerText = cost;
+        }
+        window.costList = scans.filter(s => !s.revealed && SCANS[s.key]).map(s => window['cost' + SCANS[s.key]]);
+        // Valeurs scannées : pour dessiner les couches qui apparaissent
+        if (window.planetView && planetView.update)
+            planetView.update(planet.modules || {});
+        for (let scan of scans)
+            if (scan.revealed && !planetDone.has(scan.key)) {
+                planetDone.add(scan.key);
+                replayScan(scan);
+            }
+        let points = Number.isFinite(planet.points) ? planet.points : null;
+        window.detectionPoints = points === null ? 0 : points;
+        writePoints('.detection-point', points === null ? '' : points);
+        window.dronenbr = Math.max(0, parseInt(planet.drones) || 0);
+        writePoints('.drone', dronenbr);
+        // Plus de scan possible : atterrir ou repartir, comme chez le MJ
+        if (planet.done && !showbuttons) {
+            window.showbuttons = true;
+            showbuttons_fun();
+        }
+        renderPlanetVotes(card);
+    };
+
+    // Les boutons de la planète sont ceux du MJ : un clic du joueur est un vote
+    if (PLANET)
+        for (let type of ['mousedown', 'mouseup', 'click'])
+            window.addEventListener(type, function (e) {
+                let button = !planetDriving && e.target.closest && e.target.closest(PLANET_BUTTONS);
+                if (!button)
+                    return;
+                e.stopPropagation();
+                e.preventDefault();
+                if (type !== 'mouseup' || e.button !== 0 || !canPlanetVote())
+                    return;
+                let i = (window.planetVoteChoices || []).findIndex(c => c.button && q(c.button) === button);
+                if (i >= 0)
+                    toPage('vote', {index: you.vote === i ? null : i});
+            }, true);
+
+    // ---- Écran de fin, comme chez le MJ ----------------------------------------
+    // end-screen.js lit le score, le vaisseau et la planète au chargement :
+    // il n'est chargé qu'une fois le score reçu, et joue toute l'animation
+    // (comptes, console, récap de la planète) comme chez le MJ.
+    let endStarted = false;
+    const startEnd = function (result) {
+        if (endStarted || !result)
+            return;
+        endStarted = true;
+        window.score = {scoreShip: result.scoreShip, scorePlanet: result.scorePlanet, scoreCards: result.scoreCards, scoreTotal: result.scoreTotal};
+        window.ship = Object.assign({cryopods: result.cryopods}, result.ship || {});
+        let planet = result.planet || {};
+        let modules = planet.modules || {};
+        // Valeurs de la planète posées sur les repères (__oxy__…) de la page
+        document.querySelectorAll('.planet-reading').forEach(function (reading) {
+            for (let attr of Array.from(reading.attributes)) {
+                let m = attr.value.match(/^__(\w+)__$/);
+                if (m)
+                    reading.setAttribute(attr.name, modules[m[1]] ? Number(modules[m[1]].val) || 0 : 0);
+            }
+        });
+        let recap = q('.end-settings');
+        if (recap && result.settings)
+            recap.innerHTML = settingsRecap({settings: result.settings});
+        // Planète entière et ses lunes, comme planet-view.js sur la page du MJ
+        let canvas = q('canvas[data-planet-view]');
+        if (canvas && window.PlanetView) {
+            let radius = Number(canvas.dataset.planetRadius) || canvas.clientWidth * .3;
+            PlanetView.create(canvas, {radius: radius, modules: modules, seed: planet.id, revealed: 'all'});
+            let moons = q('canvas[data-planet-moons]');
+            if (moons && Number(planet.id))
+                PlanetView.createMoons(moons, Number(planet.id), moons.dataset.planetMoons === 'compact' ? {compact: true, planetRadius: radius} : {});
+        }
+        let script = document.createElement('script');
+        script.src = 'js/end-screen.js';
+        document.body.append(script);
+    };
+
     // ---- État de la partie -------------------------------------------------
 
     const render = function () {
         if (!game)
             return;
+        if (END) {
+            if (game.phase === 'postGame')
+                startEnd(game.score);
+            return;
+        }
         renderShip(game.ship);
         renderStatuses(game.statuses);
         renderTeam(game.team);
         let card = game.card;
+        if (PLANET) {
+            if (card && card.kind === 'planet')
+                renderPlanet(card);
+            return;
+        }
         syncCardText(card);
         renderChoices(card);
     };
@@ -443,5 +607,10 @@
 
     initialiseModTabs();
     initialiseLeftTabs();
-    toPage('ready');
+    // Planète : planet.js prépare la page au chargement complet (points,
+    // drones) ; l'état de la partie n'arrive qu'après
+    if (!PLANET || document.readyState === 'complete')
+        toPage('ready');
+    else
+        window.addEventListener('load', () => toPage('ready'));
 })();

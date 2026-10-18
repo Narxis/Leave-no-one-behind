@@ -1,0 +1,425 @@
+/* Généré par scripts/player-assets.js depuis public/css/end-screen.css : ne pas modifier à la main */
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
+
+:root {
+  --amount: 0;
+  --score: 5000000;
+}
+
+.endscreen-container {
+  display: flex;
+  position: absolute;
+  width: 1060px;
+  height: 800px;
+  border: 4px solid rgb(180 180 180);
+  border-radius: 40px;
+  background: var(--lgrad);
+  backdrop-filter: blur(1px);
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/*---vvv---score---vvv---*/
+
+.score {
+  width: 471px;
+  height: 348px;
+  padding: 30px 30px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.line {
+
+  height: 45px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.title-score {
+  width: 200px;
+  height: 45px;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scoretext {
+  width: 200px;
+  height: 45px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.scorevalue {
+  width: 240px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.amount {
+  font-size: 20px;
+  margin: 0px 40px 0px 0px;
+}
+
+.consolescore {
+  position: absolute;
+  top: 200px;
+  left: 650px;
+  width: 300px;
+  height: 70px;
+  font-size: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*---^^^---Score---^^^---*/
+/*---vvv---Console---vvv---*/
+
+.blink {
+  animation: blinking 2s linear infinite;
+}
+
+@keyframes blinking {
+  0% {
+    filter: opacity(1);
+  }
+
+  49.99% {
+    filter: opacity(1);
+  }
+
+  50% {
+    filter: opacity(0);
+  }
+
+  100% {
+    filter: opacity(0);
+  }
+}
+
+.console-container {
+  height: 200px;
+  width: 435px;
+  display: block;
+  color: white;
+  font-size: 20px;
+  margin: 90px 0px 0px 40px;
+  line-height: 40px;
+  left: 521px;
+  top: -5px;
+  position: absolute;
+}
+
+.console-underscore {
+  display: inline-block;
+  position: relative;
+  left: -5px;
+  font-size: 40px;
+  text-indent: 0px;
+  top: -10px;
+}
+
+#text {
+  vertical-align: top;
+}
+
+.aftereffect::after {
+  content: '';
+  animation: threedots 3s steps(6, end) infinite;
+}
+
+@keyframes threedots {
+  0% {
+    content: '.';
+  }
+
+  33% {
+    content: '..';
+  }
+
+  50% {
+    content: '...';
+  }
+
+  70% {
+    content: '...';
+  }
+
+  71.1% {
+    content: ' ';
+  }
+
+  100% {
+    content: ' ';
+  }
+}
+
+/*---^^^---Console---^^^---*/
+/*---vvv---Ship-recap---vvv---*/
+
+.ship-recap {
+  width: 469px;
+  height: 370px;
+  border-right: 2px solid rgb(180 180 180);
+  padding: 30px 30px 0px 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-top: 2px solid rgb(180 180 180);
+}
+
+.module {
+  display: flex;
+  width: 234px;
+  height: 68px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.secondaire {
+  height: 40px;
+}
+
+#humain {
+  width: 287px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+}
+
+.name {
+  display: flex;
+  width: 129px;
+  height: 50px;
+  justify-content: flex-start;
+  align-items: center;
+  text-indent: 10px;
+  font-size: 15px;
+}
+
+.dial {
+  margin: 0px 0px 0px 30px;
+}
+
+.dial svg {
+  height: 53px;
+  overflow: visible;
+  margin: 0px 0px 0px -10px;
+}
+
+.dial svg circle {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .03s ease-out;
+}
+
+.dial svg text {
+  font-size: 30px;
+  fill: whitesmoke;
+}
+
+#humain svg {
+  width: 25px;
+  height: 25px;
+  fill: rgb(148, 38, 38);
+  animation: heartbeat 1.5s infinite;
+  margin: 0px 0px 0px 40px;
+}
+
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(0.8);
+  }
+
+  5% {
+    transform: scale(0.9);
+  }
+
+  10% {
+    transform: scale(0.8);
+  }
+
+  15% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.8);
+  }
+
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+.humain-text {
+  font-size: 18px;
+}
+
+#humain-value {
+  font-size: 18px;
+  padding: 0px 40px 0px 0px;
+}
+
+/*---^^^---Ship-recap---^^^---*/
+/*---vvv--Planet-recap--vvv---*/
+
+.planet-recap {
+  width: 469px;
+  height: 370px;
+  padding: 30px 30px 0px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  border-top: 2px solid rgb(180 180 180);
+}
+
+.planet-recap-line {
+  height: 60px;
+  width: 470px;
+}
+
+.planet-reading {
+  font-size: 14px;
+}
+
+/*---^^^--Planet-recap--^^^---*/
+
+.next {
+  position: absolute;
+  top: 271px;
+  left: 580px;
+  display: flex;
+  height: 70px;
+  width: 200px;
+  border-radius: 20px;
+  border: 2px solid #fff;
+  background: var(--lgrad);
+  font-size: 1.5em;
+  align-items: center;
+  text-align: center;
+  backdrop-filter: blur(1px);
+  text-decoration: none;
+  color: #fff;
+  justify-content: center;
+}
+
+/* Planète atteinte, à droite du bilan de la planète */
+.planet-recap {
+  position: relative;
+}
+
+/* Bilan de la planète : colonne de 300px à gauche de la planète. Chaque
+   ligne réserve d'avance la hauteur de son texte complet (.reading-ghost,
+   invisible) : les textes ne se chevauchent pas et rien ne saute à l'écriture */
+.planet-recap {
+  gap: 8px;
+  padding-top: 22px;
+}
+
+.planet-recap .planet-recap-line {
+  height: auto;
+  width: 300px;
+}
+
+.planet-recap .planet-reading,
+.planet-recap .reading-ghost {
+  max-width: 300px;
+  font-size: 12.5px;
+  line-height: 1.3;
+}
+
+.planet-recap .planet-reading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 85%);
+}
+
+.planet-recap .reading-ghost {
+  display: block;
+  visibility: hidden;
+}
+
+/* Planète et lunes centrées dans la case ; quand le bilan de la planète
+   s'écrit (.with-text, end-screen.js), elles glissent à droite du texte */
+.end-planet,
+.end-moons {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+.end-planet,
+.end-moons {
+  transition: left 1s cubic-bezier(.4, 0, .2, 1), transform 1s cubic-bezier(.4, 0, .2, 1), opacity 1s;
+}
+
+/* Pendant le bilan : plus petite, à droite, lunes en retrait */
+.with-text .end-planet,
+.with-text .end-moons {
+  left: calc(100% - 92px);
+  transform: translate(-50%, -50%) scale(.72);
+}
+
+.with-text .end-moons {
+  opacity: .45;
+}
+
+.end-planet {
+  width: 300px;
+  height: 300px;
+}
+
+/* Lunes autour de la planète atteinte (même centre que .end-planet) */
+.end-moons {
+  width: 400px;
+  height: 400px;
+  pointer-events: none;
+}
+
+/* Textes du bilan au-dessus des lunes */
+.planet-recap .planet-recap-line {
+  position: relative;
+  z-index: 1;
+}
+
+/* Planète qu'on peut faire tourner à la souris (planet-view.js) */
+body.planet-hover {
+  cursor: grab;
+}
+
+body.planet-grabbing,
+body.planet-grabbing * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+
+/* Paramètres de la partie, en haut à droite du cadre */
+.end-settings {
+  position: absolute;
+  top: 26px;
+  right: 34px;
+  max-width: 520px;
+  z-index: 1;
+}
