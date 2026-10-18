@@ -8,6 +8,8 @@ const ShipLabels = (function () {
     // jusqu'à FLOOR_PX si la salle est trop petite ; en dessous, on replie
     const MIN_PX = 8;
     const FLOOR_PX = 6.5;
+    // Les cabines, étroites et alignées en haut, descendent un peu plus bas
+    const GROUP_FLOOR_PX = 6;
 
     let box = null;
     let svg = null;
@@ -59,7 +61,10 @@ const ShipLabels = (function () {
         });
     };
 
-    // Taille de chaque nom selon la largeur du plan à l'écran
+    // Taille de chaque nom selon la largeur du plan à l'écran. Les noms d'un
+    // même groupe (les cabines) prennent tous la même taille, la plus grande
+    // qui convient à tous ; si l'un d'eux ne tient pas, tout le groupe est
+    // replié.
     const fit = function () {
         if (!svg)
             return;
@@ -67,23 +72,46 @@ const ShipLabels = (function () {
         if (!width) // onglet caché
             return;
         let scale = width / svg.viewBox.baseVal.width;
-        svg.querySelectorAll('.ship-room-label').forEach(label => {
+        let labels = Array.from(svg.querySelectorAll('.ship-room-label')).map(label => {
             if (!label.dataset.size)
                 label.dataset.size = label.getAttribute('font-size');
             let base = parseFloat(label.dataset.size);
             label.setAttribute('font-size', base);
-            let origin = textBox(label);
-            let ok = false;
-            for (let px = MIN_PX; px >= FLOOR_PX && !ok; px -= 0.5) {
-                label.setAttribute('font-size', Math.max(base, px / scale));
-                ok = fits(label, origin);
-            }
+            return {label: label, base: base, origin: textBox(label)};
+        });
+        const tryAt = function (l, px) {
+            l.label.setAttribute('font-size', Math.max(l.base, px / scale));
+            return fits(l.label, l.origin);
+        };
+        // Plus grande taille à l'écran qui tient, ou null
+        const best = function (l) {
+            let floor = l.label.dataset.group ? GROUP_FLOOR_PX : FLOOR_PX;
+            for (let px = MIN_PX; px >= floor; px -= 0.5)
+                if (tryAt(l, px))
+                    return px;
+            return null;
+        };
+        const apply = function (l, px) {
+            let ok = px !== null && tryAt(l, px);
             if (!ok)
-                label.setAttribute('font-size', base);
-            label.classList.toggle('is-folded', !ok);
-            let hit = roomHit(label.dataset.room);
+                l.label.setAttribute('font-size', l.base);
+            l.label.classList.toggle('is-folded', !ok);
+            let hit = roomHit(l.label.dataset.room);
             if (hit)
                 hit.classList.toggle('is-folded', !ok);
+        };
+        let groups = {};
+        labels.forEach(l => {
+            l.px = best(l);
+            let group = l.label.dataset.group;
+            if (group)
+                (groups[group] = groups[group] || []).push(l);
+            else
+                apply(l, l.px);
+        });
+        Object.values(groups).forEach(members => {
+            let px = members.some(l => l.px === null) ? null : Math.min(...members.map(l => l.px));
+            members.forEach(l => apply(l, px));
         });
         if (shown)
             show(shown);

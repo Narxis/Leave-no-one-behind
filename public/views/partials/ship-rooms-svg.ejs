@@ -33,7 +33,7 @@
         if (!room.label) return;
         var l = room.label, lines = l.lines || [room.name], size = l.size || 12;
         var transform = l.rotate ? ' transform="rotate(' + l.rotate + ' ' + l.x + ' ' + l.y + ')"' : ''; %>
-        <text class="ship-room-label" data-room="<%= room.id %>" data-name="<%= room.name %>" x="<%= l.x %>" y="<%= l.y %>" font-size="<%= size %>"<%- transform %>><% lines.forEach(function(line, i) { %><tspan x="<%= l.x %>" dy="<%= i === 0 ? -(lines.length - 1) * 0.55 : 1.1 %>em"><%= line %></tspan><% }); %></text>
+        <text class="ship-room-label" data-room="<%= room.id %>" data-name="<%= room.name %>"<% if (l.group) { %> data-group="<%= l.group %>"<% } %><% if (l.anchor) { %> style="text-anchor: <%= l.anchor %>"<% } %> x="<%= l.x %>" y="<%= l.y %>" font-size="<%= size %>"<%- transform %>><% lines.forEach(function(line, i) { %><tspan x="<%= l.x %>" dy="<%= i === 0 ? -(lines.length - 1) * 0.55 : 1.1 %>em"><%= line %></tspan><% }); %></text>
     <% }); %>
     </g>
 </svg>
