@@ -54,9 +54,38 @@ const TimerAnim = (function () {
         return (IDLE_PERIOD - anim.currentTime % IDLE_PERIOD) % IDLE_PERIOD;
     }
 
+    // Bandeaux jaunes et noirs en haut et en bas de l'écran, flashs jaunes sur
+    // les bords, comme l'alerte du vaisseau (ship-alerts.css) : de plus en
+    // plus vite sous 10 s puis 5 s
+    function alertBox() {
+        let node = document.getElementById('timer-alert');
+        if (!node) {
+            node = document.createElement('div');
+            node.id = 'timer-alert';
+            node.className = 'timer-alert';
+            node.setAttribute('aria-hidden', 'true');
+            node.innerHTML = '<div class="timer-alert-vignette"></div>'
+                + '<div class="timer-alert-stripes top"></div><div class="timer-alert-stripes bottom"></div>';
+            document.body.append(node);
+        }
+        return node;
+    }
+
+    function setAlert(timeLeft) {
+        const node = alertBox();
+        // (la page joueur pose le sien et le gère elle-même)
+        if (node.dataset.manual)
+            return;
+        const on = timeLeft !== null && timeLeft > 0;
+        node.classList.toggle('active', on);
+        node.classList.toggle('warn', on && timeLeft <= 10);
+        node.classList.toggle('critical', on && timeLeft <= 5);
+    }
+
     function tick(timeLeft) {
         const box = $('#bigboite');
         setDigits(timeLeft);
+        setAlert(timeLeft);
         if (timeLeft === 30) {
             run++;
             reset();
@@ -113,6 +142,7 @@ const TimerAnim = (function () {
         const alive = () => r === run;
 
         setDigits(0);
+        setAlert(null);
         box.classList.remove('grow', 'overcharge', 'critical', 'beat');
         box.classList.add('fizzle');
         puff();
@@ -153,6 +183,7 @@ const TimerAnim = (function () {
     async function cancel() {
         const r = ++run;
         const box = $('#bigboite');
+        setAlert(null);
         box.classList.remove('grow', 'flash', 'overcharge', 'critical', 'beat');
         box.classList.add('plop');
         await wait(500);

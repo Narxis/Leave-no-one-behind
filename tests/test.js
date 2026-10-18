@@ -323,6 +323,8 @@ async function test_votes() {
     assert.deepEqual(seen.choices, ['Fuir', 'Combattre']);
     assert.deepEqual(seen.counts, [1, 1]);
     assert.equal(seen.chosen, null);
+    // ... et qui a voté quoi (logo de son rôle sur le choix)
+    assert.deepEqual(seen.voters.map(v => [v.id, v.index]).sort(), [[alice.id, 0], [bob.id, 1]]);
     // ... mais pas celui d'une autre carte
     assert.equal(playerView.publicCard({id: 5, type: TYPE_NEGATIVE, desc: 'x', choices: []}).counts, undefined);
 
@@ -532,6 +534,22 @@ function test_mj_screen_port() {
         assert.ok(!/location\.(href|reload)|href="\/leaderboard/.test(html.replace(/<script[\s\S]*?<\/script>/g, '')), page + '.html : pas de navigation du MJ');
     }
     assert.ok(/var PLANET_DATA = \{id: Number\([^)]*\)[^}]*modules: \{\}\}/.test(files['public/player/mj/planet.html']), 'planet.html : planète sans valeurs');
+    // Classement pour les joueurs : les équipes et leurs persos, sans pseudo Discord
+    const leaderboard = require('../src/controllers/leaderboard');
+    const list = leaderboard.list;
+    leaderboard.list = () => [{id: 'x', team: 'Équipe', score: 10, members: [{name: 'Kaël', race: 'fnek', discord: '@kael', stats: {combat: 50}}]}];
+    try {
+        let ranks = playerView.leaderboardState();
+        assert.equal(ranks.kind, 'leaderboard');
+        assert.equal(ranks.entries[0].team, 'Équipe');
+        assert.deepEqual(ranks.entries[0].members, [{name: 'Kaël', race: 'fnek', stats: {combat: 50}}]);
+    } finally {
+        leaderboard.list = list;
+    }
+    // Pages portées en mode standard (doctype), celles du MJ non : une
+    // longueur sans unité y serait ignorée (nom des modules décalé)
+    for (let file of Object.keys(files).filter(f => /^public\/player\/mj\/css\/.*\.css$/.test(f)))
+        assert.ok(!/^\s*(width|height|top|left|right|bottom|margin|padding|font-size)\s*:\s*[1-9][0-9.]*\s*;/m.test(files[file]), file + ' : longueur sans unité');
     console.log('MJ screen port OK');
 }
 
@@ -1129,6 +1147,18 @@ async function test_blank_card() {
         assert.equal(shown.action, 'blank-card-show');
         // Les joueurs en ligne voient le texte et les choix, pas les résultats
         assert.deepEqual(blankCard.publicCard(), {id: 'blank', kind: 'blank', desc: 'Suite', timer: false, choices: ['Ouvrir']});
+        // ... et peuvent voter dès que la page de jeu montre ses choix
+        const votes = require('../src/controllers/votes');
+        const state = CONFIG.gameState;
+        CONFIG.gameState = 'gameLive';
+        votes.setScreen({cardId: 'blank', text: 'Suite', choices: ['Ouvrir']});
+        let seenBlank = (await playerView.gameState()).card;
+        assert.equal(seenBlank.kind, 'blank');
+        assert.ok(seenBlank.screen);
+        assert.deepEqual(seenBlank.choices, ['Ouvrir']);
+        assert.deepEqual(seenBlank.counts, [0]);
+        votes.clear();
+        CONFIG.gameState = state;
         let out = await blankCard.handle({action: 'blank-card-choice', data: {index: 0}});
         assert.equal(out[0].action, 'blank-card-choice');
         assert.equal(out.filter(m => m.action === 'playerStat').length, 2);

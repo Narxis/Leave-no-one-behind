@@ -130,6 +130,8 @@
     let you;            // dernier état du joueur reçu (undefined : pas encore reçu)
     let tab = store.get('lnob-player-tab') || 'game';
     let codex = null;       // ce que l'équipage a rencontré (kind 'codex')
+    let ranks = null;       // classement des équipes (kind 'leaderboard')
+    let ranksLevel = '';    // filtre de difficulté choisi
     let codexFilter = 'all';
     const codexImages = new Map(); // images des fiches envoyées par le MJ (customs, objets)
     let chat = [];          // messages visibles par ce joueur
@@ -252,6 +254,16 @@
             sendAction('vote', {index: m.index});
     });
 
+    // Création des persos : l'onglet Partie montre directement la fiche (ou
+    // la création du perso) sous le message d'attente, sans page à part
+    const sheetOnGame = () => tab === 'game' && !!game && game.phase === 'creation';
+    const updatePanels = function () {
+        let shown = sheetOnGame() ? 'me' : tab;
+        document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.dataset.panel !== shown; });
+        $('me-phase').hidden = !sheetOnGame();
+        $('me-phase').textContent = PHASES.creation;
+    };
+
     const selectTab = function (name) {
         tab = name;
         store.set('lnob-player-tab', name);
@@ -259,7 +271,7 @@
             b.classList.toggle('active', b.dataset.tab === name);
             b.setAttribute('aria-selected', b.dataset.tab === name);
         });
-        document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.dataset.panel !== name; });
+        updatePanels();
         $('back-game').hidden = name === 'game';
         setMenu(false);
         updatePlanetMode();
@@ -648,6 +660,11 @@
         let show = !!(timer && card && !game.combat && card.kind !== 'planet' && timer.cardId === String(card.id)
             && (timer.paused || Date.now() - timerSeen < 3500));
         $('card-timer').hidden = !show;
+        // Bandeaux et flashs jaunes (sur grand écran, l'écran de jeu porté les a)
+        let alertOn = show && !timer.paused && timer.left > 0 && !mjScreenFits();
+        $('timer-alert').classList.toggle('active', alertOn);
+        $('timer-alert').classList.toggle('warn', alertOn && timer.left <= 10);
+        $('timer-alert').classList.toggle('critical', alertOn && timer.left <= 5);
         if (!show)
             return;
         $('card-timer-text').textContent = String(timer.left).padStart(2, '0');
@@ -659,6 +676,28 @@
     };
     // Plus de nouvelles de la page de jeu : le chrono disparaît
     setInterval(() => { if (timer && !timer.paused && !$('card-timer').hidden) renderTimer(); }, 1000);
+
+    // Qui a voté pour un choix : le logo de son rôle (son initiale sans rôle),
+    // comme sur l'écran de jeu
+    const voterIcons = function (card, i) {
+        let box = el('span', 'choice-voters');
+        for (let voter of (card.voters || []).filter(v => v.index === i)) {
+            let member = ((game && game.team) || []).find(p => String(p.id) === String(voter.id));
+            let logo = member && member.roleInfo && /^\/img\//.test(member.roleInfo.icon || '') ? 'mj/' + member.roleInfo.icon.slice(1) : '';
+            let icon;
+            if (logo) {
+                icon = el('img');
+                icon.src = logo;
+                icon.alt = '';
+            }
+            else
+                icon = el('span', 'voter-initial', (String(voter.name || '').trim().charAt(0) || '?').toUpperCase());
+            icon.classList.add('voter-icon');
+            icon.title = voter.name || '';
+            box.append(icon);
+        }
+        return box;
+    };
 
     const renderGame = function () {
         let phase = game ? game.phase : 'init';
@@ -679,9 +718,8 @@
             text = 'Le MJ prépare la suite…';
         $('phase-text').textContent = text;
         $('phase').hidden = !text;
+        updatePanels();
         let character = you && you.character;
-        $('phase-action').hidden = phase !== 'creation';
-        $('phase-action').textContent = character ? 'Voir ma fiche' : 'Créer mon personnage';
 
         renderEnd(phase === 'postGame' ? score : null);
 
@@ -763,8 +801,11 @@
             li.append(body);
             if (intro && card.expected)
                 li.append(el('span', 'choice-votes', count + '/' + card.expected + ' prêts'));
-            else if (count)
-                li.append(el('span', 'choice-votes', count + (count > 1 ? ' votes' : ' vote')));
+            else if (count) {
+                let votes = el('span', 'choice-votes');
+                votes.append(voterIcons(card, i), count + (count > 1 ? ' votes' : ' vote'));
+                li.append(votes);
+            }
             return li;
         }));
         let note = '';
@@ -1242,6 +1283,113 @@
         return icon;
     };
 
+    // ---- Classement des équipes (comme leaderboard.ejs chez le MJ) ----------
+
+    const RANK_STATS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'],
+        ['survival', 'Survie'], ['recon', 'Recon.', 'Reconnaissance'], ['moral', 'Moral']];
+    const rankNum = (v) => Number(v || 0).toLocaleString('fr-FR');
+    const rankRace = (r) => r ? String(r).split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-') : '';
+    const rankLevel = (e) => e.settings && e.settings.preset ? e.settings.preset.name : 'Non renseignée';
+    const rankDuration = function (ms) {
+        if (!ms || ms < 0)
+            return '—';
+        let min = Math.round(ms / 60000), h = Math.floor(min / 60);
+        if (!min)
+            return 'moins d\'1 min';
+        return h ? h + ' h ' + String(min % 60).padStart(2, '0') : min + ' min';
+    };
+    const rankFact = function (label, value) {
+        let f = el('div', 'team-fact');
+        f.append(el('span', 'team-fact-label', label), el('span', 'team-fact-value', value));
+        return f;
+    };
+
+    // Détail d'une équipe : score, durée, personnages et compagnons
+    const openTeam = function (entry) {
+        $('team-dialog-title').textContent = entry.team;
+        let body = $('team-dialog-body');
+        body.replaceChildren();
+        let facts = el('div', 'team-facts');
+        facts.append(rankFact('Score', rankNum(entry.score)), rankFact('Durée de la partie', rankDuration(entry.duration)),
+            rankFact('Survivants', rankNum(entry.cryopods)), rankFact('Planète', entry.planet || '—'),
+            rankFact('Date', new Date(entry.date).toLocaleString('fr-FR', {dateStyle: 'short', timeStyle: 'short'})));
+        if (entry.settings) {
+            let s = entry.settings;
+            facts.append(rankFact('Difficulté', s.preset ? s.preset.name : 'Personnalisé'), rankFact('Planètes', rankNum(s.planetCount)));
+        }
+        if (entry.breakdown)
+            facts.append(rankFact('Score vaisseau', rankNum(entry.breakdown.ship)), rankFact('Score planète', rankNum(entry.breakdown.planet)),
+                rankFact('Score cartes', rankNum(entry.breakdown.cards)));
+        body.append(facts);
+        if (!entry.members)
+            body.append(el('p', 'dim', 'La composition de l\'équipe n\'était pas encore enregistrée pour cette partie.'));
+        else {
+            body.append(el('h3', '', 'Personnages'));
+            let list = el('div', 'team-members');
+            for (let m of entry.members) {
+                let card = el('div', 'team-member');
+                let head = el('div', 'team-member-head');
+                head.append(el('span', 'team-member-name', m.name || '—'));
+                if (m.race)
+                    head.append(el('span', 'race-pill', rankRace(m.race)));
+                let stats = el('div', 'team-member-stats');
+                for (let [key, label, full] of RANK_STATS) {
+                    let s = el('span', 'team-stat');
+                    s.title = full || label;
+                    s.append(el('span', 'team-stat-label', label), el('b', '', String(m.stats ? m.stats[key] : '—')));
+                    stats.append(s);
+                }
+                card.append(head, stats);
+                list.append(card);
+            }
+            body.append(list);
+            if (entry.npcs && entry.npcs.length) {
+                body.append(el('h3', '', 'Compagnons'));
+                let npcs = el('div', 'team-npcs');
+                for (let n of entry.npcs)
+                    npcs.append(el('span', 'team-npc', n.name + (n.race ? ' · ' + rankRace(n.race) : '')));
+                body.append(npcs);
+            }
+        }
+        if (!$('team-dialog').open)
+            $('team-dialog').showModal();
+    };
+
+    const renderRanks = function () {
+        let entries = ranks && Array.isArray(ranks.entries) ? ranks.entries : [];
+        $('ranks-empty').hidden = !!entries.length;
+        $('ranks-table').hidden = !entries.length;
+        $('ranks-hint').hidden = !entries.length;
+        // Filtre par difficulté : les rangs sont recomptés dans le groupe choisi
+        let levels = [...new Set(entries.map(rankLevel))];
+        if (!levels.includes(ranksLevel))
+            ranksLevel = '';
+        $('ranks-filter').hidden = levels.length < 2;
+        $('ranks-filter').replaceChildren(...(levels.length < 2 ? [] : [''].concat(levels).map(level => {
+            let b = el('button', 'codex-filter' + (level === ranksLevel ? ' active' : ''), level || 'Toutes');
+            b.type = 'button';
+            b.setAttribute('role', 'radio');
+            b.setAttribute('aria-checked', String(level === ranksLevel));
+            b.addEventListener('click', () => { ranksLevel = level; renderRanks(); });
+            return b;
+        })));
+        let rank = 0;
+        $('ranks-body').replaceChildren(...entries.map((entry, i) => [entry, i]).filter(([entry]) => !ranksLevel || rankLevel(entry) === ranksLevel).map(([entry]) => {
+            rank++;
+            let tr = el('tr', (ranks.current && entry.id === ranks.current ? 'is-current ' : '') + (rank <= 3 ? 'podium podium-' + rank : ''));
+            tr.tabIndex = 0;
+            tr.setAttribute('role', 'button');
+            tr.setAttribute('aria-label', 'Détail de l\'équipe ' + entry.team);
+            tr.append(el('td', 'rank', String(rank)), el('td', 'team', entry.team), el('td', 'num score', rankNum(entry.score)),
+                el('td', 'num', rankNum(entry.cryopods)), el('td', '', entry.planet || '—'),
+                el('td', 'level', entry.settings && entry.settings.preset ? entry.settings.preset.name : '—'),
+                el('td', 'date', new Date(entry.date).toLocaleDateString('fr-FR')));
+            tr.addEventListener('click', () => openTeam(entry));
+            tr.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openTeam(entry); } });
+            return tr;
+        }));
+    };
+
     const renderCodex = function () {
         let book = codex || {races: [], items: [], statuses: [], totals: {}};
         let totals = book.totals || {};
@@ -1486,6 +1634,10 @@
         else if (data.kind === 'codex') {
             codex = data;
             renderCodex();
+        }
+        else if (data.kind === 'leaderboard') {
+            ranks = data;
+            renderRanks();
         }
         // Image d'une fiche, en data URL (rien d'autre n'est accepté)
         else if (data.kind === 'codex-image' && typeof data.key === 'string' && /^data:image\/(png|jpeg|webp);base64,/.test(data.src || '')) {
@@ -1743,9 +1895,11 @@
         show('join');
     });
 
-    $('phase-action').addEventListener('click', () => selectTab('me'));
     $('rolls-continue').addEventListener('click', closeRace);
     $('race-dialog-close').addEventListener('click', closeRace);
+    $('team-dialog-close').addEventListener('click', () => $('team-dialog').close());
+    // Clic en dehors de la fiche : elle se ferme
+    $('team-dialog').addEventListener('click', (e) => { if (e.target === $('team-dialog')) $('team-dialog').close(); });
     // Échap ou clic hors de la fenêtre
     $('race-dialog').addEventListener('close', () => { if (raceOpen) closeRace(); else if (you && you.character) renderRaces(you.character); });
     $('race-dialog').addEventListener('click', (e) => {

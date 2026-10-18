@@ -87,6 +87,8 @@ function startCountDown() {
         clearInterval(interval_cd);
         countDownRunning = false;
         announceTimer(0);
+        // Les choix partent aussi chez les joueurs, le temps de l'animation
+        announceScreen(undefined, []);
         let choicetab = document.getElementById('choicetab');
         TimerAnim.tick(0);
         choicetab.style.pointerEvents = 'none';
@@ -342,16 +344,19 @@ var showChoicesRun = 0;
 // Ce qu'affiche la page, annoncé au serveur pour les joueurs en ligne : ils
 // voient le même texte et votent sur les mêmes choix (votes.js)
 var cardScreenText = '';
-function announceScreen(chosen) {
+function announceScreen(chosen, choices) {
     if (typeof wsLNOB === 'undefined')
         return;
-    let data = {cardId: currentCard.id, text: cardScreenText, choices: (currentCard.choices || []).map(c => c.value)};
+    // (une carte blanche n'a pas de numéro : « blank », comme pour les joueurs)
+    let data = {cardId: currentCard.blank ? 'blank' : currentCard.id, text: cardScreenText,
+        choices: choices || (currentCard.choices || []).map(c => c.value)};
     if (chosen !== undefined)
         data.chosen = chosen;
     wsLNOB.send({action: 'card-screen', data: data});
 }
 
-// Votes des joueurs : nombre de voix sous chaque bouton
+// Votes des joueurs : sous chaque bouton, le logo du rôle de ceux qui l'ont
+// choisi et le nombre de voix
 function showVotes(data) {
     if (!data)
         return;
@@ -369,7 +374,7 @@ function showVotes(data) {
             badge.className = 'vote-count';
             btn.append(badge);
         }
-        badge.textContent = count + (count > 1 ? ' votes' : ' vote');
+        badge.replaceChildren(voteRoleIcons((data.voters || []).filter(v => v.index === i)), count + (count > 1 ? ' votes' : ' vote'));
     });
 }
 document.addEventListener('votes', (e) => showVotes(e.detail.data));

@@ -380,6 +380,36 @@
     letter-spacing: 0.06em;
 }
 
+/* Qui a voté : logo du rôle de chaque joueur (initiale sans rôle), avant le
+   nombre de voix (players.js, voteRoleIcons) */
+.vote-roles {
+    display: inline-flex;
+    gap: 3px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.vote-roles:empty {
+    display: none;
+}
+
+.vote-role {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.vote-initial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ui-cyan);
+    border-radius: 50%;
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
 /* Choix en attente : « Annuler » prend la place du compteur de votes */
 .choice.choice-pending .vote-count {
     display: none;

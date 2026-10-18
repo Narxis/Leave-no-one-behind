@@ -141,14 +141,23 @@ function announcePlanet() {
     wsLNOB.send({action: 'card-screen', data: {cardId: cardId, text: '', choices: planetVoteChoices.map(c => c.label)}});
 }
 
-// Votes des joueurs affichés sur les boutons (scans, atterrir, repartir)
+// Votes des joueurs affichés sur les boutons (scans, atterrir, repartir) :
+// le logo du rôle de ceux qui l'ont choisi et le nombre de voix
 document.addEventListener('votes', function (e) {
-    let counts = (e.detail.data && e.detail.data.counts) || [];
+    let data = e.detail.data || {};
+    let counts = data.counts || [];
     document.querySelectorAll('[data-votes]').forEach(b => b.removeAttribute('data-votes'));
+    document.querySelectorAll('.planet-vote-roles').forEach(b => b.remove());
     planetVoteChoices.forEach(function (choice, i) {
         let button = document.querySelector(choice.button);
-        if (button && counts[i])
-            button.setAttribute('data-votes', counts[i] + (counts[i] > 1 ? ' votes' : ' vote'));
+        if (!button || !counts[i])
+            return;
+        button.setAttribute('data-votes', counts[i] + (counts[i] > 1 ? ' votes' : ' vote'));
+        if (typeof voteRoleIcons === 'function') {
+            let icons = voteRoleIcons((data.voters || []).filter(v => v.index === i));
+            icons.classList.add('planet-vote-roles');
+            button.append(icons);
+        }
     });
 });
 document.addEventListener('planet-reveal', function (e) {

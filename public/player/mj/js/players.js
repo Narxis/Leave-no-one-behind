@@ -115,6 +115,33 @@ function syncPlayerRole(e) {
     fitPlayerName(box.closest('.player-tab'));
 }
 
+// Joueurs qui ont voté pour un choix (votes.js) : le logo de leur rôle, pris
+// sur leur onglet, pour voir qui veut aller où ; sans rôle, leur initiale
+function voteRoleIcons(voters) {
+    let box = document.createElement('span');
+    box.className = 'vote-roles';
+    for (let voter of voters || []) {
+        let tab = document.getElementById('player-tab' + voter.id);
+        let logo = tab && tab.querySelector('.player-role img');
+        let nameNode = tab && tab.querySelector('.player-name-text');
+        let name = voter.name || (nameNode ? nameNode.textContent : '');
+        let icon;
+        if (logo) {
+            icon = document.createElement('img');
+            icon.src = logo.src;
+            icon.alt = '';
+        } else {
+            icon = document.createElement('span');
+            icon.className = 'vote-initial';
+            icon.textContent = (String(name).trim().charAt(0) || '?').toUpperCase();
+        }
+        icon.classList.add('vote-role');
+        icon.title = name;
+        box.append(icon);
+    }
+    return box;
+}
+
 document.addEventListener('player-role', syncPlayerRole);
 document.addEventListener('emote', doPlayerEmote);
 document.addEventListener('roll', doPlayerRoll);
