@@ -353,6 +353,12 @@ function test_stat_rolls() {
         assert.equal(result.stats[s], keep + 50);
     }
     assert.equal(result.stats.moral, 100);
+    // Fini : le dernier tirage reste visible pour le joueur
+    let done = statRolls.state(Object.assign({}, player, result.stats));
+    assert.equal(done.step, 'done');
+    assert.deepEqual(done.stats.map(s => s.dice), statRolls.STATS.map(s => result.dice[s]));
+    statRolls.reset(player.discord_id);
+    assert.deepEqual(statRolls.state(Object.assign({}, player, result.stats)), {step: 'done'});
     console.log('Stat rolls OK');
 }
 
