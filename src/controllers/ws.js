@@ -22,6 +22,7 @@ const roles = require("./roles");
 const votes = require("./votes");
 const planetScan = require("./planetScan");
 const itemUse = require("./itemUse");
+const itemRequests = require("./itemRequests");
 const intro = require("./intro");
 const WebSocket = require("ws");
 
@@ -206,6 +207,10 @@ const makeAction = async function (raw_response) {
             break;
         case 'item-use-answer':
             payload = itemUse.answer(response.data);
+            break;
+        // Objets que les joueurs en ligne se demandent (logo à côté de l'objet)
+        case 'item-requests':
+            payload = itemRequests.payload();
             break;
         case 'ship-alerts':
             payload = shipAlerts.handle(response);

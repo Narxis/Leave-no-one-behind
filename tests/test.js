@@ -136,11 +136,14 @@ async function test_remote() {
     assert.equal((await act('emote', {emoji: '🚀', type: 'url'})).type, 'glyph');
     assert.ok((await act('emote', {emoji: '<img src=x onerror=alert(1)>'})).refused);
 
-    // Donner un objet : toujours depuis son propre inventaire, à un autre joueur
+    // Donner un objet : toujours depuis son propre inventaire, à un autre
+    // joueur ou au vaisseau
     let give = await act('inventory-move', {slug: 'medkit', from: {type: 'ship'}, to: {type: 'player', id: 'bob-0001'}});
     assert.deepEqual(give.data.from, {type: 'player', id: alice.id});
     assert.ok((await act('inventory-move', {slug: 'medkit', to: {type: 'player', id: alice.id}})).refused);
-    assert.ok((await act('inventory-move', {slug: 'medkit', to: {type: 'ship'}})).refused);
+    assert.ok((await act('inventory-move', {slug: 'medkit', to: {type: 'loot', index: 0}})).refused);
+    assert.deepEqual((await act('inventory-move', {slug: 'medkit', from: {type: 'player', id: 'bob-0001'}, to: {type: 'ship'}, all: true})).data,
+        {slug: 'medkit', from: {type: 'player', id: alice.id}, to: {type: 'ship'}, all: true});
 
     // Message qui n'est pas une action : ignoré
     assert.equal(await remote.translate(alice, {kind: 'chat'}), null);
@@ -176,6 +179,7 @@ async function test_remote() {
     await test_chat();
     await test_votes();
     await test_item_use();
+    await test_item_requests();
     test_stat_rolls();
     test_player_view();
     test_player_assets();
@@ -395,6 +399,88 @@ async function test_item_use() {
     await DB.tables.items.destroy({where: {id: row.id}});
     chat.clear();
     console.log('Item use OK');
+}
+
+// Objets entre joueurs : on donne ce qu'on a, on demande ce qu'ont les
+// autres (logo à côté de l'objet, message au salon), sans jamais le prendre
+async function test_item_requests() {
+    console.log('Testing item requests');
+    const itemRequests = require('../src/controllers/itemRequests');
+    const remote = require('../src/controllers/remote');
+    const inventory = require('../src/controllers/inventory');
+    const playerView = require('../src/controllers/playerView');
+    const chat = require('../src/controllers/chat');
+    let ana = {id: 'req-ana-00000001', name: 'ana'};
+    let ben = {id: 'req-ben-00000001', name: 'ben'};
+    let ask = (player, slug, owner) => remote.translate(player, {kind: 'action', action: 'item-request', data: {slug, owner}});
+    let move = (player, data) => remote.translate(player, {kind: 'action', action: 'inventory-move', data});
+    itemRequests.clear();
+    chat.clear();
+    CONFIG.gameState = 'gameLive';
+    await DB.tables.players.create({discord_id: ana.id, name: 'Ana'});
+    await DB.tables.items.create({slug: 'test-rope', name: 'Corde', desc: '', pool: '', race: '', quantity: 2, image: '', owners: ana.id});
+    const rope = (owner) => ({owner, slug: 'test-rope'});
+
+    // Sans perso : pas de demande
+    assert.ok((await ask(ben, 'test-rope', {type: 'player', id: ana.id})).refused);
+    await DB.tables.players.create({discord_id: ben.id, name: 'Ben'});
+
+    // Ben demande la corde d'Ana : son logo à côté de l'objet (pages du MJ et
+    // écrans portés), un message de Ben pour Ana au salon
+    let sent = await ask(ben, 'test-rope', {type: 'player', id: ana.id});
+    assert.equal(sent.action, 'passThrough');
+    assert.deepEqual(sent.data, {action: 'item-requests', error: false,
+        data: {requests: [Object.assign(rope({type: 'player', id: ana.id}), {from: [{id: ben.id, name: 'Ben'}]})]}});
+    let said = chat.historyFor(ana.id).pop();
+    assert.equal(said.from.name, 'Ben');
+    assert.ok(said.text.includes('@Ana') && said.text.includes('« Corde »'), said.text);
+    // Ana le voit sur sa page, avec de quoi la lui donner
+    assert.deepEqual((await playerView.playerState(ana.id)).requested, [{slug: 'test-rope', from: [{id: ben.id, name: 'Ben'}]}]);
+    assert.deepEqual((await playerView.playerState(ben.id)).requested, []);
+
+    // Pas chez soi, pas ce qui n'y est pas
+    assert.ok((await ask(ana, 'test-rope', {type: 'player', id: ana.id})).refused);
+    assert.ok((await ask(ben, 'test-rope', {type: 'player', id: ben.id})).refused);
+    assert.ok((await ask(ana, 'pas-la', {type: 'ship'})).refused);
+    assert.ok((await ask(ana, 'test-rope', {type: 'loot'})).refused);
+
+    // Dans le vaisseau : la demande va au MJ ; un second clic la retire, sans
+    // nouveau message
+    sent = await ask(ana, 'test-rope', {type: 'ship'});
+    assert.equal(sent.data.data.requests.length, 2);
+    assert.ok(chat.historyFor(ana.id).pop().text.startsWith('MJ :'));
+    let count = chat.historyFor(ana.id).length;
+    sent = await ask(ana, 'test-rope', {type: 'ship'});
+    assert.deepEqual(sent.data.data.requests.map(r => r.owner.type), ['player']);
+    assert.equal(chat.historyFor(ana.id).length, count);
+
+    // On ne prend jamais : un déplacement part toujours de son propre coffre
+    assert.ok((await move(ben, {slug: 'test-rope', from: {type: 'player', id: ana.id}, to: {type: 'player', id: ben.id}})).refused);
+    let fromShip = await move(ben, {slug: 'test-rope', from: {type: 'ship'}, to: {type: 'player', id: ana.id}});
+    assert.deepEqual(fromShip.data.from, {type: 'player', id: ben.id});
+    assert.equal((await inventory.handle(fromShip)).action, 'inventory-error'); // Ben n'a pas de corde
+
+    // Ana la donne à Ben : la demande tombe, les pages en sont prévenues
+    let out = await inventory.handle(await move(ana, {slug: 'test-rope', to: {type: 'player', id: ben.id}}));
+    assert.equal((await inventory.getInventory(ben.id)).find(i => i.slug === 'test-rope').count, 1);
+    assert.deepEqual(out.find(m => m.action === 'item-requests').data.requests, []);
+    assert.deepEqual(itemRequests.list(), []);
+
+    // Ben la range dans le vaisseau
+    await inventory.handle(await move(ben, {slug: 'test-rope', to: {type: 'ship'}}));
+    assert.equal(await inventory.countOf('test-rope', {type: 'ship'}), 3);
+    assert.equal(await inventory.countOf('test-rope', {type: 'player', id: ben.id}), 0);
+
+    // Nouvelle partie : plus de demande
+    await ask(ben, 'test-rope', {type: 'ship'});
+    itemRequests.clear();
+    assert.deepEqual(itemRequests.payload().data.requests, []);
+    assert.ok(playerView.MIRRORED.includes('item-requests'));
+
+    await DB.tables.items.destroy({where: {slug: 'test-rope'}});
+    await DB.tables.players.destroy({where: {discord_id: [ana.id, ben.id]}});
+    chat.clear();
+    console.log('Item requests OK');
 }
 
 // Règles du tirage : dés = |bonus| + 1, meilleur dé avec un bonus, pire avec un malus

@@ -580,6 +580,14 @@ body.planet-mode .timer-host, .stage-screen:has(> #combat:not([hidden])) .timer-
 .players { margin: 0; padding: 0; list-style: none; }
 .players li { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
 .players li:last-child { border-bottom: none; }
+/* Objets d'un coéquipier ou du vaisseau, à demander */
+.crew-items { flex-basis: 100%; margin: 4px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.players .crew-items li { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; padding: 4px 0 4px 10px; border-bottom: none; border-left: 2px solid var(--border); }
+.players .crew-items li.asked { border-left-color: var(--accent); }
+.crew-item-name { flex: 1; min-width: 0; }
+.players .crew-items li.asked .crew-item-name { color: var(--accent); }
+.crew-items .choice-voters { margin-right: 0; }
+.crew-items button { margin: 0; }
 .players .me { color: var(--accent); }
 .players .player-name { flex: 1; }
 
@@ -683,6 +691,10 @@ body.planet-mode .planet-orbit { display: none; }
 .money { margin: 0; color: var(--accent); font-weight: 600; letter-spacing: 0.04em; }
 .item .inline-form button { margin: 0; }
 .use-item { align-self: flex-start; }
+/* Objet que d'autres joueurs demandent : leur logo, et de quoi le leur donner */
+.item.requested { border-color: var(--accent); }
+.item-asked { display: flex; align-items: center; gap: 6px; color: var(--accent); font-size: 13px; }
+.item-asked .choice-voters { margin-right: 0; }
 .use-item:disabled { opacity: .6; cursor: default; }
 
 /* Grand écran : disposition de l'écran de jeu. Stats à gauche, humains en

@@ -193,7 +193,7 @@
     let mjPage = mjFrame ? mjFrame.getAttribute('src') : null;
     let mjLastText = null;   // dernier texte annoncé par le MJ (pour un écran rechargé)
     let mjLastTimer = null;
-    const MJ_REPLAY = ['inventory', 'combat', 'card-loot', 'allies'];
+    const MJ_REPLAY = ['inventory', 'item-requests', 'combat', 'card-loot', 'allies'];
     const mjLastEvents = new Map();
     const wideScreen = window.matchMedia ? window.matchMedia('(min-width: 900px)') : {matches: true};
     const toMjScreen = function (message) {
@@ -250,6 +250,12 @@
             for (let payload of mjLastEvents.values())
                 toMjScreen({lnob: 'mj-event', payload: payload});
         }
+        // Écran porté : objet de son inventaire glissé sur un autre joueur ou
+        // le vaisseau, ou objet d'un autre demandé
+        else if (m.lnobScreen === 'move' && typeof m.slug === 'string' && m.to && (m.to.type === 'ship' || (m.to.type === 'player' && typeof m.to.id === 'string')))
+            sendAction('inventory-move', {slug: m.slug, to: m.to.type === 'ship' ? {type: 'ship'} : {type: 'player', id: m.to.id}, all: !!m.all});
+        else if (m.lnobScreen === 'request' && typeof m.slug === 'string' && m.owner && (m.owner.type === 'ship' || (m.owner.type === 'player' && typeof m.owner.id === 'string')))
+            sendAction('item-request', {slug: m.slug, owner: m.owner.type === 'ship' ? {type: 'ship'} : {type: 'player', id: m.owner.id}});
         else if (m.lnobScreen === 'vote' && (m.index === null || Number.isInteger(m.index)))
             sendAction('vote', {index: m.index});
     });
@@ -370,10 +376,35 @@
         return tag;
     };
 
+    // Objets des autres joueurs et du vaisseau : on ne les prend pas, on les
+    // demande (le logo de son rôle s'affiche à côté chez tout le monde, un
+    // message part dans le chat) ; un second appui retire la demande
+    const askList = function (items, owner, asks) {
+        let ul = el('ul', 'crew-items');
+        for (let item of items) {
+            let asked = asks.find(a => a.slug === item.slug && a.owner && a.owner.type === owner.type && String(a.owner.id || '') === String(owner.id || ''));
+            let mine = !!asked && (asked.from || []).some(f => f.id === playerId);
+            let row = el('li', mine ? 'asked' : '');
+            row.append(el('span', 'crew-item-name', item.name + (item.count > 1 ? ' ×' + item.count : '')));
+            if (asked && asked.from.length)
+                row.append(voterIcons({voters: asked.from.map(f => Object.assign({index: 0}, f))}, 0));
+            let b = el('button', 'secondary small', mine ? 'Annuler' : 'Demander');
+            b.type = 'button';
+            b.title = mine ? 'Retirer ma demande' : 'Demander cet objet';
+            b.addEventListener('click', () => sendAction('item-request', {slug: item.slug, owner: owner}));
+            row.append(b);
+            ul.append(row);
+        }
+        return ul;
+    };
+
     const renderPlayers = function () {
         let list = roster.length ? roster : (me ? [me] : []);
         let characters = new Map(((game && game.team) || []).map(c => [c.id, c]));
-        $('players').replaceChildren(...list.map(p => {
+        let stock = (mjLastEvents.get('inventory') || {}).data || {};
+        let asks = ((mjLastEvents.get('item-requests') || {}).data || {}).requests || [];
+        let canAsk = !!(game && game.phase === 'gameLive' && you && you.character);
+        let rows = list.map(p => {
             let li = el('li', p.id === playerId ? 'me' : '');
             li.append(el('span', 'player-name', p.name + (p.id === playerId ? ' (toi)' : '')));
             let tag = discordTag(p.discord);
@@ -383,8 +414,18 @@
             li.append(el('span', 'dim', c ? c.name + (c.race ? ' · ' + c.race : '') + (c.role ? ' · ' + c.role : '') : 'pas de perso'));
             if (p.online === false)
                 li.append(el('span', 'dim', 'déconnecté'));
+            let items = c && p.id !== playerId && canAsk && (stock.inventories || {})[p.id];
+            if (items && items.length)
+                li.append(askList(items, {type: 'player', id: p.id}, asks));
             return li;
-        }));
+        });
+        // Le vaisseau : ce qu'on y prend passe aussi par le MJ
+        if (canAsk && (stock.ship || []).length) {
+            let hold = el('li', 'ship-hold');
+            hold.append(el('span', 'player-name', 'Vaisseau'), el('span', 'dim', 'demande au MJ'), askList(stock.ship, {type: 'ship'}, asks));
+            rows.push(hold);
+        }
+        $('players').replaceChildren(...rows);
         if (game)
             renderCrewStrip();
     };
@@ -1546,11 +1587,27 @@
         // Bourse du joueur (« 20 crédits »)
         $('money').hidden = !(you && you.money);
         $('money').textContent = you && you.money ? 'Bourse : ' + you.money : '';
+        let requested = (you && you.requested) || [];
         $('items').replaceChildren(...items.map(item => {
             let li = el('li', 'item');
             li.append(el('strong', '', item.name + (item.count > 1 ? ' ×' + item.count : '')));
             if (item.desc)
                 li.append(el('span', 'dim small-text', String(item.desc).replace(/<[^>]*>/g, '')));
+            // Demandé par d'autres joueurs : leur logo, et de quoi le leur donner
+            let asked = requested.find(r => r.slug === item.slug);
+            if (asked && asked.from.length) {
+                li.classList.add('requested');
+                let line = el('span', 'item-asked');
+                line.append(voterIcons({voters: asked.from.map(f => Object.assign({index: 0}, f))}, 0),
+                    'Demandé par ' + asked.from.map(f => f.name).join(', '));
+                li.append(line);
+                for (let f of asked.from) {
+                    let give = el('button', 'primary small', 'Donner à ' + f.name);
+                    give.type = 'button';
+                    give.addEventListener('click', () => sendAction('inventory-move', {slug: item.slug, to: {type: 'player', id: f.id}}));
+                    li.append(give);
+                }
+            }
             // Utiliser : demande au MJ, qui accepte ou refuse
             if (game && game.phase === 'gameLive') {
                 let pending = ((you && you.pendingItems) || []).includes(item.slug);
@@ -1569,12 +1626,16 @@
                     o.value = c.id;
                     select.append(o);
                 }
+                // Ou le ranger dans le vaisseau
+                let hold = el('option', '', 'Vaisseau');
+                hold.value = '@ship';
+                select.append(hold);
                 let b = el('button', 'secondary small', 'Donner');
                 b.type = 'submit';
                 form.append(select, b);
                 form.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    sendAction('inventory-move', {slug: item.slug, to: {type: 'player', id: select.value}});
+                    sendAction('inventory-move', {slug: item.slug, to: select.value === '@ship' ? {type: 'ship'} : {type: 'player', id: select.value}});
                 });
                 li.append(form);
             }
@@ -1615,6 +1676,9 @@
             if (MJ_REPLAY.includes(data.payload.action))
                 mjLastEvents.set(data.payload.action, data.payload);
             toMjScreen({lnob: 'mj-event', payload: data.payload});
+            // Objets des autres, à demander depuis l'onglet Équipage
+            if (data.payload.action === 'inventory' || data.payload.action === 'item-requests')
+                renderPlayers();
         }
         else if (data.kind === 'timer') {
             timer = data.timer && Number.isInteger(data.timer.left) ? data.timer : null;
@@ -1630,6 +1694,7 @@
             renderGame();
             renderMe();
             renderItems();
+            renderPlayers();
         }
         else if (data.kind === 'codex') {
             codex = data;
