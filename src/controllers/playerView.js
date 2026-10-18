@@ -203,6 +203,17 @@ const mirror = function (payload) {
     lobby.sendTo('*', {kind: 'mj-event', payload: mirrorPayload(payload)});
 };
 
+// Carte blanche affichée par le MJ : ses choix, avec les votes, dès que la
+// page de jeu les montre (elle l'annonce sous le numéro « blank », card.js)
+const publicBlankCard = function () {
+    let card = blankCard.publicCard();
+    let screen = card && card.choices.length ? votes.screenFor('blank') : null;
+    if (screen)
+        Object.assign(card, {desc: cardText(screen.text), screen: screen.id, choices: screen.choices.map(cleanText),
+            counts: screen.counts, voters: screen.voters, chosen: screen.chosen});
+    return card;
+};
+
 // Tout ce qui est commun aux joueurs
 const gameState = async function () {
     let alerts = shipAlerts.getState();
@@ -214,7 +225,7 @@ const gameState = async function () {
         phase: phase,
         // Lancement (synopsis, fiche du vaisseau) ; sinon une carte blanche
         // en cours passe devant la carte du paquet
-        card: intro.publicCard() || (phase === 'gameLive' ? (blankCard.publicCard() || publicCard(deck.getCurrentCard())) : null),
+        card: intro.publicCard() || (phase === 'gameLive' ? (publicBlankCard() || publicCard(deck.getCurrentCard())) : null),
         ship: await shipState(),
         statuses: await statusList(),
         alerts: {blink: alerts.blink || [], showMap: !!alerts.showMap, alert: alerts.alert ? {room: alerts.alert.room, name: alerts.alert.name, message: alerts.alert.message} : null},

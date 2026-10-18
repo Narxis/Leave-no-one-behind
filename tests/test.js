@@ -1135,6 +1135,18 @@ async function test_blank_card() {
         assert.equal(shown.action, 'blank-card-show');
         // Les joueurs en ligne voient le texte et les choix, pas les résultats
         assert.deepEqual(blankCard.publicCard(), {id: 'blank', kind: 'blank', desc: 'Suite', timer: false, choices: ['Ouvrir']});
+        // ... et peuvent voter dès que la page de jeu montre ses choix
+        const votes = require('../src/controllers/votes');
+        const state = CONFIG.gameState;
+        CONFIG.gameState = 'gameLive';
+        votes.setScreen({cardId: 'blank', text: 'Suite', choices: ['Ouvrir']});
+        let seenBlank = (await playerView.gameState()).card;
+        assert.equal(seenBlank.kind, 'blank');
+        assert.ok(seenBlank.screen);
+        assert.deepEqual(seenBlank.choices, ['Ouvrir']);
+        assert.deepEqual(seenBlank.counts, [0]);
+        votes.clear();
+        CONFIG.gameState = state;
         let out = await blankCard.handle({action: 'blank-card-choice', data: {index: 0}});
         assert.equal(out[0].action, 'blank-card-choice');
         assert.equal(out.filter(m => m.action === 'playerStat').length, 2);
