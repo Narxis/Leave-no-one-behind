@@ -8,7 +8,46 @@
         error: 'Relais injoignable, nouvel essai en cours…'
     };
 
+    // Bouton de lancement selon l'étape de la partie : page ouverte sur l'écran principal
+    const LAUNCH = {
+        creation: {
+            hint: 'Création des persos en cours : les joueurs créent leur perso depuis leur app.',
+            label: 'Afficher la création des persos',
+            page: '/persos'
+        },
+        gameLive: {
+            hint: 'Partie en cours.',
+            label: 'Afficher l\'écran de jeu',
+            page: '/next'
+        },
+        none: {
+            hint: 'Quand tout le monde est là, lance la partie : paramètres, puis création des persos, que les joueurs font depuis leur app.',
+            label: 'Lancer la partie',
+            page: '/parametres'
+        }
+    };
+    let phase = null;
+
+    // Dans l'app, la page s'ouvre dans la fenêtre du jeu et le lobby reste ouvert ;
+    // dans un navigateur, l'onglet du lobby y va
+    const openGame = function (page) {
+        if (/Electron/.test(navigator.userAgent))
+            window.open(page, 'lnob-game');
+        else
+            location.href = page;
+    };
+
+    const renderLaunch = function () {
+        let step = LAUNCH[phase] || LAUNCH.none;
+        $('lobby-launch-hint').textContent = step.hint;
+        $('lobby-launch-main').textContent = step.label;
+        // Partie en cours ou création commencée : on peut aussi tout recommencer
+        $('lobby-launch-new').hidden = !LAUNCH[phase];
+    };
+
     const render = function (state) {
+        phase = state.phase || null;
+        renderLaunch();
         let closed = state.status === 'closed';
         $('lobby-closed').hidden = !closed;
         $('lobby-opened').hidden = closed;
@@ -68,6 +107,14 @@
     document.addEventListener('lobby', (e) => render(e.detail.data));
     // Après une coupure du serveur du jeu, on redemande l'état
     document.addEventListener('ws-reconnect', () => wsLNOB.send({action: 'lobby-state'}));
+
+    $('lobby-launch-main').addEventListener('click', () => openGame((LAUNCH[phase] || LAUNCH.none).page));
+    $('lobby-launch-new').addEventListener('click', () => {
+        if (confirm('Recommencer une nouvelle partie ? La partie en cours sera perdue.'))
+            openGame('/parametres');
+    });
+    // L'étape a pu changer pendant que la fenêtre était en arrière-plan
+    window.addEventListener('focus', () => wsLNOB.send({action: 'lobby-state'}));
 
     $('lobby-open').addEventListener('click', () => wsLNOB.send({action: 'lobby-open'}));
     $('lobby-close').addEventListener('click', () => {

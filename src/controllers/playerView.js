@@ -261,6 +261,7 @@ const flush = async function () {
 // Une action a eu lieu : on recalcule un peu plus tard (plusieurs actions
 // rapprochées ne donnent qu'un envoi)
 const changed = function () {
+    lobby.phaseChanged();
     if (lobby.getState().status !== 'open')
         return;
     clearTimeout(timer);
