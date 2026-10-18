@@ -652,7 +652,7 @@ body.planet-mode .planet-orbit { display: none; }
 @media (min-width: 900px) {
     body.in-game { padding: 0; overflow: hidden; }
     .card.wide { width: 100%; }
-    .topbar { position: fixed; top: 24px; left: 28px; }
+    .topbar { position: fixed; top: 24px; left: 28px; z-index: 30; }
     #ship-alert, #action-error { position: fixed; top: 24px; left: 50%; z-index: 25; transform: translateX(-50%); max-width: min(600px, 60vw); }
     .hud { display: contents; }
     .hud-humans { position: fixed; top: 24px; right: 24px; z-index: 10; width: 280px; max-height: 30vh; overflow-y: auto; }
