@@ -2,7 +2,8 @@
 //
 // Après chaque action du jeu (tout passe par le WebSocket du MJ), l'état est
 // recalculé ; seul ce qui a changé repart vers les joueurs :
-//   {kind: 'game', phase, card, ship, statuses, alerts, team, races}  à tous
+//   {kind: 'game', phase, card, ship, statuses, alerts, team, races,
+//    combat, score}                                                  à tous
 //   {kind: 'you', character, inventory, money, creation}              à chacun
 //   {kind: 'codex', races, items, statuses, totals, wiki}              à tous
 //   {kind: 'codex-image', key, src}   images des fiches (customs, objets),
@@ -25,6 +26,7 @@ const votes = require('./votes');
 const planetScan = require('./planetScan');
 const itemUse = require('./itemUse');
 const codex = require('./codex');
+const combat = require('./combat');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -108,6 +110,29 @@ const team = async function () {
         discord: lobby.discordOf(p.discord_id)}));
 };
 
+// Combat en cours, comme sur l'écran de jeu : adversaires et leurs PV,
+// ordre de jeu, tour ; le butin une fois tous les adversaires à terre
+const combatState = function () {
+    let state = combat.getState();
+    if (!state.active)
+        return null;
+    return {
+        turn: state.turn,
+        enemies: state.enemies.map(e => ({id: e.id, name: e.name, hp: e.hp, maxHp: e.maxHp, ko: e.hp <= 0})),
+        order: (state.order || []).map(f => ({kind: f.kind, id: String(f.id), name: f.name})),
+        current: state.current,
+        loot: state.lootRevealed ? state.enemies.flatMap(e => e.loot).map(i => i.qty > 1 ? i.name + ' ×' + i.qty : i.name) : null
+    };
+};
+
+// Score de fin de partie, posé par l'écran de fin (default.js) : montré aux
+// joueurs tant que la partie est finie
+let score = null;
+const setScore = function (value) {
+    score = value || null;
+    changed();
+};
+
 // Tout ce qui est commun aux joueurs
 const gameState = async function () {
     let alerts = shipAlerts.getState();
@@ -122,7 +147,9 @@ const gameState = async function () {
         alerts: {blink: alerts.blink || [], showMap: !!alerts.showMap, alert: alerts.alert ? {room: alerts.alert.room, name: alerts.alert.name, message: alerts.alert.message} : null},
         team: await team(),
         // Pour la création du perso : fiches des races de la partie (bonus et malus, affinités)
-        races: phase === 'creation' ? races.playable().map(r => codex.raceCard(r)) : []
+        races: phase === 'creation' ? races.playable().map(r => codex.raceCard(r)) : [],
+        combat: phase === 'gameLive' ? combatState() : null,
+        score: phase === 'postGame' ? score : null
     };
 };
 
@@ -258,4 +285,4 @@ const init = function () {
     lobby.onPlayerJoin(player => welcome(player).catch(e => log('[LOBBY] ' + e)));
 };
 
-module.exports = {init, changed, welcome, publicCard, gameState, playerState, MODULES};
+module.exports = {init, changed, welcome, publicCard, gameState, playerState, combatState, setScore, MODULES};
