@@ -19,6 +19,7 @@ const statRolls = require('./statRolls');
 const chat = require('./chat');
 const votes = require('./votes');
 const itemUse = require('./itemUse');
+const intro = require('./intro');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = ['', 'scanner', 'proximity', 'motors', 'oxygen', 'energy', 'gravity'];
@@ -109,6 +110,15 @@ const RULES = {
         let index = data.index === null ? null : Number(data.index);
         let character = await characterOf(player.id);
         let result = votes.vote(player.id, character ? character.name : player.name, index);
+        if (result.error)
+            return refuse(result.error);
+        return {action: 'passThrough', data: result.payload};
+    },
+    // Synopsis et fiche du vaisseau : prêt à continuer (ou plus)
+    'intro-ready': async (player, data) => {
+        if (!await characterOf(player.id))
+            return refuse('Il faut un perso pour voter.');
+        let result = intro.vote(player.id, !!data.ready);
         if (result.error)
             return refuse(result.error);
         return {action: 'passThrough', data: result.payload};
