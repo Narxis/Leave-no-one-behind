@@ -1,0 +1,1029 @@
+/* Généré par scripts/player-assets.js depuis public/css/timer-animation.css : ne pas modifier à la main */
+@font-face {
+  font-family: '7segments';
+  src: url('../fonts/7segments.ttf') format('truetype');
+}
+
+.plugship {
+  position: absolute;
+  width: 180px;
+  height: 130px;
+  top: -119px;
+  left: 36px;
+  transform: rotate(-14deg);
+}
+
+/* Le flottement passe par translate/rotate et ne s'arrête jamais : la vrille
+   et le retour (sur transform) s'y ajoutent sans saut au début ni à la fin */
+.shipflotte {
+  animation: shipfloat 10s ease-in-out infinite;
+}
+
+.robot-arm svg {
+  overflow: visible;
+}
+
+.robot-arm {
+  position: absolute;
+  width: 432px;
+  height: 100px;
+  top: -138px;
+  left: 507px;
+}
+
+#arm1 {
+  position: absolute;
+  opacity: 0;
+  transform-origin: 1756px 1434px;
+  animation-direction: reverse;
+}
+
+#arm2 {
+  position: absolute;
+  transform-origin: 2369px 1259px;
+}
+
+#arm3 {
+  position: absolute;
+  transform-origin: 2159px 717px;
+}
+
+#jaw-up {
+  position: absolute;
+  transform-origin: 1852px 745px;
+}
+
+#jaw-down {
+  position: absolute;
+  transform-origin: 1865px 791px;
+}
+
+#plugun,
+#plugun2 {
+  position: absolute;
+  transform-origin: 1421px 623px;
+}
+
+.ring {
+  transform-origin: center;
+}
+
+#timer-background,
+#timer-text,
+#timer-background2,
+#timer-text2 {
+  font-family: '7segments';
+  font-size: 228.26px;
+  letter-spacing: 3px;
+  fill: #383838;
+  transform: translate(1322px, 721px) rotate(4deg) scale(0.9);
+}
+
+#timer-text,
+#timer-text2 {
+  position: absolute;
+  top: 5px;
+  fill: red;
+}
+
+/*---vvv-----Timer Animation-----vvv---*/
+/*---vvv-------Timer Start-------vvv---*/
+#bigboite.start #arm1 {
+  animation: gunstart1 2s ease-out forwards;
+}
+
+#bigboite.start #arm2 {
+  animation: gunstart2 2s ease-out forwards;
+}
+
+#bigboite.start #arm3 {
+  animation: gunstart3 2s ease-out forwards;
+}
+
+#bigboite.start #jaw-up {
+  animation: gunstart4 2s ease-out forwards;
+}
+
+#bigboite.startnot #arm1 {
+  animation: gunstartnot1 2s ease-out forwards;
+}
+
+#bigboite.startnot #arm2 {
+  animation: gunstartnot2 2s ease-out forwards;
+}
+
+#bigboite.startnot #arm3 {
+  animation: gunstartnot3 2s ease-out forwards;
+}
+
+#bigboite.startnot #jaw-up {
+  animation: gunstartnot4 2s ease-out forwards;
+}
+
+@keyframes gunstart1 {
+  0% {
+    opacity: 0;
+    transform: rotate(207deg);
+  }
+
+  0.1% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotate(352deg);
+  }
+}
+
+@keyframes gunstart2 {
+  0% {
+    transform: rotate(304deg);
+  }
+
+  100% {
+    transform: rotate(20deg);
+  }
+}
+
+@keyframes gunstart3 {
+  0% {
+    transform: rotate(219deg);
+  }
+
+  100% {
+    transform: rotate(344deg);
+  }
+}
+
+@keyframes gunstart4 {
+  0% {
+    transform: rotate(309deg);
+  }
+
+  100% {
+    transform: rotate(356deg);
+  }
+}
+
+@keyframes gunstartnot1 {
+  100% {
+    opacity: 0;
+    transform: rotate(207deg);
+  }
+
+  99.99% {
+    opacity: 1;
+  }
+
+  0% {
+    opacity: 1;
+    transform: rotate(352deg);
+  }
+}
+
+@keyframes gunstartnot2 {
+  100% {
+    transform: rotate(304deg);
+  }
+
+  0% {
+    transform: rotate(20deg);
+  }
+}
+
+@keyframes gunstartnot3 {
+  100% {
+    transform: rotate(219deg);
+  }
+
+  0% {
+    transform: rotate(344deg);
+  }
+}
+
+@keyframes gunstartnot4 {
+  100% {
+    transform: rotate(309deg);
+  }
+
+  0% {
+    transform: rotate(356deg);
+  }
+}
+
+/*---^^^-----Timer Start-----^^^---*/
+/*---vvv-----Timer Idle------vvv---*/
+#bigboite.idle #arm1 {
+  opacity: 1;
+  animation: gunfloat1 2s ease-in-out infinite;
+}
+
+#bigboite.idle #arm2 {
+  animation: gunfloat2 2s ease-in-out infinite;
+}
+
+#bigboite.idle #arm3 {
+  animation: gunfloat3 2s ease-in-out infinite;
+}
+
+#bigboite.idle #jaw-up {
+  animation: gunfloat4 2s ease-in-out infinite;
+}
+
+@keyframes gunfloat1 {
+  0% {
+    transform: rotate(352deg);
+  }
+
+  50% {
+    transform: rotate(354deg);
+  }
+
+  100% {
+    transform: rotate(352deg);
+  }
+}
+
+@keyframes gunfloat2 {
+  0% {
+    transform: rotate(20deg);
+  }
+
+  50% {
+    transform: rotate(18deg);
+  }
+
+  100% {
+    transform: rotate(20deg);
+  }
+}
+
+@keyframes gunfloat3 {
+  0% {
+    transform: rotate(344deg);
+  }
+
+  50% {
+    transform: rotate(346deg);
+  }
+
+  100% {
+    transform: rotate(344deg);
+  }
+}
+
+@keyframes gunfloat4 {
+  0% {
+    transform: rotate(356deg);
+  }
+
+  50% {
+    transform: rotate(353deg);
+  }
+
+  100% {
+    transform: rotate(356deg);
+  }
+}
+
+@keyframes shipfloat {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+
+  50% {
+    translate: 0 -10px;
+    rotate: 2deg;
+  }
+}
+
+#bigboite.idle .ringl,
+#bigboite.idle .ringl2 {
+  transition: transform 6s;
+  transform: translateX(-20px);
+}
+
+#bigboite.idle .ringr,
+#bigboite.idle .ringr2 {
+  transition: transform 6s;
+  transform: translateX(20px);
+}
+
+/* ---^^^---Timer Idle----^^^--- */
+/* ---vvv---Timer Flash----vvv--- */
+#bigboite.flash #flashbox {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgb(255, 255, 255);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 36%, rgb(80, 80, 80) 55%, rgba(255, 255, 255, 0) 56%);
+  animation: flash 2s ease-in-out forwards;
+}
+
+@keyframes flash {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+
+  25% {
+    transform: scale(14);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(14);
+    opacity: 0;
+  }
+}
+
+#bigboite.flash .ringl,
+#bigboite.flash .ringl2 {
+  transition: transform .3s;
+  transform: translatex(-60px);
+}
+
+#bigboite.flash .ringr,
+#bigboite.flash .ringr2 {
+  transition: transform .3s;
+  transform: translatex(60px);
+}
+
+/* ---^^^---Timer Flash----^^^--- */
+/* ---^^^---Timer Idle----^^^--- */
+/* ---vvv---Laser boule---vvv---*/
+#bigboite.idle .pop {
+  transition: opacity 3s;
+  opacity: 1;
+}
+
+#canvas {
+  position: absolute;
+  top: -130px;
+  left: 0px;
+  transform-origin: left;
+  transform: rotate(356deg) scale(0.25);
+  opacity: 0;
+}
+
+#bigboite.idle #canvas {
+  transition: opacity 5s;
+  opacity: 0.8;
+}
+
+.spinner-box {
+  top: -80px;
+  left: -88px;
+  width: 175px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  position: absolute;
+  overflow: visible;
+  opacity: 0;
+}
+
+#bigboite.plop #boulboite {
+  animation: plop .3s ease-in-out forwards;
+}
+
+@keyframes plop {
+  0% {
+    transform: scale(1);
+  }
+
+  20% {
+    transform: scale(1.5);
+  }
+
+  100% {
+    transform: scale(0);
+  }
+}
+
+.leo-border-1 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(0deg, rgba(63, 249, 220, 0.1) 33%, rgba(63, 249, 220, 1) 100%);
+  animation: spin3D 1.8s linear 0s infinite;
+}
+
+.leo-core-1 {
+  width: 100%;
+  height: 100%;
+  background-color: #37474faa;
+  border-radius: 50%;
+}
+
+.leo-border-2 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: rgb(251, 91, 83);
+  background: linear-gradient(0deg, rgba(251, 91, 83, 0.1) 33%, rgba(251, 91, 83, 1) 100%);
+}
+
+.leo-core-2 {
+  width: 100%;
+  height: 100%;
+  background-color: #1d2630aa;
+  border-radius: 50%;
+}
+
+.leo {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.blue-orbit {
+  --ax: 1, 1, 0;
+  width: 165px;
+  height: 165px;
+  border: 1px solid #ffffff;
+  background: rgb(255, 255, 255);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 36%, rgba(255, 255, 255, 1) 55%, rgba(255, 255, 255, 0) 56%);
+  animation: spin3D 1s linear .2s infinite;
+}
+
+.green-orbit {
+  --ax: 0, 1, 1;
+  width: 120px;
+  height: 120px;
+  border: 1px solid #ffffff;
+  background: rgb(255, 255, 255);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 36%, rgba(255, 255, 255, 1) 55%, rgba(255, 255, 255, 0) 56%);
+  animation: spin3D .95s linear 0s infinite reverse;
+}
+
+.red-orbit {
+  --ax: 1, 0, 1;
+  width: 90px;
+  height: 90px;
+  border: 1px solid #ffffff;
+  background: rgb(255, 255, 255);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 36%, rgba(255, 255, 255, 1) 55%, rgba(255, 255, 255, 0) 56%);
+  animation: spin3D .5s linear 0s infinite;
+}
+
+.white-orbit {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #ffffff;
+  animation: spin3D .7s linear 0s infinite reverse;
+}
+
+.w1 {
+  --ax: 1, 1, 1;
+}
+
+.w2 {
+  --ax: 1, 2, .5;
+}
+
+.w3 {
+  --ax: .5, 1, 2;
+}
+
+#bigboite.float #floatboite {
+  position: absolute;
+  animation: laserfloat 2s ease-in-out infinite;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes spin3D {
+  from {
+    transform: rotate3d(var(--ax, 1, 1, 0), 0deg);
+  }
+
+  to {
+    transform: rotate3d(var(--ax, 1, 1, 0), 360deg);
+  }
+}
+
+@keyframes laserfloat {
+  0% {
+    translate: 0 15px;
+  }
+
+  100% {
+    translate: 0 9px;
+  }
+}
+
+/*---^^^------Laser boule-----^^^---*/
+/*---vvv------Timer Shot------vvv---*/
+#bigboite.shot #arm1 {
+  opacity: 1;
+  animation: shotarm1 2.67s ease-in-out forwards;
+}
+
+#bigboite.shot #arm2 {
+  animation: shotarm2 2.67s ease-in-out forwards;
+}
+
+#bigboite.shot #arm3 {
+  animation: shotarm3 2.67s ease-in-out forwards;
+}
+
+#bigboite.shot #jaw-up {
+  animation: shotjaw-up 2.67s ease-in-out forwards;
+}
+
+#bigboite.shot #jaw-down {
+  animation: shotjaw-down 2.67s ease-in-out forwards;
+}
+
+@keyframes shotarm1 {
+  0% {
+    transform: rotate(-8deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  30% {
+    transform: rotate(20deg);
+    animation-timing-function: ease-in;
+  }
+
+  70% {
+    opacity: 1;
+    transform: rotate(-65deg);
+    animation-timing-function: ease-out;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(-190deg);
+  }
+}
+
+@keyframes shotarm2 {
+  0% {
+    transform: rotate(20deg);
+  }
+
+  40% {
+    transform: rotate(120deg);
+    animation-timing-function: ease-in;
+  }
+
+  70% {
+    transform: rotate(-10deg);
+    animation-timing-function: ease-out;
+  }
+
+  100% {
+    transform: rotate(-30deg);
+  }
+}
+
+@keyframes shotarm3 {
+  0% {
+    transform: rotate(-16deg);
+  }
+
+  50% {
+    transform: rotate(99deg);
+  }
+
+  70% {
+    transform: rotate(-20deg);
+  }
+
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes shotjaw-up {
+  0% {
+    transform: rotate(-4deg);
+  }
+
+  25% {
+    transform: rotate(-50deg);
+  }
+
+  70% {
+    transform: rotate(15deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes shotjaw-down {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(0deg);
+  }
+
+  70% {
+    transform: rotate(-15deg);
+    position: relative;
+  }
+
+  100% {
+    transform: rotate(0deg);
+    position: relative;
+  }
+}
+
+/*@keyframes yeet {
+    0% {}
+    50% {}
+    70% {position: relative; transform: translateX(-2000px);}
+    100% {position: relative; transform: translateX(-2000px);}
+  }*/
+
+/*---^^^------Timer Shot------^^^---*/
+#robot-arm2 {
+  display: none;
+}
+
+/* Le lâcher est calé sur l'animation du bras (même départ, délai de 1,6 s) :
+   le pistolet lancé prend exactement la place de celui de la pince */
+#bigboite.shot #robot-arm2 {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  opacity: 0;
+  animation: yeet 1.1s linear 1.6s forwards;
+  display: block;
+}
+
+#bigboite.shot #plugun {
+  animation: drop-gun 0s 1.6s forwards;
+}
+
+@keyframes drop-gun {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes yeet {
+  /* Pose et vitesse du pistolet dans la pince au moment du lâcher */
+  0% {
+    opacity: 1;
+    transform: translate(7px, -113px) rotate(62deg);
+    animation-timing-function: cubic-bezier(.3, .5, .6, .9);
+  }
+
+  25% {
+    transform: translate(-223px, -160px) rotate(-29deg);
+    animation-timing-function: cubic-bezier(.4, 0, .8, .6);
+  }
+
+  /* Impact sur le vaisseau, puis ricochet hors champ */
+  51% {
+    opacity: 1;
+    transform: translate(-573px, -174px) rotate(-119deg);
+    animation-timing-function: cubic-bezier(.3, .45, .55, 1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-980px, -545px) rotate(-399deg);
+  }
+}
+
+/*---vvv------Chiffres du timer------vvv---*/
+#bigboite.beat #timer-text,
+#bigboite.beat #timer-text2 {
+  animation: timer-beat 1s ease-out;
+}
+
+#bigboite.critical.beat #timer-text,
+#bigboite.critical.beat #timer-text2 {
+  animation: timer-crit 1s linear;
+}
+
+@keyframes timer-beat {
+  0% {
+    fill: #ff8a7a;
+  }
+
+  100% {
+    fill: red;
+  }
+}
+
+@keyframes timer-crit {
+
+  0%,
+  45% {
+    fill: #ffd2c8;
+  }
+
+  50%,
+  100% {
+    fill: #a00000;
+  }
+}
+
+/*---vvv------Boule d'énergie------vvv---*/
+#bigboite.grow #boulboite {
+  transform: scale(var(--charge, 0));
+  transition: transform 1s linear, opacity 3s;
+}
+
+#boulboite::before {
+  content: '';
+  position: absolute;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 248, 255, .9) 0%, rgba(90, 210, 255, .45) 24%, rgba(60, 120, 255, .14) 48%, transparent 68%);
+  animation: halo-pulse 1.4s ease-in-out infinite;
+}
+
+#bigboite.overcharge #boulboite::before {
+  background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(160, 235, 255, .6) 26%, rgba(90, 140, 255, .22) 50%, transparent 70%);
+  animation-duration: .45s;
+}
+
+@keyframes halo-pulse {
+  50% {
+    transform: scale(1.18);
+    opacity: .75;
+  }
+}
+
+/* Surcharge : la boule tremble */
+#bigboite.overcharge #boulboite {
+  animation: ball-jitter .16s steps(1) infinite;
+}
+
+@keyframes ball-jitter {
+  0% {
+    translate: 2px -1px;
+  }
+
+  25% {
+    translate: -2px 1px;
+  }
+
+  50% {
+    translate: 1px 2px;
+  }
+
+  75% {
+    translate: -1px -2px;
+  }
+}
+
+#bigboite.overcharge .ringl,
+#bigboite.overcharge .ringl2 {
+  transition: transform .6s;
+  transform: translateX(-45px);
+}
+
+#bigboite.overcharge .ringr,
+#bigboite.overcharge .ringr2 {
+  transition: transform .6s;
+  transform: translateX(45px);
+}
+
+/* Fin du temps : la boule enfle... et fait pschitt */
+#bigboite.fizzle #boulboite {
+  opacity: 1;
+  animation: fizzle 1s ease-in forwards;
+}
+
+@keyframes fizzle {
+  0% {
+    transform: scale(1);
+  }
+
+  18% {
+    transform: scale(1.3);
+  }
+
+  30% {
+    transform: scale(1.05);
+  }
+
+  42% {
+    transform: scale(1.22);
+    opacity: 1;
+  }
+
+  60% {
+    opacity: .5;
+  }
+
+  66% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0);
+    opacity: .3;
+  }
+}
+
+#bigboite.fizzle .ring,
+#bigboite.shot .ring {
+  transition: transform .4s;
+  transform: none;
+}
+
+.fizzle-puff {
+  position: absolute;
+  left: -9px;
+  top: 61px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(190, 198, 214, .8);
+  filter: blur(1px);
+  opacity: 0;
+  pointer-events: none;
+  animation: puff 1.1s ease-out forwards;
+}
+
+@keyframes puff {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(.3);
+  }
+
+  45% {
+    opacity: .85;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(2.4);
+  }
+}
+
+/*---vvv------Vaisseau percuté------vvv---*/
+.ship-impact {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  margin: -48px 0 0 -48px;
+  background: radial-gradient(circle, #fff 0 16%, #fff1a8 28%, #ffc531 50%, #ff8a1f 70%);
+  clip-path: polygon(50% 0%, 59% 33%, 93% 18%, 70% 45%, 100% 58%, 66% 64%, 77% 97%, 50% 72%, 22% 96%, 33% 64%, 0% 56%, 30% 45%, 8% 18%, 41% 33%);
+  pointer-events: none;
+  z-index: 30;
+  animation: impact-burst .55s ease-out forwards;
+}
+
+@keyframes impact-burst {
+  0% {
+    opacity: 1;
+    transform: scale(.2) rotate(0deg);
+  }
+
+  35% {
+    opacity: 1;
+    transform: scale(1.15) rotate(18deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.5) rotate(32deg);
+  }
+}
+
+.bonk,
+.comeback {
+  z-index: 20;
+}
+
+.bonk {
+  animation: bonk 1s forwards;
+}
+
+/* Une seule décélération : plus d'arrêt net juste après le choc */
+@keyframes bonk {
+  0% {
+    transform: translate(0px, 0px) rotate(-14deg);
+    animation-timing-function: cubic-bezier(.2, .6, .4, 1);
+  }
+
+  100% {
+    transform: translate(-328px, 275px) rotate(-350deg);
+  }
+}
+
+/* Retour : le vaisseau s'oriente vers sa place, pousse, puis freine.
+   L'accélération de la poussée enchaîne sur le freinage à la même vitesse,
+   sans s'arrêter à mi-chemin */
+.comeback {
+  animation: reguys 1.9s forwards;
+}
+
+@keyframes reguys {
+  0% {
+    transform: translate(-328px, 275px) rotate(10deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  18% {
+    transform: translate(-320px, 266px) rotate(-38deg);
+    animation-timing-function: ease-in;
+  }
+
+  68% {
+    transform: translate(-34px, 12px) rotate(-26deg);
+    animation-timing-function: cubic-bezier(.1, .48, .3, 1);
+  }
+
+  84% {
+    transform: translate(6px, -6px) rotate(-6deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  100% {
+    transform: translate(0px, 0px) rotate(-14deg);
+  }
+}
+
+/*---vvv------Flammes du réacteur------vvv---*/
+#vaisseau {
+  overflow: visible;
+}
+
+#ship-flame {
+  transform-box: view-box;
+  transform-origin: 140px 360px;
+  transform: scaleX(0);
+  opacity: 0;
+  transition: transform .4s ease-in, opacity .4s ease-in;
+}
+
+#plugship.thrust #ship-flame {
+  transform: scaleX(1);
+  opacity: 1;
+  transition: transform .18s cubic-bezier(.3, 1.6, .6, 1), opacity .1s;
+}
+
+#ship-flame path {
+  transform-box: view-box;
+  transform-origin: 140px 360px;
+}
+
+#plugship.thrust #ship-flame path {
+  animation: flame-flicker .09s ease-in-out infinite alternate;
+}
+
+#plugship.thrust #ship-flame .flame-mid {
+  animation-duration: .07s;
+  animation-delay: -.03s;
+}
+
+#plugship.thrust #ship-flame .flame-core {
+  animation-duration: .11s;
+}
+
+.flame-outer {
+  fill: #ff6a1a;
+  opacity: .85;
+}
+
+.flame-mid {
+  fill: #ffb31a;
+}
+
+.flame-core {
+  fill: #fff4c8;
+}
+
+@keyframes flame-flicker {
+  from {
+    transform: scale(1, 1);
+  }
+
+  to {
+    transform: scale(.8, 1.1);
+  }
+}
+
+/* ---^^^---Timer Animation---^^^---*/

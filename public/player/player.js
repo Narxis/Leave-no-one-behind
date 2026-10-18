@@ -180,6 +180,78 @@
         document.body.classList.toggle('planet-mode', planetShown && tab === 'game');
     };
 
+    // ---- Écran de jeu du MJ, porté tel quel (mj/screen.html, mj/planet.html) --
+    // Sur ordinateur, l'onglet Partie affiche une copie des pages de jeu du MJ
+    // (même balisage, mêmes styles, mêmes scripts), dans un cadre : la page de
+    // la carte, ou celle de la planète. La page lui transmet l'état de la
+    // partie et ce que la page du MJ écrit ; il renvoie les votes du joueur.
+    // Sur téléphone, la page garde sa mise en page.
+    const mjFrame = $('mj-screen');
+    let mjReady = false;
+    let mjPage = mjFrame ? mjFrame.getAttribute('src') : null;
+    let mjLastText = null;   // dernier texte annoncé par le MJ (pour un écran rechargé)
+    let mjLastTimer = null;
+    const MJ_REPLAY = ['inventory', 'combat', 'card-loot', 'allies'];
+    const mjLastEvents = new Map();
+    const wideScreen = window.matchMedia ? window.matchMedia('(min-width: 900px)') : {matches: true};
+    const toMjScreen = function (message) {
+        if (mjReady && mjFrame && mjFrame.contentWindow)
+            mjFrame.contentWindow.postMessage(message, '*');
+    };
+    const mjState = () => toMjScreen({lnob: 'state', game: game, you: you || null, me: playerId});
+    // Ce que l'écran porté affiche : une carte (événement, lieu, carte
+    // blanche) avec son combat, une planète, ou le score de fin
+    const mjScreenFits = function () {
+        let card = game && game.card;
+        if (!wideScreen.matches || tab !== 'game' || !game)
+            return false;
+        if (game.phase === 'postGame')
+            return !!game.score;
+        return game.phase === 'gameLive' && !!card && card.kind !== 'intro';
+    };
+    // Page du MJ à montrer : l'écran de fin, celle de la planète (sa graine,
+    // et la dernière planète a un seul bouton), sinon celle de la carte
+    const mjScreenPage = function () {
+        let card = game && game.card;
+        if (game && game.phase === 'postGame' && game.score)
+            return 'mj/end.html';
+        if (!card || card.kind !== 'planet')
+            return 'mj/screen.html';
+        return 'mj/planet.html?card=' + encodeURIComponent(card.id) + (card.lastPlanet ? '&last=1' : '');
+    };
+    const updateMjScreen = function () {
+        let page = mjScreenPage();
+        // Changement de page, comme le MJ passe de la carte à la planète
+        if (mjFrame && wideScreen.matches && page !== mjPage) {
+            mjPage = page;
+            mjReady = false;
+            mjFrame.setAttribute('src', page);
+        }
+        let on = !!mjFrame && mjScreenFits();
+        document.body.classList.toggle('mj-screen-on', on);
+        if (mjFrame)
+            mjFrame.setAttribute('aria-hidden', on ? 'false' : 'true');
+    };
+    if (wideScreen.addEventListener)
+        wideScreen.addEventListener('change', updateMjScreen);
+    window.addEventListener('message', (e) => {
+        if (!mjFrame || e.source !== mjFrame.contentWindow || !e.data || typeof e.data.lnobScreen !== 'string')
+            return;
+        let m = e.data;
+        if (m.lnobScreen === 'ready') {
+            mjReady = true;
+            mjState();
+            if (mjLastText)
+                toMjScreen({lnob: 'card-text', data: Object.assign({}, mjLastText, {late: true})});
+            if (mjLastTimer)
+                toMjScreen({lnob: 'timer', timer: mjLastTimer});
+            for (let payload of mjLastEvents.values())
+                toMjScreen({lnob: 'mj-event', payload: payload});
+        }
+        else if (m.lnobScreen === 'vote' && (m.index === null || Number.isInteger(m.index)))
+            sendAction('vote', {index: m.index});
+    });
+
     const selectTab = function (name) {
         tab = name;
         store.set('lnob-player-tab', name);
@@ -191,6 +263,7 @@
         $('back-game').hidden = name === 'game';
         setMenu(false);
         updatePlanetMode();
+        updateMjScreen();
     };
 
     // ---- Menu (burger en haut à gauche) ------------------------------------
@@ -451,7 +524,7 @@
                 for (let i = 0; i < full.length; i++) {
                     c.textContent += full[i];
                     if (!typingFast || ++count % 5 === 0)
-                        await typePause(22);
+                        await typePause(21.7);
                     if (run !== typingRun)
                         return;
                 }
@@ -496,6 +569,45 @@
             typeText(textNode, textNode.dataset.text);
     };
     $('game-card').addEventListener('click', () => { typingFast = true; });
+
+    // Texte de la carte, écrit en même temps que sur l'écran du MJ : sa page
+    // annonce chaque texte qu'elle commence à écrire (et le clic qui accélère)
+    let mjText = null;        // {text, seq, at} : dernier texte annoncé
+    let textCardId = null;    // carte dont le texte est affiché
+    let textFallback = null;
+    const MJ_TEXT_RECENT = 3000;
+    const onCardText = function (data) {
+        if (data.fast) {
+            if (mjText && data.seq === mjText.seq)
+                typingFast = true;
+            return;
+        }
+        mjText = {text: String(data.text || ''), seq: data.seq, at: Date.now()};
+        clearTimeout(textFallback);
+        let node = $('card-desc');
+        node.dataset.text = mjText.text;
+        if (data.late)
+            showText(node, mjText.text);
+        else
+            typeText(node, mjText.text);
+    };
+    // Nouvelle carte : texte vidé en attendant celui du MJ (sauf s'il vient
+    // d'arriver, juste avant l'état de la partie). Sans nouvelles de sa page,
+    // le texte de la carte s'affiche quand même.
+    const syncCardText = function (card) {
+        if (card.id === textCardId)
+            return;
+        textCardId = card.id;
+        clearTimeout(textFallback);
+        if (mjText && Date.now() - mjText.at < MJ_TEXT_RECENT)
+            return;
+        typingRun++;
+        $('card-desc').replaceChildren();
+        textFallback = setTimeout(() => {
+            if (textCardId === card.id && (!mjText || Date.now() - mjText.at > 6000))
+                showText($('card-desc'), card.desc);
+        }, 6000);
+    };
 
     // ---- Partie : carte en cours, status, alerte ---------------------------
 
@@ -595,7 +707,16 @@
         renderPlanet(isPlanet ? card.planet : null);
         planetShown = isPlanet;
         updatePlanetMode();
-        if (showCard && !isPlanet) {
+        $('game-card').classList.toggle('intro-card', !!intro);
+        if (showCard && !isPlanet && card.kind !== 'intro') {
+            // Texte écrit au rythme du MJ (message card-text) : rien n'est
+            // écrit avant que sa page commence
+            $('card-kind').textContent = card.title || CARD_KINDS[card.kind] || '';
+            $('card-desc').hidden = false;
+            syncCardText(card);
+            reveal($('game-card'), 'card|' + card.id);
+        }
+        else if (showCard && !isPlanet) {
             $('card-kind').textContent = card.title || CARD_KINDS[card.kind] || '';
             let key = card.id + '|' + (card.screen || '') + '|' + card.desc;
             if (key !== revealKey) {
@@ -1332,15 +1453,32 @@
         else if (data.kind === 'game') {
             game = data;
             renderAll();
+            mjState();
+            updateMjScreen();
+        }
+        else if (data.kind === 'card-text') {
+            onCardText(data);
+            if (!data.fast)
+                mjLastText = {text: data.text, seq: data.seq};
+            toMjScreen({lnob: 'card-text', data: data});
+        }
+        else if (data.kind === 'mj-event' && data.payload && typeof data.payload.action === 'string') {
+            // Gardés pour un écran rechargé : le dernier inventaire, combat, butin
+            if (MJ_REPLAY.includes(data.payload.action))
+                mjLastEvents.set(data.payload.action, data.payload);
+            toMjScreen({lnob: 'mj-event', payload: data.payload});
         }
         else if (data.kind === 'timer') {
             timer = data.timer && Number.isInteger(data.timer.left) ? data.timer : null;
+            mjLastTimer = timer;
+            toMjScreen({lnob: 'timer', timer: timer});
             timerSeen = Date.now();
             timerAnim(timer);
             renderTimer();
         }
         else if (data.kind === 'you') {
             you = data;
+            mjState();
             renderGame();
             renderMe();
             renderItems();

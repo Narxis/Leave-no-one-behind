@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffcc00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Pilote : volant -->
+  <circle cx="12" cy="12" r="9"/>
+  <circle cx="12" cy="12" r="2.5"/>
+  <path d="M3.5 10.5h6M14.5 10.5h6M12 14.5V21"/>
+</svg>

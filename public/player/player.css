@@ -287,15 +287,31 @@ h2 { margin: 8px 0 0; font-size: 13px; font-weight: 600; color: var(--dim); text
     position: relative;
     height: 100%;
     min-height: 390px;
-    padding: 24px 26px;
-    border: 1px solid rgb(255 204 0 / 50%);
+    padding: 10px 17px;
 }
-.card-kind { margin: 0 0 14px; color: var(--accent); font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; opacity: .85; }
-.card-desc { margin: 0; font-size: clamp(17px, 1.6vw, 21px); line-height: 1.6; letter-spacing: 0.02em; white-space: pre-line; }
+/* Coins dorés de la carte du jeu (template-card.css, ui-card.css) : un en
+   haut à droite, un en bas à gauche ; au survol, ils s'étirent en cadre */
+.screen-card::after, .screen-inner::before {
+    content: "";
+    position: absolute;
+    width: 33px;
+    height: 33px;
+    border: 1px solid var(--accent);
+    opacity: .45;
+    transition: .3s;
+    pointer-events: none;
+}
+.screen-card::after { top: 33px; right: 33px; border-bottom-width: 0; border-left-width: 0; }
+.screen-inner::before { bottom: 3px; left: 3px; border-top-width: 0; border-right-width: 0; }
+.screen-card:hover::after { width: calc(100% - 68px); height: calc(100% - 68px); }
+.screen-card:hover .screen-inner::before { width: calc(100% - 6px); height: calc(100% - 6px); }
+/* Pas de titre sur la carte du jeu (gardé pour le synopsis et la fiche du vaisseau) */
+.screen-card:not(.intro-card) .card-kind { display: none; }
+/* Texte comme sur la carte du jeu : 20 px, ombre claire */
+.card-desc { margin: 0; font-size: 20px; line-height: 25px; color: #fff; text-shadow: rgb(238 232 232 / 42%) 3px 3px 3px; white-space: pre-line; }
 
-/* Révélation : le cadre s'ouvre, le filet doré se trace */
+/* Révélation : le cadre s'ouvre */
 .revealing { animation: card-open .7s var(--ease) both; }
-.revealing .screen-inner { animation: frame-trace 1.1s .2s var(--ease) both; }
 @keyframes card-open { from { opacity: 0; transform: scale(.94) translateY(12px); filter: blur(4px); } }
 @keyframes frame-trace { from { clip-path: inset(0 100% 100% 0); } to { clip-path: inset(0 0 0 0); } }
 
@@ -1000,3 +1016,11 @@ a.wiki-link, .codex-entry a { color: var(--ok); }
     .stat-row { grid-template-columns: 1fr auto; }
     .stat-row .dice { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* ---- Écran de jeu du MJ porté (mj/screen.html, planet.html, end.html) --
+   Sur ordinateur, l'onglet Partie affiche la copie de l'écran du MJ dans un
+   cadre plein écran ; le menu, le chat et les alertes restent par-dessus. */
+.mj-screen { position: fixed; inset: 0; z-index: 12; width: 100%; height: 100%; border: 0; background: transparent; visibility: hidden; pointer-events: none; }
+body.mj-screen-on .mj-screen { visibility: visible; pointer-events: auto; }
+body.mj-screen-on .hud, body.mj-screen-on .game-main { visibility: hidden; }
+@media (max-width: 899px) { .mj-screen { display: none; } }

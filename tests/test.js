@@ -179,6 +179,7 @@ async function test_remote() {
     test_stat_rolls();
     test_player_view();
     test_player_assets();
+    test_mj_screen_port();
     await test_codex();
     await test_discord_profiles();
     await test_intro();
@@ -485,10 +486,53 @@ function test_player_assets() {
     const assets = require('../scripts/player-assets');
     const path = require('path');
     for (let [file, content] of Object.entries(assets.files())) {
+        let message = file + ' n\'est pas à jour : lance node scripts/player-assets.js';
+        // Images et polices recopiées telles quelles
+        if (Buffer.isBuffer(content)) {
+            assert.ok(fs.existsSync(path.join(assets.ROOT, file)) && content.equals(fs.readFileSync(path.join(assets.ROOT, file))), message);
+            continue;
+        }
         let current = fs.readFileSync(path.join(assets.ROOT, file), 'utf8').replace(/\r\n/g, '\n');
-        assert.equal(current, content.replace(/\r\n/g, '\n'), file + ' n\'est pas à jour : lance node scripts/player-assets.js');
+        assert.equal(current, content.replace(/\r\n/g, '\n'), message);
     }
     console.log('Player assets OK');
+}
+
+// Écran de jeu porté pour les joueurs (public/player/mj) : rien de caché ne
+// sort, et les scripts du MJ repris gardent ce que mj/screen.js utilise
+function test_mj_screen_port() {
+    console.log('Testing MJ screen port');
+    const playerView = require('../src/controllers/playerView');
+    const assets = require('../scripts/player-assets');
+    for (let action of ['roll', 'emote', 'playerStat', 'player-role', 'inventory', 'card-loot', 'combat', 'allies'])
+        assert.ok(playerView.MIRRORED.includes(action), action + ' relayé aux joueurs');
+    // Combat : ni butin avant la fin, ni attaque des adversaires
+    let state = {active: true, lootRevealed: false, enemies: [{id: 1, name: 'Pirate', hp: 5, maxHp: 10, defense: 40, attack: 60, damage: 8, loot: [{slug: 'laser'}]}]};
+    let seen = playerView.publicCombat(state).enemies[0];
+    assert.deepEqual(seen.loot, []);
+    assert.equal(seen.attack, undefined);
+    assert.equal(seen.damage, undefined);
+    assert.equal(seen.hp, 5);
+    assert.deepEqual(playerView.publicCombat(Object.assign({}, state, {lootRevealed: true})).enemies[0].loot, [{slug: 'laser'}]);
+    // planet.js est rejoué par mj/screen.js : ses variables doivent rester là
+    let planet = fs.readFileSync(__dirname + '/../public/js/planet.js', 'utf8');
+    for (let name of ['texto2', 'textcl', 'textff', 'textre', 'texteau', 'textgr', 'costo2', 'costcl', 'costff', 'costre', 'costeau', 'costgr',
+        'detectionPoints', 'costList', 'showbuttons', 'dronenbr', 'planetVoteChoices'])
+        assert.ok(new RegExp('\\bvar ' + name + '\\b').test(planet), 'planet.js : var ' + name + ' utilisée par public/player/mj/screen.js');
+    for (let name of ['PLANET_SCANS', 'PLANET_EXITS'])
+        assert.ok(new RegExp('\\bconst ' + name + '\\b').test(planet), 'planet.js : ' + name + ' utilisée par public/player/mj/screen.js');
+    for (let name of ['writePoints', 'showbuttons_fun'])
+        assert.ok(new RegExp('function ' + name + '\\b').test(planet), 'planet.js : ' + name + '() utilisée par public/player/mj/screen.js');
+    assert.ok(/return \{[^}]*\bupdate\b/.test(fs.readFileSync(__dirname + '/../public/js/planet-view.js', 'utf8')), 'planet-view.js : update()');
+    // Pages portées : aucun bouton qui change de page, valeurs de planète absentes
+    let files = assets.files();
+    for (let page of ['screen', 'planet', 'end']) {
+        let html = files['public/player/mj/' + page + '.html'];
+        assert.ok(html, page + '.html généré');
+        assert.ok(!/location\.(href|reload)|href="\/leaderboard/.test(html.replace(/<script[\s\S]*?<\/script>/g, '')), page + '.html : pas de navigation du MJ');
+    }
+    assert.ok(/var PLANET_DATA = \{id: Number\([^)]*\)[^}]*modules: \{\}\}/.test(files['public/player/mj/planet.html']), 'planet.html : planète sans valeurs');
+    console.log('MJ screen port OK');
 }
 
 // Codex des joueurs : seulement ce que l'équipage a rencontré, races customs
