@@ -357,30 +357,43 @@ button.choice-text {
 .choice-tab.dimmed { opacity: .45; }
 .card-note { margin: 14px 0 0; color: var(--dim); font-size: 13px; text-align: center; }
 
-/* Modules principaux : cadrans à droite de la carte */
+/* Modules principaux : onglets à droite de la carte, comme chez le MJ
+   (template-card.css + ui-card.css) : onglets de 71px collés les uns aux
+   autres, glissés sous la carte, bout arrondi (rayon 36px) avec l'anneau
+   de 54px et l'icône centrés dans l'arrondi, sans pourcentage */
 .module-dials {
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin: 24px 0 0 -26px;
+    margin: 38px 0 0 -30px;
     padding: 0;
     list-style: none;
 }
 .stage .module-dials .dial {
-    padding: 5px 10px 5px 36px;
+    position: relative;
+    width: 102px;
+    height: 71px;
+    padding: 0;
     border: 1px solid var(--border-strong);
     border-left: none;
-    border-radius: 0 40px 40px 0;
+    border-radius: 0 36px 36px 0;
     background: var(--surface);
+    box-shadow: 0 10px 30px -14px rgb(0 0 0 / 85%);
+    transition: transform .3s var(--ease);
 }
-.stage .module-dials .dial + .dial { margin-top: -1px; }
-.dial { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
+.stage .module-dials .dial:hover { transform: translateX(5px); }
+.stage .module-dials .dial-face { position: absolute; left: calc(100% - 36px); top: 50%; width: 54px; height: 54px; transform: translate(-50%, -50%); }
+.stage .module-dials .dial-img { width: 34px; height: 34px; }
+.stage .module-dials .dial-value { display: none; }
+.dial { --gauge: var(--ok); display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
+.dial.warn { --gauge: var(--accent); }
+.dial.crit { --gauge: var(--danger); }
 .dial-face { position: relative; display: grid; place-items: center; width: 46px; height: 46px; }
-.dial-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-.dial-track { fill: rgb(10 8 30 / 85%); stroke: rgb(255 255 255 / 10%); stroke-width: 8; }
-.dial-fill { fill: none; stroke: var(--ok); stroke-width: 8; stroke-linecap: round; filter: drop-shadow(0 0 4px rgb(79 216 224 / 70%)); transition: stroke-dashoffset .8s var(--ease); }
-.dial.low .dial-fill { stroke: var(--danger); filter: drop-shadow(0 0 4px rgb(255 90 110 / 70%)); }
-.dial-img { position: relative; width: 52%; height: 52%; object-fit: contain; }
+.dial-ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.dial-ring circle { fill: none; stroke-width: 9; }
+.dial-track { stroke: rgb(255 255 255 / 10%); }
+.dial-fill { stroke: var(--gauge); stroke-linecap: round; filter: drop-shadow(0 0 3px var(--gauge)); transition: stroke-dasharray .5s var(--ease), stroke .4s var(--ease); }
+.dial-img { position: relative; width: 62%; height: 62%; object-fit: contain; filter: saturate(.85) drop-shadow(0 0 4px rgb(0 0 0 / 60%)); }
 .dial-label { display: none; font-size: 12px; color: var(--dim); }
 .dial-value { font-size: 12px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
 .end-modules { display: flex; padding: 0; list-style: none; }
@@ -602,9 +615,11 @@ select {
     .stage-row { flex-direction: column-reverse; align-items: stretch; gap: 10px; }
     .stage .module-dials { margin: 0; }
     .stage .module-dials { flex-direction: row; justify-content: space-between; margin: 0; padding: 8px 6px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); }
-    .stage .module-dials .dial { padding: 0; border: none; border-radius: 0; background: none; }
-    .stage .module-dials .dial + .dial { margin-top: 0; }
-    .dial-face { width: 46px; height: 46px; }
+    .stage .module-dials .dial { width: auto; height: auto; padding: 0; border: none; border-radius: 0; background: none; box-shadow: none; }
+    .stage .module-dials .dial:hover { transform: none; }
+    .stage .module-dials .dial-face { position: relative; left: auto; top: auto; width: 46px; height: 46px; transform: none; }
+    .stage .module-dials .dial-img { width: 62%; height: 62%; }
+    .stage .module-dials .dial-value { display: block; }
     .screen-card, .combat-screen { min-height: 0; padding: 14px; border-radius: 18px; }
     .screen-inner { min-height: 160px; padding: 18px 16px; }
     .choice-tabs { flex-direction: column; width: calc(100% - 28px); padding: 0; gap: 0; }

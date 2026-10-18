@@ -354,14 +354,15 @@
     const dial = function (id, label, value) {
         let li = el('li', 'dial');
         let pct = Math.max(0, Math.min(100, Number(value) || 0));
-        li.classList.toggle('low', pct < 35);
+        // Couleur selon l'état, comme les jauges du MJ (ui-gauges.js)
+        li.classList.add(pct >= 60 ? 'ok' : (pct >= 30 ? 'warn' : 'crit'));
         li.title = label + ' ' + pct + ' %';
         let ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         ring.setAttribute('viewBox', '0 0 100 100');
         ring.setAttribute('class', 'dial-ring');
         ring.setAttribute('aria-hidden', 'true');
         ring.innerHTML = '<circle class="dial-track" cx="50" cy="50" r="44" pathLength="100"/>'
-            + '<circle class="dial-fill" cx="50" cy="50" r="44" pathLength="100" stroke-dasharray="100" stroke-dashoffset="' + (100 - pct) + '"/>';
+            + '<circle class="dial-fill" cx="50" cy="50" r="44" pathLength="100" transform="rotate(-90 50 50)" stroke-dasharray="' + pct + ' 100"' + (pct ? '' : ' opacity="0"') + '/>';
         let face = el('span', 'dial-face');
         face.append(ring);
         let img = el('img', 'dial-img');
