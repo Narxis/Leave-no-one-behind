@@ -882,8 +882,11 @@ body.planet-mode .planet-orbit { display: none; }
 /* ---- Fiches : races (création, Codex), objets, statuts ---- */
 .race { flex-direction: row; align-items: flex-start; gap: 10px; }
 .race-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-/* Race choisie : fiche complète */
-.race.selected .race-desc { -webkit-line-clamp: unset; }
+/* Liste de création : vignette, la fiche complète s'ouvre en fenêtre */
+.race-more { color: var(--ok); }
+.race.race-random { flex-direction: column; justify-content: center; }
+.race-resume { margin: 0; }
+.race-resume button { margin: 0; }
 .race-affinities { margin: 2px 0 0; padding-left: 16px; font-size: 12px; font-weight: 400; color: var(--text); }
 .sheet-img { width: 56px; height: 56px; flex: none; border-radius: 8px; object-fit: contain; background: rgb(0 0 0 / 30%); }
 .sheet-img.pixel { image-rendering: pixelated; padding: 6px; }
@@ -931,3 +934,69 @@ a.wiki-link, .codex-entry a { color: var(--ok); }
 .discord-me span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .discord-tag { display: inline-flex; align-items: center; gap: 6px; margin: 0 8px; font-size: 13px; color: #b9bdf8; }
 .discord-tag img { width: 20px; height: 20px; border-radius: 50%; }
+
+/* ---- Fenêtre d'une race (création du perso) ---- */
+.race-dialog {
+    width: min(640px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    margin: auto;
+    padding: 22px;
+    overflow-y: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    background-color: var(--surface-flat);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+.race-dialog[open] { display: flex; flex-direction: column; gap: 14px; animation: race-pop .25s var(--ease) both; }
+.race-dialog::backdrop { background: rgb(5 4 20 / 72%); backdrop-filter: blur(3px); }
+@keyframes race-pop { from { opacity: 0; transform: translateY(12px) scale(.98); } }
+@media (prefers-reduced-motion: reduce) { .race-dialog[open] { animation: none; } }
+.race-dialog h3 { margin: 6px 0 0; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.race-dialog-close {
+    position: sticky;
+    top: 0;
+    align-self: flex-end;
+    z-index: 1;
+    flex: none;
+    margin: 0 0 -44px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-flat);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1;
+}
+.race-detail { display: flex; flex-direction: column; gap: 10px; }
+.race-detail-head { display: flex; align-items: center; gap: 16px; padding-right: 44px; }
+.race-detail-head h2 { margin: 0; font-size: 26px; }
+.race-detail-title { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.sheet-img.race-detail-img { width: 132px; height: 132px; border-radius: 12px; border: 1px solid var(--border); }
+.race-detail-desc { margin: 0; font-size: 15px; line-height: 1.5; }
+.race-stat-grid { display: flex; flex-direction: column; gap: 6px; }
+.race-stat { display: grid; grid-template-columns: auto minmax(0, 1fr) 3ch auto; align-items: center; gap: 10px; padding: 4px 8px 4px 4px; border-radius: 8px; background: var(--fill); }
+.race-stat-mod { text-align: right; font-variant-numeric: tabular-nums; }
+.race-stat.up .race-stat-mod { color: var(--ok); }
+.race-stat.down .race-stat-mod { color: var(--danger); }
+.race-stat-dice { text-align: right; }
+.race-dialog .race-affinities { font-size: 14px; }
+.race-items { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.race-items li { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-left: 2px solid var(--accent); border-radius: 6px; background: var(--fill); }
+.race-choose-box { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border); }
+.race-choose-box[hidden], .stat-rolls[hidden] { display: none; }
+.race-choose-box p { margin: 0; }
+.race-choose-box button { margin: 0; align-self: stretch; }
+.stat-rolls { padding-top: 12px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+.stat-rolls p { margin: 0; }
+@media (max-width: 520px) {
+    .race-dialog { padding: 16px; }
+    .sheet-img.race-detail-img { width: 92px; height: 92px; }
+    .race-detail-head h2 { font-size: 22px; }
+    .race-stat-dice { grid-column: 2 / -1; text-align: left; margin-top: -4px; }
+    .stat-row { grid-template-columns: 1fr auto; }
+    .stat-row .dice { grid-column: 1 / -1; grid-row: 2; }
+}
