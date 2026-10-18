@@ -95,6 +95,25 @@ const drawOutcome = function (outcomes, random = Math.random) {
     return outcomes.length - 1;
 }
 
+// Marchand ouvert par un choix : {name, stock?} (stock omis : dernier étal
+// du MJ, voir merchant.js), ou null. « shop: true » ouvre un marchand sans nom
+const parseShop = function (raw) {
+    try {
+        let shop = typeof raw === 'string' ? (raw ? JSON.parse(raw) : null) : raw;
+        if (shop === true)
+            shop = {};
+        if (!shop || typeof shop !== 'object' || Array.isArray(shop))
+            return null;
+        let out = {name: String(shop.name || '').slice(0, 40)};
+        if (Array.isArray(shop.stock))
+            out.stock = shop.stock;
+        return out;
+    }
+    catch (e) {
+        return null;
+    }
+}
+
 class Card {
     id;
     type;
@@ -176,6 +195,7 @@ class Card {
                     humans: this.choices[choice].humans || 0,
                     loot: Array.isArray(this.choices[choice].loot) && this.choices[choice].loot.length ? JSON.stringify(this.choices[choice].loot) : '',
                     status: this.choices[choice].status && this.choices[choice].status.slug ? JSON.stringify(this.choices[choice].status) : '',
+                    shop: parseShop(this.choices[choice].shop) ? JSON.stringify(parseShop(this.choices[choice].shop)) : '',
                     roll: this.rollToStore(this.choices[choice].roll),
                     outcomes: this.outcomesToStore(this.choices[choice].outcomes),
                 });
@@ -397,6 +417,7 @@ class Card {
                 'humans',
                 'loot',
                 'status',
+                'shop',
                 'roll',
                 'outcomes'
             ],
@@ -426,6 +447,9 @@ class Card {
                     loot: parseLoot(mod.loot),
                     status: parseStatus(mod.status)
                 };
+                let shop = parseShop(mod.shop);
+                if (shop)
+                    choice.shop = shop;
                 // Seulement sur les choix à jet : les autres restent comme avant
                 let roll = parseRoll(mod.roll);
                 if (roll)
@@ -472,7 +496,7 @@ class Card {
                     humans: base.humans || 0,
                     loot: base.loot || [],
                     status: base.status || null
-                }, foundChoice));
+                }, base.shop ? {shop: base.shop} : {}, foundChoice));
             });
             if (alt_choices.length > 0)
                 this.choices = alt_choices;
@@ -484,4 +508,4 @@ class Card {
     }
 }
 
-module.exports = {Card, parseRoll, parseOutcomes, drawOutcome, ROLL_STATS}
+module.exports = {Card, parseShop, parseRoll, parseOutcomes, drawOutcome, ROLL_STATS}

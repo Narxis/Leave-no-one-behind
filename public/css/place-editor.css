@@ -1209,3 +1209,10 @@ kbd {
 .pe-node .pe-status select option {
     background: #17181c;
 }
+
+/* Marchand ouvert par un choix */
+.pe-node .pe-shop {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}

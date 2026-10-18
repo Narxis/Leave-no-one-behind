@@ -85,6 +85,20 @@ Chaque issue a un `reveal` ou un `next` (ou un `roll`), et peut avoir `mjreveal`
         }
 ```
 
+### Choix qui donne un statut ou ouvre la boutique
+
+`status` donne un statut à toute l'équipe (`slug` de `statuses.json`, `duration` en cartes).
+`shop` ouvre la boutique sur l'écran de jeu ; le MJ la ferme depuis son menu. Sans `stock`, elle vend le dernier étal préparé par le MJ, ou à défaut les objets qui ont un prix (`price` dans `items.json`). `stock` suit le format de l'étal : `name` ou `slug`, `price` et `qty` facultatifs.
+
+```json
+        {
+          "value": "Entrer dans le bazar",
+          "reveal": "\n   ",
+          "status": { "slug": "diverti", "duration": 3 },
+          "shop": { "name": "Zork", "stock": [{ "name": "Corde", "price": 2, "qty": 3 }] }
+        }
+```
+
 ### Planet Template
 
 ```json
