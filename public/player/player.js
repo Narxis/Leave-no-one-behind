@@ -914,8 +914,8 @@
     const modText = (mod) => mod > 0 ? '+' + mod : String(mod);
 
     // Fiche d'une race : image, bonus et malus, description, affinités
-    // (création du perso et Codex)
-    const raceSheet = function (node, r) {
+    // (Codex ; compact : vignette de la liste de création)
+    const raceSheet = function (node, r, compact) {
         node.append(cardImage(r, 'img/races/wat.webp'));
         let body = el('span', 'race-body');
         body.append(el('strong', '', r.name));
@@ -923,6 +923,11 @@
         body.append(el('span', 'dim small-text', mods.length ? mods.join(', ') : 'Aucun bonus ni malus'));
         if (r.desc)
             body.append(el('span', 'race-desc', r.desc.replace(/<[^>]*>/g, '')));
+        if (compact) {
+            body.append(el('span', 'race-more small-text', 'Voir la fiche ›'));
+            node.append(body);
+            return node;
+        }
         if (r.affinities && r.affinities.length) {
             let list = el('ul', 'race-affinities');
             list.append(...r.affinities.map(a => el('li', '', a)));
@@ -936,23 +941,156 @@
         return node;
     };
 
+    // Fenêtre de la race ouverte (slug), au-dessus de la liste
+    let raceOpen = null;
+    let resumeShown = false; // tirage en cours retrouvé au chargement : fenêtre rouverte une fois
+
+    // Dés d'une stat avant le tirage : « 3 dés, garde le meilleur »
+    const diceRule = function (mod) {
+        let n = Math.abs(mod) + 1;
+        if (!mod)
+            return '1 dé';
+        return n + ' dés, garde le ' + (mod > 0 ? 'meilleur' : 'pire');
+    };
+
+    const raceDetail = function (r) {
+        let wrap = el('div', 'race-detail');
+        let head = el('div', 'race-detail-head');
+        let img = cardImage(r, 'img/races/wat.webp');
+        img.classList.add('race-detail-img');
+        let title = el('div', 'race-detail-title');
+        let name = el('h2', '', r.name);
+        name.id = 'race-dialog-name';
+        title.append(name);
+        if (r.custom)
+            title.append(el('span', 'race-pill', 'Race custom'));
+        head.append(img, title);
+        wrap.append(head);
+
+        if (r.desc)
+            wrap.append(el('p', 'race-detail-desc', r.desc.replace(/<[^>]*>/g, '')));
+
+        wrap.append(el('h3', '', 'Statistiques'));
+        let table = el('div', 'race-stat-grid');
+        for (let stat of ['combat', 'pilotage', 'engineering', 'survival', 'recon']) {
+            let mod = parseInt((r.stats || {})[stat]) || 0;
+            let row = el('div', 'race-stat' + (mod > 0 ? ' up' : mod < 0 ? ' down' : ''));
+            row.append(svgIcon('stat-icon', window.LNOB_STAT_SVG && LNOB_STAT_SVG[stat]), el('span', 'race-stat-name', STAT_LABELS[stat]),
+                el('strong', 'race-stat-mod', mod ? modText(mod) : '0'), el('span', 'dim small-text race-stat-dice', diceRule(mod)));
+            table.append(row);
+        }
+        wrap.append(table);
+
+        wrap.append(el('h3', '', 'Affinités'));
+        if (r.affinities && r.affinities.length) {
+            let list = el('ul', 'race-affinities');
+            list.append(...r.affinities.map(a => el('li', '', a)));
+            wrap.append(list);
+        }
+        else
+            wrap.append(el('p', 'dim small-text', 'Ni le jeu ni le wiki n\'en définissent pour cette race.'));
+
+        wrap.append(el('h3', '', 'Objets de départ'));
+        if (r.starterItems && r.starterItems.length) {
+            let list = el('ul', 'race-items');
+            list.append(...r.starterItems.map(i => {
+                let li = el('li');
+                li.append(el('strong', '', i.name));
+                if (i.desc)
+                    li.append(el('span', 'dim small-text', i.desc));
+                return li;
+            }));
+            wrap.append(list);
+        }
+        else
+            wrap.append(el('p', 'dim small-text', 'Aucun objet propre à cette race.'));
+        return wrap;
+    };
+
+    const openRace = function (slug) {
+        if (raceOpen !== slug)
+            $('race-dialog-error').hidden = true;
+        raceOpen = slug;
+        renderRaceDialog();
+        let dialog = $('race-dialog');
+        if (!dialog.open && !$('creation').hidden) {
+            if (dialog.showModal)
+                dialog.showModal();
+            else
+                dialog.setAttribute('open', '');
+        }
+        dialog.scrollTop = 0;
+    };
+
+    const closeRace = function () {
+        raceOpen = null;
+        let dialog = $('race-dialog');
+        if (dialog.open)
+            dialog.close ? dialog.close() : dialog.removeAttribute('open');
+        // Tirage fini : fermer la fenêtre, c'est passer à sa fiche
+        if (rollsHeld) {
+            rollsHeld = false;
+            renderMe();
+        }
+    };
+
+    // Dés lancés pour la race choisie : elle ne change plus (sauf par le MJ)
+    const rollsStarted = (creation) => !!(creation && creation.step === 'stats' && (creation.stats || []).some(s => s.dice.length));
+
+    const renderRaceDialog = function () {
+        let character = you && you.character;
+        let creation = you && you.creation;
+        let r = ((game && game.races) || []).find(x => x.slug === raceOpen);
+        if (!r || !character) {
+            if ($('race-dialog').open)
+                closeRace();
+            return;
+        }
+        $('race-dialog-sheet').replaceChildren(raceDetail(r));
+        let mine = character.race === r.slug;
+        let locked = rollsStarted(creation) || (creation && creation.step === 'done');
+        $('race-choose-box').hidden = mine;
+        $('race-choose').disabled = locked || !hostOnline;
+        let note = '';
+        if (!mine && locked)
+            note = 'Tu as déjà lancé tes dés pour ta race (' + (character.raceName || character.race) + ') : demande au MJ pour en changer.';
+        $('race-choose-note').textContent = note;
+        $('race-choose-note').hidden = !note;
+        let hidden = $('stat-rolls').hidden;
+        renderRolls(mine ? creation : null);
+        // Race choisie : on descend jusqu'aux dés
+        if (hidden && !$('stat-rolls').hidden)
+            $('stat-rolls').scrollIntoView({block: 'start', behavior: reduceMotion ? 'auto' : 'smooth'});
+    };
+
     const renderRaces = function (character) {
         let races = (game && game.races) || [];
         $('race-list').replaceChildren(...races.map(r => {
-            let b = raceSheet(el('button', 'race' + (character.race === r.slug ? ' selected' : '')), r);
+            let b = raceSheet(el('button', 'race' + (character.race === r.slug ? ' selected' : '')), r, true);
             b.type = 'button';
             b.setAttribute('aria-pressed', character.race === r.slug);
-            b.addEventListener('click', () => sendAction('set-race', {race: r.slug}));
+            b.setAttribute('aria-haspopup', 'dialog');
+            b.addEventListener('click', () => openRace(r.slug));
             return b;
         }));
-        // Race aléatoire : une autre que celle déjà choisie
+        // Race aléatoire : ouvre la fiche d'une autre que celle déjà choisie
+        let creation = you && you.creation;
         let others = races.filter(r => r.slug !== character.race);
-        if (others.length) {
-            let random = el('button', 'race');
+        if (others.length && !rollsStarted(creation)) {
+            let random = el('button', 'race race-random');
             random.type = 'button';
             random.append(el('strong', '', '🎲 Race aléatoire'), el('span', 'dim small-text', 'Laisse le hasard choisir'));
-            random.addEventListener('click', () => sendAction('set-race', {race: others[Math.floor(Math.random() * others.length)].slug}));
+            random.addEventListener('click', () => openRace(others[Math.floor(Math.random() * others.length)].slug));
             $('race-list').prepend(random);
+        }
+        // Tirage en cours, fenêtre fermée : de quoi y revenir
+        let resume = $('race-resume');
+        resume.hidden = !(creation && creation.step === 'stats' && character.race) || $('race-dialog').open;
+        if (!resume.hidden) {
+            let b = el('button', 'primary small', '🎲 Lancer mes dés (' + (character.raceName || character.race) + ')');
+            b.type = 'button';
+            b.addEventListener('click', () => openRace(character.race));
+            resume.replaceChildren(b);
         }
     };
 
@@ -1112,8 +1250,18 @@
         if (creating) {
             if (document.activeElement !== $('char-name'))
                 $('char-name').value = character.name;
+            // Tirage déjà commencé (page rechargée) : la fenêtre rouvre sur la race
+            if (!resumeShown && rollsStarted(creation) && !$('race-dialog').open) {
+                resumeShown = true;
+                openRace(character.race);
+            }
+            else if ($('race-dialog').open)
+                renderRaceDialog();
             renderRaces(character);
-            renderRolls(creation);
+        }
+        else if ($('race-dialog').open) {
+            raceOpen = null;
+            $('race-dialog').close();
         }
         $('sheet').hidden = !character || creating;
         if (character && !creating)
@@ -1216,6 +1364,9 @@
         }
         else if (data.kind === 'refused') {
             showActionError(data.message);
+            // Fenêtre de race ouverte : le message y est aussi (la bulle est dessous)
+            $('race-dialog-error').textContent = data.message || '';
+            $('race-dialog-error').hidden = !$('race-dialog').open || !data.message;
             renderMe();
         }
         // Réponse du MJ à une demande (objet utilisé ou non)
@@ -1455,9 +1606,20 @@
     });
 
     $('phase-action').addEventListener('click', () => selectTab('me'));
-    $('rolls-continue').addEventListener('click', () => {
-        rollsHeld = false;
-        renderMe();
+    $('rolls-continue').addEventListener('click', closeRace);
+    $('race-dialog-close').addEventListener('click', closeRace);
+    // Échap ou clic hors de la fenêtre
+    $('race-dialog').addEventListener('close', () => { if (raceOpen) closeRace(); else if (you && you.character) renderRaces(you.character); });
+    $('race-dialog').addEventListener('click', (e) => {
+        let box = $('race-dialog').getBoundingClientRect();
+        if (e.target === $('race-dialog') && (e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom))
+            closeRace();
+    });
+    $('race-choose').addEventListener('click', () => {
+        if (!raceOpen)
+            return;
+        $('race-choose').disabled = true;
+        sendAction('set-race', {race: raceOpen});
     });
     $('back-game').addEventListener('click', () => selectTab('game'));
     $('menu-toggle').addEventListener('click', () => setMenu($('menu-drawer').hidden));

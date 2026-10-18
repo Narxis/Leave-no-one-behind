@@ -159,6 +159,11 @@ async function test_remote() {
         });
         last = await act('roll-stat', {stat});
         assert.equal(last.action, i < total - 1 ? 'roll-stats' : 'roll-stats-done');
+        // Premier dé lancé : plus de changement de race (pas de relance déguisée)
+        if (i === 0 && total > 1) {
+            let other = Object.keys(races.getStats()).find(r => r !== race);
+            assert.ok((await act('set-race', {race: other})).refused);
+        }
     }
     let done = await new Player().getData(alice.id);
     for (let s of ['combat', 'pilotage', 'engineering', 'survival', 'recon'])
@@ -560,6 +565,10 @@ async function test_codex() {
     assert.equal(yorc.affinities.length, 1);
     // À la création, la fiche montre toutes les affinités
     assert.ok(codex.raceCard(races.list().find(r => r.slug === 'sylv')).affinities.length >= 2);
+    // Fenêtre de création : objets de départ de la race (« nek » va aux quatre Neks)
+    let cards = await codex.creationCards();
+    assert.deepEqual(cards.find(r => r.slug === 'omphor').starterItems.map(i => i.name).sort(), ['Armure en "Kev-lard"', 'Shrips']);
+    assert.ok(cards.every(r => Array.isArray(r.starterItems)));
 
     // Page du MJ : tout, avec ce qui a été rencontré
     let gm = await codex.forGm();
