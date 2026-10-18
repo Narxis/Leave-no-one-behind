@@ -26,6 +26,8 @@ class SocketLNOB {
 
                 if (resp.error) {
                     console.log(resp.error_msg);
+                    // Pour qui attend une réponse (fenêtre de dés…)
+                    document.dispatchEvent(new CustomEvent('ws-error', {detail: resp}));
                     return false;
                 }
 

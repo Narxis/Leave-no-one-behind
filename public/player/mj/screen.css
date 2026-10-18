@@ -78,6 +78,32 @@ html, body {
 .combat-loot-hint {
     display: none !important;
 }
+.combat-loot-item[data-index],
+.card-loot-item[data-index] {
+    cursor: default;
+    touch-action: auto;
+}
+
+/* Objets (screen.js) : le joueur glisse les siens pour les donner, et
+   demande d'un clic ceux des autres et du vaisseau */
+.player-tab:not(.npc-tab) .itemlist-line[data-slug],
+.todos li[data-slug] {
+    cursor: default;
+    touch-action: auto;
+}
+.player-tab:not(.npc-tab) .itemlist-line.player-own {
+    cursor: grab;
+    touch-action: none;
+}
+.player-tab:not(.npc-tab) .itemlist-line.player-ask,
+.todos li.player-ask,
+.todos li.player-ask label {
+    cursor: pointer;
+}
+.itemlist-line.player-asked p,
+.todos li.player-asked p {
+    color: var(--ui-accent, #ffcc00);
+}
 
 /* Planète (planet.html) : les boutons des scans et de l'atterrissage servent
    à voter ; le scan et l'atterrissage restent faits par le MJ */

@@ -36,6 +36,7 @@ const combat = require('./combat');
 const intro = require('./intro');
 const allies = require('./allies');
 const leaderboard = require('./leaderboard');
+const itemRequests = require('./itemRequests');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -185,7 +186,7 @@ const setCardText = function (data) {
 // quels (mêmes scripts : players.js, inventory.js) : jets, emotes, stats et
 // rôles des joueurs, inventaires, butin d'une carte, combat (combat.js),
 // onglets des compagnons (npc-tabs.js)
-const MIRRORED = ['roll', 'emote', 'playerStat', 'player-role', 'inventory', 'card-loot', 'combat', 'allies'];
+const MIRRORED = ['roll', 'emote', 'playerStat', 'player-role', 'inventory', 'item-requests', 'card-loot', 'combat', 'allies'];
 // Combat : ce que l'écran de jeu montre, sans le butin caché ni les
 // caractéristiques d'attaque des adversaires
 const publicCombat = function (state) {
@@ -261,7 +262,9 @@ const playerState = async function (id) {
         // Prêt à quitter le synopsis ou la fiche du vaisseau
         introReady: intro.isReady(id),
         // Objets dont l'utilisation attend la réponse du MJ
-        pendingItems: itemUse.pendingFor(id)
+        pendingItems: itemUse.pendingFor(id),
+        // Objets de son inventaire que d'autres joueurs demandent
+        requested: itemRequests.forOwner(id)
     };
 };
 
@@ -395,6 +398,7 @@ const welcome = async function (player) {
     // Inventaires (coffres des onglets, objets du vaisseau) et combat en cours
     let stock = (await inventory.payload())[0];
     lobby.sendTo(player.id, {kind: 'mj-event', payload: stock});
+    lobby.sendTo(player.id, {kind: 'mj-event', payload: itemRequests.payload()});
     lobby.sendTo(player.id, {kind: 'mj-event', payload: {action: 'allies', error: false, data: {allies: allies.getAllies(), event: null}}});
     lobby.sendTo(player.id, {kind: 'mj-event', payload: mirrorPayload({action: 'combat', error: false, data: {state: combat.getState(), event: null}})});
     // Arrivée en cours de carte : le texte déjà écrit par le MJ, sans l'animer

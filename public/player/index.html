@@ -6,6 +6,7 @@
     <title>LNOB · Rejoindre une partie</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="timer-animation.css">
+    <link rel="stylesheet" href="dice-window.css">
     <link rel="stylesheet" href="player.css">
 </head>
 <body>
@@ -226,15 +227,6 @@
             <div id="sheet" hidden>
                 <p class="sheet-name"><strong id="sheet-name"></strong> <span id="sheet-race" class="race-pill"></span> <span id="sheet-role" class="dim"></span></p>
                 <div id="sheet-stats" class="sheet-stats"></div>
-                <div id="roll-box" class="roll-box" hidden>
-                    <h2>Lancer les dés</h2>
-                    <form id="roll-form" class="roll-form">
-                        <select id="roll-stat" aria-label="Stat"></select>
-                        <select id="roll-module" aria-label="Module"></select>
-                        <button type="submit" class="primary">Lancer</button>
-                    </form>
-                    <p id="roll-result" class="roll-result" hidden></p>
-                </div>
             </div>
         </div>
 
@@ -323,6 +315,7 @@
 <script src="game-icons.js"></script>
 <script src="timer-markup.js"></script>
 <script src="timer-anim.js"></script>
+<script src="dice-window.js"></script>
 <script src="player.js"></script>
 </body>
 </html>
