@@ -511,6 +511,8 @@ const broadcastData = function (data, ws, sendBackToSender = true) {
     catch (e) {
         log(e)
     }
+    // Écran de jeu porté des joueurs : jets, inventaires… repris tels quels
+    playerView.mirror(data);
     // L'état du jeu a pu changer : la vue des joueurs en ligne suit
     if (!data || !['lobby', 'chat', 'chat-history'].includes(data.action))
         playerView.changed();

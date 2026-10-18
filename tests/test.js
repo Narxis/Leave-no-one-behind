@@ -480,8 +480,14 @@ function test_player_assets() {
     const assets = require('../scripts/player-assets');
     const path = require('path');
     for (let [file, content] of Object.entries(assets.files())) {
+        let message = file + ' n\'est pas à jour : lance node scripts/player-assets.js';
+        // Images et polices recopiées telles quelles
+        if (Buffer.isBuffer(content)) {
+            assert.ok(fs.existsSync(path.join(assets.ROOT, file)) && content.equals(fs.readFileSync(path.join(assets.ROOT, file))), message);
+            continue;
+        }
         let current = fs.readFileSync(path.join(assets.ROOT, file), 'utf8').replace(/\r\n/g, '\n');
-        assert.equal(current, content.replace(/\r\n/g, '\n'), file + ' n\'est pas à jour : lance node scripts/player-assets.js');
+        assert.equal(current, content.replace(/\r\n/g, '\n'), message);
     }
     console.log('Player assets OK');
 }

@@ -947,3 +947,11 @@ a.wiki-link, .codex-entry a { color: var(--ok); }
 .discord-me span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .discord-tag { display: inline-flex; align-items: center; gap: 6px; margin: 0 8px; font-size: 13px; color: #b9bdf8; }
 .discord-tag img { width: 20px; height: 20px; border-radius: 50%; }
+
+/* ---- Écran de jeu du MJ porté (mj/screen.html) ------------------------
+   Sur ordinateur, l'onglet Partie affiche la copie de l'écran du MJ dans un
+   cadre plein écran ; le menu, le chat et les alertes restent par-dessus. */
+.mj-screen { position: fixed; inset: 0; z-index: 12; width: 100%; height: 100%; border: 0; background: transparent; visibility: hidden; pointer-events: none; }
+body.mj-screen-on .mj-screen { visibility: visible; pointer-events: auto; }
+body.mj-screen-on .hud, body.mj-screen-on .game-main { visibility: hidden; }
+@media (max-width: 899px) { .mj-screen { display: none; } }

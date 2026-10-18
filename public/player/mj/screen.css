@@ -1,0 +1,45 @@
+/* Écran de jeu porté pour les joueurs (screen.html, généré depuis
+   template-card.ejs) : seuls les réglages propres aux joueurs sont ici. */
+
+/* Le fond étoilé est dessiné par la page joueur, derrière ce cadre */
+html, body {
+    background: transparent !important;
+}
+
+/* Boutons et saisies du MJ : cachés, la place reste la même que chez lui */
+.mod-b,
+.modform.form-mot, #modtab .modform,
+.todoList form.add,
+.todos .delete,
+.item-trash {
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Cases du type de jet (perso / module) : affichées, mais posées par le jeu */
+.roll-type {
+    pointer-events: none;
+}
+
+/* Choix : le joueur vote, le MJ tranche */
+#choicetab .choice {
+    cursor: default;
+}
+#choicetab.player-can-vote .choice {
+    cursor: pointer;
+}
+#choicetab .choice.player-voted {
+    outline: 2px solid var(--ui-accent, #ffcc00);
+    outline-offset: -2px;
+}
+
+/* Son propre onglet : nom en couleur */
+.player-tab.player-me .player-name-text {
+    color: var(--ui-accent, #ffcc00);
+}
+
+/* Butin : c'est le MJ qui le distribue */
+#card-loot-all,
+.combat-loot-hint {
+    display: none !important;
+}
