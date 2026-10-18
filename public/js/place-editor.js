@@ -40,6 +40,14 @@
         </div>
         <input type="hidden" df-loot>
     </div>
+    <div class="pe-status" title="Statut donné à toute l'équipe quand ce choix est validé">
+        <span><i class="fas fa-heartbeat"></i> Statut <small>(facultatif)</small></span>
+        <select df-status>
+            <option value="">Aucun statut</option>
+            ${(typeof STATUS_LIST !== 'undefined' ? STATUS_LIST : []).map(st => '<option value="' + esc(st.slug) + '">' + esc(st.name) + '</option>').join('')}
+        </select>
+        <input type="number" df-statusdur min="1" max="99" placeholder="1" title="Durée, en cartes" aria-label="Durée du statut, en cartes">
+    </div>
     <label class="pe-roll" title="La suite dépend d'un jet : le MJ dit s'il est réussi (sortie du haut) ou raté (sortie du bas)">
         <span><i class="fas fa-dice-d20"></i> Jet <small>(facultatif)</small></span>
         <select df-roll>
@@ -537,7 +545,7 @@
             return null;
         }
         let defaults = type === 'card' ? {desc: '', mjreveal: '', timer: 'off', shuffle: 'off', marker: ''}
-            : type === 'choice' ? {choice: '', mjreveal: '', roll: '', random: ''} : {reveal: ''};
+            : type === 'choice' ? {choice: '', mjreveal: '', roll: '', random: '', status: '', statusdur: ''} : {reveal: ''};
         let id = editor.addNode(type, PORTS[type][0], PORTS[type][1], x, y, type, Object.assign(defaults, values || {}), TEMPLATES[type]);
         refreshNodes();
         return id;
@@ -548,6 +556,12 @@
         let field = el && el.querySelector('textarea');
         if (field)
             setTimeout(() => field.focus(), 50);
+    }
+
+    // Statut donné par un choix : {slug, duration}, ou null
+    function statusOf(node) {
+        let slug = node.data.status;
+        return slug ? {slug: slug, duration: Math.max(1, parseInt(node.data.statusdur) || 1)} : null;
     }
 
     /* ---------- Butin d'un choix ---------- */
@@ -909,6 +923,8 @@
                 let loot = lootOf(choice);
                 if (loot.length)
                     c.loot = loot;
+                if (statusOf(choice))
+                    c.status = statusOf(choice);
                 let suiteOf = (out) => {
                     let next = byId(choice.outputs[out].connections[0].node);
                     return next.name === 'reveal' ? {reveal: next.data.reveal || ''} : {next: nameOf(next)};
@@ -988,6 +1004,7 @@
                     value: choice.data.choice || '',
                     mjreveal: (choice.data.mjreveal || '').trim(),
                     loot: lootOf(choice),
+                    status: statusOf(choice),
                     roll: roll ? {stat: choice.data.roll, success: suiteOf('output_1'), failure: suiteOf('output_2')} : null,
                     outcomes: random ? choiceOutputs(choice).map((out, k) => Object.assign({weight: weights[k]}, suiteOf(out))) : null
                 }, roll || random ? {reveal: null, revealId: null, next: null} : suiteOf('output_1')));
