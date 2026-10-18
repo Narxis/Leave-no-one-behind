@@ -48,7 +48,7 @@ const LNOBSound = (function () {
     return {get, set, volume, play};
 })();
 
-// Fenêtre Options, ouverte depuis le menu Échap
+// Fenêtre Options, ouverte par l'engrenage du menu
 (function () {
     const modal = document.getElementById('options-modal');
     const open = document.getElementById('options-open');
