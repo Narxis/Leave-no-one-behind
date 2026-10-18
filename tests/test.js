@@ -180,6 +180,7 @@ async function test_remote() {
     await test_votes();
     await test_item_use();
     await test_item_requests();
+    await test_dice();
     test_stat_rolls();
     test_player_view();
     test_player_assets();
@@ -481,6 +482,75 @@ async function test_item_requests() {
     await DB.tables.players.destroy({where: {discord_id: [ana.id, ben.id]}});
     chat.clear();
     console.log('Item requests OK');
+}
+
+// Fenêtre de dés : dés neutres lancés par le serveur, annoncés au salon (ou
+// au MJ seul), avec un détail qu'un message tapé à la main n'a pas
+async function test_dice() {
+    console.log('Testing dice window');
+    const dice = require('../src/controllers/dice');
+    const chat = require('../src/controllers/chat');
+    const remote = require('../src/controllers/remote');
+    let gmSeen = [];
+    chat.init(m => gmSeen.push(m));
+    chat.clear();
+    let zoe = {id: 'dice-zoe-0000001', name: 'Zoé'};
+    let max = {id: 'dice-max-0000001', name: 'Max'};
+    let throwDice = (player, data) => remote.translate(player, {kind: 'action', action: 'dice', data});
+
+    // Dés connus seulement, de 1 à 10 dés
+    assert.deepEqual(dice.SIDES, [2, 4, 6, 8, 10, 20, 100]);
+    assert.ok(dice.roll(7, 1).error);
+    assert.ok(dice.roll('../20', 1).error);
+    let faces = [3, 5, 6];
+    let r = dice.roll(6, 3, () => faces.shift());
+    assert.deepEqual(r, {sides: 6, count: 3, dice: [3, 5, 6], total: 14});
+    assert.equal(dice.text(r), '🎲 3D6 : 3 + 5 + 6 = 14');
+    assert.equal(dice.text(dice.roll(20, 1, () => 17)), '🎲 1D20 : 17');
+    assert.equal(dice.roll(4, 50).count, dice.MAX_COUNT);
+    assert.equal(dice.roll(4, -2).count, 1);
+    for (let i = 0; i < 200; i++) {
+        let one = dice.roll(100, 1);
+        assert.ok(one.total >= 1 && one.total <= 100);
+    }
+
+    // Un joueur lance : résultat pour lui, message de jet au salon pour tous
+    let sent = await throwDice(zoe, {sides: 20, count: 2});
+    assert.equal(sent.done, true);
+    assert.equal(sent.result.sides, 20);
+    assert.equal(sent.result.dice.length, 2);
+    assert.equal(sent.result.secret, false);
+    let said = chat.historyFor(max.id).pop();
+    assert.deepEqual(said.dice, {sides: 20, count: 2, dice: sent.result.dice, total: sent.result.total});
+    assert.equal(said.to, null);
+    assert.equal(said.from.name, 'Zoé'); // pas de perso : son pseudo
+    assert.equal(gmSeen.pop().data.message.dice.total, sent.result.total); // le MJ le voit
+
+    // Secret : le MJ et lui seulement
+    sent = await throwDice(zoe, {sides: 100, count: 1, secret: true});
+    assert.equal(sent.result.secret, true);
+    assert.equal(chat.historyFor(zoe.id).pop().to, zoe.id);
+    assert.ok(!chat.historyFor(max.id).some(m => m.dice && m.dice.sides === 100));
+
+    // Dé inconnu refusé ; un message tapé ne devient pas un jet
+    assert.ok((await throwDice(zoe, {sides: 3})).refused);
+    await remote.translate(max, {kind: 'action', action: 'chat', data: {text: '🎲 1D20 : 20', dice: {sides: 20, count: 1, dice: [20], total: 20}}});
+    assert.equal(chat.historyFor(max.id).pop().dice, undefined);
+
+    // Pas de rafale : même limite que le chat
+    let refused = 0;
+    for (let i = 0; i < 8; i++)
+        if ((await throwDice(max, {sides: 6})).refused)
+            refused++;
+    assert.ok(refused >= 2, 'anti-flood');
+
+    // Jet du MJ montré au salon
+    let gm = chat.gmDice(dice.roll(8, 1, () => 4));
+    assert.deepEqual([gm.from.gm, gm.to, gm.text, gm.dice.total], [true, null, '🎲 1D8 : 4', 4]);
+    assert.ok(remote.ACTIONS.includes('dice'));
+
+    chat.clear();
+    console.log('Dice window OK');
 }
 
 // Règles du tirage : dés = |bonus| + 1, meilleur dé avec un bonus, pire avec un malus

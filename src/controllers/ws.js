@@ -23,6 +23,7 @@ const votes = require("./votes");
 const planetScan = require("./planetScan");
 const itemUse = require("./itemUse");
 const itemRequests = require("./itemRequests");
+const dice = require("./dice");
 const intro = require("./intro");
 const WebSocket = require("ws");
 
@@ -207,6 +208,10 @@ const makeAction = async function (raw_response) {
             break;
         case 'item-use-answer':
             payload = itemUse.answer(response.data);
+            break;
+        // Dés neutres du MJ (fenêtre de dés) : montrés au salon, ou à lui seul
+        case 'dice':
+            payload = diceRoll(response.data || {});
             break;
         // Objets que les joueurs en ligne se demandent (logo à côté de l'objet)
         case 'item-requests':
@@ -471,6 +476,17 @@ const actionItem = async function (response) {
     return inventory.payload(null);
 }
 
+// Jet de dés neutres du MJ : au salon (message du MJ) sauf s'il est secret ;
+// le résultat revient aux pages du MJ (fenêtre de dés)
+const diceRoll = function (data) {
+    let result = dice.roll(data.sides, data.count);
+    if (result.error)
+        return {action: 'dice', error: true, error_msg: result.error, data: {}};
+    if (!data.secret)
+        chat.gmDice(result);
+    return {action: 'dice', error: false, data: Object.assign(result, {secret: !!data.secret})};
+}
+
 /**
  * Return the result of a roll for a player
  * @param response
@@ -519,7 +535,7 @@ const broadcastData = function (data, ws, sendBackToSender = true) {
     // Écran de jeu porté des joueurs : jets, inventaires… repris tels quels
     playerView.mirror(data);
     // L'état du jeu a pu changer : la vue des joueurs en ligne suit
-    if (!data || !['lobby', 'chat', 'chat-history'].includes(data.action))
+    if (!data || !['lobby', 'chat', 'chat-history', 'dice'].includes(data.action))
         playerView.changed();
 }
 

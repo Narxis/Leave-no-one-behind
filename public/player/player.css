@@ -609,7 +609,6 @@ body.planet-mode .timer-host, .stage-screen:has(> #combat:not([hidden])) .timer-
 .stat-tile { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--fill); }
 .stat-tile-value { color: var(--accent); font-size: 22px; font-variant-numeric: tabular-nums; }
 .stat-tile .bar-track { grid-column: 1 / -1; }
-.roll-box { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; padding-top: 14px; border-top: 1px solid var(--border); }
 .inline-form { display: flex; gap: 8px; align-items: center; }
 .inline-form input { flex: 1; min-width: 0; padding: 8px 12px; font-size: 16px; }
 select {
@@ -646,11 +645,6 @@ select {
 .die.empty { color: var(--dim); border-style: dashed; }
 .die.kept { border-color: var(--ok); color: var(--ok); }
 
-.roll-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.roll-form button { margin: 0; }
-.roll-result { margin: 0; font-size: 18px; font-weight: 600; }
-.roll-result.ok { color: var(--ok); }
-.roll-result.fail { color: var(--danger); }
 
 /* Page planète (comme public/views/template-planet.ejs) : panneau des
    scans à gauche, planète seule au centre avec ses relevés, panneau de
@@ -980,6 +974,12 @@ body.planet-mode .planet-orbit { display: none; }
 .chat-message.gm { border-color: rgb(255 204 0 / 60%); }
 .chat-message.gm .chat-head strong { color: var(--accent); }
 .chat-message.mine { background: rgb(255 255 255 / 7%); }
+/* Fenêtre de dés (dice-window.css) : seulement une fois dans la partie */
+body:not(.in-game) .dice-fab,
+body:not(.in-game) .dice-window { display: none !important; }
+/* Jet de la fenêtre de dés : posé par le serveur, on ne peut pas le taper */
+.chat-message.chat-dice { border-color: rgb(79 216 224 / 45%); }
+.chat-message.chat-dice .chat-text { color: var(--ok); font-weight: 600; font-variant-numeric: tabular-nums; }
 .chat-head { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
 .chat-text { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .chat-form { display: flex; gap: 8px; align-items: stretch; }

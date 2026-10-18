@@ -329,7 +329,7 @@
         let list = chat.filter(m => channelOf(m) === chatChannel);
         $('chat-empty').hidden = list.length > 0;
         $('chat-messages').replaceChildren(...list.map(m => {
-            let li = el('li', 'chat-message' + (m.from.gm ? ' gm' : '') + (m.from.id === playerId ? ' mine' : ''));
+            let li = el('li', 'chat-message' + (m.from.gm ? ' gm' : '') + (m.from.id === playerId ? ' mine' : '') + (m.dice ? ' chat-dice' : ''));
             let head = el('div', 'chat-head');
             head.append(el('strong', '', m.from.name), el('span', 'dim', chatTime(m.at)));
             li.append(head, el('p', 'chat-text', m.text));
@@ -1535,7 +1535,7 @@
             tile.append(track);
             return tile;
         }));
-        $('roll-box').hidden = !game || game.phase !== 'gameLive';
+        renderDice();
     };
 
     const renderMe = function () {
@@ -1652,6 +1652,70 @@
         renderCodex();
     };
 
+    // ---- Fenêtre de dés ------------------------------------------------------
+    // Toujours à portée (bouton 🎲 en bas à gauche) : jets sur ses stats
+    // pendant la partie, dés neutres D2 à D100 à tout moment. Les dés neutres
+    // sont lancés par le serveur et annoncés dans le chat (ou au MJ seul).
+
+    const ROLL_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
+    const diceWin = window.DiceWindow ? DiceWindow.create({
+        storageKey: 'lnob-player-dice',
+        modules: ROLL_MODULES,
+        secretLabel: 'Seul le MJ voit le résultat',
+        secretDefault: false,
+        timeoutText: 'Pas de réponse du MJ : relance quand il est connecté.',
+        onStat: (stat, module) => sendAction('roll', {stat: stat, module: module}),
+        onDice: (sides, count, secret) => sendAction('dice', {sides: sides, count: count, secret: secret})
+    }) : null;
+
+    const renderDice = function () {
+        if (!diceWin)
+            return;
+        let c = you && you.character;
+        let live = !!(game && game.phase === 'gameLive');
+        let stats = c && live ? ROLL_STATS.map(s => ({stat: s, label: STAT_LABELS[s], value: c[s]})) : [];
+        diceWin.setStats(stats, !c ? 'Les jets de stats arrivent avec ton perso.' : live ? '' : 'Les jets de stats se font pendant la partie.');
+    };
+
+    // Jet sur une stat : même calcul que /roll (dé, rôle, module), résultat
+    // aussi montré sur l'écran de jeu
+    const diceStatResult = function (r) {
+        if (!diceWin)
+            return;
+        let label = STAT_LABELS[r.stat] || r.stat;
+        let tone = r.success ? 'ok' : 'fail';
+        diceWin.result({title: label, total: r.result, tone: tone,
+            detail: (r.dice ? 'dés ' + r.dice.join(' / ') + ', gardé ' : 'dé ') + r.dice_result + ' · ' + (r.success ? 'réussite' : 'échec')});
+        diceWin.log({who: 'Toi', what: label, total: r.result, tone: tone});
+    };
+    const diceNeutralResult = function (r) {
+        if (diceWin)
+            diceWin.result({title: r.count + 'D' + r.sides + (r.secret ? ' · vu par le MJ seul' : ''), total: r.total, detail: r.count > 1 ? r.dice.join(' + ') : ''});
+    };
+    // Jets annoncés dans le chat (les siens compris)
+    const diceLogChat = function (m) {
+        if (diceWin && m.dice)
+            diceWin.log({who: m.from.id === playerId ? 'Toi' : m.from.name, what: m.dice.count + 'D' + m.dice.sides + (m.to ? ' · secret' : ''), total: m.dice.total});
+    };
+    const diceHistory = function (list) {
+        if (!diceWin)
+            return;
+        diceWin.clearLog();
+        list.filter(m => m.dice).slice(-8).forEach(diceLogChat);
+    };
+
+    // Téléphone : le bouton passe au-dessus du chat ouvert (collé en bas)
+    if (window.ResizeObserver) {
+        const lift = () => {
+            let dock = $('chat');
+            let docked = dock && !dock.hidden && !wideScreen.matches;
+            document.documentElement.style.setProperty('--dice-lift', docked ? dock.offsetHeight + 'px' : '0px');
+        };
+        new ResizeObserver(lift).observe($('chat'));
+        if (wideScreen.addEventListener)
+            wideScreen.addEventListener('change', lift);
+    }
+
     // ---- Connexion au relais -------------------------------------------------
 
     const onGameMessage = function (data) {
@@ -1713,12 +1777,18 @@
         else if (data.kind === 'chat-history') {
             chat = Array.isArray(data.messages) ? data.messages : [];
             renderChat();
+            diceHistory(chat);
         }
         else if (data.kind === 'chat' && data.message) {
             addChat(data.message);
+            if (data.message.dice)
+                diceLogChat(data.message);
         }
         else if (data.kind === 'refused') {
             showActionError(data.message);
+            // Jet refusé : la fenêtre de dés arrête sa roue
+            if ((data.action === 'roll' || data.action === 'dice') && diceWin)
+                diceWin.fail(data.message || 'Jet impossible.');
             // Fenêtre de race ouverte : le message y est aussi (la bulle est dessous)
             $('race-dialog-error').textContent = data.message || '';
             $('race-dialog-error').hidden = !$('race-dialog').open || !data.message;
@@ -1728,12 +1798,10 @@
         else if (data.kind === 'notice' && data.text) {
             showActionError(String(data.text), true);
         }
-        else if (data.kind === 'result' && data.action === 'roll' && data.data) {
-            let r = data.data;
-            $('roll-result').hidden = false;
-            $('roll-result').className = 'roll-result ' + (r.success ? 'ok' : 'fail');
-            $('roll-result').textContent = '🎲 ' + (r.dice ? 'meilleur de ' + r.dice.join(' / ') + ' = ' : '') + r.dice_result + ' → ' + r.result + ' : ' + (r.success ? 'réussite !' : 'échec.');
-        }
+        else if (data.kind === 'result' && data.action === 'roll' && data.data)
+            diceStatResult(data.data);
+        else if (data.kind === 'result' && data.action === 'dice' && data.data)
+            diceNeutralResult(data.data);
     };
 
     const connect = function () {
@@ -2026,22 +2094,6 @@
         }
     });
 
-    $('roll-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        $('roll-result').hidden = true;
-        sendAction('roll', {stat: $('roll-stat').value, module: $('roll-module').value});
-    });
-
-    for (let s of Object.keys(STAT_LABELS).filter(s => s !== 'moral')) {
-        let o = el('option', '', STAT_LABELS[s]);
-        o.value = s;
-        $('roll-stat').append(o);
-    }
-    for (let [value, label] of ROLL_MODULES) {
-        let o = el('option', '', label);
-        o.value = value;
-        $('roll-module').append(o);
-    }
     $('emotes').replaceChildren(...EMOTES.map(e => {
         let b = el('button', 'emote', e);
         b.type = 'button';

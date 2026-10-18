@@ -201,6 +201,9 @@
 .chat-message.gm { border-color: var(--ui-accent); }
 .chat-head { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
 .chat-message.gm .chat-head strong { color: var(--ui-accent); }
+/* Jet de la fenêtre de dés : posé par le serveur, on ne peut pas le taper */
+.chat-message.chat-dice { border-color: rgb(79 216 224 / 45%); }
+.chat-message.chat-dice .chat-text { color: var(--ui-cyan); font-weight: 600; }
 .chat-time { color: var(--ui-text-dim); }
 .lobby .chat-text { margin-top: 4px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .chat-empty { color: var(--ui-text-dim); }

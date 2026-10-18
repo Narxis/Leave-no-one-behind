@@ -9,7 +9,8 @@
         "/css/mj-ship.css",
         "/css/mj-blank.css",
         "/css/mj-shop.css",
-        "/css/mj-craft.css"
+        "/css/mj-craft.css",
+        "/css/dice-window.css"
     ]
 }) %>
 
@@ -337,5 +338,7 @@ var SHIP_ROOMS = <%- JSON.stringify(locals.shipRooms || []).replace(/</g, '\\u00
 <script src="js/mj-shop.js"></script>
 <script src="js/mj-craft.js"></script>
 <script src="/js/item-requests.js"></script>
+<script src="/js/dice-window.js"></script>
+<script src="/js/mj-dice.js"></script>
 <%- include("partials/bottom-scripts") %>
 </body>

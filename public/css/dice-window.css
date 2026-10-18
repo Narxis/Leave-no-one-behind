@@ -1,0 +1,226 @@
+/* Fenêtre de dés flottante (dice-window.js), page joueur et menu MJ : mêmes
+   couleurs que l'écran de jeu, sur les variables de chaque page (joueur :
+   --accent…, MJ : --ui-accent…). Longueurs toujours avec unité : les pages
+   du MJ sont sans doctype. */
+.dice-fab,
+.dice-window {
+    --dw-accent: var(--accent, var(--ui-accent, #ffcc00));
+    --dw-accent-soft: var(--accent-soft, var(--ui-accent-soft, rgb(255 204 0 / 10%)));
+    --dw-ok: var(--ok, var(--ui-cyan, #4fd8e0));
+    --dw-fail: var(--danger, var(--ui-danger, #ff5a6e));
+    --dw-text: var(--text, var(--ui-text, #eeecfb));
+    --dw-dim: var(--dim, var(--ui-text-dim, rgb(226 222 255 / 62%)));
+    --dw-border: var(--border, var(--ui-border, rgb(176 166 255 / 26%)));
+    --dw-border-strong: var(--border-strong, var(--ui-border-strong, rgb(204 196 255 / 55%)));
+    --dw-surface: var(--surface, var(--ui-surface, linear-gradient(160deg, #1d1650 0%, #0b0922 100%)));
+    --dw-fill: var(--fill, var(--ui-fill, rgb(255 255 255 / 4%)));
+    --dw-shadow: inset 0 1px 0 rgb(255 255 255 / 6%), 0 24px 60px -24px rgb(0 0 0 / 85%), 0 0 48px -16px rgb(112 84 255 / 35%);
+    font-family: Jura, system-ui, sans-serif;
+    color: var(--dw-text);
+    box-sizing: border-box;
+}
+.dice-window *, .dice-window *::before, .dice-window *::after { box-sizing: border-box; }
+
+/* Bouton d'ouverture : en bas à gauche (au-dessus du chat ouvert sur
+   téléphone : --dice-lift) */
+.dice-fab {
+    position: fixed;
+    left: 20px;
+    bottom: calc(20px + var(--dice-lift, 0px));
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 10px 16px;
+    border: 1px solid var(--dw-border-strong);
+    border-radius: 999px;
+    background: var(--dw-surface);
+    box-shadow: var(--dw-shadow);
+    font: 600 16px Jura, system-ui, sans-serif;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: border-color 150ms, color 150ms, box-shadow 200ms;
+}
+.dice-fab:hover, .dice-fab.active {
+    border-color: var(--dw-accent);
+    color: var(--dw-accent);
+    box-shadow: var(--dw-shadow), 0 0 22px -4px rgb(255 204 0 / 45%);
+}
+.dice-fab-icon { font-size: 18px; line-height: 1; }
+
+.dice-window {
+    position: fixed;
+    left: 20px;
+    bottom: calc(76px + var(--dice-lift, 0px));
+    z-index: 61;
+    width: min(340px, calc(100vw - 32px));
+    max-height: calc(100vh - 96px - var(--dice-lift, 0px));
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--dw-border-strong);
+    border-radius: 16px;
+    background: var(--dw-surface);
+    box-shadow: var(--dw-shadow);
+    font-size: 14px;
+    line-height: 1.3;
+    text-align: left;
+}
+.dice-window[hidden] { display: none !important; }
+.dice-window.dragging { opacity: .92; user-select: none; }
+
+.dice-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 10px 10px 16px;
+    border-bottom: 1px solid var(--dw-border);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+.dice-window.dragging .dice-head { cursor: grabbing; }
+.dice-title { flex: 1; color: var(--dw-accent); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 13px; }
+
+.dice-window button,
+.dice-window select {
+    margin: 0;
+    font: 600 14px Jura, system-ui, sans-serif;
+    color: var(--dw-text);
+    letter-spacing: 0.04em;
+}
+.dice-window button {
+    padding: 0;
+    border: 1px solid var(--dw-border);
+    border-radius: 10px;
+    background: var(--dw-fill);
+    cursor: pointer;
+    transition: border-color 150ms, color 150ms, background 150ms, box-shadow 200ms;
+}
+.dice-window button:hover:not(:disabled) { border-color: var(--dw-accent); color: var(--dw-accent); background: var(--dw-accent-soft); }
+.dice-window button:disabled { opacity: .4; cursor: default; }
+.dice-window select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--dw-border);
+    border-radius: 8px;
+    background: #15123a;
+    font-weight: 500;
+}
+.dice-window select:disabled { opacity: .5; }
+.dice-close { width: 30px; height: 30px; border-color: transparent !important; background: transparent !important; color: var(--dw-dim) !important; font-size: 14px !important; }
+.dice-close:hover { color: var(--dw-text) !important; }
+
+.dice-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px 16px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+}
+.dice-section { display: flex; flex-direction: column; gap: 8px; }
+.dice-section[hidden] { display: none; }
+.dice-section h3 {
+    margin: 0;
+    color: var(--dw-dim);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+.dice-hint { margin: 0; color: var(--dw-dim); font-size: 13px; }
+.dice-hint[hidden], .dice-stat-grid[hidden], .dice-window select[hidden] { display: none; }
+
+/* Résultat */
+.dice-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 10px 8px 12px;
+    border: 1px solid var(--dw-border);
+    border-radius: 12px;
+    background: rgb(0 0 0 / 22%);
+}
+.dice-total {
+    min-height: 44px;
+    color: var(--dw-accent);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 44px;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 14px rgb(255 204 0 / 40%);
+}
+.dice-total.ok { color: var(--dw-ok); text-shadow: 0 0 14px rgb(79 216 224 / 45%); }
+.dice-total.fail { color: var(--dw-fail); text-shadow: 0 0 14px rgb(255 90 110 / 40%); }
+.dice-total.pop { animation: dice-pop 380ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+.dice-window.rolling .dice-total { color: var(--dw-dim); text-shadow: none; }
+.dice-detail { color: var(--dw-dim); font-size: 13px; text-align: center; overflow-wrap: anywhere; }
+@keyframes dice-pop {
+    0% { transform: scale(.6); opacity: .3; }
+    60% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+/* Stats */
+.dice-stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; }
+.dice-window .dice-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 7px 4px;
+    font-size: 12px;
+}
+.dice-stat-label { overflow: hidden; max-width: 100%; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; letter-spacing: 0; }
+.dice-stat-value { color: var(--dw-accent); font-size: 16px; font-weight: 700; }
+
+/* Dés neutres */
+.dice-count { display: flex; align-items: center; gap: 8px; }
+.dice-count-label { flex: 1; color: var(--dw-dim); font-size: 13px; }
+.dice-window .dice-step { width: 30px; height: 30px; font-size: 18px; line-height: 1; }
+.dice-count-value { min-width: 24px; text-align: center; font-size: 16px; font-weight: 700; }
+.dice-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.dice-window .dice-die {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 2px 5px;
+}
+.dice-die svg { width: 30px; height: 30px; fill: rgb(255 204 0 / 8%); stroke: currentColor; stroke-width: 2px; stroke-linejoin: round; }
+.dice-die:hover svg { fill: rgb(255 204 0 / 18%); }
+.dice-die-label { font-size: 12px; font-weight: 700; }
+.dice-secret { display: flex; align-items: center; gap: 6px; color: var(--dw-dim); font-size: 13px; cursor: pointer; }
+.dice-secret input { margin: 0; accent-color: var(--dw-accent); cursor: pointer; }
+
+/* Derniers jets */
+.dice-log { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.dice-log li {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 4px 8px;
+    border-left: 2px solid var(--dw-border);
+    font-size: 13px;
+}
+.dice-log li.ok { border-left-color: var(--dw-ok); }
+.dice-log li.fail { border-left-color: var(--dw-fail); }
+.dice-log-who { color: var(--dw-text); font-weight: 600; white-space: nowrap; }
+.dice-log-what { flex: 1; min-width: 0; color: var(--dw-dim); overflow-wrap: anywhere; }
+.dice-log-total { color: var(--dw-accent); font-variant-numeric: tabular-nums; }
+.dice-log li.ok .dice-log-total { color: var(--dw-ok); }
+.dice-log li.fail .dice-log-total { color: var(--dw-fail); }
+
+/* Téléphone : le bouton plus petit, la fenêtre sur toute la largeur */
+@media (max-width: 599px) {
+    .dice-fab { left: 12px; bottom: calc(14px + var(--dice-lift, 0px)); padding: 9px 14px; font-size: 15px; }
+    .dice-window { left: 12px; bottom: calc(66px + var(--dice-lift, 0px)); width: calc(100vw - 24px); max-height: calc(100vh - 84px - var(--dice-lift, 0px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dice-total.pop { animation: none; }
+}
