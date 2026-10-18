@@ -879,8 +879,13 @@
         $('codex-empty').hidden = !empty;
     };
 
+    // Après le dernier dé, le tirage reste affiché jusqu'au clic sur Continuer
+    let rollsHeld = false;
+    let lastCreationStep = null;
+
     const renderRolls = function (creation) {
-        $('stat-rolls').hidden = !creation || creation.step !== 'stats';
+        $('stat-rolls').hidden = !creation || !creation.stats || (creation.step !== 'stats' && !rollsHeld);
+        $('rolls-done').hidden = !rollsHeld;
         if ($('stat-rolls').hidden)
             return;
         $('stat-table').replaceChildren(...creation.stats.map(s => {
@@ -935,7 +940,13 @@
         $('create').hidden = phase !== 'creation';
         $('create').disabled = !hostOnline;
 
-        let creating = !!(character && creation && creation.step !== 'done');
+        let step = creation ? creation.step : null;
+        if (lastCreationStep === 'stats' && step === 'done' && creation.stats)
+            rollsHeld = true;
+        else if (step !== 'done')
+            rollsHeld = false;
+        lastCreationStep = step;
+        let creating = !!(character && creation && (step !== 'done' || rollsHeld));
         $('creation').hidden = !creating;
         if (creating) {
             if (document.activeElement !== $('char-name'))
@@ -1257,6 +1268,10 @@
     });
 
     $('phase-action').addEventListener('click', () => selectTab('me'));
+    $('rolls-continue').addEventListener('click', () => {
+        rollsHeld = false;
+        renderMe();
+    });
     $('back-game').addEventListener('click', () => selectTab('game'));
     $('menu-toggle').addEventListener('click', () => setMenu($('menu-drawer').hidden));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
