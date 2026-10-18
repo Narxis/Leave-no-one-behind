@@ -8,6 +8,8 @@ const ShipLabels = (function () {
     // jusqu'à FLOOR_PX si la salle est trop petite ; en dessous, on replie
     const MIN_PX = 8;
     const FLOOR_PX = 6.5;
+    // Les cabines, étroites et alignées en haut, descendent un peu plus bas
+    const GROUP_FLOOR_PX = 6;
 
     let box = null;
     let svg = null;
@@ -83,7 +85,8 @@ const ShipLabels = (function () {
         };
         // Plus grande taille à l'écran qui tient, ou null
         const best = function (l) {
-            for (let px = MIN_PX; px >= FLOOR_PX; px -= 0.5)
+            let floor = l.label.dataset.group ? GROUP_FLOOR_PX : FLOOR_PX;
+            for (let px = MIN_PX; px >= floor; px -= 0.5)
                 if (tryAt(l, px))
                     return px;
             return null;
