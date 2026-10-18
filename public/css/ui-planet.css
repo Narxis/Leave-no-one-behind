@@ -306,3 +306,30 @@ body.planet-grabbing * {
     font-weight: 600;
     letter-spacing: 0.06em;
 }
+
+/* Qui a voté : logo du rôle de chaque joueur (initiale sans rôle), au-dessus
+   du nombre de voix (players.js, voteRoleIcons) */
+.planet-vote-roles {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    margin-top: 4px;
+    pointer-events: none;
+}
+
+.planet-vote-roles .vote-role {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.planet-vote-roles .vote-initial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ui-cyan);
+    border-radius: 50%;
+    color: var(--ui-cyan);
+    font-size: 10px;
+    line-height: 1;
+}

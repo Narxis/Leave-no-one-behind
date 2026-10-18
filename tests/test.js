@@ -323,6 +323,8 @@ async function test_votes() {
     assert.deepEqual(seen.choices, ['Fuir', 'Combattre']);
     assert.deepEqual(seen.counts, [1, 1]);
     assert.equal(seen.chosen, null);
+    // ... et qui a voté quoi (logo de son rôle sur le choix)
+    assert.deepEqual(seen.voters.map(v => [v.id, v.index]).sort(), [[alice.id, 0], [bob.id, 1]]);
     // ... mais pas celui d'une autre carte
     assert.equal(playerView.publicCard({id: 5, type: TYPE_NEGATIVE, desc: 'x', choices: []}).counts, undefined);
 
@@ -532,6 +534,10 @@ function test_mj_screen_port() {
         assert.ok(!/location\.(href|reload)|href="\/leaderboard/.test(html.replace(/<script[\s\S]*?<\/script>/g, '')), page + '.html : pas de navigation du MJ');
     }
     assert.ok(/var PLANET_DATA = \{id: Number\([^)]*\)[^}]*modules: \{\}\}/.test(files['public/player/mj/planet.html']), 'planet.html : planète sans valeurs');
+    // Pages portées en mode standard (doctype), celles du MJ non : une
+    // longueur sans unité y serait ignorée (nom des modules décalé)
+    for (let file of Object.keys(files).filter(f => /^public\/player\/mj\/css\/.*\.css$/.test(f)))
+        assert.ok(!/^\s*(width|height|top|left|right|bottom|margin|padding|font-size)\s*:\s*[1-9][0-9.]*\s*;/m.test(files[file]), file + ' : longueur sans unité');
     console.log('MJ screen port OK');
 }
 

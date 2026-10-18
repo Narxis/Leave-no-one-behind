@@ -252,6 +252,16 @@
             sendAction('vote', {index: m.index});
     });
 
+    // Création des persos : l'onglet Partie montre directement la fiche (ou
+    // la création du perso) sous le message d'attente, sans page à part
+    const sheetOnGame = () => tab === 'game' && !!game && game.phase === 'creation';
+    const updatePanels = function () {
+        let shown = sheetOnGame() ? 'me' : tab;
+        document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.dataset.panel !== shown; });
+        $('me-phase').hidden = !sheetOnGame();
+        $('me-phase').textContent = PHASES.creation;
+    };
+
     const selectTab = function (name) {
         tab = name;
         store.set('lnob-player-tab', name);
@@ -259,7 +269,7 @@
             b.classList.toggle('active', b.dataset.tab === name);
             b.setAttribute('aria-selected', b.dataset.tab === name);
         });
-        document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.dataset.panel !== name; });
+        updatePanels();
         $('back-game').hidden = name === 'game';
         setMenu(false);
         updatePlanetMode();
@@ -660,6 +670,28 @@
     // Plus de nouvelles de la page de jeu : le chrono disparaît
     setInterval(() => { if (timer && !timer.paused && !$('card-timer').hidden) renderTimer(); }, 1000);
 
+    // Qui a voté pour un choix : le logo de son rôle (son initiale sans rôle),
+    // comme sur l'écran de jeu
+    const voterIcons = function (card, i) {
+        let box = el('span', 'choice-voters');
+        for (let voter of (card.voters || []).filter(v => v.index === i)) {
+            let member = ((game && game.team) || []).find(p => String(p.id) === String(voter.id));
+            let logo = member && member.roleInfo && /^\/img\//.test(member.roleInfo.icon || '') ? 'mj/' + member.roleInfo.icon.slice(1) : '';
+            let icon;
+            if (logo) {
+                icon = el('img');
+                icon.src = logo;
+                icon.alt = '';
+            }
+            else
+                icon = el('span', 'voter-initial', (String(voter.name || '').trim().charAt(0) || '?').toUpperCase());
+            icon.classList.add('voter-icon');
+            icon.title = voter.name || '';
+            box.append(icon);
+        }
+        return box;
+    };
+
     const renderGame = function () {
         let phase = game ? game.phase : 'init';
         let score = game && game.score;
@@ -679,9 +711,8 @@
             text = 'Le MJ prépare la suite…';
         $('phase-text').textContent = text;
         $('phase').hidden = !text;
+        updatePanels();
         let character = you && you.character;
-        $('phase-action').hidden = phase !== 'creation';
-        $('phase-action').textContent = character ? 'Voir ma fiche' : 'Créer mon personnage';
 
         renderEnd(phase === 'postGame' ? score : null);
 
@@ -763,8 +794,11 @@
             li.append(body);
             if (intro && card.expected)
                 li.append(el('span', 'choice-votes', count + '/' + card.expected + ' prêts'));
-            else if (count)
-                li.append(el('span', 'choice-votes', count + (count > 1 ? ' votes' : ' vote')));
+            else if (count) {
+                let votes = el('span', 'choice-votes');
+                votes.append(voterIcons(card, i), count + (count > 1 ? ' votes' : ' vote'));
+                li.append(votes);
+            }
             return li;
         }));
         let note = '';
@@ -1743,7 +1777,6 @@
         show('join');
     });
 
-    $('phase-action').addEventListener('click', () => selectTab('me'));
     $('rolls-continue').addEventListener('click', closeRace);
     $('race-dialog-close').addEventListener('click', closeRace);
     // Échap ou clic hors de la fenêtre

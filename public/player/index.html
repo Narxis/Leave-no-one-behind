@@ -98,7 +98,6 @@
         <div class="tab-panel" data-panel="game">
             <div id="phase" class="phase-banner" hidden>
                 <p id="phase-text"></p>
-                <button type="button" id="phase-action" class="primary small" hidden></button>
             </div>
 
             <div id="stage" class="stage" hidden>
@@ -182,6 +181,8 @@
 
         <!-- Perso : création, fiche, dés -->
         <div class="tab-panel sheet-panel hud-panel" data-panel="me">
+            <!-- Création des persos, onglet Partie : le message d'attente, au-dessus de la fiche -->
+            <p id="me-phase" class="me-phase" hidden></p>
             <div id="no-character" hidden>
                 <p id="no-character-text"></p>
                 <button type="button" id="create" class="primary">Créer mon personnage</button>
