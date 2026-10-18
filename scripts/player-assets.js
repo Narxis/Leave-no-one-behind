@@ -6,7 +6,8 @@
 //                                   public/player/status-icons.js
 //                                   public/player/game-icons.js
 //                                   public/player/timer-markup.js,
-//                                   timer-animation.css, timer-anim.js
+//                                   timer-animation.css, timer-anim.js,
+//                                   dice-window.js, dice-window.css
 //                                   et public/player/img/modules/*.svg
 // Les vignettes des races de base (public/player/img/races/*.webp, 240 px)
 // sont faites une fois à la main depuis public/img/races, par exemple :
@@ -355,6 +356,8 @@ const files = () => ({
     'public/player/timer-markup.js': timerMarkup(),
     'public/player/timer-animation.css': timerCss(),
     'public/player/timer-anim.js': HEADER + read('public/js/timer-anim.js'),
+    'public/player/dice-window.js': HEADER + read('public/js/dice-window.js'),
+    'public/player/dice-window.css': '/* Généré par scripts/player-assets.js : ne pas modifier à la main */\n' + read('public/css/dice-window.css'),
     ...Object.fromEntries(Object.entries(MODULE_ICONS).map(([id, file]) =>
         ['public/player/img/modules/' + id + '.svg', read('public/img/modules/' + file)])),
     ...mjFiles()

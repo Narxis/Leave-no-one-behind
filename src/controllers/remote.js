@@ -22,6 +22,7 @@ const itemUse = require('./itemUse');
 const intro = require('./intro');
 const inventory = require('./inventory');
 const itemRequests = require('./itemRequests');
+const dice = require('./dice');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = ['', 'scanner', 'proximity', 'motors', 'oxygen', 'energy', 'gravity'];
@@ -139,6 +140,18 @@ const RULES = {
             return refuse(result.error);
         return {action: 'passThrough', data: result.payload};
     },
+    // Dés neutres de la fenêtre de dés : lancés ici, annoncés au salon (ou au
+    // MJ seul si secret) ; le joueur reçoit aussi le résultat
+    dice: async (player, data) => {
+        let result = dice.roll(data.sides, data.count);
+        if (result.error)
+            return refuse(result.error);
+        let character = await characterOf(player.id);
+        let said = chat.playerDice(player, character ? character.name : player.name, result, !!data.secret);
+        if (said.error)
+            return refuse(said.error);
+        return {done: true, action: 'dice', result: Object.assign(result, {secret: !!data.secret})};
+    },
     // Chat : salon commun, ou privé (seul le MJ le lit). Signé du nom du
     // perso s'il en a un, sinon du pseudo du lobby.
     chat: async (player, data) => {
@@ -216,7 +229,8 @@ const init = function ({run, broadcast}) {
             return lobby.sendTo(player.id, {kind: 'refused', action: message.action, message: action.refused});
 
         if (action.done)
-            return; // déjà fait et diffusé (chat)
+            // Déjà fait et diffusé (chat) ; un jet de dés renvoie son résultat
+            return action.result ? lobby.sendTo(player.id, {kind: 'result', action: message.action, data: action.result}) : undefined;
         log('[LOBBY] ' + player.name + ' : ' + action.action, '#4fd8e0');
         let results = [].concat(await run(action));
         for (let result of results)

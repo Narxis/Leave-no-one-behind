@@ -12,6 +12,7 @@
 //   {action:'chat-history', data:{messages}}
 // Joueurs (relais) : {kind:'chat', message} et {kind:'chat-history', messages}
 const lobby = require('./lobby');
+const dice = require('./dice');
 
 const MAX_HISTORY = 300;
 const MAX_TEXT = 500;
@@ -40,8 +41,11 @@ const deliver = function (message) {
     toGm({action: 'chat', error: false, data: {message: message}});
 };
 
-const add = function (from, to, text) {
+const add = function (from, to, text, dice) {
     let message = {id: nextId++, at: Date.now(), from: from, to: to || null, text: text};
+    // Jet de la fenêtre de dés (dice.js) : posé par le serveur seulement
+    if (dice)
+        message.dice = dice;
     history.push(message);
     if (history.length > MAX_HISTORY)
         history = history.slice(-MAX_HISTORY);
@@ -49,20 +53,39 @@ const add = function (from, to, text) {
     return message;
 };
 
+// Anti-flood d'un joueur : false s'il écrit (ou lance) trop vite
+const allowed = function (playerId) {
+    let now = Date.now();
+    let times = (recent.get(playerId) || []).filter(t => now - t < RATE_MS);
+    if (times.length >= RATE_COUNT)
+        return false;
+    times.push(now);
+    recent.set(playerId, times);
+    return true;
+};
+const TOO_FAST = 'Doucement : attends quelques secondes avant d\'écrire à nouveau.';
+
 // Message d'un joueur. privateToGm : seul le MJ le lit. Renvoie {error} ou {message}
 const fromPlayer = function (player, displayName, data) {
     let text = cleanText(data && data.text);
     if (!text)
         return {error: 'Message vide.'};
-    let now = Date.now();
-    let times = (recent.get(player.id) || []).filter(t => now - t < RATE_MS);
-    if (times.length >= RATE_COUNT)
-        return {error: 'Doucement : attends quelques secondes avant d\'écrire à nouveau.'};
-    times.push(now);
-    recent.set(player.id, times);
+    if (!allowed(player.id))
+        return {error: TOO_FAST};
     let from = {id: player.id, name: displayName || player.name, gm: false};
     return {message: add(from, data && data.private ? player.id : null, text)};
 };
+
+// Jet de dés neutres d'un joueur (dice.js), au salon ou au MJ seul (secret)
+const playerDice = function (player, displayName, result, secret) {
+    if (!allowed(player.id))
+        return {error: 'Doucement : attends quelques secondes avant de relancer.'};
+    let from = {id: player.id, name: displayName || player.name, gm: false};
+    return {message: add(from, secret ? player.id : null, dice.text(result), dice.detail(result))};
+};
+
+// Jet du MJ montré à tout le salon
+const gmDice = (result) => add({id: 'gm', name: 'MJ', gm: true}, null, dice.text(result), dice.detail(result));
 
 // Message du MJ, dans le salon (to vide) ou à un joueur
 const fromGm = function (data) {
@@ -97,4 +120,4 @@ const init = function (broadcast) {
     lobby.onPlayerJoin(player => lobby.sendTo(player.id, {kind: 'chat-history', messages: historyFor(player.id)}));
 };
 
-module.exports = {init, handle, fromPlayer, fromGm, historyFor, clear, MAX_TEXT};
+module.exports = {init, handle, fromPlayer, fromGm, playerDice, gmDice, historyFor, clear, MAX_TEXT};
