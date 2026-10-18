@@ -33,6 +33,7 @@ const itemUse = require('./itemUse');
 const codex = require('./codex');
 const combat = require('./combat');
 const intro = require('./intro');
+const allies = require('./allies');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const MODULES = [
@@ -179,8 +180,9 @@ const setCardText = function (data) {
 
 // Événements de l'écran de jeu que l'écran porté des joueurs reprend tels
 // quels (mêmes scripts : players.js, inventory.js) : jets, emotes, stats et
-// rôles des joueurs, inventaires, butin d'une carte, combat (combat.js)
-const MIRRORED = ['roll', 'emote', 'playerStat', 'player-role', 'inventory', 'card-loot', 'combat'];
+// rôles des joueurs, inventaires, butin d'une carte, combat (combat.js),
+// onglets des compagnons (npc-tabs.js)
+const MIRRORED = ['roll', 'emote', 'playerStat', 'player-role', 'inventory', 'card-loot', 'combat', 'allies'];
 // Combat : ce que l'écran de jeu montre, sans le butin caché ni les
 // caractéristiques d'attaque des adversaires
 const publicCombat = function (state) {
@@ -357,6 +359,7 @@ const welcome = async function (player) {
     // Inventaires (coffres des onglets, objets du vaisseau) et combat en cours
     let stock = (await inventory.payload())[0];
     lobby.sendTo(player.id, {kind: 'mj-event', payload: stock});
+    lobby.sendTo(player.id, {kind: 'mj-event', payload: {action: 'allies', error: false, data: {allies: allies.getAllies(), event: null}}});
     lobby.sendTo(player.id, {kind: 'mj-event', payload: mirrorPayload({action: 'combat', error: false, data: {state: combat.getState(), event: null}})});
     // Arrivée en cours de carte : le texte déjà écrit par le MJ, sans l'animer
     if (cardWriting)

@@ -1446,7 +1446,15 @@
             runQueue();
         }
 
-        return {reveal, hide, revealAll: () => reveal(LAYERS)};
+        // Page joueur : les valeurs n'arrivent qu'au fil des scans ; elles
+        // servent au prochain reveal
+        function update(values) {
+            for (let k of Object.keys(s))
+                if (values && values[k])
+                    s[k] = Number(values[k].val) || 0;
+        }
+
+        return {reveal, hide, update, revealAll: () => reveal(LAYERS)};
     }
 
     // Lunes : de 0 à 3 par planète, tirées de sa graine. Même style que la

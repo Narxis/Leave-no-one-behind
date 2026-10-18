@@ -71,12 +71,21 @@ const renderEndScreen = async function (res, ship, planet, scoreCards, record = 
         scoreTotal: scoreTotal
     }
 
+    // Réglages avec lesquels la partie a été jouée (ceux du lancement)
+    let current = leaderboard.getCurrent();
+    let settings = record && current && current.settings ? current.settings : gameSettings.get();
+
     // Fin de partie : les joueurs en ligne voient le même écran de score
+    // (settings : le récap des réglages en haut de l'écran, settings-recap.ejs)
     if (record)
         playerView.setScore({
             cryopods: ship.cryopods, scoreShip: scoreShip, scorePlanet: scorePlanet, scoreCards: scoreCards, scoreTotal: scoreTotal,
             ship: Object.fromEntries(playerView.MODULES.map(([id]) => [id, Number(ship[id]) || 0])),
-            planet: {id: planet.id || 0, name: planet.name || '', modules: Object.fromEntries(Object.entries(planet.modules || {}).map(([k, m]) => [k, {val: Number(m.val) || 0}]))}
+            planet: {id: planet.id || 0, name: planet.name || '', modules: Object.fromEntries(Object.entries(planet.modules || {}).map(([k, m]) => [k, {val: Number(m.val) || 0}]))},
+            settings: settings ? {preset: settings.preset ? {name: String(settings.preset.name || '')} : null,
+                planetCount: settings.planetCount, negativeByStep: settings.negativeByStep, positiveByStep: settings.positiveByStep,
+                neutralByStep: settings.neutralByStep, placeByStep: settings.placeByStep,
+                clearStatusesAfterPlanet: settings.clearStatusesAfterPlanet, randomShipStats: !!settings.randomShipStats} : null
         });
 
     let leaderboardId = record ? await leaderboard.record({
@@ -85,10 +94,6 @@ const renderEndScreen = async function (res, ship, planet, scoreCards, record = 
     }) : null;
 
     let js = {vars:`var score=JSON.parse('` + JSON.stringify(score) + `'); var ship=JSON.parse('` + JSON.stringify(ship) + `');`};
-
-    // Réglages avec lesquels la partie a été jouée (ceux du lancement)
-    let current = leaderboard.getCurrent();
-    let settings = record && current && current.settings ? current.settings : gameSettings.get();
 
     let vars = {
         ship: ship,
