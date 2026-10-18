@@ -126,7 +126,7 @@ input[type="checkbox"] {
     padding-left: 16px;
 }
 
-/* Icône "réglages" (reset) en haut du menu */
+/* Engrenage en haut du menu : ouvre les Options */
 #menuToggle svg {
     width: 20px;
     left: 188px;

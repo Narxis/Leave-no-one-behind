@@ -2049,5 +2049,10 @@ function test_mj_access() {
     }
     for (let href of ['/index', '/lobby', '/parametres', '/persos', '/fiche-vaisseau', '/codex', '/leaderboard'])
         assert.ok(player.includes('href="' + href + '"'), href);
+    // Options : dans l'engrenage, pour le MJ et les joueurs
+    for (let page of [player, mj]) {
+        assert.ok(page.includes('id="options-open" class="options-gear"'));
+        assert.ok(!page.includes('<li>Options</li>'));
+    }
     console.log('MJ access OK');
 }
