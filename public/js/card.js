@@ -345,7 +345,8 @@ var cardScreenText = '';
 function announceScreen(chosen) {
     if (typeof wsLNOB === 'undefined')
         return;
-    let data = {cardId: currentCard.id, text: cardScreenText, choices: (currentCard.choices || []).map(c => c.value)};
+    // (une carte blanche n'a pas de numéro : « blank », comme pour les joueurs)
+    let data = {cardId: currentCard.blank ? 'blank' : currentCard.id, text: cardScreenText, choices: (currentCard.choices || []).map(c => c.value)};
     if (chosen !== undefined)
         data.chosen = chosen;
     wsLNOB.send({action: 'card-screen', data: data});
