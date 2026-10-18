@@ -199,6 +199,12 @@ module.exports = {
             data.status = dat.choices[index].status.slug;
             data.statusdur = String(dat.choices[index].status.duration || 1);
         }
+        let shop = dat.choices[index].shop;
+        if (shop) {
+            data.shop = (shop === true ? '' : shop.name) || 'Marchand';
+            if (Array.isArray(shop.stock))
+                data.shopstock = JSON.stringify(shop.stock);
+        }
         if (dat.choices[index].outcomes)
             data.random = JSON.stringify(dat.choices[index].outcomes.map(o => o.weight));
         else if (dat.choices[index].roll)

@@ -114,7 +114,10 @@ const PLANET_SCANS = [
     {key: 'wtr', label: 'Présence d\'eau', button: '#eau-button', cost: () => costeau, text: () => texteau},
     {key: 'grv', label: 'Gravité', button: '#gr-button', cost: () => costgr, text: () => textgr}
 ];
-const PLANET_EXITS = [
+// Dernière planète : une seule sortie, atterrir termine le voyage
+const PLANET_EXITS = window.LAST_PLANET ? [
+    {key: 'land', label: 'Terminer le voyage', button: '.land-button'}
+] : [
     {key: 'land', label: 'Atterrir sur la planète', button: '.land-button'},
     {key: 'leave', label: 'Continuer votre voyage', button: '.leave-button'}
 ];
@@ -178,8 +181,7 @@ async function showbuttons_fun() {
         while (iswritting > 0) {
             await sleep(100)
         }
-        document.querySelector('.land-button').classList.add('show-buttons')
-        document.querySelector('.leave-button').classList.add('show-buttons')
+        document.querySelectorAll('.land-button, .leave-button').forEach(b => b.classList.add('show-buttons'))
     }
 }
 

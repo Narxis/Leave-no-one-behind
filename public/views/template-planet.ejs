@@ -495,8 +495,13 @@
     </div>
     <% } %>
     <div class="topcenter">
+      <% if (locals.lastPlanet) { %>
+      <%# Dernière planète : impossible de repartir, atterrir termine le voyage %>
+      <button onclick="location.href = '/land' " class="land-button">Terminer le voyage.</button>
+      <% } else { %>
       <button onclick="location.href = '/land' " class="land-button">Atterrir sur la planète.</button>
       <button onclick="location.reload()" class="leave-button">Continuer votre voyage.</button>
+      <% } %>
     </div>
     <div class="bottomcenter">
       <div class="player-tabs" id="playertabs_container">
@@ -670,6 +675,7 @@
   <% } %>
   <script>var PLANET_DATA = <%- JSON.stringify({id: card.id || 0, modules: card.modules}).replace(/</g, '\\u003c') %>;</script>
   <script src="/js/planet-view.js"></script>
+  <script>var LAST_PLANET = <%= locals.lastPlanet ? 'true' : 'false' %>;</script>
   <script src="/js/planet.js"></script>
   <script src="/js/players.js"></script>
   <script>
