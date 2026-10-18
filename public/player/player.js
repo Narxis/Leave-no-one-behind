@@ -658,6 +658,11 @@
         let show = !!(timer && card && !game.combat && card.kind !== 'planet' && timer.cardId === String(card.id)
             && (timer.paused || Date.now() - timerSeen < 3500));
         $('card-timer').hidden = !show;
+        // Bandeaux et flashs jaunes (sur grand écran, l'écran de jeu porté les a)
+        let alertOn = show && !timer.paused && timer.left > 0 && !mjScreenFits();
+        $('timer-alert').classList.toggle('active', alertOn);
+        $('timer-alert').classList.toggle('warn', alertOn && timer.left <= 10);
+        $('timer-alert').classList.toggle('critical', alertOn && timer.left <= 5);
         if (!show)
             return;
         $('card-timer-text').textContent = String(timer.left).padStart(2, '0');

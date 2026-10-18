@@ -1026,4 +1026,72 @@
   }
 }
 
+/* Compte à rebours : bandeaux jaunes et noirs en haut et en bas de l'écran,
+   flashs jaunes sur les bords (comme l'alerte du vaisseau, ship-alerts.css),
+   de plus en plus vite sous 10 s puis 5 s (timer-anim.js) */
+.timer-alert {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .3s, visibility 0s .3s;
+}
+
+.timer-alert.active {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .3s;
+}
+
+.timer-alert-vignette {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 120px 20px rgb(255 204 0 / 55%);
+  animation: timer-alert-vignette 1.2s ease-in-out infinite;
+}
+
+.timer-alert.warn .timer-alert-vignette {
+  animation-duration: .7s;
+}
+
+.timer-alert.critical .timer-alert-vignette {
+  box-shadow: inset 0 0 160px 40px rgb(255 204 0 / 70%);
+  animation-duration: .4s;
+}
+
+@keyframes timer-alert-vignette {
+  0%, 100% { opacity: .3; }
+  50% { opacity: 1; }
+}
+
+.timer-alert-stripes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background: repeating-linear-gradient(-45deg, #ffcc00 0 18px, #141000 18px 36px);
+  background-size: 51px 14px;
+  animation: timer-alert-stripes 1s linear infinite;
+}
+
+.timer-alert-stripes.top { top: 0; }
+.timer-alert-stripes.bottom { bottom: 0; }
+
+.timer-alert.critical .timer-alert-stripes {
+  animation-duration: .5s;
+}
+
+@keyframes timer-alert-stripes {
+  to { background-position: 51px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timer-alert-vignette,
+  .timer-alert-stripes {
+    animation: none;
+  }
+}
+
 /* ---^^^---Timer Animation---^^^---*/
