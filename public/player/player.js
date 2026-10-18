@@ -373,6 +373,28 @@
         return li;
     };
 
+    // Onglets des modules à droite de l'écran de jeu : 71px chacun et 38px
+    // de marge en haut comme chez le MJ, réduits si la carte est moins haute
+    const fitDials = function () {
+        let list = $('module-dials');
+        let screen = ['game-card', 'combat', 'planet'].map($).find(n => !n.hidden);
+        if (!screen || !window.matchMedia('(min-width: 900px)').matches) {
+            list.style.removeProperty('--tab-h');
+            list.style.removeProperty('--dials-top');
+            return;
+        }
+        let h = screen.offsetHeight;
+        let top = Math.min(38, h * .075);
+        let tab = Math.max(36, Math.min(71, Math.floor((h - 2 * top) / 6)));
+        list.style.setProperty('--tab-h', tab + 'px');
+        list.style.setProperty('--dials-top', Math.max(0, (h - 6 * tab) / 2) + 'px');
+    };
+    if (window.ResizeObserver) {
+        let observer = new ResizeObserver(fitDials);
+        ['game-card', 'combat', 'planet'].forEach(id => observer.observe($(id)));
+    }
+    window.addEventListener('resize', fitDials);
+
     const renderDials = function (list) {
         let ship = game && game.ship;
         let values = new Map(ship ? ship.modules.map(m => [m.id, m.value]) : []);
