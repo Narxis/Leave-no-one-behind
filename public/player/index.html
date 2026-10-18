@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="player.css">
 </head>
 <body>
-<div class="starfield" aria-hidden="true"></div>
+<canvas id="starfield" class="starfield" aria-hidden="true"></canvas>
 <main class="card" id="main">
     <h1 class="logo">LEAVE <span>NO</span> ONE BEHIND</h1>
 
@@ -37,21 +37,25 @@
     <!-- Dans la partie : mise en page de l'écran de jeu du MJ (carte au
          centre, modules à droite, stats et humains à gauche, équipage en bas) -->
     <section id="lobby" class="game" hidden>
+        <!-- Menu en burger (en haut à gauche, comme sur l'écran de jeu) -->
         <header class="topbar">
-            <p class="topbar-logo">LEAVE <span>NO</span> ONE BEHIND</p>
-            <div class="topbar-info">
+            <button type="button" id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="menu-drawer" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <p id="status" class="status" role="status"></p>
+            <div id="menu-drawer" class="menu-drawer" hidden>
+                <p class="topbar-logo">LEAVE <span>NO</span> ONE BEHIND</p>
                 <p class="dim">Partie <strong id="lobby-code"></strong></p>
-                <p id="status" class="status" role="status"></p>
+                <nav class="tabs" role="tablist">
+                    <button type="button" role="tab" data-tab="game" class="tab">Partie</button>
+                    <button type="button" role="tab" data-tab="me" class="tab">Perso</button>
+                    <button type="button" role="tab" data-tab="ship" class="tab">Vaisseau</button>
+                    <button type="button" role="tab" data-tab="bag" class="tab">Inventaire</button>
+                    <button type="button" role="tab" data-tab="crew" class="tab">Équipage</button>
+                    <button type="button" role="tab" data-tab="codex" class="tab">Codex</button>
+                </nav>
+                <button type="button" id="leave" class="secondary small">Quitter la partie</button>
             </div>
-            <nav class="tabs" role="tablist">
-                <button type="button" role="tab" data-tab="game" class="tab">Partie</button>
-                <button type="button" role="tab" data-tab="me" class="tab">Perso</button>
-                <button type="button" role="tab" data-tab="ship" class="tab">Vaisseau</button>
-                <button type="button" role="tab" data-tab="bag" class="tab">Inventaire</button>
-                <button type="button" role="tab" data-tab="crew" class="tab">Équipage</button>
-                <button type="button" role="tab" data-tab="codex" class="tab">Codex</button>
-            </nav>
-            <button type="button" id="leave" class="secondary small">Quitter</button>
         </header>
         <div id="ship-alert" class="alert-banner" role="alert" hidden></div>
         <p id="action-error" class="error toast" role="alert" hidden></p>
@@ -79,6 +83,7 @@
         </aside>
 
         <div class="game-main">
+        <button type="button" id="back-game" class="back-game secondary small" hidden>← Retour à la partie</button>
         <!-- Écran de jeu : carte, planète, combat ou score -->
         <div class="tab-panel" data-panel="game">
             <div id="phase" class="phase-banner" hidden>
@@ -230,12 +235,14 @@
             <p class="dim small-text">Le Codex se remplit au fil de la partie : races croisées, objets trouvés, statuts subis. Il repart de zéro à chaque nouvelle partie. <a class="wiki-link" target="_blank" rel="noopener">Wiki des règles ↗</a></p>
         </div>
         </div>
-        <!-- Chat toujours visible : à droite sur grand écran, en bas sur téléphone.
-             Salon commun et conversation privée avec le MJ -->
+        <!-- Chat en bas à droite (en bas sur téléphone), qu'on peut fermer :
+             salon commun et conversation privée avec le MJ -->
+        <button type="button" id="chat-open" class="chat-open" hidden>💬 Chat <span id="chat-open-badge" class="badge" hidden></span></button>
         <aside id="chat" class="chat-dock" aria-label="Chat">
             <div class="chat-switch" role="group" aria-label="Conversation">
                 <button type="button" class="chat-channel active" data-channel="room">Salon <span class="badge" data-badge="room" hidden></span></button>
                 <button type="button" class="chat-channel" data-channel="gm">🔒 Avec le MJ <span class="badge" data-badge="gm" hidden></span></button>
+                <button type="button" id="chat-close" class="chat-close" aria-label="Fermer le chat" title="Fermer le chat">✕</button>
             </div>
             <ol id="chat-messages" class="chat-messages" aria-live="polite"></ol>
             <p id="chat-empty" class="dim">Aucun message pour l'instant.</p>
