@@ -18,6 +18,9 @@ module.exports = function() {
     // Compte Discord d'un joueur en ligne (id d'app → {id, name, avatar} ou null)
     app.locals.discordOf = (id) => require('../src/controllers/lobby').discordOf(id);
 
+    // Pages MJ cachées et bloquées pour les joueurs (src/controllers/mjAccess.js)
+    app.use(require('../src/controllers/mjAccess').middleware);
+
     app.use(express.urlencoded({ extended: true, limit: '52428800' }));
     app.use(express.json({limit: '52428800'}));
 

@@ -134,3 +134,4 @@ storage/cache/codex.json
 
 # Relais Cloudflare : fichiers locaux de wrangler
 relay/.wrangler/
+storage/mj-key

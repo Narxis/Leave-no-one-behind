@@ -117,3 +117,23 @@
         grid-column: 1 / -1;
     }
 }
+
+/* Réinitialiser la partie (MJ), ancien rôle de l'engrenage */
+.options-reset {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid #ff6b6b;
+    border-radius: 10px;
+    color: #ff8b8b;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.options-reset:hover,
+.options-reset:focus-visible {
+    background: rgb(255 107 107 / 15%);
+}
+
+.options-check + .options-section {
+    margin-top: 16px;
+}

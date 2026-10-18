@@ -96,7 +96,8 @@ const createWindow = function (page, options) {
 // Fenêtre avec l'adresse et le QR code du panneau MJ, comme dans le terminal
 const showPhoneAccess = function () {
     let ip = lanAddress();
-    let url = ip ? `http://${ip}:${port}/mj-menu` : null;
+    // Lien avec la clé MJ : les autres appareils du réseau n'ont pas les pages MJ
+    let url = ip ? require('../src/controllers/mjAccess').mjUrl(`http://${ip}:${port}`, 'mj-menu') : null;
     let svg = '';
     if (url) {
         const QRCode = require('qrcode-terminal/vendor/QRCode');
