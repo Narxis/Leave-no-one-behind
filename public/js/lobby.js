@@ -28,13 +28,17 @@
     };
     let phase = null;
 
-    // Dans l'app, la page s'ouvre dans la fenêtre du jeu et le lobby reste ouvert ;
-    // dans un navigateur, l'onglet du lobby y va
+    // Dans l'app, la page s'ouvre dans la fenêtre du jeu ; dans un navigateur,
+    // dans un onglet à part (ou l'onglet du lobby si les fenêtres sont bloquées)
     const openGame = function (page) {
-        if (/Electron/.test(navigator.userAgent))
-            window.open(page, 'lnob-game');
-        else
+        if (!window.open(page, 'lnob-game') && !/Electron/.test(navigator.userAgent))
             location.href = page;
+    };
+
+    // Lancement : l'écran de jeu passe aux paramètres et la page du MJ va au panneau MJ
+    const launch = function () {
+        openGame('/parametres');
+        location.href = '/mj-menu';
     };
 
     const renderLaunch = function () {
@@ -108,10 +112,15 @@
     // Après une coupure du serveur du jeu, on redemande l'état
     document.addEventListener('ws-reconnect', () => wsLNOB.send({action: 'lobby-state'}));
 
-    $('lobby-launch-main').addEventListener('click', () => openGame((LAUNCH[phase] || LAUNCH.none).page));
+    $('lobby-launch-main').addEventListener('click', () => {
+        if (LAUNCH[phase])
+            openGame(LAUNCH[phase].page);
+        else
+            launch();
+    });
     $('lobby-launch-new').addEventListener('click', () => {
         if (confirm('Recommencer une nouvelle partie ? La partie en cours sera perdue.'))
-            openGame('/parametres');
+            launch();
     });
     // L'étape a pu changer pendant que la fenêtre était en arrière-plan
     window.addEventListener('focus', () => wsLNOB.send({action: 'lobby-state'}));
