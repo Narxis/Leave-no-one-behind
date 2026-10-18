@@ -87,6 +87,8 @@ function startCountDown() {
         clearInterval(interval_cd);
         countDownRunning = false;
         announceTimer(0);
+        // Les choix partent aussi chez les joueurs, le temps de l'animation
+        announceScreen(undefined, []);
         let choicetab = document.getElementById('choicetab');
         TimerAnim.tick(0);
         choicetab.style.pointerEvents = 'none';
@@ -342,11 +344,12 @@ var showChoicesRun = 0;
 // Ce qu'affiche la page, annoncé au serveur pour les joueurs en ligne : ils
 // voient le même texte et votent sur les mêmes choix (votes.js)
 var cardScreenText = '';
-function announceScreen(chosen) {
+function announceScreen(chosen, choices) {
     if (typeof wsLNOB === 'undefined')
         return;
     // (une carte blanche n'a pas de numéro : « blank », comme pour les joueurs)
-    let data = {cardId: currentCard.blank ? 'blank' : currentCard.id, text: cardScreenText, choices: (currentCard.choices || []).map(c => c.value)};
+    let data = {cardId: currentCard.blank ? 'blank' : currentCard.id, text: cardScreenText,
+        choices: choices || (currentCard.choices || []).map(c => c.value)};
     if (chosen !== undefined)
         data.chosen = chosen;
     wsLNOB.send({action: 'card-screen', data: data});
