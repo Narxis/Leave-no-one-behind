@@ -107,7 +107,7 @@ class Items {
         // Quantité donnée à chaque joueur : « qty » de l'objet dans items.json
         let qty = {};
         try {
-            let pools = JSON.parse(fs.readFileSync(__dirname + '/../config/items.json', 'utf8'));
+            let pools = JSON.parse(fs.readFileSync(require('../config/paths').itemsFile(), 'utf8'));
             for (let item of (pools.starter || []))
                 qty[item.slug] = parseInt(item.qty) > 1 ? parseInt(item.qty) : 1;
         } catch (e) {}
@@ -210,7 +210,7 @@ class Items {
         if (cleanInstall) {
             await DB.tables.items.destroy({truncate: true});
         }
-        let baseItemsRaw = fs.readFileSync(__dirname + '/../config/items.json');
+        let baseItemsRaw = fs.readFileSync(require('../config/paths').itemsFile());
         let baseItems = JSON.parse(baseItemsRaw);
         let bulkItems = [];
 

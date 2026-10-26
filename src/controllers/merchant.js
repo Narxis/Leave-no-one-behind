@@ -12,7 +12,7 @@ const loot = require('./loot');
 // objets à une part de leur prix (sellRatio), modifiable par le MJ.
 // Gardé en mémoire, comme l'état du combat.
 
-const ITEMS_FILE = path.join(__dirname, '../config/items.json');
+const itemsFile = require('../config/paths').itemsFile;
 const MAX_STOCK = 30;
 const MAX_PRICE = 99999;
 const LOG_SIZE = 20;
@@ -27,7 +27,7 @@ const text = (v, max) => String(v || '').replace(/\s+/g, ' ').trim().slice(0, ma
 
 // Objets du catalogue avec leur prix (0 : pas de prix)
 const catalog = function () {
-    let pools = JSON.parse(fs.readFileSync(ITEMS_FILE, 'utf8'));
+    let pools = JSON.parse(fs.readFileSync(itemsFile(), 'utf8'));
     return Object.values(pools).flat().map(item => ({
         slug: item.slug,
         name: item.name,
