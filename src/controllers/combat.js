@@ -66,7 +66,7 @@ const getBestiary = function () {
 // Objets proposés au MJ pour le butin : la monnaie, puis tous ceux de
 // items.json (qty : la quantité proposée d'office quand on l'ajoute à un butin)
 const getLootList = function () {
-    let pools = JSON.parse(fs.readFileSync(__dirname + '/../config/items.json', 'utf8'));
+    let pools = JSON.parse(fs.readFileSync(require('../config/paths').itemsFile(), 'utf8'));
     let coins = money.lootItem(10);
     let seen = new Set([coins.name.toLowerCase()]);
     let list = [coins];

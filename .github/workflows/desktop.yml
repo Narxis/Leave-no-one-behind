@@ -1,21 +1,39 @@
-# Construit l'app de bureau (Windows, macOS, Linux) à la demande depuis
-# l'onglet Actions, ou quand un tag v* est poussé. Les installeurs sont
-# téléchargeables dans les artefacts du run.
+# Construit l'app de bureau.
+# - Windows : à chaque push sur prod (hors relais et docs), l'exécutable est
+#   publié dans une Release GitHub. Les fichiers ont toujours le même nom, donc
+#   ce lien télécharge toujours la dernière version :
+#     https://github.com/<dépôt>/releases/latest/download/LNOB-Setup.exe
+#     https://github.com/<dépôt>/releases/latest/download/LNOB-Portable.exe
+#   Par défaut la Release est créée dans ce dépôt. Pour la publier dans un
+#   autre dépôt (public, pour que les joueurs n'aient pas besoin d'un compte
+#   GitHub), définir la variable RELEASE_REPO (ex. Narxis/LNOB-app) et le
+#   secret RELEASE_TOKEN (jeton avec le droit « Contents: write » sur ce dépôt).
+# - macOS et Linux : à la demande depuis l'onglet Actions ou sur un tag v*,
+#   téléchargeables dans les artefacts du run.
 name: App de bureau
 
 on:
   workflow_dispatch:
   push:
+    branches: [ prod ]
     tags: [ "v*" ]
+    paths-ignore:
+      - 'relay/**'
+      - '**.md'
+      - '.github/workflows/relay.yml'
+      - '.github/workflows/wiki-tableaux.yml'
+
+# Une seule publication à la fois : la plus récente gagne
+concurrency:
+  group: desktop-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ windows-latest, macos-latest, ubuntu-latest ]
-    runs-on: ${{ matrix.os }}
-
+  windows:
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v5
     - uses: actions/setup-node@v5
@@ -24,8 +42,59 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm test
-    # Pas de certificat de signature pour l'instant : Windows et macOS
-    # afficheront un avertissement au premier lancement
+    # Pas de certificat de signature pour l'instant : Windows affiche
+    # « Windows a protégé votre ordinateur » au premier lancement
+    # (« Informations complémentaires » puis « Exécuter quand même »)
+    - run: npx electron-builder --win --publish never -c.extraMetadata.version=1.0.${{ github.run_number }}
+      env:
+        CSC_IDENTITY_AUTO_DISCOVERY: false
+    - uses: actions/upload-artifact@v5
+      with:
+        name: lnob-windows
+        path: |
+          dist/LNOB-Setup.exe
+          dist/LNOB-Portable.exe
+        if-no-files-found: error
+    - name: Publier la Release
+      if: github.ref == 'refs/heads/prod' || startsWith(github.ref, 'refs/tags/v')
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
+        REPO: ${{ vars.RELEASE_REPO || github.repository }}
+        TAG: app-1.0.${{ github.run_number }}
+      run: |
+        notes="Version construite depuis le commit ${GITHUB_SHA::7} de ${{ github.repository }}.
+
+        - **LNOB-Setup.exe** : installeur Windows (raccourci dans le menu Démarrer, mises à jour en réinstallant par-dessus).
+        - **LNOB-Portable.exe** : rien à installer, se lance directement (démarrage un peu plus lent).
+
+        Les parties, réglages et éditeurs sont gardés dans le dossier de données de l'utilisateur, hors du dossier de l'app : ils ne sont pas perdus en changeant de version.
+
+        Au premier lancement, Windows peut afficher « Windows a protégé votre ordinateur » : cliquer sur « Informations complémentaires » puis « Exécuter quand même »."
+        # Le commit n'existe que dans ce dépôt-ci
+        target=()
+        [ "$REPO" = "${{ github.repository }}" ] && target=(--target "$GITHUB_SHA")
+        gh release create "$TAG" dist/LNOB-Setup.exe dist/LNOB-Portable.exe \
+          --repo "$REPO" "${target[@]}" --latest \
+          --title "LNOB 1.0.${{ github.run_number }}" --notes "$notes"
+
+  other:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos-latest, ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+      with:
+        node-version: 22
+        cache: 'npm'
+    - run: npm ci
+    - run: npm test
+    # Pas de certificat de signature pour l'instant : macOS affichera un
+    # avertissement au premier lancement
     - run: npx electron-builder --publish never
       env:
         CSC_IDENTITY_AUTO_DISCOVERY: false
@@ -33,7 +102,6 @@ jobs:
       with:
         name: lnob-${{ matrix.os }}
         path: |
-          dist/*.exe
           dist/*.dmg
           dist/*.AppImage
         if-no-files-found: error

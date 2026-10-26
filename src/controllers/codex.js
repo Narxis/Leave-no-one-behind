@@ -22,7 +22,7 @@ const WIKI_PAGES = {
 };
 
 const FILE = paths.cache('codex.json');
-const ITEMS_FILE = path.join(__dirname, '../config/items.json');
+const itemsFile = require('../config/paths').itemsFile;
 const STATUSES_FILE = path.join(__dirname, '../config/statuses.json');
 const AFFINITIES_FILE = path.join(__dirname, '../config/raceAffinities.json');
 const ITEM_IMAGES = path.join(paths.ROOT, 'public');
@@ -124,7 +124,7 @@ const racesIn = function (text) {
 // Catalogue des objets, plus les butins ajoutés à la main par le MJ (en base seulement)
 const itemCatalog = async function () {
     let items = new Map();
-    for (let [pool, list] of Object.entries(readJson(ITEMS_FILE, {})))
+    for (let [pool, list] of Object.entries(readJson(itemsFile(), {})))
         for (let item of list)
             items.set(item.slug, {slug: item.slug, name: item.name, desc: item.desc || '', type: item.type || '', rarity: item.rarity || '', pool: pool,
                 race: item.race || '', image: item.image ? '/img/items/' + item.image : ''});
