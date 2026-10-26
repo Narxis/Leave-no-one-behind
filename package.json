@@ -65,12 +65,16 @@
       "output": "dist"
     },
     "win": {
-      "target": "nsis",
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "icon": "public/img/lnob-icon.ico"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "LNOB-Setup.${ext}"
     },
     "mac": {
       "target": "dmg",
@@ -80,6 +84,9 @@
       "target": "AppImage",
       "icon": "public/img/512.png",
       "category": "Game"
+    },
+    "portable": {
+      "artifactName": "LNOB-Portable.${ext}"
     }
   },
   "lnob": {

@@ -16,7 +16,7 @@ const combat = require('./combat');
 // failLosesIngredients. Réglages : config/craft.json.
 
 const FILE = path.join(__dirname, '../config/craft.json');
-const ITEMS_FILE = path.join(__dirname, '../config/items.json');
+const itemsFile = require('../config/paths').itemsFile;
 const DEFAULTS = {baseChance: 70, armoryBonus: 10, armoryMax: 3, failLosesIngredients: true};
 const IMAGE_PATH = '/img/items/';
 const MAX_INGREDIENTS = 8;
@@ -46,7 +46,7 @@ const qtyOf = (v) => Math.min(Math.max(parseInt(v) || 1, 1), MAX_QTY);
 const catalog = function () {
     let out = {};
     try {
-        let pools = JSON.parse(fs.readFileSync(ITEMS_FILE, 'utf8'));
+        let pools = JSON.parse(fs.readFileSync(itemsFile(), 'utf8'));
         for (let pool in pools)
             for (let item of pools[pool])
                 out[item.slug] = {slug: item.slug, name: item.name, image: item.image ? IMAGE_PATH + item.image : '', recipe: item.recipe};

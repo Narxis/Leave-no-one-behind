@@ -27,6 +27,8 @@ module.exports = function() {
     // Images des races customs, dans le dossier de données ; les races de base
     // restent servies depuis public/img/races
     app.use('/img/races', express.static(paths.raceImages()));
+    // Pareil pour les images ajoutées dans l'éditeur d'objets
+    app.use('/img/items', express.static(paths.itemImages()));
 
     app.use(express.static(pub()));
 
