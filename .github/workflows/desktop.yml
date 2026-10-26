@@ -45,7 +45,9 @@ jobs:
     # Pas de certificat de signature pour l'instant : Windows affiche
     # « Windows a protégé votre ordinateur » au premier lancement
     # (« Informations complémentaires » puis « Exécuter quand même »)
+    # bash : PowerShell coupe l'option -c.extraMetadata.version
     - run: npx electron-builder --win --publish never -c.extraMetadata.version=1.0.${{ github.run_number }}
+      shell: bash
       env:
         CSC_IDENTITY_AUTO_DISCOVERY: false
     - uses: actions/upload-artifact@v5
