@@ -4,7 +4,9 @@ const races = require('./races');
 const money = require('./money');
 const craft = require('./craft');
 
-// Catalogue des objets (éditeur /items) : src/config/items.json, rangé par
+// Catalogue des objets (éditeur /items) : src/config/items.json (dans l'app
+// installée, une copie modifiable dans le dossier de données, voir paths.js),
+// rangé par
 // catégorie (« pool »). Chaque objet a aussi un type facultatif (arme,
 // consommable, ressource…) et une rareté (commun → légendaire), propres au
 // catalogue pour l'instant. Les objets « starter » sont donnés au début de la
@@ -19,8 +21,9 @@ const craft = require('./craft');
 // La recette (« recipe », facultative) dit comment fabriquer l'objet à
 // l'atelier : {ingredients: [{slug, qty}], qty: exemplaires fabriqués}.
 
-const ITEMS_FILE = path.join(__dirname, '../config/items.json');
-const IMAGE_DIR = path.join(__dirname, '../../public/img/items');
+const paths = require('../config/paths');
+// Images ajoutées dans l'éditeur : dans le dossier de données (servies sur /img/items)
+const IMAGE_DIR = paths.itemImages();
 const IMAGE_PATH = '/img/items/';
 const STARTER = 'starter';
 const MAX_NAME = 60;
@@ -32,8 +35,8 @@ const MAX_PRICE = 99999;
 const RARITIES = ['commun', 'peu_commun', 'rare', 'epique', 'legendaire'];
 const TYPES = ['arme', 'armure', 'munition', 'consommable', 'ressource', 'outil', 'gadget', 'divers'];
 
-const read = () => JSON.parse(fs.readFileSync(ITEMS_FILE, 'utf8'));
-const write = (pools) => fs.writeFileSync(ITEMS_FILE, JSON.stringify(pools, null, 2) + '\n');
+const read = () => JSON.parse(fs.readFileSync(paths.itemsFile(), 'utf8'));
+const write = (pools) => fs.writeFileSync(paths.itemsWriteFile(), JSON.stringify(pools, null, 2) + '\n');
 
 const slugify = (text, sep = '-') => String(text).toLowerCase()
     .normalize('NFD').replace(/[̀-ͯ]/g, '')

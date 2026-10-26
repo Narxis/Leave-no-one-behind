@@ -9,9 +9,9 @@ const lootEntry = require('./loot');
 // Compagnons : modèles (nom, rôle, stats) gardés dans storage/cache/companions.json.
 
 const BASE_ENEMIES = path.join(__dirname, '../config/bestiary.json');
-// Chemins relatifs au dossier de lancement du serveur (comme les races customs)
-const ENEMY_FILE = path.join(process.cwd(), 'storage/cache/bestiary.json');
-const COMPANION_FILE = path.join(process.cwd(), 'storage/cache/companions.json');
+// Dans le dossier de données (comme les races customs)
+const ENEMY_FILE = require('../config/paths').cache('bestiary.json');
+const COMPANION_FILE = require('../config/paths').cache('companions.json');
 
 const DAMAGE = ['faible', 'moyen', 'fort'];
 // Catégorie d'un ennemi : sert au tri dans l'éditeur, au Roll et au menu MJ
