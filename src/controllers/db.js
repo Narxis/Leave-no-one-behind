@@ -146,32 +146,32 @@ class DB {
                 defaultValue: '',
                 allowNull: false
             },
-            humans: { // humains gagnés (+) ou perdus (-) en cliquant sur le choix
+            humans: { // humans gained (+) or lost (-) by clicking the choice
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
             },
-            loot: { // butin du choix : liste JSON de noms d'objets
+            loot: { // choice loot: JSON list of item names
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
             },
-            shop: { // marchand ouvert par le choix : JSON {name, stock?}
+            shop: { // merchant opened by the choice: JSON {name, stock?}
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
             },
-            status: { // statut donné par le choix : JSON {slug, duration}
+            status: { // status given by the choice: JSON {slug, duration}
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
             },
-            roll: { // jet du choix : JSON {stat, success, failure} (suites selon le résultat)
+            roll: { // choice roll: JSON {stat, success, failure} (follow-ups depending on the result)
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
             },
-            outcomes: { // issues tirées au hasard : JSON [{weight, reveal|next, ...}]
+            outcomes: { // outcomes drawn at random: JSON [{weight, reveal|next, ...}]
                 type: Sequelize.TEXT,
                 defaultValue: '',
                 allowNull: false
@@ -261,13 +261,13 @@ class DB {
                 defaultValue: 100,
                 allowNull: false
             },
-            // Rôle donné par le MJ (src/config/roles.json), '' : aucun
+            // Role given by the GM (src/config/roles.json), '': none
             role: {
                 type: Sequelize.STRING,
                 defaultValue: '',
                 allowNull: false
             },
-            credits: { // bourse du joueur (monnaie : config/currency.json)
+            credits: { // player's purse (currency: config/currency.json)
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
@@ -290,12 +290,12 @@ class DB {
                 defaultValue: 1000,
                 allowNull: false
             },
-            credits: { // caisse de bord, commune à l'équipage
+            credits: { // cash box, shared by the crew
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
             },
-            armory_up: { // niveau d'amélioration de l'armurerie (artisanat)
+            armory_up: { // armory upgrade level (crafting)
                 type: Sequelize.INTEGER,
                 defaultValue: 0,
                 allowNull: false
@@ -474,17 +474,17 @@ class DB {
                 defaultValue: 0,
                 allowNull: false
             },
-            player_id: { // '' : toute l'équipe, sinon le discord_id du joueur concerné
+            player_id: { // '': the whole team, otherwise the discord_id of the player concerned
                 type: Sequelize.STRING,
                 defaultValue: '',
                 allowNull: false
             },
-            custom: { // créé à la volée par le MJ
+            custom: { // created on the fly by the GM
                 type: Sequelize.BOOLEAN,
                 defaultValue: false,
                 allowNull: false
             },
-            clear_after_planet: { // null : suit l'option de partie
+            clear_after_planet: { // null: follows the game option
                 type: Sequelize.BOOLEAN,
                 defaultValue: null,
                 allowNull: true
@@ -522,8 +522,8 @@ class DB {
             log('synchro ' + table, '#666666')
         }
 
-        // Colonnes ajoutées après coup : on les crée dans une base existante
-        // plutôt que d'incrémenter DB_VERSION (qui repartirait d'une base vide)
+        // Columns added afterwards: we create them in an existing database
+        // rather than incrementing DB_VERSION (which would restart from an empty database)
         await this.addMissingColumns('card_modules', ['humans', 'loot', 'status', 'roll', 'outcomes', 'shop']);
         await this.addMissingColumns('players', ['role', 'credits']);
         await this.addMissingColumns('ship', ['credits', 'armory_up']);

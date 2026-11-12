@@ -1,6 +1,6 @@
-// Panneau MJ : plan du vaisseau. Le MJ fait clignoter des salles, affiche le
-// plan chez les joueurs et envoie une alerte dans une salle. L'état fait foi
-// côté serveur et revient par l'événement « ship-alerts ».
+// GM panel: ship map. The GM makes rooms blink, shows the
+// map to the players and sends an alert to a room. The server state is
+// authoritative and comes back through the "ship-alerts" event.
 (function () {
     const map = document.getElementById('mj-ship-map');
     if (!map)
@@ -23,11 +23,11 @@
     function toggleRoom(id) {
         let blink = state.blink.includes(id) ? state.blink.filter(r => r !== id) : state.blink.concat(id);
         send({blink: blink});
-        // La salle cliquée devient la cible proposée pour l'alerte
+        // The clicked room becomes the suggested target for the alert
         alertRoom.value = id;
     }
 
-    // Zones cliquables : la salle pleine, au-dessus du contour
+    // Clickable areas: the filled room, above the outline
     const hit = ShipMap.svgEl('g', {id: 'mj-ship-hit'}, svg);
     for (let room of rooms) {
         let path = ShipMap.roomFill(svg, room.id, 'mj-ship-room', hit);
@@ -37,7 +37,7 @@
         path.addEventListener('click', () => toggleRoom(room.id));
     }
 
-    // Liste des salles, pour cliquer sans viser sur le plan
+    // List of rooms, to click without aiming on the map
     const chips = {};
     for (let room of rooms) {
         let chip = document.createElement('button');
@@ -59,7 +59,7 @@
             chips[id].classList.toggle('active', state.blink.includes(id));
             chips[id].classList.toggle('alert', !!(alert && alert.room === id));
         }
-        // Calque sous les zones cliquables, pour ne pas gêner les clics
+        // Layer under the clickable areas, so it doesn't get in the way of clicks
         let g = ShipMap.layer(svg, 'ship-alert-layer');
         svg.insertBefore(g, svg.querySelector('.ship-room-labels') || hit);
         ShipMap.markAlertLabel(svg, alert && alert.room);

@@ -4,13 +4,13 @@ const money = require('./money');
 const inventory = require('./inventory');
 const loot = require('./loot');
 
-// Marchand : le MJ prépare un étal (objets, prix, stock) dans son menu et
-// l'ouvre ; l'écran de jeu le montre aux joueurs. Le MJ fait les achats et
-// les ventes pour eux : un joueur (sa bourse) ou le vaisseau (la caisse de
-// bord) achète en monnaie, ou l'équipage paie en cryopods (humains du
-// vaisseau) au cours de config/currency.json. Un marchand rachète les
-// objets à une part de leur prix (sellRatio), modifiable par le MJ.
-// Gardé en mémoire, comme l'état du combat.
+// Merchant: the GM prepares a stall (items, prices, stock) in their menu and
+// opens it; the game screen shows it to the players. The GM makes the purchases and
+// sales for them: a player (their purse) or the ship (the cash
+// box) buys with currency, or the crew pays in cryopods (the ship's
+// humans) at the rate of config/currency.json. A merchant buys back
+// items at a share of their price (sellRatio), editable by the GM.
+// Kept in memory, like the combat state.
 
 const itemsFile = require('../config/paths').itemsFile;
 const MAX_STOCK = 30;
@@ -18,14 +18,14 @@ const MAX_PRICE = 99999;
 const LOG_SIZE = 20;
 const DEFAULT_NAME = 'Marchand';
 
-// stock : [{slug, name, image, price, qty}] (qty null : sans limite)
+// stock: [{slug, name, image, price, qty}] (qty null: unlimited)
 let state = {open: false, name: DEFAULT_NAME, stock: [], log: []};
 
 const toInt = (v, def) => Number.isFinite(parseInt(v)) ? parseInt(v) : def;
 const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
 const text = (v, max) => String(v || '').replace(/\s+/g, ' ').trim().slice(0, max);
 
-// Objets du catalogue avec leur prix (0 : pas de prix)
+// Catalog items with their price (0: no price)
 const catalog = function () {
     let pools = JSON.parse(fs.readFileSync(itemsFile(), 'utf8'));
     return Object.values(pools).flat().map(item => ({
@@ -41,8 +41,8 @@ const findItem = function (list, entry) {
     return list.find(i => i.slug === slug) || list.find(i => name && i.name.toLowerCase() === name);
 }
 
-// Étal envoyé par le menu MJ : objets du catalogue (ou saisis à la main),
-// prix par défaut celui de l'éditeur d'objets
+// Stall sent by the GM menu: catalog items (or typed by hand),
+// default price from the item editor
 const cleanStock = function (raw) {
     let known = catalog();
     let stock = [];
@@ -99,13 +99,13 @@ const validTarget = async function (target) {
     return null;
 }
 
-// Ouvre l'étal (ou le met à jour s'il est déjà ouvert)
+// Opens the stall (or updates it if already open)
 const open = function (data) {
     let wasOpen = state.open;
     state.open = true;
     state.name = text(data.name, 40) || DEFAULT_NAME;
-    // Ouvert depuis une carte sans liste d'objets : dernier étal du MJ,
-    // à défaut les objets du catalogue qui ont un prix
+    // Opened from a card without an item list: the GM's last stall,
+    // failing that the catalog items that have a price
     if (Array.isArray(data.stock))
         state.stock = cleanStock(data.stock);
     else if (!state.stock.length)
@@ -120,7 +120,7 @@ const close = function () {
     return {type: 'close'};
 }
 
-// Achat : {index, slug, buyer: {type, id}, pay: 'credits' | 'cryopods', count}
+// Purchase: {index, slug, buyer: {type, id}, pay: 'credits' | 'cryopods', count}
 const buy = async function (data) {
     if (!state.open)
         return {error: 'La boutique est fermée'};
@@ -161,8 +161,8 @@ const buy = async function (data) {
     return {event: Object.assign({buyer: buyer, cryopods: cryopods}, log)};
 }
 
-// Vente au marchand : {slug, seller: {type, id}, count, price (à l'unité,
-// facultatif : sinon la part sellRatio du prix de l'éditeur)}
+// Sale to the merchant: {slug, seller: {type, id}, count, price (per unit,
+// optional: otherwise the sellRatio share of the editor price)}
 const sell = async function (data) {
     if (!state.open)
         return {error: 'La boutique est fermée'};
@@ -176,7 +176,7 @@ const sell = async function (data) {
     if (taken.error)
         return taken;
     await money.add(seller, price * taken.count);
-    // Le marchand remet l'objet dans son étal s'il en vend déjà
+    // The merchant puts the item back in their stall if they already sell it
     let entry = state.stock.find(e => e.slug && e.slug === taken.row.slug);
     if (entry && entry.qty !== null)
         entry.qty = Math.min(entry.qty + taken.count, loot.MAX_QTY);
@@ -184,7 +184,7 @@ const sell = async function (data) {
     return {event: Object.assign({seller: seller}, log)};
 }
 
-// Message websocket : l'étal, les bourses, les cryopods et les joueurs
+// Websocket message: the stall, purses, cryopods and players
 const message = async function (event) {
     return {
         action: 'merchant',
@@ -202,7 +202,7 @@ const message = async function (event) {
 
 const error = (text) => ({action: 'merchant-error', error: false, data: {message: text}});
 
-// Point d'entrée des actions websocket « merchant-* » et « money-* »
+// Entry point of the "merchant-*" and "money-*" websocket actions
 const handle = async function (response) {
     let data = response.data || {};
     let result = {};
@@ -219,7 +219,7 @@ const handle = async function (response) {
         case 'merchant-sell':
             result = await sell(data);
             break;
-        // Le MJ ajoute ou retire de la monnaie à une bourse (+x / -x)
+        // The GM adds or removes currency to a purse (+x / -x)
         case 'money-add': {
             let target = await validTarget(data.target);
             if (!target)
@@ -230,7 +230,7 @@ const handle = async function (response) {
             result = {event: {type: 'money', who: await whoName(target), amount: toInt(data.amount, 0)}};
             break;
         }
-        // Une bourse en donne à une autre (joueur ↔ joueur ou caisse de bord)
+        // A purse gives some to another (player ↔ player or cash box)
         case 'money-transfer': {
             let from = await validTarget(data.from), to = await validTarget(data.to);
             if (!from || !to)
@@ -241,7 +241,7 @@ const handle = async function (response) {
             result = {event: {type: 'transfer', from: await whoName(from), to: await whoName(to), amount: toInt(data.amount, 0)}};
             break;
         }
-        default:    // merchant-state : simple lecture
+        default:    // merchant-state: plain read
             return [await message(null)].concat(await inventory.payload(null));
     }
     if (result.error)

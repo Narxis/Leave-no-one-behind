@@ -1,4 +1,4 @@
-// EDITED 2023-01-17 pour le templating
+// EDITED 2023-01-17 for templating
 
 function setPlayerRaceListeners(discord_id) {
     let playerRaceContainer = document.querySelectorAll('#p'+discord_id+' .race-selector-container');
@@ -20,7 +20,7 @@ function setPlayerRaceListeners(discord_id) {
     }
 }
 
-// Race aléatoire : une autre que celle déjà choisie, quand il y en a d'autres
+// Random race: a different one from the one already chosen, when there are others
 function randomRace(race_list) {
     let all = [...race_list];
     let others = all.filter(li => !li.classList.contains('selected'));
@@ -40,8 +40,8 @@ function setRaceSelect(e=null, race=null, discord_id=null) {
         this.closest('.options-affichage').classList.remove('display-options');
     }
 
-    // Même message que le menu Discord (set-race.js) : le serveur enregistre
-    // la race puis la renvoie à toutes les pages, qui l'affichent via setRace
+    // Same message as the Discord menu (set-race.js): the server saves
+    // the race then sends it back to all pages, which show it via setRace
     wsLNOB.send({
         action: 'set-race',
         uid: discord_id,
@@ -49,7 +49,7 @@ function setRaceSelect(e=null, race=null, discord_id=null) {
     });
 }
 
-// Image + description de la race sur la fiche du joueur
+// Race image + description on the player's sheet
 function showRace(discord_id, race) {
     let img = document.querySelector('#p' + discord_id + ' .race-img');
     let desc = document.querySelector('#p' + discord_id + ' .race-desc');
@@ -57,7 +57,7 @@ function showRace(discord_id, race) {
         img.onerror = () => { img.onerror = null; img.src = '/img/races/wat.png'; };
         img.src = '/img/races/' + race + '.png';
 
-    // Race active surlignée dans le menu, et son nom en titre de description
+    // Active race highlighted in the menu, and its name as the description title
     let label = '';
     document.querySelectorAll('#p' + discord_id + ' .race-possible').forEach(li => {
         let active = li.getAttribute('data-name') === race;
@@ -72,8 +72,8 @@ function showRace(discord_id, race) {
     }
 }
 
-// Rôle choisi par le MJ : le serveur l'enregistre (et le retire au joueur qui
-// l'avait) puis renvoie un message player-role par joueur modifié
+// Role chosen by the GM: the server saves it (and removes it from the player who
+// had it) then sends a player-role message per changed player
 function setPlayerRoleListener(discord_id) {
     let select = document.querySelector('#p' + discord_id + ' .role-select');
     if (select)

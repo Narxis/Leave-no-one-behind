@@ -5,11 +5,11 @@ const { REST } = require('@discordjs/rest');
 const chalk = require("chalk");
 const token = process.env.DS_TOKEN;
 
-// Client connecté, pour retrouver un pseudo Discord hors d'une commande
+// Connected client, to find a Discord nickname outside of a command
 let activeClient = null;
 const getClient = () => activeClient;
 
-// Commande refusée parce que la partie n'en est pas à la bonne étape : on dit pourquoi
+// Command refused because the game isn't at the right step: say why
 const STEP_HINTS = {
     creation: 'La création des personnages n\'est pas ouverte : le MJ doit d\'abord ouvrir la page « Fiche Personnages ».',
     gameLive: 'La partie n\'a pas encore commencé : attends que le MJ lance la partie.'
@@ -59,8 +59,8 @@ const start = function () {
             '  Bot Ready !\n', '#7289DA');
     });
 
-    // Invité sur un nouveau serveur pendant qu'il tourne : ses commandes y sont
-    // enregistrées tout de suite (sinon il fallait redémarrer)
+    // Invited to a new server while running: its commands are
+    // registered there right away (otherwise a restart was needed)
     client.on('guildCreate', async guild => {
         log('[DS] Nouveau serveur : ' + guild.name, '#7289DA');
         await deployCommands(guild);
@@ -88,7 +88,7 @@ const start = function () {
         }
     });
 
-    /* AUTOCOMPLETE : propositions pendant la saisie d'une option */
+    /* AUTOCOMPLETE: suggestions while typing an option */
     client.on('interactionCreate', async interaction => {
         if (!interaction.isAutocomplete()) return;
 

@@ -1,5 +1,5 @@
 var express = require('express');
 module.exports = function() {
-    // On retourne que le router de express
+    // Only returns the express router
     return express.Router();
 };

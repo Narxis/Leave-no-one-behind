@@ -9,7 +9,7 @@ const {Card} = require("../models/card");
 const drawflow = require("../controllers/drawflow");
 const fs = require('fs');
 const paths = require('../config/paths');
-// Nom d'un lieu de l'éditeur : il sert de nom de fichier, rien d'autre que lettres, chiffres, - et _
+// Name of an editor place: it is used as a file name, nothing but letters, digits, - and _
 const validPlaceName = (name) => typeof name === 'string' && /^[a-z0-9_-]{1,40}$/i.test(name);
 const combat = require("./combat");
 const allies = require("./allies");
@@ -55,7 +55,7 @@ module.exports = {
         res.status(result.error ? 400 : 200).json(result);
     },
 
-    // Éditeur d'ennemis et compagnons (/bestiaire) : kind vaut enemies ou companions
+    // Enemy and companion editor (/bestiaire): kind is enemies or companions
     getNpcs(req, res) {
         res.json({enemies: npcs.getEnemies(), companions: npcs.getCompanions()});
     },
@@ -227,12 +227,12 @@ module.exports = {
         res.json(allies.getAllies());
     },
 
-    // Salles qui clignotent et alerte en cours sur le plan du vaisseau
+    // Blinking rooms and current alert on the ship map
     getShipAlerts(req, res) {
         res.json(shipAlerts.getState());
     },
 
-    // Équipe de la partie en cours (nommée par le MJ avant de commencer)
+    // Team of the current game (named by the GM before starting)
     getTeam(req, res) {
         res.json(leaderboard.getCurrent());
     },
@@ -244,7 +244,7 @@ module.exports = {
         res.json(team);
     },
 
-    // Paramètres de la partie (nombre de planètes, cartes par étape)
+    // Game settings (number of planets, cards per step)
     getSettings(req, res) {
         res.json(gameSettings.get());
     },
@@ -279,18 +279,18 @@ module.exports = {
         });
 
         let card = await new Card(cardRaw.id).getData();
-        // Carte de suite d'un choix : elle devient la carte affichée
+        // Follow-up card of a choice: it becomes the displayed card
         announceCard(card);
 
         res.json(card);
     },
 
-    // Carte affichée sur la page de jeu (panneau MJ ouvert en cours de partie)
+    // Card shown on the game page (GM panel opened mid-game)
     getCurrentCard(req, res) {
         res.json(getCurrentCard() || {});
     },
 
-    // Carte blanche en cours (panneau MJ ouvert ou rechargé pendant l'attente)
+    // Current blank card (GM panel opened or reloaded while waiting)
     getBlankCard(req, res) {
         res.json(blankCard.getState() || {});
     },
@@ -300,12 +300,12 @@ module.exports = {
         let statuses = await new Statuses();
         let activeStatuses = await statuses.getAllStatuses();
 
-        // Option du MJ : les statuts hors combat s'arrêtent après la visite
-        // d'une planète. La dernière carte jouée est alors cette planète : on
-        // reprend le voyage, la carte piochée est tirée sans eux (variantes)
+        // GM option: out-of-combat statuses end after visiting
+        // a planet. The last card played is then that planet: we
+        // resume the journey, the drawn card is drawn without them (variants)
         let last = await DB.tables.deck.findOne({where: {deck_id: 0, played: 1}, order: [['id', 'DESC']], raw: true});
         let lastCard = last && await DB.tables.cards.findOne({attributes: ['type'], where: {id: last.card_id}, raw: true});
-        // Un statut créé à la volée suit sa propre case plutôt que l'option
+        // A status created on the fly follows its own box rather than the option
         let afterPlanet = !!lastCard && lastCard.type === TYPE_PLANET;
         let clearOption = gameSettings.get().clearStatusesAfterPlanet;
         let isCleared = (s) => afterPlanet && (s.clear_after_planet === null || s.clear_after_planet === undefined ? clearOption : !!s.clear_after_planet);
@@ -314,7 +314,7 @@ module.exports = {
         let next_card = await cardPop();
 
         await statuses.countDown(activeStatuses.filter(s => !isCleared(s)));
-        // Les durées ont baissé (ou sont remises à zéro) : le panneau MJ redessine ses status
+        // Durations went down (or were reset): the GM panel redraws its statuses
         if (activeStatuses.length) {
             const wsClient = new ws(WS_URL);
             wsClient.on('open', () => {

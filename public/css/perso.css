@@ -383,7 +383,7 @@ input[type=number]::-webkit-outer-spin-button {
 .hidden{
   display: none;
 }
-/* Nom de l'équipe, demandé au MJ avant de commencer la partie */
+/* Team name, asked of the GM before starting the game */
 .team-dialog {
   width: min(440px, calc(100vw - 32px));
   padding: 0;
@@ -474,9 +474,9 @@ input[type=number]::-webkit-outer-spin-button {
   background: var(--ui-fill-hover);
 }
 
-/* Légende des stats + bouton d'explication du tirage */
+/* Stats legend + button explaining the roll */
 .legend-stack {
-  /* Au-dessus de la grille des fiches (très large), qui sinon capte les clics */
+  /* Above the grid of sheets (very wide), which otherwise catches the clicks */
   position: relative;
   z-index: 2;
   display: flex;
@@ -639,7 +639,7 @@ input[type=number]::-webkit-outer-spin-button {
   color: var(--ui-text-dim);
 }
 
-/* Tableau des bonus : repère des races customs (éditeur /races) */
+/* Bonus table: marker for custom races (/races editor) */
 .stats-custom {
   margin-left: 4px;
   padding: 0 6px;
@@ -651,12 +651,12 @@ input[type=number]::-webkit-outer-spin-button {
   vertical-align: 1px;
 }
 
-/* Paramètres de la partie rappelés avant de commencer */
+/* Game settings reminded before starting */
 .team-settings {
   margin-bottom: 4px;
 }
 
-/* Rôle du joueur, choisi par le MJ */
+/* Player's role, chosen by the GM */
 .role-picker {
   display: flex;
   align-items: center;
@@ -699,7 +699,7 @@ input[type=number]::-webkit-outer-spin-button {
   background: var(--ui-surface-flat);
 }
 
-/* Races customs de la partie (fenêtre de /persos) */
+/* Custom races of the game (/persos window) */
 .custom-races-list {
   display: flex;
   flex-direction: column;

@@ -1,9 +1,9 @@
 const combat = require('./combat');
 
-// Butin d'une carte : quand un choix rapporte des objets, ils attendent ici
-// que le MJ les distribue (glisser sur un joueur, comme le butin d'un combat)
-// ou les range tous dans le vaisseau. La carte suivante n'arrive qu'une fois
-// le butin vide. Gardé en mémoire, comme l'état du combat
+// Card loot: when a choice yields items, they wait here
+// for the GM to distribute them (drag onto a player, like combat loot)
+// or store them all in the ship. The next card only arrives once
+// the loot is empty. Kept in memory, like the combat state
 let state = {items: []};
 
 const getState = function () {
@@ -14,13 +14,13 @@ const message = function (event) {
     return {action: 'card-loot', error: false, data: {state: getState(), event: event || null}};
 }
 
-// Le choix vient d'être cliqué : son butin remplace l'éventuel butin oublié
+// The choice was just clicked: its loot replaces any forgotten loot
 const offer = function (items) {
     state = {items: combat.makeLoot(items)};
     return message({type: 'offer'});
 }
 
-// Un objet quitte le butin (même repérage que combat.takeLoot)
+// An item leaves the loot (same lookup as combat.takeLoot)
 const take = function (index, slug, name) {
     let i = parseInt(index);
     let item = state.items[i];
@@ -29,7 +29,7 @@ const take = function (index, slug, name) {
     return state.items.splice(i, 1)[0];
 }
 
-// Tout le butin d'un coup (« Tout récupérer »)
+// All the loot at once ("Tout récupérer")
 const takeAll = function () {
     let items = state.items;
     state = {items: []};

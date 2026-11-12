@@ -1,6 +1,6 @@
-/*---vvv---Rafraîchissement des menus (chargé après le CSS de chaque page)---vvv---*/
+/*---vvv---Menus restyle (loaded after each page's CSS)---vvv---*/
 
-/*---Panneaux---*/
+/*---Panels---*/
 .flex-container,
 .endscreen-container,
 .lecadre,
@@ -17,16 +17,16 @@
     color: var(--ui-text);
 }
 
-/* Pas de flou ici : backdrop-filter changerait le repère des
-   blocs .ennemy/.ally/.status-box positionnés en absolu */
+/* No blur here: backdrop-filter would change the reference frame of the
+   absolutely positioned .ennemy/.ally/.status-box blocks */
 .flex-container {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
 }
 
-/* Cadre du vaisseau : rentré dans le panneau (il débordait de 53px à
-   gauche), largeur calée sur la colonne des modules, et fond spatial en
-   CSS à la place de l'image Discord qui a expiré */
+/* Ship frame: brought inside the panel (it overflowed by 53px on the
+   left), width matched to the modules column, and space background in
+   CSS instead of the expired Discord image */
 .fiche-page .vaisseau {
     left: 37px;
     width: 353px;
@@ -36,7 +36,7 @@
     box-shadow: var(--ui-shadow), inset 0 0 40px rgb(0 0 0 / 55%);
     background-color: #05031a;
     background-image:
-        /* champ d'étoiles (SVG intégré, positions fixes) */
+        /* star field (inline SVG, fixed positions) */
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='220' fill='white'%3E%3Ccircle cx='0' cy='203' r='0.7' fill-opacity='0.79'/%3E%3Ccircle cx='192' cy='72' r='0.9' fill-opacity='0.68'/%3E%3Ccircle cx='246' cy='140' r='0.7' fill-opacity='0.57'/%3E%3Ccircle cx='255' cy='154' r='1.3' fill-opacity='0.76'/%3E%3Ccircle cx='168' cy='203' r='0.6' fill-opacity='0.66'/%3E%3Ccircle cx='332' cy='151' r='0.8' fill-opacity='0.90'/%3E%3Ccircle cx='327' cy='82' r='0.9' fill-opacity='0.55'/%3E%3Ccircle cx='55' cy='65' r='0.7' fill-opacity='0.91'/%3E%3Ccircle cx='201' cy='160' r='0.6' fill-opacity='0.51'/%3E%3Ccircle cx='202' cy='112' r='0.7' fill-opacity='0.90'/%3E%3Ccircle cx='20' cy='80' r='0.9' fill-opacity='0.90'/%3E%3Ccircle cx='185' cy='36' r='0.7' fill-opacity='0.57'/%3E%3Ccircle cx='153' cy='73' r='0.8' fill-opacity='0.49'/%3E%3Ccircle cx='326' cy='101' r='0.9' fill-opacity='0.73'/%3E%3Ccircle cx='186' cy='111' r='1.0' fill-opacity='0.59'/%3E%3Ccircle cx='255' cy='55' r='0.7' fill-opacity='0.55'/%3E%3Ccircle cx='141' cy='175' r='0.6' fill-opacity='0.84'/%3E%3Ccircle cx='28' cy='89' r='0.6' fill-opacity='0.95'/%3E%3Ccircle cx='79' cy='139' r='1.3' fill-opacity='0.62'/%3E%3Ccircle cx='213' cy='30' r='1.0' fill-opacity='0.88'/%3E%3Ccircle cx='319' cy='200' r='0.7' fill-opacity='0.36'/%3E%3Ccircle cx='89' cy='17' r='1.3' fill-opacity='0.72'/%3E%3Ccircle cx='83' cy='163' r='0.9' fill-opacity='0.49'/%3E%3Ccircle cx='318' cy='52' r='1.0' fill-opacity='0.42'/%3E%3Ccircle cx='176' cy='1' r='0.9' fill-opacity='0.90'/%3E%3Ccircle cx='8' cy='198' r='1.0' fill-opacity='0.69'/%3E%3Ccircle cx='245' cy='59' r='0.7' fill-opacity='0.69'/%3E%3Ccircle cx='19' cy='169' r='0.9' fill-opacity='0.65'/%3E%3Ccircle cx='12' cy='24' r='0.7' fill-opacity='0.76'/%3E%3Ccircle cx='321' cy='8' r='0.9' fill-opacity='0.95'/%3E%3Ccircle cx='344' cy='168' r='0.7' fill-opacity='0.79'/%3E%3Ccircle cx='318' cy='88' r='0.8' fill-opacity='0.88'/%3E%3Ccircle cx='201' cy='77' r='0.9' fill-opacity='0.55'/%3E%3Ccircle cx='261' cy='93' r='0.7' fill-opacity='0.94'/%3E%3Ccircle cx='358' cy='139' r='1.0' fill-opacity='0.47'/%3E%3Ccircle cx='232' cy='30' r='0.8' fill-opacity='0.81'/%3E%3Ccircle cx='340' cy='106' r='0.8' fill-opacity='0.45'/%3E%3Ccircle cx='239' cy='115' r='0.8' fill-opacity='0.80'/%3E%3Ccircle cx='130' cy='165' r='1.3' fill-opacity='0.53'/%3E%3Ccircle cx='195' cy='45' r='0.7' fill-opacity='0.49'/%3E%3Ccircle cx='237' cy='94' r='1.3' fill-opacity='0.81'/%3E%3Ccircle cx='296' cy='201' r='0.9' fill-opacity='0.93'/%3E%3Ccircle cx='9' cy='168' r='0.9' fill-opacity='0.89'/%3E%3Ccircle cx='13' cy='30' r='1.3' fill-opacity='0.41'/%3E%3Ccircle cx='31' cy='2' r='1.0' fill-opacity='0.47'/%3E%3Ccircle cx='48' cy='44' r='0.7' fill-opacity='0.62'/%3E%3C/svg%3E"),
         radial-gradient(ellipse 60% 70% at 28% 35%, rgb(118 78 255 / 38%), transparent 70%),
         radial-gradient(ellipse 50% 60% at 78% 72%, rgb(79 216 224 / 22%), transparent 70%),
@@ -51,8 +51,8 @@
     background: none;
 }
 
-/* Image d'origine hébergée sur Discord, expirée : n'affichait plus
-   qu'une icône cassée et un trait vertical */
+/* Original image hosted on Discord, expired: only showed
+   a broken icon and a vertical line */
 .fiche-page .vsaut {
     display: none;
 }
@@ -62,7 +62,7 @@
     filter: drop-shadow(0 10px 18px rgb(0 0 0 / 60%)) drop-shadow(0 0 22px rgb(118 78 255 / 35%));
 }
 
-/*---Boutons---*/
+/*---Buttons---*/
 .next,
 .bouton-suivant,
 .mj-button,
@@ -112,7 +112,7 @@
     box-shadow: inset 0 2px 6px rgb(0 0 0 / 40%);
 }
 
-/* Boutons d'action principale : accent jaune permanent */
+/* Main action buttons: permanent yellow accent */
 .next,
 .bouton-suivant,
 .mj-button {
@@ -124,7 +124,7 @@
     text-align: center;
 }
 
-/* Accès au menu MJ depuis un téléphone (bouton visible sur mobile seulement) */
+/* Access to the GM menu from a phone (button visible on mobile only) */
 .mj-button {
     box-sizing: border-box;
     border-radius: 14px;
@@ -138,7 +138,7 @@
     font-size: 0.95em;
 }
 
-/* Couleurs de sens conservées, en version plus sobre */
+/* Meaning colors kept, in a more sober version */
 .player-create {
     background: rgb(79 216 224 / 12%);
     border-color: rgb(79 216 224 / 55%);
@@ -154,7 +154,7 @@
     border-color: rgb(92 220 120 / 60%);
 }
 
-/*---Champs de saisie---*/
+/*---Input fields---*/
 #search-ally,
 #search-ennemy,
 #search-status,
@@ -196,7 +196,7 @@ input.add-life:focus,
     opacity: 1;
 }
 
-/*---Menu principal---*/
+/*---Main menu---*/
 .pas-title {
     width: max-content;
     white-space: nowrap;
@@ -227,7 +227,7 @@ input.add-life:focus,
     50% { opacity: 1; }
 }
 
-/*---Menu MJ---*/
+/*---GM menu---*/
 .choice-reveal,
 .combat {
     border-color: var(--ui-border) !important;
@@ -303,8 +303,8 @@ input.add-life:focus,
     color: var(--ui-accent);
 }
 
-/* Colonne adversaires / compagnons / status : grille alignée au lieu
-   des blocs positionnés en absolu, à toutes les tailles d'écran */
+/* Opponents / companions / status column: aligned grid instead
+   of absolutely positioned blocks, at all screen sizes */
 @media all {
     .life-container {
         box-sizing: border-box;
@@ -352,7 +352,7 @@ input.add-life:focus,
         border-bottom: none;
     }
 
-    /* Compagnons : +, compagnon au hasard et x sur une ligne */
+    /* Companions: +, random companion and x on one line */
     .ally:not(.hide) {
         grid-template-columns: 1fr 1fr 1fr;
     }
@@ -381,10 +381,10 @@ input.add-life:focus,
     }
 }
 
-/* Mise en page responsive : 3 colonnes, puis 2, puis 1. Le cadre n'est
-   plus centré sur un point fixe (.center 0x0) mais dans le flux, pour que
-   la page défile quand il ne tient pas à l'écran */
-/* Le menu Échap passe au-dessus du cadre (.center a aussi un z-index) */
+/* Responsive layout: 3 columns, then 2, then 1. The frame is no
+   longer centered on a fixed point (.center 0x0) but in the flow, so that
+   the page scrolls when it doesn't fit on screen */
+/* The Escape menu goes above the frame (.center also has a z-index) */
 .mj-page #menuToggle {
     z-index: 10;
 }
@@ -430,8 +430,8 @@ input.add-life:focus,
     height: 100%;
 }
 
-/* 3 colonnes de hauteur fixe : chaque colonne défile si son contenu
-   dépasse (liste d'adversaires, compagnons, butin) */
+/* 3 fixed-height columns: each column scrolls if its content
+   overflows (opponent list, companions, loot) */
 .mj-page .life-container,
 .mj-page .combat {
     overflow: hidden auto;
@@ -447,8 +447,8 @@ input.add-life:focus,
     height: auto;
 }
 
-/* Neutralise les hauteurs fixes et le débordement des anciennes règles
-   « téléphone » de mj-menu.css (media queries sur la densité de pixels) */
+/* Cancels the fixed heights and overflow of the old
+   "phone" rules of mj-menu.css (media queries on pixel density) */
 .mj-page .choice-reveal {
     overflow: hidden auto;
 }
@@ -518,9 +518,9 @@ input.add-life:focus,
     }
 }
 
-/* C'est la page elle-même qui défile, pas un bloc intérieur : sur
-   téléphone, Safari ne masque ses barres (adresse, navigation) que lorsque
-   la page défile. style.css bloque le défilement du body sur tout le site */
+/* The page itself scrolls, not an inner block: on
+   phones, Safari only hides its bars (address, navigation) when
+   the page scrolls. style.css blocks body scrolling across the whole site */
 body.mj-page {
     height: auto;
     min-height: 100vh;
@@ -535,9 +535,9 @@ body.mj-page {
     }
 }
 
-/* Écrans tactiles (téléphones, tablettes) : pas de menu ☰ (masqué sur
-   mobile), marges sur les zones sûres (encoche, barre d'accueil), y compris
-   en mode plein écran depuis l'écran d'accueil */
+/* Touch screens (phones, tablets): no ☰ menu (hidden on
+   mobile), margins on safe areas (notch, home bar), including
+   in full-screen mode from the home screen */
 @media (hover: none) and (pointer: coarse) {
     .mj-page .center {
         padding:
@@ -555,7 +555,7 @@ body.mj-page {
     }
 }
 
-/*---Menu MJ : combat---*/
+/*---GM menu: combat---*/
 .mj-enemies {
     display: flex;
     flex-direction: column;
@@ -778,7 +778,7 @@ body.mj-page {
     background: rgb(255 90 110 / 18%);
 }
 
-/* Choix de la cible d'un ennemi : même boîte que le choix de l'attaquant, en rouge */
+/* Choosing an enemy's target: same box as choosing the attacker, in red */
 .mj-victims {
     border-color: rgb(255 90 110 / 50%);
 }
@@ -788,7 +788,7 @@ body.mj-page {
     color: var(--ui-danger);
 }
 
-/* Attaque en préparation : choix sélectionné, puis « Valider » (mj-combat.js) */
+/* Attack being prepared: selected choice, then "Valider" (mj-combat.js) */
 .mj-choices {
     display: flex;
     flex-wrap: wrap;
@@ -834,8 +834,8 @@ body.mj-page {
     cursor: default;
 }
 
-/* Appui long pour confirmer (ui-hold.js) : le bouton se remplit pendant le
-   maintien ; un simple clic affiche le rappel de data-hold dessous */
+/* Long press to confirm (ui-hold.js): the button fills up while
+   held; a simple click shows the data-hold reminder below */
 [data-hold] {
     position: relative;
 }
@@ -876,7 +876,7 @@ body.mj-page {
     100% { opacity: 0; }
 }
 
-/* Issue imposée par le MJ pour l'attaque d'un ennemi (mj-combat.js) */
+/* Outcome forced by the GM for an enemy's attack (mj-combat.js) */
 .mj-outcome {
     display: flex;
     flex-wrap: wrap;
@@ -935,7 +935,7 @@ body.mj-page {
     cursor: default;
 }
 
-/*---Menu MJ : butin des ennemis---*/
+/*---GM menu: enemy loot---*/
 .mj-loot-toggle {
     grid-column: 1 / -1;
     overflow: hidden;
@@ -987,7 +987,7 @@ body.mj-page {
     font-size: 12px;
 }
 
-/* Objet saisi à la main, absent de items.json */
+/* Item typed by hand, not in items.json */
 .mj-loot-item.custom {
     border-style: dashed;
 }
@@ -1047,8 +1047,8 @@ body.mj-page {
     cursor: pointer;
 }
 
-/*---Menu MJ : compagnons (PNJ)---*/
-/* Onglets Adversaires / Compagnons : une seule liste visible */
+/*---GM menu: companions (NPCs)---*/
+/* Opponents / Companions tabs: only one list visible */
 .mj-enemies.hide,
 .mj-allies.hide {
     display: none;
@@ -1172,7 +1172,7 @@ body.mj-page {
     padding: 0 16px 12px;
     font-size: 13px;
     color: var(--ui-text-dim);
-    /* Défilement si le journal déborde */
+    /* Scrolling if the log overflows */
     max-height: 200px;
     overflow-y: auto;
 }
@@ -1189,7 +1189,7 @@ body.mj-page {
     color: var(--ui-danger);
 }
 
-/*---Fiches personnages---*/
+/*---Character sheets---*/
 .player .player-stats,
 .race-img {
     border-color: var(--ui-border);
@@ -1204,8 +1204,8 @@ body.mj-page {
     box-shadow: inset 0 0 0 1px var(--ui-border);
 }
 
-/* Menu des races : 2 colonnes, hauteur selon le contenu (avant : 300px
-   fixes, la dernière race était coupée) */
+/* Race menu: 2 columns, height based on content (before: fixed 300px,
+   the last race was cut off) */
 .display-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1235,7 +1235,7 @@ body.mj-page {
     transition: background 150ms var(--ui-ease), color 150ms var(--ui-ease), border-color 150ms var(--ui-ease);
 }
 
-/* Race aléatoire : toute la largeur, au-dessus des races */
+/* Random race: full width, above the races */
 .options-affichage li.race-random {
     grid-column: 1 / -1;
     border-color: var(--ui-border);
@@ -1257,8 +1257,8 @@ body.mj-page {
     cursor: pointer;
 }
 
-/* Légende des stats (colonne de gauche de /persos) */
-/* Description de la race */
+/* Stats legend (left column of /persos) */
+/* Race description */
 .player .race-desc {
     box-sizing: border-box;
     width: calc(100% - 24px);
@@ -1304,14 +1304,14 @@ body.mj-page {
     border-color: var(--ui-border);
 }
 
-/*---Écran de fin---*/
+/*---End screen---*/
 .ship-recap,
 .planet-recap {
     border-color: var(--ui-border) !important;
     border-width: 1px !important;
 }
 
-/*---Fiche vaisseau : libellés des modules---*/
+/*---Ship sheet: module labels---*/
 .fiche-page .modtxt {
     box-shadow: none;
     padding: 0 0 0 24px;
@@ -1323,9 +1323,9 @@ body.mj-page {
 }
 
 /*---Synopsis---*/
-/* Hauteur fixe à la taille du texte complet : 185px d'origine ne suffisaient
-   plus avec l'interligne, et une hauteur automatique ferait grandir le
-   cadre pendant l'écriture */
+/* Fixed height matching the full text: the original 185px were no longer
+   enough with the line height, and an automatic height would make the
+   frame grow while typing */
 .synopsis-page .card {
     height: auto;
     min-height: 232px;
@@ -1334,13 +1334,13 @@ body.mj-page {
     text-indent: 0;
 }
 
-/* « Suivant » sous le coin droit du cadre (il dépassait de 160px à droite) */
+/* "Suivant" under the right corner of the frame (it overflowed by 160px on the right) */
 .synopsis-page .next {
     top: 172px;
     left: 419px;
 }
 
-/*---^^^---Rafraîchissement des menus---^^^---*/
+/*---^^^---Menus restyle---^^^---*/
 
 @media (max-width: 480px) {
     .mj-ally-stats {
@@ -1348,8 +1348,8 @@ body.mj-page {
     }
 }
 
-/* Description du vaisseau : texte un peu resserré, et la colonne défile
-   au lieu de déborder du panneau (zoom ou police plus large) */
+/* Ship description: slightly tighter text, and the column scrolls
+   instead of overflowing the panel (zoom or wider font) */
 .fiche-page .descriptif {
     box-sizing: border-box;
     max-height: calc(100% - 64px);
@@ -1367,7 +1367,7 @@ body.mj-page {
     margin: 6px 0;
 }
 
-/* Status actifs (mj-menu.js) : nom, durée restante en cartes, retrait */
+/* Active statuses (mj-menu.js): name, remaining duration in cards, removal */
 .mj-statuses {
     display: flex;
     flex-direction: column;
@@ -1405,7 +1405,7 @@ body.mj-page {
     color: var(--ui-text-dim);
 }
 
-/* Cible des statuts hors combat et création d'un statut à la volée */
+/* Target of out-of-combat statuses and creating a status on the fly */
 .mj-status-form {
     display: flex;
     flex-direction: column;
@@ -1454,7 +1454,7 @@ body.mj-page {
     margin-left: auto;
 }
 
-/*---Menu MJ : tour en cours et statuts des ennemis---*/
+/*---GM menu: current turn and enemy statuses---*/
 .mj-turn {
     display: flex;
     flex-wrap: wrap;
@@ -1504,7 +1504,7 @@ body.mj-page {
     color: var(--ui-text-dim);
 }
 
-/*---Menu MJ : initiative et ordre de jeu---*/
+/*---GM menu: initiative and turn order---*/
 .mj-page .combat .combat-initiative {
     width: 90%;
     height: auto;
@@ -1638,7 +1638,7 @@ body.mj-page {
     cursor: default;
 }
 
-/*---Menu MJ : jet lancé à la place d'un joueur---*/
+/*---GM menu: roll made on behalf of a player---*/
 .mj-player-roll {
     display: flex;
     flex-direction: column;
@@ -1677,13 +1677,13 @@ body.mj-page {
     pointer-events: none;
 }
 
-/*---Menu MJ : issue tirée au hasard pour un choix---*/
+/*---GM menu: random outcome drawn for a choice---*/
 .mj-outcome {
     color: var(--ui-accent);
     font-weight: 600;
 }
 
-/*---Menu MJ : jet d'un choix en attente (page de jeu en pause)---*/
+/*---GM menu: pending choice roll (game page paused)---*/
 .mj-card-roll {
     display: flex;
     flex: none;
@@ -1785,7 +1785,7 @@ body.mj-page {
     color: var(--ui-danger);
 }
 
-/*---Menu MJ : points de vie des joueurs et compagnons---*/
+/*---GM menu: health points of players and companions---*/
 .mj-team {
     display: flex;
     flex-direction: column;
@@ -1870,7 +1870,7 @@ body.mj-page {
     background: var(--ui-danger);
 }
 
-/*---Menu MJ : panneau des statuts (ennemis, joueurs, compagnons)---*/
+/*---GM menu: statuses panel (enemies, players, companions)---*/
 .mj-status-panel {
     display: flex;
     flex-direction: column;

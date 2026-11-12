@@ -1,20 +1,20 @@
-// Demandes d'objets entre joueurs en ligne. Un joueur donne ce qu'il a, mais
-// ne prend jamais dans l'inventaire d'un autre ni dans le vaisseau : il
-// demande. Sa demande pose le logo de son rôle à côté de l'objet (écran de jeu
-// et écran porté, inventory.js) et un message part en son nom dans le chat.
-// Elle tombe d'elle-même quand l'objet quitte cet inventaire.
+// Item requests between online players. A player gives what they have, but
+// never takes from someone else's inventory or from the ship: they
+// request. Their request puts their role logo next to the item (game screen
+// and ported screen, inventory.js) and a message goes to the chat in their name.
+// It drops by itself when the item leaves that inventory.
 //
-// Pages du MJ et écran porté : {action: 'item-requests', data: {requests}}
-//   requests : [{owner: {type: 'player', id} | {type: 'ship'}, slug, from: [{id, name}]}]
+// GM pages and ported screen: {action: 'item-requests', data: {requests}}
+//   requests: [{owner: {type: 'player', id} | {type: 'ship'}, slug, from: [{id, name}]}]
 
-const requests = new Map(); // clé (inventaire|objet) → {owner, slug, from: Map(id → nom)}
+const requests = new Map(); // key (inventory|item) → {owner, slug, from: Map(id → name)}
 
 const keyOf = (owner, slug) => (owner.type === 'ship' ? 'ship' : 'player:' + owner.id) + '|' + slug;
 
 const cleanOwner = (owner) => owner && owner.type === 'ship' ? {type: 'ship'}
     : owner && owner.type === 'player' && owner.id ? {type: 'player', id: String(owner.id)} : null;
 
-// Demande (ou retire la demande) d'un joueur. Renvoie {active} ou {error}
+// A player's request (or withdrawal of it). Returns {active} or {error}
 const toggle = function (requester, owner, slug) {
     owner = cleanOwner(owner);
     slug = String(slug || '');
@@ -41,12 +41,12 @@ const list = () => Array.from(requests.values()).map(r => ({
     from: Array.from(r.from, ([id, name]) => ({id, name}))
 }));
 
-// Demandes sur les objets d'un joueur (sa page : « Mira te demande… »)
+// Requests on a player's items (their page: "Mira te demande…")
 const forOwner = (id) => list().filter(r => r.owner.type === 'player' && r.owner.id === String(id))
     .map(r => ({slug: r.slug, from: r.from}));
 
-// Objets partis (donnés, utilisés, jetés) : leurs demandes tombent.
-// inventories : {id: [{slug}]}, ship : [{slug}]. Renvoie true si ça a changé
+// Items gone (given, used, discarded): their requests drop.
+// inventories: {id: [{slug}]}, ship: [{slug}]. Returns true if something changed
 const prune = function (inventories, ship) {
     let changed = false;
     for (let [key, r] of requests) {

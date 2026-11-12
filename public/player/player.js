@@ -1,9 +1,9 @@
-// Page joueur : rejoindre une partie avec son code, puis suivre la partie.
-// Servie par le relais (lien partagé par le MJ) et ouverte par l'app de
-// bureau en mode joueur (adresse du relais dans ?relay=).
+// Player page: join a game with its code, then follow the game.
+// Served by the relay (link shared by the GM) and opened by the desktop
+// app in player mode (relay address in ?relay=).
 //
-// Le MJ envoie l'état du jeu (kind 'game') et celui du joueur (kind 'you') ;
-// le joueur envoie des actions ({kind:'action'}), que le MJ accepte ou non.
+// The GM sends the game state (kind 'game') and the player's state (kind 'you');
+// the player sends actions ({kind:'action'}), which the GM accepts or not.
 (function () {
     const PROTOCOL = 1;
     const $ = (id) => document.getElementById(id);
@@ -13,15 +13,15 @@
     const ROLL_MODULES = [['', 'Sans module'], ['scanner', 'Scanners de surface'], ['proximity', 'Détecteurs de proximité'], ['motors', 'Moteurs'], ['oxygen', 'Module d\'oxygène'], ['energy', 'Électricité'], ['gravity', 'Gravité artificielle']];
     const EMOTES = ['👍', '👎', '😮', '😂', '😱', '❤️', '🤔', '🎉'];
     const CARD_KINDS = {event: 'Événement', place: 'Lieu', planet: 'Planète en approche', blank: 'Carte blanche'};
-    // Panneau « Statistiques » et cadrans des modules, comme sur l'écran de jeu
+    // "Statistiques" panel and module dials, as on the game screen
     const HUD_STATS = [['combat', 'Combat/offense'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'], ['survival', 'Survie/défense'], ['recon', 'Reconnaissance'], ['moral', 'Moral']];
     const MAIN_MODULES = {motors: 'Moteurs', scanner: 'Scanner', proximity: 'Détecteur', oxygen: 'Oxygène', energy: 'Électricité', gravity: 'Gravité'};
     const SECOND_MODULES = [['landing', 'Atterrissage'], ['construction', 'Construction'], ['dbscience', 'BDD scientifique'], ['dbhistory', 'BDD historique']];
-    // Relevés autour de la planète : à gauche, puis à droite (écran de jeu)
+    // Readings around the planet: on the left, then on the right (game screen)
     const PLANET_LEFT = ['oxy', 'cli', 'grv'];
-    let starWarp = () => {}; // voyage entre deux cartes (fond étoilé, plus bas)
+    let starWarp = () => {}; // travel between two cards (starry background, further down)
     const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // Site du wiki des règles (même adresse dans src/controllers/codex.js)
+    // Rules wiki site (same address in src/controllers/codex.js)
     const WIKI_URL = 'https://narxis.github.io/Leave-no-one-behind-Wiki/';
     const RARITIES = {commun: 'Commun', peu_commun: 'Peu commun', rare: 'Rare', epique: 'Épique', legendaire: 'Légendaire'};
     const PHASES = {
@@ -31,7 +31,7 @@
         postGame: 'La partie est terminée.'
     };
 
-    // Adresse WebSocket du relais
+    // Relay WebSocket address
     const relayBase = (function () {
         let base = params.get('relay') || (/^https?:$/.test(location.protocol) ? location.origin : '');
         return base.replace(/^http/, 'ws').replace(/\/+$/, '');
@@ -39,10 +39,10 @@
 
     const store = {
         get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
-        set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* stockage indisponible */ } }
+        set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* storage unavailable */ } }
     };
 
-    // Identifiant du joueur, gardé d'une partie à l'autre pour retrouver son perso
+    // Player id, kept from one game to the next to find their character again
     const playerId = (function () {
         let id = store.get('lnob-player-id');
         if (!/^[A-Za-z0-9_-]{8,64}$/.test(id || '')) {
@@ -54,10 +54,10 @@
         return id;
     })();
 
-    // ---- Connexion Discord ------------------------------------------------
-    // Le relais fait la connexion (OAuth2, scope identify) et renvoie un
-    // profil signé {id, name, avatar}, gardé sur l'appareil et présenté en
-    // rejoignant une partie. Rien ne s'affiche si le relais n'est pas réglé.
+    // ---- Discord login ------------------------------------------------
+    // The relay does the login (OAuth2, identify scope) and returns a
+    // signed profile {id, name, avatar}, kept on the device and presented when
+    // joining a game. Nothing shows if the relay isn't configured.
     const relayHttp = relayBase.replace(/^ws/, 'http');
     const discordPayload = function (token) {
         try {
@@ -69,7 +69,7 @@
             return null;
         }
     };
-    // Retour de Discord : #discord= (navigateur) ou ?discord= (app de bureau)
+    // Return from Discord: #discord= (browser) or ?discord= (desktop app)
     (function () {
         let hash = new URLSearchParams(location.hash.slice(1));
         let token = hash.get('discord') || params.get('discord');
@@ -83,7 +83,7 @@
     const formatCode = (code) => code.length === 6 ? code.slice(0, 3) + '-' + code.slice(3) : code;
     const cleanCode = (value) => String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 
-    // Petit utilitaire : élément avec classe et texte (jamais de HTML venu du réseau)
+    // Small helper: element with class and text (never HTML coming from the network)
     const el = function (tag, cls, text) {
         let node = document.createElement(tag);
         if (cls)
@@ -93,9 +93,9 @@
         return node;
     };
 
-    // Texte de carte : quelques balises de mise en forme (<s>Non</s>) sont
-    // gardées, tout le reste devient du texte. Le HTML est lu dans un document
-    // inerte (rien ne s'exécute), puis reconstruit balise par balise.
+    // Card text: a few formatting tags (<s>Non</s>) are
+    // kept, everything else becomes text. The HTML is read in an inert
+    // document (nothing runs), then rebuilt tag by tag.
     const RICH_TAGS = ['S', 'B', 'I', 'U', 'EM', 'STRONG', 'BR'];
     const richText = function (node, text) {
         let doc = new DOMParser().parseFromString('<body>' + String(text || ''), 'text/html');
@@ -126,16 +126,16 @@
     let roster = [];
     let me = null;
     let hostOnline = false;
-    let game = null;    // dernier état du jeu reçu
-    let you;            // dernier état du joueur reçu (undefined : pas encore reçu)
+    let game = null;    // last game state received
+    let you;            // last player state received (undefined: not received yet)
     let tab = store.get('lnob-player-tab') || 'game';
-    let codex = null;       // ce que l'équipage a rencontré (kind 'codex')
-    let ranks = null;       // classement des équipes (kind 'leaderboard')
-    let ranksLevel = '';    // filtre de difficulté choisi
+    let codex = null;       // what the crew encountered (kind 'codex')
+    let ranks = null;       // team leaderboard (kind 'leaderboard')
+    let ranksLevel = '';    // chosen difficulty filter
     let codexFilter = 'all';
-    const codexImages = new Map(); // images des fiches envoyées par le MJ (customs, objets)
-    let chat = [];          // messages visibles par ce joueur
-    let chatChannel = 'room'; // 'room' (salon) ou 'gm' (privé avec le MJ)
+    const codexImages = new Map(); // sheet images sent by the GM (customs, items)
+    let chat = [];          // messages visible to this player
+    let chatChannel = 'room'; // 'room' (common room) or 'gm' (private with the GM)
     const chatUnread = {room: 0, gm: 0};
 
     const show = function (panel) {
@@ -165,7 +165,7 @@
             errorTimer = setTimeout(() => showActionError(''), 6000);
     };
 
-    // Message au MJ (le relais le transmet si le MJ est là)
+    // Message to the GM (the relay forwards it if the GM is there)
     const sendAction = function (action, data) {
         if (!hostOnline)
             return showActionError('Le MJ est déconnecté.');
@@ -173,25 +173,25 @@
             socket.send(JSON.stringify({type: 'msg', data: {kind: 'action', action: action, data: data || {}}}));
     };
 
-    // ---- Onglets ----------------------------------------------------------
+    // ---- Tabs ----------------------------------------------------------
 
-    // Planète affichée sur l'onglet Partie : disposition de la page planète
-    // du MJ (scans à gauche, planète au centre, humains et modules à droite)
+    // Planet shown on the Partie tab: layout of the GM's planet
+    // page (scans on the left, planet in the center, humans and modules on the right)
     let planetShown = false;
     const updatePlanetMode = function () {
         document.body.classList.toggle('planet-mode', planetShown && tab === 'game');
     };
 
-    // ---- Écran de jeu du MJ, porté tel quel (mj/screen.html, mj/planet.html) --
-    // Sur ordinateur, l'onglet Partie affiche une copie des pages de jeu du MJ
-    // (même balisage, mêmes styles, mêmes scripts), dans un cadre : la page de
-    // la carte, ou celle de la planète. La page lui transmet l'état de la
-    // partie et ce que la page du MJ écrit ; il renvoie les votes du joueur.
-    // Sur téléphone, la page garde sa mise en page.
+    // ---- GM game screen, ported as is (mj/screen.html, mj/planet.html) --
+    // On computer, the Partie tab shows a copy of the GM's game pages
+    // (same markup, same styles, same scripts), in a frame: the card
+    // page, or the planet one. The page passes it the game
+    // state and what the GM page writes; it sends back the player's votes.
+    // On phone, the page keeps its own layout.
     const mjFrame = $('mj-screen');
     let mjReady = false;
     let mjPage = mjFrame ? mjFrame.getAttribute('src') : null;
-    let mjLastText = null;   // dernier texte annoncé par le MJ (pour un écran rechargé)
+    let mjLastText = null;   // last text announced by the GM (for a reloaded screen)
     let mjLastTimer = null;
     const MJ_REPLAY = ['inventory', 'item-requests', 'combat', 'card-loot', 'allies'];
     const mjLastEvents = new Map();
@@ -201,8 +201,8 @@
             mjFrame.contentWindow.postMessage(message, '*');
     };
     const mjState = () => toMjScreen({lnob: 'state', game: game, you: you || null, me: playerId});
-    // Ce que l'écran porté affiche : une carte (événement, lieu, carte
-    // blanche) avec son combat, une planète, ou le score de fin
+    // What the ported screen shows: a card (event, place, blank
+    // card) with its combat, a planet, or the end score
     const mjScreenFits = function () {
         let card = game && game.card;
         if (!wideScreen.matches || tab !== 'game' || !game)
@@ -211,8 +211,8 @@
             return !!game.score;
         return game.phase === 'gameLive' && !!card && card.kind !== 'intro';
     };
-    // Page du MJ à montrer : l'écran de fin, celle de la planète (sa graine,
-    // et la dernière planète a un seul bouton), sinon celle de la carte
+    // GM page to show: the end screen, the planet one (its seed,
+    // and the last planet has a single button), otherwise the card one
     const mjScreenPage = function () {
         let card = game && game.card;
         if (game && game.phase === 'postGame' && game.score)
@@ -223,7 +223,7 @@
     };
     const updateMjScreen = function () {
         let page = mjScreenPage();
-        // Changement de page, comme le MJ passe de la carte à la planète
+        // Page change, like the GM going from the card to the planet
         if (mjFrame && wideScreen.matches && page !== mjPage) {
             mjPage = page;
             mjReady = false;
@@ -250,8 +250,8 @@
             for (let payload of mjLastEvents.values())
                 toMjScreen({lnob: 'mj-event', payload: payload});
         }
-        // Écran porté : objet de son inventaire glissé sur un autre joueur ou
-        // le vaisseau, ou objet d'un autre demandé
+        // Ported screen: item from their inventory dragged onto another player or
+        // the ship, or someone else's item requested
         else if (m.lnobScreen === 'move' && typeof m.slug === 'string' && m.to && (m.to.type === 'ship' || (m.to.type === 'player' && typeof m.to.id === 'string')))
             sendAction('inventory-move', {slug: m.slug, to: m.to.type === 'ship' ? {type: 'ship'} : {type: 'player', id: m.to.id}, all: !!m.all});
         else if (m.lnobScreen === 'request' && typeof m.slug === 'string' && m.owner && (m.owner.type === 'ship' || (m.owner.type === 'player' && typeof m.owner.id === 'string')))
@@ -260,8 +260,8 @@
             sendAction('vote', {index: m.index});
     });
 
-    // Création des persos : l'onglet Partie montre directement la fiche (ou
-    // la création du perso) sous le message d'attente, sans page à part
+    // Character creation: the Partie tab directly shows the sheet (or
+    // the character creation) under the waiting message, with no separate page
     const sheetOnGame = () => tab === 'game' && !!game && game.phase === 'creation';
     const updatePanels = function () {
         let shown = sheetOnGame() ? 'me' : tab;
@@ -284,7 +284,7 @@
         updateMjScreen();
     };
 
-    // ---- Menu (burger en haut à gauche) ------------------------------------
+    // ---- Menu (burger at the top left) ------------------------------------
 
     const setMenu = function (open) {
         $('menu-drawer').hidden = !open;
@@ -307,8 +307,8 @@
         $('chat-open-badge').hidden = !chatClosedUnread;
     };
 
-    // Chat fermé : un bouton le rouvre, avec les messages arrivés entre-temps
-    // (ouvert d'office sur grand écran, fermé sur téléphone, où il cache la carte)
+    // Chat closed: a button reopens it, with the messages received in the meantime
+    // (open by default on large screens, closed on phones, where it hides the card)
     let chatPref = store.get('lnob-chat-closed');
     let chatOpen = chatPref ? chatPref !== '1' : !!(window.matchMedia && window.matchMedia('(min-width: 900px)').matches);
     let chatClosedUnread = 0;
@@ -343,7 +343,7 @@
     const addChat = function (m) {
         chat.push(m);
         let c = channelOf(m);
-        // Le chat est toujours affiché : seule l'autre conversation compte des non-lus
+        // The chat is always shown: only the other conversation counts unread messages
         if (m.from.id !== playerId && c !== chatChannel)
             chatUnread[c]++;
         if (m.from.id !== playerId && !chatOpen)
@@ -351,7 +351,7 @@
         renderChat();
     };
 
-    // ---- Statut de connexion -------------------------------------------
+    // ---- Connection status -------------------------------------------
 
     const renderStatus = function () {
         if (hostOnline)
@@ -360,9 +360,9 @@
             setStatus('Le MJ est déconnecté : la partie reprendra à son retour.', 'wait');
     };
 
-    // ---- Équipage --------------------------------------------------------
+    // ---- Crew --------------------------------------------------------
 
-    // Avatar et pseudo Discord d'un joueur, s'il s'est connecté avec
+    // A player's Discord avatar and nickname, if they logged in with it
     const discordTag = function (discord) {
         if (!discord || !/^https:\/\/cdn\.discordapp\.com\//.test(discord.avatar || ''))
             return null;
@@ -376,9 +376,9 @@
         return tag;
     };
 
-    // Objets des autres joueurs et du vaisseau : on ne les prend pas, on les
-    // demande (le logo de son rôle s'affiche à côté chez tout le monde, un
-    // message part dans le chat) ; un second appui retire la demande
+    // Items of other players and of the ship: you don't take them, you
+    // request them (your role logo shows next to them for everyone, a
+    // message goes to the chat); a second tap removes the request
     const askList = function (items, owner, asks) {
         let ul = el('ul', 'crew-items');
         for (let item of items) {
@@ -419,7 +419,7 @@
                 li.append(askList(items, {type: 'player', id: p.id}, asks));
             return li;
         });
-        // Le vaisseau : ce qu'on y prend passe aussi par le MJ
+        // The ship: what you take from it also goes through the GM
         if (canAsk && (stock.ship || []).length) {
             let hold = el('li', 'ship-hold');
             hold.append(el('span', 'player-name', 'Vaisseau'), el('span', 'dim', 'demande au MJ'), askList(stock.ship, {type: 'ship'}, asks));
@@ -430,7 +430,7 @@
             renderCrewStrip();
     };
 
-    // Fiches des joueurs en bas de l'écran, comme sur l'écran de jeu
+    // Player sheets at the bottom of the screen, as on the game screen
     const renderCrewStrip = function () {
         let online = new Map(roster.map(p => [p.id, p]));
         let team = (game && game.team) || [];
@@ -455,13 +455,13 @@
         }));
     };
 
-    // ---- HUD : humains, statuts, stats du perso ---------------------------
+    // ---- HUD: humans, statuses, character stats ---------------------------
 
     const svgIcon = function (cls, svg) {
         let icon = el('span', cls);
         icon.setAttribute('aria-hidden', 'true');
         if (svg)
-            icon.innerHTML = svg; // fichier statique de la page, pas du réseau
+            icon.innerHTML = svg; // static file of the page, not from the network
         return icon;
     };
 
@@ -476,7 +476,7 @@
             li.append(el('span', 'status-name', st.name), el('span', 'status-turns', String(st.duration)));
             return li;
         }));
-        // Modules principaux et secondaires (panneau de droite de la page planète)
+        // Main and secondary modules (right panel of the planet page)
         let values = new Map(ship ? ship.modules.map(m => [m.id, m.value]) : []);
         $('hud-main-modules').replaceChildren(...Object.entries(MAIN_MODULES).map(([id, label]) => {
             let li = dial(id, label, values.get(id));
@@ -498,11 +498,11 @@
         }) : []));
     };
 
-    // Cadran d'un module : anneau rempli selon la valeur, icône au centre
+    // Module dial: ring filled according to the value, icon in the center
     const dial = function (id, label, value) {
         let li = el('li', 'dial');
         let pct = Math.max(0, Math.min(100, Number(value) || 0));
-        // Couleur selon l'état, comme les jauges du MJ (ui-gauges.js)
+        // Color based on the state, like the GM gauges (ui-gauges.js)
         li.classList.add(pct >= 60 ? 'ok' : (pct >= 30 ? 'warn' : 'crit'));
         li.title = label + ' ' + pct + ' %';
         let ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -521,8 +521,8 @@
         return li;
     };
 
-    // Onglets des modules à droite de l'écran de jeu : 71px chacun et 38px
-    // de marge en haut comme chez le MJ, réduits si la carte est moins haute
+    // Module tabs on the right of the game screen: 71px each and 38px
+    // top margin as on the GM side, shrunk if the card is shorter
     const fitDials = function () {
         let list = $('module-dials');
         let screen = ['game-card', 'combat', 'planet'].map($).find(n => !n.hidden);
@@ -549,14 +549,14 @@
         list.replaceChildren(...(ship ? Object.entries(MAIN_MODULES).map(([id, label]) => dial(id, label, values.get(id))) : []));
     };
 
-    // ---- Révélation de la carte : cadre qui s'ouvre, texte qui s'écrit -----
+    // ---- Card reveal: frame that opens, text that types -----
 
     let revealKey = null;
-    let lastTravelKey; // undefined : rien reçu encore (pas de voyage au chargement)
-    // Texte de la carte écrit lettre par lettre, comme l'écran de jeu
-    // (card.js, writeCardDesc) : 22 ms par lettre ; à chaque pause {....},
-    // quatre points (400 ms chacun), puis le texte s'efface et repart à zéro.
-    // Un clic sur la carte accélère (pauses divisées par 15, 5 lettres à la fois).
+    let lastTravelKey; // undefined: nothing received yet (no travel on load)
+    // Card text written letter by letter, like the game screen
+    // (card.js, writeCardDesc): 22 ms per letter; at each pause {....},
+    // four dots (400 ms each), then the text clears and starts over.
+    // A click on the card speeds it up (pauses divided by 15, 5 letters at a time).
     const STOP_TOKEN = '{....}';
     const lastSegment = (text) => String(text || '').split(STOP_TOKEN).pop();
     let typingRun = 0;
@@ -597,7 +597,7 @@
                 return;
         }
     };
-    // Texte en entier tout de suite (carte déjà écrite) : la dernière partie
+    // Whole text right away (card already written): the last part
     const showText = function (node, text) {
         typingRun++;
         richText(node, lastSegment(text));
@@ -613,20 +613,20 @@
         }
         if (!reduceMotion) {
             frame.classList.remove('revealing');
-            void frame.offsetWidth; // relance l'animation
+            void frame.offsetWidth; // restarts the animation
             frame.classList.add('revealing');
         }
-        // L'écriture lettre par lettre fait partie du jeu : gardée même
-        // quand l'appareil demande moins d'animations, comme chez le MJ
+        // Letter-by-letter typing is part of the game: kept even
+        // when the device asks for less animation, as on the GM side
         if (textNode)
             typeText(textNode, textNode.dataset.text);
     };
     $('game-card').addEventListener('click', () => { typingFast = true; });
 
-    // Texte de la carte, écrit en même temps que sur l'écran du MJ : sa page
-    // annonce chaque texte qu'elle commence à écrire (et le clic qui accélère)
-    let mjText = null;        // {text, seq, at} : dernier texte annoncé
-    let textCardId = null;    // carte dont le texte est affiché
+    // Card text, written at the same time as on the GM screen: their page
+    // announces each text it starts writing (and the click that speeds it up)
+    let mjText = null;        // {text, seq, at}: last text announced
+    let textCardId = null;    // card whose text is shown
     let textFallback = null;
     const MJ_TEXT_RECENT = 3000;
     const onCardText = function (data) {
@@ -644,9 +644,9 @@
         else
             typeText(node, mjText.text);
     };
-    // Nouvelle carte : texte vidé en attendant celui du MJ (sauf s'il vient
-    // d'arriver, juste avant l'état de la partie). Sans nouvelles de sa page,
-    // le texte de la carte s'affiche quand même.
+    // New card: text cleared while waiting for the GM's (unless it just
+    // arrived, right before the game state). With no news from their page,
+    // the card text is shown anyway.
     const syncCardText = function (card) {
         if (card.id === textCardId)
             return;
@@ -662,15 +662,15 @@
         }, 6000);
     };
 
-    // ---- Partie : carte en cours, status, alerte ---------------------------
+    // ---- Game: current card, status, alert ---------------------------
 
-    // ---- Compte à rebours des choix (envoyé par la page de jeu chaque seconde)
+    // ---- Choices countdown (sent by the game page every second)
 
     let timer = null;
     let timerSeen = 0;
-    // Animation de l'écran de jeu (timer-anim.js) : chaque seconde reçue fait
-    // avancer le bras et la boule ; fin du temps : pschitt et lancer ;
-    // choix fait avant : la boule se dissipe
+    // Game screen animation (timer-anim.js): each second received moves
+    // the arm and the ball forward; time's up: fizzle and throw;
+    // choice made before: the ball dissipates
     let timerLast = null;
     if (window.LNOB_TIMER_HTML)
         $('timer-host').innerHTML = LNOB_TIMER_HTML;
@@ -680,7 +680,7 @@
         let box = $('bigboite');
         try {
             if (next && !next.paused) {
-                // Arrivé en cours de compte à rebours : bras déjà sorti
+                // Arrived mid-countdown: arm already out
                 if (next.left < 30 && !box.classList.contains('float'))
                     box.classList.add('grow', 'float', 'idle');
                 TimerAnim.tick(next.left);
@@ -693,7 +693,7 @@
                 else
                     TimerAnim.cancel();
             }
-        } catch (e) { /* animation seulement */ }
+        } catch (e) { /* animation only */ }
         timerLast = next;
     };
     const renderTimer = function () {
@@ -701,7 +701,7 @@
         let show = !!(timer && card && !game.combat && card.kind !== 'planet' && timer.cardId === String(card.id)
             && (timer.paused || Date.now() - timerSeen < 3500));
         $('card-timer').hidden = !show;
-        // Bandeaux et flashs jaunes (sur grand écran, l'écran de jeu porté les a)
+        // Yellow stripes and flashes (on large screens, the ported game screen has them)
         let alertOn = show && !timer.paused && timer.left > 0 && !mjScreenFits();
         $('timer-alert').classList.toggle('active', alertOn);
         $('timer-alert').classList.toggle('warn', alertOn && timer.left <= 10);
@@ -715,11 +715,11 @@
         $('card-timer').classList.toggle('warn', timer.left <= 10);
         $('card-timer').title = timer.paused ? 'Compte à rebours en pause' : 'Temps restant pour choisir';
     };
-    // Plus de nouvelles de la page de jeu : le chrono disparaît
+    // No more news from the game page: the timer disappears
     setInterval(() => { if (timer && !timer.paused && !$('card-timer').hidden) renderTimer(); }, 1000);
 
-    // Qui a voté pour un choix : le logo de son rôle (son initiale sans rôle),
-    // comme sur l'écran de jeu
+    // Who voted for a choice: their role logo (their initial without a role),
+    // as on the game screen
     const voterIcons = function (card, i) {
         let box = el('span', 'choice-voters');
         for (let voter of (card.voters || []).filter(v => v.index === i)) {
@@ -745,13 +745,13 @@
         let score = game && game.score;
         let combat = game && game.combat;
         let card = game && game.card;
-        // Lancement de la partie : synopsis puis fiche du vaisseau, comme une
-        // carte avec un seul choix « Continuer »
+        // Game launch: synopsis then ship sheet, like a
+        // card with a single "Continuer" choice
         let intro = !!card && card.kind === 'intro';
         renderHud();
         renderCrewStrip();
 
-        // Bandeau d'attente (lancement, création, fin sans score)
+        // Waiting banner (launch, creation, end without score)
         let text = PHASES[phase] !== undefined ? PHASES[phase] : '';
         if ((phase === 'postGame' && score) || intro)
             text = '';
@@ -773,7 +773,7 @@
         renderDials($('module-dials'));
         renderCombat(onStage ? combat : null);
         renderTimer();
-        // Nouvelle carte : voyage rapide dans les étoiles, comme initCard()
+        // New card: quick travel through the stars, like initCard()
         let travelKey = card ? String(card.id) : null;
         if (game) {
             if (travelKey && travelKey !== lastTravelKey && lastTravelKey !== undefined)
@@ -788,8 +788,8 @@
         updatePlanetMode();
         $('game-card').classList.toggle('intro-card', !!intro);
         if (showCard && !isPlanet && card.kind !== 'intro') {
-            // Texte écrit au rythme du MJ (message card-text) : rien n'est
-            // écrit avant que sa page commence
+            // Text written at the GM's pace (card-text message): nothing is
+            // written before their page starts
             $('card-kind').textContent = card.title || CARD_KINDS[card.kind] || '';
             $('card-desc').hidden = false;
             syncCardText(card);
@@ -807,19 +807,19 @@
         }
         else if (isPlanet)
             reveal($('planet'), 'planet|' + card.id);
-        // Dernière planète du voyage : texte envoyé par le jeu (lang.json)
+        // Last planet of the journey: text sent by the game (lang.json)
         let last = showCard && card.lastPlanet;
         $('card-last').hidden = !last;
         $('card-last').textContent = last ? last.title + ' : ' + last.text : '';
 
-        // Choix sous la carte, comme les onglets de l'écran de jeu : on vote,
-        // le MJ tranche. Votes possibles quand la page de jeu a annoncé ses
-        // choix (card.screen) et que le MJ n'a pas encore cliqué.
+        // Choices under the card, like the game screen tabs: you vote,
+        // the GM decides. Votes possible when the game page has announced its
+        // choices (card.screen) and the GM hasn't clicked yet.
         let choices = showCard ? (card.choices || []) : [];
         let canVote = showCard && !!card.screen && card.chosen === null && !!character;
         let myVote = intro ? (you && you.introReady ? 0 : null) : (you ? you.vote : null);
-        // Planète : comme chez le MJ, on vote sur les scans de la liste et
-        // sur les boutons Atterrir / Continuer, pas sur des onglets
+        // Planet: as on the GM side, you vote on the listed scans and
+        // on the Atterrir / Continuer buttons, not on tabs
         let planetVoting = showCard && !intro && card.kind === 'planet';
         renderPlanetVotes(planetVoting ? card : null, canVote, myVote);
         if (planetVoting)
@@ -873,7 +873,7 @@
         $('ship-alert').hidden = !alert;
         if (alert)
             $('ship-alert').textContent = '⚠ ' + alert.name + (alert.message ? ' : ' + alert.message : '');
-        // Le MJ affiche le plan : on bascule sur l'onglet Vaisseau
+        // The GM shows the map: switch to the Vaisseau tab
         if (game && game.alerts && (game.alerts.showMap || alert) && !renderGame.mapShown)
             selectTab('ship');
         renderGame.mapShown = !!(game && game.alerts && (game.alerts.showMap || alert));
@@ -912,7 +912,7 @@
             $('combat-loot-items').replaceChildren(...(loot.length ? loot : ['Rien à ramasser']).map(name => el('li', 'combat-loot-item', name)));
     };
 
-    // ---- Fin de partie : écran de score -------------------------------------
+    // ---- End of game: score screen -------------------------------------
 
     let endShown = null;
     const countUp = function (node, value) {
@@ -970,11 +970,11 @@
         }
     };
 
-    // ---- Planète : dessin couche par couche, points de détection, scans -----
+    // ---- Planet: layer-by-layer drawing, detection points, scans -----
 
-    // Le dessin ne connaît que les stats scannées : à chaque scan il est refait
-    // avec la nouvelle valeur, puis la couche apparaît avec son animation
-    let planetDrawn = null; // {id, keys: [couches affichées]}
+    // The drawing only knows the scanned stats: on each scan it is redone
+    // with the new value, then the layer appears with its animation
+    let planetDrawn = null; // {id, keys: [layers shown]}
     const renderPlanet = function (planet) {
         $('planet').hidden = !planet;
         if (!planet) {
@@ -1020,7 +1020,7 @@
                 li.append(el('p', 'scan-text', s.text));
             return li;
         }));
-        // Relevés autour de la planète : nom et coût, ou « scanné »
+        // Readings around the planet: name and cost, or "scanné"
         $('planet-labels').replaceChildren(...scans.map(s => {
             let left = PLANET_LEFT.includes(s.key);
             let li = el('li', 'planet-label ' + (left ? 'left' : 'right') + ' row-' + (left ? PLANET_LEFT.indexOf(s.key) : scans.filter(x => !PLANET_LEFT.includes(x.key)).indexOf(s)) + (s.revealed ? ' scanned' : ''));
@@ -1030,8 +1030,8 @@
         }));
     };
 
-    // Votes de la page planète : chaque choix annoncé par le MJ est un scan
-    // (même nom que dans la liste) ou un bouton de sortie (Atterrir…)
+    // Planet page votes: each choice announced by the GM is a scan
+    // (same name as in the list) or an exit button (Atterrir…)
     const renderPlanetVotes = function (card, canVote, myVote) {
         let choices = card ? (card.choices || []) : [];
         let counts = card ? (card.counts || []) : [];
@@ -1071,7 +1071,7 @@
         $('planet-exits').hidden = !$('planet-exits').children.length;
     };
 
-    // ---- Vaisseau ----------------------------------------------------------
+    // ---- Ship ----------------------------------------------------------
 
     const bar = function (label, value, max) {
         let row = el('div', 'bar-row');
@@ -1086,7 +1086,7 @@
         return row;
     };
 
-    // Plan : contour du vaisseau, salles et noms (ship-labels.js)
+    // Map: ship outline, rooms and names (ship-labels.js)
     const shipSvg = function () {
         return typeof ShipLabels === 'undefined' ? null : ShipLabels.setup($('ship-plan'));
     };
@@ -1112,12 +1112,12 @@
         ShipMap.markAlertLabel(svg, alert ? alert.room : null);
     };
 
-    // ---- Perso -------------------------------------------------------------
+    // ---- Character -------------------------------------------------------------
 
     const modText = (mod) => mod > 0 ? '+' + mod : String(mod);
 
-    // Fiche d'une race : image, bonus et malus, description, affinités
-    // (Codex ; compact : vignette de la liste de création)
+    // Race sheet: image, bonuses and maluses, description, affinities
+    // (Codex; compact: thumbnail of the creation list)
     const raceSheet = function (node, r, compact) {
         node.append(cardImage(r, 'img/races/wat.webp'));
         let body = el('span', 'race-body');
@@ -1144,11 +1144,11 @@
         return node;
     };
 
-    // Fenêtre de la race ouverte (slug), au-dessus de la liste
+    // Race window open (slug), above the list
     let raceOpen = null;
-    let resumeShown = false; // tirage en cours retrouvé au chargement : fenêtre rouverte une fois
+    let resumeShown = false; // roll in progress found on load: window reopened once
 
-    // Dés d'une stat avant le tirage : « 3 dés, garde le meilleur »
+    // Dice of a stat before the roll: "3 dés, garde le meilleur"
     const diceRule = function (mod) {
         let n = Math.abs(mod) + 1;
         if (!mod)
@@ -1230,14 +1230,14 @@
         let dialog = $('race-dialog');
         if (dialog.open)
             dialog.close ? dialog.close() : dialog.removeAttribute('open');
-        // Tirage fini : fermer la fenêtre, c'est passer à sa fiche
+        // Roll finished: closing the window means going to your sheet
         if (rollsHeld) {
             rollsHeld = false;
             renderMe();
         }
     };
 
-    // Dés lancés pour la race choisie : elle ne change plus (sauf par le MJ)
+    // Dice rolled for the chosen race: it no longer changes (except by the GM)
     const rollsStarted = (creation) => !!(creation && creation.step === 'stats' && (creation.stats || []).some(s => s.dice.length));
 
     const renderRaceDialog = function () {
@@ -1261,7 +1261,7 @@
         $('race-choose-note').hidden = !note;
         let hidden = $('stat-rolls').hidden;
         renderRolls(mine ? creation : null);
-        // Race choisie : on descend jusqu'aux dés
+        // Race chosen: scroll down to the dice
         if (hidden && !$('stat-rolls').hidden)
             $('stat-rolls').scrollIntoView({block: 'start', behavior: reduceMotion ? 'auto' : 'smooth'});
     };
@@ -1276,7 +1276,7 @@
             b.addEventListener('click', () => openRace(r.slug));
             return b;
         }));
-        // Race aléatoire : ouvre la fiche d'une autre que celle déjà choisie
+        // Random race: opens the sheet of a different one from the one already chosen
         let creation = you && you.creation;
         let others = races.filter(r => r.slug !== character.race);
         if (others.length && !rollsStarted(creation)) {
@@ -1286,7 +1286,7 @@
             random.addEventListener('click', () => openRace(others[Math.floor(Math.random() * others.length)].slug));
             $('race-list').prepend(random);
         }
-        // Tirage en cours, fenêtre fermée : de quoi y revenir
+        // Roll in progress, window closed: a way to get back to it
         let resume = $('race-resume');
         resume.hidden = !(creation && creation.step === 'stats' && character.race) || $('race-dialog').open;
         if (!resume.hidden) {
@@ -1297,8 +1297,8 @@
         }
     };
 
-    // Image d'une fiche : livrée avec la page (races de base), envoyée par le
-    // MJ (customs, objets), sinon une image par défaut
+    // Sheet image: shipped with the page (base races), sent by the
+    // GM (customs, items), otherwise a default image
     const cardImage = function (entry, fallback) {
         let src = entry.image || (entry.imageKey && codexImages.get(entry.imageKey)) || fallback;
         let img = el('img', 'sheet-img' + (entry.imageKey && entry.imageKey.startsWith('item:') ? ' pixel' : ''));
@@ -1320,11 +1320,11 @@
         icon.setAttribute('aria-hidden', 'true');
         let svg = window.LNOB_STATUS_SVG && window.LNOB_STATUS_SVG[slug];
         if (svg)
-            icon.innerHTML = svg; // fichier statique de la page, pas du réseau
+            icon.innerHTML = svg; // static file of the page, not from the network
         return icon;
     };
 
-    // ---- Classement des équipes (comme leaderboard.ejs chez le MJ) ----------
+    // ---- Team leaderboard (like leaderboard.ejs on the GM side) ----------
 
     const RANK_STATS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'],
         ['survival', 'Survie'], ['recon', 'Recon.', 'Reconnaissance'], ['moral', 'Moral']];
@@ -1345,7 +1345,7 @@
         return f;
     };
 
-    // Détail d'une équipe : score, durée, personnages et compagnons
+    // Team details: score, duration, characters and companions
     const openTeam = function (entry) {
         $('team-dialog-title').textContent = entry.team;
         let body = $('team-dialog-body');
@@ -1401,7 +1401,7 @@
         $('ranks-empty').hidden = !!entries.length;
         $('ranks-table').hidden = !entries.length;
         $('ranks-hint').hidden = !entries.length;
-        // Filtre par difficulté : les rangs sont recomptés dans le groupe choisi
+        // Filter by difficulty: ranks are recounted within the chosen group
         let levels = [...new Set(entries.map(rankLevel))];
         if (!levels.includes(ranksLevel))
             ranksLevel = '';
@@ -1488,7 +1488,7 @@
         $('codex-empty').hidden = !empty;
     };
 
-    // Après le dernier dé, le tirage reste affiché jusqu'au clic sur Continuer
+    // After the last die, the roll stays shown until clicking Continuer
     let rollsHeld = false;
     let lastCreationStep = null;
 
@@ -1523,7 +1523,7 @@
         $('sheet-race').hidden = !character.raceName;
         $('sheet-role').textContent = character.role ? character.role.name : '';
         $('sheet-role').title = character.role ? character.role.name + ' : ' + character.role.effect : '';
-        // Stats en tuiles, avec les icônes de l'écran de jeu
+        // Stats as tiles, with the game screen icons
         $('sheet-stats').replaceChildren(...HUD_STATS.map(([stat, label]) => {
             let tile = el('div', 'stat-tile');
             tile.append(svgIcon('stat-icon', window.LNOB_STAT_SVG && LNOB_STAT_SVG[stat]), el('span', 'stat-tile-label', label),
@@ -1560,7 +1560,7 @@
         if (creating) {
             if (document.activeElement !== $('char-name'))
                 $('char-name').value = character.name;
-            // Tirage déjà commencé (page rechargée) : la fenêtre rouvre sur la race
+            // Roll already started (page reloaded): the window reopens on the race
             if (!resumeShown && rollsStarted(creation) && !$('race-dialog').open) {
                 resumeShown = true;
                 openRace(character.race);
@@ -1578,13 +1578,13 @@
             renderSheet(character);
     };
 
-    // ---- Inventaire ----------------------------------------------------------
+    // ---- Inventory ----------------------------------------------------------
 
     const renderItems = function () {
         let items = (you && you.inventory) || [];
         let others = ((game && game.team) || []).filter(c => c.id !== playerId);
         $('items-empty').hidden = items.length > 0;
-        // Bourse du joueur (« 20 crédits »)
+        // Player's purse ("20 crédits")
         $('money').hidden = !(you && you.money);
         $('money').textContent = you && you.money ? 'Bourse : ' + you.money : '';
         let requested = (you && you.requested) || [];
@@ -1593,7 +1593,7 @@
             li.append(el('strong', '', item.name + (item.count > 1 ? ' ×' + item.count : '')));
             if (item.desc)
                 li.append(el('span', 'dim small-text', String(item.desc).replace(/<[^>]*>/g, '')));
-            // Demandé par d'autres joueurs : leur logo, et de quoi le leur donner
+            // Requested by other players: their logo, and a way to give it to them
             let asked = requested.find(r => r.slug === item.slug);
             if (asked && asked.from.length) {
                 li.classList.add('requested');
@@ -1608,7 +1608,7 @@
                     li.append(give);
                 }
             }
-            // Utiliser : demande au MJ, qui accepte ou refuse
+            // Use: request to the GM, who accepts or refuses
             if (game && game.phase === 'gameLive') {
                 let pending = ((you && you.pendingItems) || []).includes(item.slug);
                 let use = el('button', 'secondary small use-item', pending ? 'Demande envoyée au MJ' : 'Utiliser');
@@ -1626,7 +1626,7 @@
                     o.value = c.id;
                     select.append(o);
                 }
-                // Ou le ranger dans le vaisseau
+                // Or store it in the ship
                 let hold = el('option', '', 'Vaisseau');
                 hold.value = '@ship';
                 select.append(hold);
@@ -1652,10 +1652,10 @@
         renderCodex();
     };
 
-    // ---- Fenêtre de dés ------------------------------------------------------
-    // Toujours à portée (bouton 🎲 en bas à gauche) : jets sur ses stats
-    // pendant la partie, dés neutres D2 à D100 à tout moment. Les dés neutres
-    // sont lancés par le serveur et annoncés dans le chat (ou au MJ seul).
+    // ---- Dice window ------------------------------------------------------
+    // Always at hand (🎲 button at the bottom left): rolls on your stats
+    // during the game, neutral dice D2 to D100 at any time. Neutral dice
+    // are rolled by the server and announced in the chat (or to the GM only).
 
     const ROLL_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
     const diceWin = window.DiceWindow ? DiceWindow.create({
@@ -1677,8 +1677,8 @@
         diceWin.setStats(stats, !c ? 'Les jets de stats arrivent avec ton perso.' : live ? '' : 'Les jets de stats se font pendant la partie.');
     };
 
-    // Jet sur une stat : même calcul que /roll (dé, rôle, module), résultat
-    // aussi montré sur l'écran de jeu
+    // Roll on a stat: same calculation as /roll (die, role, module), result
+    // also shown on the game screen
     const diceStatResult = function (r) {
         if (!diceWin)
             return;
@@ -1692,7 +1692,7 @@
         if (diceWin)
             diceWin.result({title: r.count + 'D' + r.sides + (r.secret ? ' · vu par le MJ seul' : ''), total: r.total, detail: r.count > 1 ? r.dice.join(' + ') : ''});
     };
-    // Jets annoncés dans le chat (les siens compris)
+    // Rolls announced in the chat (your own included)
     const diceLogChat = function (m) {
         if (diceWin && m.dice)
             diceWin.log({who: m.from.id === playerId ? 'Toi' : m.from.name, what: m.dice.count + 'D' + m.dice.sides + (m.to ? ' · secret' : ''), total: m.dice.total});
@@ -1704,7 +1704,7 @@
         list.filter(m => m.dice).slice(-8).forEach(diceLogChat);
     };
 
-    // Téléphone : le bouton passe au-dessus du chat ouvert (collé en bas)
+    // Phone: the button goes above the open chat (stuck to the bottom)
     if (window.ResizeObserver) {
         const lift = () => {
             let dock = $('chat');
@@ -1716,7 +1716,7 @@
             wideScreen.addEventListener('change', lift);
     }
 
-    // ---- Connexion au relais -------------------------------------------------
+    // ---- Relay connection -------------------------------------------------
 
     const onGameMessage = function (data) {
         if (data.kind === 'roster') {
@@ -1736,11 +1736,11 @@
             toMjScreen({lnob: 'card-text', data: data});
         }
         else if (data.kind === 'mj-event' && data.payload && typeof data.payload.action === 'string') {
-            // Gardés pour un écran rechargé : le dernier inventaire, combat, butin
+            // Kept for a reloaded screen: the last inventory, combat, loot
             if (MJ_REPLAY.includes(data.payload.action))
                 mjLastEvents.set(data.payload.action, data.payload);
             toMjScreen({lnob: 'mj-event', payload: data.payload});
-            // Objets des autres, à demander depuis l'onglet Équipage
+            // Others' items, to request from the Équipage tab
             if (data.payload.action === 'inventory' || data.payload.action === 'item-requests')
                 renderPlayers();
         }
@@ -1768,7 +1768,7 @@
             ranks = data;
             renderRanks();
         }
-        // Image d'une fiche, en data URL (rien d'autre n'est accepté)
+        // Sheet image, as a data URL (nothing else is accepted)
         else if (data.kind === 'codex-image' && typeof data.key === 'string' && /^data:image\/(png|jpeg|webp);base64,/.test(data.src || '')) {
             codexImages.set(data.key, data.src);
             renderCodex();
@@ -1786,15 +1786,15 @@
         }
         else if (data.kind === 'refused') {
             showActionError(data.message);
-            // Jet refusé : la fenêtre de dés arrête sa roue
+            // Roll refused: the dice window stops its wheel
             if ((data.action === 'roll' || data.action === 'dice') && diceWin)
                 diceWin.fail(data.message || 'Jet impossible.');
-            // Fenêtre de race ouverte : le message y est aussi (la bulle est dessous)
+            // Race window open: the message is there too (the bubble is underneath)
             $('race-dialog-error').textContent = data.message || '';
             $('race-dialog-error').hidden = !$('race-dialog').open || !data.message;
             renderMe();
         }
-        // Réponse du MJ à une demande (objet utilisé ou non)
+        // GM's answer to a request (item used or not)
         else if (data.kind === 'notice' && data.text) {
             showActionError(String(data.text), true);
         }
@@ -1822,7 +1822,7 @@
             if (msg.type === 'welcome') {
                 retryDelay = 1000;
                 me = msg.you;
-                // Profil refusé par le relais (expiré, ou relais sans Discord) : on l'oublie
+                // Profile refused by the relay (expired, or relay without Discord): forget it
                 if (discordToken && !(me && me.discord)) {
                     discordToken = null;
                     store.set('lnob-discord', '');
@@ -1859,7 +1859,7 @@
                 $('submit').disabled = false;
                 return;
             }
-            // Coupure réseau ou relais redémarré : on se reconnecte tout seul
+            // Network outage or relay restarted: reconnect automatically
             if (!$('lobby').hidden)
                 setStatus('Connexion perdue, reconnexion…', 'wait');
             else {
@@ -1872,7 +1872,7 @@
         };
     };
 
-    // ---- Connexion Discord : bouton ou compte connecté -----------------------
+    // ---- Discord login: button or logged-in account -----------------------
 
     let discordEnabled = false;
     const renderDiscord = function () {
@@ -1886,7 +1886,7 @@
         }
     };
     if (/^https?:/.test(relayHttp)) {
-        // L'app de bureau intercepte le retour (?app=1) et rouvre la page
+        // The desktop app intercepts the return (?app=1) and reopens the page
         $('discord-login').href = relayHttp + '/auth/discord/login' + (location.protocol === 'file:' ? '?app=1' : '');
         fetch(relayHttp + '/auth/discord/config').then(r => r.json()).then(c => {
             discordEnabled = !!(c && c.enabled);
@@ -1900,11 +1900,11 @@
     });
     renderDiscord();
 
-    // ---- Fond étoilé ---------------------------------------------------------
+    // ---- Starry background ---------------------------------------------------------
 
-    // Fond étoilé de l'écran de jeu (public/js/stars.js) : étoiles en 3D qui
-    // dérivent très lentement ; elles ne s'étirent en traînées que pendant
-    // le voyage entre deux cartes (fastTravel, 2 s)
+    // Game screen starry background (public/js/stars.js): 3D stars that
+    // drift very slowly; they only stretch into streaks during
+    // the travel between two cards (fastTravel, 2 s)
     (function () {
         let canvas = $('starfield');
         let ctx = canvas.getContext && canvas.getContext('2d');
@@ -1950,7 +1950,7 @@
                 let dx = x - cx, dy = y - cy;
                 let dist = Math.hypot(dx, dy) / dpr;
                 let ds = Math.max(0, (2000 - z) / 2000);
-                // Taille du sprite (128 px dans le jeu), étirée vers le centre
+                // Sprite size (128 px in the game), stretched toward the center
                 let size = 128 * ds * BASE_SIZE * .45 * dpr;
                 let len = 128 * (ds * BASE_SIZE + ds * speed * STRETCH * dist / sw) * .7 * dpr;
                 if (size < .2)
@@ -1993,7 +1993,7 @@
             requestAnimationFrame(loop);
     })();
 
-    // ---- Formulaires et boutons ------------------------------------------
+    // ---- Forms and buttons ------------------------------------------
 
     $('join').addEventListener('submit', (event) => {
         event.preventDefault();
@@ -2031,9 +2031,9 @@
     $('rolls-continue').addEventListener('click', closeRace);
     $('race-dialog-close').addEventListener('click', closeRace);
     $('team-dialog-close').addEventListener('click', () => $('team-dialog').close());
-    // Clic en dehors de la fiche : elle se ferme
+    // Click outside the sheet: it closes
     $('team-dialog').addEventListener('click', (e) => { if (e.target === $('team-dialog')) $('team-dialog').close(); });
-    // Échap ou clic hors de la fenêtre
+    // Escape or click outside the window
     $('race-dialog').addEventListener('close', () => { if (raceOpen) closeRace(); else if (you && you.character) renderRaces(you.character); });
     $('race-dialog').addEventListener('click', (e) => {
         let box = $('race-dialog').getBoundingClientRect();
@@ -2086,7 +2086,7 @@
         sendAction('chat', {text: text, private: chatChannel === 'gm'});
         $('chat-text').value = '';
     });
-    // Entrée envoie, Maj+Entrée va à la ligne
+    // Enter sends, Shift+Enter adds a new line
     $('chat-text').addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -2109,7 +2109,7 @@
     document.querySelectorAll('.wiki-link').forEach(a => { a.href = WIKI_URL + (a.dataset.page || ''); });
     selectTab(document.querySelector('.tab[data-tab="' + tab + '"]') ? tab : 'game');
 
-    // Code reçu dans le lien du MJ, sinon le dernier utilisé
+    // Code received in the GM's link, otherwise the last one used
     $('code').value = formatCode(cleanCode(params.get('code') || store.get('lnob-last-code') || ''));
     $('name').value = store.get('lnob-player-name') || '';
     $('code').addEventListener('input', () => {

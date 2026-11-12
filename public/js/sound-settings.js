@@ -1,7 +1,7 @@
-// Réglages du son, gardés dans le navigateur (chaque écran règle le sien).
-// Les futurs sons passent par LNOBSound pour respecter ces réglages :
+// Sound settings, kept in the browser (each screen sets its own).
+// Future sounds go through LNOBSound to respect these settings:
 //   LNOBSound.play('/sounds/porte.mp3', 'effects')
-//   audio.volume = LNOBSound.volume('music')  (et suivre l'événement « sound-settings »)
+//   audio.volume = LNOBSound.volume('music')  (and follow the "sound-settings" event)
 const LNOBSound = (function () {
     const KEY = 'lnob-sound';
     const DEFAULTS = {master: 80, effects: 80, music: 60, muted: false};
@@ -27,7 +27,7 @@ const LNOBSound = (function () {
         document.dispatchEvent(new CustomEvent('sound-settings', {detail: get()}));
     }
 
-    // Volume final (0 à 1) d'une catégorie : 'effects' ou 'music'
+    // Final volume (0 to 1) of a category: 'effects' or 'music'
     function volume(category) {
         if (settings.muted)
             return 0;
@@ -48,7 +48,7 @@ const LNOBSound = (function () {
     return {get, set, volume, play};
 })();
 
-// Fenêtre Options, ouverte par l'engrenage du menu
+// Options window, opened by the menu gear
 (function () {
     const modal = document.getElementById('options-modal');
     const open = document.getElementById('options-open');
@@ -95,7 +95,7 @@ const LNOBSound = (function () {
         });
     });
 
-    // Échap ferme la fenêtre sans rouvrir le menu (capturé avant keyPressFunctions.js)
+    // Escape closes the window without reopening the menu (captured before keyPressFunctions.js)
     ['keydown', 'keyup'].forEach(type => window.addEventListener(type, (e) => {
         if (modal.hidden || e.key !== 'Escape')
             return;

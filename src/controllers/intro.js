@@ -1,13 +1,13 @@
-// Lancement de la partie : synopsis puis fiche du vaisseau, comme sur les
-// pages du MJ (/synopsis puis /start). Les joueurs en ligne lisent le même
-// texte et votent « Continuer » ; quand tous les joueurs en ligne avec un
-// perso sont prêts, la page du MJ passe à la suite (le MJ peut toujours
-// cliquer « Suivant » lui-même).
+// Game launch: synopsis then ship sheet, as on the
+// GM pages (/synopsis then /start). Online players read the same
+// text and vote "Continuer"; when all online players with a
+// character are ready, the GM page moves on (the GM can always
+// click "Suivant" themselves).
 const lobby = require('./lobby');
 
 const SYNOPSIS = 'Des membres de différentes espèces extraterrestres unissent leurs forces pour sauver l’humanité de l’extinction en envoyant des vaisseaux spatiaux pour récupérer des humains cryogénisés et les emmener vers une nouvelle planète habitable.\n\nCependant, durant le voyage, le vaisseau rencontre des problèmes inattendus et l’équipage doit travailler ensemble pour trouver une solution et protéger au mieux les humains à bord.';
 
-// Texte de la fiche du vaisseau (public/views/fiche-vaisseau.ejs)
+// Ship sheet text (public/views/fiche-vaisseau.ejs)
 const SHIP = [
     'Vaisseau type “Plugs” (Pretty Looking and Ultimately Glorious Ships) manufacturé par l’“Organization Legaly Independent” dans le but de sauver un maximum d’êtres humains de la 69-ième guerre d’autodestruction terrienne à échelle cosmique opposant l’”Unbound Strategic Alliance” et la “Joyful army of Protestants and Nutritionnists”.',
     'Il permet de stocker plus d’humains dans des pods cryogéniques (que le modèle “Geisha”) et de les faire entrer dans un état permettant de les transporter plus facilement vers leur nouvelle planète. Le vaisseau dispose d’un système de bouclier lui permettant de résister à une attaque, cependant il ne possède pas de système d’attaque (au cas où les humains se réveillerais et voudrais faire une révolution en prenant le contrôle du vaisseau [ils serraient contraints de faire grève]), il est donc impossible de se défendre avec.',
@@ -24,9 +24,9 @@ const STEPS = {
 };
 
 let step = null;          // 'synopsis' | 'ship' | null
-const ready = new Set();  // joueurs prêts à continuer
+const ready = new Set();  // players ready to continue
 
-// Nouvel écran : les votes repartent de zéro
+// New screen: the votes start over from zero
 const set = function (value) {
     value = STEPS[value] ? value : null;
     if (value !== step)
@@ -36,7 +36,7 @@ const set = function (value) {
 
 const clear = () => set(null);
 
-// Joueurs attendus : en ligne et avec un perso
+// Expected players: online and with a character
 const expected = () => lobby.getState().players.filter(p => p.online && p.character).map(p => p.id);
 
 const counts = function () {
@@ -45,12 +45,12 @@ const counts = function () {
     return {ready: done, expected: ids.length, all: ids.length > 0 && done === ids.length};
 };
 
-// Message pour les pages du MJ
+// Message for the GM pages
 const payload = function () {
     return {action: 'intro', error: false, data: Object.assign({step}, counts())};
 };
 
-// Un joueur est prêt (ou ne l'est plus)
+// A player is ready (or no longer is)
 const vote = function (playerId, value) {
     if (!step)
         return {error: 'Rien à valider pour l\'instant.'};
@@ -63,7 +63,7 @@ const vote = function (playerId, value) {
 
 const isReady = (playerId) => !!step && ready.has(playerId);
 
-// L'écran tel que les joueurs le voient, comme une carte avec un seul choix
+// The screen as the players see it, like a card with a single choice
 const publicCard = function () {
     if (!step)
         return null;

@@ -1,6 +1,6 @@
-/* Plan du vaisseau : salles signalées par le MJ (page de jeu et panneau MJ) */
+/* Ship map: rooms flagged by the GM (game page and GM panel) */
 
-/* Les contours du plan sont invisibles par défaut (.plan-room path) */
+/* The map outlines are invisible by default (.plan-room path) */
 .plan-room path.mj-blink {
     opacity: 1;
     animation: danger .7s ease-in-out infinite;
@@ -64,11 +64,11 @@
     paint-order: stroke;
 }
 
-/* Bandeau d'alerte sur la page des joueurs */
+/* Alert banner on the players' page */
 .ship-alert {
     position: fixed;
     inset: 0;
-    /* Au-dessus du plan (.plan-container, z-index 50) */
+    /* Above the map (.plan-container, z-index 50) */
     z-index: 60;
     pointer-events: none;
     visibility: hidden;
@@ -180,7 +180,7 @@
     color: #ffd6dc;
 }
 
-/* Après quelques secondes, le bandeau se range en haut pour laisser voir le plan */
+/* After a few seconds, the banner moves to the top to show the map */
 .ship-alert.compact .ship-alert-banner {
     top: 28px;
     transform: translate(-50%, 0);
@@ -212,7 +212,7 @@
     }
 }
 
-/* Noms des salles sur le plan (partials/ship-rooms-svg) */
+/* Room names on the map (partials/ship-rooms-svg) */
 .ship-room-label {
     fill: #e9e5ff;
     font-family: 'Jura', sans-serif;
@@ -230,7 +230,7 @@
     user-select: none;
 }
 
-/* La salle en alerte a déjà son nom en grand sous le repère */
+/* The room on alert already has its name in large under the marker */
 .ship-room-label.is-alert {
     display: none;
 }

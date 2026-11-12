@@ -1,14 +1,14 @@
-// Alertes sur le plan du vaisseau, pilotées par le MJ :
-// - des salles qui clignotent sur le plan des joueurs
-// - le plan affiché d'office chez les joueurs
-// - une alerte dans une salle (bandeau et salle mise en évidence)
-// L'état est gardé en mémoire : il ne concerne que la scène en cours.
+// Alerts on the ship map, driven by the GM:
+// - rooms blinking on the players' map
+// - the map shown by default on the players' side
+// - an alert in a room (banner and highlighted room)
+// The state is kept in memory: it only concerns the current scene.
 const ROOMS = require('../config/shipRooms.json');
 const ROOM_IDS = new Set(ROOMS.map(r => r.id));
 const MAX_MESSAGE = 120;
 
 let state;
-// Identifiant unique même après un redémarrage (les pages retiennent la dernière alerte vue)
+// Unique id even after a restart (the pages remember the last alert seen)
 let lastAlertId = 0;
 
 const reset = function () {
@@ -23,10 +23,10 @@ const getState = function () {
 }
 
 /**
- * Applique une demande du MJ. Seuls les champs présents sont modifiés :
- * - blink : liste des salles qui clignotent
- * - showMap : plan affiché chez les joueurs
- * - alert : {room, message} pour lancer une alerte, null pour l'arrêter
+ * Applies a GM request. Only the fields present are changed:
+ * - blink: list of blinking rooms
+ * - showMap: map shown on the players' side
+ * - alert: {room, message} to start an alert, null to stop it
  */
 const update = function (data) {
     data = data || {};

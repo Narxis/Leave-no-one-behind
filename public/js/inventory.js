@@ -1,10 +1,10 @@
-// Inventaires sur la page de jeu : coffre de chaque joueur, objets du vaisseau
-// et glisser-déposer du MJ. On attrape un objet (butin du combat gagné, coffre
-// d'un joueur, liste du vaisseau) et on le lâche sur l'onglet d'un joueur ou
-// sur la liste du vaisseau (src/controllers/inventory.js). Un objet en
-// plusieurs exemplaires part un par un ; Maj enfoncée, toute la pile part
+// Inventories on the game page: each player's chest, ship items
+// and GM drag and drop. You grab an item (loot from a won combat, a player's
+// chest, the ship list) and drop it on a player's tab or
+// on the ship list (src/controllers/inventory.js). An item with
+// several copies goes one by one; with Shift held, the whole stack goes
 (function () {
-    const DRAG_START = 6;   // px avant que l'appui devienne un glisser
+    const DRAG_START = 6;   // px before the press becomes a drag
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -23,7 +23,7 @@
         return el('span', 'item-image item-noimg', item.name.charAt(0));
     }
 
-    // Monnaie : config/currency.json (envoyée avec les inventaires)
+    // Currency: config/currency.json (sent with the inventories)
     let currency = {name: 'crédit', plural: 'crédits', image: '/img/monnaie.svg'};
     const moneyLabel = (n) => n + ' ' + (Math.abs(n) >= 2 ? currency.plural : currency.name);
 
@@ -35,7 +35,7 @@
         return line;
     }
 
-    // Même rendu que partials/player-tabs.ejs, avec la bourse en tête
+    // Same rendering as partials/player-tabs.ejs, with the purse at the top
     function renderPlayer(discord_id, items, credits) {
         let list = document.getElementById('item' + discord_id);
         if (!list)
@@ -63,14 +63,14 @@
 
     const STACK_HINT = (n) => 'Glisser : un exemplaire. Maj + glisser : les ' + n;
 
-    // Même rendu que la liste .todos de template-card.ejs : une ligne par
-    // objet, avec sa quantité
+    // Same rendering as the .todos list of template-card.ejs: one row per
+    // item, with its quantity
     function renderShip(items, credits) {
         let list = document.querySelector('.todos');
         if (!list)
             return;
         list.innerHTML = '';
-        // Caisse de bord : pas une case à cocher, ni un objet à glisser
+        // Cash box: not a checkbox, nor an item to drag
         if (credits !== undefined) {
             let li = el('li', 'ship-money');
             li.append(moneyLine('ship-money-line', credits));
@@ -113,9 +113,9 @@
             flash(document.getElementById('player-tab' + ev.to.id), '+ ' + (ev.item.count > 1 && !ev.item.money ? ev.item.count + ' ' : '') + ev.item.name);
     });
 
-    // Demandes des joueurs en ligne (itemRequests.js) : le logo du rôle de
-    // ceux qui veulent l'objet, à côté de lui ; le coffre du joueur qui l'a
-    // s'allume pour qu'il le voie
+    // Requests from online players (itemRequests.js): the role logo of
+    // those who want the item, next to it; the chest of the player who has it
+    // lights up so they see it
     let requests = [];
     function paintRequests() {
         document.querySelectorAll('.item-requesters').forEach(n => n.remove());
@@ -138,7 +138,7 @@
         requests = (e.detail.data && e.detail.data.requests) || [];
         paintRequests();
     });
-    // Page ouverte ou reconnectée : les demandes en cours
+    // Page opened or reconnected: the pending requests
     if (typeof wsLNOB !== 'undefined') {
         document.addEventListener('ws-reconnect', () => wsLNOB.send({action: 'item-requests'}));
         wsLNOB.send({action: 'item-requests'});
@@ -148,7 +148,7 @@
         toast(e.detail.data.message);
     });
 
-    // Atelier (menu MJ) : l'objet fabriqué, ou l'échec, est annoncé à l'écran
+    // Workshop (GM menu): the crafted item, or the failure, is announced on screen
     document.addEventListener('craft', (e) => {
         let ev = e.detail.data.event;
         if (!ev || (ev.type !== 'craft' && ev.type !== 'craft-failed'))
@@ -157,7 +157,7 @@
         toast(ev.type === 'craft' ? ev.who + ' fabrique ' + what : ev.who + ' rate la fabrication de ' + what, true);
     });
 
-    // Petit texte qui s'envole de l'onglet du joueur qui reçoit l'objet
+    // Small text flying from the tab of the player receiving the item
     function flash(tab, text) {
         if (!tab)
             return;
@@ -175,14 +175,14 @@
         setTimeout(() => t.remove(), 2600);
     }
 
-    /* Glisser-déposer */
+    /* Drag and drop */
 
-    // Nom d'un objet de coffre : le texte de la ligne, sans l'initiale (objet
-    // sans image), la quantité ni le logo de ceux qui le demandent
+    // Name of a chest item: the row text, without the initial (item
+    // without image), the quantity or the logo of those requesting it
     const lineName = (p) => Array.from(p.childNodes).filter(n => n.nodeType === Node.TEXT_NODE)
         .map(n => n.textContent).join('').trim();
 
-    // Ce qu'on attrape : {item: {slug, name}, from, node}
+    // What is grabbed: {item: {slug, name}, from, node}
     function sourceOf(target) {
         let cardLoot = target.closest('.card-loot-item[data-index]');
         if (cardLoot)
@@ -203,7 +203,7 @@
         return null;
     }
 
-    // Où on le lâche : l'onglet d'un joueur (pas d'un PNJ) ou la liste du vaisseau
+    // Where it is dropped: a player's tab (not an NPC's) or the ship list
     function dropOf(x, y) {
         let under = document.elementFromPoint(x, y);
         if (!under)
@@ -270,7 +270,7 @@
         d.ghost.remove();
         d.node.classList.remove('inventory-source');
         document.body.classList.remove('inventory-dragging');
-        // Le relâchement ne doit pas ouvrir/fermer le coffre ni cocher la case
+        // The release must not open/close the chest or tick the box
         let swallow = (ev) => { ev.stopPropagation(); ev.preventDefault(); };
         window.addEventListener('click', swallow, {capture: true, once: true});
         window.addEventListener('mouseup', swallow, {capture: true, once: true});
@@ -286,7 +286,7 @@
         wsLNOB.send({action: 'inventory-move', data: {slug: d.slug, name: d.name, from: d.from, to: drop.to, all: d.all || e.shiftKey}});
     }
 
-    // Pas de glisser natif du navigateur (image) : il annulerait le nôtre
+    // No native browser drag (image): it would cancel ours
     document.addEventListener('dragstart', (e) => {
         if (sourceOf(e.target))
             e.preventDefault();

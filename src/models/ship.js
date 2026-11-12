@@ -1,6 +1,6 @@
 const {Op} = require("sequelize");
 
-// Modules du vaisseau dont la valeur de départ peut être tirée au hasard
+// Ship modules whose starting value can be drawn at random
 const RANDOM_START_STATS = ['scanner', 'proximity', 'motors', 'shield', 'oxygen', 'energy', 'gravity',
     'landing', 'dbscience', 'dbhistory', 'construction'];
 const MODULE_MAX = 100;
@@ -182,9 +182,9 @@ class Ship{
         await this.update(dat);
     }
 
-    // Stats de départ légèrement aléatoires (option de partie « Vaisseau
-    // aléatoire ») : chaque module part d'une valeur tirée entre -variation et
-    // +variation autour de sa valeur de base, sans dépasser 100 %
+    // Slightly random starting stats ("Vaisseau
+    // aléatoire" game option): each module starts from a value drawn between -variation and
+    // +variation around its base value, without exceeding 100%
     static randomStart(variation, rand = Math.random) {
         let base = new Ship().accepted_datas;
         let data = {};

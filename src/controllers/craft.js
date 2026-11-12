@@ -3,17 +3,17 @@ const path = require('path');
 const inventory = require('./inventory');
 const combat = require('./combat');
 
-// Artisanat (wiki : regles/artisanat.md). On fabrique un objet en
-// assemblant des objets d'un même inventaire (un joueur ou le vaisseau),
-// dans le vaisseau et pendant un moment calme : jamais en plein combat.
-// Les recettes se saisissent dans l'éditeur d'objets, sur l'objet fabriqué :
+// Crafting (wiki: regles/artisanat.md). An item is crafted by
+// assembling items from the same inventory (a player or the ship),
+// in the ship and during a quiet moment: never in the middle of combat.
+// Recipes are entered in the item editor, on the crafted item:
 // "recipe": {"ingredients": [{"slug": "corde", "qty": 2}], "qty": 1}
-// (qty : exemplaires fabriqués). Le MJ peut aussi assembler librement des
-// objets et décider lui-même du résultat.
-// Réussite : baseChance %, plus armoryBonus % par niveau d'amélioration de
-// l'armurerie (ship.armory_up, 0 à armoryMax). Le MJ peut lancer le dé ou
-// valider directement. En cas d'échec, les ingrédients sont perdus si
-// failLosesIngredients. Réglages : config/craft.json.
+// (qty: copies crafted). The GM can also freely assemble
+// items and decide the result themselves.
+// Success: baseChance %, plus armoryBonus % per armory upgrade
+// level (ship.armory_up, 0 to armoryMax). The GM can roll the die or
+// confirm directly. On failure, the ingredients are lost if
+// failLosesIngredients. Settings: config/craft.json.
 
 const FILE = path.join(__dirname, '../config/craft.json');
 const itemsFile = require('../config/paths').itemsFile;
@@ -40,9 +40,9 @@ const config = function () {
 
 const qtyOf = (v) => Math.min(Math.max(parseInt(v) || 1, 1), MAX_QTY);
 
-/* ---------- Recettes ---------- */
+/* ---------- Recipes ---------- */
 
-// Catalogue à plat : {slug: {slug, name, image, recipe}}
+// Flat catalog: {slug: {slug, name, image, recipe}}
 const catalog = function () {
     let out = {};
     try {
@@ -54,8 +54,8 @@ const catalog = function () {
     return out;
 }
 
-// Recette propre ou null : ingrédients du catalogue (sauf l'objet lui-même),
-// quantités fusionnées, MAX_INGREDIENTS au plus
+// Clean recipe or null: catalog ingredients (except the item itself),
+// merged quantities, MAX_INGREDIENTS at most
 const cleanRecipe = function (raw, known, self) {
     if (!raw || !Array.isArray(raw.ingredients))
         return null;
@@ -73,7 +73,7 @@ const cleanRecipe = function (raw, known, self) {
     return ingredients.length ? {ingredients: ingredients, qty: qtyOf(raw.qty)} : null;
 }
 
-// Recettes du catalogue, prêtes à afficher
+// Catalog recipes, ready to display
 const recipes = function () {
     let known = catalog(), out = [];
     for (let slug in known) {
@@ -88,7 +88,7 @@ const recipes = function () {
     return out.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/* ---------- Armurerie ---------- */
+/* ---------- Armory ---------- */
 
 const shipRow = () => DB.tables.ship.findOne({raw: true, order: [['id', 'ASC']]});
 
@@ -106,15 +106,15 @@ const setArmory = async function (level) {
     return {level: level};
 }
 
-// Chance de réussite (en %) pour un niveau d'armurerie
+// Success chance (in %) for an armory level
 const chance = function (level, cfg) {
     cfg = cfg || config();
     return Math.min(cfg.baseChance + cfg.armoryBonus * (level || 0), 100);
 }
 
-/* ---------- Fabrication ---------- */
+/* ---------- Crafting ---------- */
 
-// {type: 'player', id} ou {type: 'ship'} ; null si inconnu
+// {type: 'player', id} or {type: 'ship'}; null if unknown
 const validCrafter = async function (crafter) {
     crafter = crafter || {};
     if (crafter.type === 'ship')
@@ -131,7 +131,7 @@ const whoName = async function (crafter) {
     return p ? p.name : '?';
 }
 
-// Nom d'un objet de la partie (ou du catalogue)
+// Name of a game item (or of the catalog)
 const itemName = async function (slug, known) {
     if (known[slug])
         return known[slug].name;
@@ -147,14 +147,14 @@ const addLog = function (entry) {
 }
 
 /**
- * Fabrique un objet. data :
- * - crafter : qui fabrique (ses objets servent d'ingrédients, il reçoit le résultat)
- * - slug : l'objet fabriqué (une recette du catalogue, ou n'importe quel objet en assemblage libre)
- * - name : en assemblage libre, nom d'un objet hors catalogue à créer
- * - ingredients : [{slug, qty}] pour un assemblage libre ; absent, ceux de la recette
- * - qty : exemplaires fabriqués (par défaut ceux de la recette, 1 sinon)
- * - roll : true pour lancer le dé de réussite, sinon réussite assurée
- * Renvoie {event, item} ou {error}
+ * Crafts an item. data:
+ * - crafter: who crafts (their items are used as ingredients, they receive the result)
+ * - slug: the crafted item (a catalog recipe, or any item in free assembly)
+ * - name: in free assembly, name of an item outside the catalog to create
+ * - ingredients: [{slug, qty}] for a free assembly; if absent, those of the recipe
+ * - qty: copies crafted (by default those of the recipe, otherwise 1)
+ * - roll: true to roll the success die, otherwise success is guaranteed
+ * Returns {event, item} or {error}
  */
 const make = async function (data) {
     data = data || {};
@@ -201,7 +201,7 @@ const make = async function (data) {
         qty = qtyOf(data.qty || recipe.qty);
     }
 
-    // Tous les ingrédients doivent être dans l'inventaire de l'artisan
+    // All ingredients must be in the crafter's inventory
     for (let ing of ingredients) {
         let have = await inventory.countOf(ing.slug, crafter);
         ing.name = await itemName(ing.slug, known);
@@ -244,7 +244,7 @@ const make = async function (data) {
 
 /* ---------- Messages ---------- */
 
-// Exemplaires de chaque objet : {ship: {slug: n}, players: {id: {slug: n}}}
+// Copies of each item: {ship: {slug: n}, players: {id: {slug: n}}}
 const holdings = async function () {
     let out = {ship: {}, players: {}};
     for (let it of await inventory.getShip())
@@ -258,7 +258,7 @@ const holdings = async function () {
     return out;
 }
 
-// Objets de la partie (pour l'assemblage libre) : {slug: {name, image}}
+// Game items (for free assembly): {slug: {name, image}}
 const items = async function () {
     let out = {};
     for (let row of await DB.tables.items.findAll({raw: true}))
@@ -294,7 +294,7 @@ const reset = function () {
     log = [];
 }
 
-// Point d'entrée des actions websocket « craft-* »
+// Entry point of the "craft-*" websocket actions
 const handle = async function (response) {
     let data = response.data || {};
     if (response.action === 'craft-make') {
@@ -310,7 +310,7 @@ const handle = async function (response) {
             return error(result.error);
         return [await message({type: 'armory', level: result.level})];
     }
-    return [await message(null)];   // craft-state : simple lecture
+    return [await message(null)];   // craft-state: plain read
 }
 
 module.exports = {handle, config, catalog, cleanRecipe, recipes, armory, setArmory, chance, make, message, reset, MAX_INGREDIENTS};

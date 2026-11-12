@@ -1,31 +1,31 @@
-// Fenêtre de dés flottante, la même pour les joueurs (page joueur : copie
-// faite par scripts/player-assets.js) et pour le MJ (menu MJ) : jets sur les
-// stats et dés neutres D2 à D100, sans changer de page. Le bouton 🎲 en bas à
-// gauche l'ouvre ; elle se déplace en la tenant par son titre et garde sa
-// place d'une visite à l'autre.
+// Floating dice window, the same for players (player page: copy
+// made by scripts/player-assets.js) and for the GM (GM menu): stat
+// rolls and neutral dice D2 to D100, without changing page. The 🎲 button at the bottom
+// left opens it; it moves by holding its title and keeps its
+// position from one visit to the next.
 //
 //   let dice = DiceWindow.create({
-//       storageKey,                   place et réglages gardés (localStorage)
-//       modules: [[value, label]],    modules d'un jet de stat ('' : aucun)
-//       secretLabel, secretDefault,   case « secret » des dés neutres
-//       timeoutText,                  message si le jet reste sans réponse
-//       onStat(stat, module, target), jet de stat demandé
-//       onDice(sides, count, secret)  dés neutres demandés
+//       storageKey,                   position and settings kept (localStorage)
+//       modules: [[value, label]],    modules of a stat roll ('': none)
+//       secretLabel, secretDefault,   "secret" box of the neutral dice
+//       timeoutText,                  message if the roll gets no answer
+//       onStat(stat, module, target), stat roll requested
+//       onDice(sides, count, secret)  neutral dice requested
 //   });
-//   dice.setStats([{stat, label, value}], hint)  stats lançables (vide : hint)
-//   dice.setTargets([{id, name, group}])         MJ : pour qui lancer la stat
-//   dice.result({title, total, detail, tone})    résultat reçu (tone : ok | fail)
-//   dice.log({who, what, total, tone})           ligne de « Derniers jets »
-//   dice.clearLog()                              « Derniers jets » vidé
-//   dice.fail(text)                              jet refusé
+//   dice.setStats([{stat, label, value}], hint)  rollable stats (empty: hint)
+//   dice.setTargets([{id, name, group}])         GM: who to roll the stat for
+//   dice.result({title, total, detail, tone})    result received (tone: ok | fail)
+//   dice.log({who, what, total, tone})           "Derniers jets" row
+//   dice.clearLog()                              "Derniers jets" cleared
+//   dice.fail(text)                              roll refused
 (function () {
     'use strict';
     const SIDES = [2, 4, 6, 8, 10, 20, 100];
     const MAX_COUNT = 10;
     const LOG_SIZE = 8;
-    const WAIT_MS = 5000;   // sans réponse, la roue s'arrête
+    const WAIT_MS = 5000;   // no answer, the wheel stops
 
-    // Forme de chaque dé (viewBox 40 × 40)
+    // Shape of each die (viewBox 40 × 40)
     const SHAPES = {
         2: '<circle cx="20" cy="20" r="16"/>',
         4: '<polygon points="20,4 36,34 4,34"/>',
@@ -48,7 +48,7 @@
         try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; }
     };
     const save = (key, value) => {
-        try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* navigation privée */ }
+        try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* private browsing */ }
     };
 
     const create = function (options) {
@@ -73,7 +73,7 @@
         close.setAttribute('aria-label', 'Fermer');
         head.append(el('span', 'dice-title', '🎲 Dés'), close);
 
-        // Résultat : gros chiffre, détail dessous
+        // Result: big number, details below
         let result = el('div', 'dice-result');
         result.setAttribute('aria-live', 'polite');
         let total = el('div', 'dice-total', '–');
@@ -96,7 +96,7 @@
         let hint = el('p', 'dice-hint');
         stats.append(el('h3', '', 'Stats'), target, statGrid, module, hint);
 
-        // Dés neutres
+        // Neutral dice
         let neutral = el('section', 'dice-section dice-neutral');
         let count = Math.min(MAX_COUNT, Math.max(1, parseInt(saved.count) || 1));
         let countBox = el('div', 'dice-count');
@@ -123,7 +123,7 @@
         secretBox.append(secret, document.createTextNode(' ' + (options.secretLabel || 'Secret')));
         neutral.append(el('h3', '', 'Dés neutres'), countBox, grid, secretBox);
 
-        // Derniers jets
+        // Last rolls
         let logBox = el('section', 'dice-section dice-log-box');
         let logList = el('ol', 'dice-log');
         logBox.append(el('h3', '', 'Derniers jets'), logList);
@@ -145,7 +145,7 @@
         plus.addEventListener('click', () => { count = Math.min(MAX_COUNT, count + 1); showCount(); remember(); });
         secret.addEventListener('change', remember);
 
-        // ---- Ouvrir, fermer, déplacer ----------------------------------
+        // ---- Open, close, move ----------------------------------
         const place = function () {
             if (saved.x === undefined || saved.y === undefined) {
                 win.style.left = win.style.top = win.style.bottom = '';
@@ -202,7 +202,7 @@
         };
         head.addEventListener('pointerup', stopDrag);
         head.addEventListener('pointercancel', stopDrag);
-        // Double clic sur le titre : la fenêtre revient à sa place
+        // Double click on the title: the window goes back to its place
         head.addEventListener('dblclick', (e) => {
             if (e.target.closest('button'))
                 return;
@@ -212,7 +212,7 @@
             remember();
         });
 
-        // ---- Lancer -----------------------------------------------------
+        // ---- Roll -----------------------------------------------------
         let spin = null, waiting = null;
         const stopSpin = () => {
             clearInterval(spin);
@@ -253,7 +253,7 @@
             options.onDice(sides, count, secret.checked);
         });
 
-        // ---- Ce que la page lui donne -----------------------------------
+        // ---- What the page gives it -----------------------------------
         const setStats = function (list, text) {
             statList = list || [];
             let keyNow = JSON.stringify(statList);
@@ -273,7 +273,7 @@
             hint.textContent = text || '';
             hint.hidden = !text;
         };
-        // Un compagnon lance sans module
+        // A companion rolls without a module
         const syncModule = function () {
             module.disabled = String(target.value).startsWith('npc');
             if (module.disabled)
@@ -342,7 +342,7 @@
         return {setStats, setTargets, result: showResult, log: addLog, clearLog, fail, open, rolling: () => !!spin};
     };
 
-    // Texte d'un jet de dés neutres reçu (message du chat ou réponse)
+    // Text of a neutral dice roll received (chat message or answer)
     const describe = (r) => (r.count > 1 ? r.dice.join(' + ') + ' = ' : '') + r.total;
 
     window.DiceWindow = {create, describe, SIDES, MAX_COUNT};

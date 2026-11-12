@@ -1,4 +1,4 @@
-/* Panneau MJ : plan du vaisseau et alertes (mj-ship.js) */
+/* GM panel: ship map and alerts (mj-ship.js) */
 .mj-ship {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
@@ -20,7 +20,7 @@
     aspect-ratio: 1153 / 681;
 }
 
-/* Mêmes positions que sur la page de jeu (plan-du-vaisseau.css) */
+/* Same positions as on the game page (plan-du-vaisseau.css) */
 .mj-ship-map img {
     position: absolute;
     inset: 0;

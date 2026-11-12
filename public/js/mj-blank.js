@@ -1,7 +1,7 @@
-// Carte blanche (src/controllers/blankCard.js) : quand les joueurs choisissent
-// « Autre… », le panneau s'allume ; le MJ écrit le texte et jusqu'à 4 choix
-// (résultat, moral, humains, butin) puis l'affiche sur l'écran de jeu. Il
-// peut aussi en afficher une à tout moment, ou annuler pour reprendre la carte.
+// Blank card (src/controllers/blankCard.js): when the players choose
+// "Autre…", the panel lights up; the GM writes the text and up to 4 choices
+// (result, morale, humans, loot) then shows it on the game screen. They
+// can also show one at any time, or cancel to go back to the card.
 (function () {
     const $ = (id) => document.getElementById(id);
     const panel = $('mj-blank');
@@ -64,7 +64,7 @@
     });
     document.addEventListener('blank-card-show', () => render({status: 'shown'}));
     document.addEventListener('blank-card-cancel', () => render(null));
-    // Choix fait : la carte est finie, le formulaire est vidé pour la prochaine
+    // Choice made: the card is finished, the form is cleared for the next one
     document.addEventListener('blank-card-choice', () => { render(null); clear(); });
     document.addEventListener('ws-reconnect', load);
     load();

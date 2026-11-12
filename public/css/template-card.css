@@ -433,7 +433,7 @@
 
 /*---^^^---Choices-tabs---^^^---*/
 
-/*---vvv---consommable-tab-----vvv---*/
+/*---vvv---consumable-tab-----vvv---*/
 button,
 input,
 select,
@@ -753,7 +753,7 @@ textarea {
   color: aliceblue;
 }
 
-/*---vvv---consommable-tab-Animation----vvv---*/
+/*---vvv---consumable-tab-Animation----vvv---*/
 .wrapper-menu {
   width: 30px;
   height: 30px;
@@ -932,7 +932,7 @@ textarea {
   }
 }
 
-/*---^^^---consommable-tab-Animation----^^^---*/
+/*---^^^---consumable-tab-Animation----^^^---*/
 /*---vvv---human-status----vvv---*/
 .human-status {
   position: absolute;
@@ -1099,9 +1099,9 @@ textarea {
   align-content: center;
   row-gap: 20px;
   top: 0px;
-  /*ça marche pas sans alors on laisse*/
+  /*doesn't work without it, so we keep it*/
   left: 0px;
-  /*ça marche pas sans alors on laisse*/
+  /*doesn't work without it, so we keep it*/
 }
 
 .ennemy-container {

@@ -1,37 +1,37 @@
-// Chat écrit de la partie en ligne : un salon commun, et une conversation
-// privée entre le MJ et chaque joueur.
+// Written chat of the online game: a common room, and a private
+// conversation between the GM and each player.
 //
-// Un message : {id, at, from: {id, name, gm}, to, text}
-//   to = null       salon commun (tout le monde le voit)
-//   to = id joueur  privé entre le MJ et ce joueur
-// L'historique reste en mémoire pendant la partie : un joueur qui revient
-// retrouve le salon et sa conversation privée. Une nouvelle partie (page des
-// persos ouverte depuis une autre page) le vide.
+// A message: {id, at, from: {id, name, gm}, to, text}
+//   to = null       common room (everyone sees it)
+//   to = player id  private between the GM and that player
+// The history stays in memory during the game: a returning player
+// finds the room and their private conversation again. A new game (characters
+// page opened from another page) clears it.
 //
-// Pages du MJ (WebSocket local) : {action:'chat', data:{message}} et
+// GM pages (local WebSocket): {action:'chat', data:{message}} and
 //   {action:'chat-history', data:{messages}}
-// Joueurs (relais) : {kind:'chat', message} et {kind:'chat-history', messages}
+// Players (relay): {kind:'chat', message} and {kind:'chat-history', messages}
 const lobby = require('./lobby');
 const dice = require('./dice');
 
 const MAX_HISTORY = 300;
 const MAX_TEXT = 500;
-// Anti-flood : au plus 6 messages par joueur toutes les 10 secondes
+// Anti-flood: at most 6 messages per player every 10 seconds
 const RATE_COUNT = 6;
 const RATE_MS = 10000;
 
 let history = [];
 let nextId = 1;
-const recent = new Map(); // id joueur → dates de ses derniers messages
+const recent = new Map(); // player id → dates of their last messages
 
 const cleanText = (value) => String(value || '').replace(/\r\n?/g, '\n').replace(/\n{3,}/g, '\n\n').trim().slice(0, MAX_TEXT);
 
-// Ce qu'un joueur a le droit de voir
+// What a player is allowed to see
 const visibleTo = (playerId) => (m) => m.to === null || m.to === playerId;
 
 const historyFor = (playerId) => history.filter(visibleTo(playerId));
 
-// Diffusion d'un nouveau message : aux joueurs concernés et aux pages du MJ
+// Broadcasting a new message: to the players concerned and to the GM pages
 let toGm = () => {};
 const deliver = function (message) {
     if (message.to === null)
@@ -43,7 +43,7 @@ const deliver = function (message) {
 
 const add = function (from, to, text, dice) {
     let message = {id: nextId++, at: Date.now(), from: from, to: to || null, text: text};
-    // Jet de la fenêtre de dés (dice.js) : posé par le serveur seulement
+    // Dice window roll (dice.js): set by the server only
     if (dice)
         message.dice = dice;
     history.push(message);
@@ -53,7 +53,7 @@ const add = function (from, to, text, dice) {
     return message;
 };
 
-// Anti-flood d'un joueur : false s'il écrit (ou lance) trop vite
+// A player's anti-flood: false if they write (or roll) too fast
 const allowed = function (playerId) {
     let now = Date.now();
     let times = (recent.get(playerId) || []).filter(t => now - t < RATE_MS);
@@ -65,7 +65,7 @@ const allowed = function (playerId) {
 };
 const TOO_FAST = 'Doucement : attends quelques secondes avant d\'écrire à nouveau.';
 
-// Message d'un joueur. privateToGm : seul le MJ le lit. Renvoie {error} ou {message}
+// A player's message. privateToGm: only the GM reads it. Returns {error} or {message}
 const fromPlayer = function (player, displayName, data) {
     let text = cleanText(data && data.text);
     if (!text)
@@ -76,7 +76,7 @@ const fromPlayer = function (player, displayName, data) {
     return {message: add(from, data && data.private ? player.id : null, text)};
 };
 
-// Jet de dés neutres d'un joueur (dice.js), au salon ou au MJ seul (secret)
+// A player's neutral dice roll (dice.js), in the room or to the GM only (secret)
 const playerDice = function (player, displayName, result, secret) {
     if (!allowed(player.id))
         return {error: 'Doucement : attends quelques secondes avant de relancer.'};
@@ -84,10 +84,10 @@ const playerDice = function (player, displayName, result, secret) {
     return {message: add(from, secret ? player.id : null, dice.text(result), dice.detail(result))};
 };
 
-// Jet du MJ montré à tout le salon
+// GM roll shown to the whole room
 const gmDice = (result) => add({id: 'gm', name: 'MJ', gm: true}, null, dice.text(result), dice.detail(result));
 
-// Message du MJ, dans le salon (to vide) ou à un joueur
+// GM message, in the room (empty to) or to a player
 const fromGm = function (data) {
     let text = cleanText(data && data.text);
     if (!text)
@@ -103,18 +103,18 @@ const clear = function () {
     lobby.sendTo('*', {kind: 'chat-history', messages: []});
 };
 
-// Actions des pages du MJ (ws.js)
+// Actions from the GM pages (ws.js)
 const handle = function (response) {
     if (response.action === 'chat-send') {
         fromGm(response.data);
-        return null; // déjà diffusé
+        return null; // already broadcast
     }
-    // chat-history : la page du MJ qui s'ouvre demande tout l'historique
+    // chat-history: the GM page that opens asks for the whole history
     return {action: 'chat-history', error: false, data: {messages: history}};
 };
 
-// broadcast(message) envoie aux pages du MJ ; à l'arrivée d'un joueur, il
-// reçoit l'historique qu'il a le droit de voir
+// broadcast(message) sends to the GM pages; when a player arrives, they
+// receive the history they are allowed to see
 const init = function (broadcast) {
     toGm = broadcast;
     lobby.onPlayerJoin(player => lobby.sendTo(player.id, {kind: 'chat-history', messages: historyFor(player.id)}));

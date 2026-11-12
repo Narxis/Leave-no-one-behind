@@ -124,14 +124,14 @@ dist
 .idea/
 public/views/index-legacy.ejs
 
-# Données du jeu gardées entre les redémarrages : alliés (PNJ) du MJ, classement des équipes, paramètres de partie
+# Game data kept across restarts: GM's allies (NPCs), team leaderboard, game settings
 storage/cache/allies.json
 storage/cache/leaderboard.json
 storage/cache/gameSettings.json
-# Races customs autorisées par le MJ, mémoire du Codex de la partie en cours
+# Custom races allowed by the GM, Codex memory of the current game
 storage/cache/raceSettings.json
 storage/cache/codex.json
 
-# Relais Cloudflare : fichiers locaux de wrangler
+# Cloudflare relay: local wrangler files
 relay/.wrangler/
 storage/mj-key

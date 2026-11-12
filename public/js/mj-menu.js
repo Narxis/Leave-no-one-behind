@@ -8,12 +8,12 @@ async function getAllPlayers () {
     });
     return JSON.parse(await rawResponse.text());
 }
-// Le combat (adversaires, début/fin, attaques) est géré dans mj-combat.js
-// Les compagnons (PNJ) et les onglets Adversaires / Compagnons sont gérés dans mj-allies.js
+// Combat (opponents, start/end, attacks) is handled in mj-combat.js
+// Companions (NPCs) and the Opponents / Companions tabs are handled in mj-allies.js
 
-// Status : ajout depuis le champ de recherche, liste des status actifs avec
-// leur durée (en cartes) et retrait. L'état fait foi côté serveur et revient
-// par l'événement « status ».
+// Status: adding from the search field, list of active statuses with
+// their duration (in cards) and removal. The server state is authoritative and comes back
+// through the "status" event.
 (function () {
     const search = document.getElementById('search-status');
     const duration = document.getElementById('duration-status');
@@ -32,7 +32,7 @@ async function getAllPlayers () {
         return e;
     };
 
-    // Accepte le slug (blackout) ou le nom affiché (Blackout, Recherché…)
+    // Accepts the slug (blackout) or the displayed name (Blackout, Recherché…)
     function findStatus(text) {
         let t = text.trim().toLowerCase();
         return known.find(s => s.slug.toLowerCase() === t || String(s.name).toLowerCase() === t);
@@ -46,7 +46,7 @@ async function getAllPlayers () {
         }
         for (let status of active) {
             let row = el('div', 'mj-status');
-            // Description au survol ; statut d'un seul joueur : son nom
+            // Description on hover; status of a single player: their name
             row.title = status.desc || '';
             let name = el('span', 'mj-status-name', status.name);
             if (status.player_id)
@@ -61,7 +61,7 @@ async function getAllPlayers () {
         }
     }
 
-    // Statuts connus (ceux créés à la volée s'y ajoutent) et joueurs ciblables
+    // Known statuses (those created on the fly are added) and targetable players
     function loadKnown() {
         fetch('/api/statuses').then(r => r.json()).then(all => {
             known = all;
@@ -99,7 +99,7 @@ async function getAllPlayers () {
         input.focus();
     }
 
-    // Nouveau statut : nom et description, appliqué avec la durée et la cible choisies
+    // New status: name and description, applied with the chosen duration and target
     function create() {
         if (!newName.value.trim())
             return shake(newName);
@@ -113,7 +113,7 @@ async function getAllPlayers () {
     function add() {
         let status = findStatus(search.value);
         if (!status) {
-            // Statut inconnu : on propose de le créer avec ce nom
+            // Unknown status: offer to create it with this name
             if (search.value.trim()) {
                 newName.value = search.value.trim();
                 newName.closest('details').open = true;
@@ -141,16 +141,16 @@ async function getAllPlayers () {
             loadKnown();
     });
     document.addEventListener('ws-reconnect', () => { load(); loadKnown(); });
-    // Un joueur a rejoint ou changé de nom : la liste des cibles suit
+    // A player joined or changed name: the target list follows
     document.addEventListener('join', loadKnown);
     document.addEventListener('set-name', loadKnown);
     load();
     loadKnown();
 })();
 
-// Jet à la place d'un joueur (pas de moyen de lancer, joueur AFK) : la demande
-// part exactement comme le /roll Discord (action « roll »), donc mêmes calculs,
-// même affichage sur l'écran de jeu et même effet en combat
+// Roll on behalf of a player (no way to roll, player AFK): the request
+// goes exactly like the Discord /roll ("roll" action), so same calculations,
+// same display on the game screen and same effect in combat
 (function () {
     const playerSelect = document.getElementById('mj-player-roll-player');
     const statSelect = document.getElementById('mj-player-roll-stat');
@@ -160,8 +160,8 @@ async function getAllPlayers () {
     let names = {};
     let waiting = null;
 
-    // Joueurs puis compagnons (PNJ, valeur « npc<id> ») : un compagnon peut
-    // aussi faire ses jets hors combat
+    // Players then companions (NPCs, value "npc<id>"): a companion can
+    // also make rolls outside combat
     function load() {
         Promise.all([getAllPlayers(), fetch('/api/allies').then(r => r.json()).catch(() => [])]).then(([list, allies]) => {
             let current = playerSelect.value;
@@ -189,7 +189,7 @@ async function getAllPlayers () {
         }).catch(() => {});
     }
 
-    // Un compagnon lance sans module
+    // A companion rolls without a module
     const isAlly = () => playerSelect.value.startsWith('npc');
     function syncModule() {
         moduleSelect.disabled = isAlly();
@@ -202,7 +202,7 @@ async function getAllPlayers () {
         if (!playerSelect.value)
             return;
         sendBtn.disabled = true;
-        // Le bouton revient même si le serveur ne répond pas (joueur supprimé…)
+        // The button comes back even if the server doesn't answer (deleted player…)
         waiting = setTimeout(() => { sendBtn.disabled = false; }, 3000);
         if (isAlly())
             wsLNOB.send({action: 'ally-roll', data: {id: playerSelect.value.slice(3), stat: statSelect.value}});
@@ -210,7 +210,7 @@ async function getAllPlayers () {
             wsLNOB.rollDice(playerSelect.value, statSelect.value, moduleSelect.value);
     });
 
-    // Dernier jet reçu, qu'il vienne du MJ ou d'un joueur
+    // Last roll received, whether from the GM or a player
     document.addEventListener('roll', (e) => {
         let data = e.detail.data;
         let stat = statSelect.querySelector('option[value="' + data.stat + '"]');
@@ -218,7 +218,7 @@ async function getAllPlayers () {
         result.className = 'mj-player-roll-result ' + (data.success ? 'success' : 'fail');
         result.textContent = (names[data.discord_id] || data.name || 'Joueur') + ' · ' + (stat ? stat.textContent : data.stat)
             + (module ? ' (' + module.textContent + ')' : '')
-            // Dé en plus du rôle : on montre tous les dés et celui gardé
+            // Extra die from the role: show all dice and the one kept
             + (data.dice ? ' : dés ' + data.dice.join(' / ') + ', gardé ' : ' : dé ') + data.dice_result + ' → ';
         let value = document.createElement('strong');
         value.textContent = data.result + (data.success ? ' réussite' : ' échec');
@@ -241,15 +241,15 @@ function setMJCardValue(card) {
     });
     document.querySelector('.desc-text').innerHTML = card.desc || '';
     document.querySelector('.desc-mjreveal').innerHTML = '<span class="mjreveal">' + (card.mjreveal || '') + '</span>';
-    // Le panneau a 3 emplacements, comme l'éditeur de lieux
-    // « Autre… » (carte blanche) n'y prend pas de place
+    // The panel has 3 slots, like the place editor
+    // "Autre…" (blank card) takes no slot
     card.choices.filter(c => !c.other).slice(0, 3).forEach(function (choice, i) {
         document.querySelector('#choice' + i + ' .button-text').innerHTML = choice.value;
         document.querySelector('#choice' + i + ' .mjreveal-text').innerHTML = '<span class="mjreveal">' + (choice.mjreveal || '') + '</span>';
-        // Butin du choix : distribué sur la page de jeu avant la suite
+        // Choice loot: distributed on the game page before the follow-up
         let loot = Array.isArray(choice.loot) && choice.loot.length
             ? '<br><br><span class="mj-loot">Butin : ' + choice.loot.map(n => (n && typeof n === 'object' ? n.name + (n.qty > 1 ? ' ×' + n.qty : '') : String(n)).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]))).join(', ') + '</span>' : '';
-        // Issues au hasard : celle tirée pour cette carte est déjà la suite du choix
+        // Random outcomes: the one drawn for this card is already the choice's follow-up
         let drawn = Array.isArray(choice.outcomes)
             ? '<span class="mj-outcome">Issue tirée au hasard : ' + (choice.outcome + 1) + ' sur ' + choice.outcomes.length + '</span><br>' : '';
         document.querySelector('#choice' + i + ' .reveal-text').innerHTML = "Prochain evenement: <br> <br>" + drawn + (choice.roll ? rollIssuesHtml(choice.roll) : (choice.reveal || (choice.next ? 'Carte suivante (' + escMj(choice.next) + ')' : ''))) + loot;
@@ -259,7 +259,7 @@ function setMJCardValue(card) {
 const CARD_ROLL_STATS = {combat: 'Combat', pilotage: 'Pilotage', engineering: 'Ingénierie', survival: 'Survie', recon: 'Reconnaissance'};
 const escMj = (t) => String(t).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]));
 
-// Une suite de jet en une ligne : texte (ou carte suivante) et infos MJ
+// A roll follow-up on one line: text (or next card) and GM info
 function rollIssueHtml(issue) {
     issue = issue || {};
     let text = issue.reveal ? issue.reveal.trim() : (issue.next ? 'Carte suivante (' + escMj(issue.next) + ')' : '');
@@ -273,7 +273,7 @@ function rollIssuesHtml(roll) {
         + '<b>Si échec :</b> ' + rollIssueHtml(roll.failure);
 }
 
-// Jet d'un choix demandé par la page de jeu : chrono en pause jusqu'à la réponse
+// Choice roll requested by the game page: timer paused until the answer
 (function () {
     const box = document.getElementById('mj-card-roll');
     const last = document.getElementById('mj-card-roll-last');
@@ -295,7 +295,7 @@ function rollIssuesHtml(roll) {
         pending = null;
         box.hidden = true;
     });
-    // Jet reçu pendant l'attente : mis en avant, le MJ garde la main
+    // Roll received while waiting: highlighted, the GM stays in control
     document.addEventListener('roll', (e) => {
         let data = e.detail.data || {};
         if (!pending || (pending.stat && data.stat !== pending.stat))
@@ -307,14 +307,14 @@ function rollIssuesHtml(roll) {
         if (pending)
             wsLNOB.triggerCustomEvent('card-roll-result', {result: btn.dataset.cardRoll});
     }));
-    // Menu ouvert pendant un jet : la page de jeu renvoie sa demande
+    // Menu opened during a roll: the game page sends its request again
     const query = () => wsLNOB.triggerCustomEvent('card-roll-query', {});
     document.addEventListener('ws-reconnect', query);
     query();
 })();
 
-// Carte en cours : chargée à l'ouverture (et après une coupure du serveur),
-// puis suivie par l'événement « card-played »
+// Current card: loaded on opening (and after a server outage),
+// then followed through the "card-played" event
 function loadCurrentCard() {
     fetch('/api/currentCard').then(r => r.json()).then(setMJCardValue).catch(() => {});
 }
@@ -347,8 +347,8 @@ document.getElementById('mjroll-button').addEventListener('mouseup',function(){
     },25);
 });
 
-// Votes des joueurs en ligne sur les choix affichés (votes.js). Le MJ
-// choisit toujours lui-même sur la page de jeu.
+// Online players' votes on the displayed choices (votes.js). The GM
+// always chooses on the game page themselves.
 function showVotes(data) {
     let box = document.getElementById('mj-votes');
     if (!box || !data)
@@ -362,7 +362,7 @@ function showVotes(data) {
             li.className = 'chosen';
         let label = document.createElement('div');
         label.className = 'mj-vote-choice';
-        // Intitulé sans sa mise en forme (<s>, <b>…)
+        // Label without its formatting (<s>, <b>…)
         let tmp = document.createElement('div');
         tmp.innerHTML = String(text);
         label.textContent = tmp.textContent;

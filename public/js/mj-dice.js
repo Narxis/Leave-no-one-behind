@@ -1,21 +1,21 @@
-// Fenêtre de dés du menu MJ (dice-window.js) : les mêmes dés que les joueurs.
-// Jet de stat pour un joueur ou un compagnon, par le même chemin que « Jet
-// pour un joueur ou un compagnon » (action « roll », ou « ally-roll ») ;
-// dés neutres cachés aux joueurs, ou montrés au salon du chat. « Derniers
-// jets » suit aussi ceux des joueurs.
+// Dice window of the GM menu (dice-window.js): the same dice as the players.
+// Stat roll for a player or companion, through the same path as "Jet
+// pour un joueur ou un compagnon" ("roll" or "ally-roll" action);
+// neutral dice hidden from the players, or shown in the chat room. "Derniers
+// jets" also follows the players' rolls.
 (function () {
     if (!window.DiceWindow || typeof wsLNOB === 'undefined')
         return;
     const STATS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'], ['survival', 'Survie'], ['recon', 'Reconnaissance']];
     const LABELS = Object.fromEntries(STATS);
-    // Modules : ceux du jet pour un joueur, plus haut dans la page
+    // Modules: those of the roll for a player, higher up in the page
     let moduleSelect = document.getElementById('mj-player-roll-module');
     const MODULES = moduleSelect ? Array.from(moduleSelect.options).map(o => [o.value, o.textContent])
         : [['', 'Sans module'], ['scanner', 'Scanners de surface'], ['proximity', 'Détecteurs de proximité'], ['motors', 'Moteurs'],
             ['oxygen', 'Module d\'oxygène'], ['energy', 'Électricité'], ['gravity', 'Gravité artificielle']];
 
     let names = {};
-    let pending = null;     // jet de stat lancé ici : {target, stat}
+    let pending = null;     // stat roll made here: {target, stat}
     const dice = DiceWindow.create({
         storageKey: 'lnob-mj-dice',
         modules: MODULES,
@@ -33,7 +33,7 @@
     });
     dice.setStats(STATS.map(([stat, label]) => ({stat: stat, label: label})), '');
 
-    // Pour qui : joueurs puis compagnons
+    // For whom: players then companions
     const loadTargets = function () {
         let players = typeof getAllPlayers === 'function' ? getAllPlayers().catch(() => []) : Promise.resolve([]);
         let allies = fetch('/api/allies').then(r => r.json()).catch(() => []);
@@ -48,7 +48,7 @@
     for (let type of ['join', 'set-name', 'allies', 'ws-reconnect'])
         document.addEventListener(type, loadTargets);
 
-    // Jets de stats, d'ici ou des joueurs
+    // Stat rolls, from here or from the players
     document.addEventListener('roll', function (e) {
         let d = e.detail && e.detail.data;
         if (!d || e.detail.error || d.result === undefined)
@@ -64,7 +64,7 @@
         }
     });
 
-    // Jet lancé ici et refusé par le serveur (joueur plus dans la partie…)
+    // Roll made here and refused by the server (player no longer in the game…)
     document.addEventListener('ws-error', function (e) {
         let action = e.detail && e.detail.action;
         if (action === 'roll' && pending) {
@@ -75,7 +75,7 @@
             dice.fail('Jet impossible.');
     });
 
-    // Dés neutres du MJ
+    // GM's neutral dice
     document.addEventListener('dice', function (e) {
         let r = e.detail.data;
         let what = r.count + 'D' + r.sides;
@@ -83,7 +83,7 @@
         dice.log({who: 'MJ', what: what + (r.secret ? ' · caché' : ''), total: r.total});
     });
 
-    // Dés neutres des joueurs (messages du chat posés par le serveur)
+    // Players' neutral dice (chat messages set by the server)
     document.addEventListener('chat', function (e) {
         let m = e.detail.data && e.detail.data.message;
         if (m && m.dice && !m.from.gm)

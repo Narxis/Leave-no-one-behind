@@ -1,22 +1,22 @@
-# Relais LNOB sur Cloudflare Workers (offre gratuite).
-# Mise en ligne : voir relay/README.md
+# LNOB relay on Cloudflare Workers (free plan).
+# Deployment: see relay/README.md
 name = "lnob-relay"
 main = "worker.js"
 compatibility_date = "2026-09-01"
 
-# Page joueur, servie sur / (le lien partagé par le MJ)
+# Player page, served on / (the link shared by the GM)
 [assets]
 directory = "../public/player"
 binding = "ASSETS"
 
-# Connexion Discord des joueurs (facultative) : DISCORD_CLIENT_ID et
-# DISCORD_CLIENT_SECRET en secrets (npx wrangler secret put …), voir README.md
+# Players' Discord login (optional): DISCORD_CLIENT_ID and
+# DISCORD_CLIENT_SECRET as secrets (npx wrangler secret put …), see README.md
 
 [[durable_objects.bindings]]
 name = "LOBBY"
 class_name = "LobbyRoom"
 
-# Durable Objects avec stockage SQLite : les seuls disponibles sur l'offre gratuite
+# Durable Objects with SQLite storage: the only ones available on the free plan
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["LobbyRoom"]

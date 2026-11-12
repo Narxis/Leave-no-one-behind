@@ -1,5 +1,5 @@
-/* Boutique du marchand sur l'écran de jeu (merchant.js) : le cadre du
-   combat, aux couleurs du butin */
+/* Merchant shop on the game screen (merchant.js): the combat
+   frame, in loot colors */
 .merchant-area {
     border-color: rgb(255 204 0 / 45%);
     background:
@@ -9,7 +9,7 @@
     z-index: 6;
 }
 
-/* Comme le reste de l'interface hors combat */
+/* Like the rest of the interface outside combat */
 body.combat-mode #merchant-area {
     visibility: hidden;
     pointer-events: none;
@@ -89,7 +89,7 @@ body.combat-mode #merchant-area {
     from { color: var(--ui-accent); transform: scale(1.06); }
 }
 
-/* Bourse en tête des coffres et caisse de bord du vaisseau (inventory.js) */
+/* Purse at the top of the chests and the ship's cash box (inventory.js) */
 .itemlist-money p,
 .ship-money-line p {
     color: var(--ui-accent);

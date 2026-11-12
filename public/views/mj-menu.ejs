@@ -26,7 +26,7 @@
                         <div class="desc-mjreveal"></div>
                         <div class="desc-text">Ici serra présenté le texte descriptif de la carte actuelle, certaines informations ne seront visible qu'ici !</div>
                     </div>
-                    <!-- Jet d'un choix en attente sur la page de jeu : le MJ dit s'il est réussi -->
+                    <!-- Choice roll pending on the game page: the GM says whether it succeeded -->
                     <div class="mj-card-roll" id="mj-card-roll" hidden>
                         <div class="mj-card-roll-title"><span id="mj-card-roll-stat">Jet</span> en attente</div>
                         <div class="mj-card-roll-choice" id="mj-card-roll-choice"></div>
@@ -118,8 +118,8 @@
                     <div class="mj-statuses" id="mj-statuses"></div>
                 </div>
                 <div class="combat">
-                    <!--Un espace pour chaque joueurs pour un boutton join-->
-                    <%# Qui commence (wiki : regles/combat.md) ; l'ordre reste modifiable pendant le combat %>
+                    <!--A slot for each player for a join button-->
+                    <%# Who starts (wiki: regles/combat.md); the order stays editable during combat %>
                     <select class="add-life combat-initiative" id="combat-initiative" title="Initiative : qui commence le combat">
                         <option value="hasard" title="Sauf si aucun joueur n'a plus de 75 de moral : les adversaires commencent">Initiative : pile ou face</option>
                         <option value="joueurs" title="Ils lancent le combat : ils commencent">Les joueurs attaquent</option>
@@ -130,7 +130,7 @@
                     <div class="mj-team" id="mj-team"></div>
                     <div class="mj-status-panel hide" id="mj-status-panel"></div>
                     <div class="mj-combat-log" id="mj-combat-log"></div>
-                    <!-- Jet à la place d'un joueur (AFK, pas de moyen de lancer) : même chemin que /roll -->
+                    <!-- Roll on behalf of a player (AFK, no way to roll): same path as /roll -->
                     <div class="mj-player-roll" id="mj-player-roll">
                         <div class="mj-team-title">Jet pour un joueur ou un compagnon</div>
                         <div class="mj-player-roll-fields">
@@ -182,7 +182,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Carte blanche : la suite d'une action libre (« Autre… »), écrite sur le moment (mj-blank.js) -->
+            <!-- Blank card: the follow-up of a free action ("Autre…"), written on the spot (mj-blank.js) -->
             <section class="mj-blank" id="mj-blank">
                 <div class="mj-blank-head">
                     <div class="mj-ship-title">Carte blanche</div>
@@ -208,7 +208,7 @@
                     <button type="button" class="add-life" id="mj-blank-clear">Vider</button>
                 </div>
             </section>
-            <!-- Plan du vaisseau : salles qui clignotent et alertes chez les joueurs (mj-ship.js) -->
+            <!-- Ship map: blinking rooms and alerts on the players' side (mj-ship.js) -->
             <section class="mj-ship" id="mj-ship">
                 <div class="mj-ship-map" id="mj-ship-map">
                     <img src="/img/plan-plugs-stroke.png" alt="">
@@ -239,7 +239,7 @@
                     </div>
                 </div>
             </section>
-            <!-- Marchand et bourses (mj-shop.js) -->
+            <!-- Merchant and purses (mj-shop.js) -->
             <section class="mj-shop" id="mj-shop">
                 <div class="mj-shop-col">
                     <div class="mj-shop-head">
@@ -277,7 +277,7 @@
                 </div>
             </section>
 
-            <!-- Atelier d'artisanat (mj-craft.js) -->
+            <!-- Crafting workshop (mj-craft.js) -->
             <section class="mj-craft" id="mj-craft">
                 <div class="mj-craft-col">
                     <div class="mj-shop-head">

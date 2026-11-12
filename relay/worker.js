@@ -1,8 +1,8 @@
-// Relais LNOB sur Cloudflare Workers : un Durable Object par lobby.
-// Il sert la page joueur (public/player, voir wrangler.toml), les
-// connexions WebSocket sur /host, /host/CODE et /join/CODE, et la connexion
-// Discord des joueurs sur /auth/discord/* (discord-auth.js).
-// La logique est dans lobby-core.js, partagée avec le relais Node.
+// LNOB relay on Cloudflare Workers: one Durable Object per lobby.
+// It serves the player page (public/player, see wrangler.toml), the
+// WebSocket connections on /host, /host/CODE and /join/CODE, and the players'
+// Discord login on /auth/discord/* (discord-auth.js).
+// The logic is in lobby-core.js, shared with the Node relay.
 import {DurableObject} from 'cloudflare:workers';
 import core from './lobby-core.js';
 import discordAuth from './discord-auth.js';
@@ -14,19 +14,19 @@ export class LobbyRoom extends DurableObject {
     async lobby() {
         let code = await this.ctx.storage.get('code');
         return new Lobby(code || '', {
-            // Seuls les sockets ouverts : pendant webSocketClose, celui qui se ferme n'en fait plus partie
+            // Only open sockets: during webSocketClose, the one closing is no longer part of them
             sockets: () => this.ctx.getWebSockets()
                 .filter(ws => ws.readyState === WebSocket.OPEN)
                 .map(ws => ({ws, meta: readMeta(ws)})),
             metaOf: readMeta,
             setMeta: (ws, meta) => {
-                try { ws.serializeAttachment(meta); } catch (e) { /* socket fermé */ }
+                try { ws.serializeAttachment(meta); } catch (e) { /* socket closed */ }
             },
             send: (ws, obj) => {
-                try { ws.send(JSON.stringify(obj)); } catch (e) { /* socket fermé */ }
+                try { ws.send(JSON.stringify(obj)); } catch (e) { /* socket closed */ }
             },
             close: (ws, code, reason) => {
-                try { ws.close(code, reason); } catch (e) { /* déjà fermé */ }
+                try { ws.close(code, reason); } catch (e) { /* already closed */ }
             },
             getToken: async () => (await this.ctx.storage.get('token')) || null,
             setToken: async (token) => {
@@ -48,7 +48,7 @@ export class LobbyRoom extends DurableObject {
         let q = url.searchParams;
         let role = q.get('role');
 
-        // Nouveau lobby sur un code déjà pris : le worker en tire un autre
+        // New lobby on a code already taken: the worker draws another one
         if (role === 'new-host' && await this.ctx.storage.get('token'))
             return new Response('code pris', {status: 409});
         if (role === 'new-host')
@@ -126,7 +126,7 @@ export default {
             return new Response('Aucun code libre', {status: 503});
         }
 
-        // Code invalide : le lobby « XXXXXX » n'existe jamais et répond par une erreur lisible
+        // Invalid code: the "XXXXXX" lobby never exists and answers with a readable error
         let code = normalizeCode(parts[1]) || 'XXXXXX';
         if (parts[0] === 'host')
             return forward(env, code, request, {role: 'host', token: q.get('token') || ''});

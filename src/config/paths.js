@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-// Dossiers du jeu.
-// - ROOT : le code et les fichiers livrés avec le jeu (vues, css, images…),
-//   en lecture seule dans l'app de bureau.
-// - DATA : ce que le jeu écrit (bases SQLite, storage/cache, images des races
-//   customs). Par défaut le dossier de lancement du serveur, comme avant ;
-//   l'app de bureau le place dans le dossier de données de l'utilisateur
-//   avec LNOB_DATA_DIR.
+// Game folders.
+// - ROOT: the code and files shipped with the game (views, css, images…),
+//   read-only in the desktop app.
+// - DATA: what the game writes (SQLite databases, storage/cache, custom race
+//   images). By default the server launch folder, as before;
+//   the desktop app puts it in the user's data folder
+//   with LNOB_DATA_DIR.
 const ROOT = path.join(__dirname, '../..');
 const DATA = path.resolve(process.env.LNOB_DATA_DIR || process.cwd());
 
@@ -17,19 +17,19 @@ const databases = (...parts) => storage('databases', ...parts);
 const raceImages = (...parts) => path.join(DATA, 'public/img/races', ...parts);
 const itemImages = (...parts) => path.join(DATA, 'public/img/items', ...parts);
 
-// Catalogue des objets (éditeur /items). Lancé depuis le dépôt (DATA = ROOT),
-// l'éditeur modifie src/config/items.json comme avant. Dans l'app installée,
-// le catalogue livré est en lecture seule : la première modification en fait
-// une copie dans storage/cache/items.json, lue ensuite à sa place. Tant que le
-// MJ ne touche à rien, il garde le catalogue livré avec chaque mise à jour.
+// Item catalog (/items editor). Started from the repo (DATA = ROOT),
+// the editor changes src/config/items.json as before. In the installed app,
+// the shipped catalog is read-only: the first change makes
+// a copy in storage/cache/items.json, read instead from then on. As long as the
+// GM doesn't touch anything, they keep the catalog shipped with each update.
 const BASE_ITEMS = path.join(ROOT, 'src/config/items.json');
 const sameDir = (a, b) => path.resolve(a).toLowerCase() === path.resolve(b).toLowerCase();
 const itemsWriteFile = () => sameDir(DATA, ROOT) ? BASE_ITEMS : cache('items.json');
 const itemsFile = () => fs.existsSync(itemsWriteFile()) ? itemsWriteFile() : BASE_ITEMS;
 
-// Crée les dossiers de données. À la création de storage/cache, y copie les
-// fichiers de départ livrés avec le jeu (les lieux) : une seule fois, pour
-// qu'un lieu supprimé dans l'éditeur ne revienne pas au lancement suivant.
+// Creates the data folders. When storage/cache is created, copies the
+// starting files shipped with the game (the places) into it: only once, so
+// that a place deleted in the editor doesn't come back on the next launch.
 const prepare = function () {
     let seed = path.join(ROOT, 'storage/cache');
     let firstRun = !fs.existsSync(cache()) && fs.existsSync(seed);

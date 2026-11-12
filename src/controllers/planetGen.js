@@ -1,14 +1,14 @@
 const ARCHETYPES = require('../config/planetArchetypes.json');
 
-// Poids de chaque stat dans le score d'une planète (somme = 500) : le score
-// va de 1 à 1000 et place la planète dans une tranche de difficulté
+// Weight of each stat in a planet's score (sum = 500): the score
+// goes from 1 to 1000 and puts the planet in a difficulty range
 const STAT_WEIGHTS = {oxy: 85, grv: 60, wtr: 95, res: 80, fau: 30, flo: 30, civ: 65, cli: 55};
 const STATS = Object.keys(STAT_WEIGHTS);
 const MAX_TRIES = 3000;
 
-// Règles de cohérence entre stats, appliquées à chaque tirage :
-// activité tectonique forte et pluies acides (climat ≤ 25) => pas d'eau en
-// surface, seulement « un autre liquide » (eau ≤ 20)
+// Consistency rules between stats, applied on each draw:
+// strong tectonic activity and acid rain (climate ≤ 25) => no water on
+// the surface, only "another liquid" (water ≤ 20)
 const RULES = [
     (v) => v.cli > 25 || v.wtr <= 20
 ];
@@ -20,7 +20,7 @@ const rangesFor = (archetype, stat) => archetype[stat] || ARCHETYPES.default[sta
 
 const randInt = (rng, min, max) => min + Math.floor(rng() * (max - min + 1));
 
-// Score minimal et maximal qu'un archétype peut atteindre
+// Minimum and maximum score an archetype can reach
 const scoreBounds = function (archetype) {
     let low = {}, high = {};
     for (let stat of STATS) {
@@ -52,8 +52,8 @@ const pickWeighted = function (entries, rng) {
     return entries[entries.length - 1];
 }
 
-// Tire un archétype compatible avec la tranche [min, max], puis ses stats
-// jusqu'à tomber dans la tranche. Renvoie {archetype, values, score}
+// Draws an archetype compatible with the [min, max] range, then its stats
+// until they fall within the range. Returns {archetype, values, score}
 const rollPlanet = function (min, max, rng = Math.random) {
     let candidates = Object.entries(ARCHETYPES.archetypes).filter(([, a]) => {
         let [low, high] = scoreBounds(a);
@@ -67,10 +67,10 @@ const rollPlanet = function (min, max, rng = Math.random) {
             if (score >= min && score <= max && isCoherent(values))
                 return {archetype: slug, values, score};
         }
-        // Tranche trop étroite pour cet archétype : on en essaie un autre
+        // Range too narrow for this archetype: try another one
         candidates = candidates.filter(([s]) => s !== slug);
     }
-    // Aucun archétype ne convient : tirage libre, comme avant les archétypes
+    // No archetype fits: free draw, as before archetypes
     for (;;) {
         let values = rollWith({}, rng);
         let score = scoreOf(values);

@@ -1,12 +1,12 @@
-// Rôles des joueurs (capitaine, pilote…) : définis dans src/config/roles.json.
-// Le MJ en donne un à chaque joueur sur la fiche des persos ; un rôle donne
-// des dés en plus sur les jets de sa stat, et on garde le meilleur dé
+// Player roles (captain, pilot…): defined in src/config/roles.json.
+// The GM gives one to each player on the characters sheet; a role gives
+// extra dice on rolls of its stat, and the best die is kept
 const fs = require('fs');
 const {Player} = require('../models/player');
 
 const CONFIG_FILE = __dirname + '/../config/roles.json';
 
-// Relu à chaque fois : un changement du fichier compte sans redémarrer
+// Re-read each time: a file change counts without restarting
 const load = function () {
     try {
         let conf = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
@@ -21,13 +21,13 @@ const list = () => load().roles;
 
 const find = (slug) => slug ? list().find(r => r.slug === slug) || null : null;
 
-// Ce que voient les pages et les joueurs
+// What the pages and the players see
 const publicRole = function (slug) {
     let role = find(slug);
     return role ? {slug: role.slug, name: role.name, effect: role.effect || '', icon: role.icon || ''} : null;
 }
 
-// Nombre de dés d'un jet : 1, plus le bonus du rôle si c'est sa stat
+// Number of dice for a roll: 1, plus the role bonus if it is its stat
 const diceCount = function (player, stat) {
     let role = find(player && player.role);
     if (!role || !role.stat || role.stat !== stat)
@@ -35,7 +35,7 @@ const diceCount = function (player, stat) {
     return 1 + Math.max(0, parseInt(role.bonus) || 0);
 }
 
-// Lance les dés d'un jet (de 1 à 100) et garde le meilleur
+// Rolls the dice of a roll (from 1 to 100) and keeps the best
 const rollDice = function (count, random = Math.random) {
     let dice = [];
     for (let i = 0; i < Math.max(1, count); i++)
@@ -43,8 +43,8 @@ const rollDice = function (count, random = Math.random) {
     return {dice: dice, kept: Math.max(...dice)};
 }
 
-// Donne un rôle à un joueur ('' : aucun). Si le rôle est unique, le joueur
-// qui l'avait le perd. Renvoie les joueurs modifiés, ou null si refusé
+// Gives a role to a player ('': none). If the role is unique, the player
+// who had it loses it. Returns the changed players, or null if refused
 const assign = async function (discord_id, slug) {
     slug = slug || '';
     if (slug && !find(slug))

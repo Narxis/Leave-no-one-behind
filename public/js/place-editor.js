@@ -1,12 +1,12 @@
-// Éditeur de lieux (/buildCard) : un lieu est un module Drawflow fait de
-// cartes, de choix et de résultats reliés entre eux. Les données gardent le
-// format d'origine (storage/cache/<lieu>_placesDat.json) ; seule l'interface change.
+// Place editor (/buildCard): a place is a Drawflow module made of
+// cards, choices and results linked together. The data keeps the
+// original format (storage/cache/<place>_placesDat.json); only the interface changes.
 (function () {
     const MAX_CHOICES = 3;
     const PLACE_NAME = /^[a-z0-9_-]{1,40}$/i;
     const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 
-    // Contenu des blocs. Les champs df-* sont synchronisés par Drawflow avec node.data
+    // Block contents. The df-* fields are synced by Drawflow with node.data
     const TEMPLATES = {
         card: `
 <div class="pe-node">
@@ -80,8 +80,8 @@
     const PORTS = {card: [1, MAX_CHOICES], choice: [1, 1], reveal: [1, 0]};
     const LABELS = {card: 'Carte', choice: 'Choix', reveal: 'Résultat'};
 
-    // Choix à jet (champ df-roll = la stat) : deux sorties, réussite puis échec.
-    // Choix à issues au hasard (champ df-random = poids en JSON) : une sortie par issue
+    // Choice with a roll (df-roll field = the stat): two outputs, success then failure.
+    // Choice with random outcomes (df-random field = weights in JSON): one output per outcome
     const MAX_OUTCOMES = 4;
     function weightsOf(node) {
         try {
@@ -98,7 +98,7 @@
         : isRoll(node) ? ['output_1', 'output_2'] : ['output_1'];
     const outputLabel = (node, out) => isRandom(node) ? 'pour l\'issue ' + out.slice(7)
         : isRoll(node) ? (out === 'output_1' ? 'en cas de réussite' : 'en cas d\'échec') : '';
-    // Chance de chaque issue, en %
+    // Chance of each outcome, in %
     const chances = (weights) => {
         let total = weights.reduce((a, b) => a + b, 0);
         return weights.map(w => total > 0 ? Math.round(100 * w / total) : Math.round(100 / weights.length));
@@ -111,7 +111,7 @@
     editor.zoom_min = .15;
     editor.start();
 
-    // Anciens blocs : même données, nouvelle présentation
+    // Old blocks: same data, new presentation
     let data = PLACES_DATA && PLACES_DATA.drawflow ? PLACES_DATA : {drawflow: {}};
     for (let place in data.drawflow)
         for (let id in data.drawflow[place].data) {
@@ -119,7 +119,7 @@
             if (TEMPLATES[node.name])
                 node.html = TEMPLATES[node.name];
         }
-    // Module vide « Home » : Drawflow s'y replie quand il n'y a plus de lieu
+    // Empty "Home" module: Drawflow falls back to it when there are no places left
     if (!data.drawflow.Home)
         data.drawflow.Home = {data: {}};
     let loading = true;
@@ -163,7 +163,7 @@
         return new Promise(resolve => dialog.addEventListener('close', () => resolve(dialog.returnValue === 'ok'), {once: true}));
     }
 
-    /* ---------- État enregistré / modifié ---------- */
+    /* ---------- Saved / modified state ---------- */
 
     function markDirty() {
         if (loading || !current())
@@ -203,9 +203,9 @@
         $('pe-empty').hidden = !!current();
     }
 
-    // Numéro de chaque carte d'un lieu, dans l'ordre de l'histoire : la carte de
-    // départ est la n° 1, puis on suit les choix de haut en bas, étape par étape.
-    // Il sert aussi de nom à l'export (« lieu-12 ») : plus de nom à inventer
+    // Number of each card of a place, in story order: the starting
+    // card is no. 1, then we follow the choices from top to bottom, step by step.
+    // It is also used as the export name ("lieu-12"): no more names to invent
     function cardNumbers(place) {
         let nodes = nodesOf(place);
         let byId = new Map(nodes.map(n => [String(n.id), n]));
@@ -228,14 +228,14 @@
                 }
             }
         }
-        // Cartes isolées : à la suite, de haut en bas
+        // Isolated cards: next, from top to bottom
         cards.filter(n => !order.has(n.id)).sort((a, b) => a.pos_y - b.pos_y || a.pos_x - b.pos_x)
             .forEach(n => order.set(n.id, order.size + 1));
         return order;
     }
     const cardLabel = (numbers, node) => 'carte n° ' + numbers.get(node.id);
 
-    // Badge « Départ », numéros, boutons d'ajout grisés quand il n'y a plus de place, bascules
+    // "Départ" badge, numbers, add buttons greyed out when there is no room left, toggles
     function refreshNodes() {
         if (!current())
             return;
@@ -254,7 +254,7 @@
                 if (add)
                     add.disabled = used >= MAX_CHOICES;
                 el.querySelectorAll('.pe-toggle').forEach(btn => btn.setAttribute('aria-pressed', node.data[btn.dataset.toggle] === 'on'));
-                // Marqueur posé depuis le test (card-preview.js)
+                // Marker set from the test (card-preview.js)
                 el.classList.toggle('is-marked', !!node.data.marker);
                 let badge = el.querySelector('.pe-marker-badge');
                 if (badge)
@@ -263,7 +263,7 @@
             if (node.name === 'choice') {
                 el.classList.toggle('is-roll', isRoll(node));
                 el.classList.toggle('is-random', isRandom(node));
-                // Jet et issues au hasard ne vont pas ensemble dans l'éditeur
+                // Roll and random outcomes don't go together in the editor
                 let rollField = el.querySelector('select[df-roll]');
                 if (rollField)
                     rollField.disabled = isRandom(node);
@@ -278,14 +278,14 @@
         }
     }
 
-    // Boutons « + Carte suivante / + Résultat » de chaque sortie d'un choix,
-    // avec « Si réussite / Si échec » ou le poids de chaque issue au hasard
+    // "+ Carte suivante / + Résultat" buttons of each choice output,
+    // with "Si réussite / Si échec" or the weight of each random outcome
     function renderSuites(el, node) {
         let box = el.querySelector('.pe-suites');
         if (!box)
             return;
         let outs = choiceOutputs(node), weights = weightsOf(node), pct = chances(weights);
-        // Poids en cours de saisie : on ne touche qu'aux pourcentages
+        // Weight being typed: only touch the percentages
         if (box.contains(document.activeElement) && document.activeElement.matches('[data-weight]')) {
             box.querySelectorAll('.pe-chance').forEach((c, k) => c.textContent = (pct[k] != null ? pct[k] : '?') + ' %');
             return;
@@ -311,7 +311,7 @@
         box.innerHTML = html;
     }
 
-    // Poids des issues : passent par le champ caché df-random, comme une saisie
+    // Outcome weights: go through the hidden df-random field, like typed input
     function setRandom(el, weights) {
         let field = el.querySelector('[df-random]');
         field.value = weights.length >= 2 ? JSON.stringify(weights) : '';
@@ -328,7 +328,7 @@
         weights[parseInt(input.dataset.weight)] = Number.isFinite(w) && w >= 0 ? w : 1;
         setRandom(el, weights);
     });
-    // Champ quitté : les blocs sont redessinés avec le poids gardé
+    // Field left: the blocks are redrawn with the kept weight
     board.addEventListener('focusout', (e) => {
         if (e.target.matches('[data-weight]'))
             setTimeout(refreshNodes, 0);
@@ -340,10 +340,10 @@
         refreshStatus();
     }
 
-    /* ---------- Plan : zoom et cadrage ---------- */
+    /* ---------- Map: zoom and framing ---------- */
 
     function setView(cx, cy, z) {
-        // Le plan est mis à l'échelle autour de son centre : on place (cx, cy) au milieu de l'écran
+        // The map is scaled around its center: we put (cx, cy) in the middle of the screen
         let W = editor.precanvas.clientWidth, H = editor.precanvas.clientHeight;
         editor.zoom = editor.zoom_last_value = z;
         editor.canvas_x = -(cx - W / 2) * z;
@@ -377,14 +377,14 @@
         el.classList.add('flash');
     }
 
-    // Position sur le plan d'un point de l'écran
+    // Map position of a screen point
     function boardPoint(clientX, clientY) {
         let r = editor.precanvas.getBoundingClientRect();
         return {x: (clientX - r.x) / editor.zoom, y: (clientY - r.y) / editor.zoom};
     }
 
-    // Rangement automatique : un arbre de gauche à droite depuis la carte de départ,
-    // une colonne par étape, les branches les unes sous les autres
+    // Auto layout: a left-to-right tree from the starting card,
+    // one column per step, branches one below the other
     function arrange() {
         let nodes = nodesOf(current());
         let byId = new Map(nodes.map(n => [String(n.id), n]));
@@ -392,7 +392,7 @@
         let placed = new Set(), cursor = 0, depthX = [];
         const GAP_X = 110, GAP_Y = 40;
         let colX = (d) => depthX[d];
-        // Largeur de chaque colonne = son bloc le plus large
+        // Width of each column = its widest block
         let widths = [];
         (function measure(list, d, seen) {
             for (let n of list) {
@@ -412,8 +412,8 @@
             for (let k of kids)
                 if (!placed.has(k.id))
                     ys.push(place(k, d + 1));
-            // Centré sur ses enfants, sans remonter au-dessus de sa branche ; la
-            // branche suivante commence sous le bloc et sous tous ses enfants
+            // Centered on its children, without going above its branch; the
+            // next branch starts below the block and all its children
             let y = ys.length ? Math.max(start, (ys[0] + ys[ys.length - 1]) / 2) : start;
             cursor = Math.max(cursor, y + h + GAP_Y);
             move(n, colX(d) || 0, y);
@@ -421,7 +421,7 @@
         }
         for (let start of nodes.filter(n => !n.inputs.input_1.connections.length && n.name === 'card'))
             place(start, 0);
-        // Blocs qui ne partent d'aucune carte de départ : rangés en dessous
+        // Blocks not reached from any starting card: placed below
         cursor += 120;
         let x0 = 0, rowH = 0, inRow = 0;
         for (let n of nodes.filter(n => !placed.has(n.id))) {
@@ -439,8 +439,8 @@
         showArranged();
     }
 
-    // Après un rangement : tout le lieu s'il reste lisible, sinon le début de
-    // l'histoire, à une taille où les blocs se lisent
+    // After a layout: the whole place if it stays readable, otherwise the start of
+    // the story, at a size where the blocks are readable
     function showArranged() {
         fitView();
         let start = nodesOf(current()).find(n => n.name === 'card' && !n.inputs.input_1.connections.length);
@@ -483,7 +483,7 @@
     $('pe-zoom-out').addEventListener('click', () => editor.zoom_out());
     $('pe-fit').addEventListener('click', fitView);
 
-    /* ---------- Lieux ---------- */
+    /* ---------- Places ---------- */
 
     function selectPlace(name) {
         loading = true;
@@ -504,7 +504,7 @@
             return error.textContent = 'Ce lieu existe déjà.';
         editor.addModule(name);
         selectPlace(name);
-        // Un lieu commence toujours par une carte de départ
+        // A place always starts with a starting card
         let id = addBlock('card', 120, 120);
         input.value = '';
         dirty.add(name);
@@ -542,7 +542,7 @@
         fitView();
     }
 
-    /* ---------- Blocs ---------- */
+    /* ---------- Blocks ---------- */
 
     function addBlock(type, x, y, values) {
         if (!current()) {
@@ -563,13 +563,13 @@
             setTimeout(() => field.focus(), 50);
     }
 
-    // Statut donné par un choix : {slug, duration}, ou null
+    // Status given by a choice: {slug, duration}, or null
     function statusOf(node) {
         let slug = node.data.status;
         return slug ? {slug: slug, duration: Math.max(1, parseInt(node.data.statusdur) || 1)} : null;
     }
 
-    // Marchand ouvert par un choix : {name, stock?}, ou null
+    // Merchant opened by a choice: {name, stock?}, or null
     function shopOf(node) {
         let name = (node.data.shop || '').trim();
         if (!name)
@@ -584,15 +584,15 @@
         return shop;
     }
 
-    /* ---------- Butin d'un choix ---------- */
+    /* ---------- Choice loot ---------- */
 
     const LOOT_MAX = 12;
     const QTY_MAX = 999;
-    // Une entrée de butin : un nom (un exemplaire) ou {name, qty}
+    // A loot entry: a name (one copy) or {name, qty}
     const lootName = (entry) => String(entry && typeof entry === 'object' ? entry.name : entry);
     const lootQty = (entry) => entry && typeof entry === 'object' && entry.qty > 1 ? entry.qty : 1;
     const lootEntry = (name, qty) => qty > 1 ? {name: name, qty: Math.min(qty, QTY_MAX)} : name;
-    // Butin rangé dans node.data.loot en JSON (le champ caché df-loot)
+    // Loot stored in node.data.loot as JSON (the hidden df-loot field)
     function lootOf(node) {
         try {
             let list = JSON.parse(node.data.loot || '[]');
@@ -610,7 +610,7 @@
         renderLoot(el, list);
     }
 
-    // Pastilles des objets, avec l'image de ceux du jeu
+    // Item dots, with the image of the game's items
     function renderLoot(el, list) {
         let box = el.querySelector('.pe-loot-list');
         if (!box)
@@ -640,12 +640,12 @@
         if (!name)
             return input.focus();
         let qty = Math.min(Math.max(parseInt(qtyField && qtyField.value) || 1, 1), QTY_MAX);
-        // Même casse que le catalogue quand l'objet existe
+        // Same case as the catalog when the item exists
         let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === name.toLowerCase());
         if (known)
             name = known.name;
         let list = lootOf(node);
-        // Déjà dans le butin : on ajoute à sa quantité
+        // Already in the loot: add to its quantity
         let at = list.findIndex(e => lootName(e).toLowerCase() === name.toLowerCase());
         if (at >= 0)
             list[at] = lootEntry(name, lootQty(list[at]) + qty);
@@ -660,7 +660,7 @@
         input.focus();
     }
 
-    // Objet du catalogue choisi : sa quantité habituelle est proposée
+    // Catalog item chosen: its usual quantity is suggested
     board.addEventListener('input', (e) => {
         let input = e.target.closest('.pe-loot-add input[type="text"]');
         if (!input)
@@ -671,7 +671,7 @@
             qtyField.value = known.qty || 1;
     });
 
-    // Entrée dans le champ : ajoute l'objet
+    // Enter in the field: adds the item
     board.addEventListener('keydown', (e) => {
         let input = e.target.closest('.pe-loot-add input');
         if (input && e.key === 'Enter') {
@@ -681,14 +681,14 @@
         }
     });
 
-    // Taille d'un bloc à l'écran (estimée tant qu'il n'est pas encore dessiné)
+    // Size of a block on screen (estimated as long as it isn't drawn yet)
     const SIZE = {card: [260, 340], choice: [230, 240], reveal: [230, 170]};
     function boxOf(node) {
         let el = nodeEl(node.id);
         return {x: node.pos_x, y: node.pos_y, w: el ? el.offsetWidth : SIZE[node.name][0], h: el ? el.offsetHeight : SIZE[node.name][1]};
     }
 
-    // Première place libre en descendant depuis (x, y) : pas de bloc posé sur un autre
+    // First free spot going down from (x, y): no block placed on top of another
     function freeSpot(type, x, y) {
         let [w, h] = SIZE[type], boxes = nodesOf(current()).map(boxOf);
         for (let tries = 0; tries < 60; tries++) {
@@ -700,7 +700,7 @@
         return {x, y};
     }
 
-    // Bloc relié à droite d'un autre (sortie output → entrée du nouveau)
+    // Block linked to the right of another (output → input of the new one)
     function addLinked(fromId, output, type, slot, noFocus) {
         let from = editor.getNodeFromId(fromId), el = nodeEl(fromId);
         let spot = freeSpot(type, from.pos_x + (el ? el.offsetWidth : 260) + 90, from.pos_y + slot * 60);
@@ -721,7 +721,7 @@
         let id = btn.closest('.drawflow-node').id.slice(5);
         let node = editor.getNodeFromId(id);
         if (btn.classList.contains('pe-toggle')) {
-            // Bascule : la valeur passe par le champ caché, que Drawflow recopie dans node.data
+            // Toggle: the value goes through the hidden field, which Drawflow copies into node.data
             let field = btn.parentElement.querySelector('[df-' + btn.dataset.toggle + ']');
             field.value = node.data[btn.dataset.toggle] === 'on' ? 'off' : 'on';
             field.dispatchEvent(new Event('input', {bubbles: true}));
@@ -745,7 +745,7 @@
             }
             case 'add-next':
             case 'add-reveal': {
-                // Choix à jet ou à issues : la suite part de la sortie de son bouton
+                // Choice with a roll or outcomes: the follow-up starts from its button's output
                 let output = btn.closest('.pe-node-adds').dataset.output || 'output_1';
                 addLinked(id, output, btn.dataset.action === 'add-next' ? 'card' : 'reveal', (parseInt(output.slice(7)) - 1) * 4);
                 break;
@@ -771,7 +771,7 @@
                 break;
             }
             case 'random-remove': {
-                // La sortie part avec sa suite ; les suivantes sont renumérotées par Drawflow
+                // The output goes with its follow-up; the following ones are renumbered by Drawflow
                 let k = parseInt(btn.dataset.index);
                 let weights = weightsOf(node);
                 if (weights.length <= 2)
@@ -797,7 +797,7 @@
         }
     });
 
-    // Palette : clic = au centre de l'écran, glisser = où on lâche
+    // Palette: click = at the center of the screen, drag = where it is dropped
     document.querySelectorAll('.pe-tool').forEach(tool => {
         tool.addEventListener('click', () => {
             let r = board.getBoundingClientRect();
@@ -817,7 +817,7 @@
         focusField(addBlock(type, p.x - 40, p.y - 20));
     });
 
-    // Jet ou issues ajoutés / retirés : le choix gagne ou perd des sorties (les dernières)
+    // Roll or outcomes added / removed: the choice gains or loses outputs (the last ones)
     function syncChoicePorts(id) {
         let node = editor.getNodeFromId(id);
         if (!node || node.name !== 'choice')
@@ -841,9 +841,9 @@
         .forEach(ev => editor.on(ev, markDirty));
     ['connectionCreated', 'connectionRemoved', 'nodeRemoved'].forEach(ev => editor.on(ev, () => refreshNodes()));
 
-    /* ---------- Vérification et export ---------- */
+    /* ---------- Checks and export ---------- */
 
-    // Problèmes d'un lieu : [{level: 'error'|'warn', place, id, text}]
+    // Problems of a place: [{level: 'error'|'warn', place, id, text}]
     function check(place) {
         let problems = [];
         let add = (level, node, text) => problems.push({level, place, id: node ? node.id : null, text});
@@ -913,7 +913,7 @@
         showProblems(problems, errors ? errors + ' erreur(s) à corriger' : (problems.length ? 'Quelques points à revoir' : 'Tout est bon'));
     });
 
-    // Même format que l'ancien export (section « place » de baseCards.json)
+    // Same format as the old export ("place" section of baseCards.json)
     function buildExport(place) {
         let nodes = nodesOf(place);
         let byId = (id) => nodes.find(n => String(n.id) === String(id));
@@ -996,9 +996,9 @@
         setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     });
 
-    /* ---------- Prévisualisation (card-preview.js) ---------- */
+    /* ---------- Preview (card-preview.js) ---------- */
 
-    // Histoire du lieu telle qu'elle est dans l'éditeur, même non enregistrée
+    // Story of the place as it is in the editor, even unsaved
     function previewStory(place) {
         let nodes = nodesOf(place);
         let byId = new Map(nodes.map(n => [String(n.id), n]));
@@ -1057,8 +1057,8 @@
         };
     }
 
-    // Modifications faites depuis le test : elles passent par les champs des
-    // blocs, comme une saisie dans l'éditeur (lieu marqué modifié, à enregistrer)
+    // Edits made from the test: they go through the block
+    // fields, like typing in the editor (place marked modified, to be saved)
     const previewActions = {
         edit(id, field, value) {
             let el = nodeEl(id);
@@ -1089,7 +1089,7 @@
 
     $('pe-preview').addEventListener('click', () => openPreview());
 
-    /* ---------- Enregistrement ---------- */
+    /* ---------- Saving ---------- */
 
     async function save() {
         let targets = dirty.size ? [...dirty] : (current() ? [current()] : []);
@@ -1131,7 +1131,7 @@
         }
     });
 
-    /* ---------- Aide, boîtes de dialogue, menu Échap ---------- */
+    /* ---------- Help, dialog boxes, Escape menu ---------- */
 
     $('pe-help-btn').addEventListener('click', () => $('pe-help').showModal());
     document.querySelectorAll('.pe-dialog').forEach(d => {
@@ -1147,7 +1147,7 @@
         }
     });
 
-    /* ---------- Démarrage ---------- */
+    /* ---------- Startup ---------- */
 
     let first = places()[0];
     if (first)

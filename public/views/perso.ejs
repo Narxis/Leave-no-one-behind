@@ -28,7 +28,7 @@
         <div class="bouton-suivant" id="start-game" role="button" tabindex="0">Commencer la partie</div>
     </div>
 
-    <%# Avant de commencer : le MJ nomme l'équipe, pour le classement de fin de partie %>
+    <%# Before starting: the GM names the team, for the end-of-game leaderboard %>
     <dialog class="team-dialog" id="team-dialog" aria-labelledby="team-dialog-title">
         <form method="dialog" class="team-form" id="team-form">
             <h2 class="team-dialog-title" id="team-dialog-title">Nom de l'équipe</h2>
@@ -44,7 +44,7 @@
         </form>
     </dialog>
 
-    <%# Règle du tirage des stats (même calcul que le bouton roll-stats du bot) %>
+    <%# Stat roll rule (same calculation as the bot's roll-stats button) %>
     <%
         const STAT_COLS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'],
             ['survival', 'Survie'], ['recon', 'Recon.']];
@@ -112,7 +112,7 @@
         </div>
     </dialog>
 
-    <%# Races customs jouables dans cette partie : seules celles cochées sont proposées aux joueurs et visibles dans leur Codex %>
+    <%# Custom races playable in this game: only the checked ones are offered to the players and visible in their Codex %>
     <% if (customRaces.length) { %>
     <dialog class="stats-rules" id="custom-races" aria-labelledby="custom-races-title">
         <div class="stats-rules-head">
@@ -137,11 +137,11 @@
             const dialog = document.getElementById('stats-rules');
             document.getElementById('stats-rules-open').addEventListener('click', () => dialog.showModal());
             document.getElementById('stats-rules-close').addEventListener('click', () => dialog.close());
-            // Clic en dehors de la fenêtre : elle se ferme
+            // Click outside the window: it closes
             dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
         })();
 
-        // Races customs autorisées : enregistrées à chaque case cochée
+        // Allowed custom races: saved on each checked box
         (function () {
             const dialog = document.getElementById('custom-races');
             if (!dialog)
@@ -179,7 +179,7 @@
             const error = document.getElementById('team-error');
             const open = () => {
                 error.textContent = '';
-                // Nom de l'équipe précédente proposé par défaut
+                // Previous team name suggested by default
                 fetch('/api/team').then(r => r.json()).then(team => {
                     if (team && team.team && !input.value)
                         input.value = team.team;

@@ -81,7 +81,7 @@ function setPlayerStat(id, stat, newValue) {
     wsLNOB.setStatistic(id, stat, newValue);
 }
 
-// Une stat a changé côté serveur (menu MJ, dégâts en combat) : l'onglet suit
+// A stat changed on the server (GM menu, combat damage): the tab follows
 function syncPlayerStats(e) {
     let player = e.detail && e.detail.data;
     if (!player || !player.discord_id)
@@ -95,7 +95,7 @@ function syncPlayerStats(e) {
 
 document.addEventListener('playerStat', syncPlayerStats);
 
-// Le MJ a changé le rôle d'un joueur (fiche des persos) : logo à côté du nom
+// The GM changed a player's role (character sheet): logo next to the name
 function syncPlayerRole(e) {
     let data = e.detail && e.detail.data;
     let box = data && document.querySelector('#player-tab' + data.discord_id + ' .player-role');
@@ -114,8 +114,8 @@ function syncPlayerRole(e) {
     fitPlayerName(box.closest('.player-tab'));
 }
 
-// Joueurs qui ont voté pour un choix (votes.js) : le logo de leur rôle, pris
-// sur leur onglet, pour voir qui veut aller où ; sans rôle, leur initiale
+// Players who voted for a choice (votes.js): their role logo, taken
+// from their tab, to see who wants to go where; without a role, their initial
 function voteRoleIcons(voters) {
     let box = document.createElement('span');
     box.className = 'vote-roles';
@@ -160,8 +160,8 @@ function initialisePlayerExpander() {
         })
     })
 }
-// Nom long sur l'en-tête d'une carte : la police rétrécit jusqu'à 13px ; si ça
-// ne tient toujours pas (cartes étroites), le nom passe sur deux lignes en 12px
+// Long name on a card header: the font shrinks down to 13px; if it
+// still doesn't fit (narrow cards), the name goes on two lines at 12px
 function fitPlayerName(tab) {
     let name = tab.querySelector('.player-name');
     let text = tab.querySelector('.player-name-text');
@@ -177,7 +177,7 @@ function fitPlayerName(tab) {
     if (text.scrollWidth > text.clientWidth + 1) {
         text.style.fontSize = '';
         name.classList.add('name-wrap');
-        // Trois lignes nécessaires (mots longs, PNJ à race longue) : un cran plus petit
+        // Three lines needed (long words, NPC with a long race): one notch smaller
         if (text.scrollHeight > text.clientHeight + 1) {
             text.style.fontSize = '11px';
             text.style.lineHeight = '11.5px';
@@ -187,8 +187,8 @@ function fitPlayerName(tab) {
 
 (function () {
     const fitAll = () => document.querySelectorAll('.player-tab').forEach(fitPlayerName);
-    // Une carte qui change de largeur (arrivée d'un PNJ, animation d'entrée,
-    // fenêtre redimensionnée) remesure son nom
+    // A card that changes width (an NPC arriving, entry animation,
+    // resized window) re-measures its name
     let resized = typeof ResizeObserver !== 'undefined'
         ? new ResizeObserver(entries => entries.forEach(e => fitPlayerName(e.target))) : null;
     const watch = () => document.querySelectorAll('.player-tab').forEach(tab => {
@@ -202,7 +202,7 @@ function fitPlayerName(tab) {
     let container = document.getElementById('playertabs_container');
     if (container)
         new MutationObserver(() => { watch(); fitAll(); }).observe(container, {childList: true});
-    // La police Jura arrive après le premier rendu : on remesure
+    // The Jura font arrives after the first render: re-measure
     if (document.fonts)
         document.fonts.ready.then(fitAll);
     window.addEventListener('resize', fitAll);

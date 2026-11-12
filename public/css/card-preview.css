@@ -1,5 +1,5 @@
-/* Prévisualisation des cartes dans l'éditeur de lieux (card-preview.js).
-   La carte reprend le cadre et le fond étoilé de la carte en jeu (ui-card.css) */
+/* Card preview in the place editor (card-preview.js).
+   The card reuses the frame and starry background of the in-game card (ui-card.css) */
 
 .cp-dialog {
     width: min(1180px, calc(100vw - 32px));
@@ -30,7 +30,7 @@
     backdrop-filter: blur(3px);
 }
 
-/* ---------- Barre du haut ---------- */
+/* ---------- Top bar ---------- */
 
 .cp-head {
     display: flex;
@@ -171,7 +171,7 @@
     display: none;
 }
 
-/* Formulaire « Variable » */
+/* "Variable" form */
 .cp-var {
     display: flex;
     align-items: flex-end;
@@ -261,7 +261,7 @@
     accent-color: var(--ui-accent);
 }
 
-/* ---------- Scène : carte, butin, choix ---------- */
+/* ---------- Scene: card, loot, choices ---------- */
 
 .cp-body {
     flex: 1;
@@ -344,7 +344,7 @@
     white-space: pre-wrap;
 }
 
-/* Mode Éditer : le texte de la carte devient un champ */
+/* Edit mode: the card text becomes a field */
 .cp-edit {
     position: absolute;
     inset: 34px 32px 34px;
@@ -399,7 +399,7 @@
     width: min(100%, 700px);
 }
 
-/* Même allure que les choix sous la carte en jeu */
+/* Same look as the choices under the in-game card */
 .cp-choice {
     flex: 1 1 180px;
     max-width: 320px;
@@ -440,7 +440,7 @@
     opacity: .7;
 }
 
-/* Choix en mode Éditer : texte modifiable et lien vers la suite */
+/* Choices in Edit mode: editable text and link to what follows */
 .cp-choice.is-edit {
     flex-basis: 100%;
     max-width: none;
@@ -526,7 +526,7 @@
     border-style: dashed;
 }
 
-/* Jet d'un choix : réussite / échec, comme en jeu */
+/* Choice roll: success / failure, as in game */
 .cp-roll {
     display: flex;
     flex-basis: 100%;
@@ -690,7 +690,7 @@
     cursor: pointer;
 }
 
-/* ---------- Panneau MJ ---------- */
+/* ---------- GM panel ---------- */
 
 .cp-mj-panel {
     padding: 18px;
@@ -845,7 +845,7 @@
     gap: 4px;
 }
 
-/* ---------- Bouton « Tester » d'une carte dans l'éditeur ---------- */
+/* ---------- "Tester" button of a card in the editor ---------- */
 
 .pe-node-play {
     margin-left: auto;
@@ -868,7 +868,7 @@
     color: var(--ui-accent);
 }
 
-/* Marqueur sur la carte dans l'éditeur */
+/* Marker on the card in the editor */
 .pe-marker-badge {
     display: none;
     color: var(--ui-accent);

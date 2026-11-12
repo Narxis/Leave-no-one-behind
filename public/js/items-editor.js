@@ -1,5 +1,5 @@
-// Éditeur d'objets (/items) : création, modification et suppression des objets
-// du catalogue (src/config/items.json, via src/controllers/itemsEditor.js).
+// Item editor (/items): creating, editing and deleting catalog
+// items (src/config/items.json, via src/controllers/itemsEditor.js).
 (function () {
     const STARTER = 'starter';
     const NEW_POOL = '__new__';
@@ -25,14 +25,14 @@
     let typeFilter = 'all';
     let rarityFilter = 'all';
     let rarity = 'commun';
-    let type = '';            // type choisi dans le formulaire ('' : aucun, NEW_TYPE : nouveau)
-    let editing = null;       // objet affiché (null : nouvel objet)
-    let image = null;         // nouvelle image (data URL PNG) à envoyer
+    let type = '';            // type chosen in the form ('': none, NEW_TYPE: new)
+    let editing = null;       // item shown (null: new item)
+    let image = null;         // new image (PNG data URL) to send
     let removeImage = false;
-    let recipe = [];          // ingrédients de la recette : [{slug, qty}]
-    let saved = '';           // état du formulaire au dernier enregistrement
+    let recipe = [];          // recipe ingredients: [{slug, qty}]
+    let saved = '';           // form state at the last save
     let busy = false;
-    // Images remplacées pendant la session : on force le rechargement
+    // Images replaced during the session: force a reload
     let bust = {};
 
     const raceName = (slug) => {
@@ -63,7 +63,7 @@
         return new Promise(r => dialog.addEventListener('close', () => r(dialog.returnValue === 'ok'), {once: true}));
     }
 
-    /* ---------- Liste ---------- */
+    /* ---------- List ---------- */
 
     function renderFilters() {
         let counts = {};
@@ -128,7 +128,7 @@
             box.innerHTML = '<p class="ie-none">Aucun objet ne correspond.</p>';
     }
 
-    /* ---------- Formulaire ---------- */
+    /* ---------- Form ---------- */
 
     function fillPools(selected) {
         let pools = catalog.pools.slice();
@@ -173,13 +173,13 @@
         return p === NEW_POOL ? slugify($('ie-new-pool').value).replace(/-/g, '_') : p;
     }
 
-    // Quantité saisie, bornée de 1 à 99
+    // Typed quantity, clamped from 1 to 99
     function currentQty() {
         let n = parseInt($('ie-qty').value);
         return Number.isFinite(n) ? Math.min(Math.max(n, 1), 99) : 1;
     }
 
-    // Prix saisi (0 : pas de prix)
+    // Typed price (0: no price)
     function currentPrice() {
         let n = parseInt($('ie-price').value);
         return Number.isFinite(n) ? Math.min(Math.max(n, 0), 99999) : 0;
@@ -196,7 +196,7 @@
             : 'Le marchand ne le propose pas d\'office';
     }
 
-    /* ---------- Recette ---------- */
+    /* ---------- Recipe ---------- */
 
     const bounded = (v) => Math.min(Math.max(parseInt(v) || 1, 1), 99);
     const itemBySlug = (slug) => catalog.items.find(i => i.slug === slug);
@@ -227,14 +227,14 @@
         list.hidden = !recipe.length;
         $('ie-recipe-yield-box').hidden = !recipe.length;
 
-        // Ingrédients possibles : tout le catalogue, sauf l'objet lui-même et ceux déjà pris
+        // Possible ingredients: the whole catalog, except the item itself and those already taken
         let select = $('ie-recipe-item'), keep = select.value;
         select.innerHTML = '<option value="">Ajouter un ingrédient…</option>' + catalog.items
             .filter(i => i.slug !== self && !recipe.some(r => r.slug === i.slug))
             .slice().sort((a, b) => a.name.localeCompare(b.name))
             .map(i => '<option value="' + esc(i.slug) + '"' + (i.slug === keep ? ' selected' : '') + '>' + esc(i.name) + '</option>').join('');
 
-        // Ce que l'objet sert à fabriquer
+        // What the item is used to craft
         let uses = self ? catalog.items.filter(i => i.recipe && i.recipe.ingredients.some(r => r.slug === self)) : [];
         $('ie-recipe-uses').textContent = uses.length ? 'Sert à fabriquer : ' + uses.map(i => i.name).join(', ') + '.' : '';
     }
@@ -343,7 +343,7 @@
         renderStatus();
     }
 
-    // Ouvre un objet (null : nouvel objet), éventuellement prérempli
+    // Opens an item (null: new item), possibly prefilled
     function open(item, prefill) {
         editing = item;
         image = null;
@@ -464,7 +464,7 @@
 
     /* ---------- Image ---------- */
 
-    // Recadrée en carré et réduite par le navigateur (256 px, PNG) avant l'envoi
+    // Cropped to a square and shrunk by the browser (256 px, PNG) before sending
     function loadImage(file) {
         if (!file)
             return;
@@ -506,7 +506,7 @@
         refresh();
     });
 
-    /* ---------- Événements ---------- */
+    /* ---------- Events ---------- */
 
     $('ie-filters').addEventListener('click', (e) => {
         let b = e.target.closest('[data-pool]');
@@ -543,7 +543,7 @@
         let b = e.target.closest('[data-type]');
         if (!b)
             return;
-        // Un second clic sur le type choisi le retire
+        // A second click on the chosen type removes it
         type = type === b.dataset.type ? '' : b.dataset.type;
         refresh();
         if (type === NEW_TYPE)
@@ -615,7 +615,7 @@
                 save();
         }
     });
-    // Échap : menu du jeu (sauf pendant la saisie ou dans une boîte de dialogue)
+    // Escape: game menu (except while typing or in a dialog box)
     document.addEventListener('keyup', (e) => {
         let typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
         if (e.key === 'Escape' && !typing && !document.querySelector('dialog[open]') && $('navBtn'))

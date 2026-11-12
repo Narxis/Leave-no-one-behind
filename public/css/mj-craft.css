@@ -1,4 +1,4 @@
-/* Panneau MJ : atelier d'artisanat (mj-craft.js), même cadre que le marchand */
+/* GM panel: crafting workshop (mj-craft.js), same frame as the merchant */
 .mj-craft {
     display: grid;
     grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr);
@@ -94,7 +94,7 @@
     gap: 6px;
 }
 
-/* Une recette : résultat | ingrédients | bouton */
+/* A recipe: result | ingredients | button */
 .mj-craft-recipe {
     display: grid;
     grid-template-columns: minmax(150px, 1fr) minmax(0, 2fr) 110px;

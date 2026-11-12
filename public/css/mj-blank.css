@@ -1,4 +1,4 @@
-/* Panneau MJ : carte blanche (mj-blank.js) */
+/* GM panel: blank card (mj-blank.js) */
 .mj-blank {
     display: flex;
     flex-direction: column;
@@ -14,7 +14,7 @@
     transition: border-color .2s, box-shadow .2s;
 }
 
-/* Les joueurs attendent la suite : le panneau s'allume */
+/* Players are waiting for what's next: the panel lights up */
 .mj-blank.waiting {
     border-color: var(--ui-accent);
     box-shadow: var(--ui-glow-accent);
@@ -44,7 +44,7 @@
     color: var(--ui-cyan);
 }
 
-/* Champs et boutons du menu (.add-life, .fight) à taille de formulaire */
+/* Menu fields and buttons (.add-life, .fight) at form size */
 .mj-page .mj-blank .add-life {
     height: auto;
     width: 100%;

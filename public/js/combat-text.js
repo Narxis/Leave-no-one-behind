@@ -1,10 +1,10 @@
-// Statut posé par une attaque qui touche (« + Saignement, 3 tours »)
+// Status set by an attack that hits ("+ Saignement, 3 tours")
 function describeHitStatus(entry) {
     let s = entry.status;
     return s && s.name ? ' + ' + s.name + ' (' + s.turns + ' tour' + (s.turns > 1 ? 's' : '') + ')' : '';
 }
 
-// Texte du journal de combat, partagé entre l'écran de jeu et le menu MJ
+// Combat log text, shared between the game screen and the GM menu
 function describeCombatEntry(entry, forMJ = false) {
     switch (entry.type) {
         case 'start': return 'Le combat commence !';
@@ -29,11 +29,11 @@ function describeCombatEntry(entry, forMJ = false) {
         case 'enemy-attack': {
             let who = entry.target ? entry.enemy + ' attaque ' + entry.target + (entry.npc_target ? ' (PNJ)' : '')
                 : entry.enemy + ' attaque';
-            // « imposé » : issue ou dégâts choisis par le MJ, visible par lui seul
+            // "imposé": outcome or damage chosen by the GM, visible to them only
             let forced = forMJ && entry.forced ? ', imposé' : '';
             if (!entry.hit)
                 return who + ' : raté (' + entry.dice + forced + ')';
-            // Avec une cible, les dégâts sont déjà retirés de ses PV
+            // With a target, the damage is already taken off its HP
             return who + ' : touché (' + entry.dice + forced + ') — ' + entry.damage + ' dégâts'
                 + (entry.target ? (entry.hp !== undefined ? ' (reste ' + entry.hp + ' PV)' : '') : (forMJ ? ' à appliquer' : ''))
                 + describeHitStatus(entry);

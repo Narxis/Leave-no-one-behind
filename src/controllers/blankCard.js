@@ -1,14 +1,14 @@
 const {Player} = require('../models/player');
 const gameSettings = require('./gameSettings');
 
-// Carte blanche : les joueurs proposent une action libre (choix « Autre… »
-// des cartes RP), le MJ écrit la suite sur le moment depuis son menu (texte,
-// jusqu'à 4 choix avec leur résultat, moral, humains, butin) et l'affiche sur
-// l'écran de jeu. Après elle, la pioche reprend normalement.
-// Gardée en mémoire, comme l'état du combat :
-//   null                          rien en cours
-//   {status: 'waiting', from}     les joueurs attendent la suite du MJ
-//   {status: 'shown', card}       affichée, en attente du choix
+// Blank card: the players suggest a free action ("Autre…" choice
+// of RP cards), the GM writes the follow-up on the spot from their menu (text,
+// up to 4 choices with their result, morale, humans, loot) and shows it on
+// the game screen. After it, drawing resumes normally.
+// Kept in memory, like the combat state:
+//   null                          nothing in progress
+//   {status: 'waiting', from}     the players are waiting for the GM's follow-up
+//   {status: 'shown', card}       shown, waiting for the choice
 let state = null;
 
 const OTHER_LABEL = 'Autre…';
@@ -26,9 +26,9 @@ const bounded = function (v, limit) {
     return Number.isFinite(n) ? Math.max(-limit, Math.min(limit, n)) : 0;
 };
 
-// Cartes qui reçoivent « Autre… » : événements et lieux avec au moins deux
-// choix, sans chrono (le dernier choix y est celui du temps écoulé, et une
-// action libre irait contre l'urgence), si l'option de partie est cochée
+// Cards that get "Autre…": events and places with at least two
+// choices, without a timer (the last choice there is the time-out one, and a
+// free action would go against the urgency), if the game option is checked
 const eligible = function (card) {
     if (!card || !Array.isArray(card.choices) || card.choices.length < 2)
         return false;
@@ -39,14 +39,14 @@ const eligible = function (card) {
     return !!gameSettings.get().otherChoice;
 };
 
-// Ajoute « Autre… » à la carte (une seule fois)
+// Adds "Autre…" to the card (only once)
 const addOther = function (card) {
     if (eligible(card) && !card.choices.some(c => c.other))
         card.choices.push({value: OTHER_LABEL, other: true, reveal: '', mjreveal: '', next: '', humans: 0, loot: []});
     return card;
 };
 
-// Carte écrite par le MJ, bornée. null si elle est vide
+// Card written by the GM, clamped. null if it is empty
 const clean = function (input) {
     if (!input || typeof input !== 'object')
         return null;
@@ -68,7 +68,7 @@ const clean = function (input) {
 
 const getState = () => state ? JSON.parse(JSON.stringify(state)) : null;
 
-// La carte telle que les joueurs en ligne la voient (sans les résultats)
+// The card as online players see it (without the results)
 const publicCard = function () {
     if (!state)
         return null;
@@ -79,8 +79,8 @@ const publicCard = function () {
 
 const message = (action, data) => ({action, error: false, data});
 
-// Le moral de chaque joueur bouge du même nombre (borné à 0–100, comme les
-// onglets). Renvoie les messages qui mettent les onglets à jour
+// Each player's morale moves by the same amount (clamped to 0–100, like the
+// tabs). Returns the messages that update the tabs
 const changeMoral = async function (delta) {
     if (!delta)
         return [];
@@ -100,11 +100,11 @@ const changeMoral = async function (delta) {
 const handle = async function (response) {
     let data = response.data || {};
     switch (response.action) {
-        // Écran de jeu : les joueurs ont choisi « Autre… »
+        // Game screen: the players chose "Autre…"
         case 'blank-card-request':
             state = {status: 'waiting', from: text(data.desc, MAX_DESC)};
             return message('blank-card-request', getState());
-        // Menu MJ : la carte est prête
+        // GM menu: the card is ready
         case 'blank-card-show': {
             let card = clean(data);
             if (!card)
@@ -112,7 +112,7 @@ const handle = async function (response) {
             state = {status: 'shown', card};
             return message('blank-card-show', card);
         }
-        // Écran de jeu : choix fait (-1 : carte sans choix, « Continuer »)
+        // Game screen: choice made (-1: card without choices, "Continuer")
         case 'blank-card-choice': {
             if (!state || state.status !== 'shown')
                 return {action: 'blank-card-choice', error: true, error_msg: 'Pas de carte blanche affichée', data: {}};
@@ -121,7 +121,7 @@ const handle = async function (response) {
             let stats = await changeMoral(choice ? choice.moral : 0);
             return [message('blank-card-choice', {index: parseInt(data.index), choice})].concat(stats);
         }
-        // Menu MJ : on oublie, l'écran de jeu reprend la carte d'avant
+        // GM menu: forget it, the game screen goes back to the previous card
         case 'blank-card-cancel':
             state = null;
             return message('blank-card-cancel', {});
@@ -129,7 +129,7 @@ const handle = async function (response) {
     return null;
 };
 
-// Nouvelle partie
+// New game
 const reset = function () {
     state = null;
 };

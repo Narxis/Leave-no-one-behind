@@ -1,4 +1,4 @@
-// Fenêtre de départ : seul accès de la page au reste de l'app
+// Start window: the page's only access to the rest of the app
 const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('lnob', {

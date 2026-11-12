@@ -1,12 +1,12 @@
-// Éditeur d'ennemis et compagnons (/bestiaire) : fiches enregistrées par
-// src/controllers/npcs.js et proposées dans le menu MJ (onglets
-// Adversaires et Compagnons).
+// Enemy and companion editor (/bestiaire): sheets saved by
+// src/controllers/npcs.js and offered in the GM menu (Opponents
+// and Companions tabs).
 (function () {
     const $ = (id) => document.getElementById(id);
     const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
     const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
     const toInt = (v, def) => Number.isFinite(parseInt(v)) ? parseInt(v) : def;
-    // Entrée de butin : un nom (un exemplaire) ou {name, qty}
+    // Loot entry: a name (one copy) or {name, qty}
     const lootName = (e) => String(e && typeof e === 'object' ? e.name || '' : e || '');
     const lootQty = (e) => e && typeof e === 'object' && e.qty > 1 ? e.qty : 1;
     const lootStored = (name, qty) => qty > 1 ? {name: name, qty: Math.min(qty, 999)} : name;
@@ -25,20 +25,20 @@
 
     let data = NPCS;
     let kind = 'enemies';
-    let editing = null;     // fiche affichée (null : nouvelle)
-    const enemy = {};       // valeurs du formulaire ennemi
-    const companion = {};   // valeurs du formulaire compagnon
+    let editing = null;     // sheet shown (null: new)
+    const enemy = {};       // enemy form values
+    const companion = {};   // companion form values
 
-    // Fourchettes du bestiaire de départ, par palier de dégâts : un « Roll »
-    // d'ennemi reste dans celle du palier choisi
+    // Ranges of the starting bestiary, per damage tier: an enemy "Roll"
+    // stays within the range of the chosen tier
     const TIERS = {
         faible: {hp: [10, 16], offense: [40, 50], defense: [40, 55]},
         moyen: {hp: [14, 24], offense: [55, 65], defense: [45, 55]},
         fort: {hp: [28, 40], offense: [68, 78], defense: [58, 68]}
     };
     const rand = ([min, max]) => min + Math.floor(Math.random() * (max - min + 1));
-    // Catégories d'ennemis : le Roll part des fourchettes du palier de dégâts,
-    // puis multiplie les PV et décale l'attaque et la défense
+    // Enemy categories: the Roll starts from the damage tier ranges,
+    // then multiplies the HP and shifts attack and defense
     const CATEGORIES = {
         invocation: {label: 'Invocation', plural: 'Invocations', hp: 0.5, shift: -10, help: 'appelée en renfort, fragile'},
         sbire: {label: 'Sbire', plural: 'Sbires', hp: 0.75, shift: -5, help: 'chair à canon, souvent en groupe'},
@@ -58,8 +58,8 @@
         toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
     }
 
-    // Chance (en %) qu'un jet de stat atteigne une valeur, avec la formule de
-    // Player.roll : dé × stat / 100 + (moral - 50) / 4, arrondi au-dessus
+    // Chance (in %) that a stat roll reaches a value, with the formula of
+    // Player.roll: die × stat / 100 + (morale - 50) / 4, rounded up
     function chance(stat, moral, target) {
         let ok = 0;
         for (let d = 1; d <= 100; d++)
@@ -68,7 +68,7 @@
         return ok;
     }
 
-    /* ---------- Liste ---------- */
+    /* ---------- List ---------- */
 
     function pill(text, cls, title) {
         return '<span class="re-mod ' + (cls || 'mod-0') + '"' + (title ? ' title="' + esc(title) + '"' : '') + '>' + esc(text) + '</span>';
@@ -118,7 +118,7 @@
         $('ne-intro').textContent = KINDS[kind].intro;
     }
 
-    // Filtres par catégorie (ennemis seulement), avec le nombre de fiches
+    // Filters by category (enemies only), with the number of sheets
     function renderFilters() {
         let box = $('ne-filters');
         box.hidden = kind !== 'enemies';
@@ -142,9 +142,9 @@
             });
     }
 
-    /* ---------- Ennemi ---------- */
+    /* ---------- Enemy ---------- */
 
-    // Champ nombre + curseur liés ; le curseur s'arrête à son max, le nombre va plus loin
+    // Linked number field + slider; the slider stops at its max, the number goes further
     function bindNumber(key, min, max, values, render) {
         let num = $('ne-' + key), range = $('ne-' + key + '-range');
         num.addEventListener('input', () => {
@@ -208,7 +208,7 @@
         let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === name.toLowerCase());
         if (known)
             name = known.name;
-        // Déjà dans le butin : la quantité s'ajoute
+        // Already in the loot: the quantity is added
         let at = enemy.loot.findIndex(e => lootName(e).toLowerCase() === name.toLowerCase());
         if (at >= 0)
             enemy.loot[at] = lootStored(name, lootQty(enemy.loot[at]) + qty);
@@ -223,13 +223,13 @@
     }
 
     function fillEnemy(src) {
-        // Même objet (les champs liés le gardent), valeurs remplacées
+        // Same object (the linked fields keep it), values replaced
         Object.assign(enemy, {
             hp: src ? src.hp : 15,
             offense: src ? src.offense : 50,
             defense: src ? src.defense : 50,
             damage: src && DAMAGE[src.damage] ? src.damage : 'moyen',
-            // Nouvelle fiche : catégorie du filtre affiché, s'il y en a un
+            // New sheet: category of the shown filter, if there is one
             category: src ? categoryOf(src) : (filter !== 'all' ? filter : 'standard'),
             loot: src && Array.isArray(src.loot) ? src.loot.filter(l => lootName(l)).map(l => lootStored(lootName(l), lootQty(l))) : []
         });
@@ -241,7 +241,7 @@
         renderEnemy();
     }
 
-    /* ---------- Compagnon ---------- */
+    /* ---------- Companion ---------- */
 
     function buildStats() {
         let box = $('ne-stats');
@@ -285,8 +285,8 @@
         $('ne-' + key + '-range').value = value;
     }
 
-    // Ennemi : PV, attaque et défense tirés dans la fourchette de son palier de dégâts
-    // puis ajusté par sa catégorie (PV multipliés, attaque et défense décalées)
+    // Enemy: HP, attack and defense drawn in the range of its damage tier
+    // then adjusted by its category (HP multiplied, attack and defense shifted)
     function rollEnemy() {
         let tier = TIERS[enemy.damage], cat = CATEGORIES[enemy.category];
         let ranges = {
@@ -304,9 +304,9 @@
             + '. Change la catégorie ou le palier pour un ennemi plus fort ou plus faible.');
     }
 
-    // Compagnon : tiré comme un personnage joueur (/create sur Discord). Chaque
-    // stat vaut 50 + le meilleur (bonus) ou le pire (malus) de |bonus|+1 dés de 50 ;
-    // les bonus sont ceux de la race écrite dans « Rôle ou race », s'il y en a une
+    // Companion: drawn like a player character (/create on Discord). Each
+    // stat is 50 + the best (bonus) or worst (malus) of |bonus|+1 50-sided dice;
+    // the bonuses are those of the race written in "Rôle ou race", if there is one
     function rollCompanion() {
         let typed = $('ne-companion-race').value.trim().toLowerCase();
         let race = RACES.find(r => r.name.toLowerCase() === typed);
@@ -326,10 +326,10 @@
             : 'Tiré comme un personnage sans bonus de race (50 + 1 dé de 50), moral 100. Écris une race dans « Rôle ou race » pour appliquer ses bonus.');
     }
 
-    /* ---------- Nom aléatoire ---------- */
+    /* ---------- Random name ---------- */
 
-    // Noms extraterrestres faits de syllabes ; un ennemi reçoit en plus un
-    // titre qui va avec sa catégorie (Larve, Pillard, Seigneur…)
+    // Alien names made of syllables; an enemy also gets a
+    // title matching its category (Larve, Pillard, Seigneur…)
     const SYLLABLES = {
         start: ['Zor', 'Kra', 'Vel', 'Nek', 'Yr', 'Thal', 'Mor', 'Xa', 'Gor', 'Sil', 'Dra', 'Ka', 'Qu', 'Vor', 'Lu', 'Brak', 'Ze', 'Oph', 'Rhu', 'Tsa'],
         middle: ['a', 'e', 'i', 'o', 'u', 'ra', 'li', 'zo', 'ne', 'ka', 'th', 'ri'],
@@ -349,7 +349,7 @@
         return name.charAt(0) + name.slice(1).toLowerCase();
     }
 
-    // Nom libre parmi les fiches du même type, quelques essais au plus
+    // Name not used among sheets of the same type, a few attempts at most
     function randomName(f) {
         let names = data[kind].map(e => e.name.toLowerCase());
         let name;
@@ -362,11 +362,11 @@
         return name.slice(0, f === 'enemy' ? 60 : 20);
     }
 
-    /* ---------- Fiche ouverte ---------- */
+    /* ---------- Open sheet ---------- */
 
     const formOf = (k) => k === 'enemies' ? 'enemy' : 'companion';
 
-    // Ouvre une fiche (null : nouvelle ; copy : nouvelle fiche pré-remplie)
+    // Opens a sheet (null: new; copy: new prefilled sheet)
     function open(entry, copy) {
         editing = entry;
         let f = formOf(kind);
@@ -460,7 +460,7 @@
         open(null);
     }
 
-    /* ---------- Événements ---------- */
+    /* ---------- Events ---------- */
 
     document.querySelectorAll('.ne-tabs button').forEach(b => b.addEventListener('click', () => switchKind(b.dataset.kind)));
     $('ne-new').addEventListener('click', () => {
@@ -490,7 +490,7 @@
         renderEnemy();
     }));
     $('ne-loot-btn').addEventListener('click', addLoot);
-    // Objet de la liste : sa quantité habituelle est proposée
+    // Listed item: its usual quantity is suggested
     $('ne-loot-input').addEventListener('input', () => {
         let known = LOOT_ITEMS.find(it => it.name.toLowerCase() === $('ne-loot-input').value.trim().toLowerCase());
         if (known)
@@ -527,7 +527,7 @@
         });
     }
 
-    // Échap : menu du jeu (sauf pendant la saisie ou dans une boîte de dialogue)
+    // Escape: game menu (except while typing or in a dialog box)
     document.addEventListener('keyup', (e) => {
         let typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
         if (e.key === 'Escape' && !typing && !document.querySelector('dialog[open]') && $('navBtn'))

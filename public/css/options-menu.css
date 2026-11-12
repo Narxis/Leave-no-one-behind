@@ -1,4 +1,4 @@
-/* Fenêtre Options (menu Échap) */
+/* Options window (Escape menu) */
 .options-modal {
     position: fixed;
     inset: 0;
@@ -118,7 +118,7 @@
     }
 }
 
-/* Réinitialiser la partie (MJ), ancien rôle de l'engrenage */
+/* Reset the game (GM), former role of the gear */
 .options-reset {
     display: inline-block;
     padding: 8px 14px;

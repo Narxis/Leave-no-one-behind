@@ -1,13 +1,13 @@
-// Éditeur de races (/races) : création, modification et suppression des races
-// customs (src/controllers/races.js). Les races de base se consultent seulement.
+// Race editor (/races): creating, editing and deleting custom
+// races (src/controllers/races.js). Base races can only be viewed.
 (function () {
     const STATS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'],
         ['survival', 'Survie'], ['recon', 'Reconnaissance']];
-    // Somme des bonus de chaque race de base : repère d'équilibre
+    // Sum of the bonuses of each base race: balance reference
     const BASE_TOTAL = 3;
     const $ = (id) => document.getElementById(id);
     const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-    // Description enregistrée en HTML échappé : on la remet en texte pour l'éditer
+    // Description saved as escaped HTML: turn it back into text to edit it
     const unescape = (t) => {
         let d = document.createElement('textarea');
         d.innerHTML = t || '';
@@ -15,13 +15,13 @@
     };
 
     let races = RACES;
-    let editing = null;     // race affichée dans le formulaire (null : nouvelle)
+    let editing = null;     // race shown in the form (null: new)
     let stats = {};
     let feminine = false;
-    let image = null;       // nouvelle image (data URL PNG) à envoyer
-    let thumb = null;       // sa vignette JPEG, pour le Codex de l'app des joueurs
+    let image = null;       // new image (PNG data URL) to send
+    let thumb = null;       // its JPEG thumbnail, for the players' app Codex
 
-    // Valeur moyenne de la stat finale : 50 + meilleur/pire de |mod|+1 dés de 50 (comme /persos)
+    // Average value of the final stat: 50 + best/worst of |mod|+1 50-sided dice (like /persos)
     function average(mod) {
         let k = Math.abs(mod) + 1, sum = 0;
         for (let v = 1; v <= 50; v++)
@@ -31,7 +31,7 @@
     }
     const signed = (m) => m > 0 ? '+' + m : String(m);
 
-    // Mêmes formes que le serveur (races.grammar), pour l'aperçu
+    // Same forms as the server (races.grammar), for the preview
     function grammar(name, plural, fem) {
         let vowel = /^[aeiouyhâàéèêëîïôöûü]/i.test(name);
         return [
@@ -51,7 +51,7 @@
         toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
     }
 
-    /* ---------- Liste ---------- */
+    /* ---------- List ---------- */
 
     function card(race) {
         let b = document.createElement('button');
@@ -79,7 +79,7 @@
         $('re-new').disabled = races.length >= MAX_RACES;
     }
 
-    /* ---------- Formulaire ---------- */
+    /* ---------- Form ---------- */
 
     function renderStats(readonly) {
         let box = $('re-stats');
@@ -117,7 +117,7 @@
         $('re-desc-count').textContent = $('re-desc').value.length + ' / 600';
     }
 
-    // Ouvre une race (null : nouvelle). Une race de base est affichée en lecture seule
+    // Opens a race (null: new). A base race is shown read-only
     function open(race, prefill) {
         editing = race;
         let readonly = !!(race && !race.custom);
@@ -162,7 +162,7 @@
         renderGrammar();
     }));
 
-    // Image : recadrée et réduite par le navigateur (256 px, PNG) avant l'envoi
+    // Image: cropped and shrunk by the browser (256 px, PNG) before sending
     $('re-image-input').addEventListener('change', (e) => {
         let file = e.target.files[0];
         e.target.value = '';
@@ -179,7 +179,7 @@
             let t = document.createElement('canvas');
             t.width = t.height = 128;
             let tc = t.getContext('2d');
-            tc.fillStyle = '#10141c'; // le JPEG n'a pas de transparence
+            tc.fillStyle = '#10141c'; // JPEG has no transparency
             tc.fillRect(0, 0, 128, 128);
             tc.drawImage(c, 0, 0, 128, 128);
             thumb = t.toDataURL('image/jpeg', .8);
@@ -256,7 +256,7 @@
         open(null);
     });
 
-    // Échap : menu du jeu (sauf pendant la saisie ou dans une boîte de dialogue)
+    // Escape: game menu (except while typing or in a dialog box)
     document.addEventListener('keyup', (e) => {
         let typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
         if (e.key === 'Escape' && !typing && !document.querySelector('dialog[open]') && $('navBtn'))

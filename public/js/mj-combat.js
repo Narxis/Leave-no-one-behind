@@ -1,7 +1,7 @@
-// Combat côté MJ : préparation des adversaires, début / fin du combat,
-// PV et attaques des ennemis, et désignation des attaques des joueurs
-// (cible puis attaquant ; le joueur valide avec /roll Combat sur Discord). L'état fait foi côté serveur
-// (src/controllers/combat.js) et revient par l'événement « combat ».
+// Combat on the GM side: preparing opponents, start / end of combat,
+// enemy HP and attacks, and designating the players' attacks
+// (target then attacker; the player confirms with /roll Combat on Discord). The server
+// state is authoritative (src/controllers/combat.js) and comes back through the "combat" event.
 (function () {
     const list = document.getElementById('mj-enemies');
     const logBox = document.getElementById('mj-combat-log');
@@ -20,20 +20,20 @@
     const MAX_HP = 1000;
 
     let state = {active: false, enemies: [], log: []};
-    let pending = [];      // adversaires préparés avant le combat
-    let startMoral = {};   // moral des joueurs au début, pour les évanouissements
-    let localLog = [];     // lignes visibles uniquement par le MJ
-    let players = [];      // joueurs de la partie, pour choisir l'attaquant
-    let allies = [];       // compagnons (PNJ) : le serveur lance leur dé directement
-    let targetId = null;   // ennemi choisi, en attente du choix de l'attaquant
-    let victimFor = null;  // ennemi qui attaque, en attente du choix de sa cible
-    let pick = null;       // attaquant ou cible choisi, envoyé avec « Valider » ('p:<id>' ou 'a:<id>')
-    let hitStatus = {kind: '', turns: 3}; // statut posé si l'attaque en préparation touche
-    let lootOpen = null;   // butin en cours d'édition : 'p<index>' (préparation) ou id de l'ennemi
-    let lootDraft = '';    // texte en cours de saisie, gardé quand la liste se redessine
-    let lootFocus = false; // donner le focus au champ au prochain rendu
-    let outcome = 'dice';  // issue de la prochaine attaque ennemie : dé, touché ou raté
-    let forcedDamage = ''; // dégâts imposés (vide : tirés selon le palier)
+    let pending = [];      // opponents prepared before combat
+    let startMoral = {};   // players' morale at the start, for fainting
+    let localLog = [];     // lines visible only to the GM
+    let players = [];      // players of the game, to choose the attacker
+    let allies = [];       // companions (NPCs): the server rolls their die directly
+    let targetId = null;   // chosen enemy, waiting for the attacker choice
+    let victimFor = null;  // attacking enemy, waiting for its target choice
+    let pick = null;       // attacker or target chosen, sent with "Valider" ('p:<id>' or 'a:<id>')
+    let hitStatus = {kind: '', turns: 3}; // status set if the attack being prepared hits
+    let lootOpen = null;   // loot being edited: 'p<index>' (preparation) or enemy id
+    let lootDraft = '';    // text being typed, kept when the list is redrawn
+    let lootFocus = false; // give focus to the field on the next render
+    let outcome = 'dice';  // outcome of the next enemy attack: die, hit or miss
+    let forcedDamage = ''; // forced damage (empty: drawn according to the tier)
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -59,10 +59,10 @@
             logBox.append(el('div', 'mj-log-line ' + line.cls, line.text));
     }
 
-    // Butin d'un ennemi : résumé cliquable, et sous lui l'éditeur (suggestions
-    // de items.json via la datalist, ou saisie libre). Révélé aux joueurs
-    // quand tous les ennemis sont K.O.
-    // Quantité habituelle d'un objet de la liste (éditeur d'objets)
+    // Enemy loot: clickable summary, with the editor below it (suggestions
+    // from items.json via the datalist, or free input). Revealed to the players
+    // when all enemies are K.O.
+    // Usual quantity of a listed item (item editor)
     function knownQty(name) {
         let option = [...document.querySelectorAll('#loot-list option')].find(o => o.value.toLowerCase() === name.toLowerCase());
         return option ? parseInt(option.dataset.qty) || 1 : 1;
@@ -112,7 +112,7 @@
             let n = Math.min(Math.max(parseInt(qty.value) || 1, 1), 999);
             lootDraft = '';
             lootFocus = true;
-            // Déjà dans le butin : la quantité s'ajoute
+            // Already in the loot: the quantity is added
             let at = loot.findIndex(i => i.name.toLowerCase() === name.toLowerCase());
             if (at >= 0)
                 onChange(loot.map((i, j) => j === at ? Object.assign({}, i, {qty: (i.qty || 1) + n}) : i));
@@ -152,7 +152,7 @@
         });
     }
 
-    // Attaque désignée, en attente du /roll Combat du joueur
+    // Designated attack, waiting for the player's /roll Combat
     function renderWaiting() {
         let p = state.pending;
         if (!p)
@@ -165,9 +165,9 @@
         list.append(box);
     }
 
-    // Attaque en préparation : le MJ choisit l'attaquant ou la cible, l'issue,
-    // les dégâts et un statut éventuel, puis envoie tout d'un coup avec
-    // « Valider ». Rien ne part tant qu'il n'a pas validé
+    // Attack being prepared: the GM chooses the attacker or the target, the outcome,
+    // the damage and an optional status, then sends everything at once with
+    // "Valider". Nothing is sent until they confirm
     const resetDraft = () => {
         pick = null;
         outcome = 'dice';
@@ -175,8 +175,8 @@
         hitStatus = {kind: '', turns: 3};
     };
 
-    // Joueurs et compagnons à choisir (un seul à la fois) ; stunnedOff : un
-    // combattant étourdi ne peut pas être choisi comme attaquant
+    // Players and companions to choose from (one at a time); stunnedOff: a
+    // stunned fighter can't be chosen as attacker
     function fighterChoices(box, stunnedOff) {
         let choices = el('div', 'mj-choices');
         const choice = (key, name, npc, statuses) => {
@@ -202,7 +202,7 @@
         box.append(choices);
     }
 
-    // Statut posé si l'attaque touche (facultatif)
+    // Status set if the attack hits (optional)
     function hitStatusControl(box) {
         let row = el('div', 'mj-outcome mj-hit-status');
         let kind = el('select', 'mj-sp-select');
@@ -233,7 +233,7 @@
 
     const hitStatusData = () => hitStatus.kind ? {status: hitStatus.kind, turns: hitStatus.turns} : undefined;
 
-    // Bas du panneau : Annuler (ferme sans rien envoyer) et Valider
+    // Bottom of the panel: Annuler (closes without sending anything) and Valider
     function draftFooter(box, label, ready, onValidate) {
         let foot = el('div', 'mj-draft-foot');
         foot.append(button('mj-waiting-cancel', 'Annuler', () => {
@@ -252,7 +252,7 @@
         box.append(foot);
     }
 
-    // Choix du joueur qui attaque l'ennemi ciblé
+    // Choosing the player who attacks the targeted enemy
     function renderAttackers(enemy) {
         let box = el('div', 'mj-attackers');
         box.append(el('span', 'mj-attackers-label', 'Qui attaque ' + enemy.name + ' ?'));
@@ -261,7 +261,7 @@
         fighterChoices(box, true);
         hitStatusControl(box);
         let ally = pick && pick.startsWith('a:') && allies.find(a => 'a:' + a.id === pick);
-        // Un compagnon lance son dé tout de suite ; un joueur doit lancer Combat
+        // A companion rolls its die right away; a player must roll Combat
         draftFooter(box, ally ? 'Valider (dé de ' + ally.name + ')' : 'Valider', !!pick, () => {
             let [type, id] = pick.split(':');
             let data = {enemy_id: enemy.id, status: hitStatusData()};
@@ -273,14 +273,14 @@
         list.append(box);
     }
 
-    // Choix du joueur ou du compagnon que l'ennemi attaque
+    // Choosing the player or companion the enemy attacks
     function renderVictims(enemy) {
         let box = el('div', 'mj-attackers mj-victims');
         box.append(el('span', 'mj-attackers-label', 'Qui ' + enemy.name + ' attaque ?'));
         fighterChoices(box, false);
 
-        // Issue de l'attaque, choisie par le MJ s'il le veut (pour épargner un
-        // joueur, ou rendre un coup plus dur) : les joueurs ne voient que le résultat
+        // Outcome of the attack, chosen by the GM if they want (to spare a
+        // player, or make a hit harder): the players only see the result
         let control = el('div', 'mj-outcome');
         for (let [key, label] of [['dice', 'Dé'], ['hit', 'Touché'], ['miss', 'Raté']]) {
             let b = button('mj-outcome-btn' + (outcome === key ? ' active' : ''), label, () => {
@@ -323,7 +323,7 @@
         list.append(box);
     }
 
-    // Tour en cours et ordre de jeu ; « Tour suivant » fait agir les statuts
+    // Current turn and turn order; "Tour suivant" makes the statuses act
     function renderTurn() {
         let bar = el('div', 'mj-turn');
         bar.append(el('span', 'mj-turn-label', 'Tour ' + (state.turn || 1)));
@@ -341,7 +341,7 @@
         list.append(bar);
     }
 
-    // Combattant K.O. : il passe son tour
+    // K.O. fighter: skips their turn
     function isDownLocal(f) {
         if (f.kind === 'enemy') {
             let enemy = state.enemies.find(e => e.id === f.id);
@@ -351,8 +351,8 @@
         return !!who && hpOf(f.id, who.moral) <= 0;
     }
 
-    // Ordre de jeu, fixé par l'initiative : le MJ le change avec les flèches
-    // ou en glissant un nom, et donne la main à quelqu'un en cliquant son nom
+    // Turn order, set by initiative: the GM changes it with the arrows
+    // or by dragging a name, and hands the turn to someone by clicking their name
     let dragFrom = null;
     function renderOrder(order) {
         let box = el('ol', 'mj-order');
@@ -405,7 +405,7 @@
     const isStunned = (statuses) => Object.values(statuses || {}).some(s => s.stun);
     const fighterStatuses = (id) => (state.fighters || {})[id] || {};
 
-    // Pastilles des statuts actifs d'un combattant (× pour retirer)
+    // Active status dots of a fighter (× to remove)
     function statusChips(statuses, target) {
         let line = el('div', 'mj-statuses-line');
         for (let [key, status] of Object.entries(statuses || {})) {
@@ -423,8 +423,8 @@
         return line;
     }
 
-    // Panneau des statuts : cible (ennemi, joueur ou compagnon), statut connu
-    // ou personnalisé (nom, dégâts par tour, empêche d'attaquer), durée
+    // Statuses panel: target (enemy, player or companion), known
+    // or custom status (name, damage per turn, prevents attacking), duration
     let sp = {target: '', kind: 'saignement', turns: 3, name: '', damage: '', stun: false};
 
     function targetOf(value) {
@@ -594,10 +594,10 @@
     }
 
     function render() {
-        // Un événement de combat ne doit pas faire perdre la saisie du butin en cours
+        // A combat event must not lose the loot input in progress
         if (document.activeElement && document.activeElement.classList.contains('mj-loot-input'))
             lootFocus = true;
-        // …ni celle d'une attaque en préparation (dégâts, durée du statut)
+        // …nor that of an attack being prepared (damage, status duration)
         let active = document.activeElement;
         let refocus = active && list.contains(active) && active.closest('.mj-attackers') && active.tagName === 'INPUT'
             ? '.mj-attackers input.' + active.className.trim().split(/\s+/).join('.') : null;
@@ -609,7 +609,7 @@
         startBtn.textContent = state.active ? 'Terminer le combat' : 'Commencer le combat';
         initSelect.classList.toggle('hide', state.active);
         startBtn.classList.toggle('running', state.active);
-        // Fin du combat : rare et irréversible, elle demande un appui long (ui-hold.js)
+        // End of combat: rare and irreversible, it requires a long press (ui-hold.js)
         if (state.active)
             startBtn.dataset.hold = 'Maintenir pour terminer le combat';
         else
@@ -618,8 +618,8 @@
         renderTeam();
     }
 
-    // PV des joueurs et compagnons (1 moral = 10 PV), modifiables à tout
-    // moment. Le serveur met à jour leur moral et les onglets sous la carte
+    // HP of players and companions (1 morale = 10 HP), editable at any
+    // time. The server updates their morale and the tabs under the card
     function hpOf(id, moral) {
         return Math.max(0, moral * HP_PER_MORAL - ((state.wounds || {})[id] || 0));
     }
@@ -660,7 +660,7 @@
 
     function renderTeam() {
         renderStatusPanel();
-        // Ne pas effacer une valeur en cours de saisie
+        // Don't erase a value being typed
         if (teamBox.contains(document.activeElement) && document.activeElement.tagName === 'INPUT')
             return;
         teamBox.innerHTML = '';
@@ -683,12 +683,12 @@
             return;
         let mob = BESTIARY.find(b => b.name.toLowerCase() === name.toLowerCase());
         search.value = '';
-        // En plein combat, l'adversaire arrive tout de suite en renfort
+        // In the middle of combat, the opponent arrives right away as reinforcement
         if (state.active) {
             wsLNOB.send({action: 'combat-add', data: {enemy: mob ? Object.assign({}, mob) : {name: name, hp: 10}}});
             return;
         }
-        // Butin du bestiaire (noms, ou {name, qty}) au format du combat
+        // Bestiary loot (names, or {name, qty}) in the combat format
         let loot = mob && Array.isArray(mob.loot) ? mob.loot.map(l => typeof l === 'string' ? {name: l} : l) : [];
         pending.push(mob ? Object.assign({}, mob, {loot: loot}) : {name: name, hp: 10});
         render();
@@ -704,7 +704,7 @@
         render();
     }
 
-    // Règle reprise de l'ancien menu : -10 de moral pendant le combat = évanoui
+    // Rule taken from the old menu: -10 morale during combat = fainted
     async function checkFaint() {
         if (!state.active)
             return;
@@ -768,7 +768,7 @@
 
     function load() {
         fetch('/api/allies').then(r => r.json()).then(list => { allies = list; renderTeam(); }).catch(() => {});
-        // Joueurs chargés tout de suite, pour leurs PV même hors combat
+        // Players loaded right away, for their HP even outside combat
         getAllPlayers().then(list => { players = list; renderTeam(); }).catch(() => {});
         fetch('/api/combat').then(r => r.json()).then(s => {
             state = s;

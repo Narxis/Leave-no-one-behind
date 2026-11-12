@@ -1,11 +1,11 @@
-// Scans de planète vus par les joueurs en ligne.
+// Planet scans seen by online players.
 //
-// La page planète du MJ (planet.js) annonce son état à l'ouverture et après
-// chaque scan (action « planet-screen ») : points de détection restants,
-// drones, scans faits avec leur texte. Les joueurs voient la planète se
-// dessiner couche par couche, comme sur l'écran principal : ils ne reçoivent
-// que les valeurs des stats déjà scannées. Ils votent pour le scan suivant
-// (votes.js) ; le MJ scanne sur sa page.
+// The GM's planet page (planet.js) announces its state on opening and after
+// each scan ("planet-screen" action): remaining detection points,
+// drones, scans done with their text. Players see the planet being
+// drawn layer by layer, as on the main screen: they only receive
+// the values of the stats already scanned. They vote for the next scan
+// (votes.js); the GM scans on their page.
 const SCANS = {
     oxy: {label: 'Oxygène', modules: ['oxy']},
     cli: {label: 'Climat', modules: ['cli']},
@@ -34,16 +34,16 @@ const setScreen = function (data) {
     }
     screen = {
         cardId: data.cardId === undefined || data.cardId === null ? null : String(data.cardId),
-        // Labo de planètes : points illimités (null)
+        // Planet lab: unlimited points (null)
         points: num(data.points),
         drones: Math.max(0, parseInt(data.drones) || 0),
         done: !!data.done,
         scans
     };
-    return null; // rien pour les pages du MJ : la vue joueur suit (playerView)
+    return null; // nothing for the GM pages: the player view follows (playerView)
 };
 
-// Ce que voient les joueurs de la planète en cours (card : la carte du paquet)
+// What the players see of the current planet (card: the deck card)
 const forCard = function (card) {
     if (!card || !screen || screen.cardId !== String(card.id))
         return {id: card ? card.id : null, points: null, drones: 0, done: false, modules: {},

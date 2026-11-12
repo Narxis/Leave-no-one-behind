@@ -2,11 +2,11 @@ const fs = require('fs');
 const allies = require('./allies');
 const gameSettings = require('./gameSettings');
 
-// Classement des équipes. Le MJ nomme l'équipe avant de lancer la partie ;
-// son score est enregistré à l'écran de fin. Gardé dans un fichier (comme les
-// alliés) : la configuration en base est remise à zéro à chaque démarrage du
-// serveur, le classement doit survivre aux parties et aux redémarrages.
-// Dans le dossier de données (voir config/paths.js)
+// Team leaderboard. The GM names the team before launching the game;
+// its score is saved on the end screen. Kept in a file (like the
+// allies): the database configuration is reset on each server
+// start, the leaderboard must survive games and restarts.
+// In the data folder (see config/paths.js)
 const FILE = require('../config/paths').cache('leaderboard.json');
 const NAME_MAX = 40;
 
@@ -31,8 +31,8 @@ const save = function () {
 
 const cleanName = (v) => String(v || '').replace(/\s+/g, ' ').trim().slice(0, NAME_MAX);
 
-// Nouvelle partie pour cette équipe : un nouvel identifiant, pour que deux
-// parties de la même équipe donnent deux lignes au classement
+// New game for this team: a new id, so that two
+// games of the same team give two leaderboard rows
 const setTeam = function (name) {
     name = cleanName(name);
     if (!name)
@@ -41,7 +41,7 @@ const setTeam = function (name) {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         team: name,
         startedAt: new Date().toISOString(),
-        // Réglages de la partie, pour comparer les scores à réglages égaux
+        // Game settings, to compare scores with equal settings
         settings: gameSettings.get()
     };
     save();
@@ -52,7 +52,7 @@ const getCurrent = () => data.current ? Object.assign({}, data.current) : null;
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon', 'moral'];
 
-// Pseudo Discord d'un joueur, demandé au bot (s'il tourne), 2 s au plus
+// A player's Discord nickname, asked of the bot (if it is running), 2 s at most
 const discordName = async function (discord_id) {
     let client;
     try {
@@ -75,7 +75,7 @@ const discordName = async function (discord_id) {
     }
 }
 
-// Composition de l'équipe au moment du score : personnages et compagnons
+// Team composition at scoring time: characters and companions
 const teamMembers = async function () {
     let players = await DB.tables.players.findAll({raw: true});
     let members = await Promise.all(players.map(async (p) => ({
@@ -88,9 +88,9 @@ const teamMembers = async function () {
     return {members, npcs};
 }
 
-// Score de la partie en cours (écran de fin). Recharger l'écran met à jour
-// la même ligne au lieu d'en ajouter une (la durée reste celle du premier
-// affichage). Renvoie l'identifiant de la ligne
+// Score of the current game (end screen). Reloading the screen updates
+// the same row instead of adding one (the duration stays that of the first
+// display). Returns the row id
 const record = async function (result) {
     if (!data.current)
         return null;
@@ -116,7 +116,7 @@ const record = async function (result) {
         },
         startedAt: data.current.startedAt,
         duration: previous && previous.duration ? previous.duration : now - new Date(data.current.startedAt),
-        // Pseudo déjà trouvé gardé si le bot ne répond pas cette fois-ci
+        // Nickname already found kept if the bot doesn't answer this time
         members: team.members.map(m => {
             let old = previous && previous.members && previous.members.find(o => o.name === m.name);
             return m.discord || !old ? m : Object.assign(m, {discord: old.discord});

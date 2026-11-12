@@ -1,10 +1,10 @@
-/* Partie en ligne (lobby.ejs) */
+/* Online game (lobby.ejs) */
 .lobby {
     position: relative;
     z-index: 1;
     box-sizing: border-box;
     width: min(640px, calc(100vw - 32px));
-    /* Sous le bouton du menu, en haut à gauche */
+    /* Under the menu button, top left */
     margin: 80px auto 40px;
     padding: 28px 32px;
     display: flex;
@@ -201,7 +201,7 @@
 .chat-message.gm { border-color: var(--ui-accent); }
 .chat-head { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
 .chat-message.gm .chat-head strong { color: var(--ui-accent); }
-/* Jet de la fenêtre de dés : posé par le serveur, on ne peut pas le taper */
+/* Dice window roll: set by the server, it can't be typed */
 .chat-message.chat-dice { border-color: rgb(79 216 224 / 45%); }
 .chat-message.chat-dice .chat-text { color: var(--ui-cyan); font-weight: 600; }
 .chat-time { color: var(--ui-text-dim); }
@@ -219,6 +219,6 @@
     resize: vertical;
 }
 
-/* Compte Discord du joueur */
+/* Player's Discord account */
 .discord-avatar { width: 22px; height: 22px; margin-right: 8px; border-radius: 50%; vertical-align: middle; }
 .discord-name { font-weight: 400; color: var(--ui-text-dim); }

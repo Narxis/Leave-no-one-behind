@@ -1,6 +1,6 @@
-// Écran de combat sur la page des cartes : il s'ouvre quand le MJ lance le
-// combat. Le MJ désigne la cible et l'attaquant depuis son menu ; le joueur
-// valide l'attaque avec /roll Combat sur Discord (src/controllers/combat.js).
+// Combat screen on the cards page: it opens when the GM starts the
+// combat. The GM designates the target and the attacker from their menu; the player
+// confirms the attack with /roll Combat on Discord (src/controllers/combat.js).
 (function () {
     const area = document.getElementById('combat-area');
     const enemiesBox = document.getElementById('combat-enemies');
@@ -43,17 +43,17 @@
             el('span', 'combat-enemy-def', 'Défense ' + enemy.defense));
         card.append(meta);
 
-        // Statuts posés par le MJ, avec les tours restants
+        // Statuses set by the GM, with the remaining turns
         if (!ko && Object.keys(enemy.statuses || {}).length)
             card.append(statusBadges(enemy.statuses));
         return card;
     }
 
-    // Combattant dont c'est le tour, selon l'ordre de jeu (initiative)
+    // Fighter whose turn it is, according to the turn order (initiative)
     const actingFighter = () => state.active && (state.order || [])[state.current];
 
-    // Ordre de jeu : le combattant dont c'est le tour est mis en avant, ici,
-    // sur sa carte d'ennemi ou sur son onglet sous la carte
+    // Turn order: the fighter whose turn it is is highlighted, here,
+    // on their enemy card or on their tab under the card
     function renderOrder() {
         orderBox.innerHTML = '';
         let order = state.active ? state.order || [] : [];
@@ -74,7 +74,7 @@
             tab.classList.add('combat-acting');
     }
 
-    // Bandeau « à toi de jouer » pour le joueur désigné par le MJ
+    // "Your turn" banner for the player designated by the GM
     function renderPending() {
         pendingBox.innerHTML = '';
         let p = state.pending;
@@ -88,8 +88,8 @@
             el('span', 'combat-pending-enemy', p.enemy));
     }
 
-    // Victoire : le butin de tous les ennemis, caché jusque-là, est révélé.
-    // Pendant un combat, on laisse d'abord jouer l'animation du coup fatal
+    // Victory: the loot of all enemies, hidden until then, is revealed.
+    // During combat, the killing blow animation plays first
     let revealTimer = null;
     function renderLoot(delay = 0) {
         let revealed = state.active && state.lootRevealed;
@@ -109,7 +109,7 @@
         }, delay);
     }
 
-    // still : sans animation, quand le MJ vient de distribuer un objet
+    // still: without animation, when the GM has just handed out an item
     function fillLoot(still = false) {
         let items = state.enemies.flatMap(e => e.loot || []);
         lootBox.classList.toggle('loot-still', still);
@@ -120,7 +120,7 @@
         let grid = el('div', 'combat-loot-items');
         items.forEach((item, i) => {
             let card = el('div', 'combat-loot-item');
-            // Repères pour le glisser-déposer (inventory.js)
+            // Markers for drag and drop (inventory.js)
             card.dataset.index = i;
             card.dataset.name = item.name;
             card.dataset.slug = item.slug || '';
@@ -141,7 +141,7 @@
         lootBox.append(grid);
     }
 
-    // Pastilles des statuts (connus ou inventés par le MJ) et tours restants
+    // Status dots (known or invented by the GM) and remaining turns
     function statusBadges(statuses) {
         let row = el('div', 'combat-statuses');
         for (let [key, status] of Object.entries(statuses || {})) {
@@ -151,8 +151,8 @@
         return row;
     }
 
-    // Barre de vie sous le nom de chaque joueur et compagnon, visible pendant
-    // le combat : 1 point de moral = 10 PV, moins les PV perdus sous la dizaine
+    // Health bar under the name of each player and companion, visible during
+    // combat: 1 morale point = 10 HP, minus the HP lost below the ten
     function renderHealth() {
         let wounds = state.wounds || {};
         document.querySelectorAll('#playertabs_container .player-tab').forEach(tab => {
@@ -177,7 +177,7 @@
             box.classList.toggle('ko', hp <= 0);
             box.title = hp + ' / ' + MAX_HP + ' PV (moral ' + moral + ')';
 
-            // Statuts du joueur ou du compagnon, sous sa barre de vie
+            // Statuses of the player or companion, under their health bar
             let old = tab.querySelector('.tab-statuses');
             if (old)
                 old.remove();
@@ -208,10 +208,10 @@
     }
 
     function show(active) {
-        // La légende et les infobulles des stats passent aux noms de combat
-        // L'interface hors combat est masquée par la CSS (body.combat-mode)
+        // The legend and stat tooltips switch to the combat names
+        // The non-combat interface is hidden by the CSS (body.combat-mode)
         document.body.classList.toggle('combat-mode', !!active);
-        // Le chrono de la carte attend la fin du combat (card.js)
+        // The card timer waits for the end of the combat (card.js)
         if (typeof pauseCountDown === 'function')
             pauseCountDown(active);
         if (active) {
@@ -228,7 +228,7 @@
         }
     }
 
-    // Petit texte qui s'envole au-dessus de l'ennemi (« -6 », « Raté »)
+    // Small text flying up above the enemy ("-6", "Raté")
     function floatText(card, text, cls) {
         let f = el('div', 'combat-float ' + cls, text);
         card.append(f);
@@ -239,14 +239,14 @@
         if (!event)
             return;
         let card = enemiesBox.querySelector('[data-id="' + event.enemy_id + '"]');
-        // Le jet lui-même s'affiche déjà sur l'onglet du joueur (événement « roll »)
+        // The roll itself is already shown on the player's tab ("roll" event)
         if (event.type === 'player-attack') {
             if (card) {
                 card.classList.add(event.hit ? 'hit' : 'miss');
                 floatText(card, event.hit ? '-' + event.damage : 'Raté', event.hit ? 'dmg' : 'miss');
             }
         }
-        // Tour suivant : les statuts qui blessent agissent (ennemis, joueurs, compagnons)
+        // Next turn: harmful statuses take effect (enemies, players, companions)
         if (event.type === 'turn')
             for (let tick of event.ticks || []) {
                 if (tick.enemy_id !== undefined) {
@@ -272,7 +272,7 @@
             card.classList.add('attacking');
             floatText(card, event.hit ? 'Touché ! ' + event.damage : 'Raté', event.hit ? 'enemy-hit' : 'miss');
         }
-        // L'onglet du joueur ou du compagnon visé réagit sous la carte
+        // The tab of the targeted player or companion reacts under the card
         let tab = event.type === 'enemy-attack' && event.target_id && document.getElementById('player-tab' + event.target_id);
         if (tab) {
             tab.classList.remove('under-attack', 'dodged');
@@ -305,7 +305,7 @@
     }
     load();
     document.addEventListener('ws-reconnect', load);
-    // Le moral d'un joueur ou d'un compagnon a changé : sa barre suit
+    // The morale of a player or companion changed: their bar follows
     document.addEventListener('playerStat', renderHealth);
     document.addEventListener('allies', renderHealth);
 })();

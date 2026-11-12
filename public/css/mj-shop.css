@@ -1,4 +1,4 @@
-/* Panneau MJ : marchand et bourses (mj-shop.js), même cadre que le plan du vaisseau */
+/* GM panel: merchant and purses (mj-shop.js), same frame as the ship map */
 .mj-shop {
     display: grid;
     grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr);
@@ -69,7 +69,7 @@
     pointer-events: none;
 }
 
-/* Lignes de l'étal et de la vente : objet | prix | cryopods | stock | bouton | × */
+/* Stall and sale rows: item | price | cryopods | stock | button | × */
 .mj-shop-stock-head,
 .mj-shop-stock .mj-shop-row {
     display: grid;

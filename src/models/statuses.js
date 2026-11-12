@@ -1,10 +1,10 @@
 const {Op} = require("sequelize");
 const fs = require("fs");
 
-// Diverti : les pertes de moral sont divisées par 2 (arrondi vers le bas)
+// Diverti: morale losses are divided by 2 (rounded down)
 const DIVERTED_SLUG = 'diverti';
 const DIVERTED_LOSS_DIVISOR = 2;
-// Statuts créés à la volée : longueur du nom et de la description
+// Statuses created on the fly: length of the name and description
 const CUSTOM_NAME_MAX = 30;
 const CUSTOM_DESC_MAX = 160;
 
@@ -47,9 +47,9 @@ class Statuses {
         return await this.getData();
     }
 
-    // Durée d'un statut, pour toute l'équipe (playerId vide) ou un seul
-    // joueur : la ligne du joueur reprend le nom et la description du
-    // statut, elle disparaît quand sa durée tombe à 0
+    // Duration of a status, for the whole team (empty playerId) or a single
+    // player: the player's row takes the name and description of the
+    // status, it disappears when its duration drops to 0
     async updateStatus(slug, newValue, playerId = '') {
         playerId = String(playerId || '');
         if (!playerId) {
@@ -72,9 +72,9 @@ class Statuses {
                 player_id: playerId, custom: base.custom, clear_after_planet: base.clear_after_planet});
     }
 
-    // Statut créé à la volée par le MJ (nom + description courte). Un nom
-    // déjà pris par un statut créé à la volée le met à jour. Renvoie son slug,
-    // ou false si le nom est vide ou celui d'un statut de base
+    // Status created on the fly by the GM (name + short description). A name
+    // already taken by a status created on the fly updates it. Returns its slug,
+    // or false if the name is empty or that of a base status
     async createCustom(data = {}) {
         let name = String(data.name || '').trim().slice(0, CUSTOM_NAME_MAX);
         let slug = 'c-' + slugify(name);
@@ -106,8 +106,8 @@ class Statuses {
         await DB.tables.statuses.decrement({duration: val}, { where: { slug: slug, player_id: '' } });
     }
 
-    // Fin d'une carte : ces statuts actifs perdent une carte, ou s'arrêtent
-    // net (clear, après une planète). Ceux d'un joueur disparaissent à 0
+    // End of a card: these active statuses lose a card, or stop
+    // outright (clear, after a planet). A player's ones disappear at 0
     async countDown(rows, clear = false) {
         for (let row of rows) {
             let duration = clear ? 0 : Math.max(0, row.duration - 1);
@@ -118,14 +118,14 @@ class Statuses {
         }
     }
 
-    // Statut actif pour ce joueur : sur toute l'équipe ou sur lui
+    // Status active for this player: on the whole team or on them
     async isActiveFor(slug, playerId) {
         return !!await DB.tables.statuses.findOne({raw: true, where: {slug: slug, duration: {[Op.gt]: 0},
             player_id: {[Op.in]: ['', String(playerId || '')]}}});
     }
 
-    // Diverti : une perte de moral est divisée (arrondi vers le bas). Renvoie
-    // la nouvelle valeur du moral
+    // Diverti: a morale loss is divided (rounded down). Returns
+    // the new morale value
     async moralAfterLoss(playerId, oldMoral, newMoral) {
         if (!(newMoral < oldMoral) || !await this.isActiveFor(DIVERTED_SLUG, playerId))
             return newMoral;
@@ -156,8 +156,8 @@ class Statuses {
         return this;
     }
 
-    // Actifs : ceux de l'équipe et ceux des joueurs (avec le nom du joueur).
-    // Sinon : la liste des statuts connus (de base et créés à la volée)
+    // Active: the team's and the players' ones (with the player's name).
+    // Otherwise: the list of known statuses (base and created on the fly)
     async getAllStatuses(active=true) {
         if (!active)
             return (await DB.tables.statuses.findAll({where: {player_id: ''}, order: [['id', 'ASC']]})).map(r => r.dataValues);
@@ -180,8 +180,8 @@ class Statuses {
         let baseStatusRaw = fs.readFileSync(__dirname + '/../config/statuses.json');
         let baseStatuses = JSON.parse(baseStatusRaw);
         let bulkStatuses = [];
-        // Sans remise à zéro : n'ajoute que les statuts de base manquants
-        // (partie commencée avant l'ajout d'un statut au jeu)
+        // Without a reset: only adds the missing base statuses
+        // (game started before a status was added to the game)
         let existing = cleanInstall ? [] : (await DB.tables.statuses.findAll({attributes: ['slug'], raw: true})).map(s => s.slug);
 
         for (let status of baseStatuses) {

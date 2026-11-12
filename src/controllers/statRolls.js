@@ -1,21 +1,21 @@
-// Tirage des stats à la création du perso, comme le bouton du bot Discord
-// (src/commands/buttons/roll-stats.js), mais dés lancés par le serveur :
-// - chaque stat a |bonus de race| + 1 dés de 1 à 50 ;
-// - bonus positif : on garde le meilleur dé, négatif : le pire ;
-// - stat finale = dé gardé + 50, moral à 100.
-// Les dés déjà lancés restent en mémoire jusqu'à la fin du tirage.
+// Stat roll at character creation, like the Discord bot button
+// (src/commands/buttons/roll-stats.js), but dice rolled by the server:
+// - each stat has |race bonus| + 1 dice from 1 to 50;
+// - positive bonus: the best die is kept, negative: the worst;
+// - final stat = kept die + 50, morale at 100.
+// Dice already rolled stay in memory until the end of the roll.
 const races = require('./races');
 
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
-const rolls = new Map(); // id du joueur → {race, dice: {stat: [valeurs]}}
-// Dernier tirage terminé, gardé pour que le joueur voie son dernier dé
-// avant de passer à sa fiche
+const rolls = new Map(); // player id → {race, dice: {stat: [values]}}
+// Last finished roll, kept so the player sees their last die
+// before going to their sheet
 const finished = new Map();
 
 const dieCount = (mod) => Math.abs(parseInt(mod) || 0) + 1;
 const modsOf = (race) => races.getStats()[race] || {};
 
-// Stats déjà tirées : un perso créé a ses stats au-dessus de 50
+// Stats already rolled: a created character has their stats above 50
 const isDone = (player) => STATS.every(s => (parseInt(player[s]) || 0) > 0);
 
 const kept = function (dice, mod) {
@@ -45,8 +45,8 @@ const statsOf = function (race, entry) {
     });
 };
 
-// Ce que voit le joueur : dés lancés, dés restants et dé gardé par stat.
-// Une fois fini, le dernier tirage reste visible (stats) s'il est connu.
+// What the player sees: dice rolled, dice remaining and kept die per stat.
+// Once finished, the last roll stays visible (stats) if it is known.
 const state = function (player) {
     if (!player.race)
         return {step: 'race'};
@@ -57,8 +57,8 @@ const state = function (player) {
     return {step: 'stats', stats: statsOf(player.race, current(player))};
 };
 
-// Lance le dé suivant de cette stat. Renvoie {dice} pendant le tirage,
-// {stats} quand tout est tiré (à enregistrer), ou {error}
+// Rolls the next die of this stat. Returns {dice} during the roll,
+// {stats} when everything is rolled (to save), or {error}
 const roll = function (player, stat, random = Math.random) {
     if (!STATS.includes(stat))
         return {error: 'Stat inconnue.'};
@@ -83,8 +83,8 @@ const roll = function (player, stat, random = Math.random) {
     return {dice: entry.dice, stats: stats};
 };
 
-// Premier dé lancé : la race ne change plus (sinon changer de race et
-// revenir relancerait les dés)
+// First die rolled: the race no longer changes (otherwise changing race and
+// coming back would re-roll the dice)
 const started = function (player) {
     let entry = rolls.get(player.discord_id);
     return !!(entry && entry.race === player.race && STATS.some(s => entry.dice[s].length));

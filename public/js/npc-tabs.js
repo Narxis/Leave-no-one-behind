@@ -1,6 +1,6 @@
-// Onglets des alliés (PNJ) sous la carte, à côté de ceux des joueurs.
-// Le MJ les crée et les modifie depuis son menu (src/controllers/allies.js) ;
-// leurs jets s'affichent comme ceux des joueurs (événement « roll », id « npc<id> »)
+// Ally (NPC) tabs under the card, next to the players' ones.
+// The GM creates and edits them from their menu (src/controllers/allies.js);
+// their rolls are shown like the players' ("roll" event, id "npc<id>")
 (function () {
     const container = document.getElementById('playertabs_container');
     const tpl = document.getElementById('npc-tab-template');
@@ -24,7 +24,7 @@
         tab.classList.add('npc-tab');
         tab.dataset.ally = ally.id;
 
-        // Pas d'inventaire pour un PNJ
+        // No inventory for an NPC
         tab.querySelector('.expander-item').remove();
         tab.querySelector('.expander').addEventListener('mouseup', () => tab.classList.toggle('move-up'));
 
@@ -34,7 +34,7 @@
         badge.title = 'Personnage non joueur, contrôlé par le MJ';
         tab.querySelector('.player-name').prepend(badge);
 
-        // Les boutons +/- du modèle visent un joueur Discord : on les remplace
+        // The template's +/- buttons target a Discord player: we replace them
         for (let stat of STATS) {
             tab.querySelectorAll('.' + stat + ' .mod-b').forEach(btn => {
                 btn.removeAttribute('onclick');
