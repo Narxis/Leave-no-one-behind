@@ -4,25 +4,25 @@ const races = require('./races');
 const money = require('./money');
 const craft = require('./craft');
 
-// Catalogue des objets (éditeur /items) : src/config/items.json (dans l'app
-// installée, une copie modifiable dans le dossier de données, voir paths.js),
-// rangé par
-// catégorie (« pool »). Chaque objet a aussi un type facultatif (arme,
-// consommable, ressource…) et une rareté (commun → légendaire), propres au
-// catalogue pour l'instant. Les objets « starter » sont donnés au début de la
-// partie aux joueurs de leur race. Chaque modification met aussi à jour la
-// table items de la partie en cours, sans toucher aux exemplaires que les
-// joueurs ou le vaisseau possèdent déjà.
-// La quantité (« qty », 1 si absente) est le nombre d'exemplaires donnés à
-// chaque joueur pour un objet de départ, et la quantité proposée d'office
-// quand on ajoute l'objet à un butin (cartes, ennemis, combat).
-// Le prix (« price », en monnaie du jeu, absent : pas de prix) est celui des
-// marchands ; ils le rachètent à une part de ce prix (config/currency.json).
-// La recette (« recipe », facultative) dit comment fabriquer l'objet à
-// l'atelier : {ingredients: [{slug, qty}], qty: exemplaires fabriqués}.
+// Item catalog (/items editor): src/config/items.json (in the installed
+// app, an editable copy in the data folder, see paths.js),
+// sorted by
+// category ("pool"). Each item also has an optional type (weapon,
+// consumable, resource…) and a rarity (common → legendary), specific to the
+// catalog for now. "starter" items are given at the start of the
+// game to the players of their race. Each change also updates the
+// items table of the current game, without touching the copies that
+// players or the ship already own.
+// The quantity ("qty", 1 if missing) is the number of copies given to
+// each player for a starting item, and the quantity suggested by default
+// when the item is added to a loot (cards, enemies, combat).
+// The price ("price", in game currency, missing: no price) is the merchants'
+// price; they buy it back at a share of that price (config/currency.json).
+// The recipe ("recipe", optional) says how to craft the item at
+// the workshop: {ingredients: [{slug, qty}], qty: copies crafted}.
 
 const paths = require('../config/paths');
-// Images ajoutées dans l'éditeur : dans le dossier de données (servies sur /img/items)
+// Images added in the editor: in the data folder (served on /img/items)
 const IMAGE_DIR = paths.itemImages();
 const IMAGE_PATH = '/img/items/';
 const STARTER = 'starter';
@@ -30,8 +30,8 @@ const MAX_NAME = 60;
 const MAX_DESC = 600;
 const MAX_QTY = 99;
 const MAX_PRICE = 99999;
-// Types proposés d'office dans l'éditeur ; on peut en créer d'autres
-// Raretés, de la plus courante à la plus rare
+// Types suggested by default in the editor; others can be created
+// Rarities, from most common to rarest
 const RARITIES = ['commun', 'peu_commun', 'rare', 'epique', 'legendaire'];
 const TYPES = ['arme', 'armure', 'munition', 'consommable', 'ressource', 'outil', 'gadget', 'divers'];
 
@@ -48,7 +48,7 @@ const priceOf = (v) => Math.min(Math.max(parseInt(v) || 0, 0), MAX_PRICE);
 const knownSlugs = (pools) => Object.fromEntries(Object.values(pools).flat().map(i => [i.slug, true]));
 const ownersOf = (row) => row && row.owners ? String(row.owners).split(',').filter(Boolean) : [];
 
-// Exemplaires dans la partie en cours : {slug: {players, ship}}
+// Copies in the current game: {slug: {players, ship}}
 const usage = async function () {
     let rows = await DB.tables.items.findAll({raw: true});
     let out = {};
@@ -57,7 +57,7 @@ const usage = async function () {
     return out;
 }
 
-// Liste à plat, dans l'ordre du fichier
+// Flat list, in file order
 const list = async function () {
     let pools = read(), used = await usage(), known = knownSlugs(pools);
     let items = [];
@@ -90,17 +90,17 @@ const find = function (pools, slug) {
     return null;
 }
 
-// Retire un objet de sa catégorie ; une catégorie vidée par l'éditeur disparaît
+// Removes an item from its category; a category emptied by the editor disappears
 const dropFrom = function (pools, pool, index) {
     pools[pool].splice(index, 1);
     if (!pools[pool].length && pool !== STARTER)
         delete pools[pool];
 }
 
-// Fichier image utilisé par un autre objet que celui-ci ?
+// Image file used by an item other than this one?
 const imageShared = (pools, file, slug) => Object.values(pools).flat().some(i => i.image === file && i.slug !== slug);
 
-// Recopie l'objet dans la partie en cours (ou l'y ajoute, sans exemplaire)
+// Copies the item into the current game (or adds it, with no copies)
 const syncDB = async function (item, pool, oldSlug) {
     let data = {slug: item.slug, name: item.name, desc: item.desc, pool: pool, race: item.race || '', image: imageUrl(item.image)};
     let row = await DB.tables.items.findOne({raw: true, where: {slug: oldSlug || item.slug}});
@@ -110,7 +110,7 @@ const syncDB = async function (item, pool, oldSlug) {
         await DB.tables.items.create(Object.assign({owners: '', quantity: 0}, data));
 }
 
-// Création ou modification. Renvoie {item} ou {error}
+// Creation or edit. Returns {item} or {error}
 const save = async function (data) {
     let pools = read();
     let name = String(data.name || '').replace(/\s+/g, ' ').trim().slice(0, MAX_NAME);
@@ -156,7 +156,7 @@ const save = async function (data) {
         item.recipe = recipe;
     item.image = existing ? (existing.item.image || '') : '';
 
-    // Image envoyée par l'éditeur : un PNG déjà redimensionné par le navigateur
+    // Image sent by the editor: a PNG already resized by the browser
     if (data.image && /^data:image\/png;base64,/.test(data.image)) {
         let buffer = Buffer.from(data.image.split(',')[1], 'base64');
         if (buffer.length > 3 * 1024 * 1024)
@@ -170,7 +170,7 @@ const save = async function (data) {
         item.image = '';
     }
 
-    // Même place dans la liste, sauf changement de catégorie (à la fin de la nouvelle)
+    // Same place in the list, unless the category changes (at the end of the new one)
     if (existing && existing.pool === pool)
         pools[pool][existing.index] = item;
     else {
@@ -183,7 +183,7 @@ const save = async function (data) {
     return {item: (await list()).items.find(i => i.slug === slug)};
 }
 
-// Suppression du catalogue. Les exemplaires déjà possédés restent jusqu'à la prochaine partie
+// Removal from the catalog. Copies already owned stay until the next game
 const remove = async function (slug) {
     let pools = read();
     let found = find(pools, String(slug));

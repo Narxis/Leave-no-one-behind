@@ -5,8 +5,8 @@ class SocketLNOB {
         this.connect();
     }
 
-    // Connexion, et reconnexion automatique si le serveur redémarre : sans
-    // ça, une page ouverte restait sourde jusqu'au rechargement
+    // Connection, and automatic reconnection if the server restarts: without
+    // it, an open page stayed deaf until reloaded
     connect() {
         this.socket = new WebSocket("ws://" + window.location.host);
         this.socket.onopen = () => {
@@ -26,7 +26,7 @@ class SocketLNOB {
 
                 if (resp.error) {
                     console.log(resp.error_msg);
-                    // Pour qui attend une réponse (fenêtre de dés…)
+                    // For whoever is waiting for an answer (dice window…)
                     document.dispatchEvent(new CustomEvent('ws-error', {detail: resp}));
                     return false;
                 }
@@ -43,7 +43,7 @@ class SocketLNOB {
         }
     }
 
-    // Send payload to backend (mis en attente si la connexion est coupée)
+    // Send payload to backend (queued if the connection is down)
     send(data) {
         let payload = JSON.stringify(data);
         if (this.socket.readyState === WebSocket.OPEN)

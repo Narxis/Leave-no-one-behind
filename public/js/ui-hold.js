@@ -1,10 +1,10 @@
-// Maintenir + / - sur les modules (et le compteur Humains) fait défiler la
-// valeur, de plus en plus vite. Chaque pas rejoue le onclick du bouton
-// (quickUpdateModule), donc envoi au serveur et bornes 0-100 inchangés.
+// Holding + / - on the modules (and the Humans counter) scrolls the
+// value, faster and faster. Each step replays the button's onclick
+// (quickUpdateModule), so sending to the server and 0-100 bounds unchanged.
 (function () {
     const SELECTOR = '[onclick*="quickUpdateModule"]';
-    const START_DELAY = 400;            // avant le premier pas répété
-    const STEPS = [                     // [après X ms de maintien, un pas toutes les Y ms]
+    const START_DELAY = 400;            // before the first repeated step
+    const STEPS = [                     // [after X ms of holding, one step every Y ms]
         [0, 120],
         [1000, 60],
         [2500, 30]
@@ -49,8 +49,8 @@
             stop();
     });
 
-    // Après un maintien, le relâchement déclenche un clic natif : on l'ignore
-    // pour ne pas ajouter un pas de trop
+    // After a hold, the release fires a native click: ignore it
+    // so as not to add one step too many
     document.addEventListener('click', (e) => {
         if (repeated && e.isTrusted && e.target.closest(SELECTOR)) {
             e.stopPropagation();
@@ -60,17 +60,17 @@
     }, true);
 })();
 
-// Appui long pour confirmer une action rare et irréversible (fin de combat…),
-// sans fenêtre de confirmation : un bouton [data-hold] reçoit l'événement
-// « hold-confirm » après HOLD_MS de maintien. Un clic simple ne fait que
-// rappeler le texte de data-hold (« Maintenir pour … »)
+// Long press to confirm a rare and irreversible action (end of combat…),
+// without a confirmation dialog: a [data-hold] button receives the
+// "hold-confirm" event after HOLD_MS of holding. A simple click only
+// recalls the data-hold text ("Maintenir pour …")
 (function () {
     const SELECTOR = '[data-hold]';
     const HOLD_MS = 800;
 
     let timer = null;
-    let held = null;      // bouton en cours de maintien
-    let done = null;      // bouton qui vient d'être confirmé : son clic de relâchement est ignoré
+    let held = null;      // button being held
+    let done = null;      // button just confirmed: its release click is ignored
 
     const stop = () => {
         clearTimeout(timer);
@@ -105,7 +105,7 @@
         if (held && e.target.closest(SELECTOR) === held && !held.contains(e.relatedTarget))
             stop();
     });
-    // Au clavier : maintenir Entrée ou Espace
+    // With the keyboard: hold Enter or Space
     document.addEventListener('keydown', (e) => {
         const button = (e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest(SELECTOR);
         if (!button)

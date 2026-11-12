@@ -1,7 +1,7 @@
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-//Recap var :
+//Recap vars:
 var o2 = document.getElementById('reading-1');
 var cl = document.getElementById('reading-2');
 var ff = document.getElementById('reading-3');
@@ -34,15 +34,15 @@ var shipState = Math.floor(score.scoreShip/25);
 var humans = ship.cryopods-1;
 var valueScoreMultiplier = [humans, shipState-1, planetState-1];
 
-// Score total : celui du serveur, le même que celui du classement.
-// humains × vaisseau × planète forment la base, les cartes s'y ajoutent
+// Total score: the server's, the same as the leaderboard's.
+// humans × ship × planet form the base, the cards add to it
 var totalScore = Math.round(score.scoreTotal);
 var cardsScore = Math.round(score.scoreCards);
 var baseScore = totalScore - cardsScore;
-// Part de la base déjà affichée après les humains, le vaisseau, puis la planète
+// Share of the base already shown after the humans, the ship, then the planet
 var baseSteps = [.15, .45, 1];
 var valueScoreAdder = [cardsScore];
-// Vitesse de frappe du texte de la console (ms par caractère)
+// Typing speed of the console text (ms per character)
 var TYPE_SPEED = 55;
 var currentscore = "0";
 var scoring = false;
@@ -152,7 +152,7 @@ async function scoreAdd(oldscore, newscore, place, interval) {
         })
 }
 
-// Compteur qui défile jusqu'à une valeur (négative possible, contrairement à scoreUp)
+// Counter that scrolls up to a value (can be negative, unlike scoreUp)
 function countTo(place, from, to, ms) {
     let el = document.getElementById(place);
     let start = performance.now();
@@ -226,7 +226,7 @@ async function writePercent(number, place) {
     }
 }
 
-//Console var :
+//Console vars:
 const  humanTextArr = ['HumanText1', 'HumanText2', 'HumanText3'];
 const  shipTextArr = ['ShipText1', 'ShipText2', 'ShipText3'];
 const  planetTextArr = ['PlanetText1', 'PlanetText2', 'PlanetText3'];
@@ -306,9 +306,9 @@ async function scoreCalcul() {
             }
         }
         if (i==2){
-            // La planète laisse la place au texte de son bilan
+            // The planet makes way for its summary text
             document.querySelector('.planet-recap').classList.add('with-text');
-            // Place réservée pour le texte complet de chaque ligne
+            // Space reserved for the full text of each line
             recapText.forEach((text, j) => {
                 let ghost = document.createElement('span');
                 ghost.className = 'reading-ghost';

@@ -14,7 +14,7 @@
         <% if (!entries.length) { %>
             <p class="leaderboard-empty">Aucune partie terminée pour l'instant. Le score d'une équipe s'ajoute ici à la fin de sa partie.</p>
         <% } else { %>
-            <%# Comparer les scores à réglages égaux : filtre par difficulté %>
+            <%# Compare scores with equal settings: filter by difficulty %>
             <% const presetName = (e) => e.settings && e.settings.preset ? e.settings.preset.name : 'Non renseignée';
                const levels = [...new Set(entries.map(presetName))]; %>
             <% if (levels.length > 1) { %>
@@ -68,12 +68,12 @@
     </dialog>
     <script>var LEADERBOARD = <%- JSON.stringify(entries).replace(/</g, '\\u003c') %>;</script>
     <script>
-        // La ligne de la partie qui vient de se terminer est amenée à l'écran
+        // The row of the game that just ended is scrolled into view
         let current = document.querySelector('.leaderboard-table .is-current');
         if (current)
             current.scrollIntoView({block: 'center'});
 
-        // Détail d'une équipe : score, durée, personnages et compagnons
+        // Team details: score, duration, characters and companions
         (function () {
             const dialog = document.getElementById('team-detail');
             const body = document.getElementById('team-detail-body');
@@ -171,7 +171,7 @@
                     }
                 });
             });
-            // Filtre par difficulté : les rangs sont recomptés dans le groupe choisi
+            // Filter by difficulty: ranks are recounted within the chosen group
             document.querySelectorAll('.gs-filter .gs-preset').forEach(button => {
                 button.addEventListener('click', () => {
                     let level = button.dataset.level;
@@ -187,7 +187,7 @@
             });
 
             document.getElementById('team-detail-close').addEventListener('click', () => dialog.close());
-            // Clic en dehors de la fiche : elle se ferme
+            // Click outside the sheet: it closes
             dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
         })();
     </script>

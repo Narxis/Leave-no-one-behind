@@ -1,17 +1,17 @@
-// Actions des joueurs en ligne, reçues du relais par le lobby (lobby.js).
+// Online players' actions, received from the relay by the lobby (lobby.js).
 //
-// Les pages du MJ parlent au serveur par le WebSocket local et ont droit à
-// toutes les actions. Un joueur en ligne, lui, n'a droit qu'à une liste fixe,
-// et toujours en son nom : son identifiant d'app (celui du lobby) remplit le
-// champ discord_id du jeu, quoi que contienne son message.
+// GM pages talk to the server through the local WebSocket and are allowed
+// all actions. An online player, however, only gets a fixed list,
+// and always in their own name: their app id (the lobby one) fills the
+// game's discord_id field, whatever their message contains.
 //
-// Comme avec le bot, la création du perso n'est ouverte que pendant la
-// création (page des persos du MJ) et les dés de jeu que pendant la partie.
+// As with the bot, character creation is only open during
+// creation (GM characters page) and game dice only during the game.
 //
-// Joueur → MJ : {kind: 'action', action, data}
-// MJ → joueur : {kind: 'result', action, data}  action faite
+// Player → GM: {kind: 'action', action, data}
+// GM → player: {kind: 'result', action, data}  action done
 //               {kind: 'refused', action, message}
-// (l'état du jeu et du perso part de playerView.js)
+// (the game and character state goes out from playerView.js)
 const {Player} = require('../models/player');
 const lobby = require('./lobby');
 const races = require('./races');
@@ -33,7 +33,7 @@ const NOT_LIVE = 'Les dés se lancent pendant la partie.';
 const inCreation = () => CONFIG.gameState === 'creation';
 const text = (value, max) => String(value || '').replace(/\s+/g, ' ').trim().slice(0, max);
 
-// Ce que le joueur voit de son perso
+// What the player sees of their character
 const characterOf = async function (id) {
     let player = await new Player().getData(id);
     if (!player)
@@ -44,10 +44,10 @@ const characterOf = async function (id) {
     return character;
 };
 
-// Message de jeu, au nom du joueur, pour chaque action permise.
-// Renvoie le message à exécuter, ou {refused} avec la raison.
+// Game message, in the player's name, for each allowed action.
+// Returns the message to run, or {refused} with the reason.
 const RULES = {
-    // Rejoindre l'équipage : crée son perso avec le pseudo du lobby
+    // Joining the crew: creates their character with the lobby nickname
     join: async (player) => {
         if (!inCreation())
             return refuse(NOT_CREATION);
@@ -73,12 +73,12 @@ const RULES = {
             return refuse('Tes stats sont déjà tirées : demande au MJ pour changer de race.');
         if (statRolls.started(me) && String(data.race) !== me.race)
             return refuse('Tu as commencé à lancer tes dés : demande au MJ pour changer de race.');
-        // Races de base et customs cochées par le MJ pour la partie
+        // Base races and customs checked by the GM for the game
         if (!races.isAllowed(String(data.race || '')))
             return refuse('Race inconnue.');
         return {action: 'set-race', uid: player.id, race: data.race};
     },
-    // Dé suivant d'une stat, tiré par le serveur (création du perso)
+    // Next die of a stat, drawn by the server (character creation)
     'roll-stat': async (player, data) => {
         if (!inCreation())
             return refuse(NOT_CREATION);
@@ -100,15 +100,15 @@ const RULES = {
             return refuse('Lancer invalide.');
         return {action: 'roll', data: {discord_id: player.id, stat: data.stat, module: data.module || ''}};
     },
-    // Emoji seulement : le texte est affiché tel quel sur l'écran du MJ
+    // Emoji only: the text is shown as is on the GM screen
     emote: async (player, data) => {
         let emoji = text(data.emoji, 16);
         if (!emoji || /[<>&"']/.test(emoji))
             return refuse('Emote invalide.');
         return {action: 'emote', emoji: emoji, type: 'glyph', uid: player.id};
     },
-    // Vote pour un choix de la carte affichée (null : retirer son vote).
-    // Le MJ voit les votes et choisit lui-même.
+    // Vote for a choice of the displayed card (null: withdraw the vote).
+    // The GM sees the votes and chooses themselves.
     vote: async (player, data) => {
         if (CONFIG.gameState !== 'gameLive')
             return refuse('On vote pendant la partie.');
@@ -119,7 +119,7 @@ const RULES = {
             return refuse(result.error);
         return {action: 'passThrough', data: result.payload};
     },
-    // Synopsis et fiche du vaisseau : prêt à continuer (ou plus)
+    // Synopsis and ship sheet: ready to continue (or no longer)
     'intro-ready': async (player, data) => {
         if (!await characterOf(player.id))
             return refuse('Il faut un perso pour voter.');
@@ -128,7 +128,7 @@ const RULES = {
             return refuse(result.error);
         return {action: 'passThrough', data: result.payload};
     },
-    // Utiliser un objet de son inventaire : demande au MJ, qui accepte ou non
+    // Using an item from their inventory: request to the GM, who accepts or not
     'item-use': async (player, data) => {
         if (CONFIG.gameState !== 'gameLive')
             return refuse('Les objets s\'utilisent pendant la partie.');
@@ -140,8 +140,8 @@ const RULES = {
             return refuse(result.error);
         return {action: 'passThrough', data: result.payload};
     },
-    // Dés neutres de la fenêtre de dés : lancés ici, annoncés au salon (ou au
-    // MJ seul si secret) ; le joueur reçoit aussi le résultat
+    // Neutral dice of the dice window: rolled here, announced in the room (or to the
+    // GM only if secret); the player also receives the result
     dice: async (player, data) => {
         let result = dice.roll(data.sides, data.count);
         if (result.error)
@@ -152,8 +152,8 @@ const RULES = {
             return refuse(said.error);
         return {done: true, action: 'dice', result: Object.assign(result, {secret: !!data.secret})};
     },
-    // Chat : salon commun, ou privé (seul le MJ le lit). Signé du nom du
-    // perso s'il en a un, sinon du pseudo du lobby.
+    // Chat: common room, or private (only the GM reads it). Signed with the
+    // character name if they have one, otherwise the lobby nickname.
     chat: async (player, data) => {
         let character = await characterOf(player.id);
         let result = chat.fromPlayer(player, character ? character.name : player.name, data);
@@ -161,9 +161,9 @@ const RULES = {
             return refuse(result.error);
         return {done: true, action: 'chat'};
     },
-    // Donner un objet de son inventaire à un autre joueur (comme /donner) ou
-    // le ranger dans le vaisseau ; toujours depuis le sien, jamais celui d'un
-    // autre (all : toute la pile)
+    // Giving an item from their inventory to another player (like /donner) or
+    // storing it in the ship; always from their own, never from someone
+    // else's (all: the whole stack)
     'inventory-move': async (player, data) => {
         let to = data.to || {};
         if (to.type === 'ship')
@@ -172,9 +172,9 @@ const RULES = {
             return refuse('On ne peut donner un objet qu\'à un autre joueur ou au vaisseau.');
         return {action: 'inventory-move', data: {slug: String(data.slug || ''), from: {type: 'player', id: player.id}, to: {type: 'player', id: String(to.id)}, all: !!data.all}};
     },
-    // Demander un objet à un autre joueur (ou au vaisseau) : on ne le prend
-    // pas, le logo de son rôle s'affiche à côté et un message part dans le
-    // salon. Une seconde demande du même objet la retire.
+    // Requesting an item from another player (or from the ship): it isn't
+    // taken, their role logo shows next to it and a message goes to the
+    // room. A second request for the same item withdraws it.
     'item-request': async (player, data) => {
         let character = await characterOf(player.id);
         if (!character)
@@ -205,7 +205,7 @@ const RULES = {
 
 const ACTIONS = Object.keys(RULES);
 
-// Traduit le message d'un joueur en action de jeu (exporté pour les tests)
+// Turns a player's message into a game action (exported for the tests)
 const translate = async function (player, message) {
     if (!message || message.kind !== 'action' || typeof message.action !== 'string')
         return null;
@@ -216,12 +216,12 @@ const translate = async function (player, message) {
     return rule(player, data);
 };
 
-// run(message) exécute une action comme si elle venait d'une page du MJ et
-// renvoie ses messages ; broadcast(message) les envoie aux pages du MJ
+// run(message) runs an action as if it came from a GM page and
+// returns its messages; broadcast(message) sends them to the GM pages
 const init = function ({run, broadcast}) {
     lobby.onPlayerMessage(async (player, message) => {
         if (!player.name)
-            return; // pas (ou plus) dans le lobby
+            return; // not (or no longer) in the lobby
         let action = await translate(player, message);
         if (!action)
             return;
@@ -229,7 +229,7 @@ const init = function ({run, broadcast}) {
             return lobby.sendTo(player.id, {kind: 'refused', action: message.action, message: action.refused});
 
         if (action.done)
-            // Déjà fait et diffusé (chat) ; un jet de dés renvoie son résultat
+            // Already done and broadcast (chat); a dice roll returns its result
             return action.result ? lobby.sendTo(player.id, {kind: 'result', action: message.action, data: action.result}) : undefined;
         log('[LOBBY] ' + player.name + ' : ' + action.action, '#4fd8e0');
         let results = [].concat(await run(action));

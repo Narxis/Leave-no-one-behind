@@ -1,4 +1,4 @@
-// Partie en ligne (lobby.ejs) : code de la partie et joueurs connectés au relais
+// Online game (lobby.ejs): game code and players connected to the relay
 (function () {
     const $ = (id) => document.getElementById(id);
     const STATUS = {
@@ -8,7 +8,7 @@
         error: 'Relais injoignable, nouvel essai en cours…'
     };
 
-    // Bouton de lancement selon l'étape de la partie : page ouverte sur l'écran principal
+    // Launch button depending on the game step: page opened on the main screen
     const LAUNCH = {
         creation: {
             hint: 'Création des persos en cours : les joueurs créent leur perso depuis leur app.',
@@ -28,14 +28,14 @@
     };
     let phase = null;
 
-    // Dans l'app, la page s'ouvre dans la fenêtre du jeu ; dans un navigateur,
-    // dans un onglet à part (ou l'onglet du lobby si les fenêtres sont bloquées)
+    // In the app, the page opens in the game window; in a browser,
+    // in a separate tab (or the lobby tab if windows are blocked)
     const openGame = function (page) {
         if (!window.open(page, 'lnob-game') && !/Electron/.test(navigator.userAgent))
             location.href = page;
     };
 
-    // Lancement : l'écran de jeu passe aux paramètres et la page du MJ va au panneau MJ
+    // Launch: the game screen goes to the settings and the GM page goes to the GM panel
     const launch = function () {
         openGame('/parametres');
         location.href = '/mj-menu';
@@ -45,7 +45,7 @@
         let step = LAUNCH[phase] || LAUNCH.none;
         $('lobby-launch-hint').textContent = step.hint;
         $('lobby-launch-main').textContent = step.label;
-        // Partie en cours ou création commencée : on peut aussi tout recommencer
+        // Game in progress or creation started: you can also start everything over
         $('lobby-launch-new').hidden = !LAUNCH[phase];
     };
 
@@ -75,7 +75,7 @@
             let name = document.createElement('span');
             name.className = 'lobby-player-name';
             name.textContent = p.name;
-            // Compte Discord vérifié par le relais : avatar et pseudo
+            // Discord account verified by the relay: avatar and username
             if (p.discord) {
                 let avatar = document.createElement('img');
                 avatar.className = 'discord-avatar';
@@ -88,7 +88,7 @@
                 tag.textContent = ' · Discord : ' + p.discord.name;
                 name.append(tag);
             }
-            // Perso retrouvé grâce à l'identifiant d'app du joueur
+            // Character found thanks to the player's app id
             let character = document.createElement('span');
             character.className = 'lobby-player-character';
             character.textContent = p.character ? 'perso : ' + p.character : 'pas de perso';
@@ -109,7 +109,7 @@
     };
 
     document.addEventListener('lobby', (e) => render(e.detail.data));
-    // Après une coupure du serveur du jeu, on redemande l'état
+    // After a game server outage, ask for the state again
     document.addEventListener('ws-reconnect', () => wsLNOB.send({action: 'lobby-state'}));
 
     $('lobby-launch-main').addEventListener('click', () => {
@@ -122,7 +122,7 @@
         if (confirm('Recommencer une nouvelle partie ? La partie en cours sera perdue.'))
             launch();
     });
-    // L'étape a pu changer pendant que la fenêtre était en arrière-plan
+    // The step may have changed while the window was in the background
     window.addEventListener('focus', () => wsLNOB.send({action: 'lobby-state'}));
 
     $('lobby-open').addEventListener('click', () => wsLNOB.send({action: 'lobby-open'}));

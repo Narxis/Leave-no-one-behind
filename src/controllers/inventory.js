@@ -4,11 +4,11 @@ const loot = require('./loot');
 const money = require('./money');
 const itemRequests = require('./itemRequests');
 
-// Inventaires des joueurs : un objet appartient à un joueur quand son
-// discord_id figure dans « owners » (liste séparée par des virgules). Un id
-// peut y figurer plusieurs fois : le joueur a alors plusieurs exemplaires.
-// L'inventaire du vaisseau, lui, est la quantité (« quantity ») de l'objet.
-// La monnaie n'est pas un objet : elle va dans les bourses (money.js).
+// Players' inventories: an item belongs to a player when their
+// discord_id is in "owners" (comma-separated list). An id
+// can appear several times: the player then has several copies.
+// The ship's inventory, on the other hand, is the item's "quantity".
+// Currency isn't an item: it goes into purses (money.js).
 
 const ownersOf = (row) => row.owners ? String(row.owners).split(',').filter(Boolean) : [];
 
@@ -38,7 +38,7 @@ const getInventory = async function (discord_id) {
     return (await getInventories())[discord_id] || [];
 }
 
-// Objets rangés dans le vaisseau
+// Items stored in the ship
 const getShip = async function () {
     let rows = await DB.tables.items.findAll({raw: true});
     return rows.filter(row => row.quantity > 0)
@@ -46,7 +46,7 @@ const getShip = async function () {
         .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-// Ligne de l'objet en base ; un butin saisi à la main par le MJ y est ajouté
+// Item row in the database; loot typed by hand by the GM is added to it
 const ensureItem = async function (item) {
     let name = String(item.name || '').trim().slice(0, 60);
     let slug = item.slug || (name && slugify(name));
@@ -64,7 +64,7 @@ const setOwners = (row, owners) => DB.tables.items.update({owners: owners.join('
 
 const isPlayer = async (discord_id) => !!discord_id && !!(await DB.tables.players.findOne({raw: true, where: {discord_id: String(discord_id)}}));
 
-// Ajoute count exemplaires à un joueur ou au vaisseau
+// Adds count copies to a player or the ship
 const giveTo = async function (row, to, count) {
     if (to.type === 'player') {
         let fresh = await DB.tables.items.findOne({raw: true, where: {id: row.id}});
@@ -74,8 +74,8 @@ const giveTo = async function (row, to, count) {
         await DB.tables.items.increment({quantity: count}, {where: {id: row.id}});
 }
 
-// Retire jusqu'à count exemplaires d'un objet d'un joueur ou du vaisseau.
-// Renvoie {row, count} (exemplaires vraiment retirés) ou {error}
+// Removes up to count copies of an item from a player or the ship.
+// Returns {row, count} (copies actually removed) or {error}
 const takeFrom = async function (slug, from, count) {
     let row = await DB.tables.items.findOne({raw: true, where: {slug: String(slug || '')}});
     if (from.type === 'player') {
@@ -100,7 +100,7 @@ const takeFrom = async function (slug, from, count) {
     return {error: 'Origine inconnue'};
 }
 
-// Nombre d'exemplaires d'un objet chez un joueur ou dans le vaisseau
+// Number of copies of an item for a player or in the ship
 const countOf = async function (slug, owner) {
     let row = await DB.tables.items.findOne({raw: true, where: {slug: String(slug || '')}});
     if (!row)
@@ -110,13 +110,13 @@ const countOf = async function (slug, owner) {
     return ownersOf(row).filter(id => id === String(owner.id)).length;
 }
 
-// Déplace des exemplaires d'un objet. from / to : {type: 'player', id},
-// {type: 'ship'} ou, en source seulement, {type: 'loot', index} (butin du
-// combat gagné) et {type: 'card-loot', index} (butin d'une carte).
-// Un butin part en entier (toute sa quantité) ; depuis un inventaire, on
-// déplace count exemplaires (1 par défaut, all : tous). La monnaie d'un
-// butin va dans la bourse du joueur ou la caisse du vaisseau.
-// Renvoie {error} ou {item, from, to, lootTaken}
+// Moves copies of an item. from / to: {type: 'player', id},
+// {type: 'ship'} or, as source only, {type: 'loot', index} (loot of the
+// won combat) and {type: 'card-loot', index} (loot of a card).
+// A loot entry goes whole (its full quantity); from an inventory,
+// count copies are moved (1 by default, all: every one). Currency from a
+// loot goes to the player's purse or the ship's cash box.
+// Returns {error} or {item, from, to, lootTaken}
 const move = async function (data) {
     let from = data.from || {}, to = data.to || {};
     if (to.type === 'player' && !(await isPlayer(to.id)))
@@ -126,7 +126,7 @@ const move = async function (data) {
     if (from.type === to.type && String(from.id || '') === String(to.id || ''))
         return {error: 'L\'objet y est déjà'};
 
-    // On vérifie et on retire d'abord la source : rien n'est créé si elle est vide
+    // The source is checked and removed first: nothing is created if it is empty
     let row, count = data.all ? loot.MAX_QTY : loot.qtyOf(data.count), lootTaken = false, cardLootTaken = false;
     if (from.type === 'player' || from.type === 'ship') {
         let taken = await takeFrom(data.slug, from, count);
@@ -158,8 +158,8 @@ const move = async function (data) {
     return {item: itemView(row, count), from: from, to: to, lootTaken: lootTaken, cardLootTaken: cardLootTaken};
 }
 
-// « Tout récupérer » : tout le butin de la carte va dans le vaisseau (la
-// monnaie dans la caisse de bord)
+// "Tout récupérer": all the card loot goes into the ship (the
+// currency into the cash box)
 const takeAllCardLoot = async function () {
     let items = cardLoot.takeAll();
     for (let item of items) {
@@ -174,7 +174,7 @@ const takeAllCardLoot = async function () {
     return {cardLootTaken: true, toShip: items.length};
 }
 
-// Message websocket : inventaires à jour (+ l'état du combat si le butin a changé)
+// Websocket message: updated inventories (+ the combat state if the loot changed)
 const payload = async function (event) {
     let inventories = await getInventories();
     let ship = await getShip();
@@ -183,7 +183,7 @@ const payload = async function (event) {
         error: false,
         data: {inventories: inventories, ship: ship, wallets: await money.wallets(), currency: money.publicConfig(), event: event || null}
     }];
-    // Objet parti (donné, utilisé, jeté) : les demandes qu'il avait tombent
+    // Item gone (given, used, discarded): its pending requests drop
     if (itemRequests.prune(inventories, ship))
         messages.push(itemRequests.payload());
     if (event && event.lootTaken)
@@ -193,7 +193,7 @@ const payload = async function (event) {
     return messages;
 }
 
-// Point d'entrée des actions websocket « inventory-* »
+// Entry point of the "inventory-*" websocket actions
 const handle = async function (response) {
     if (response.action === 'inventory-move') {
         let result = await move(response.data || {});
@@ -203,7 +203,7 @@ const handle = async function (response) {
     }
     if (response.action === 'card-loot-all')
         return payload(await takeAllCardLoot());
-    // inventory-sync : le bot Discord a déjà déplacé l'objet, on diffuse
+    // inventory-sync: the Discord bot already moved the item, we broadcast
     return payload((response.data && response.data.event) || null);
 }
 

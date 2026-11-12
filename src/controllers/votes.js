@@ -1,22 +1,22 @@
-// Votes des joueurs en ligne sur les choix de la carte affichée.
+// Online players' votes on the choices of the displayed card.
 //
-// La page de jeu (card.js) annonce ce qu'elle affiche à chaque nouvel
-// affichage de choix : texte de la carte et intitulés des boutons
-// (action « card-screen »). Les joueurs votent pour un choix ; le MJ voit
-// les votes sur la page de jeu et dans son menu, et garde le dernier mot :
-// c'est toujours lui qui clique.
+// The game page (card.js) announces what it shows on each new
+// display of choices: card text and button labels
+// ("card-screen" action). Players vote for a choice; the GM sees
+// the votes on the game page and in their menu, and has the final say:
+// they are always the one who clicks.
 //
-// Un nouvel affichage (autre texte ou autres choix) remet les votes à zéro.
+// A new display (other text or other choices) resets the votes.
 const MAX_TEXT = 4000;
 const MAX_CHOICE = 300;
 
 let screen = null;        // {id, cardId, text, choices, chosen}
 let screenCount = 0;
-const votes = new Map();  // id du joueur → {name, index}
+const votes = new Map();  // player id → {name, index}
 
 const clip = (value, max) => String(value || '').slice(0, max);
 
-// Ce que la page de jeu affiche. Renvoie le message pour les pages du MJ.
+// What the game page shows. Returns the message for the GM pages.
 const setScreen = function (data) {
     data = data && typeof data === 'object' ? data : {};
     let text = clip(data.text, MAX_TEXT);
@@ -27,7 +27,7 @@ const setScreen = function (data) {
     let same = screen && screen.cardId === cardId && screen.text === text
         && JSON.stringify(screen.choices) === JSON.stringify(choices);
     if (chosen !== null && screen) {
-        // Le MJ a cliqué : les votes se ferment, le choix retenu reste affiché
+        // The GM clicked: votes close, the chosen choice stays shown
         screen.chosen = chosen;
     } else if (!same) {
         screen = {id: ++screenCount, cardId, text, choices, chosen: null};
@@ -44,10 +44,10 @@ const counts = function () {
     return list;
 };
 
-// Qui a voté quoi (id du joueur, nom du perso, index du choix)
+// Who voted what (player id, character name, choice index)
 const voters = () => Array.from(votes, ([id, v]) => ({id, name: v.name, index: v.index}));
 
-// Message pour les pages du MJ : votes par choix et qui a voté quoi
+// Message for the GM pages: votes per choice and who voted what
 const payload = function () {
     return {
         action: 'votes',
@@ -62,7 +62,7 @@ const payload = function () {
     };
 };
 
-// Vote d'un joueur (index du choix, ou null pour retirer son vote)
+// A player's vote (choice index, or null to withdraw the vote)
 const vote = function (playerId, name, index) {
     if (!screen || !screen.choices.length)
         return {error: 'Pas de choix à voter pour l\'instant.'};
@@ -78,9 +78,9 @@ const vote = function (playerId, name, index) {
     return {payload: payload()};
 };
 
-// Carte vue par les joueurs : l'affichage de la page de jeu s'il concerne
-// bien la carte en cours, sinon rien (la carte du paquet sert alors). Qui a
-// voté quoi est montré à tous, avec le logo de son rôle
+// Card seen by the players: the game page display if it is indeed about
+// the current card, otherwise nothing (the deck card is used then). Who
+// voted what is shown to all, with their role logo
 const screenFor = function (cardId) {
     if (!screen || screen.cardId !== (cardId === undefined || cardId === null ? null : String(cardId)))
         return null;

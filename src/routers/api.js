@@ -23,7 +23,7 @@ module.exports = function(router) {
     router.get(basePath + '/team', controller.getTeam);
     router.get(basePath + '/races', controller.getRaces);
     router.post(basePath + '/races', controller.saveRace);
-    // Races customs autorisées dans la partie (cochées par le MJ sur /persos)
+    // Custom races allowed in the game (checked by the GM on /persos)
     router.get(basePath + '/races/allowed', controller.getAllowedRaces);
     router.post(basePath + '/races/allowed', controller.setAllowedRaces);
     router.delete(basePath + '/races/:slug', controller.deleteRace);
@@ -43,7 +43,7 @@ module.exports = function(router) {
     router.get(basePath + '/items', controller.getAllItems);
     router.get(basePath + '/items/owned', controller.getOwnedItems);
     router.get(basePath + '/items/owned/:discordId', controller.getPlayerItems);
-    // Éditeur d'objets (/items) : catalogue src/config/items.json
+    // Item editor (/items): catalog src/config/items.json
     router.get(basePath + '/items/catalog', controller.getItemCatalog);
     router.post(basePath + '/items/catalog', controller.saveCatalogItem);
     router.delete(basePath + '/items/catalog/:slug', controller.deleteCatalogItem);

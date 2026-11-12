@@ -1,6 +1,6 @@
-// Demandes d'objets des joueurs en ligne (src/controllers/itemUse.js) :
-// petit panneau en bas à droite des pages du MJ, avec Accepter / Refuser.
-// Accepté, l'objet quitte l'inventaire du joueur ; l'effet reste au MJ.
+// Item requests from online players (src/controllers/itemUse.js):
+// small panel at the bottom right of the GM pages, with Accepter / Refuser.
+// Once accepted, the item leaves the player's inventory; the effect is up to the GM.
 (function () {
     if (typeof wsLNOB === 'undefined')
         return;

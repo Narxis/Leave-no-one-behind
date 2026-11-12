@@ -1,26 +1,26 @@
-// Accès MJ aux pages du serveur.
-// Le serveur du jeu tourne sur le PC du MJ et s'ouvre aussi depuis le réseau
-// local. Est MJ : le PC du serveur lui-même, ou un appareil qui a ouvert le
-// lien MJ (QR code « Panneau MJ sur un téléphone », avec la clé ?mj=…), qui
-// garde ensuite un cookie. Les autres appareils sont des joueurs : le menu
-// leur cache les pages MJ, et ces pages les renvoient au menu principal.
+// GM access to the server pages.
+// The game server runs on the GM's PC and can also be opened from the local
+// network. GM is: the server PC itself, or a device that opened the
+// GM link (QR code "Panneau MJ sur un téléphone", with the ?mj=… key), which
+// then keeps a cookie. Other devices are players: the menu
+// hides the GM pages from them, and these pages send them back to the main menu.
 const crypto = require('crypto');
 const fs = require('fs');
 const paths = require('../config/paths');
 
 const COOKIE = 'lnob_mj';
-// Pages et actions de partie réservées au MJ
+// Game pages and actions reserved for the GM
 const MJ_PATHS = [
     '/mj-menu', '/template-card', '/template-card-lieu', '/template-planet', '/planet-lab',
     '/buildCard', '/races', '/items', '/bestiaire', '/end-screen',
     '/reset', '/start', '/land', '/next', '/deck', '/score'
 ].map(p => p.toLowerCase());
 
-// Les routes d'Express ignorent la casse et le « / » final
+// Express routes ignore case and the trailing "/"
 const mjOnly = (path) => MJ_PATHS.includes(String(path).toLowerCase().replace(/\/+$/, ''));
 
-// Clé gardée dans le dossier de données : le lien MJ reste le même d'une
-// partie à l'autre
+// Key kept in the data folder: the GM link stays the same from one
+// game to the next
 let key = null;
 const getKey = function () {
     if (key)
@@ -37,7 +37,7 @@ const getKey = function () {
             fs.mkdirSync(paths.storage(), {recursive: true});
             fs.writeFileSync(file, key);
         } catch (e) {
-            // Sans dossier de données, la clé vaut pour ce lancement
+            // Without a data folder, the key is valid for this launch
         }
     }
     return key;
@@ -58,7 +58,7 @@ const isMJ = function (req) {
     return cookieOf(req) === getKey();
 };
 
-// Middleware : retient le lien MJ, puis bloque les pages MJ aux joueurs
+// Middleware: remembers the GM link, then blocks GM pages for players
 const middleware = function (req, res, next) {
     if (req.query && req.query.mj === getKey()) {
         res.setHeader('Set-Cookie', `${COOKIE}=${getKey()}; Path=/; Max-Age=31536000; SameSite=Lax; HttpOnly`);
@@ -71,7 +71,7 @@ const middleware = function (req, res, next) {
     next();
 };
 
-// Lien à ouvrir sur un téléphone pour avoir l'accès MJ
+// Link to open on a phone to get GM access
 const mjUrl = (base, page) => `${base}/${page || ''}?mj=${getKey()}`;
 
 module.exports = {middleware, isMJ, mjOnly, mjUrl, getKey};

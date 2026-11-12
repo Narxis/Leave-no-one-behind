@@ -1,8 +1,8 @@
-// Relais LNOB en Node, pour jouer et tester sans Cloudflare (npm run relay).
-// Même comportement que le relais Cloudflare (worker.js) : il sert la page
-// joueur sur / et les connexions WebSocket sur /host, /host/CODE et /join/CODE.
-// Connexion Discord : DISCORD_CLIENT_ID et DISCORD_CLIENT_SECRET dans
-// l'environnement (voir relay/README.md).
+// LNOB relay in Node, to play and test without Cloudflare (npm run relay).
+// Same behavior as the Cloudflare relay (worker.js): it serves the player
+// page on / and WebSocket connections on /host, /host/CODE and /join/CODE.
+// Discord login: DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET in
+// the environment (see relay/README.md).
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -14,7 +14,7 @@ const PLAYER_DIR = path.join(__dirname, '../public/player');
 const TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
     '.webp': 'image/webp', '.gif': 'image/gif', '.jpg': 'image/jpeg', '.ttf': 'font/ttf'};
 
-// Lobbies en mémoire, par code
+// In-memory lobbies, by code
 const createStore = function (options) {
     const expiryMs = (options && options.expiryMs) || EXPIRY_MS;
     const env = (options && options.env) || process.env;
@@ -38,7 +38,7 @@ const createStore = function (options) {
                     ws.send(JSON.stringify(obj));
             },
             close: (ws, code, reason) => {
-                try { ws.close(code, reason); } catch (e) { /* déjà fermé */ }
+                try { ws.close(code, reason); } catch (e) { /* already closed */ }
             },
             getToken: async () => entry.token,
             setToken: async (token) => { entry.token = token; },
@@ -55,14 +55,14 @@ const createStore = function (options) {
         return entry;
     };
 
-    // Branche un socket sur son lobby
+    // Attaches a socket to its lobby
     const attach = function (entry, ws) {
         entry.sockets.set(ws, null);
         ws.on('message', (data, isBinary) => entry.lobby.message(ws, isBinary ? data : data.toString()));
         ws.on('close', async () => {
             await entry.lobby.closed(ws);
             entry.sockets.delete(ws);
-            // Lobby inconnu ou oublié, sans personne : rien à garder
+            // Unknown or forgotten lobby, with nobody: nothing to keep
             if (!entry.token && !entry.sockets.size && lobbies.get(entry.code) === entry)
                 lobbies.delete(entry.code);
         });
@@ -73,7 +73,7 @@ const createStore = function (options) {
         let q = url.searchParams;
 
         if (parts[0] === 'host' && parts.length === 1) {
-            // Nouveau lobby : un code libre
+            // New lobby: a free code
             for (let i = 0; i < 10; i++) {
                 let code = newCode();
                 let entry = get(code);
@@ -104,7 +104,7 @@ const createStore = function (options) {
     return {connect, lobbies};
 };
 
-// Page joueur (fichiers de public/player)
+// Player page (files from public/player)
 const serveStatic = function (req, res) {
     let name = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     if (name === '/')
@@ -118,7 +118,7 @@ const serveStatic = function (req, res) {
     fs.createReadStream(file).pipe(res);
 };
 
-// Routes /auth/discord/* (discord-auth.js), sinon la page joueur
+// /auth/discord/* routes (discord-auth.js), otherwise the player page
 const serve = (env) => async function (req, res) {
     let response = req.url.startsWith('/auth/discord/')
         ? await discordAuth.handle(new Request('http://' + (req.headers.host || '127.0.0.1') + req.url), env).catch(() => null)

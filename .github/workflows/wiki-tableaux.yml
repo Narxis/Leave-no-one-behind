@@ -1,9 +1,9 @@
-# Recopie les tableaux « Dans le jeu » (stats des races, objets, statuts) dans
-# les pages du wiki (Narxis/Leave-no-one-behind-Wiki) quand les fichiers du
-# jeu changent sur prod, ou à la main depuis l'onglet Actions.
-# Le dépôt du jeu est privé : c'est lui qui écrit dans le wiki, avec le secret
-# WIKI_TOKEN (à créer une fois, voir scripts/wiki-tableaux.js). Sans ce secret,
-# l'action donne seulement les pages mises à jour à télécharger (artefact).
+# Copies the "Dans le jeu" tables (race stats, items, statuses) into
+# the wiki pages (Narxis/Leave-no-one-behind-Wiki) when the game files
+# change on prod, or manually from the Actions tab.
+# The game repo is private: it is the one writing to the wiki, with the
+# WIKI_TOKEN secret (create it once, see scripts/wiki-tableaux.js). Without this secret,
+# the action only provides the updated pages to download (artifact).
 name: Tableaux du wiki
 
 on:

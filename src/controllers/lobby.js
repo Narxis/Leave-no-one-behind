@@ -1,12 +1,12 @@
-// Lobby de la partie, côté MJ : le serveur du jeu se connecte au relais
-// (relay/), obtient un code de partie et suit les joueurs qui le rejoignent.
-// Les pages du MJ reçoivent l'état par le WebSocket du jeu (action « lobby »).
-// Gardé en mémoire : un redémarrage du serveur ouvre une nouvelle partie.
+// Game lobby, GM side: the game server connects to the relay
+// (relay/), gets a game code and follows the players who join it.
+// GM pages receive the state through the game WebSocket ("lobby" action).
+// Kept in memory: a server restart opens a new game.
 const WebSocket = require('ws');
 const pkg = require('../../package.json');
 
-// Relais : LNOB_RELAY_URL, sinon celui de package.json (lnob.relayUrl),
-// sinon le relais local de développement (npm run relay)
+// Relay: LNOB_RELAY_URL, otherwise the one in package.json (lnob.relayUrl),
+// otherwise the local development relay (npm run relay)
 const RELAY_URL = String(process.env.LNOB_RELAY_URL || (pkg.lnob && pkg.lnob.relayUrl) || 'http://127.0.0.1:8787').replace(/\/+$/, '');
 
 let socket = null;
@@ -20,7 +20,7 @@ const reset = function () {
 };
 reset();
 
-// Écouteurs des messages et des arrivées des joueurs (remote.js)
+// Listeners for player messages and arrivals (remote.js)
 const listeners = [];
 const onPlayerMessage = (fn) => listeners.push(fn);
 const joinListeners = [];
@@ -36,15 +36,15 @@ const notifyJoin = function (player) {
     }
 };
 
-// Compte Discord vérifié par le relais : seulement l'id, le pseudo et l'URL
-// de l'avatar (cdn de Discord), sinon null
+// Discord account verified by the relay: only the id, the nickname and the avatar
+// URL (Discord cdn), otherwise null
 const cleanDiscord = function (d) {
     if (!d || typeof d !== 'object' || !/^\d{5,25}$/.test(String(d.id)) || !/^https:\/\/cdn\.discordapp\.com\/[\w./?=-]+$/.test(String(d.avatar)))
         return null;
     return {id: String(d.id), name: String(d.name || '').slice(0, 32), avatar: String(d.avatar)};
 };
 
-// Un joueur arrive ou revient : on garde le nom de son perso, s'il en a un
+// A player arrives or comes back: keep their character's name, if they have one
 const addPlayer = function (p) {
     let known = state.players.get(p.id);
     let player = {id: p.id, name: p.name, online: true, character: known ? known.character : null, discord: cleanDiscord(p.discord)};
@@ -54,7 +54,7 @@ const addPlayer = function (p) {
 
 const formatCode = (code) => code ? code.slice(0, 3) + '-' + code.slice(3) : null;
 
-// Étape de la partie (creation, gameLive, postGame…) : le lobby propose de la lancer ou de la reprendre
+// Game step (creation, gameLive, postGame…): the lobby offers to launch or resume it
 const phase = () => (global.CONFIG && CONFIG.gameState) || null;
 let lastPhase = null;
 
@@ -72,7 +72,7 @@ const getState = function () {
 
 const message = () => ({action: 'lobby', error: false, data: getState()});
 
-// Vers les pages du MJ (même format qu'une réponse du WebSocket du jeu)
+// To the GM pages (same format as a game WebSocket answer)
 const broadcast = function () {
     if (!global.WSS)
         return;
@@ -89,13 +89,13 @@ const relaySend = function (obj) {
         socket.send(JSON.stringify(obj));
 };
 
-// Vers les joueurs : un seul (id) ou tous ('*')
+// To the players: just one (id) or all ('*')
 const sendTo = (to, data) => relaySend({type: 'send', to: to, data: data});
 
-// Liste de l'équipage, affichée sur l'écran d'attente des joueurs
+// Crew list, shown on the players' waiting screen
 const sendRoster = () => sendTo('*', {kind: 'roster', players: [...state.players.values()]});
 
-// La partie a changé d'étape : les pages du MJ mettent à jour le bouton de lancement
+// The game changed step: the GM pages update the launch button
 const phaseChanged = function () {
     if (phase() !== lastPhase)
         broadcast();
@@ -119,7 +119,7 @@ const onRelayMessage = function (raw) {
         state.token = msg.token;
         state.status = 'open';
         state.error = null;
-        // Retour après une coupure : ceux qui sont encore là repassent en ligne
+        // Back after an outage: those still there go back online
         for (let p of state.players.values())
             p.online = false;
         let back = msg.players.map(addPlayer);
@@ -150,7 +150,7 @@ const onRelayMessage = function (raw) {
         }
     }
     else if (msg.type === 'error') {
-        // Partie oubliée par le relais (MJ absent trop longtemps) : on en ouvre une nouvelle
+        // Game forgotten by the relay (GM away too long): open a new one
         state.error = msg.message;
         if (msg.code === 'unknown' || msg.code === 'token') {
             state.code = null;
@@ -185,7 +185,7 @@ const connect = function () {
             broadcast();
             return;
         }
-        // Coupure : on retente avec le même code, de plus en plus espacé
+        // Outage: retry with the same code, less and less often
         state.status = state.code ? 'reconnecting' : 'error';
         for (let p of state.players.values())
             p.online = false;
@@ -215,7 +215,7 @@ const close = function () {
     return message();
 };
 
-// Nom du perso lié à ce joueur (null s'il n'en a pas encore)
+// Name of the character linked to this player (null if they don't have one yet)
 const setCharacter = function (id, name) {
     let p = state.players.get(String(id));
     if (!p || p.character === name)
@@ -224,7 +224,7 @@ const setCharacter = function (id, name) {
     changed();
 };
 
-// Compte Discord d'un joueur (écrans du MJ), null s'il ne s'est pas connecté avec
+// A player's Discord account (GM screens), null if they didn't log in with it
 const discordOf = function (id) {
     let p = state.players.get(String(id));
     return p ? p.discord : null;
@@ -237,7 +237,7 @@ const kick = function (id) {
     return message();
 };
 
-// Actions envoyées par les pages du MJ
+// Actions sent by the GM pages
 const handle = function (response) {
     switch (response.action) {
         case 'lobby-open':

@@ -30,19 +30,19 @@ const {Statuses} = require("../models/statuses");
 const {Items} = require("../models/items");
 const drawflow = require("../controllers/drawflow");
 const ws = require("ws");
-// Textes du jeu pour les pages : recalculés à chaque rendu, pour inclure les
-// races customs créées depuis le démarrage
+// Game texts for the pages: recomputed on each render, to include the
+// custom races created since startup
 var langJS = {get lang() { return 'var lang=' + JSON.stringify(LANG).replace(/</g, '\\u003c') + ';'; }};
 // const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
-// Textes de la carte en cours tels que les joueurs les voient (Codex)
+// Texts of the current card as the players see them (Codex)
 const playerViewTexts = function () {
     let card = CONFIG.gameState === 'gameLive' ? playerView.publicCard(require('./deck').getCurrentCard()) : null;
     return card ? [card.desc].concat(card.choices || []) : [];
 };
 
-// Calcule le score final et affiche l'écran de fin (partie réelle et démo)
-// record : vraie fin de partie, le score de l'équipe entre au classement
+// Computes the final score and shows the end screen (real game and demo)
+// record: actual end of game, the team's score enters the leaderboard
 const renderEndScreen = async function (res, ship, planet, scoreCards, record = false) {
     let scoreShip = 30*ship.scanner
         + 30*ship.proximity
@@ -50,8 +50,8 @@ const renderEndScreen = async function (res, ship, planet, scoreCards, record = 
         + 80*ship.construction
         + 120*(ship.dbscience+ship.dbhistory);
 
-    // Les valeurs des modules sont stockées en texte : sans conversion,
-    // fau.val + flo.val concatène ("32" + "31" = "3231") au lieu d'additionner
+    // Module values are stored as text: without conversion,
+    // fau.val + flo.val concatenates ("32" + "31" = "3231") instead of adding
     let mod = (name) => Number(planet.modules[name].val) || 0;
 
     let scorePlanet = 85*mod('oxy')
@@ -72,12 +72,12 @@ const renderEndScreen = async function (res, ship, planet, scoreCards, record = 
         scoreTotal: scoreTotal
     }
 
-    // Réglages avec lesquels la partie a été jouée (ceux du lancement)
+    // Settings the game was played with (those at launch)
     let current = leaderboard.getCurrent();
     let settings = record && current && current.settings ? current.settings : gameSettings.get();
 
-    // Fin de partie : les joueurs en ligne voient le même écran de score
-    // (settings : le récap des réglages en haut de l'écran, settings-recap.ejs)
+    // End of game: online players see the same score screen
+    // (settings: the settings recap at the top of the screen, settings-recap.ejs)
     if (record)
         playerView.setScore({
             cryopods: ship.cryopods, scoreShip: scoreShip, scorePlanet: scorePlanet, scoreCards: scoreCards, scoreTotal: scoreTotal,
@@ -170,7 +170,7 @@ module.exports = {
 
         // if (!data) {
             // data = fs.readFileSync(__dirname + '/../../storage/cache/placesDat.json','utf8');
-        // Seuls les fichiers des lieux (le cache contient aussi les compagnons, le classement…)
+        // Only the place files (the cache also contains the companions, the leaderboard…)
         fs.readdirSync(paths.cache()).filter(file => file.endsWith('_' + PLACESDAT_FILEMAME)).forEach(file => {
             let json = JSON.parse(fs.readFileSync(paths.cache(file),'utf8'));
             let index = Object.keys(json)[0];
@@ -180,7 +180,7 @@ module.exports = {
         // else
         data = JSON.stringify(data);
 
-        // « < » échappé : un texte contenant </script> ne casse pas la page
+        // "<" escaped: a text containing </script> doesn't break the page
         res.render('drawflow', {vars: {dat: data.replace(/</g, '\\u003c')}, lang: langJS, lootItems: combat.getLootList(), statusList: require('../config/statuses.json').map(st => ({slug: st.slug, name: st.name}))});
     },
 
@@ -197,7 +197,7 @@ module.exports = {
             clearStatusesAfterPlanet: gameSettings.get().clearStatusesAfterPlanet});
     },
 
-    // Paramètres de la partie, choisis par le MJ avant la création des persos
+    // Game settings, chosen by the GM before character creation
     settings(req, res) {
         res.render('parametres', {
             lang: langJS,
@@ -210,9 +210,9 @@ module.exports = {
     },
 
     async persos(req, res) {
-        // Nouvelle création : les personnages de la partie précédente sont effacés
-        // (avec leurs objets et les compagnons du MJ). Pas sur un rechargement de
-        // la page elle-même, pour ne pas perdre les joueurs qui viennent de rejoindre
+        // New creation: the characters of the previous game are deleted
+        // (with their items and the GM's companions). Not on a reload of
+        // the page itself, so as not to lose players who just joined
         let from = '';
         try {
             from = new URL(req.get('referer') || '').pathname;
@@ -227,33 +227,33 @@ module.exports = {
             itemRequests.clear();
             planetScan.clear();
             itemUse.clear();
-            // Codex des joueurs : rien de rencontré dans la nouvelle partie
+            // Players' Codex: nothing encountered in the new game
             codex.reset();
         }
         await CONFIG.upsert('gameState', 'creation');
         intro.clear();
         playerView.changed();
-        // Bonus et malus des races (customs comprises), pour l'explication de la répartition des stats
+        // Race bonuses and maluses (customs included), for explaining the stat distribution
         res.render('perso', {lang: langJS, races: races.list(), customRaces: races.allowedState(), settings: gameSettings.get()});
     },
 
-    // Codex complet du MJ : tout le contenu du jeu, et ce que l'équipage a déjà rencontré
+    // Full GM Codex: all the game content, and what the crew has already encountered
     async renderCodex(req, res) {
         await codex.observe(playerViewTexts());
         res.render('codex', {lang: langJS, codex: await codex.forGm()});
     },
 
-    // Éditeur des races customs
+    // Custom races editor
     renderRaces(req, res) {
         res.render('races', {lang: langJS, races: races.list(), maxRaces: races.MAX_RACES});
     },
 
-    // Éditeur d'objets (catalogue src/config/items.json)
+    // Item editor (catalog src/config/items.json)
     async renderItemsEditor(req, res) {
         res.render('items-editor', {lang: langJS, catalog: await itemsEditor.list()});
     },
 
-    // Éditeur d'ennemis et compagnons
+    // Enemy and companion editor
     renderNpcEditor(req, res) {
         res.render('npc-editor', {
             lang: langJS,
@@ -269,7 +269,7 @@ module.exports = {
         res.render('fiche-vaisseau', {lang: langJS});
     },
 
-    // Synopsis : les joueurs en ligne le lisent aussi et votent pour continuer
+    // Synopsis: online players read it too and vote to continue
     synopsis(req, res) {
         intro.set('synopsis');
         playerView.changed();
@@ -302,7 +302,7 @@ module.exports = {
 
         if (CONFIG.gameState !== 'gameLive')
             await CONFIG.upsert('gameState', 'gameLive');
-        // Fin du lancement : les joueurs passent à la première carte
+        // End of launch: the players move on to the first card
         intro.clear();
         playerView.changed();
         //
@@ -334,7 +334,7 @@ module.exports = {
         switch (current_card.type) {
             case TYPE_PLANET: {
                 let played = await cardPop();
-                // Dernière planète du voyage : alerte « réservoirs presque vides »
+                // Last planet of the journey: "réservoirs presque vides" alert
                 vars.lastPlanet = played && played.lastPlanet ? LANG.last_planet : null;
                 res.render('template-planet', vars);
                 break;
@@ -633,12 +633,12 @@ module.exports = {
     res.render('template-planet', vars);
 },
 
-    // Labo de test : une planète tirée au hasard à chaque chargement, à scanner
-    // sans limite de points. Rien n'est lu ni écrit dans la partie en cours
+    // Test lab: a planet drawn at random on each load, to scan
+    // without a point limit. Nothing is read from or written to the current game
     renderPlanetLab(req, res) {
         const BANDS = {1: [1, 500], 2: [501, 800], 3: [801, 1000]};
-        // Graine : tout en découle (tranche si elle n'est pas imposée, stats,
-        // coûts, relief, lunes) ; ?seed=… redonne exactement la même planète
+        // Seed: everything follows from it (range if not forced, stats,
+        // costs, relief, moons); ?seed=… gives exactly the same planet again
         let seed = parseInt(req.query.seed);
         if (!(seed > 0 && seed < 2147483647))
             seed = 1 + Math.floor(Math.random() * 2147483646);
@@ -660,7 +660,7 @@ module.exports = {
 
         let archetype = planetGen.ARCHETYPES.archetypes[planet.archetype];
         let card = {
-            // Graine du rendu (relief, lunes)
+            // Render seed (relief, moons)
             id: seed,
             value: planet.score,
             name: archetype ? archetype.name : '',
@@ -682,7 +682,7 @@ module.exports = {
         });
     },
 
-    // Démo de l'écran de fin avec un vaisseau et une planète fictifs
+    // End screen demo with a fictional ship and planet
     endScreen(req, res) {
         let ship = {
             name: '',
@@ -725,7 +725,7 @@ module.exports = {
         });
     },
 
-    // Partie en ligne : code à donner aux joueurs et joueurs connectés
+    // Online game: code to give to the players and connected players
     lobby(req, res) {
         res.render('lobby', {lobby: lobby.getState(), lang: langJS, wikiUrl: codex.WIKI_URL});
     },
@@ -736,7 +736,7 @@ module.exports = {
 
     async land(req, res) {
         let ship = await new Ship().getData();
-        // Pas de partie en cours : retour à l'accueil au lieu de crasher
+        // No game in progress: back to the home page instead of crashing
         if (!ship)
             return res.redirect('/');
         await ship.land();
@@ -776,7 +776,7 @@ module.exports = {
     }
 
     let planet = await lastPlanet();
-    // Aucune planète jouée : pas de score possible
+    // No planet played: no score possible
     if (!planet)
         return res.redirect('/');
 
@@ -787,7 +787,7 @@ module.exports = {
 
     async start(req, res) {
 
-    // Fiche du vaisseau : les joueurs en ligne la lisent aussi et votent pour continuer
+    // Ship sheet: online players read it too and vote to continue
     intro.set('ship');
     playerView.changed();
     res.render('fiche-vaisseau', {lang: langJS});
@@ -806,7 +806,7 @@ module.exports = {
     let items = new Items();
     await items.hydrateDB();
     await items.giveAllStarters();
-    // Bourses de départ (config/currency.json), boutique fermée, atelier vide
+    // Starting purses (config/currency.json), shop closed, workshop empty
     await money.reset();
     merchant.reset();
     craft.reset();

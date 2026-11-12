@@ -18,7 +18,7 @@ module.exports = {
         if (!items.length)
             embed.setDescription('Ton inventaire est vide.');
         else
-            // 25 champs au plus dans un embed Discord
+            // 25 fields at most in a Discord embed
             embed.addFields(items.slice(0, 25).map(item => ({
                 name: item.name + (item.count > 1 ? ' ×' + item.count : ''),
                 value: (item.desc || '—').slice(0, 1024)

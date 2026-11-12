@@ -1,13 +1,13 @@
-/* Écran de jeu porté pour les joueurs (screen.html et planet.html, générés
-   depuis template-card.ejs et template-planet.ejs) : seuls les réglages
-   propres aux joueurs sont ici. */
+/* Game screen ported for the players (screen.html and planet.html, generated
+   from template-card.ejs and template-planet.ejs): only the
+   player-specific settings are here. */
 
-/* Le fond étoilé est dessiné par la page joueur, derrière ce cadre */
+/* The starry background is drawn by the player page, behind this frame */
 html, body {
     background: transparent !important;
 }
 
-/* Boutons et saisies du MJ : cachés, la place reste la même que chez lui */
+/* GM buttons and inputs: hidden, the space stays the same as on their side */
 .mod-b,
 .modform.form-mot, #modtab .modform,
 .todoList form.add,
@@ -17,8 +17,8 @@ html, body {
     pointer-events: none !important;
 }
 
-/* Onglets des modules ouverts : la valeur du module (screen.js) à la place
-   des + et - du MJ, centrée sous le nom */
+/* Open module tabs: the module value (screen.js) instead of
+   the GM's + and -, centered under the name */
 .tab .player-mod-value {
     position: absolute;
     top: 20px;
@@ -36,8 +36,8 @@ html, body {
     pointer-events: none;
 }
 
-/* Texte trop long pour la carte : la carte garde sa taille, le texte défile
-   dedans, sans ascenseur visible */
+/* Text too long for the card: the card keeps its size, the text scrolls
+   inside, without a visible scrollbar */
 .card-text {
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -46,17 +46,17 @@ html, body {
 .card-text::-webkit-scrollbar {
     display: none;
 }
-/* (les cases des réponses, posées sur le texte, laissent passer la molette) */
+/* (the answer boxes, placed over the text, let the mouse wheel through) */
 .container-card .answer {
     pointer-events: none;
 }
 
-/* Cases du type de jet (perso / module) : affichées, mais posées par le jeu */
+/* Roll type boxes (character / module): shown, but set by the game */
 .roll-type {
     pointer-events: none;
 }
 
-/* Choix : le joueur vote, le MJ tranche */
+/* Choices: the player votes, the GM decides */
 #choicetab .choice {
     cursor: default;
 }
@@ -68,12 +68,12 @@ html, body {
     outline-offset: -2px;
 }
 
-/* Son propre onglet : nom en couleur */
+/* Their own tab: name in color */
 .player-tab.player-me .player-name-text {
     color: var(--ui-accent, #ffcc00);
 }
 
-/* Butin : c'est le MJ qui le distribue */
+/* Loot: the GM is the one who distributes it */
 #card-loot-all,
 .combat-loot-hint {
     display: none !important;
@@ -84,8 +84,8 @@ html, body {
     touch-action: auto;
 }
 
-/* Objets (screen.js) : le joueur glisse les siens pour les donner, et
-   demande d'un clic ceux des autres et du vaisseau */
+/* Items (screen.js): the player drags their own to give them, and
+   requests those of others and of the ship with a click */
 .player-tab:not(.npc-tab) .itemlist-line[data-slug],
 .todos li[data-slug] {
     cursor: default;
@@ -105,8 +105,8 @@ html, body {
     color: var(--ui-accent, #ffcc00);
 }
 
-/* Planète (planet.html) : les boutons des scans et de l'atterrissage servent
-   à voter ; le scan et l'atterrissage restent faits par le MJ */
+/* Planet (planet.html): the scan and landing buttons are used
+   to vote; scanning and landing are still done by the GM */
 .p-txt, .land-button, .leave-button, .use-drone {
     cursor: default;
 }
@@ -118,7 +118,7 @@ html, body {
     outline-offset: 2px;
 }
 
-/* Écran de fin (end.html) : « Suivant » mène le MJ au classement */
+/* End screen (end.html): "Suivant" takes the GM to the leaderboard */
 .endscreen-container ~ .next {
     display: none !important;
 }

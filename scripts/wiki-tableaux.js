@@ -1,20 +1,20 @@
-// Tableaux « Dans le jeu » du wiki (dépôt Leave-no-one-behind-Wiki), tirés
-// des fichiers du jeu, qui font foi pour les chiffres :
-//   node scripts/wiki-tableaux.js <dossier du wiki> [--customs] [--check]
-// Dans les pages du wiki, seul le texte entre deux marqueurs est remplacé :
+// "Dans le jeu" tables of the wiki (Leave-no-one-behind-Wiki repo), taken
+// from the game files, which are authoritative for the numbers:
+//   node scripts/wiki-tableaux.js <wiki folder> [--customs] [--check]
+// In the wiki pages, only the text between two markers is replaced:
 //   <!-- jeu:debut stats-races -->  …  <!-- jeu:fin -->
-// Tableaux possibles : stats-races (toutes, ou « stats-races fnek » /
-// « stats-races nek_eau,nek_feu »), objets-depart, objets-autres, statuts.
-// --customs ajoute les races customs de l'éditeur /races (dossier de données
-// local) à « stats-races » ; --check ne modifie rien et sort en erreur si une
-// page n'est pas à jour. À la main : npm run wiki-tableaux -- ../Leave-no-one-behind-Wiki
+// Possible tables: stats-races (all, or "stats-races fnek" /
+// "stats-races nek_eau,nek_feu"), objets-depart, objets-autres, statuts.
+// --customs adds the custom races of the /races editor (local data
+// folder) to "stats-races"; --check changes nothing and exits with an error if a
+// page isn't up to date. By hand: npm run wiki-tableaux -- ../Leave-no-one-behind-Wiki
 //
-// Lancé aussi par .github/workflows/wiki-tableaux.yml, qui pousse sur le wiki
-// avec le secret WIKI_TOKEN, à créer une fois : sur GitHub, Settings du compte →
-// Developer settings → Personal access tokens → Fine-grained tokens, accès au
-// seul dépôt Leave-no-one-behind-Wiki, permission « Contents : Read and write » ;
-// puis dans ce dépôt : Settings → Secrets and variables → Actions → New
-// repository secret, nom WIKI_TOKEN.
+// Also run by .github/workflows/wiki-tableaux.yml, which pushes to the wiki
+// with the WIKI_TOKEN secret, to create once: on GitHub, account Settings →
+// Developer settings → Personal access tokens → Fine-grained tokens, access to
+// the Leave-no-one-behind-Wiki repo only, "Contents: Read and write" permission;
+// then in this repo: Settings → Secrets and variables → Actions → New
+// repository secret, name WIKI_TOKEN.
 const fs = require('fs');
 const path = require('path');
 
@@ -24,7 +24,7 @@ const readJson = (file) => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'ut
 const STATS = [['combat', 'Combat'], ['pilotage', 'Pilotage'], ['engineering', 'Ingénierie'], ['survival', 'Survie'], ['recon', 'Reconnaissance']];
 const POOLS = {starter: 'Départ', electronique: 'Électronique'};
 const BLOCK = /(<!-- jeu:debut ([\w-]+)(?: ([\w,-]+))? -->)[\s\S]*?(<!-- jeu:fin -->)/g;
-// Pages jamais touchées
+// Pages never touched
 const SKIP = ['.git', 'archives-notion', 'node_modules', '_site'];
 
 const signed = (v) => v > 0 ? '+' + v : (v < 0 ? '−' + (-v) : '0');
@@ -34,7 +34,7 @@ const table = (head, rows) => ['| ' + head.join(' | ') + ' |', '| ' + head.map((
     .concat(rows.map(r => '| ' + r.map(cell).join(' | ') + ' |')).join('\n');
 const note = (files) => '_Généré depuis ' + files.map(f => '`' + f + '`').join(', ') + ' du jeu : ne pas modifier à la main._';
 
-// Races de base (raceStats.json, noms de lang.json), puis les customs si demandé
+// Base races (raceStats.json, names from lang.json), then the customs if requested
 const loadRaces = function (withCustoms) {
     let lang = readJson('src/config/lang.json');
     let base = readJson('src/config/raceStats.json');
@@ -100,7 +100,7 @@ const generators = {
     }
 };
 
-// Une page : ses blocs remplacés (le reste du texte ne bouge pas)
+// A page: its blocks replaced (the rest of the text doesn't move)
 const render = function (text, opts = {}) {
     let eol = text.includes('\r\n') ? '\r\n' : '\n';
     return text.replace(BLOCK, (all, start, name, arg, end) => {
@@ -124,7 +124,7 @@ const pages = function (dir) {
     return out;
 }
 
-// Met à jour les pages du wiki ; rend la liste des pages modifiées (ou à modifier)
+// Updates the wiki pages; returns the list of changed pages (or pages to change)
 const run = function (wikiDir, opts = {}) {
     let changed = [];
     for (let file of pages(wikiDir)) {

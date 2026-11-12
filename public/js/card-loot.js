@@ -1,13 +1,13 @@
-// Butin d'une carte (src/controllers/cardLoot.js) : quand un choix rapporte des
-// objets, ils s'affichent sur la carte comme le butin d'un combat gagné. Le MJ
-// les glisse sur les joueurs (inventory.js) ou les range tous dans le vaisseau ;
-// l'histoire ne continue qu'une fois le butin vide.
+// Card loot (src/controllers/cardLoot.js): when a choice yields
+// items, they show on the card like the loot of a won combat. The GM
+// drags them onto the players (inventory.js) or stores them all in the ship;
+// the story only continues once the loot is empty.
 var CardLoot = (function () {
     const area = document.getElementById('card-loot-area');
     const box = document.getElementById('card-loot');
     const allBtn = document.getElementById('card-loot-all');
     let items = [];
-    let waiting = null;     // résolution de collect() quand le butin est vide
+    let waiting = null;     // resolves collect() when the loot is empty
 
     const el = (tag, cls, text) => {
         let e = document.createElement(tag);
@@ -16,7 +16,7 @@ var CardLoot = (function () {
         return e;
     };
 
-    // Même rendu que le butin de combat (combat.js), repéré « card-loot » pour le glisser
+    // Same rendering as the combat loot (combat.js), tagged "card-loot" for dragging
     function render(still, doneText) {
         box.innerHTML = '';
         box.classList.toggle('loot-still', still);
@@ -68,8 +68,8 @@ var CardLoot = (function () {
         }
         else if (!area.classList.contains('combat-none'))
             render(true, ev.type === 'all-taken' ? 'Tout le butin a été rangé dans le vaisseau' : 'Tout le butin a été distribué');
-        // Butin vide : on laisse lire le message, puis l'histoire reprend
-        // (tout de suite si aucun objet n'était valable)
+        // Empty loot: let the message be read, then the story resumes
+        // (right away if no item was valid)
         if (!items.length && waiting) {
             let done = waiting;
             waiting = null;
@@ -86,7 +86,7 @@ var CardLoot = (function () {
         setTimeout(() => allBtn.disabled = false, 1500);
     });
 
-    // Affiche le butin d'un choix et attend qu'il soit entièrement distribué
+    // Shows a choice's loot and waits until it is fully distributed
     function collect(list) {
         if (!list || !list.length)
             return Promise.resolve();

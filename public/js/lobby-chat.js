@@ -1,11 +1,11 @@
-// Chat de la partie en ligne, côté MJ (lobby.ejs) : le salon commun et une
-// conversation privée avec chaque joueur. Les messages arrivent par le
-// WebSocket du jeu (actions « chat » et « chat-history »).
+// Online game chat, GM side (lobby.ejs): the common room and a
+// private conversation with each player. Messages arrive through the
+// game WebSocket ("chat" and "chat-history" actions).
 (function () {
     const $ = (id) => document.getElementById(id);
-    const ROOM = '';      // salon commun
+    const ROOM = '';      // common room
     let messages = [];
-    let players = [];     // joueurs du lobby (pour les conversations privées)
+    let players = [];     // lobby players (for private conversations)
     let channel = ROOM;
     const unread = new Map();
 
@@ -22,7 +22,7 @@
     };
 
     const renderChannels = function () {
-        // Joueurs du lobby, plus ceux qui ont écrit puis sont partis
+        // Lobby players, plus those who wrote and then left
         let ids = new Map(players.map(p => [p.id, p.character || p.name]));
         for (let m of messages)
             if (m.to && !ids.has(m.to))
@@ -89,7 +89,7 @@
         wsLNOB.send({action: 'chat-send', data: {text: text, to: channel || null}});
         $('chat-text').value = '';
     });
-    // Entrée envoie, Maj+Entrée va à la ligne
+    // Enter sends, Shift+Enter adds a new line
     $('chat-text').addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();

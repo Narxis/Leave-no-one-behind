@@ -1,13 +1,13 @@
 const fs = require('fs');
 
-// Alliés (PNJ) créés par le MJ : ils ont les mêmes stats que les joueurs et
-// s'affichent sous la carte comme eux. Ils ne sont pas en base : on les garde
-// dans un fichier pour qu'ils survivent à un redémarrage du serveur
-// Dans le dossier de données (voir config/paths.js)
+// Allies (NPCs) created by the GM: they have the same stats as the players and
+// show under the card like them. They aren't in the database: we keep them
+// in a file so they survive a server restart
+// In the data folder (see config/paths.js)
 const FILE = require('../config/paths').cache('allies.json');
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon', 'moral'];
 const MAX_ALLIES = 6;
-// Noms des compagnons tirés au hasard, par race
+// Companion names drawn at random, per race
 const NAMES_FILE = require('path').join(__dirname, '../config/companionNames.json');
 const races = require('./races');
 
@@ -54,7 +54,7 @@ const add = function (data) {
     return {type: 'add', id: ally.id};
 }
 
-// Le MJ modifie un champ : nom, rôle (affiché à la place de la race) ou stat
+// The GM edits a field: name, role (shown instead of the race) or stat
 const update = function (data) {
     let ally = findAlly(data.id);
     if (!ally)
@@ -81,9 +81,9 @@ const remove = function (data) {
     return {type: 'remove', id: ally.id};
 }
 
-// Compagnon tiré d'un clic : race au hasard (ou celle demandée), stats
-// tirées comme un personnage joueur (statRolls : 50 + le meilleur ou le pire
-// de |bonus|+1 dés de 50, moral 100) et nom pris dans la liste de sa race
+// Companion drawn with a click: random race (or the requested one), stats
+// drawn like a player character (statRolls: 50 + the best or worst
+// of |bonus|+1 50-sided dice, morale 100) and name taken from its race's list
 const randomCompanion = function (data = {}, random = Math.random) {
     let list = races.list();
     let race = list.find(r => r.slug === data.race) || list[Math.floor(random() * list.length)];
@@ -102,7 +102,7 @@ const randomCompanion = function (data = {}, random = Math.random) {
     let taken = allies.map(a => a.name.toLowerCase());
     let free = pool.filter(n => !taken.includes(String(n).toLowerCase()));
     let name = (free.length ? free : pool)[Math.floor(random() * (free.length || pool.length))] || 'Compagnon';
-    // Tous les noms déjà pris : un numéro les distingue
+    // All names already taken: a number tells them apart
     if (!free.length)
         name = String(name).slice(0, 17) + ' ' + (allies.length + 1);
     ally.name = String(name).slice(0, 20);
@@ -119,15 +119,15 @@ const readNames = function () {
 
 const addRandom = (data) => add(randomCompanion(data));
 
-// Même formule que Player.roll pour un jet sans module
+// Same formula as Player.roll for a roll without a module
 const roll = function (ally, stat) {
     let dice = Math.floor(Math.random() * 100) + 1;
     let result = Math.ceil(dice * ally[stat] / 100 + (ally.moral - 50) / 4);
     return {dice_result: dice, result: result, success: result >= 50};
 }
 
-// Jet d'un compagnon hors combat, lancé par le MJ : affiché comme celui
-// d'un joueur (onglet sous la carte, panneau du MJ)
+// Companion roll outside combat, made by the GM: shown like
+// a player's (tab under the card, GM panel)
 const ROLL_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 const rollAction = function (data = {}) {
     let ally = findAlly(data.id);
@@ -156,7 +156,7 @@ const handle = function (response) {
     };
 }
 
-// Nouvelle équipe : plus aucun compagnon
+// New team: no more companions
 const clear = function () {
     allies = [];
     nextId = 1;

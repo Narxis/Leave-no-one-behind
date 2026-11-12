@@ -1,18 +1,18 @@
-/*---vvv---Rafraîchissement de la page carte (chargé en dernier)---vvv---*/
-/* Pas de transform sur les éléments animés : move-right / open,
-   slide-right / close-left, move-down et choice-hover les déplacent */
+/*---vvv---Card page restyle (loaded last)---vvv---*/
+/* No transform on animated elements: move-right / open,
+   slide-right / close-left, move-down and choice-hover move them */
 
-/*---Cadre de la carte---*/
+/*---Card frame---*/
 .container-card {
     border: 1px solid var(--ui-border-strong);
     border-radius: 24px;
     box-shadow: var(--ui-shadow), inset 0 0 60px rgb(0 0 0 / 50%);
 }
 
-/* Fond illustré à la place de la photo Pexels (trop réaliste pour le
-   style du jeu). Couleurs sourdes et étoiles clairsemées. Étoiles proches
-   et nébuleuses suivent la parallaxe de template-card.js (--bX / --bY),
-   étoiles lointaines fixes */
+/* Illustrated background instead of the Pexels photo (too realistic for the
+   game's style). Muted colors and sparse stars. Near stars
+   and nebulae follow the parallax of template-card.js (--bX / --bY),
+   distant stars are fixed */
 .container-card {
     background-color: #0a0920;
     background-image:
@@ -40,11 +40,11 @@
         repeat,
         no-repeat, no-repeat,
         no-repeat;
-    /* parallaxe lissée (la transition du transform d origine est gardée) */
+    /* smoothed parallax (the original transform transition is kept) */
     transition: transform .6s 1s, background-position .35s ease-out;
 }
 
-/* Grille de points plus discrète (s'atténue encore au survol, comme avant) */
+/* More discreet dot grid (fades further on hover, as before) */
 .bg-dot {
     opacity: 0.45;
 }
@@ -59,7 +59,7 @@
     opacity: 0.45;
 }
 
-/*---Onglets des modules (à droite de la carte)---*/
+/*---Module tabs (right of the card)---*/
 .tab,
 .tab-moteurs,
 .tab-scan,
@@ -91,8 +91,8 @@
     background: transparent;
 }
 
-/* L'anneau sert de fond à l'icône : pas de texte ni de filtre de teinte
-   qui fausserait la couleur d'état */
+/* The ring is the icon's background: no text nor hue filter
+   that would distort the state color */
 .mod-button .dial svg.ui-gauge,
 .dial svg.ui-gauge {
     animation: none;
@@ -104,9 +104,9 @@
     fill: transparent;
 }
 
-/* Anneau et icône centrés tous les deux au milieu du bouton
-   (avant : anneau décalé en dur, icône centrée + petits décalages par id) */
-/* Centre aligné sur celui de l'arrondi de l'onglet (rayon 36px) */
+/* Ring and icon both centered in the middle of the button
+   (before: hard-coded ring offset, centered icon + small offsets per id) */
+/* Center aligned with the tab's rounded corner center (36px radius) */
 .mod-button svg.ui-gauge {
     left: calc(100% - 36px);
     top: 50%;
@@ -126,13 +126,13 @@
     filter: saturate(0.85) drop-shadow(0 0 4px rgb(0 0 0 / 60%));
 }
 
-/* Icône scanner : le globe est en haut à gauche de l'image (la loupe
-   dépasse en bas à droite), on centre le globe et non l'image */
+/* Scanner icon: the globe is at the top left of the image (the magnifier
+   sticks out at the bottom right), we center the globe and not the image */
 .mod-button #img-scan {
     transform: translate(calc(-50% + 3px), calc(-50% + 3px)) !important;
 }
 
-/* Infobulle "Moteurs 100%" */
+/* "Moteurs 100%" tooltip */
 [data-tooltip]:before {
     padding: 6px 10px;
     border: 1px solid var(--ui-border);
@@ -150,9 +150,9 @@
     border-right-color: var(--ui-border-strong);
 }
 
-/* Infobulles des modules : centrées verticalement sur l'anneau, sur une
-   ligne (avant : départ à 30 % de la hauteur et largeur fixe de 122px,
-   donc les libellés longs passaient sur 2 lignes et descendaient) */
+/* Module tooltips: vertically centered on the ring, on one
+   line (before: starting at 30% of the height with a fixed 122px width,
+   so long labels wrapped onto 2 lines and moved down) */
 .mod-button[data-tooltip]:before {
     top: 50%;
     left: calc(100% + 14px);
@@ -169,7 +169,7 @@
     transform: translateY(-50%);
 }
 
-/*---Steppers - valeur + (onglets modules et modules secondaires)---*/
+/*---Steppers - value + (module tabs and secondary modules)---*/
 .tab .mod-b,
 .mods-left .mod-b,
 .human .mod-b {
@@ -214,7 +214,7 @@
     box-shadow: inset 0 0 0 1px var(--ui-accent), 0 0 0 3px rgb(255 204 0 / 15%);
 }
 
-/*---Choix sous la carte---*/
+/*---Choices under the card---*/
 .choice {
     border: 1px solid var(--ui-border-strong);
     border-top: none;
@@ -236,7 +236,7 @@
     box-shadow: 0 0 22px -6px rgb(255 204 0 / 45%);
 }
 
-/*---Choix en attente (délai d'annulation, card.js)---*/
+/*---Pending choice (cancel delay, card.js)---*/
 .has-pending .choice:not(.choice-pending) {
     opacity: 0.55;
 }
@@ -287,9 +287,9 @@
     to { transform: scaleX(0); }
 }
 
-/*---Jet d'un choix : en attente du résultat (card.js)---*/
+/*---Choice roll: waiting for the result (card.js)---*/
 .choice.card-roll {
-    /* Plus haut qu'un choix : il descend sous la carte au lieu de monter dessous */
+    /* Taller than a choice: it goes down under the card instead of up below it */
     align-self: flex-start;
     top: 205px;
     flex-direction: column;
@@ -367,7 +367,7 @@
     color: var(--ui-text-dim);
 }
 
-/* Votes des joueurs en ligne sous l'intitulé du choix */
+/* Online players' votes under the choice label */
 .choice .vote-count {
     position: absolute;
     left: 0;
@@ -380,8 +380,8 @@
     letter-spacing: 0.06em;
 }
 
-/* Qui a voté : logo du rôle de chaque joueur (initiale sans rôle), avant le
-   nombre de voix (players.js, voteRoleIcons) */
+/* Who voted: role logo of each player (initial without a role), before the
+   vote count (players.js, voteRoleIcons) */
 .vote-roles {
     display: inline-flex;
     gap: 3px;
@@ -410,12 +410,12 @@
     letter-spacing: 0;
 }
 
-/* Choix en attente : « Annuler » prend la place du compteur de votes */
+/* Pending choice: "Annuler" takes the place of the vote counter */
 .choice.choice-pending .vote-count {
     display: none;
 }
 
-/*---Volet gauche : bouton menu, objets, modules secondaires---*/
+/*---Left panel: menu button, items, secondary modules---*/
 .consommable-tab {
     border: 1px solid var(--ui-border-strong);
     border-right: none;
@@ -486,7 +486,7 @@
     text-shadow: none;
 }
 
-/*---Encadré Humains / Status (en haut à droite)---*/
+/*---Humans / Status box (top right)---*/
 .human-status {
     border: 1px solid var(--ui-border-strong);
     border-radius: 16px;
@@ -502,11 +502,11 @@
     letter-spacing: 0.03em;
 }
 
-/*---^^^---Rafraîchissement de la page carte---^^^---*/
+/*---^^^---Card page restyle---^^^---*/
 
-/*---vvv---Volet objets : lignes, case "utilisé" et bouton +---vvv---*/
+/*---vvv---Items panel: rows, "used" box and + button---vvv---*/
 
-/* Bouton + du champ "Add item..." centré verticalement (marge de 5px avant) */
+/* + button of the "Add item..." field vertically centered (5px margin before) */
 .content .input-buttons {
     display: flex;
     align-items: center;
@@ -517,7 +517,7 @@
     font-size: 16px;
 }
 
-/* Ligne d'objet : case | icône | nom, alignés */
+/* Item row: box | icon | name, aligned */
 .content input[type="checkbox"]+label {
     display: flex;
     align-items: center;
@@ -548,7 +548,7 @@
     font-size: 12px;
 }
 
-/* Quantité : à droite du nom, et petit champ avant le + */
+/* Quantity: to the right of the name, and a small field before the + */
 .todos .item-count {
     flex: none;
     margin-left: auto;
@@ -581,8 +581,8 @@
     text-overflow: ellipsis;
 }
 
-/* Case "utilisé" : rond aux couleurs du jeu au lieu du rond blanc,
-   coche dessinée en CSS (avant : image chargée depuis un site externe) */
+/* "Used" box: circle in the game colors instead of the white circle,
+   checkmark drawn in CSS (before: image loaded from an external site) */
 .content input[type="checkbox"]+label span.check {
     left: 10px;
     top: 50%;
@@ -637,9 +637,9 @@
     color: var(--ui-danger);
 }
 
-/*---^^^---Volet objets---^^^---*/
+/*---^^^---Items panel---^^^---*/
 
-/* ---- Humains gagnés / perdus par un choix ---- */
+/* ---- Humans gained / lost by a choice ---- */
 .human {
     position: relative;
 }
@@ -686,9 +686,9 @@
     }
 }
 
-/* ---- Légende des statistiques à gauche de la carte ---- */
-/* Le panneau des objets et modules, ouvert, passe par-dessus : la légende
-   s'efface pour ne pas bloquer ses objets (glisser vers les joueurs) */
+/* ---- Statistics legend to the left of the card ---- */
+/* The items and modules panel, when open, goes on top: the legend
+   fades out so it doesn't block its items (dragging to the players) */
 .card-legend {
     transition: opacity 200ms var(--ui-ease);
 }
@@ -698,17 +698,17 @@ body:has(.consommable-tab.open-left) .card-legend {
     pointer-events: none;
 }
 
-/* Pas la place à côté de la carte sur les petits écrans */
+/* No room next to the card on small screens */
 @media (max-width: 1350px) {
     .card-legend {
         display: none;
     }
 }
 
-/* ---- Plan du vaisseau (F1) ----
-   L'ancien style inversait toutes les couleurs (filter: invert) pour obtenir
-   des murs blancs. On se sert maintenant de l'image des murs comme masque,
-   ce qui permet de les teinter comme le reste de l'interface */
+/* ---- Ship map (F1) ----
+   The old style inverted all colors (filter: invert) to get
+   white walls. We now use the wall image as a mask,
+   which lets us tint them like the rest of the interface */
 .plan-container {
     left: 50%;
     z-index: 50;
@@ -733,12 +733,12 @@ body:has(.consommable-tab.open-left) .card-legend {
     filter: none;
 }
 
-/* Le reste de l'écran s'assombrit derrière le plan */
+/* The rest of the screen darkens behind the map */
 .mapshow .plan-card {
     box-shadow: var(--ui-shadow), 0 0 0 100vmax rgb(5 4 15 / 55%);
 }
 
-/* Grille discrète façon plan technique */
+/* Discreet grid, blueprint style */
 .plan-card::before {
     content: '';
     position: absolute;
@@ -766,7 +766,7 @@ body:has(.consommable-tab.open-left) .card-legend {
     opacity: 0;
 }
 
-/* Plan recentré dans le cadre (il était décalé de 25px vers la gauche) */
+/* Map re-centered in the frame (it was shifted 25px to the left) */
 .plan-empty {
     left: -575px;
     background: linear-gradient(160deg, rgb(205 198 255 / 90%), rgb(140 200 230 / 80%));
@@ -785,7 +785,7 @@ body:has(.consommable-tab.open-left) .card-legend {
     display: none;
 }
 
-/* ---- Écran de combat (par-dessus la carte) ---- */
+/* ---- Combat screen (over the card) ---- */
 .combat-container {
     box-sizing: border-box;
     width: 752px;
@@ -807,14 +807,14 @@ body:has(.consommable-tab.open-left) .card-legend {
     z-index: 4;
 }
 
-/* display: flex ci-dessus écrase .combat-none de template-card.css */
+/* display: flex above overrides .combat-none from template-card.css */
 .combat-container.combat-none {
     display: none;
 }
 
-/* Pendant un combat, l'interface hors combat (choix de la carte, chrono,
-   modules du vaisseau, butin d'un choix) est masquée et ne réagit plus aux
-   clics : elle reste en place, telle quelle, pour la fin du combat */
+/* During combat, the non-combat interface (card choices, timer,
+   ship modules, choice loot) is hidden and no longer reacts to
+   clicks: it stays in place, as is, for the end of the combat */
 body.combat-mode #choicetab,
 body.combat-mode #bigboite,
 body.combat-mode #modtab,
@@ -860,7 +860,7 @@ body.combat-mode #card-loot-area {
     color: var(--ui-text-dim);
 }
 
-/* Ordre de jeu (initiative) : le combattant dont c'est le tour en avant */
+/* Turn order (initiative): the fighter whose turn it is in front */
 .combat-order {
     display: none;
     flex-wrap: wrap;
@@ -997,7 +997,7 @@ body.combat-mode #card-loot-area {
     color: var(--ui-text);
 }
 
-/* Animations des attaques */
+/* Attack animations */
 .combat-enemy.hit {
     animation: combat-shake .4s;
 }
@@ -1048,7 +1048,7 @@ body.combat-mode #card-loot-area {
     100% { opacity: 0; transform: translateY(-26px); }
 }
 
-/* Victoire : les ennemis laissent place au butin */
+/* Victory: the enemies make way for the loot */
 .combat-loot {
     display: none;
 }
@@ -1140,7 +1140,7 @@ body.combat-mode #card-loot-area {
     70% { opacity: 1; transform: scale(1.06); }
 }
 
-/* Onglet du joueur / compagnon attaqué par un ennemi */
+/* Tab of the player / companion attacked by an enemy */
 .player-tab.under-attack {
     animation: tab-hit .6s var(--ui-ease);
 }
@@ -1167,7 +1167,7 @@ body.combat-mode #card-loot-area {
     font-size: 24px;
 }
 
-/* Attaque désignée par le MJ : le joueur doit lancer /roll Combat */
+/* Attack designated by the GM: the player must roll /roll Combat */
 .combat-pending {
     display: none;
     flex-wrap: wrap;
@@ -1218,13 +1218,13 @@ body.combat-mode #card-loot-area {
     box-shadow: 0 0 0 1px var(--ui-danger), 0 0 22px rgb(255 90 110 / 30%);
 }
 
-/* Journal */
+/* Log */
 .combat-log {
     display: flex;
     flex-direction: column;
     gap: 3px;
     min-height: 74px;
-    /* Défilement si le journal déborde */
+    /* Scrolling if the log overflows */
     max-height: 110px;
     overflow-y: auto;
     padding-top: 10px;
@@ -1245,7 +1245,7 @@ body.combat-mode #card-loot-area {
     color: var(--ui-danger);
 }
 
-/* Butin d'un choix de carte (card-loot.js) : le cadre du combat, aux couleurs du butin */
+/* Card choice loot (card-loot.js): the combat frame, in loot colors */
 .card-loot-area {
     border-color: rgb(255 204 0 / 45%);
     background:
@@ -1286,7 +1286,7 @@ body.combat-mode #card-loot-area {
     display: none;
 }
 
-/* Statuts posés par le MJ sur un ennemi */
+/* Statuses set by the GM on an enemy */
 .combat-statuses {
     display: flex;
     flex-wrap: wrap;
@@ -1318,7 +1318,7 @@ body.combat-mode #card-loot-area {
     text-shadow: 0 0 10px rgb(123 226 107 / 60%);
 }
 
-/* Renfort ennemi qui entre en combat */
+/* Enemy reinforcement entering combat */
 .combat-enemy.arriving {
     animation: combat-arrive .5s var(--ui-ease);
 }
@@ -1327,9 +1327,9 @@ body.combat-mode #card-loot-area {
     0% { opacity: 0; transform: translateY(-14px) scale(.9); }
 }
 
-/* Barre de vie des joueurs et compagnons (1 moral = 10 PV), sous leur nom,
-   visible seulement pendant un combat, avec les statuts en dessous. L'onglet
-   replié remonte un peu et les stats descendent d'autant pour leur faire de la place */
+/* Health bar of players and companions (1 morale = 10 HP), under their name,
+   visible only during combat, with statuses below. The collapsed
+   tab moves up a bit and the stats move down as much to make room for them */
 .tab-hp {
     display: none;
     position: absolute;
@@ -1389,7 +1389,7 @@ body.combat-mode .player-tab .player-stats {
     color: #b98cff;
 }
 
-/* Statuts d'un joueur ou compagnon, sous sa barre de vie */
+/* Statuses of a player or companion, under their health bar */
 .tab-statuses {
     position: absolute;
     top: 108px;

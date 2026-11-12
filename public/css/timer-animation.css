@@ -12,8 +12,8 @@
   transform: rotate(-14deg);
 }
 
-/* Le flottement passe par translate/rotate et ne s'arrête jamais : la vrille
-   et le retour (sur transform) s'y ajoutent sans saut au début ni à la fin */
+/* The floating goes through translate/rotate and never stops: the spin
+   and the return (on transform) add to it without a jump at the start or end */
 .shipflotte {
   animation: shipfloat 10s ease-in-out infinite;
 }
@@ -353,7 +353,7 @@
 
 /* ---^^^---Timer Flash----^^^--- */
 /* ---^^^---Timer Idle----^^^--- */
-/* ---vvv---Laser boule---vvv---*/
+/* ---vvv---Laser ball---vvv---*/
 #bigboite.idle .pop {
   transition: opacity 3s;
   opacity: 1;
@@ -529,7 +529,7 @@
   }
 }
 
-/*---^^^------Laser boule-----^^^---*/
+/*---^^^------Laser ball-----^^^---*/
 /*---vvv------Timer Shot------vvv---*/
 #bigboite.shot #arm1 {
   opacity: 1;
@@ -663,8 +663,8 @@
   display: none;
 }
 
-/* Le lâcher est calé sur l'animation du bras (même départ, délai de 1,6 s) :
-   le pistolet lancé prend exactement la place de celui de la pince */
+/* The drop is synced with the arm animation (same start, 1.6 s delay):
+   the thrown gun takes exactly the place of the one in the claw */
 #bigboite.shot #robot-arm2 {
   position: absolute;
   top: 0px;
@@ -685,7 +685,7 @@
 }
 
 @keyframes yeet {
-  /* Pose et vitesse du pistolet dans la pince au moment du lâcher */
+  /* Pose and speed of the gun in the claw at the moment of the drop */
   0% {
     opacity: 1;
     transform: translate(7px, -113px) rotate(62deg);
@@ -697,7 +697,7 @@
     animation-timing-function: cubic-bezier(.4, 0, .8, .6);
   }
 
-  /* Impact sur le vaisseau, puis ricochet hors champ */
+  /* Impact on the ship, then ricochet out of frame */
   51% {
     opacity: 1;
     transform: translate(-573px, -174px) rotate(-119deg);
@@ -710,7 +710,7 @@
   }
 }
 
-/*---vvv------Chiffres du timer------vvv---*/
+/*---vvv------Timer digits------vvv---*/
 #bigboite.beat #timer-text,
 #bigboite.beat #timer-text2 {
   animation: timer-beat 1s ease-out;
@@ -744,7 +744,7 @@
   }
 }
 
-/*---vvv------Boule d'énergie------vvv---*/
+/*---vvv------Energy ball------vvv---*/
 #bigboite.grow #boulboite {
   transform: scale(var(--charge, 0));
   transition: transform 1s linear, opacity 3s;
@@ -772,7 +772,7 @@
   }
 }
 
-/* Surcharge : la boule tremble */
+/* Overload: the ball shakes */
 #bigboite.overcharge #boulboite {
   animation: ball-jitter .16s steps(1) infinite;
 }
@@ -807,7 +807,7 @@
   transform: translateX(45px);
 }
 
-/* Fin du temps : la boule enfle... et fait pschitt */
+/* Time's up: the ball swells... and fizzles out */
 #bigboite.fizzle #boulboite {
   opacity: 1;
   animation: fizzle 1s ease-in forwards;
@@ -881,7 +881,7 @@
   }
 }
 
-/*---vvv------Vaisseau percuté------vvv---*/
+/*---vvv------Ship hit------vvv---*/
 .ship-impact {
   position: absolute;
   width: 96px;
@@ -920,7 +920,7 @@
   animation: bonk 1s forwards;
 }
 
-/* Une seule décélération : plus d'arrêt net juste après le choc */
+/* A single deceleration: no more hard stop right after the impact */
 @keyframes bonk {
   0% {
     transform: translate(0px, 0px) rotate(-14deg);
@@ -932,9 +932,9 @@
   }
 }
 
-/* Retour : le vaisseau s'oriente vers sa place, pousse, puis freine.
-   L'accélération de la poussée enchaîne sur le freinage à la même vitesse,
-   sans s'arrêter à mi-chemin */
+/* Return: the ship turns toward its spot, thrusts, then brakes.
+   The thrust acceleration flows into the braking at the same speed,
+   without stopping halfway */
 .comeback {
   animation: reguys 1.9s forwards;
 }
@@ -965,7 +965,7 @@
   }
 }
 
-/*---vvv------Flammes du réacteur------vvv---*/
+/*---vvv------Engine flames------vvv---*/
 #vaisseau {
   overflow: visible;
 }
@@ -1025,9 +1025,9 @@
   }
 }
 
-/* Compte à rebours : bandeaux jaunes et noirs en haut et en bas de l'écran,
-   flashs jaunes sur les bords (comme l'alerte du vaisseau, ship-alerts.css),
-   de plus en plus vite sous 10 s puis 5 s (timer-anim.js) */
+/* Countdown: yellow and black stripes at the top and bottom of the screen,
+   yellow flashes on the edges (like the ship alert, ship-alerts.css),
+   faster and faster under 10 s then 5 s (timer-anim.js) */
 .timer-alert {
   position: fixed;
   inset: 0;

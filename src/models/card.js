@@ -2,7 +2,7 @@ const {literal} = require("sequelize");
 const {Statuses} = require("./statuses");
 const chalk = require("chalk");
 
-// Butin d'un choix, enregistré en JSON (vide : aucun butin)
+// Choice loot, saved as JSON (empty: no loot)
 const parseLoot = function (raw) {
     try {
         let list = raw ? JSON.parse(raw) : [];
@@ -13,7 +13,7 @@ const parseLoot = function (raw) {
     }
 }
 
-// Statut donné par un choix : {slug, duration}, ou null
+// Status given by a choice: {slug, duration}, or null
 const parseStatus = function (raw) {
     try {
         let status = raw ? JSON.parse(raw) : null;
@@ -24,9 +24,9 @@ const parseStatus = function (raw) {
     }
 }
 
-// Jet d'un choix (choix « roll » de baseCards.json) : le MJ dit si le jet est
-// réussi, la suite dépend du résultat. Une suite = un résultat (reveal) ou une
-// carte suivante (next), avec infos MJ, humains et butin comme un choix.
+// Choice roll ("roll" choice of baseCards.json): the GM says whether the roll
+// succeeded, the follow-up depends on the result. A follow-up = a result (reveal) or a
+// next card (next), with GM info, humans and loot like a choice.
 const ROLL_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
 
 const issueOf = function (raw) {
@@ -40,7 +40,7 @@ const issueOf = function (raw) {
     };
 }
 
-// {stat, success, failure}, ou null sans jet (ou jet mal écrit)
+// {stat, success, failure}, or null without a roll (or a badly written roll)
 const parseRoll = function (raw) {
     try {
         let roll = typeof raw === 'string' ? (raw ? JSON.parse(raw) : null) : raw;
@@ -57,9 +57,9 @@ const parseRoll = function (raw) {
     }
 }
 
-// Issues au hasard d'un choix (« outcomes ») : liste de suites, chacune avec
-// un poids (1 par défaut) et, au besoin, son propre jet. Le jeu en tire une
-// à l'affichage de la carte.
+// Random outcomes of a choice ("outcomes"): list of follow-ups, each with
+// a weight (1 by default) and, if needed, its own roll. The game draws one
+// when the card is displayed.
 const outcomeOf = function (raw) {
     raw = raw && typeof raw === 'object' ? raw : {};
     let weight = Number(raw.weight);
@@ -70,7 +70,7 @@ const outcomeOf = function (raw) {
     return outcome;
 }
 
-// [issue, ...] (au moins 2), ou null sans issues au hasard
+// [outcome, ...] (at least 2), or null without random outcomes
 const parseOutcomes = function (raw) {
     try {
         let list = typeof raw === 'string' ? (raw ? JSON.parse(raw) : null) : raw;
@@ -81,7 +81,7 @@ const parseOutcomes = function (raw) {
     }
 }
 
-// Indice tiré selon les poids (tous à 0 : chacune a la même chance)
+// Index drawn according to the weights (all at 0: each has the same chance)
 const drawOutcome = function (outcomes, random = Math.random) {
     let total = outcomes.reduce((sum, o) => sum + o.weight, 0);
     if (!(total > 0))
@@ -95,8 +95,8 @@ const drawOutcome = function (outcomes, random = Math.random) {
     return outcomes.length - 1;
 }
 
-// Marchand ouvert par un choix : {name, stock?} (stock omis : dernier étal
-// du MJ, voir merchant.js), ou null. « shop: true » ouvre un marchand sans nom
+// Merchant opened by a choice: {name, stock?} (stock omitted: the GM's last
+// stall, see merchant.js), or null. "shop: true" opens an unnamed merchant
 const parseShop = function (raw) {
     try {
         let shop = typeof raw === 'string' ? (raw ? JSON.parse(raw) : null) : raw;
@@ -218,7 +218,7 @@ class Card {
         return await this.getData()
     }
 
-    // Jet enregistré en JSON, variables des textes déjà tirées ('' : pas de jet)
+    // Roll saved as JSON, text variables already drawn ('': no roll)
     rollToStore(raw) {
         let roll = parseRoll(raw);
         if (!roll)
@@ -230,7 +230,7 @@ class Card {
         return JSON.stringify(roll);
     }
 
-    // Issues au hasard en JSON, variables tirées comme pour le reste de la carte
+    // Random outcomes as JSON, variables drawn as for the rest of the card
     outcomesToStore(raw) {
         let outcomes = parseOutcomes(raw);
         if (!outcomes)
@@ -245,10 +245,10 @@ class Card {
     }
 
     replaceVars(text) {
-        // Tirage fait une seule fois par objet Card : la même variable garde sa
-        // valeur dans desc, mjreveal, choix, reveal et variantes. hydrateCardDB
-        // réutilise le même objet pour les suites d'un lieu, qui partagent donc
-        // aussi les valeurs tirées.
+        // Draw done only once per Card object: the same variable keeps its
+        // value in desc, mjreveal, choices, reveal and variants. hydrateCardDB
+        // reuses the same object for the follow-ups of a place, which therefore
+        // also share the drawn values.
         if (!Object.keys(this.cardVars).length) {
             this.langVars = structuredClone(LANG).card_vars;
             for (let key of Object.keys(this.langVars))
@@ -268,7 +268,7 @@ class Card {
 
         variable = variable.replace('[','').replace(']','')
         let parsedVar = variable.split("_");
-        // Forme courte [type_id] (ex. [objet_1]) : article par défaut « no »
+        // Short form [type_id] (e.g. [objet_1]): default article "no"
         if (parsedVar.length === 2 && LANG.card_vars[parsedVar[0].toLowerCase()]) {
             let ucType = parsedVar[0].charAt(0) === parsedVar[0].charAt(0).toUpperCase();
             parsedVar = [ucType ? 'No' : 'no', parsedVar[0].toLowerCase(), parsedVar[1]];
@@ -288,13 +288,13 @@ class Card {
                 return CONFIG[type];
         }
 
-        // Crochets sans « _ » (ex. « [rev B] ») : simple texte, pas une variable
+        // Brackets without "_" (e.g. "[rev B]"): plain text, not a variable
         if (!type && article !== 'conf')
             return "[" + variable + "]";
 
         if (!this.cardVars[type]) {
             log("Error with texte variable ["+variable+"]", "#f00");
-            // Texte laissé intact (crochets compris) : visible en jeu et détecté par les tests
+            // Text left intact (brackets included): visible in game and caught by the tests
             return "[" + variable + "]";
         }
 
@@ -303,7 +303,7 @@ class Card {
         }
         else {
             let obj_keys = Object.keys(this.langVars[type]);
-            // Liste épuisée (plus d'ids que de valeurs) : on accepte les doublons
+            // List exhausted (more ids than values): duplicates are accepted
             if (!obj_keys.length) {
                 this.langVars[type] = structuredClone(LANG.card_vars[type]);
                 obj_keys = Object.keys(this.langVars[type]);
@@ -326,9 +326,9 @@ class Card {
         await DB.tables.card_modules.destroy({ where: { card_id: this.id } });
     }
 
-    // Issue tirée au hasard : elle devient la suite du choix (résultat ou carte,
-    // jet éventuel) ; humains, butin et infos MJ s'ajoutent à ceux du choix.
-    // La liste reste dans outcomes, l'indice tiré dans outcome (menu MJ, tests)
+    // Randomly drawn outcome: it becomes the choice's follow-up (result or card,
+    // optional roll); humans, loot and GM info add to the choice's.
+    // The list stays in outcomes, the drawn index in outcome (GM menu, tests)
     pickOutcome(choice, outcomes) {
         let index = drawOutcome(outcomes);
         let picked = outcomes[index];
@@ -358,7 +358,7 @@ class Card {
         ];
         let indexPrio = 9999;
 
-        // Seuls les statuts de toute l'équipe changent la carte
+        // Only whole-team statuses change the card
         for (let status of statuses.filter(s => !s.player_id)) {
             let indexFound = prioStatuses.indexOf(status.slug);
             if (indexFound < indexPrio && indexFound > -1) {
@@ -450,7 +450,7 @@ class Card {
                 let shop = parseShop(mod.shop);
                 if (shop)
                     choice.shop = shop;
-                // Seulement sur les choix à jet : les autres restent comme avant
+                // Only on choices with a roll: the others stay as before
                 let roll = parseRoll(mod.roll);
                 if (roll)
                     choice.roll = roll;
@@ -485,9 +485,9 @@ class Card {
                 order: [['id', 'ASC']]
             });
 
-            // Une variante ne décrit que le texte : elle reprend la suite, les
-            // humains et le butin du choix normal à la même place (ordre de
-            // création, même si la carte mélange ses choix)
+            // A variant only describes the text: it takes the follow-up, the
+            // humans and the loot of the normal choice at the same position (creation
+            // order, even if the card shuffles its choices)
             let byOrder = choices.slice().sort((a, b) => a.id - b.id);
             foundChoices.forEach((foundChoice, i) => {
                 let base = byOrder[i] || {};

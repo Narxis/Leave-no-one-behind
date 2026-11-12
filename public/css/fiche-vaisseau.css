@@ -199,7 +199,7 @@ svg {
     color: #fff;
     justify-content: center;
 }
-/* Joueurs en ligne prêts à continuer (js/intro-votes.js) */
+/* Online players ready to continue (js/intro-votes.js) */
 .intro-ready {
     position: absolute;
     top: 345px;

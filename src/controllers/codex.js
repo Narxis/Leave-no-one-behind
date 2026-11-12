@@ -1,21 +1,21 @@
-// Codex : races, objets et statuts du jeu, lus dans les fichiers du jeu
+// Codex: races, items and statuses of the game, read from the game files
 // (races.js, config/items.json, config/statuses.json, config/raceAffinities.json).
 //
-// Les joueurs ne voient que ce que l'équipage a rencontré pendant la partie,
-// comme un journal de bord : les races de l'équipage et celles nommées par
-// les cartes qu'ils ont vues, les objets passés dans un inventaire, les
-// statuts subis. Cette mémoire est propre à la partie : gardée dans
-// storage/cache/codex.json (un redémarrage du serveur ne la perd pas) et
-// vidée à chaque nouvelle partie (/persos). Le MJ voit tout sur /codex.
+// Players only see what the crew encountered during the game,
+// like a logbook: the crew's races and those named by
+// the cards they saw, the items that went through an inventory, the
+// statuses suffered. This memory is specific to the game: kept in
+// storage/cache/codex.json (a server restart doesn't lose it) and
+// cleared on each new game (/persos). The GM sees everything on /codex.
 const fs = require('fs');
 const path = require('path');
 const paths = require('../config/paths');
 const races = require('./races');
 
-// Site du wiki des règles (même adresse dans public/player/player.js)
+// Rules wiki site (same address in public/player/player.js)
 const WIKI_URL = 'https://narxis.github.io/Leave-no-one-behind-Wiki/';
-// Pages du site, relatives à WIKI_URL. Les pages des races et des objets ne
-// sont pas publiées : les joueurs les découvrent ici
+// Site pages, relative to WIKI_URL. Race and item pages aren't
+// published: players discover them here
 const WIKI_PAGES = {
     creation: 'regles/creation-personnage/',
     statuses: 'regles/statuts/'
@@ -26,7 +26,7 @@ const itemsFile = require('../config/paths').itemsFile;
 const STATUSES_FILE = path.join(__dirname, '../config/statuses.json');
 const AFFINITIES_FILE = path.join(__dirname, '../config/raceAffinities.json');
 const ITEM_IMAGES = path.join(paths.ROOT, 'public');
-// Image envoyée par le relais (64 Ko par message, base64 compris)
+// Image sent by the relay (64 KB per message, base64 included)
 const IMAGE_MAX = 40 * 1024;
 const KINDS = ['races', 'items', 'statuses'];
 
@@ -38,13 +38,13 @@ const readJson = function (file, fallback) {
     }
 };
 
-// Texte brut : sans balises ni entités HTML (descriptions des races)
+// Plain text: no HTML tags or entities (race descriptions)
 const plain = (text) => String(text || '')
     .replace(/<[^>]*>/g, '')
     .replace(/&quot;/g, '"').replace(/&#0?39;/g, '\'').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
     .replace(/\s+/g, ' ').trim();
 
-// ---- Mémoire de la partie ---------------------------------------------------
+// ---- Game memory ---------------------------------------------------
 
 let seen = null;
 
@@ -66,7 +66,7 @@ const save = function () {
     }
 };
 
-// Nouvelle partie : l'équipage n'a encore rien rencontré
+// New game: the crew hasn't encountered anything yet
 const reset = function () {
     seen = {races: [], items: [], statuses: []};
     try {
@@ -74,7 +74,7 @@ const reset = function () {
     } catch (e) {}
 };
 
-// Ajoute ce qui vient d'être rencontré ; true si quelque chose est nouveau
+// Adds what was just encountered; true if something is new
 const remember = function (found) {
     load();
     let changed = false;
@@ -93,14 +93,14 @@ const remember = function (found) {
 
 const known = () => structuredClone(load());
 
-// ---- Contenu du jeu ---------------------------------------------------------
+// ---- Game content ---------------------------------------------------------
 
 const affinities = () => {
     let data = readJson(AFFINITIES_FILE, {});
     return Array.isArray(data.list) ? data.list : [];
 };
 
-// Formes d'un nom de race dans les textes des cartes (Fnek, Fneks, Nek-eau…)
+// Forms of a race name in the card texts (Fnek, Fneks, Nek-eau…)
 const raceForms = function (race) {
     let forms = [race.name, race.plural];
     let grammar = LANG.card_vars.race && LANG.card_vars.race[race.slug];
@@ -111,7 +111,7 @@ const raceForms = function (race) {
 
 const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-// Races de la partie nommées dans un texte vu par les joueurs
+// Races of the game named in a text seen by the players
 const racesIn = function (text) {
     text = plain(text);
     if (!text)
@@ -121,7 +121,7 @@ const racesIn = function (text) {
     )).map(r => r.slug);
 };
 
-// Catalogue des objets, plus les butins ajoutés à la main par le MJ (en base seulement)
+// Item catalog, plus loot added by hand by the GM (in the database only)
 const itemCatalog = async function () {
     let items = new Map();
     for (let [pool, list] of Object.entries(readJson(itemsFile(), {})))
@@ -137,8 +137,8 @@ const itemCatalog = async function () {
 
 const statusCatalog = () => readJson(STATUSES_FILE, []).map(s => ({slug: s.slug, name: s.name, desc: s.desc || ''}));
 
-// Fiche d'une race. withAll : toutes ses affinités (création du perso) ;
-// sinon seulement celles dont toutes les races ont été rencontrées
+// Race sheet. withAll: all its affinities (character creation);
+// otherwise only those whose races have all been encountered
 const raceCard = function (race, seenRaces) {
     let all = affinities().filter(a => a.races.includes(race.slug));
     let shown = seenRaces ? all.filter(a => a.races.every(r => seenRaces.includes(r))) : all;
@@ -149,11 +149,11 @@ const raceCard = function (race, seenRaces) {
         desc: plain(race.desc),
         stats: race.stats,
         affinities: shown.map(a => a.text),
-        // Rien de défini dans le jeu ni dans le wiki pour cette race
+        // Nothing defined in the game or the wiki for this race
         noAffinity: !all.length,
         moreAffinities: all.length - shown.length
     };
-    // Races de base : vignette livrée avec la page joueur ; customs : envoyée par le MJ
+    // Base races: thumbnail shipped with the player page; customs: sent by the GM
     if (race.custom)
         card.imageKey = 'race:' + race.slug;
     else
@@ -161,9 +161,9 @@ const raceCard = function (race, seenRaces) {
     return card;
 };
 
-// Fiches des races jouables pour la création du perso, avec leurs objets de
-// départ (donnés à toute race dont le nom commence par celui de l'objet,
-// comme giveAllStarters : les objets « nek » vont aux quatre Neks)
+// Sheets of the playable races for character creation, with their starting
+// items (given to any race whose name starts with the item's,
+// like giveAllStarters: the "nek" items go to the four Neks)
 const creationCards = async function () {
     let starters = (await itemCatalog()).filter(i => i.pool === 'starter' && i.race);
     return races.playable().map(r => Object.assign(raceCard(r), {
@@ -179,14 +179,14 @@ const itemCard = (item) => ({
 
 const statusCard = (status) => ({slug: status.slug, name: status.name, desc: plain(status.desc), link: WIKI_URL + WIKI_PAGES.statuses});
 
-// ---- Ce que l'équipage rencontre ------------------------------------------
+// ---- What the crew encounters ------------------------------------------
 
-// Relevé fait à chaque changement du jeu (playerView) et sur /codex.
-// texts : textes de la carte tels que les joueurs les voient (jamais ceux du MJ)
+// Survey made on each game change (playerView) and on /codex.
+// texts: card texts as the players see them (never the GM's)
 const observe = async function (texts) {
     let found = {races: [], items: [], statuses: []};
     if (global.DB) {
-        // Races de l'équipage, une fois la création finie (pas les essais)
+        // The crew's races, once creation is finished (not the attempts)
         if (CONFIG.gameState !== 'creation')
             for (let p of await DB.tables.players.findAll({raw: true}))
                 if (p.race && races.isAllowed(p.race))
@@ -203,7 +203,7 @@ const observe = async function (texts) {
     return remember(found);
 };
 
-// Codex des joueurs : seulement ce qui a été rencontré
+// Players' Codex: only what has been encountered
 const forPlayers = async function () {
     let memory = load();
     let raceList = races.playable();
@@ -219,7 +219,7 @@ const forPlayers = async function () {
     };
 };
 
-// Page complète du MJ : tout, avec ce que l'équipage a déjà rencontré
+// Full GM page: everything, with what the crew has already encountered
 const forGm = async function () {
     let memory = load();
     let items = await itemCatalog();
@@ -238,8 +238,8 @@ const forGm = async function () {
     };
 };
 
-// Image d'une fiche, en data URL pour passer par le relais (null : trop
-// lourde ou absente, l'app affiche une image par défaut)
+// Sheet image, as a data URL to go through the relay (null: too
+// heavy or missing, the app shows a default image)
 const imageData = async function (key) {
     let [kind, slug] = String(key).split(':');
     let file = null, type = 'image/png';

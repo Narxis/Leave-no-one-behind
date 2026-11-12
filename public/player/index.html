@@ -14,14 +14,14 @@
 <main class="card" id="main">
     <h1 class="logo">LEAVE <span>NO</span> ONE BEHIND</h1>
 
-    <!-- Saisie du code et du pseudo -->
+    <!-- Code and nickname input -->
     <form id="join" class="panel" autocomplete="off">
         <label for="code">Code de la partie</label>
         <input id="code" name="code" inputmode="text" maxlength="7" placeholder="K7Q-2MX" required spellcheck="false">
         <label for="name">Ton pseudo</label>
         <input id="name" name="name" maxlength="20" placeholder="Pseudo" required>
-        <!-- Connexion Discord (si le relais est configuré) : pseudo et avatar
-             Discord affichés à côté du perso, pour se reconnaître -->
+        <!-- Discord login (if the relay is configured): Discord nickname and avatar
+             shown next to the character, to recognize each other -->
         <div id="discord-box" class="discord-box" hidden>
             <a id="discord-login" class="discord-login">Se connecter avec Discord</a>
             <p id="discord-me" class="discord-me" hidden>
@@ -36,10 +36,10 @@
         <p class="wiki-line"><a class="wiki-link" target="_blank" rel="noopener">Wiki des règles ↗</a></p>
     </form>
 
-    <!-- Dans la partie : mise en page de l'écran de jeu du MJ (carte au
-         centre, modules à droite, stats et humains à gauche, équipage en bas) -->
+    <!-- In the game: layout of the GM's game screen (card in the
+         center, modules on the right, stats and humans on the left, crew at the bottom) -->
     <section id="lobby" class="game" hidden>
-        <!-- Menu en burger (en haut à gauche, comme sur l'écran de jeu) -->
+        <!-- Burger menu (top left, as on the game screen) -->
         <header class="topbar">
             <button type="button" id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="menu-drawer" aria-label="Menu">
                 <span></span><span></span><span></span>
@@ -60,23 +60,23 @@
                 <button type="button" id="leave" class="secondary small">Quitter la partie</button>
             </div>
         </header>
-        <!-- Écran de jeu du MJ porté tel quel (sur ordinateur, onglet Partie) -->
+        <!-- GM's game screen ported as is (on computer, Partie tab) -->
         <iframe id="mj-screen" class="mj-screen" src="mj/screen.html" title="Écran de jeu" aria-hidden="true"></iframe>
         <div id="ship-alert" class="alert-banner" role="alert" hidden></div>
-        <!-- Compte à rebours (téléphone) : bandeaux et flashs jaunes, comme l'écran de jeu -->
+        <!-- Countdown (phone): yellow stripes and flashes, like the game screen -->
         <div id="timer-alert" class="timer-alert" data-manual="1" aria-hidden="true"><div class="timer-alert-vignette"></div><div class="timer-alert-stripes top"></div><div class="timer-alert-stripes bottom"></div></div>
         <p id="action-error" class="error toast" role="alert" hidden></p>
 
         <div class="game-layout">
-        <!-- Colonne de gauche : humains et statuts (en haut à droite sur
-             l'écran de jeu), stats du perso -->
+        <!-- Left column: humans and statuses (top right on
+             the game screen), character stats -->
         <aside class="hud">
             <section class="hud-panel hud-humans">
                 <p class="humans-line">
                     <svg class="heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
                     <span>Humains :</span> <strong id="humans">…</strong>
                 </p>
-                <!-- Page planète : modules, comme le panneau de droite du MJ -->
+                <!-- Planet page: modules, like the GM's right panel -->
                 <div class="hud-modules">
                     <h2 class="hud-modules-title">Modules principaux :</h2>
                     <ul id="hud-main-modules" class="hud-main-modules"></ul>
@@ -98,7 +98,7 @@
 
         <div class="game-main">
         <button type="button" id="back-game" class="back-game secondary small" hidden>← Retour à la partie</button>
-        <!-- Écran de jeu : carte, planète, combat ou score -->
+        <!-- Game screen: card, planet, combat or score -->
         <div class="tab-panel" data-panel="game">
             <div id="phase" class="phase-banner" hidden>
                 <p id="phase-text"></p>
@@ -108,11 +108,11 @@
                 <div id="card-last" class="alert-banner card-last" role="alert" hidden></div>
                 <div class="stage-row">
                     <div class="stage-screen">
-                        <!-- Carte (événement, lieu, carte blanche) -->
-                        <!-- Bras robot du compte à rebours et vaisseau au-dessus de la
-                             carte, comme sur l'écran de jeu (timer-markup.js) -->
+                        <!-- Card (event, place, blank card) -->
+                        <!-- Countdown robot arm and ship above the
+                             card, as on the game screen (timer-markup.js) -->
                         <div id="timer-host" class="timer-host" aria-hidden="true"></div>
-                        <!-- Compte à rebours sur téléphone (le bras n'y tient pas) -->
+                        <!-- Countdown on phone (the arm doesn't fit there) -->
                         <div id="card-timer" class="card-timer" role="timer" hidden>
                             <span id="card-timer-text" class="card-timer-text">30</span>
                             <span class="card-timer-track"><span id="card-timer-fill" class="card-timer-fill"></span></span>
@@ -124,7 +124,7 @@
                             </div>
                         </article>
 
-                        <!-- Planète : scans à gauche, planète au centre avec ses relevés -->
+                        <!-- Planet: scans on the left, planet in the center with its readings -->
                         <div id="planet" class="planet-screen" hidden>
                             <div class="planet-side hud-panel">
                                 <p id="planet-points" class="planet-points"></p>
@@ -139,7 +139,7 @@
                             </div>
                         </div>
 
-                        <!-- Combat : adversaires, ordre de jeu, butin -->
+                        <!-- Combat: opponents, turn order, loot -->
                         <div id="combat" class="combat-screen" hidden>
                             <div class="combat-head">
                                 <p class="combat-title">Combat</p>
@@ -155,12 +155,12 @@
                         <ul id="card-choices" class="choice-tabs"></ul>
                         <p id="card-note" class="card-note"></p>
                     </div>
-                    <!-- Modules principaux, à droite de la carte comme sur l'écran de jeu -->
+                    <!-- Main modules, to the right of the card as on the game screen -->
                     <ul id="module-dials" class="module-dials"></ul>
                 </div>
             </div>
 
-            <!-- Fin de partie : écran de score -->
+            <!-- End of game: score screen -->
             <div id="end-screen" class="end-screen hud-panel" hidden>
                 <div class="end-score">
                     <p class="end-title">Score :</p>
@@ -179,13 +179,13 @@
                 </div>
             </div>
 
-            <!-- Équipage, en bas comme les fiches des joueurs sur l'écran de jeu -->
+            <!-- Crew, at the bottom like the player sheets on the game screen -->
             <ul id="crew-strip" class="crew-strip"></ul>
         </div>
 
-        <!-- Perso : création, fiche, dés -->
+        <!-- Character: creation, sheet, dice -->
         <div class="tab-panel sheet-panel hud-panel" data-panel="me">
-            <!-- Création des persos, onglet Partie : le message d'attente, au-dessus de la fiche -->
+            <!-- Character creation, Partie tab: the waiting message, above the sheet -->
             <p id="me-phase" class="me-phase" hidden></p>
             <div id="no-character" hidden>
                 <p id="no-character-text"></p>
@@ -202,8 +202,8 @@
                 <p class="dim small-text">Touche une race pour ouvrir sa fiche complète, puis lance tes dés. <a class="wiki-link" data-page="regles/creation-personnage/" target="_blank" rel="noopener">Règles de création sur le wiki ↗</a></p>
                 <p id="race-resume" class="race-resume" hidden></p>
                 <div id="race-list" class="race-list"></div>
-                <!-- Fiche d'une race en fenêtre : image, description, stats,
-                     affinités, objets de départ, puis le tirage des dés -->
+                <!-- Race sheet in a window: image, description, stats,
+                     affinities, starting items, then the dice roll -->
                 <dialog id="race-dialog" class="race-dialog" aria-labelledby="race-dialog-name">
                     <button id="race-dialog-close" type="button" class="race-dialog-close" aria-label="Fermer">✕</button>
                     <div id="race-dialog-sheet" class="race-dialog-sheet"></div>
@@ -230,7 +230,7 @@
             </div>
         </div>
 
-        <!-- Vaisseau : plan, modules -->
+        <!-- Ship: map, modules -->
         <div class="tab-panel hud-panel" data-panel="ship">
             <div id="ship-plan" class="ship-plan"></div>
             <p id="cryopods" class="humans-line"></p>
@@ -240,19 +240,19 @@
             <div id="ship-modules" class="bars"></div>
         </div>
 
-        <!-- Inventaire -->
+        <!-- Inventory -->
         <div class="tab-panel hud-panel" data-panel="bag">
             <p id="money" class="money" hidden></p>
             <ul id="items" class="items"></ul>
             <p id="items-empty" class="dim">Ton inventaire est vide.</p>
         </div>
 
-        <!-- Équipage -->
+        <!-- Crew -->
         <div class="tab-panel hud-panel" data-panel="crew">
             <ul id="players" class="players"></ul>
         </div>
 
-        <!-- Codex : ce que l'équipage a rencontré pendant la partie -->
+        <!-- Codex: what the crew encountered during the game -->
         <div class="tab-panel hud-panel" data-panel="codex">
             <input type="search" id="codex-search" class="codex-search" placeholder="Rechercher dans le Codex…" aria-label="Rechercher dans le Codex" autocomplete="off">
             <div class="codex-filters" role="group" aria-label="Filtrer">
@@ -266,7 +266,7 @@
             <p class="dim small-text">Le Codex se remplit au fil de la partie : races croisées, objets trouvés, statuts subis. Il repart de zéro à chaque nouvelle partie. <a class="wiki-link" target="_blank" rel="noopener">Wiki des règles ↗</a></p>
         </div>
 
-        <!-- Classement des équipes, comme la page du MJ (leaderboard.ejs) -->
+        <!-- Team leaderboard, like the GM page (leaderboard.ejs) -->
         <div class="tab-panel hud-panel ranks-panel" data-panel="ranks">
             <h2 class="ranks-title">Classement des équipes</h2>
             <div id="ranks-filter" class="ranks-filter" role="radiogroup" aria-label="Difficulté" hidden></div>
@@ -287,8 +287,8 @@
             </dialog>
         </div>
         </div>
-        <!-- Chat en bas à droite (en bas sur téléphone), qu'on peut fermer :
-             salon commun et conversation privée avec le MJ -->
+        <!-- Chat at the bottom right (at the bottom on phone), which can be closed:
+             common room and private conversation with the GM -->
         <button type="button" id="chat-open" class="chat-open" hidden>💬 Chat <span id="chat-open-badge" class="badge" hidden></span></button>
         <aside id="chat" class="chat-dock" aria-label="Chat">
             <div class="chat-switch" role="group" aria-label="Conversation">

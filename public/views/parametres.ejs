@@ -82,7 +82,7 @@
                 return [f.key, Number.isFinite(v) ? clamp(v, f) : f.min];
             }));
 
-            // Préréglage correspondant aux valeurs, en surbrillance
+            // Preset matching the values, highlighted
             function refresh() {
                 let v = values();
                 let match = GS_PRESETS.find(p => GS_FIELDS.every(f => p.values[f.key] === v[f.key]));
@@ -91,7 +91,7 @@
                     b.setAttribute('aria-checked', String(on));
                 });
 
-                // Cartes demandées sur toute la partie, comparées à celles qui existent
+                // Cards requested over the whole game, compared with those that exist
                 let total = 0;
                 for (let f of GS_FIELDS) {
                     let note = document.getElementById('gs-note-' + f.key);
@@ -132,7 +132,7 @@
 
             GS_FIELDS.forEach(f => {
                 input(f.key).addEventListener('input', refresh);
-                // Valeur hors bornes corrigée en quittant le champ
+                // Out-of-range value corrected when leaving the field
                 input(f.key).addEventListener('change', () => {
                     input(f.key).value = values()[f.key];
                     refresh();
@@ -145,7 +145,7 @@
                 fetch('/api/settings', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    // Options cochées envoyées avec les valeurs
+                    // Checked options sent with the values
                     body: JSON.stringify(Object.assign(values(),
                         Object.fromEntries(GS_OPTIONS.map(o => [o.key, input(o.key).checked]))))
                 }).then(r => r.json().then(body => ({ok: r.ok, body})))

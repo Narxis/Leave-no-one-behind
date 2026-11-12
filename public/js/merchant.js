@@ -1,6 +1,6 @@
-// Écran de jeu : la boutique ouverte par le MJ (src/controllers/merchant.js),
-// par-dessus la carte. Les joueurs voient les objets, leurs prix en monnaie
-// ou en cryopods et le stock ; le MJ achète et vend depuis son menu.
+// Game screen: the shop opened by the GM (src/controllers/merchant.js),
+// over the card. Players see the items, their prices in currency
+// or in cryopods and the stock; the GM buys and sells from their menu.
 (function () {
     const area = document.getElementById('merchant-area');
     if (!area)
@@ -65,7 +65,7 @@
         news.classList.add('flash');
     }
 
-    // Les cryopods payés au marchand quittent le compteur des humains
+    // Cryopods paid to the merchant leave the humans counter
     function setHumans(value) {
         let counter = document.getElementById('cryopods-value');
         if (!counter)

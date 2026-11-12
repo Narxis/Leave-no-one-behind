@@ -1,16 +1,16 @@
 var currentCard = {};
 var interval_cd;
 var countDownRunning = false;
-// Le compte à rebours est en pause pendant un combat (combat.js) et pendant
-// un jet de choix : une raison par pause, il repart quand il n'y en a plus
+// The countdown is paused during combat (combat.js) and during
+// a choice roll: one reason per pause, it restarts when there are none left
 var countDownPauses = new Set();
 
-// Contre les clics de travers : un choix cliqué ne part qu'après ce délai,
-// avec un bouton « Annuler » ; un autre clic pendant le délai change le choix
+// Against misclicks: a clicked choice only goes through after this delay,
+// with a "Annuler" button; another click during the delay changes the choice
 const CHOICE_CONFIRM_DELAY = 2500;
-// Un bouton seul (« Continuer votre chemin »...) part tout de suite
+// A lone button ("Continuer votre chemin"...) goes through right away
 const CHOICE_CONFIRM_MIN_CHOICES = 2;
-// Choix en attente : {btn, timeout, commit}
+// Pending choice: {btn, timeout, commit}
 var pendingChoice = null;
 
 function sleep(ms) {
@@ -18,7 +18,7 @@ function sleep(ms) {
 }
 
 async function getActiveStatus () {
-    const rawResponse = await fetch('/api/statuses/active', { // faudra rajouter /active
+    const rawResponse = await fetch('/api/statuses/active', { // will need to add /active
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -52,7 +52,7 @@ async function getCardByName (name) {
     return JSON.parse(await rawResponse.text());
 }
 
-// Compte à rebours montré aux joueurs en ligne (playerView.setTimer)
+// Countdown shown to online players (playerView.setTimer)
 function announceTimer(left, paused) {
     if (typeof wsLNOB === 'undefined')
         return;
@@ -79,7 +79,7 @@ function startCountDown() {
             time_left--;
             return;
         }
-        // Chrono à 0 pendant le délai : le choix déjà cliqué est gardé
+        // Timer at 0 during the delay: the choice already clicked is kept
         if (pendingChoice) {
             pendingChoice.commit();
             return;
@@ -87,7 +87,7 @@ function startCountDown() {
         clearInterval(interval_cd);
         countDownRunning = false;
         announceTimer(0);
-        // Les choix partent aussi chez les joueurs, le temps de l'animation
+        // The choices also go to the players, for the duration of the animation
         announceScreen(undefined, []);
         let choicetab = document.getElementById('choicetab');
         TimerAnim.tick(0);
@@ -112,8 +112,8 @@ async function stopCountdown() {
     }
 }
 
-// Appelé par combat.js : le chrono s'arrête au début du combat et repart
-// de là où il en était à la fin (même chose pendant un jet de choix)
+// Called by combat.js: the timer stops at the start of combat and resumes
+// where it was at the end (same thing during a choice roll)
 function pauseCountDown(paused, reason = 'combat') {
     if (paused)
         countDownPauses.add(reason);
@@ -158,7 +158,7 @@ async function initialiseStatusList (){
     }
 }
 
-// Le coffre est redessiné par l'événement « inventory » (inventory.js)
+// The chest is redrawn by the "inventory" event (inventory.js)
 function removeStarterItem(id, slug) {
     wsLNOB.delItem(slug, id);
 }
@@ -180,7 +180,7 @@ function quickUpdateModule(el, mod, left=false) {
     let modifier = 1;
     let newValue;
 
-    // « +x » / « -x » dans la case : écart appliqué tel quel, quel que soit le bouton
+    // "+x" / "-x" in the box: offset applied as is, whatever the button
     let parsed = parseModuleInput(inputVal);
     if (parsed && parsed.delta) {
         input.value = '';
@@ -219,7 +219,7 @@ function quickUpdateModule(el, mod, left=false) {
     setModuleVal(mod, newValue, left);
 }
 
-// Saisie de la case d'un module : « +x » ou « -x » = écart, nombre seul = valeur
+// Module box input: "+x" or "-x" = offset, number alone = value
 function parseModuleInput(text) {
     let m = String(text || '').trim().replace(',', '.').match(/^([+-])?\s*(\d+(?:\.\d+)?)$/);
     if (!m)
@@ -228,7 +228,7 @@ function parseModuleInput(text) {
     return m[1] ? {delta: true, value: m[1] === '-' ? -value : value} : {delta: false, value: value};
 }
 
-// Entrée dans la case d'un module : applique l'écart (+x / -x) ou la valeur saisie
+// Enter in a module box: applies the offset (+x / -x) or the typed value
 function submitModuleInput(input, mod) {
     let parsed = parseModuleInput(input.value);
     input.value = '';
@@ -248,7 +248,7 @@ document.querySelectorAll('#modtab .form-input').forEach(input => {
     });
 });
 
-// Choix qui coûtent (ou rapportent) des humains : appliqué au clic
+// Choices that cost (or yield) humans: applied on click
 function changeHumans(delta) {
     let counter = document.querySelector('#cryopods-value');
     let current = parseInt(counter.innerText) || 0;
@@ -268,8 +268,8 @@ function setModuleVal(mod, newValue, left) {
     let isCryopods = mod === 'cryopods';
     let maxVal = isCryopods ? 1000 : 100;
 
-    // Une valeur non numérique (case vide, saisie invalide) ne doit jamais
-    // être affichée ni envoyée au serveur
+    // A non-numeric value (empty box, invalid input) must never
+    // be displayed or sent to the server
     newValue = Number(newValue);
     if (!Number.isFinite(newValue)) return;
     newValue = Math.min(Math.max(newValue, 0), maxVal);
@@ -292,10 +292,10 @@ function setModuleVal(mod, newValue, left) {
 
 const addStatus = (status) => {
     // let index = statusNameList.findIndex(e => e === statusname)
-    // Statut créé à la volée : icône générique
+    // Status created on the fly: generic icon
     let svg = statusSvgList[status.slug] || statusSvgList.custom || '';
     const esc = (text) => String(text || '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
-    // Statut d'un seul joueur : son nom à côté
+    // Status of a single player: their name next to it
     let name = esc(status.name) + (status.player_id ? ' <span class="status-player">(' + esc(status.player_name) + ')</span>' : '');
 
     const html = ` <div class="status-line" id="line_${status.id}" title="${esc(status.desc)}">
@@ -338,16 +338,16 @@ async function initCard(forceName = null) {
     await showChoices();
 }
 
-// Un nouvel affichage (carte blanche du MJ) arrête celui en cours
+// A new display (GM blank card) stops the current one
 var showChoicesRun = 0;
 
-// Ce qu'affiche la page, annoncé au serveur pour les joueurs en ligne : ils
-// voient le même texte et votent sur les mêmes choix (votes.js)
+// What the page shows, announced to the server for online players: they
+// see the same text and vote on the same choices (votes.js)
 var cardScreenText = '';
 function announceScreen(chosen, choices) {
     if (typeof wsLNOB === 'undefined')
         return;
-    // (une carte blanche n'a pas de numéro : « blank », comme pour les joueurs)
+    // (a blank card has no number: "blank", as for the players)
     let data = {cardId: currentCard.blank ? 'blank' : currentCard.id, text: cardScreenText,
         choices: choices || (currentCard.choices || []).map(c => c.value)};
     if (chosen !== undefined)
@@ -355,12 +355,12 @@ function announceScreen(chosen, choices) {
     wsLNOB.send({action: 'card-screen', data: data});
 }
 
-// Votes des joueurs : sous chaque bouton, le logo du rôle de ceux qui l'ont
-// choisi et le nombre de voix
+// Players' votes: under each button, the role logo of those who
+// chose it and the vote count
 function showVotes(data) {
     if (!data)
         return;
-    // (pas la case d'un jet en attente)
+    // (not the box of a pending roll)
     document.querySelectorAll('#choicetab .choice:not(.card-roll)').forEach(function (btn, i) {
         let count = (data.counts || [])[i] || 0;
         let badge = btn.querySelector('.vote-count');
@@ -385,9 +385,9 @@ async function showChoices() {
     let choiceTab = document.getElementById('choicetab');
     choiceTab.innerHTML = '';
     announceScreen();
-    // Un seul choix par affichage : les boutons restent cliquables pendant
-    // qu'ils s'en vont, un double-clic relançait la suite une seconde fois
-    // (deux « Continuer votre chemin », deux pioches et une carte sautée)
+    // Only one choice per display: the buttons stay clickable while
+    // they leave, a double click triggered the follow-up a second time
+    // (two "Continuer votre chemin", two draws and a skipped card)
     let chosen = false;
     clearPendingChoice();
     const commit = async function (apply) {
@@ -395,10 +395,10 @@ async function showChoices() {
             return;
         chosen = true;
         clearPendingChoice();
-        // Le chrono s'arrête dans apply : un choix à jet le met seulement en pause
+        // The timer stops in apply: a choice with a roll only pauses it
         await apply();
     };
-    // Un clic met le choix en attente (re-cliquer le même ne fait rien)
+    // A click puts the choice on hold (clicking the same one again does nothing)
     const pick = function (btn, apply) {
         if (chosen || (pendingChoice && pendingChoice.btn === btn))
             return;
@@ -418,7 +418,7 @@ async function showChoices() {
         choiceBtn.classList.add('move-down');
         choiceBtn.id = 'choice' + i;
         choiceBtn.innerHTML = choice.value;
-        // Suite du choix, une fois le délai d'annulation passé
+        // Follow-up of the choice, once the cancel delay has passed
         const apply = async function() {
             if (choice.other) {
                 stopCountdown();
@@ -426,13 +426,13 @@ async function showChoices() {
             }
             let next = choice;
             if (choice.roll) {
-                // Jet nécessaire : chrono en pause, la suite dépend du résultat
+                // Roll needed: timer paused, the follow-up depends on the result
                 let issue = await askCardRoll(choice);
                 if (!issue)
-                    return showChoices();   // jet annulé : les choix reviennent, le chrono repart
+                    return showChoices();   // roll cancelled: the choices come back, the timer restarts
                 next = rollFollowUp(choice, issue);
             }
-            // Choix retenu (après un éventuel jet) : les votes se ferment
+            // Choice kept (after a possible roll): the votes close
             announceScreen(i);
             stopCountdown();
             if (choice.blank !== undefined) {
@@ -441,10 +441,10 @@ async function showChoices() {
             }
             if (next.humans)
                 changeHumans(next.humans);
-            // Statut donné par le choix (toute l'équipe)
+            // Status given by the choice (the whole team)
             if (choice.status && choice.status.slug)
                 wsLNOB.setStatus(choice.status.slug, choice.status.duration);
-            // Le choix ouvre la boutique (merchant.js) ; le MJ la ferme de son menu
+            // The choice opens the shop (merchant.js); the GM closes it from their menu
             if (choice.shop)
                 wsLNOB.send({action: 'merchant-open', data: choice.shop});
             await hideChoices();
@@ -457,8 +457,8 @@ async function showChoices() {
     }
 }
 
-// Carte blanche (src/controllers/blankCard.js) : « Autre… » laisse le MJ écrire
-// la suite depuis son menu (mj-menu.js). Carte d'avant gardée pour « Annuler »
+// Blank card (src/controllers/blankCard.js): "Autre…" lets the GM write
+// what follows from their menu (mj-menu.js). Previous card kept for "Annuler"
 const BLANK_WAIT_TEXT = "\n Action libre !\n\n Décrivez au MJ ce que vous tentez : il prépare la suite.";
 const BLANK_NO_REVEAL = "\n Le MJ raconte la suite.";
 var blankReturn = null;
@@ -472,7 +472,7 @@ async function askBlankCard() {
 
 document.addEventListener('blank-card-show', async function (e) {
     let card = e.detail.data;
-    // Montrée par le MJ sans « Autre… » : elle remplace la carte en cours
+    // Shown by the GM without "Autre…": it replaces the current card
     if (!blankReturn && !currentCard.blank)
         blankReturn = {desc: currentCard.desc, choices: currentCard.choices};
     clearPendingChoice();
@@ -496,7 +496,7 @@ document.addEventListener('blank-card-show', async function (e) {
     await showChoices();
 });
 
-// Le MJ renonce : la carte d'avant revient avec ses choix
+// The GM gives up: the previous card comes back with its choices
 document.addEventListener('blank-card-cancel', async function () {
     if (!blankReturn)
         return;
@@ -510,7 +510,7 @@ document.addEventListener('blank-card-cancel', async function () {
     await showChoices();
 });
 
-// Le délai repart à chaque choix ; pendant un combat il attend la fin
+// The delay restarts on each choice; during combat it waits for the end
 function armPendingChoice() {
     let pending = pendingChoice;
     pending.timeout = setTimeout(function () {
@@ -522,7 +522,7 @@ function armPendingChoice() {
     }, CHOICE_CONFIRM_DELAY);
 }
 
-// Choix en attente surligné, avec « Annuler » et une barre qui se vide
+// Pending choice highlighted, with "Annuler" and a draining bar
 function showPendingChoice(btn) {
     document.getElementById('choicetab').classList.add('has-pending');
     btn.classList.add('choice-pending');
@@ -532,7 +532,7 @@ function showPendingChoice(btn) {
     cancel.className = 'choice-cancel';
     cancel.setAttribute('role', 'button');
     cancel.textContent = 'Annuler';
-    // Le clic sur « Annuler » ne doit pas remonter jusqu'au choix
+    // The click on "Annuler" must not bubble up to the choice
     cancel.addEventListener('mouseup', function (e) {
         e.stopPropagation();
         clearPendingChoice();
@@ -555,12 +555,12 @@ function clearPendingChoice() {
     pendingChoice = null;
 }
 
-/* ---------- Jet d'un choix : réussite ou échec, validé par le MJ ---------- */
+/* ---------- Choice roll: success or failure, confirmed by the GM ---------- */
 
 const CARD_ROLL_TITLES = {combat: 'Jet de combat', pilotage: 'Jet de pilotage', engineering: 'Jet d\'ingénierie', survival: 'Jet de survie', recon: 'Jet de reconnaissance'};
-var cardRollPending = null;     // {choice, resolve, ask} tant que le MJ n'a pas tranché
+var cardRollPending = null;     // {choice, resolve, ask} as long as the GM hasn't decided
 
-// Suite d'un choix à jet : celle du résultat, humains et butin du choix en plus
+// Follow-up of a choice with a roll: the result's, plus the choice's humans and loot
 function rollFollowUp(choice, issue) {
     return {
         reveal: issue.reveal || '',
@@ -570,8 +570,8 @@ function rollFollowUp(choice, issue) {
     };
 }
 
-// Montre le jet à faire et attend « réussi », « raté » (renvoie la suite) ou « annuler » (null).
-// Le MJ répond depuis son menu (card-roll-result) ou avec les boutons de la carte
+// Shows the roll to make and waits for "success", "failure" (returns the follow-up) or "cancel" (null).
+// The GM answers from their menu (card-roll-result) or with the card buttons
 async function askCardRoll(choice) {
     pauseCountDown(true, 'roll');
     await hideChoices();
@@ -607,7 +607,7 @@ async function askCardRoll(choice) {
     });
 }
 
-// Réglé tout de suite ici, puis envoyé à tous pour fermer le menu MJ
+// Settled right away here, then sent to everyone to close the GM menu
 function sendCardRollResult(result) {
     if (!cardRollPending)
         return;
@@ -615,7 +615,7 @@ function sendCardRollResult(result) {
     wsLNOB.triggerCustomEvent('card-roll-result', {result: result});
 }
 
-// Carte blanche montrée pendant un jet : le jet est abandonné sans suite
+// Blank card shown during a roll: the roll is dropped with no follow-up
 function dropCardRoll() {
     if (!cardRollPending)
         return;
@@ -634,12 +634,12 @@ function settleCardRoll(result) {
 }
 
 document.addEventListener('card-roll-result', (e) => settleCardRoll(e.detail.data && e.detail.data.result));
-// Menu MJ ouvert (ou rechargé) pendant un jet : on lui renvoie la demande
+// GM menu opened (or reloaded) during a roll: the request is sent to it again
 document.addEventListener('card-roll-query', () => {
     if (cardRollPending)
         wsLNOB.triggerCustomEvent('card-roll-ask', cardRollPending.ask);
 });
-// Jet reçu pendant l'attente (/roll ou menu MJ) : le bon bouton est mis en avant, le MJ valide
+// Roll received while waiting (/roll or GM menu): the right button is highlighted, the GM confirms
 document.addEventListener('roll', (e) => {
     let data = e.detail.data || {};
     if (!cardRollPending || (cardRollPending.choice.roll.stat && data.stat !== cardRollPending.choice.roll.stat))
@@ -649,7 +649,7 @@ document.addEventListener('roll', (e) => {
     box.querySelector('.card-roll-hint').textContent = 'Dernier jet : ' + data.result + (data.success ? ' (réussite)' : ' (échec)') + '. Le MJ valide le résultat.';
 });
 
-// Ce qui suit un choix (ou la suite tirée par un jet) : résultat, carte suivante ou planète
+// What follows a choice (or the follow-up drawn by a roll): result, next card or planet
 async function followChoice(choice) {
     let loot = Array.isArray(choice.loot) ? choice.loot : [];
     if (choice.reveal && choice.reveal !== ''){ // NEXT IS REVEAL
@@ -666,7 +666,7 @@ async function followChoice(choice) {
     else if (choice.continue && choice.continue === 1) { // NEXT IS CARD
        await initCard();
     }
-    else if (choice.continue && choice.continue === 2) { // NEXT IS PLANET ETAPE 1
+    else if (choice.continue && choice.continue === 2) { // NEXT IS PLANET STEP 1
        let textPlanetEncounter = "\n \u00a0 Votre vaisseau s'approche d'une planète. \n \n \u00a0 Pendant la mise en orbite, vous êtes libre de vous déplacer à bord et de profiter des installations telles que la salle de cinéma, la cuisine, la salle d'entraînement, la bibliothèque, etc... \n \n\u00a0 Dirigez-vous vers la salle des scanners pour obtenir davantage d'informations sur cette planète.";
        await writeCardDesc(textPlanetEncounter);
        currentCard.choices = [{
@@ -675,7 +675,7 @@ async function followChoice(choice) {
        }];
        await showChoices();
     }
-    else if (choice.continue && choice.continue === 3) { // NEXT IS PLANET ETAPE 2
+    else if (choice.continue && choice.continue === 3) { // NEXT IS PLANET STEP 2
         fastTravel();
         await sleep(fastTravelTime);
         window.location.href = '/next';
@@ -686,18 +686,18 @@ async function followChoice(choice) {
     }
 }
 
-// Clic sur la carte pendant l'écriture : le texte s'accélère fortement
-// (remis à zéro à chaque nouveau texte)
+// Click on the card while typing: the text speeds up a lot
+// (reset on each new text)
 var cardTextFast = false;
 var cardTextWriting = false;
-const CARD_TEXT_FAST_FACTOR = 15;   // pauses divisées par 15
-const CARD_TEXT_FAST_CHARS = 5;     // et 5 caractères par pause
+const CARD_TEXT_FAST_FACTOR = 15;   // pauses divided by 15
+const CARD_TEXT_FAST_CHARS = 5;     // and 5 characters per pause
 
 function cardTextPause(ms) {
     return sleep(cardTextFast ? ms / CARD_TEXT_FAST_FACTOR : ms);
 }
 
-// Texte écrit, annoncé aux joueurs en ligne : leur page l'écrit en même temps
+// Text written, announced to online players: their page writes it at the same time
 function announceCardText(data) {
     if (typeof wsLNOB !== 'undefined')
         wsLNOB.send({action: 'card-text', data: data});

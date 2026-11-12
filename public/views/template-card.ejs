@@ -569,14 +569,14 @@
           <div class="combat-pending" id="combat-pending"></div>
           <div class="combat-log" id="combat-log"></div>
         </div>
-        <%# Butin d'un choix de carte (card-loot.js) : même présentation que le butin d'un combat %>
+        <%# Card choice loot (card-loot.js): same presentation as combat loot %>
         <div class="combat-container card-loot-area combat-won combat-none" id="card-loot-area">
           <div class="combat-loot" id="card-loot"></div>
           <button type="button" class="card-loot-all" id="card-loot-all" hidden>
             <i class="fas fa-box-open"></i> Tout récupérer dans le vaisseau
           </button>
         </div>
-        <%# Boutique ouverte par le MJ depuis son menu (merchant.js) %>
+        <%# Shop opened by the GM from their menu (merchant.js) %>
         <div class="combat-container merchant-area combat-none" id="merchant-area">
           <div class="merchant-head">
             <i class="fas fa-store"></i>
@@ -624,7 +624,7 @@
     var statusNameList = [];
     var statusDurationList = [];
     var activeStatusList = [];
-    // Icône des statuts créés à la volée par le MJ
+    // Icon of statuses created on the fly by the GM
     var statusSvgList = {custom: `<%- include('svg/custom') %>`};
 
     <% statuses.forEach(function(status) {%>

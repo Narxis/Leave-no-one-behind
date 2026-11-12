@@ -1,12 +1,12 @@
-// Page de jeu : salles qui clignotent et alertes envoyées par le MJ.
-// L'état vient du serveur (/api/ship/alerts) puis de l'événement « ship-alerts ».
+// Game page: blinking rooms and alerts sent by the GM.
+// The state comes from the server (/api/ship/alerts) then from the "ship-alerts" event.
 (function () {
     const container = document.querySelector('.plan-container');
     const svg = document.getElementById('zoneActive');
     if (!container || !svg)
         return;
 
-    // Bandeau d'alerte, au-dessus de tout le reste
+    // Alert banner, above everything else
     const overlay = document.createElement('div');
     overlay.id = 'ship-alert';
     overlay.className = 'ship-alert';
@@ -21,9 +21,9 @@
         '</div>';
     document.body.appendChild(overlay);
 
-    let shownByMJ = false;   // plan ouvert par le MJ (pas par F1)
+    let shownByMJ = false;   // map opened by the GM (not by F1)
     let lastAlertId = null;
-    // Alerte déjà vue avant un changement de page : il ne réapparaît pas en grand
+    // Alert already seen before a page change: it doesn't show up large again
     try { lastAlertId = parseInt(sessionStorage.getItem('shipAlertSeen')) || null; } catch (e) {}
     let compactTimer = null;
 
@@ -43,7 +43,7 @@
         let blink = Array.isArray(state.blink) ? state.blink : [];
         let alert = state.alert;
 
-        // Contours qui clignotent (style existant .showroom) + salle remplie
+        // Blinking outlines (existing .showroom style) + filled room
         svg.querySelectorAll('.zone-active').forEach(p => {
             p.classList.toggle('mj-blink', blink.includes(p.id) || !!(alert && alert.room === p.id));
         });
@@ -56,7 +56,7 @@
             ShipMap.alertMarker(svg, alert.room, alert.name, g);
         }
 
-        // Bandeau : grand à l'arrivée de l'alerte, puis réduit en haut de l'écran
+        // Banner: large when the alert arrives, then shrunk at the top of the screen
         overlay.classList.toggle('active', !!alert);
         if (alert) {
             overlay.querySelector('.ship-alert-room').textContent = alert.name;

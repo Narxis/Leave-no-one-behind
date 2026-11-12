@@ -1,14 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-// Paramètres d'une partie, choisis par le MJ avant la création des persos
-// (/parametres). Gardés dans un fichier comme le classement : la configuration
-// en base est remise à zéro à chaque démarrage du serveur, les réglages du MJ
-// doivent survivre aux redémarrages. Config.hydrateDB les applique par-dessus
-// baseConf.json, le paquet de cartes est tiré avec au lancement de la partie
+// Game settings, chosen by the GM before character creation
+// (/parametres). Kept in a file like the leaderboard: the database
+// configuration is reset on each server start, the GM's settings
+// must survive restarts. Config.hydrateDB applies them on top of
+// baseConf.json, the card deck is drawn with them when the game starts
 const FILE = require('../config/paths').cache('gameSettings.json');
 
-// Réglages modifiables, avec leurs bornes
+// Editable settings, with their bounds
 const FIELDS = [
     {key: 'planetCount', label: 'Planètes', min: 1, max: 10},
     {key: 'negativeByStep', label: 'Cartes négatives par étape', min: 0, max: 6},
@@ -17,12 +17,12 @@ const FIELDS = [
     {key: 'placeByStep', label: 'Lieux par étape', min: 0, max: 3}
 ];
 
-// Écart maximal des stats de départ du vaisseau quand l'option
-// « Vaisseau aléatoire » est cochée (0.1 = ±10 %)
+// Maximum deviation of the ship's starting stats when the
+// "Vaisseau aléatoire" option is checked (0.1 = ±10%)
 const SHIP_START_VARIATION = 0.1;
 
-// Options à cocher, hors difficulté (les préréglages n'y touchent pas).
-// Absente d'anciens réglages enregistrés : valeur par défaut
+// Checkbox options, except difficulty (the presets don't touch them).
+// Missing from older saved settings: default value
 const OPTIONS = [
     {key: 'clearStatusesAfterPlanet', label: 'Retirer les statuts après une planète', default: true,
         hint: 'Blackout, Anticipation, Affaibli et Recherché sont remis à zéro en reprenant le voyage. Sinon ils continuent de baisser d\'un à chaque carte.'},
@@ -33,7 +33,7 @@ const OPTIONS = [
         hint: 'Les cartes à choix (sans chrono) proposent aussi « Autre… » : les joueurs décrivent une action libre et le MJ écrit la suite dans une carte blanche, depuis son menu.'}
 ];
 
-// Préréglages de difficulté. Normal reprend les valeurs de baseConf.json
+// Difficulty presets. Normal uses the values of baseConf.json
 const PRESETS = [
     {slug: 'facile', name: 'Facile', values: {planetCount: 3, negativeByStep: 1, positiveByStep: 2, neutralByStep: 2, placeByStep: 1}},
     {slug: 'normal', name: 'Normal', values: {planetCount: 3, negativeByStep: 2, positiveByStep: 2, neutralByStep: 2, placeByStep: 1}},
@@ -63,7 +63,7 @@ const save = function () {
 
 const clamp = (v, field) => Math.min(field.max, Math.max(field.min, Math.round(v)));
 
-// Valeurs bornées ; null si une valeur manque ou n'est pas un nombre
+// Clamped values; null if a value is missing or isn't a number
 const clean = function (input) {
     if (!input || typeof input !== 'object')
         return null;
@@ -81,26 +81,26 @@ const clean = function (input) {
     return values;
 }
 
-// Préréglage dont les valeurs sont exactement celles-ci, sinon « Personnalisé »
+// Preset whose values are exactly these, otherwise "Personnalisé"
 const presetOf = function (values) {
     let found = PRESETS.find(p => FIELDS.every(f => p.values[f.key] === values[f.key]));
     return found ? {slug: found.slug, name: found.name} : Object.assign({}, CUSTOM);
 }
 
-// Réglages en cours : ceux du MJ, sinon le préréglage Normal
+// Current settings: the GM's, otherwise the Normal preset
 const get = function () {
     let values = Object.assign({}, saved || clean(PRESETS.find(p => p.slug === DEFAULT).values));
     return Object.assign(values, {preset: presetOf(values)});
 }
 
-// Valeurs à écrire dans la configuration (stockée en texte, comme baseConf.json)
+// Values to write into the configuration (stored as text, like baseConf.json)
 const asConfig = function () {
     if (!saved)
         return {};
     return Object.fromEntries(FIELDS.map(f => [f.key, String(saved[f.key])]));
 }
 
-// Enregistre les réglages du MJ et les applique à la configuration en cours
+// Saves the GM's settings and applies them to the current configuration
 const set = async function (input) {
     let values = clean(input);
     if (!values)
@@ -114,10 +114,10 @@ const set = async function (input) {
     return get();
 }
 
-// Nombre de cartes de chaque type dans le jeu, pour prévenir le MJ quand
-// une partie en demande plus qu'il n'en existe (les étapes en trop en ont moins).
-// Lu dans baseCards.json, que le lancement de la partie recharge en base.
-// Seuls les lieux marqués « start » ouvrent un lieu, les autres en sont la suite
+// Number of cards of each type in the game, to warn the GM when
+// a game asks for more than exist (the extra steps get fewer).
+// Read from baseCards.json, which the game launch reloads into the database.
+// Only places marked "start" open a place, the others follow from them
 const available = function () {
     try {
         let cards = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/baseCards.json'), 'utf8'));

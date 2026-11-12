@@ -488,7 +488,7 @@
       </div>
     </div>
     <% if (locals.lastPlanet) { %>
-    <%# Dernière planète du paquet : texte dans src/config/lang.json (last_planet) %>
+    <%# Last planet of the deck: text in src/config/lang.json (last_planet) %>
     <div class="last-planet-alert" role="alert">
       <span class="last-planet-title"><%= lastPlanet.title %></span>
       <span class="last-planet-text"><%= lastPlanet.text %></span>
@@ -496,7 +496,7 @@
     <% } %>
     <div class="topcenter">
       <% if (locals.lastPlanet) { %>
-      <%# Dernière planète : impossible de repartir, atterrir termine le voyage %>
+      <%# Last planet: impossible to leave, landing ends the journey %>
       <button onclick="location.href = '/land' " class="land-button">Terminer le voyage.</button>
       <% } else { %>
       <button onclick="location.href = '/land' " class="land-button">Atterrir sur la planète.</button>
@@ -525,8 +525,8 @@
   <% if (typeof planetLab !== 'undefined' && planetLab) { %>
   <script>var PLANET_LAB = true;</script>
   <style>
-    /* Labo : pas de drones (ils retireraient ceux du vrai vaisseau), pas d'atterrissage
-       (il changerait l'état de la partie) ni d'onglets joueurs */
+    /* Lab: no drones (they would remove those of the real ship), no landing
+       (it would change the game state) nor player tabs */
     #planet-line-2, #planet-line-2 + .separateur-horizontal, .land-button, .leave-button, .player-tabs, .npc-tab { display: none !important; }
     .planet-lab {
       position: fixed; top: 16px; left: 50%; z-index: 1000; transform: translateX(-50%);
@@ -588,7 +588,7 @@
       const SEED = <%= planetLab.seed || 0 %>;
       const url = (seed) => '/planet-lab?' + new URLSearchParams(Object.assign(seed ? {seed: seed} : {}, band.value ? {tranche: band.value} : {}));
       const next = () => { location.href = url(''); };
-      // L'adresse garde la graine : un rechargement ou un lien copié redonne la même planète
+      // The address keeps the seed: a reload or a copied link gives the same planet again
       if (SEED)
         history.replaceState(null, '', url(SEED));
       document.getElementById('lab-new').addEventListener('click', next);
@@ -607,8 +607,8 @@
       }
       document.addEventListener('keydown', (e) => { if (e.key === 'n' && e.target.tagName !== 'INPUT') next(); });
       document.getElementById('lab-values').addEventListener('click', () => document.querySelector('.planet-lab').classList.toggle('show-values'));
-      // Re-cliquer sur une stat déjà dévoilée l'annule : trait, texte, coût et
-      // couche du visuel reviennent à l'état d'avant le scan
+      // Clicking again on a stat already revealed cancels it: line, text, cost and
+      // visual layer go back to the state before the scan
       const STATS = {
         o2: {key: 'oxy', reading: 1, extra: '#rond1, #rond2, .o2-blur'},
         cl: {key: 'cli', reading: 2, extra: '.cl-cloud, .cloudshadow'},
@@ -622,7 +622,7 @@
       for (let p in STATS) {
         let reading = document.getElementById('reading-' + STATS[p].reading);
         initialText[p] = reading.innerText;
-        // planet.js désactive le bouton après le scan : on le garde cliquable
+        // planet.js disables the button after the scan: we keep it clickable
         let button = document.getElementById(p + '-button');
         new MutationObserver(() => { if (button.disabled) button.disabled = false; })
           .observe(button, {attributes: true, attributeFilter: ['disabled']});
@@ -644,7 +644,7 @@
         document.dispatchEvent(new CustomEvent('planet-hide', {detail: st.key}));
       }
 
-      // Avant planet.js (phase de capture) : un 2e clic annule au lieu de rescanner
+      // Before planet.js (capture phase): a 2nd click cancels instead of rescanning
       document.addEventListener('mouseup', (e) => {
         let button = e.target.closest && e.target.closest('.p-txt');
         let p = button && button.id.replace('-button', '');
@@ -655,13 +655,13 @@
           return;
         }
         e.stopImmediatePropagation();
-        // Le texte du scan est encore en train de s'écrire : on attend qu'il ait fini
+        // The scan text is still being written: wait until it has finished
         if (window.iswritting)
           return;
         undo(p);
       }, true);
 
-      // Les scans pas encore faits, un par un, comme des clics
+      // The scans not done yet, one by one, like clicks
       document.getElementById('lab-reveal').addEventListener('click', async () => {
         for (let p in STATS) {
           if (revealed.has(p))
@@ -679,8 +679,8 @@
   <script src="/js/planet.js"></script>
   <script src="/js/players.js"></script>
   <script>
-    // Onglets joueurs : la fiche (?) et le coffre s'ouvrent et se referment
-    // comme sur une carte (card.js n'est pas chargé sur la planète)
+    // Player tabs: the sheet (?) and the chest open and close
+    // as on a card (card.js isn't loaded on the planet)
     initialisePlayerExpander();
     initialiseItemExpand();
   </script>

@@ -41,5 +41,5 @@ async function boot() {
 
 
 
-//   exemple de ligne
+//   example line
 //   window.addEventListener('load', addDiv('.start','timer'), false);

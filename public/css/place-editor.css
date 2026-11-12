@@ -1,4 +1,4 @@
-/* Éditeur de lieux (drawflow.ejs + place-editor.js) */
+/* Place editor (drawflow.ejs + place-editor.js) */
 .place-editor-page {
     --pe-card: #ffcc00;
     --pe-choice: #4fd8e0;
@@ -6,7 +6,7 @@
     --pe-ok: #6fdc8c;
 }
 
-/* Le menu du jeu passe au-dessus de l'éditeur */
+/* The game menu goes above the editor */
 .place-editor-page #menuToggle {
     z-index: 60;
     top: 20px;
@@ -23,7 +23,7 @@
     color: var(--ui-text);
 }
 
-/* ---------- Barre du haut ---------- */
+/* ---------- Top bar ---------- */
 
 .pe-top {
     grid-column: 1 / -1;
@@ -141,7 +141,7 @@
     border-color: var(--ui-danger);
 }
 
-/* ---------- Colonne de gauche ---------- */
+/* ---------- Left column ---------- */
 
 .pe-side {
     display: flex;
@@ -341,7 +341,7 @@
     color: var(--ui-text-dim);
 }
 
-/* ---------- Plan ---------- */
+/* ---------- Map ---------- */
 
 .pe-board {
     position: relative;
@@ -411,7 +411,7 @@
     background: var(--ui-fill-hover);
 }
 
-/* ---------- Blocs ---------- */
+/* ---------- Blocks ---------- */
 
 .place-editor-page .drawflow .drawflow-node {
     width: 260px;
@@ -568,7 +568,7 @@
     display: none;
 }
 
-/* Jet d'un choix : une suite par résultat, sorties étiquetées */
+/* Choice roll: one follow-up per result, labeled outputs */
 .pe-node .pe-roll select {
     box-sizing: border-box;
     width: 100%;
@@ -606,7 +606,7 @@
     color: var(--ui-danger);
 }
 
-/* Issues au hasard : une sortie numérotée par issue, avec son poids */
+/* Random outcomes: one numbered output per outcome, with its weight */
 .pe-random-btn {
     width: 100%;
     padding: 5px 6px;
@@ -754,7 +754,7 @@
     cursor: default;
 }
 
-/* Pastilles d'entrée et de sortie, liens */
+/* Input and output dots, links */
 .place-editor-page .drawflow .drawflow-node .input,
 .place-editor-page .drawflow .drawflow-node .output {
     width: 16px;
@@ -784,7 +784,7 @@
     color: var(--ui-danger);
 }
 
-/* ---------- Problèmes ---------- */
+/* ---------- Problems ---------- */
 
 .pe-problems {
     position: absolute;
@@ -865,7 +865,7 @@
     background: var(--ui-fill-hover);
 }
 
-/* ---------- Boîtes de dialogue ---------- */
+/* ---------- Dialog boxes ---------- */
 
 .pe-dialog {
     width: min(560px, calc(100vw - 32px));
@@ -1039,7 +1039,7 @@ kbd {
     }
 }
 
-/* ---------- Butin d'un choix ---------- */
+/* ---------- Choice loot ---------- */
 
 .pe-loot {
     display: flex;
@@ -1172,7 +1172,7 @@ kbd {
     cursor: pointer;
 }
 
-/* Statut donné par un choix : liste + durée en cartes */
+/* Status given by a choice: list + duration in cards */
 .pe-node .pe-status {
     display: flex;
     flex-wrap: wrap;
@@ -1210,7 +1210,7 @@ kbd {
     background: #17181c;
 }
 
-/* Marchand ouvert par un choix */
+/* Merchant opened by a choice */
 .pe-node .pe-shop {
     display: flex;
     flex-direction: column;

@@ -84,7 +84,7 @@ const deckGenerator = async function (){
 
     let bulkDeck = [];
     for (let card of deck){
-        // Plus assez de cartes d'un type : on saute la carte au lieu de crasher
+        // Not enough cards of a type left: skip the card instead of crashing
         if (!card)
             continue;
         bulkDeck.push({
@@ -152,7 +152,7 @@ const cardPop = async function (setPlayed = true){
 
         let card = await new Card(result.card_id).getData();
 
-        // Plus aucune planète après celle-ci : c'est la dernière chance de s'installer
+        // No planets left after this one: it is the last chance to settle
         if (setPlayed && card && card.type === TYPE_PLANET)
             card.lastPlanet = (await planetsLeft()) === 0;
 
@@ -164,7 +164,7 @@ const cardPop = async function (setPlayed = true){
     return false;
 }
 
-// Planètes du paquet pas encore jouées
+// Planets of the deck not played yet
 const planetsLeft = async function () {
     let rows = await DB.tables.deck.findAll({attributes: ['card_id'], where: {deck_id: 0, played: 0}, raw: true});
     if (!rows.length)
@@ -174,15 +174,15 @@ const planetsLeft = async function () {
     return rows.filter(r => ids.has(r.card_id)).length;
 }
 
-// Carte affichée sur la page de jeu, pour le panneau MJ qui s'ouvre ou se
-// recharge en cours de partie. Gardée telle qu'elle a été jouée (variantes
-// de status comprises).
+// Card shown on the game page, for the GM panel that opens or
+// reloads mid-game. Kept as it was played (status variants
+// included).
 let currentCard = null;
 
 const announceCard = function (card) {
     if (!card)
         return;
-    // Choix « Autre… » (carte blanche) ; une carte blanche oubliée est finie
+    // "Autre…" choice (blank card); a forgotten blank card is finished
     blankCard.addOther(card);
     blankCard.reset();
     currentCard = card;
@@ -276,8 +276,8 @@ const generatePlanet = async function (min,max) {
     ];
 
     let totalCost = 0;
-    // Archétype (océan, désert, glacée…) puis stats cohérentes avec lui,
-    // dans la tranche de score demandée (src/controllers/planetGen.js)
+    // Archetype (ocean, desert, frozen…) then stats consistent with it,
+    // within the requested score range (src/controllers/planetGen.js)
     let planet = rollPlanet(min, max);
     let score = planet.score;
     let modules = {};
@@ -301,7 +301,7 @@ const generatePlanet = async function (min,max) {
     let data = {
         type: TYPE_PLANET,
         value: score,
-        // Nom de l'archétype, visible côté MJ seulement
+        // Archetype name, visible on the GM side only
         name: planet.archetype ? ARCHETYPES.archetypes[planet.archetype].name : '',
         modules: modules
     }

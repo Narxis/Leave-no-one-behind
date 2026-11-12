@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Crédits : pile de pièces (butin, bourses, marchand) -->
+  <!-- Credits: stack of coins (loot, purses, merchant) -->
   <ellipse cx="26" cy="46" rx="18" ry="7" fill="#b8860b"/>
   <rect x="8" y="38" width="36" height="8" fill="#b8860b"/>
   <ellipse cx="26" cy="38" rx="18" ry="7" fill="#ffcc00"/>

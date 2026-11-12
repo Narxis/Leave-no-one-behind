@@ -1,25 +1,25 @@
-// App de bureau LNOB. À l'ouverture, on choisit son mode :
-// - MJ : l'app lance le serveur du jeu, l'affiche et ouvre la partie en ligne
-//   (code à donner aux joueurs) ;
-// - joueur : l'app ouvre la page joueur, qui rejoint la partie par le relais.
+// LNOB desktop app. On opening, you pick your mode:
+// - GM: the app starts the game server, shows it and opens the online game
+//   (code to give to the players);
+// - player: the app opens the player page, which joins the game through the relay.
 const {app, BrowserWindow, Menu, dialog, ipcMain, shell} = require('electron');
 const net = require('net');
 const os = require('os');
 const path = require('path');
 
-// Ce que le jeu écrit (bases, storage/cache, images des races customs) va dans
-// le dossier de données de l'utilisateur : le dossier de l'app est en lecture seule
+// What the game writes (databases, storage/cache, custom race images) goes into
+// the user's data folder: the app folder is read-only
 process.env.LNOB_DATA_DIR = process.env.LNOB_DATA_DIR || app.getPath('userData');
-// Le bot Discord n'est plus utilisé : son code reste dans le dépôt
+// The Discord bot is no longer used: its code stays in the repo
 process.env.DISABLE_BOT = 'true';
 
 const PREFERRED_PORT = parseInt(process.env.PORT) || 8080;
 let port = null;
 let mainWindow = null;
-let mode = null; // 'host' ou 'join'
+let mode = null; // 'host' or 'join'
 
-// Le port habituel s'il est libre (le panneau MJ sur téléphone garde la même
-// adresse d'une partie à l'autre), sinon un port choisi par le système
+// The usual port if it is free (the GM panel on a phone keeps the same
+// address from one game to the next), otherwise a port chosen by the system
 const freePort = () => new Promise(resolve => {
     let probe = net.createServer();
     probe.once('error', () => resolve(0));
@@ -27,7 +27,7 @@ const freePort = () => new Promise(resolve => {
     probe.listen(PREFERRED_PORT);
 });
 
-// 127.0.0.1 plutôt que localhost : évite un essai en IPv6 sur certains PC
+// 127.0.0.1 rather than localhost: avoids an IPv6 attempt on some PCs
 const localUrl = (page) => `http://127.0.0.1:${port}/${page || ''}`;
 const isGameUrl = (url) => {
     try {
@@ -38,7 +38,7 @@ const isGameUrl = (url) => {
     }
 };
 
-// Adresse du jeu sur le réseau local, pour ouvrir le panneau MJ sur un téléphone
+// Game address on the local network, to open the GM panel on a phone
 const lanAddress = function () {
     for (let list of Object.values(os.networkInterfaces()))
         for (let a of list || [])
@@ -60,10 +60,10 @@ const createWindow = function (page, options) {
         webPreferences: {contextIsolation: true, sandbox: true}
     }, options || {}));
 
-    // Les liens vers d'autres sites s'ouvrent dans le navigateur
+    // Links to other sites open in the browser
     win.webContents.setWindowOpenHandler(({url, frameName}) => {
-        // Boutons du lobby (« Lancer la partie »…) : la page s'ouvre dans la
-        // fenêtre principale du jeu, recréée si le MJ l'a fermée
+        // Lobby buttons ("Lancer la partie"…): the page opens in the
+        // main game window, recreated if the GM closed it
         if (frameName === 'lnob-game' && isGameUrl(url)) {
             let page = new URL(url).pathname.replace(/^\/+/, '');
             if (mainWindow && !mainWindow.isDestroyed()) {
@@ -93,10 +93,10 @@ const createWindow = function (page, options) {
     return win;
 };
 
-// Fenêtre avec l'adresse et le QR code du panneau MJ, comme dans le terminal
+// Window with the address and QR code of the GM panel, as in the terminal
 const showPhoneAccess = function () {
     let ip = lanAddress();
-    // Lien avec la clé MJ : les autres appareils du réseau n'ont pas les pages MJ
+    // Link with the GM key: other devices on the network don't get the GM pages
     let url = ip ? require('../src/controllers/mjAccess').mjUrl(`http://${ip}:${port}`, 'mj-menu') : null;
     let svg = '';
     if (url) {
@@ -163,7 +163,7 @@ const buildMenu = function () {
     ]));
 };
 
-// Fenêtre de départ : « Créer une partie (MJ) » ou « Rejoindre une partie »
+// Start window: "Créer une partie (MJ)" or "Rejoindre une partie"
 const createLauncher = function () {
     let win = new BrowserWindow({
         width: 560,
@@ -179,9 +179,9 @@ const createLauncher = function () {
     return win;
 };
 
-// Mode MJ : serveur du jeu, écran principal et partie en ligne
+// GM mode: game server, main screen and online game
 const startHost = async function (launcher) {
-    // Un seul MJ par PC : deux serveurs écriraient dans les mêmes bases
+    // Only one GM per PC: two servers would write to the same databases
     if (!app.requestSingleInstanceLock())
         return {error: 'Une partie MJ est déjà ouverte sur ce PC.'};
     try {
@@ -202,7 +202,7 @@ const startHost = async function (launcher) {
     return {ok: true};
 };
 
-// Mode joueur : la page joueur, reliée au relais de la partie
+// Player mode: the player page, connected to the game relay
 const startJoin = function (launcher) {
     mode = 'join';
     buildMenu();
@@ -218,15 +218,15 @@ const startJoin = function (launcher) {
         backgroundColor: '#0b0c14',
         webPreferences: {contextIsolation: true, sandbox: true}
     });
-    // Les liens vers d'autres sites s'ouvrent dans le navigateur
+    // Links to other sites open in the browser
     win.webContents.setWindowOpenHandler(({url}) => {
         shell.openExternal(url);
         return {action: 'deny'};
     });
     const page = path.join(__dirname, '../public/player/index.html');
-    // Connexion Discord : faite dans la fenêtre (relais puis discord.com) ;
-    // au retour, le relais passe par /auth/discord/done?profile=… et l'app
-    // rouvre la page joueur avec ce profil
+    // Discord login: done in the window (relay then discord.com);
+    // on return, the relay goes through /auth/discord/done?profile=… and the app
+    // reopens the player page with this profile
     const discordDone = function (event, url) {
         if (!url.startsWith(relay + '/auth/discord/done'))
             return false;

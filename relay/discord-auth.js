@@ -1,24 +1,24 @@
-// Connexion Discord des joueurs (OAuth2, scope « identify » seulement), sans
-// le bot. Commun au relais Cloudflare (worker.js) et au relais Node
+// Players' Discord login (OAuth2, "identify" scope only), without
+// the bot. Shared by the Cloudflare relay (worker.js) and the Node relay
 // (dev-server.js).
 //
-// Le relais est le seul endroit fixe et public de la partie en ligne : c'est
-// lui qui reçoit le retour de Discord et échange le code contre un jeton, avec
-// le secret de l'application gardé dans ses variables (jamais dans la page
-// joueur ni chez le MJ). Il ne garde rien : il renvoie à la page joueur un
-// « profil signé » (id, pseudo, URL de l'avatar), que la page présente en
-// rejoignant une partie. Le relais vérifie la signature : un joueur ne peut
-// pas se faire passer pour le compte Discord d'un autre.
+// The relay is the only fixed and public place of the online game: it is
+// the one receiving the return from Discord and exchanging the code for a token, with
+// the application secret kept in its variables (never in the player page
+// nor on the GM side). It keeps nothing: it sends back to the player page a
+// "signed profile" (id, nickname, avatar URL), which the page presents when
+// joining a game. The relay checks the signature: a player can't
+// impersonate someone else's Discord account.
 //
-// Sans DISCORD_CLIENT_ID et DISCORD_CLIENT_SECRET, tout est désactivé :
-// /auth/discord/config répond {enabled: false} et la page n'affiche pas le
-// bouton. Réglage : voir relay/README.md.
+// Without DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET, everything is disabled:
+// /auth/discord/config answers {enabled: false} and the page doesn't show the
+// button. Setup: see relay/README.md.
 //
-// Routes :
+// Routes:
 //   GET /auth/discord/config    {enabled}
-//   GET /auth/discord/login     → Discord (?app=1 depuis l'app de bureau)
-//   GET /auth/discord/callback  retour de Discord → page joueur, profil dans #discord=
-//   GET /auth/discord/done      (app de bureau : l'app récupère ?profile= au passage)
+//   GET /auth/discord/login     → Discord (?app=1 from the desktop app)
+//   GET /auth/discord/callback  return from Discord → player page, profile in #discord=
+//   GET /auth/discord/done      (desktop app: the app grabs ?profile= on the way)
 
 const API = 'https://discord.com/api/v10';
 const PROFILE_DAYS = 30;
@@ -44,7 +44,7 @@ const configOf = (env) => {
     return id && secret ? {id, secret} : null;
 };
 
-// Signature HMAC-SHA256, avec une clé tirée du secret de l'application
+// HMAC-SHA256 signature, with a key derived from the application secret
 const keyOf = (secret) => crypto.subtle.importKey('raw', encoder.encode('lnob-profile:' + secret), {name: 'HMAC', hash: 'SHA-256'}, false, ['sign', 'verify']);
 
 const sign = async function (secret, payload) {
@@ -53,7 +53,7 @@ const sign = async function (secret, payload) {
     return body + '.' + base64url(mac);
 };
 
-// Contenu d'un jeton signé et pas expiré, sinon null
+// Content of a signed, unexpired token, otherwise null
 const verify = async function (secret, token) {
     try {
         let [body, mac] = String(token || '').split('.');
@@ -68,7 +68,7 @@ const verify = async function (secret, token) {
     }
 };
 
-// Ce que le jeu garde du compte : id, pseudo affiché, URL de l'avatar
+// What the game keeps from the account: id, display name, avatar URL
 const profileOf = function (user) {
     let id = String(user.id || '');
     let avatar = user.avatar
@@ -77,7 +77,7 @@ const profileOf = function (user) {
     return {id: id, name: String(user.global_name || user.username || '').slice(0, 32), avatar: avatar};
 };
 
-// Profil signé présenté par un joueur → {id, name, avatar}, ou null
+// Signed profile presented by a player → {id, name, avatar}, or null
 const checkProfile = async function (env, token) {
     let config = configOf(env);
     let payload = config && token ? await verify(config.secret, token) : null;
@@ -90,7 +90,7 @@ const redirect = (location) => new Response(null, {status: 302, headers: {locati
 const json = (obj) => new Response(JSON.stringify(obj), {headers: {'content-type': 'application/json', 'access-control-allow-origin': '*', 'cache-control': 'no-store'}});
 const page = (status, text) => new Response('<!doctype html><meta charset="utf-8"><title>LNOB</title><body style="font-family:sans-serif;background:#0b0c14;color:#eee;padding:24px"><p>' + text + '</p><p><a style="color:#4fd8e0" href="/">Retour</a></p>', {status: status, headers: {'content-type': 'text/html; charset=utf-8'}});
 
-// Réponse aux routes /auth/discord/*, null pour les autres
+// Answer to the /auth/discord/* routes, null for the others
 const handle = async function (request, env) {
     let url = new URL(request.url);
     if (!url.pathname.startsWith('/auth/discord/'))
@@ -115,7 +115,7 @@ const handle = async function (request, env) {
             return page(400, 'Connexion expirée : réessaie depuis la page de la partie.');
         let code = url.searchParams.get('code');
         if (!code)
-            return redirect(url.origin + '/'); // refusé sur Discord
+            return redirect(url.origin + '/'); // refused on Discord
         let token = await fetch(API + '/oauth2/token', {
             method: 'POST',
             headers: {'content-type': 'application/x-www-form-urlencoded'},
@@ -126,15 +126,15 @@ const handle = async function (request, env) {
             : null;
         if (!user || !user.id)
             return page(502, 'Discord n\'a pas répondu : réessaie dans un instant.');
-        // Le jeton Discord n'est pas gardé : seulement le profil, signé
+        // The Discord token isn't kept: only the signed profile
         let profile = await sign(config.secret, Object.assign({kind: 'profile', exp: Date.now() + PROFILE_DAYS * 86400000}, profileOf(user)));
         if (state.app)
             return redirect(url.origin + '/auth/discord/done?profile=' + encodeURIComponent(profile));
         return redirect(url.origin + '/#discord=' + encodeURIComponent(profile));
     }
 
-    // App de bureau : elle intercepte cette adresse ; dans un navigateur, on
-    // revient simplement à la page joueur
+    // Desktop app: it intercepts this address; in a browser, we
+    // simply go back to the player page
     if (route === 'done')
         return redirect(url.origin + '/#discord=' + encodeURIComponent(url.searchParams.get('profile') || ''));
 

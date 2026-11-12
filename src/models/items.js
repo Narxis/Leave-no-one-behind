@@ -91,7 +91,7 @@ class Items {
         return this.getItemBySlug(slug);
     }
 
-    // Jamais en dessous de zéro
+    // Never below zero
     async remove(slug, quantity=1) {
         await DB.tables.items.decrement({quantity: quantity}, { where: { slug: slug, quantity: {[Op.gte]: quantity} } });
     }
@@ -104,7 +104,7 @@ class Items {
         let allStarters = await DB.tables.items.findAll({raw:true, where : {pool: 'starter'}});
         let players = await DB.tables.players.findAll({raw:true});
 
-        // Quantité donnée à chaque joueur : « qty » de l'objet dans items.json
+        // Quantity given to each player: the item's "qty" in items.json
         let qty = {};
         try {
             let pools = JSON.parse(fs.readFileSync(require('../config/paths').itemsFile(), 'utf8'));
@@ -121,7 +121,7 @@ class Items {
         }
     }
 
-    // Objet de départ : le joueur en a exactement count exemplaires
+    // Starting item: the player has exactly count copies
     async giveItemToPlayer(slug, discord_id, count = 1) {
         let item = await DB.tables.items.findOne({where: {slug:slug}, raw:true});
 
@@ -134,7 +134,7 @@ class Items {
         await DB.tables.items.update({owners:new_owners}, {where:{ slug:slug }})
     }
 
-    // Retire un seul exemplaire : un joueur peut en avoir plusieurs
+    // Removes a single copy: a player can have several
     async removeItemFromPlayer(slug, discord_id) {
         let item = await DB.tables.items.findOne({where: {slug:slug}, raw:true});
         if (!item) return;

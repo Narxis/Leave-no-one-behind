@@ -1,4 +1,4 @@
-// Tests du relais (relay/lobby-core.js) avec le relais Node de développement
+// Relay tests (relay/lobby-core.js) with the Node development relay
 const assert = require('assert');
 const http = require('http');
 const https = require('https');
@@ -6,7 +6,7 @@ const WebSocket = require('ws');
 const relay = require('../relay/dev-server');
 const {MAX_PLAYERS} = require('../relay/lobby-core');
 
-// Client de test : garde les messages reçus et attend ceux qu'on demande
+// Test client: keeps the received messages and waits for the requested ones
 const client = function (url) {
     let ws = new WebSocket(url);
     let inbox = [];
@@ -43,7 +43,7 @@ const get = (url) => new Promise((resolve, reject) => {
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 async function test() {
-    // RELAY_URL=http://127.0.0.1:8787 : teste un relais déjà lancé (wrangler dev)
+    // RELAY_URL=http://127.0.0.1:8787: tests an already running relay (wrangler dev)
     let external = process.env.RELAY_URL;
     let {server, port} = external ? {} : await relay.start(0, {expiryMs: 300});
     let httpBase = external ? external.replace(/\/+$/, '') : 'http://127.0.0.1:' + port;
@@ -52,13 +52,13 @@ async function test() {
 
     console.log('Testing relay');
 
-    // Page joueur servie sur /
+    // Player page served on /
     let page = await get(httpBase + '/');
     assert.equal(page.status, 200);
     assert.ok(page.body.includes('Rejoindre'));
     assert.equal((await get(httpBase + '/../package.json')).status, 404);
 
-    // Le MJ ouvre un lobby
+    // The GM opens a lobby
     let host = client(base + '/host');
     let ready = await host.next('ready');
     assert.match(ready.code, /^[A-Z2-9]{6}$/);
@@ -66,20 +66,20 @@ async function test() {
     assert.deepEqual(ready.players, []);
     let code = ready.code;
 
-    // Un joueur rejoint (code tapé en minuscules avec un tiret)
+    // A player joins (code typed in lowercase with a dash)
     let alice = join(code.slice(0, 3).toLowerCase() + '-' + code.slice(3), 'alice-0001', 'Alice');
     let welcome = await alice.next('welcome');
     assert.equal(welcome.host, true);
     assert.deepEqual(welcome.you, {id: 'alice-0001', name: 'Alice'});
     assert.deepEqual((await host.next('join')).player, {id: 'alice-0001', name: 'Alice'});
 
-    // Messages dans les deux sens
+    // Messages in both directions
     alice.json({type: 'msg', data: {kind: 'chat', text: 'salut'}});
     assert.deepEqual(await host.next('msg'), {type: 'msg', from: 'alice-0001', data: {kind: 'chat', text: 'salut'}});
     host.json({type: 'send', to: '*', data: {kind: 'roster', players: []}});
     assert.equal((await alice.next('msg')).data.kind, 'roster');
 
-    // Message privé : seul le destinataire le reçoit
+    // Private message: only the recipient gets it
     let bob = join(code, 'bob-00000001', 'Bob');
     await bob.next('welcome');
     await host.next('join', m => m.player.id === 'bob-00000001');
@@ -88,13 +88,13 @@ async function test() {
     await sleep(50);
     await assert.rejects(alice.next('msg', m => m.data.kind === 'secret'));
 
-    // Erreurs : code inconnu, mauvaise version, identifiant invalide
+    // Errors: unknown code, wrong version, invalid id
     for (let [ws, err] of [[join('ABCDEF', 'carol-0001', 'Carol'), 'unknown'], [join(code, 'carol-0001', 'Carol', 2), 'version'], [join(code, 'x', 'Carol'), 'invalid']]) {
         assert.equal((await ws.next('error')).code, err);
         assert.equal(await ws.closed, 4000);
     }
 
-    // Même joueur connecté ailleurs : l'ancienne connexion est remplacée, sans départ annoncé
+    // Same player connected elsewhere: the old connection is replaced, with no departure announced
     let alice2 = join(code, 'alice-0001', 'Alice');
     assert.equal((await alice.next('error')).code, 'replaced');
     await alice2.next('welcome');
@@ -102,11 +102,11 @@ async function test() {
     await sleep(50);
     await assert.rejects(host.next('leave', m => m.id === 'alice-0001'));
 
-    // Départ d'un joueur
+    // A player leaves
     bob.close();
     assert.equal((await host.next('leave')).id, 'bob-00000001');
 
-    // Le MJ se déconnecte puis revient avec son jeton
+    // The GM disconnects then comes back with their token
     host.close();
     assert.equal((await alice2.next('host')).online, false);
     let badHost = client(`${base}/host/${code}?token=faux`);
@@ -117,7 +117,7 @@ async function test() {
     assert.deepEqual(back.players, [{id: 'alice-0001', name: 'Alice'}]);
     assert.equal((await alice2.next('host')).online, true);
 
-    // Partie complète
+    // Full game
     let others = [];
     for (let i = 1; i < MAX_PLAYERS; i++) {
         let ws = join(code, 'player-000' + i, 'P' + i);
@@ -127,18 +127,18 @@ async function test() {
     let late = join(code, 'player-late', 'Late');
     assert.equal((await late.next('error')).code, 'full');
 
-    // Le MJ retire un joueur
+    // The GM removes a player
     host.json({type: 'kick', id: 'player-0001'});
     assert.equal((await others[0].next('error')).code, 'kicked');
     assert.equal((await host.next('leave', m => m.id === 'player-0001')).id, 'player-0001');
 
-    // Le MJ ferme la partie : le code ne sert plus
+    // The GM closes the game: the code is no longer used
     host.json({type: 'close'});
     assert.equal((await alice2.next('error')).code, 'closed');
     await host.closed;
     assert.equal((await join(code, 'alice-0001', 'Alice').next('error')).code, 'unknown');
 
-    // MJ parti trop longtemps : le lobby est oublié (délai raccourci en local)
+    // GM gone too long: the lobby is forgotten (shortened delay locally)
     if (external) {
         for (let ws of [alice2, ...others])
             ws.terminate();
@@ -155,7 +155,7 @@ async function test() {
 
     for (let ws of [alice2, ...others])
         ws.terminate();
-    // Sans application Discord réglée : connexion désactivée
+    // Without a Discord application configured: login disabled
     if (!process.env.DISCORD_CLIENT_ID)
         assert.deepEqual(JSON.parse((await get(httpBase + '/auth/discord/config')).body), {enabled: false});
     server.close();
@@ -163,7 +163,7 @@ async function test() {
     console.log('Relay OK');
 }
 
-// Connexion Discord : le relais signe le profil et refuse ceux qu'il n'a pas signés
+// Discord login: the relay signs the profile and refuses those it didn't sign
 async function test_discord() {
     console.log('Testing Discord login');
     const auth = require('../relay/discord-auth');
@@ -173,7 +173,7 @@ async function test_discord() {
     let base = httpBase.replace(/^http/, 'ws');
 
     assert.deepEqual(JSON.parse((await get(httpBase + '/auth/discord/config')).body), {enabled: true});
-    // Vers Discord : scope identify seulement, retour sur le relais, état signé
+    // To Discord: identify scope only, return to the relay, signed state
     let login = await get(httpBase + '/auth/discord/login');
     assert.equal(login.status, 302);
     let to = new URL(login.headers.location);
@@ -185,7 +185,7 @@ async function test_discord() {
     assert.equal((await auth.verify(env.DISCORD_CLIENT_SECRET, to.searchParams.get('state'))).kind, 'state');
     assert.equal((await get(httpBase + '/auth/discord/callback?code=x&state=faux')).status, 400);
 
-    // Ce que le jeu garde : id, pseudo, URL de l'avatar
+    // What the game keeps: id, nickname, avatar URL
     assert.deepEqual(auth.profileOf({id: '80351110224678912', username: 'nelly', global_name: 'Nelly', avatar: 'abc', email: 'x@y.z'}),
         {id: '80351110224678912', name: 'Nelly', avatar: 'https://cdn.discordapp.com/avatars/80351110224678912/abc.png?size=64'});
     assert.match(auth.profileOf({id: '80351110224678912', username: 'nelly', avatar: null}).avatar, /^https:\/\/cdn\.discordapp\.com\/embed\/avatars\/[0-5]\.png$/);
@@ -203,7 +203,7 @@ async function test_discord() {
     let expected = {id: '80351110224678912', name: 'nelly', avatar: 'https://cdn.discordapp.com/avatars/80351110224678912/abc.png?size=64'};
     assert.deepEqual((await nelly.next('welcome')).you.discord, expected);
     assert.deepEqual((await host.next('join')).player.discord, expected);
-    // Profil d'un autre relais, expiré ou qui n'en est pas un : ignoré
+    // Profile from another relay, expired or not a profile at all: ignored
     for (let [i, token] of [forged, expired, state, 'n.importe.quoi'].entries()) {
         let ws = join('other-000' + i, token);
         assert.equal((await ws.next('welcome')).you.discord, undefined);

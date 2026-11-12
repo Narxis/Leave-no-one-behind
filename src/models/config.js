@@ -31,7 +31,7 @@ class Config {
             await DB.tables.config.destroy({truncate: true});
         }
         let baseConfRaw = fs.readFileSync(__dirname + '/../config/baseConf.json');
-        // Réglages de partie choisis par le MJ (/parametres) par-dessus ceux de base
+        // Game settings chosen by the GM (/parametres) on top of the base ones
         let gameSettings = require('../controllers/gameSettings').asConfig();
         let baseConfFull = {...JSON.parse(baseConfRaw), ...gameSettings, ...this.baseConf};
 

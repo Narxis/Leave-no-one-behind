@@ -1,14 +1,14 @@
-// Objets utilisés par les joueurs en ligne.
+// Items used by online players.
 //
-// Un joueur demande à utiliser un objet de son inventaire ; la demande
-// s'affiche chez le MJ (page de jeu, planète, menu MJ), qui accepte ou
-// refuse. Accepté : l'objet est retiré de l'inventaire et le salon du chat
-// l'annonce ; l'effet, lui, reste appliqué par le MJ comme avant.
+// A player asks to use an item from their inventory; the request
+// shows on the GM side (game page, planet, GM menu), who accepts or
+// refuses. Accepted: the item is removed from the inventory and the chat room
+// announces it; the effect itself is still applied by the GM as before.
 //
-// Joueur → MJ : action « item-use » {slug}
-// Pages du MJ : {action: 'item-use', data: {requests}}  demandes en attente
-//               action « item-use-answer » {id, ok}       réponse du MJ
-// MJ → joueur : {kind: 'notice', text}
+// Player → GM: "item-use" action {slug}
+// GM pages: {action: 'item-use', data: {requests}}  pending requests
+//               "item-use-answer" action {id, ok}       GM's answer
+// GM → player: {kind: 'notice', text}
 const {Items} = require('../models/items');
 const lobby = require('./lobby');
 const inventory = require('./inventory');
@@ -24,7 +24,7 @@ const payload = () => ({
     data: {requests: Array.from(requests.values())}
 });
 
-// Demande d'un joueur. Renvoie {payload} pour les pages du MJ, ou {error}
+// A player's request. Returns {payload} for the GM pages, or {error}
 const request = async function (player, name, slug) {
     slug = String(slug || '');
     let item = (await inventory.getInventory(player.id)).find(i => i.slug === slug);
@@ -40,7 +40,7 @@ const request = async function (player, name, slug) {
     return {payload: payload()};
 };
 
-// Réponse du MJ : messages pour ses pages (demandes, inventaires)
+// GM's answer: messages for their pages (requests, inventories)
 const answer = async function (data) {
     data = data || {};
     let req = requests.get(String(data.id));

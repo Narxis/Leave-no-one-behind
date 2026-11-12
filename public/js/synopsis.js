@@ -12,5 +12,5 @@ async function write(fulltext) {
     }
 }
 
-// Texte envoyé par le serveur (src/controllers/intro.js), le même que pour les joueurs
+// Text sent by the server (src/controllers/intro.js), the same as for the players
 write(SYNOPSIS)

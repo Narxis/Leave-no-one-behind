@@ -1,8 +1,8 @@
-// Menu MJ : atelier d'artisanat (src/controllers/craft.js, wiki regles/artisanat.md).
-// Le MJ choisit l'artisan (un joueur ou le vaisseau), puis fabrique un objet
-// d'une recette de l'éditeur d'objets, ou assemble librement des objets de
-// son inventaire en un résultat de son choix. Le dé de réussite dépend du
-// niveau de l'armurerie.
+// GM menu: crafting workshop (src/controllers/craft.js, wiki regles/artisanat.md).
+// The GM chooses the crafter (a player or the ship), then crafts an item
+// from an item editor recipe, or freely assembles items from
+// their inventory into a result of their choice. The success die depends on the
+// armory level.
 (function () {
     const root = document.getElementById('mj-craft');
     if (!root)
@@ -30,7 +30,7 @@
 
     let state = {recipes: [], items: {}, holdings: {ship: {}, players: {}}, players: [], armory: 0, armoryMax: 3, chance: 100, failLosesIngredients: true, combat: false, log: []};
     let prefs = {crafter: 'ship', roll: true};
-    let free = [];          // assemblage libre : [{slug, qty}]
+    let free = [];          // free assembly: [{slug, qty}]
 
     try {
         Object.assign(prefs, JSON.parse(localStorage.getItem(PREFS_KEY) || '{}'));
@@ -39,7 +39,7 @@
         try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch (e) {}
     };
 
-    // 'ship' ou l'id discord d'un joueur
+    // 'ship' or a player's discord id
     const crafter = () => prefs.crafter === 'ship' ? {type: 'ship'} : {type: 'player', id: prefs.crafter};
     const owned = () => (prefs.crafter === 'ship' ? state.holdings.ship : state.holdings.players[prefs.crafter]) || {};
     const itemName = (slug) => (state.items[slug] || {}).name || slug;
@@ -84,7 +84,7 @@
         $('mj-craft-state').textContent = state.combat ? 'Combat en cours : pas d\'artisanat' : 'Moment calme';
     }
 
-    // Une recette : résultat, ingrédients (en rouge s'il en manque), bouton
+    // A recipe: result, ingredients (in red if some are missing), button
     function renderRecipes() {
         let box = $('mj-craft-recipes');
         box.innerHTML = '';
@@ -118,7 +118,7 @@
         }
     }
 
-    // Assemblage libre : ingrédients pris dans l'inventaire de l'artisan
+    // Free assembly: ingredients taken from the crafter's inventory
     function renderFree() {
         let have = owned();
         free = free.filter(f => have[f.slug]);
@@ -224,7 +224,7 @@
     });
     document.addEventListener('craft-error', (e) => toast(e.detail.data.message, true));
 
-    // Les inventaires changent aussi ailleurs (butin, marchand, glisser-déposer)
+    // Inventories also change elsewhere (loot, merchant, drag and drop)
     document.addEventListener('inventory', (e) => {
         let data = e.detail.data;
         let holdings = {ship: {}, players: {}};
@@ -239,7 +239,7 @@
         renderRecipes();
         renderFree();
     });
-    // Début ou fin de combat : l'artisanat attend un moment calme
+    // Start or end of combat: crafting waits for a quiet moment
     document.addEventListener('combat', (e) => {
         let active = !!(e.detail.data && e.detail.data.state && e.detail.data.state.active);
         if (active !== state.combat) {

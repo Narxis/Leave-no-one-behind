@@ -1,7 +1,7 @@
-// Outils communs au plan du vaisseau (page de jeu et panneau MJ).
-// Chaque salle du plan (partials/ship-rooms-svg) est un contour : son premier
-// sous-chemin est le bord extérieur, les suivants sont le bord intérieur. En
-// ne gardant que le premier, on obtient la salle pleine, qu'on peut colorier.
+// Shared helpers for the ship map (game page and GM panel).
+// Each room of the map (partials/ship-rooms-svg) is an outline: its first
+// subpath is the outer edge, the following ones are the inner edge. By
+// keeping only the first, we get the filled room, which can be colored.
 const ShipMap = (function () {
     const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -19,8 +19,8 @@ const ShipMap = (function () {
         return el;
     }
 
-    // Calque dessiné au-dessus des salles (mais sous leurs noms), vidé à
-    // chaque mise à jour
+    // Layer drawn above the rooms (but below their names), cleared on
+    // each update
     function layer(svg, id) {
         let g = svg.querySelector('#' + id);
         if (!g) {
@@ -31,8 +31,8 @@ const ShipMap = (function () {
         return g;
     }
 
-    // Masque le nom de la salle en alerte (le repère l'affiche déjà en grand)
-    // et ceux qui tomberaient sous les cercles du repère
+    // Hides the name of the room on alert (the marker already shows it large)
+    // and those that would fall under the marker circles
     function markAlertLabel(svg, roomId) {
         let room = roomId ? svg.querySelector('#' + CSS.escape(roomId)) : null;
         let box = room ? room.getBBox() : null;
@@ -47,7 +47,7 @@ const ShipMap = (function () {
         });
     }
 
-    // Salle pleine (forme extérieure de la salle)
+    // Filled room (outer shape of the room)
     function roomFill(svg, roomId, cls, parent) {
         let room = svg.querySelector('#' + CSS.escape(roomId));
         if (!room)
@@ -55,7 +55,7 @@ const ShipMap = (function () {
         return svgEl('path', {d: outerPath(room.getAttribute('d')), class: cls, 'data-room': roomId}, parent);
     }
 
-    // Repère de l'alerte : cercles qui s'élargissent et nom de la salle
+    // Alert marker: widening circles and room name
     function alertMarker(svg, roomId, label, parent) {
         let room = svg.querySelector('#' + CSS.escape(roomId));
         if (!room)
@@ -68,7 +68,7 @@ const ShipMap = (function () {
             svgEl('circle', {cx: cx, cy: cy, r: 18, class: 'ship-alert-ring ring' + i, style: 'transform-origin:' + cx + 'px ' + cy + 'px'}, g);
         svgEl('circle', {cx: cx, cy: cy, r: 7, class: 'ship-alert-dot'}, g);
         if (label) {
-            // Le nom passe sous la salle, ou au-dessus si on est en bas du plan
+            // The name goes under the room, or above if we are at the bottom of the map
             let below = cy < 470;
             let ty = below ? Math.min(box.y + box.height + 30, cy + 70) : Math.max(box.y - 14, cy - 60);
             let tx = Math.min(Math.max(cx, 90), 980);

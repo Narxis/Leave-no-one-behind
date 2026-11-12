@@ -5,7 +5,7 @@ const npcs = require("./npcs");
 const loot = require("./loot");
 const money = require("./money");
 
-// Paliers de dégâts, les mêmes que les jets du menu MJ
+// Damage tiers, the same as the GM menu rolls
 const DAMAGE = {
     faible: [1, 4],
     moyen: [5, 8],
@@ -14,17 +14,17 @@ const DAMAGE = {
 const LOG_SIZE = 20;
 const LOOT_SIZE = 12;
 
-// Points de vie des joueurs et compagnons : 1 point de moral = 10 PV.
-// Le moral (en base, ou dans le fichier des compagnons) fait foi ; on garde
-// seulement à part les PV perdus sous la dizaine (wounds, de 0 à 9), pour
-// que 3 dégâts ne fassent pas perdre un point de moral entier
+// Health points of players and companions: 1 morale point = 10 HP.
+// Morale (in the database, or in the companions file) is authoritative; we keep
+// only the HP lost below the ten separately (wounds, from 0 to 9), so
+// that 3 damage doesn't cost a whole morale point
 const HP_PER_MORAL = 10;
 const MAX_HP = 100 * HP_PER_MORAL;
 let wounds = {};
 
-// Statuts prêts à l'emploi que le MJ peut poser sur un ennemi, un joueur ou
-// un compagnon, pour un nombre de tours ; il peut aussi en inventer (nom,
-// dégâts par tour, empêche d'attaquer). Ils agissent au tour suivant
+// Ready-made statuses the GM can set on an enemy, a player or
+// a companion, for a number of turns; they can also invent some (name,
+// damage per turn, prevents attacking). They act on the next turn
 const STATUSES = {
     saignement: {name: 'Saignement', damage: [1, 4]},
     poison: {name: 'Poison', damage: [3, 3]},
@@ -32,25 +32,25 @@ const STATUSES = {
 };
 const MAX_STATUS_TURNS = 9;
 
-// Initiative (wiki : regles/combat.md, « Qui commence ») choisie par le MJ
-// au début du combat :
-// - joueurs : ils lancent le combat, ils commencent ;
-// - adversaires : les joueurs sont attaqués ou surpris ;
-// - hasard : pile ou face, sauf si aucun joueur n'a plus de INITIATIVE_MORAL
-//   de moral (les adversaires commencent alors) ;
-// - manuel : le MJ range lui-même l'ordre (joueurs puis adversaires au départ).
-// Les joueurs, puis les compagnons à égalité, jouent du moral le plus haut
-// au plus bas ; à égalité, dans l'ordre d'arrivée (P2 avant P4)
+// Initiative (wiki: regles/combat.md, "Qui commence") chosen by the GM
+// at the start of combat:
+// - players: they start the combat, they go first;
+// - opponents: the players are attacked or surprised;
+// - random: heads or tails, unless no player has more than INITIATIVE_MORAL
+//   morale (the opponents then go first);
+// - manual: the GM sets the order themselves (players then opponents at first).
+// Players, then companions on a tie, play from highest morale
+// to lowest; on a tie, in order of arrival (P2 before P4)
 const INITIATIVE_MORAL = 75;
 const INITIATIVE_MODES = ['hasard', 'joueurs', 'adversaires', 'manuel'];
 
-// État du combat en cours, gardé en mémoire : il est renvoyé à chaque
-// action pour que l'écran de jeu et le menu MJ restent synchronisés
-// pending : attaque désignée par le MJ, en attente du /roll Combat du joueur
-// lootRevealed : tous les ennemis sont K.O., leur butin est montré aux joueurs
-// turn : numéro du tour, avancé par le MJ (les statuts agissent à chaque tour)
-// fighters : statuts des joueurs et compagnons, par id
-// order : ordre de jeu ({kind: player / ally / enemy, id, name}), current : à qui le tour
+// State of the current combat, kept in memory: it is sent back on each
+// action so the game screen and GM menu stay in sync
+// pending: attack designated by the GM, waiting for the player's /roll Combat
+// lootRevealed: all enemies are K.O., their loot is shown to the players
+// turn: turn number, advanced by the GM (statuses act each turn)
+// fighters: statuses of players and companions, by id
+// order: turn order ({kind: player / ally / enemy, id, name}), current: whose turn it is
 let state = {active: false, enemies: [], log: [], pending: null, lootRevealed: false, turn: 1, fighters: {}, order: [], current: 0};
 let nextId = 1;
 
@@ -58,13 +58,13 @@ const rollRange = ([min, max]) => min + Math.floor(Math.random() * (max - min + 
 const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
 const toInt = (v, def) => Number.isFinite(parseInt(v)) ? parseInt(v) : def;
 
-// Ennemis préparés dans l'éditeur (/bestiaire)
+// Enemies prepared in the editor (/bestiaire)
 const getBestiary = function () {
     return npcs.getEnemies();
 }
 
-// Objets proposés au MJ pour le butin : la monnaie, puis tous ceux de
-// items.json (qty : la quantité proposée d'office quand on l'ajoute à un butin)
+// Items offered to the GM for loot: currency, then all those of
+// items.json (qty: the quantity suggested by default when added to a loot)
 const getLootList = function () {
     let pools = JSON.parse(fs.readFileSync(require('../config/paths').itemsFile(), 'utf8'));
     let coins = money.lootItem(10);
@@ -79,15 +79,15 @@ const getLootList = function () {
     return list;
 }
 
-// Butin d'un ennemi ou d'un choix : un objet connu (avec son image) ou une
-// saisie libre du MJ, en un ou plusieurs exemplaires (qty)
+// Loot of an enemy or a choice: a known item (with its image) or a
+// free GM input, in one or more copies (qty)
 const makeLoot = function (raw) {
     let known = getLootList();
     let items = [];
     for (let e of (Array.isArray(raw) ? raw : []).slice(0, LOOT_SIZE).map(loot.entry)) {
         if (!e)
             continue;
-        // La monnaie (« Crédits », « monnaie »…) va dans les bourses, pas dans les coffres
+        // Currency ("Crédits", "monnaie"…) goes into purses, not chests
         if (money.isMoney(e.name)) {
             items.push(money.lootItem(e.qty));
             continue;
@@ -111,7 +111,7 @@ const addLog = function (entry) {
     return entry;
 }
 
-// Un ennemi vient du bestiaire (par son slug ou son nom) ou d'une saisie libre
+// An enemy comes from the bestiary (by its slug or name) or from free input
 const makeEnemy = function (raw) {
     let base = getBestiary().find(b => b.slug === raw.slug || b.name === raw.name) || {};
     let maxHp = clamp(toInt(raw.hp, base.hp || 10), 1, 999);
@@ -132,7 +132,7 @@ const findEnemy = function (id) {
     return state.enemies.find(e => e.id === toInt(id, -1));
 }
 
-// Ordre de jeu selon le mode d'initiative (voir INITIATIVE_MODES)
+// Turn order according to the initiative mode (see INITIATIVE_MODES)
 const makeOrder = function (mode, players, allyList, enemies, random = Math.random) {
     let team = players.map((p, i) => ({kind: 'player', id: String(p.discord_id), name: p.name, moral: p.moral, rank: i}))
         .concat(allyList.map((a, i) => ({kind: 'ally', id: 'npc' + a.id, name: a.name, moral: a.moral, rank: players.length + i})));
@@ -162,7 +162,7 @@ const start = async function (data) {
 
 const orderKey = (f) => f.kind + ':' + f.id;
 
-// Un combattant K.O. (ou parti) passe son tour
+// A K.O. (or departed) fighter skips their turn
 const isDown = async function (f) {
     if (f.kind === 'enemy') {
         let enemy = findEnemy(f.id);
@@ -172,7 +172,7 @@ const isDown = async function (f) {
     return !fighter || hpOf(fighter) <= 0;
 }
 
-// Premier combattant debout à partir de l'index from (-1 : aucun)
+// First standing fighter starting from index from (-1: none)
 const livingFrom = async function (from) {
     for (let i = from; i < state.order.length; i++)
         if (!(await isDown(state.order[i])))
@@ -180,8 +180,8 @@ const livingFrom = async function (from) {
     return -1;
 }
 
-// Au suivant dans l'ordre de jeu ; après le dernier, le tour passe
-// (les statuts agissent) et l'ordre reprend au premier debout
+// To the next one in the turn order; after the last, the turn passes
+// (statuses act) and the order resumes at the first standing one
 const nextFighter = async function () {
     if (!state.active || !state.order.length)
         return null;
@@ -189,12 +189,12 @@ const nextFighter = async function () {
     if (i < 0)
         return nextTurn();
     state.current = i;
-    // Pas dans le journal : l'ordre de jeu suffit à le montrer
+    // Not in the log: the turn order is enough to show it
     return Object.assign({type: 'next', at: Date.now()}, state.order[i]);
 }
 
-// Le MJ change l'ordre de jeu (order : clés « kind:id » dans le nouvel
-// ordre) ou donne la main à un combattant (current : sa clé)
+// The GM changes the turn order (order: "kind:id" keys in the new
+// order) or hands the turn to a fighter (current: their key)
 const setOrder = function (data) {
     if (!state.active)
         return null;
@@ -217,14 +217,14 @@ const setOrder = function (data) {
     return {type: 'order', at: Date.now()};
 }
 
-// Un nouveau venu (renfort) joue en dernier
+// A newcomer (reinforcement) plays last
 const joinOrder = function (f) {
     if (!state.order.some(o => orderKey(o) === orderKey(f)))
         state.order.push(f);
 }
 
-// Renfort ennemi en plein combat : le butin redevient caché jusqu'à la
-// nouvelle victoire (ce qui n'a pas été distribué reste dedans)
+// Enemy reinforcement mid-combat: the loot is hidden again until the
+// next victory (what wasn't distributed stays in it)
 const reinforce = function (data) {
     if (!state.active || !data.enemy)
         return null;
@@ -235,7 +235,7 @@ const reinforce = function (data) {
     return addLog({type: 'reinforcement', enemy_id: enemy.id, name: enemy.name});
 }
 
-// Un compagnon créé pendant le combat est annoncé comme renfort allié
+// A companion created during combat is announced as an allied reinforcement
 const allyJoined = function (ally) {
     if (!state.active)
         return null;
@@ -244,9 +244,9 @@ const allyJoined = function (ally) {
         event: addLog({type: 'reinforcement', name: ally.name, ally: true})}};
 }
 
-// Statuts d'un combattant : ennemi (dans sa fiche) ou joueur / compagnon
-// (state.fighters, par id : discord_id ou « npc<id> »). Chaque statut :
-// {name, turns, damage: [min, max] ou null, stun: ne peut pas attaquer}
+// Statuses of a fighter: enemy (in its sheet) or player / companion
+// (state.fighters, by id: discord_id or "npc<id>"). Each status:
+// {name, turns, damage: [min, max] or null, stun: can't attack}
 const statusesOf = function (data, create = false) {
     if (data.enemy_id !== undefined) {
         let enemy = findEnemy(data.enemy_id);
@@ -265,8 +265,8 @@ const isStunned = (statuses) => Object.values(statuses || {}).some(s => s.stun);
 const slugify = (name) => name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-// Statut décrit par le MJ : connu (data.status) ou personnalisé (nom,
-// dégâts par tour, empêche d'attaquer). Renvoie {key, status} ou null
+// Status described by the GM: known (data.status) or custom (name,
+// damage per turn, prevents attacking). Returns {key, status} or null
 const makeStatus = function (data, statuses) {
     if (STATUSES[data.status]) {
         let base = STATUSES[data.status];
@@ -282,8 +282,8 @@ const makeStatus = function (data, statuses) {
     };
 }
 
-// Statut posé par une attaque qui touche (réglé par le MJ avant de valider
-// l'attaque) : renvoie {key, name, turns} pour le journal, ou undefined
+// Status set by an attack that hits (set by the GM before confirming
+// the attack): returns {key, name, turns} for the log, or undefined
 const applyHitStatus = function (spec, statuses) {
     let made = spec && statuses && makeStatus(spec, statuses);
     if (!made)
@@ -293,8 +293,8 @@ const applyHitStatus = function (spec, statuses) {
     return {key: made.key, name: made.status.name, turns: turns};
 }
 
-// Le MJ pose un statut (connu ou personnalisé) sur un ennemi, un joueur ou
-// un compagnon, ou le retire avec 0 tour
+// The GM sets a status (known or custom) on an enemy, a player or
+// a companion, or removes it with 0 turns
 const setStatus = async function (data) {
     if (!state.active)
         return null;
@@ -328,8 +328,8 @@ const setStatus = async function (data) {
         npc_target: target.ally_id !== undefined}, target));
 }
 
-// Tour suivant : les statuts qui blessent agissent (ennemis, joueurs et
-// compagnons), puis chaque statut perd un tour
+// Next turn: harmful statuses act (enemies, players and
+// companions), then each status loses a turn
 const nextTurn = async function () {
     if (!state.active)
         return null;
@@ -393,7 +393,7 @@ const end = function () {
     return addLog({type: 'end'});
 }
 
-// Quand le dernier ennemi tombe, le butin de tous les ennemis est révélé
+// When the last enemy falls, the loot of all enemies is revealed
 const checkVictory = function () {
     if (state.lootRevealed || !state.enemies.length || state.enemies.some(e => e.hp > 0))
         return;
@@ -402,7 +402,7 @@ const checkVictory = function () {
     addLog({type: 'loot', items: items.map(lootLabel)});
 }
 
-// Le MJ choisit le butin d'un ennemi (avant ou pendant le combat)
+// The GM chooses an enemy's loot (before or during combat)
 const setLoot = function (data) {
     let enemy = findEnemy(data.enemy_id);
     if (!enemy)
@@ -411,9 +411,9 @@ const setLoot = function (data) {
     return {type: 'set-loot', enemy_id: enemy.id};
 }
 
-// Une fois le combat gagné, le MJ distribue le butin : l'objet n° index
-// (dans l'ordre affiché, tous ennemis confondus) quitte le butin. Le nom
-// évite de prendre un autre objet si la liste a changé entre-temps
+// Once the combat is won, the GM distributes the loot: item no. index
+// (in display order, all enemies together) leaves the loot. The name
+// avoids taking another item if the list changed in the meantime
 const takeLoot = function (index, slug, name) {
     if (!state.lootRevealed)
         return null;
@@ -430,7 +430,7 @@ const takeLoot = function (index, slug, name) {
     return null;
 }
 
-// Le MJ corrige les PV d'un ennemi à la main
+// The GM fixes an enemy's HP by hand
 const setHp = function (data) {
     let enemy = findEnemy(data.enemy_id);
     if (!enemy)
@@ -441,19 +441,19 @@ const setHp = function (data) {
     return entry;
 }
 
-// Le MJ désigne l'ennemi visé et le joueur qui attaque ; l'attaque attend
-// ensuite le /roll Combat de ce joueur sur Discord
+// The GM designates the targeted enemy and the attacking player; the attack then waits
+// for that player's /roll Combat on Discord
 const target = async function (data) {
     let enemy = findEnemy(data.enemy_id);
     if (!state.active || !enemy || enemy.hp <= 0)
         return null;
     let player = await new Player().getData(data.discord_id);
-    // Un joueur étourdi (ou sous un statut qui empêche d'attaquer) passe son tour
+    // A stunned player (or under a status preventing attacks) skips their turn
     if (!player || isStunned(state.fighters[String(player.discord_id)]))
         return null;
     state.pending = {enemy_id: enemy.id, enemy: enemy.name, discord_id: player.discord_id, player: player.name};
     let entry = addLog(Object.assign({type: 'target'}, state.pending));
-    // Statut à poser si l'attaque touche, réglé par le MJ avec la cible
+    // Status to set if the attack hits, set by the GM with the target
     let s = data.status;
     if (s && typeof s === 'object')
         state.pending.status = {status: String(s.status || ''), name: String(s.name || '').slice(0, 30),
@@ -469,8 +469,8 @@ const cancelTarget = function () {
     return addLog({type: 'target-cancel', enemy: pending.enemy, player: pending.player});
 }
 
-// Règle une attaque sur un ennemi : le jet doit atteindre sa défense ;
-// plus la marge est grande, plus le palier de dégâts est élevé
+// Resolves an attack on an enemy: the roll must reach its defense;
+// the bigger the margin, the higher the damage tier
 const applyAttack = function (attacker, enemy, data, status) {
     let entry = Object.assign({
         type: 'player-attack',
@@ -498,7 +498,7 @@ const applyAttack = function (attacker, enemy, data, status) {
     };
 }
 
-// Appelé après chaque /roll : si c'est le jet de combat attendu, il règle l'attaque
+// Called after each /roll: if it is the expected combat roll, it resolves the attack
 const resolveRoll = function (roll) {
     let data = roll && roll.data;
     let pending = state.pending;
@@ -514,8 +514,8 @@ const resolveRoll = function (roll) {
     return applyAttack({discord_id: pending.discord_id, player: pending.player}, enemy, data, pending.status);
 }
 
-// Un allié (PNJ) n'a pas de Discord : quand le MJ le désigne, le serveur
-// lance son dé tout de suite. Renvoie le jet (affiché sur son onglet) puis l'attaque
+// An ally (NPC) has no Discord: when the GM designates it, the server
+// rolls its die right away. Returns the roll (shown on its tab) then the attack
 const allyAttack = function (data) {
     let enemy = findEnemy(data.enemy_id);
     let ally = allies.findAlly(data.ally_id);
@@ -529,12 +529,12 @@ const allyAttack = function (data) {
     ];
 }
 
-// Attaque d'un ennemi, lancée par le MJ : l'offense est la chance de
-// toucher en %. Les dégâts sont affichés, le MJ les applique au joueur
-// La cible est un joueur (discord_id) ou un compagnon (ally_id) choisi par le MJ
+// An enemy's attack, launched by the GM: the offense is the chance to
+// hit in %. The damage is shown, the GM applies it to the player
+// The target is a player (discord_id) or a companion (ally_id) chosen by the GM
 const enemyAttack = async function (data) {
     let enemy = findEnemy(data.enemy_id);
-    // Un ennemi étourdi ne peut pas attaquer
+    // A stunned enemy can't attack
     if (!enemy || enemy.hp <= 0 || isStunned(enemy.statuses))
         return null;
     let target = {};
@@ -548,8 +548,8 @@ const enemyAttack = async function (data) {
         if (player)
             target = {target_id: String(player.discord_id), target: player.name};
     }
-    // Le MJ peut imposer l'issue (touché / raté) et les dégâts, par exemple
-    // pour épargner un joueur. Le dé affiché reste cohérent avec l'issue
+    // The GM can force the outcome (hit / miss) and the damage, for example
+    // to spare a player. The displayed die stays consistent with the outcome
     let dice = Math.floor(Math.random() * 100) + 1;
     let forced = false;
     if (data.outcome === 'hit' && dice > enemy.offense) {
@@ -579,7 +579,7 @@ const enemyAttack = async function (data) {
     }
     if (forced)
         entry.forced = true;
-    // Les dégâts sont retirés tout de suite des PV de la cible
+    // The damage is taken off the target's HP right away
     let extra = [];
     if (entry.hit && entry.target_id) {
         let fighter = await findFighter(data);
@@ -588,14 +588,14 @@ const enemyAttack = async function (data) {
             extra = await setFighterHp(fighter, hp);
             entry.hp = Math.max(0, hp);
         }
-        // Statut réglé par le MJ avec l'attaque, posé si la cible tient debout
+        // Status set by the GM with the attack, applied if the target is still standing
         if (fighter && hp > 0 && state.active)
             entry.status = applyHitStatus(data.status, statusesOf(fighter.ally ? {ally_id: fighter.ally.id} : {discord_id: fighter.id}, true));
     }
     return {entry: addLog(entry), extra: extra};
 }
 
-// Joueur (discord_id) ou compagnon (ally_id) dont on gère les PV
+// Player (discord_id) or companion (ally_id) whose HP are managed
 const findFighter = async function (data) {
     if (data.ally_id !== undefined) {
         let ally = allies.findAlly(data.ally_id);
@@ -611,8 +611,8 @@ const hpOf = function (fighter) {
     return Math.max(0, fighter.moral * HP_PER_MORAL - (wounds[fighter.id] || 0));
 }
 
-// Fixe les PV : le moral devient le nombre de dizaines entamées. Renvoie
-// les messages qui mettent à jour les onglets (stat du joueur ou compagnons)
+// Sets the HP: morale becomes the number of started tens. Returns
+// the messages that update the tabs (player stat or companions)
 const setFighterHp = async function (fighter, hp) {
     hp = clamp(Math.round(hp), 0, MAX_HP);
     let moral = Math.ceil(hp / HP_PER_MORAL);
@@ -628,7 +628,7 @@ const setFighterHp = async function (fighter, hp) {
     return [{action: 'playerStat', error: false, data: player}];
 }
 
-// Le MJ fixe les PV d'un joueur ou d'un compagnon, à tout moment
+// The GM sets the HP of a player or companion, at any time
 const setPlayerHp = async function (data) {
     let fighter = await findFighter(data);
     if (!fighter)
@@ -637,7 +637,7 @@ const setPlayerHp = async function (data) {
     let extra = await setFighterHp(fighter, toInt(data.hp, before));
     let entry = {type: 'player-hp', target_id: fighter.id, target: fighter.name, npc_target: !!fighter.ally,
         hp: hpOf(fighter), change: hpOf(fighter) - before};
-    // Hors combat, pas de journal : seuls les onglets se mettent à jour
+    // Outside combat, no log: only the tabs update
     return {entry: state.active ? addLog(entry) : Object.assign({at: Date.now()}, entry), extra: extra};
 }
 
@@ -657,10 +657,10 @@ const ACTIONS = {
     'combat-order': setOrder
 };
 
-// Point d'entrée des actions websocket « combat-* » : renvoie l'état
-// complet et l'événement qui vient de se produire
-// Une action peut aussi produire d'autres messages ({entry, extra}) : les
-// PV d'un joueur ou d'un compagnon touché, à mettre à jour sous la carte
+// Entry point of the "combat-*" websocket actions: returns the full
+// state and the event that just happened
+// An action can also produce other messages ({entry, extra}): the
+// HP of a hit player or companion, to update under the card
 const handle = async function (response) {
     let action = ACTIONS[response.action];
     let event = action ? await action(response.data || {}) : null;

@@ -1,7 +1,7 @@
 async function initialiseKeyListener() {
-    // Pendant un combat, les raccourcis de l'interface hors combat (modules,
-    // menus, plan...) sont coupés ; restent Échap (menu de navigation) et les
-    // flèches haut / bas des onglets joueurs, utiles en combat
+    // During combat, the shortcuts of the non-combat interface (modules,
+    // menus, map...) are disabled; Escape (navigation menu) and the
+    // up / down arrows of the player tabs remain, useful in combat
     const COMBAT_KEYS = ["Escape", "ArrowUp", "ArrowDown"];
     const inCombat = () => document.body.classList.contains('combat-mode');
     document.addEventListener("keydown", (event) => {
@@ -15,7 +15,7 @@ async function initialiseKeyListener() {
                 event.preventDefault();
                 document.querySelector(".plan-container").classList.toggle("mapshow")
                 break;
-// J'ai mis un toggle showroom sur tout les modules pour tester, à dégager si on veut rajouter quelque chose ici
+// I put a showroom toggle on all the modules for testing, remove it if we want to add something here
             case "F2":
                 event.preventDefault();
                 document.querySelectorAll(".zone-active").forEach(function (e) {
@@ -115,7 +115,7 @@ async function initialiseKeyListener() {
                 document.querySelector(".tab-grav").classList.toggle("open");
                 break;
             case "ArrowLeft":
-                // Pas d'onglet consommables sur la planète
+                // No consumables tab on the planet
                 if (typeof initialiseleLeftTabs !== 'function') break;
                 (async function leftKeyPress() {
                     await initialiseleLeftTabs();

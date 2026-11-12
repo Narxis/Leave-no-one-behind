@@ -1,4 +1,4 @@
-/* Éditeur de races (races.ejs + races-editor.js) */
+/* Race editor (races.ejs + races-editor.js) */
 .races-page {
     overflow: auto;
 }
@@ -124,7 +124,7 @@
     gap: 4px;
 }
 
-/* Bonus en vert, malus en rouge (mêmes couleurs que le tableau de /persos) */
+/* Bonus in green, malus in red (same colors as the /persos table) */
 .re-mod {
     padding: 1px 6px;
     border-radius: 999px;
@@ -139,7 +139,7 @@
 .mod-m1 { background: rgb(240 90 90 / 14%); color: #f5b4b4; }
 .mod-m2 { background: rgb(240 90 90 / 28%); color: #ff8f8f; }
 
-/* ---------- Formulaire ---------- */
+/* ---------- Form ---------- */
 
 .re-form {
     position: sticky;
@@ -328,7 +328,7 @@
     cursor: default;
 }
 
-/* Bonus : le bouton choisi prend la couleur du bonus ou du malus */
+/* Bonus: the chosen button takes the bonus or malus color */
 .re-seg-mod button[aria-checked="true"].mod-2,
 .re-seg-mod button[aria-checked="true"].mod-1 { box-shadow: inset 0 0 0 1px #8ff0ae; }
 .re-seg-mod button[aria-checked="true"].mod-m1,
@@ -491,7 +491,7 @@
     border-color: var(--ui-danger);
 }
 
-/* Tableau des bonus de /persos : repère des races customs */
+/* /persos bonus table: marker for custom races */
 .stats-custom {
     margin-left: 4px;
     padding: 0 6px;

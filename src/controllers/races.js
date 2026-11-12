@@ -1,26 +1,26 @@
 const fs = require('fs');
 const path = require('path');
 
-// Races jouables : celles de base (config/raceStats.json + lang.json) et les
-// races customs créées dans l'éditeur (/races), gardées dans
-// storage/cache/customRaces.json. Les customs sont fusionnées dans LANG
-// (descriptions, formes « un/le/du… » des textes de cartes) au démarrage et
-// à chaque modification.
+// Playable races: the base ones (config/raceStats.json + lang.json) and the
+// custom races created in the editor (/races), kept in
+// storage/cache/customRaces.json. The customs are merged into LANG
+// (descriptions, "un/le/du…" forms of card texts) at startup and
+// on each change.
 //
-// Le MJ choisit les races customs de la partie (/persos) : seules celles-là
-// sont jouables, citées par les cartes et visibles dans le Codex des joueurs.
+// The GM chooses the game's custom races (/persos): only those
+// are playable, mentioned by cards and visible in the players' Codex.
 
 const BASE_FILE = path.join(__dirname, '../config/raceStats.json');
-// Dans le dossier de données (voir config/paths.js)
+// In the data folder (see config/paths.js)
 const paths = require('../config/paths');
 const CUSTOM_FILE = paths.cache('customRaces.json');
 const IMAGE_DIR = paths.raceImages();
-// Races customs autorisées, gardées entre les redémarrages comme les paramètres de partie
+// Allowed custom races, kept across restarts like the game settings
 const ALLOWED_FILE = paths.cache('raceSettings.json');
 const STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon'];
-// Un menu déroulant Discord propose 25 options au plus (choix de la race dans /create)
+// A Discord dropdown offers 25 options at most (race choice in /create)
 const MAX_RACES = 25;
-// Vignette d'une race custom pour l'app des joueurs (un message du relais fait 64 Ko au plus)
+// Thumbnail of a custom race for the players' app (a relay message is 64 KB at most)
 const THUMB_MAX = 40 * 1024;
 
 const clampMod = (v) => Math.max(-2, Math.min(2, parseInt(v) || 0));
@@ -38,7 +38,7 @@ const readCustom = function () {
     }
 }
 
-// Slugs des races customs autorisées ; null : jamais réglé, toutes le sont
+// Slugs of allowed custom races; null: never set, all are allowed
 const readAllowed = function () {
     try {
         let saved = JSON.parse(fs.readFileSync(ALLOWED_FILE, 'utf8'));
@@ -51,7 +51,7 @@ const readAllowed = function () {
 
 const writeAllowed = (allowed) => fs.writeFileSync(ALLOWED_FILE, JSON.stringify({allowed: allowed}, null, 2));
 
-// Race jouable dans cette partie : de base, ou custom cochée par le MJ
+// Race playable in this game: base, or custom checked by the GM
 const isAllowed = function (slug) {
     let custom = readCustom().find(r => r.slug === slug);
     if (!custom)
@@ -60,15 +60,15 @@ const isAllowed = function (slug) {
     return !allowed || allowed.includes(slug);
 }
 
-// Nom affiché d'une race de base, à partir de son identifiant (nek_eau → Nek-Eau)
+// Displayed name of a base race, from its id (nek_eau → Nek-Eau)
 const baseLabel = (slug) => slug.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-');
 
-// Identifiant d'une race custom : sert de nom d'image et de clé partout
+// Id of a custom race: used as image name and key everywhere
 const slugify = (name) => String(name).toLowerCase()
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 30);
 
-// Formes utilisées par les variables des cartes ([un_race_1], [le_race_2]…)
+// Forms used by card variables ([un_race_1], [le_race_2]…)
 const grammar = function (name, plural, feminine) {
     let vowel = /^[aeiouyhâàéèêëîïôöûü]/i.test(name);
     return {
@@ -84,7 +84,7 @@ const grammar = function (name, plural, feminine) {
     };
 }
 
-// Liste complète, races de base d'abord
+// Full list, base races first
 const list = function () {
     let base = readBase();
     let races = Object.keys(base).map(slug => ({
@@ -100,13 +100,13 @@ const list = function () {
     return races;
 }
 
-// Races de la partie : de base, plus les customs autorisées
+// Races of the game: base, plus the allowed customs
 const playable = function () {
     let allowed = readAllowed();
     return list().filter(r => !r.custom || !allowed || allowed.includes(r.slug));
 }
 
-// Le MJ coche les races customs de la partie. Renvoie {allowed}
+// The GM checks the game's custom races. Returns {allowed}
 const setAllowed = function (slugs) {
     let known = readCustom().map(r => r.slug);
     let allowed = [...new Set((Array.isArray(slugs) ? slugs : []).map(String))].filter(s => known.includes(s));
@@ -115,13 +115,13 @@ const setAllowed = function (slugs) {
     return {allowed: allowed};
 }
 
-// Liste pour le MJ : chaque race custom avec son état
+// List for the GM: each custom race with its state
 const allowedState = function () {
     let allowed = readAllowed();
     return readCustom().map(r => ({slug: r.slug, name: r.name, allowed: !allowed || allowed.includes(r.slug)}));
 }
 
-// Même forme que raceStats.json, customs comprises (lu par le bot et /persos)
+// Same shape as raceStats.json, customs included (read by the bot and /persos)
 const getStats = function () {
     let stats = readBase();
     for (let race of readCustom())
@@ -134,7 +134,7 @@ const nameOf = function (slug) {
     return race ? race.name : (slug ? baseLabel(slug) : '');
 }
 
-// Les races customs dans LANG : description (fiche perso) et formes des cartes
+// Custom races in LANG: description (character sheet) and card forms
 let applied = [];
 const applyToLang = function () {
     for (let slug of applied) {
@@ -150,7 +150,7 @@ const applyToLang = function () {
     }
 }
 
-// Création ou modification d'une race custom. Renvoie {race} ou {error}
+// Creating or editing a custom race. Returns {race} or {error}
 const save = function (data) {
     let name = String(data.name || '').trim().slice(0, 30);
     if (!name)
@@ -176,7 +176,7 @@ const save = function (data) {
         desc: escapeHtml(String(data.desc || '').replace(/\s+/g, ' ').trim().slice(0, 600)),
         image: existing ? existing.image : '/img/races/wat.png'
     };
-    // Image envoyée par l'éditeur : un PNG déjà redimensionné par le navigateur
+    // Image sent by the editor: a PNG already resized by the browser
     if (data.image && /^data:image\/png;base64,/.test(data.image)) {
         let buffer = Buffer.from(data.image.split(',')[1], 'base64');
         if (buffer.length > 3 * 1024 * 1024)
@@ -184,7 +184,7 @@ const save = function (data) {
         fs.writeFileSync(path.join(IMAGE_DIR, slug + '.png'), buffer);
         race.image = '/img/races/' + slug + '.png?v=' + Date.now();
     }
-    // Vignette JPEG faite par l'éditeur : c'est elle que reçoit l'app des joueurs
+    // JPEG thumbnail made by the editor: it is what the players' app receives
     if (data.image && /^data:image\/png;base64,/.test(data.image)) {
         try {
             fs.unlinkSync(path.join(IMAGE_DIR, slug + '-thumb.jpg'));
@@ -200,7 +200,7 @@ const save = function (data) {
         customs[customs.indexOf(existing)] = race;
     else {
         customs.push(race);
-        // Nouvelle race : autorisée d'office dans la partie
+        // New race: allowed by default in the game
         let allowed = readAllowed();
         if (allowed)
             writeAllowed(allowed.concat(slug));
@@ -210,7 +210,7 @@ const save = function (data) {
     return {race: Object.assign({}, race, {custom: true})};
 }
 
-// Suppression d'une race custom (refusée si un personnage la porte encore)
+// Deleting a custom race (refused if a character still has it)
 const remove = async function (slug) {
     let customs = readCustom();
     let race = customs.find(r => r.slug === slug);

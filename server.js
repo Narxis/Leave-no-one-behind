@@ -15,9 +15,9 @@ const qrcode = require('qrcode-terminal');
 const startServer = async function() {
 
     constants.register();
-    // Dossiers de données (bases, storage/cache) créés si besoin
+    // Data folders (databases, storage/cache) created if needed
     require('./src/config/paths').prepare();
-    // Races customs (éditeur /races) ajoutées aux textes du jeu
+    // Custom races (/races editor) added to the game texts
     require('./src/controllers/races').applyToLang();
     let DB = new db.DB;
     global.DB = await DB.init();
@@ -49,7 +49,7 @@ const startServer = async function() {
     });
 
     WS.init();
-    // DISABLE_BOT=true : serveur de test sans connecter le bot Discord
+    // DISABLE_BOT=true: test server without connecting the Discord bot
     if (process.env.DISABLE_BOT !== 'true')
         Bot.start();
 
@@ -58,8 +58,8 @@ const startServer = async function() {
 
 module.exports = {start: startServer};
 
-// Lancé avec node server.js. L'app de bureau (electron/main.js) appelle
-// start() elle-même, sans la bannière ni le QR code
+// Started with node server.js. The desktop app (electron/main.js) calls
+// start() itself, without the banner or the QR code
 if (require.main === module) {
     if (process.env.FORCE_COLOR !== 'true') {
         console.log('Add FORCE_COLOR=true to env var for colors !');
@@ -91,7 +91,7 @@ if (require.main === module) {
             log('Ajouter FORCE_COLOR=true aux variables d\'environnement pour les couleurs sur gitbash \n');
         log(`http://localhost:${PORT}/` + chalk.hex('#aaaaaa')(' (local)'),'#0645AD')
         log(`http://${ip}:${PORT}/` + chalk.hex('#aaaaaa')(' (Wifi Network)'),'#0645AD')
-        // Lien MJ (avec la clé) : les autres appareils du réseau n'ont pas les pages MJ
+        // GM link (with the key): other devices on the network don't get the GM pages
         let mjLink = require('./src/controllers/mjAccess').mjUrl(`http://${ip}:${PORT}`, 'mj-menu');
         log(mjLink + chalk.hex('#aaaaaa')(' (MJ sur le Wifi)'),'#0645AD')
         qrcode.generate(mjLink, {small:true}, function (qrcode) {

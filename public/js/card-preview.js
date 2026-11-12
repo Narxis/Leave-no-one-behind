@@ -1,25 +1,25 @@
-// Prévisualisation des cartes d'un lieu dans l'éditeur (/buildCard).
-// Deux modes :
-//  - Jouer : l'histoire telle qu'elle est dans l'éditeur, même non enregistrée,
-//    comme en partie (texte tapé, chrono, choix mélangés, butin, résultats) ;
-//  - Éditer : la carte et ses choix se modifient directement, les changements
-//    vont dans les blocs de l'éditeur (à enregistrer comme d'habitude).
-// Navigation : retour / suivant, fil des cartes jouées, « Aller à », marqueurs, raccourcis.
+// Preview of a place's cards in the editor (/buildCard).
+// Two modes:
+//  - Play: the story as it is in the editor, even unsaved,
+//    as in a game (typed text, timer, shuffled choices, loot, results);
+//  - Edit: the card and its choices are edited directly, changes
+//    go into the editor blocks (to be saved as usual).
+// Navigation: back / next, trail of played cards, "Aller à", markers, shortcuts.
 //
-// L'éditeur ouvre le test avec CardPreview.open(provider, fromId). provider()
-// renvoie l'état du lieu à cet instant (relu à chaque étape) :
+// The editor opens the test with CardPreview.open(provider, fromId). provider()
+// returns the state of the place at that moment (re-read at each step):
 //   {title, startId, cards, goTo, actions}
 //   cards   : Map id → {id, num, desc, mjreveal, timer, shuffle, marker,
 //                       choices: [{id, value, mjreveal, loot, reveal, revealId, next, roll}]}
-//             roll : null, ou {stat, success, failure} pour un choix à jet, chaque
-//             suite étant {reveal, revealId, next} (reveal et next du choix à null)
-//             outcomes : null, ou [{weight, reveal, revealId, next}] (issues au hasard)
-//   goTo    : appelé avec l'id d'un bloc pour y aller dans l'éditeur
-//   actions : edit(id, champ, valeur), addChoice(carteId), addNext(choixId, sortie), addReveal(choixId, sortie)
-//             (renvoient l'id du bloc créé ; sortie : 'output_2' pour la suite « échec » d'un jet)
+//             roll: null, or {stat, success, failure} for a choice with a roll, each
+//             follow-up being {reveal, revealId, next} (the choice's reveal and next set to null)
+//             outcomes: null, or [{weight, reveal, revealId, next}] (random outcomes)
+//   goTo    : called with a block id to go to it in the editor
+//   actions : edit(id, field, value), addChoice(cardId), addNext(choiceId, output), addReveal(choiceId, output)
+//             (return the id of the created block; output: 'output_2' for the "failure" follow-up of a roll)
 window.CardPreview = (function () {
-    const TIMER_SECONDS = 30;          // comme en jeu (card.js)
-    const STOP_TOKEN = '{....}';       // pause « .... » puis le texte repart à zéro
+    const TIMER_SECONDS = 30;          // as in game (card.js)
+    const STOP_TOKEN = '{....}';       // pause "...." then the text starts over
     const CHAR_DELAY = 21.7;
     const FAST_FACTOR = 15, FAST_CHARS = 5;
     const MAX_CHOICES = 3;
@@ -33,7 +33,7 @@ window.CardPreview = (function () {
     const suiteOk = (x) => !!x && (x.reveal != null || x.next != null);
     const hasNext = (c) => c.outcomes ? c.outcomes.every(suiteOk) : c.roll ? suiteOk(c.roll.success) && suiteOk(c.roll.failure) : suiteOk(c);
     const ISSUES = {success: 'réussite', failure: 'échec'};
-    // Issue d'une étape : 'success' / 'failure' (jet) ou 'o0', 'o1'… (issue au hasard)
+    // Outcome of a step: 'success' / 'failure' (roll) or 'o0', 'o1'… (random outcome)
     const outcomeIndex = (issue) => /^o\d+$/.test(issue || '') ? parseInt(issue.slice(1)) : -1;
     const issueName = (issue) => ISSUES[issue] || 'issue ' + (outcomeIndex(issue) + 1);
     const issueOutput = (issue) => issue === 'failure' ? 'output_2' : 'output_' + (Math.max(outcomeIndex(issue), 0) + 1);
@@ -41,7 +41,7 @@ window.CardPreview = (function () {
         let total = list.reduce((a, o) => a + o.weight, 0);
         return list.map(o => total > 0 ? Math.round(100 * o.weight / total) : Math.round(100 / list.length));
     };
-    // Tirage pondéré, comme en jeu (src/models/card.js, drawOutcome)
+    // Weighted draw, as in game (src/models/card.js, drawOutcome)
     function drawOutcome(list) {
         let total = list.reduce((a, o) => a + o.weight, 0);
         if (!(total > 0))
@@ -56,28 +56,28 @@ window.CardPreview = (function () {
     const rollLabel = (roll) => ROLL_TITLES[roll.stat] || 'Jet';
 
     let provider = null, story = null, fromId = null;
-    // Étapes : {type: 'card', id, order} ou {type: 'reveal', cardId, choiceId, issue}
-    // (issue : 'success' / 'failure' pour le résultat d'un choix à jet)
+    // Steps: {type: 'card', id, order} or {type: 'reveal', cardId, choiceId, issue}
+    // (issue: 'success' / 'failure' for the result of a choice with a roll)
     let path = [], ahead = [];
     let mode = 'play';
-    let run = 0;            // change à chaque nouvel affichage : stoppe l'écriture et le chrono en cours
+    let run = 0;            // changes on each new display: stops the current typing and timer
     let fast = false, instant = false, writing = false;
     let timerHandle = null;
-    let timerPaused = false;    // pendant un jet : le chrono attend le résultat
+    let timerPaused = false;    // during a roll: the timer waits for the result
 
     const dialog = () => $('cp-dialog');
     const step = () => path[path.length - 1];
     const cardOf = (s) => s && story.cards.get(s.type === 'card' ? s.id : s.cardId);
     const choiceOf = (s) => { let card = cardOf(s); return card && card.choices.find(c => c.id === s.choiceId); };
-    // Suite affichée par une étape « résultat » : celle du choix, ou du jet
+    // Follow-up shown by a "result" step: the choice's, or the roll's
     const suiteOf = (choice, issue) => choice && (outcomeIndex(issue) >= 0 ? (choice.outcomes || [])[outcomeIndex(issue)]
         : issue && choice.roll ? choice.roll[issue] : choice);
 
-    /* ---------- Variables de texte : [article_type_numéro] ---------- */
+    /* ---------- Text variables: [article_type_number] ---------- */
 
-    // Même règle que le jeu (src/models/card.js, getRandomVar) : [le_race_1] devient
-    // « le Fnek », une majuscule au début donne une majuscule, le même numéro donne
-    // la même valeur dans un même texte, deux numéros différents des valeurs différentes
+    // Same rule as the game (src/models/card.js, getRandomVar): [le_race_1] becomes
+    // "le Fnek", a capital at the start gives a capital, the same number gives
+    // the same value within a text, two different numbers give different values
     const VAR_RE = /\[[^\]]+\]/g;
     const VAR_TYPES = {
         'race': 'Race',
@@ -108,7 +108,7 @@ window.CardPreview = (function () {
     };
     const articlesOf = (type) => { let first = Object.values(varsOf()[type] || {})[0]; return first && typeof first === 'object' ? Object.keys(first) : []; };
 
-    // Pourquoi une variable ne marchera pas en jeu ('' si elle est bonne)
+    // Why a variable won't work in game ('' if it is fine)
     function varProblem(token) {
         let v = parseVar(token);
         if (v.article === 'conf')
@@ -125,7 +125,7 @@ window.CardPreview = (function () {
         return String(text || '').replace(VAR_RE, (token) => {
             let v = parseVar(token);
             if (v.article === 'conf')
-                return '‹' + v.type + '›';      // réglage de la partie, connu seulement en jeu
+                return '‹' + v.type + '›';      // game setting, only known in game
             if (varProblem(token))
                 return token;
             let mine = picked[v.type] = picked[v.type] || {};
@@ -144,7 +144,7 @@ window.CardPreview = (function () {
         });
     }
 
-    // Tirage gardé par étape : revenir sur une carte ne relance pas ses variables
+    // Draw kept per step: going back to a card doesn't re-roll its variables
     function shown(s, text) {
         s.cache = s.cache || {};
         if (!(text in s.cache))
@@ -152,7 +152,7 @@ window.CardPreview = (function () {
         return s.cache[text];
     }
 
-    /* ---------- Texte tapé comme en jeu ---------- */
+    /* ---------- Text typed as in game ---------- */
 
     async function write(text, token) {
         let box = $('cp-text');
@@ -166,7 +166,7 @@ window.CardPreview = (function () {
             if (token !== run)
                 return false;
             if (instant) {
-                // Texte instantané : seul ce qui suit la dernière pause reste affiché, comme à la fin de l'écriture
+                // Instant text: only what follows the last pause stays shown, as at the end of typing
                 let parts = text.split('‡');
                 shown = parts[parts.length - 1];
                 break;
@@ -197,7 +197,7 @@ window.CardPreview = (function () {
         return true;
     }
 
-    /* ---------- Chrono ---------- */
+    /* ---------- Timer ---------- */
 
     function stopTimer() {
         clearInterval(timerHandle);
@@ -227,9 +227,9 @@ window.CardPreview = (function () {
         }, 1000);
     }
 
-    /* ---------- Petits morceaux d'affichage ---------- */
+    /* ---------- Small display pieces ---------- */
 
-    // Entrées du butin : un nom, ou {name, qty} pour plusieurs exemplaires
+    // Loot entries: a name, or {name, qty} for several copies
     function lootHtml(names) {
         return names.map(entry => {
             let obj = entry && typeof entry === 'object';
@@ -260,7 +260,7 @@ window.CardPreview = (function () {
     const afterLabel = (c) => c.outcomes ? 'Au hasard : ' + chances(c.outcomes).map((pct, k) => (k + 1) + ' (' + pct + ' %) → ' + suiteLabel(c.outcomes[k])).join(', ')
         : c.roll ? rollLabel(c.roll) + ' : réussite → ' + suiteLabel(c.roll.success) + ', échec → ' + suiteLabel(c.roll.failure) : suiteLabel(c);
 
-    // Fil des étapes, liste « Aller à », boutons retour / suivant, marqueur
+    // Trail of steps, "Aller à" list, back / next buttons, marker
     function renderNav() {
         $('cp-path').innerHTML = path.map((s, i) => {
             let card = cardOf(s);
@@ -289,7 +289,7 @@ window.CardPreview = (function () {
         dialog().classList.toggle('is-editing', mode === 'edit');
     }
 
-    // Panneau MJ : infos de la carte (modifiables en mode Éditer), suite des choix, marqueurs
+    // GM panel: card info (editable in Edit mode), choice follow-ups, markers
     function renderMj(card, order) {
         let html = '';
         let edit = mode === 'edit';
@@ -337,14 +337,14 @@ window.CardPreview = (function () {
         $('cp-mj').innerHTML = html;
     }
 
-    // Variables de l'étape : exemple de valeur (mode Éditer) ou valeur tirée (mode Jouer)
+    // Step variables: sample value (Edit mode) or drawn value (Play mode)
     function varsHtml(card, order) {
         let s = step();
         let texts = s.type === 'reveal' ? [(suiteOf(choiceOf(s), s.issue) || {}).reveal]
             : [card.desc, card.mjreveal].concat(order.flatMap(c => [c.value, c.mjreveal]));
         let found = [...new Set(texts.join(' ').match(VAR_RE) || [])];
         if (mode === 'play')
-            texts.forEach(t => shown(s, t || ''));     // valeurs tirées dans les textes eux-mêmes
+            texts.forEach(t => shown(s, t || ''));     // values drawn in the texts themselves
         if (!found.length)
             return mode === 'edit' ? '<h3 class="cp-mj-sub"><i class="fas fa-dice"></i> Variables</h3><p class="cp-mj-empty">Aucune variable. Le bouton « Variable » en insère une là où se trouve le curseur.</p>' : '';
         return '<h3 class="cp-mj-sub"><i class="fas fa-dice"></i> Variables</h3><ul class="cp-vars">' + found.map(token => {
@@ -362,7 +362,7 @@ window.CardPreview = (function () {
             : '<p class="cp-mj-empty">Aucune carte marquée. « Marquer » (ou la touche M) en garde une pour y revenir.</p>';
     }
 
-    /* ---------- Affichage d'une étape ---------- */
+    /* ---------- Displaying a step ---------- */
 
     async function render(animate) {
         let token = ++run;
@@ -375,7 +375,7 @@ window.CardPreview = (function () {
         let s = step();
         let card = cardOf(s);
         if (s.type === 'card' && card && !s.order) {
-            // Ordre des choix tiré une fois par étape (comme un tirage en jeu), gardé si on revient dessus
+            // Order of the choices drawn once per step (like a draw in game), kept when coming back to it
             s.order = card.choices.map(c => c.id);
             if (card.shuffle && mode === 'play')
                 shuffle(s.order);
@@ -387,7 +387,7 @@ window.CardPreview = (function () {
             renderMj(null, []);
             return setEnd('is-warn', '<i class="fas fa-exclamation-triangle"></i> Ce bloc n\'existe plus dans l\'éditeur.');
         }
-        // Choix dans l'ordre tiré, puis ceux ajoutés depuis
+        // Choices in the drawn order, then those added since
         let order = s.type === 'card' ? s.order.map(id => card.choices.find(c => c.id === id)).filter(Boolean)
             .concat(card.choices.filter(c => !s.order.includes(c.id))) : [];
         renderMj(card, order);
@@ -410,7 +410,7 @@ window.CardPreview = (function () {
         playChoices(order, card, token);
         if (card.timer && animate && !$('cp-no-timer').checked)
             startTimer(token, async () => {
-                // Comme en jeu : il ne reste que le dernier choix de la carte
+                // As in game: only the last choice of the card remains
                 await hideChoices();
                 if (token === run)
                     playChoices(card.choices.slice(-1), card, token);
@@ -464,7 +464,7 @@ window.CardPreview = (function () {
         $('cp-choices').append(btn);
     }
 
-    // Grand champ de texte à la place du texte de la carte
+    // Large text field in place of the card text
     function showEditor(id, field, value, placeholder) {
         let area = $('cp-edit');
         $('cp-text').hidden = true;
@@ -482,7 +482,7 @@ window.CardPreview = (function () {
         order.forEach((c, i) => {
             let row = document.createElement('div');
             row.className = 'cp-choice is-edit' + (hasNext(c) ? '' : ' is-missing');
-            // Suite (ou, pour un jet, suite « réussite » et suite « échec ») : y aller, ou la créer
+            // Follow-up (or, for a roll, "success" and "failure" follow-ups): go there, or create it
             let suiteHtml = (x, issue) => {
                 let tag = issue ? ' data-issue="' + issue + '"' : '';
                 let label = !issue ? '' : outcomeIndex(issue) >= 0
@@ -516,7 +516,7 @@ window.CardPreview = (function () {
         await sleep(instant ? 0 : 350 + list.length * 50);
     }
 
-    /* ---------- Déplacements ---------- */
+    /* ---------- Moving around ---------- */
 
     function go(next, animate) {
         path.push(next);
@@ -531,7 +531,7 @@ window.CardPreview = (function () {
             return setEnd('is-warn', '<i class="fas fa-exclamation-triangle"></i> Ce choix n\'a pas encore de suite.'
                 + ' <button type="button" class="cp-link" data-mode-switch="edit">La créer ici</button>');
         if (choice.roll) {
-            // Comme en jeu : chrono en pause, le MJ dit si le jet est réussi
+            // As in game: timer paused, the GM says whether the roll succeeded
             timerPaused = true;
             await hideChoices();
             if (token === run)
@@ -544,14 +544,14 @@ window.CardPreview = (function () {
         if (token !== run)
             return;
         if (choice.outcomes) {
-            // Issue tirée au hasard selon les poids, comme en jeu
+            // Outcome drawn at random according to the weights, as in game
             let k = drawOutcome(choice.outcomes);
             return follow(card, choice, 'o' + k, choice.outcomes[k], token);
         }
         follow(card, choice, null, choice, token);
     }
 
-    // Suite d'un choix, ou du résultat de son jet (issue)
+    // Follow-up of a choice, or of its roll result (outcome)
     async function follow(card, choice, issue, suite, token) {
         if (suite.reveal != null)
             return go({type: 'reveal', cardId: card.id, choiceId: choice.id, issue: issue}, true);
@@ -587,7 +587,7 @@ window.CardPreview = (function () {
         }));
     }
 
-    // Choix de la carte dans l'ordre tiré pour l'étape
+    // Card choices in the order drawn for the step
     function cardOrder(card) {
         let s = step();
         return (s.order || card.choices.map(c => c.id)).map(id => card.choices.find(c => c.id === id)).filter(Boolean);
@@ -646,9 +646,9 @@ window.CardPreview = (function () {
         return list;
     }
 
-    /* ---------- Insertion d'une variable (mode Éditer) ---------- */
+    /* ---------- Inserting a variable (Edit mode) ---------- */
 
-    let lastField = null;       // dernier champ de texte utilisé : la variable y est insérée
+    let lastField = null;       // last text field used: the variable is inserted there
 
     function varToken() {
         let type = $('cp-var-type').value, article = $('cp-var-article').value;
@@ -694,7 +694,7 @@ window.CardPreview = (function () {
         $('cp-var').hidden = true;
         field.focus();
         field.setSelectionRange(start + token.length, start + token.length);
-        // Met à jour la liste des variables du panneau MJ sans toucher aux champs
+        // Updates the GM panel's variable list without touching the fields
         let s = step(), card = cardOf(s);
         let box = $('cp-mj').querySelector('.cp-vars');
         let html = card ? varsHtml(card, s.type === 'card' ? card.choices : []) : '';
@@ -707,7 +707,7 @@ window.CardPreview = (function () {
             render(false);
     }
 
-    /* ---------- Ouverture et commandes ---------- */
+    /* ---------- Opening and controls ---------- */
 
     function open(getStory, from) {
         provider = getStory;
@@ -777,17 +777,17 @@ window.CardPreview = (function () {
             if (instant && writing)
                 fast = true;
         });
-        // Clic sur la carte pendant l'écriture : le texte s'accélère (comme en jeu)
+        // Click on the card while typing: the text speeds up (as in game)
         $('cp-card').addEventListener('click', () => { if (writing) fast = true; });
 
-        // Modifications : chaque frappe part dans le bloc de l'éditeur
+        // Edits: each keystroke goes into the editor block
         d.addEventListener('input', (e) => {
             let f = e.target.closest('[data-edit]');
             if (!f || !story)
                 return;
             let value = f.value;
             if (f.dataset.field === 'marker' && !value.trim())
-                return;     // un marqueur vide se retire avec le bouton « Marquée »
+                return;     // an empty marker is removed with the "Marquée" button
             story.actions.edit(f.dataset.edit, f.dataset.field, value);
             story = provider();
             if (f.dataset.field === 'marker' || f.dataset.field === 'desc')
@@ -855,7 +855,7 @@ window.CardPreview = (function () {
             }
         });
 
-        // Raccourcis (hors champs de saisie) : ← → pour reculer / avancer, 1 à 3 pour les choix, M pour marquer
+        // Shortcuts (outside input fields): ← → to go back / forward, 1 to 3 for the choices, M to mark
         d.addEventListener('keydown', (e) => {
             if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey)
                 return;

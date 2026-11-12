@@ -1,4 +1,4 @@
-// Il s'agirait d'aller se faire foutre avec des fichiers qui s'appellent todo, j'arrivais pas à le trouver...
+// Files named todo can go to hell, I couldn't find it...
 
 const submitForm = document.querySelector(".add");
 const addButton = document.querySelector(".add-todo");
@@ -20,7 +20,7 @@ const generateTemplate = (item) => {
   itemList.innerHTML += html;
 };
 
-// La liste est redessinée par l'événement « inventory » (inventory.js)
+// The list is redrawn by the "inventory" event (inventory.js)
 function addItem(e) {
   e.preventDefault();
   const item = submitForm.add.value.trim();

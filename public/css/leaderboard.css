@@ -1,4 +1,4 @@
-/* Classement des équipes (leaderboard.ejs) */
+/* Team leaderboard (leaderboard.ejs) */
 .leaderboard {
     position: relative;
     z-index: 1;
@@ -92,7 +92,7 @@
 .leaderboard-table .podium-2 .rank { color: #d9dde6; }
 .leaderboard-table .podium-3 .rank { color: #e0a56b; }
 
-/* Partie qui vient de se terminer */
+/* Game that just ended */
 .leaderboard-table tr.is-current td {
     background: var(--ui-accent-soft);
 }
@@ -133,7 +133,7 @@
     }
 }
 
-/* Lignes cliquables : détail de l'équipe */
+/* Clickable rows: team details */
 .leaderboard-table tbody tr {
     cursor: pointer;
     transition: background 150ms var(--ui-ease);

@@ -1,4 +1,4 @@
-/* Éditeur d'objets (items-editor.ejs + items-editor.js), même allure que l'éditeur de lieux */
+/* Item editor (items-editor.ejs + items-editor.js), same look as the place editor */
 .items-editor-page {
     --ie-ok: #6fdc8c;
     margin: 0;
@@ -9,7 +9,7 @@
     display: none !important;
 }
 
-/* Raretés : couleurs habituelles des RPG */
+/* Rarities: usual RPG colors */
 .rarity-commun { --rarity: #c4c4c4; }
 .rarity-peu_commun { --rarity: #1eff00; }
 .rarity-rare { --rarity: #2f8cff; }
@@ -26,7 +26,7 @@
     box-shadow: 0 0 6px var(--rarity);
 }
 
-/* Le menu du jeu passe au-dessus de l'éditeur */
+/* The game menu goes above the editor */
 .items-editor-page #menuToggle {
     z-index: 60;
     top: 20px;
@@ -43,7 +43,7 @@
     color: var(--ui-text);
 }
 
-/* ---------- Barre du haut ---------- */
+/* ---------- Top bar ---------- */
 
 .ie-top {
     grid-column: 1 / -1;
@@ -167,7 +167,7 @@
     border-color: var(--ui-danger);
 }
 
-/* ---------- Colonne de gauche : catalogue ---------- */
+/* ---------- Left column: catalog ---------- */
 
 .ie-side {
     display: flex;
@@ -472,7 +472,7 @@
     color: var(--ui-text-dim);
 }
 
-/* ---------- Zone principale : fiche de l'objet + aperçu ---------- */
+/* ---------- Main area: item sheet + preview ---------- */
 
 .ie-main {
     display: flex;
@@ -845,7 +845,7 @@
     text-transform: uppercase;
 }
 
-/* ---------- Boîtes de dialogue ---------- */
+/* ---------- Dialog boxes ---------- */
 
 .ie-close {
     width: 30px;
@@ -955,7 +955,7 @@
     border-color: var(--ui-danger);
 }
 
-/* ---------- Écrans étroits ---------- */
+/* ---------- Narrow screens ---------- */
 
 @media (max-width: 1180px) {
     .ie-main {
@@ -1001,7 +1001,7 @@
     }
 }
 
-/* Quantité (et prix) : petits champs numériques côte à côte */
+/* Quantity (and price): small number fields side by side */
 .ie-numbers {
     flex-wrap: wrap;
 }
@@ -1021,7 +1021,7 @@
     font-weight: 700;
 }
 
-/* Recette : ingrédients à assembler à l'atelier */
+/* Recipe: ingredients to assemble at the workshop */
 .ie-recipe-list {
     display: flex;
     flex-direction: column;

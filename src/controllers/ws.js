@@ -35,10 +35,10 @@ const init = function (){
 
             let data = isBinary ? message : message.toString();
             let data_json = JSON.parse(data);
-            if (!['card-timer', 'card-text'].includes(data_json.action)) // une fois par seconde
+            if (!['card-timer', 'card-text'].includes(data_json.action)) // once per second
                 log('[WS] '+ chalk.hex('#aaaaaa')(data_json.action), '#ffcc00');
-            // Une action peut produire plusieurs messages (un /roll qui règle
-            // aussi une attaque de combat)
+            // An action can produce several messages (a /roll that also
+            // resolves a combat attack)
             makeAction(data).then(data => {
                 for (let payload of (Array.isArray(data) ? data : [data]))
                     if (payload)
@@ -50,8 +50,8 @@ const init = function (){
         ws.send('Hi there, I am a WebSocket server');
     });
 
-    // Joueurs en ligne (relais) : actions permises, en leur nom, puis
-    // résultat diffusé aux pages du MJ comme pour une action locale
+    // Online players (relay): allowed actions, in their name, then
+    // result broadcast to the GM pages as for a local action
     remote.init({
         run: (action) => makeAction(JSON.stringify(action)),
         broadcast: (payload) => broadcastData(payload)
@@ -179,41 +179,41 @@ const makeAction = async function (raw_response) {
         case 'chat-history':
             payload = chat.handle(response);
             break;
-        // Page de jeu : texte et choix affichés (votes des joueurs)
+        // Game page: text and choices shown (players' votes)
         case 'card-screen':
             payload = votes.setScreen(response.data);
             break;
-        // Page de jeu : compte à rebours des choix, pour les joueurs en ligne
+        // Game page: choices countdown, for online players
         case 'card-timer':
             payload = playerView.setTimer(response.data);
             break;
-        // Page de jeu : texte de la carte en cours d'écriture (et clic pour accélérer)
+        // Game page: card text being written (and click to speed up)
         case 'card-text':
             payload = playerView.setCardText(response.data);
             break;
         case 'votes':
             payload = votes.payload();
             break;
-        // Synopsis et fiche du vaisseau : joueurs prêts à continuer
+        // Synopsis and ship sheet: players ready to continue
         case 'intro':
             payload = intro.payload();
             break;
-        // Page planète : points de détection et scans faits
+        // Planet page: detection points and scans done
         case 'planet-screen':
             payload = planetScan.setScreen(response.data);
             break;
-        // Objets que les joueurs en ligne demandent à utiliser
+        // Items online players ask to use
         case 'item-use':
             payload = itemUse.payload();
             break;
         case 'item-use-answer':
             payload = itemUse.answer(response.data);
             break;
-        // Dés neutres du MJ (fenêtre de dés) : montrés au salon, ou à lui seul
+        // GM's neutral dice (dice window): shown to the room, or to them only
         case 'dice':
             payload = diceRoll(response.data || {});
             break;
-        // Objets que les joueurs en ligne se demandent (logo à côté de l'objet)
+        // Items online players request from each other (logo next to the item)
         case 'item-requests':
             payload = itemRequests.payload();
             break;
@@ -225,7 +225,7 @@ const makeAction = async function (raw_response) {
             break;
         case 'ally-random':
         case 'ally-add': {
-            // Compagnon créé en plein combat : annoncé comme renfort
+            // Companion created mid-combat: announced as reinforcement
             let added = allies.handle(response);
             let joined = added.data.event && combat.allyJoined(added.data.allies.find(a => a.id === added.data.event.id));
             payload = joined ? [added, joined] : added;
@@ -325,7 +325,7 @@ const actionSetPlayerStat = async function(response) {
 
     player = await player.getData(response.data.player_id);
     if (player) {
-        // Diverti : la perte de moral est réduite
+        // Diverti: the morale loss is reduced
         if (stat === 'moral' && !isNaN(val))
             val = await new Statuses().moralAfterLoss(player.discord_id, player.moral, val);
         let data = {};
@@ -340,8 +340,8 @@ const actionSetPlayerStat = async function(response) {
     }
 }
 
-// Le MJ donne un rôle à un joueur ; celui qui l'avait le perd (rôle unique).
-// Un message par joueur modifié, pour que chaque page mette son onglet à jour
+// The GM gives a role to a player; whoever had it loses it (unique role).
+// One message per changed player, so each page updates its tab
 const actionSetRole = async function (response) {
     let data = response.data || {};
     let changed = await roles.assign(data.discord_id, data.role);
@@ -384,13 +384,13 @@ const actionSetModule = async function(response) {
 const actionSetStatus = async function(response) {
 
     let status = String(response.data.name || '').trim().toLowerCase();
-    // Durée en tours de carte : un champ vide vaut 1, 0 retire le status
+    // Duration in card turns: an empty field counts as 1, 0 removes the status
     let val = response.data.value === '' || response.data.value === undefined ? 1 : parseInt(response.data.value);
-    // Sans joueur : le statut touche toute l'équipe
+    // Without a player: the status affects the whole team
     let playerId = String(response.data.player_id || '');
     let statuses = new Statuses();
     const known = () => DB.tables.statuses.findOne({where: {slug: status, player_id: ''}});
-    // Statut de base ajouté au jeu après le début de la partie
+    // Base status added to the game after the game started
     if (!await known())
         await statuses.hydrateDB(false);
     if (!await known() || isNaN(val) || (playerId && !await DB.tables.players.findOne({where: {discord_id: playerId}})))
@@ -413,8 +413,8 @@ const actionSetStatus = async function(response) {
 }
 
 /**
- * Statut créé à la volée par le MJ (nom, description, retiré ou non après
- * une planète), appliqué aussitôt à l'équipe ou à un joueur
+ * Status created on the fly by the GM (name, description, removed or not after
+ * a planet), applied right away to the team or to a player
  * @param response
  * @returns {Promise<{data, action, error: boolean}>}
  */
@@ -472,12 +472,12 @@ const actionItem = async function (response) {
     else if (slug)
         await items.add(slug, loot.qtyOf(response.data.qty));
 
-    // Les onglets des joueurs et la liste du vaisseau se mettent à jour partout
+    // The player tabs and the ship list update everywhere
     return inventory.payload(null);
 }
 
-// Jet de dés neutres du MJ : au salon (message du MJ) sauf s'il est secret ;
-// le résultat revient aux pages du MJ (fenêtre de dés)
+// GM's neutral dice roll: in the room (GM message) unless it is secret;
+// the result comes back to the GM pages (dice window)
 const diceRoll = function (data) {
     let result = dice.roll(data.sides, data.count);
     if (result.error)
@@ -501,7 +501,7 @@ const actionRoll = async function (response) {
             error_msg: 'Player not in current game !'
         }
     }
-    // Le rôle du joueur peut ajouter des dés sur sa stat : on garde le meilleur
+    // The player's role can add dice on its stat: the best is kept
     let rolled = roles.rollDice(roles.diceCount(player, response.data.stat));
     let dice_result = rolled.kept;
     let result = await player.roll(dice_result, response.data.stat, response.data.module);
@@ -532,9 +532,9 @@ const broadcastData = function (data, ws, sendBackToSender = true) {
     catch (e) {
         log(e)
     }
-    // Écran de jeu porté des joueurs : jets, inventaires… repris tels quels
+    // Players' ported game screen: rolls, inventories… replayed as is
     playerView.mirror(data);
-    // L'état du jeu a pu changer : la vue des joueurs en ligne suit
+    // The game state may have changed: the online players' view follows
     if (!data || !['lobby', 'chat', 'chat-history', 'dice'].includes(data.action))
         playerView.changed();
 }

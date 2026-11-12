@@ -20,7 +20,7 @@ module.exports = {
         ),
     step: '',
 
-    // Propose les objets de l'inventaire de celui qui tape la commande
+    // Offers the items in the inventory of whoever types the command
     async autocomplete(interaction) {
         let typed = interaction.options.getFocused().toLowerCase();
         let items = await inventory.getInventory(interaction.user.id);
@@ -40,7 +40,7 @@ module.exports = {
             return;
         }
 
-        // Saisie libre sans passer par la liste : on retrouve l'objet par son nom
+        // Free input without going through the list: find the item by its name
         let items = await inventory.getInventory(interaction.user.id);
         let item = items.find(i => i.slug === slug) || items.find(i => i.name.toLowerCase() === slug.toLowerCase());
         if (!item) {
@@ -58,7 +58,7 @@ module.exports = {
             return;
         }
 
-        // Les coffres de la page de jeu se mettent à jour
+        // The game page chests update
         const wsClient = new ws(WS_URL);
         wsClient.on('open', () => {
             wsClient.send(JSON.stringify({action: 'inventory-sync', data: {event: result}}));

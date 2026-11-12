@@ -1,7 +1,7 @@
-# Met le relais en ligne sur Cloudflare quand le relais ou la page joueur
-# changent sur prod, ou à la demande depuis l'onglet Actions.
-# Réglage unique : secrets CLOUDFLARE_API_TOKEN et CLOUDFLARE_ACCOUNT_ID
-# (voir relay/README.md). Sans eux, le déploiement est sauté.
+# Deploys the relay to Cloudflare when the relay or the player page
+# change on prod, or on demand from the Actions tab.
+# One-time setup: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID secrets
+# (see relay/README.md). Without them, deployment is skipped.
 name: Relais
 
 on:

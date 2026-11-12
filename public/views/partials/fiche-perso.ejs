@@ -1,6 +1,6 @@
 <div class="player" id="p<%= player.discord_id %>" data-race="<%= player.race || '' %>">
     <input type="text" placeholder="Nom du joueur" class="player-name" value="<%= player.name %>">
-    <%# Rôle du joueur (src/config/roles.json), choisi par le MJ : perso.js %>
+    <%# Player's role (src/config/roles.json), chosen by the GM: perso.js %>
     <% let roleList = typeof playerRoles !== 'undefined' ? playerRoles.list() : [];
        let role = roleList.find(r => r.slug === player.role); %>
     <div class="role-picker">

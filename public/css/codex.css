@@ -1,4 +1,4 @@
-/* Codex complet du MJ (codex.ejs) */
+/* Full GM Codex (codex.ejs) */
 .codex-page {
     overflow: auto;
 }
@@ -223,7 +223,7 @@
     color: var(--ui-text-dim);
 }
 
-/* Bonus en vert, malus en rouge (mêmes couleurs que /races et /persos) */
+/* Bonus in green, malus in red (same colors as /races and /persos) */
 .cx .mod-2  { background: rgb(80 210 120 / 28%); color: #8ff0ae; }
 .cx .mod-1  { background: rgb(80 210 120 / 14%); color: #b9f2c9; }
 .cx .mod-0  { background: var(--ui-fill); color: var(--ui-text-dim); }

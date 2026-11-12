@@ -1,7 +1,7 @@
-// Menu MJ : marchand et bourses (src/controllers/merchant.js).
-// Le MJ prépare l'étal (objets, prix, stock), l'ouvre sur l'écran de jeu,
-// puis achète et vend pour les joueurs ou le vaisseau. L'étal en préparation
-// est gardé dans le navigateur d'une séance à l'autre.
+// GM menu: merchant and purses (src/controllers/merchant.js).
+// The GM prepares the stall (items, prices, stock), opens it on the game screen,
+// then buys and sells for the players or the ship. The stall being prepared
+// is kept in the browser from one session to the next.
 (function () {
     const root = document.getElementById('mj-shop');
     if (!root)
@@ -33,7 +33,7 @@
         return el('span', 'mj-shop-img mj-shop-noimg', item.name.charAt(0));
     };
 
-    let catalog = [];       // objets de l'éditeur, avec leur prix
+    let catalog = [];       // editor items, with their price
     let currency = {name: 'crédit', plural: 'crédits', short: 'cr', cryopodsPerCredit: 5, sellRatio: .5};
     let state = {open: false, name: '', stock: [], log: []};
     let wallets = {players: {}, ship: 0};
@@ -57,7 +57,7 @@
         try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch (e) {}
     };
 
-    // Ouverte, la boutique suit l'état du serveur ; fermée, l'étal en préparation
+    // Open, the shop follows the server state; closed, the stall being prepared
     const stock = () => state.open ? state.stock : draft.stock;
 
     function toast(text, error) {
@@ -68,9 +68,9 @@
         toast.timer = setTimeout(() => t.textContent = '', 4000);
     }
 
-    // Une modification de l'étal ouvert part tout de suite à l'écran de jeu.
-    // Un prix ou un stock modifié ne redessine pas l'étal : le champ où l'on
-    // vient de cliquer resterait sinon sans effet
+    // An edit of the open stall goes to the game screen right away.
+    // A changed price or stock doesn't redraw the stall: otherwise the field
+    // just clicked would have no effect
     function pushStock(list, redraw = true) {
         draft.stock = list.map(e => ({slug: e.slug, name: e.name, price: e.price, qty: e.qty}));
         saveDraft();
@@ -101,7 +101,7 @@
             select.value = current;
     }
 
-    /* ---------- Étal ---------- */
+    /* ---------- Stall ---------- */
 
     function renderStock() {
         let box = $('mj-shop-stock');
@@ -123,7 +123,7 @@
             price.title = 'Prix en ' + currency.plural;
             let cryoText = el('small', 'mj-shop-cryo', '≈ ' + cryo(entry.price) + ' cryo.');
             price.addEventListener('input', () => cryoText.textContent = '≈ ' + cryo(toInt(price.value, 0)) + ' cryo.');
-            // stock() et non list : l'étal a pu changer depuis ce dessin
+            // stock() and not list: the stall may have changed since this drawing
             price.addEventListener('change', () => pushStock(stock().map((e, j) => j === i ? Object.assign({}, e, {price: Math.max(toInt(price.value, 0), 0)}) : e), false));
             let qty = el('input', 'mj-shop-input mj-shop-qty');
             qty.type = 'number';
@@ -158,7 +158,7 @@
         input.focus();
     }
 
-    // Tous les objets qui ont un prix dans l'éditeur
+    // All items with a price in the editor
     function fillFromCatalog() {
         let list = stock().slice();
         for (let item of catalog)
@@ -167,7 +167,7 @@
         pushStock(list);
     }
 
-    /* ---------- Bourses ---------- */
+    /* ---------- Purses ---------- */
 
     function renderWallets() {
         let box = $('mj-shop-wallets');
@@ -196,7 +196,7 @@
         $('mj-shop-cryopods').textContent = cryopods + ' cryopods à bord';
     }
 
-    /* ---------- Vente ---------- */
+    /* ---------- Sale ---------- */
 
     function renderSell() {
         let box = $('mj-shop-sell');
@@ -226,7 +226,7 @@
         }
     }
 
-    /* ---------- Journal et état ---------- */
+    /* ---------- Log and state ---------- */
 
     function logText(entry) {
         if (entry.type === 'buy')

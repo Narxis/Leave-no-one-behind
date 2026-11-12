@@ -1,15 +1,15 @@
-# Construit l'app de bureau.
-# - Windows : à chaque push sur prod (hors relais et docs), l'exécutable est
-#   publié dans une Release GitHub. Les fichiers ont toujours le même nom, donc
-#   ce lien télécharge toujours la dernière version :
-#     https://github.com/<dépôt>/releases/latest/download/LNOB-Setup.exe
-#     https://github.com/<dépôt>/releases/latest/download/LNOB-Portable.exe
-#   Par défaut la Release est créée dans ce dépôt. Pour la publier dans un
-#   autre dépôt (public, pour que les joueurs n'aient pas besoin d'un compte
-#   GitHub), définir la variable RELEASE_REPO (ex. Narxis/LNOB-app) et le
-#   secret RELEASE_TOKEN (jeton avec le droit « Contents: write » sur ce dépôt).
-# - macOS et Linux : à la demande depuis l'onglet Actions ou sur un tag v*,
-#   téléchargeables dans les artefacts du run.
+# Builds the desktop app.
+# - Windows: on every push to prod (except relay and docs), the executable is
+#   published in a GitHub Release. The files always have the same name, so
+#   this link always downloads the latest version:
+#     https://github.com/<repo>/releases/latest/download/LNOB-Setup.exe
+#     https://github.com/<repo>/releases/latest/download/LNOB-Portable.exe
+#   By default the Release is created in this repo. To publish it in another
+#   repo (public, so players don't need a GitHub account), set the
+#   RELEASE_REPO variable (e.g. Narxis/LNOB-app) and the RELEASE_TOKEN
+#   secret (token with the "Contents: write" permission on that repo).
+# - macOS and Linux: on demand from the Actions tab or on a v* tag,
+#   downloadable from the run artifacts.
 name: App de bureau
 
 on:
@@ -23,7 +23,7 @@ on:
       - '.github/workflows/relay.yml'
       - '.github/workflows/wiki-tableaux.yml'
 
-# Une seule publication à la fois : la plus récente gagne
+# Only one publication at a time: the most recent one wins
 concurrency:
   group: desktop-${{ github.ref }}
   cancel-in-progress: true
@@ -42,10 +42,10 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm test
-    # Pas de certificat de signature pour l'instant : Windows affiche
-    # « Windows a protégé votre ordinateur » au premier lancement
-    # (« Informations complémentaires » puis « Exécuter quand même »)
-    # bash : PowerShell coupe l'option -c.extraMetadata.version
+    # No signing certificate for now: Windows shows
+    # "Windows protected your PC" on first launch
+    # ("More info" then "Run anyway")
+    # bash: PowerShell splits the -c.extraMetadata.version option
     - run: npx electron-builder --win --publish never -c.extraMetadata.version=1.0.${{ github.run_number }}
       shell: bash
       env:
@@ -73,7 +73,7 @@ jobs:
         Les parties, réglages et éditeurs sont gardés dans le dossier de données de l'utilisateur, hors du dossier de l'app : ils ne sont pas perdus en changeant de version.
 
         Au premier lancement, Windows peut afficher « Windows a protégé votre ordinateur » : cliquer sur « Informations complémentaires » puis « Exécuter quand même »."
-        # Le commit n'existe que dans ce dépôt-ci
+        # The commit only exists in this repo
         target=()
         [ "$REPO" = "${{ github.repository }}" ] && target=(--target "$GITHUB_SHA")
         gh release create "$TAG" dist/LNOB-Setup.exe dist/LNOB-Portable.exe \
@@ -95,8 +95,8 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm test
-    # Pas de certificat de signature pour l'instant : macOS affichera un
-    # avertissement au premier lancement
+    # No signing certificate for now: macOS will show a
+    # warning on first launch
     - run: npx electron-builder --publish never
       env:
         CSC_IDENTITY_AUTO_DISCOVERY: false

@@ -2,19 +2,19 @@ const fs = require('fs');
 const path = require('path');
 const lootEntry = require('./loot');
 
-// Ennemis et compagnons préparés dans l'éditeur (/bestiaire), proposés
-// ensuite au MJ dans son menu (onglets Adversaires et Compagnons).
-// Ennemis : config/bestiary.json fournit la liste de départ ; dès la première
-// modification, la liste complète vit dans storage/cache/bestiary.json.
-// Compagnons : modèles (nom, rôle, stats) gardés dans storage/cache/companions.json.
+// Enemies and companions prepared in the editor (/bestiaire), then offered
+// to the GM in their menu (Opponents and Companions tabs).
+// Enemies: config/bestiary.json provides the starting list; from the first
+// edit, the full list lives in storage/cache/bestiary.json.
+// Companions: templates (name, role, stats) kept in storage/cache/companions.json.
 
 const BASE_ENEMIES = path.join(__dirname, '../config/bestiary.json');
-// Dans le dossier de données (comme les races customs)
+// In the data folder (like custom races)
 const ENEMY_FILE = require('../config/paths').cache('bestiary.json');
 const COMPANION_FILE = require('../config/paths').cache('companions.json');
 
 const DAMAGE = ['faible', 'moyen', 'fort'];
-// Catégorie d'un ennemi : sert au tri dans l'éditeur, au Roll et au menu MJ
+// An enemy's category: used for sorting in the editor, for the Roll and in the GM menu
 const CATEGORIES = ['invocation', 'sbire', 'standard', 'elite', 'boss'];
 const COMPANION_STATS = ['combat', 'pilotage', 'engineering', 'survival', 'recon', 'moral'];
 const MAX_ENEMIES = 100;
@@ -42,8 +42,8 @@ const readList = function (file, fallback) {
 const getEnemies = () => readList(ENEMY_FILE, BASE_ENEMIES);
 const getCompanions = () => readList(COMPANION_FILE);
 
-// Fiche d'un ennemi telle qu'enregistrée (mêmes champs que bestiary.json,
-// plus le butin par défaut, repris à chaque fois qu'il entre en combat)
+// An enemy's sheet as saved (same fields as bestiary.json,
+// plus the default loot, reused each time it enters combat)
 const cleanEnemy = function (data) {
     let name = cleanText(data.name, 60);
     if (!name)
@@ -74,8 +74,8 @@ const cleanCompanion = function (data) {
     return {companion: companion};
 }
 
-// Enregistre une fiche (nouvelle si data.slug est vide). Le slug ne change
-// pas quand on renomme : c'est lui qui identifie la fiche
+// Saves a sheet (new if data.slug is empty). The slug doesn't change
+// on rename: it is what identifies the sheet
 const upsert = function (file, list, data, clean, max, label) {
     let result = clean(data);
     if (result.error)
@@ -101,7 +101,7 @@ const upsert = function (file, list, data, clean, max, label) {
         entry.slug = slug;
         list.push(entry);
     }
-    // Le slug en premier, comme dans bestiary.json
+    // The slug first, as in bestiary.json
     let saved = Object.assign({slug: entry.slug}, entry);
     list[list.indexOf(entry)] = saved;
     fs.writeFileSync(file, JSON.stringify(list, null, 2));
